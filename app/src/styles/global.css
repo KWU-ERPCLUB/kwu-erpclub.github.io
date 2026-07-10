@@ -1,15 +1,16 @@
-/* 디자인 토큰 — 원천: erp-club/docs/디자인규칙-메인.md */
+/* 디자인 토큰 — 원천: erp-club/docs/디자인규칙-메인.md
+   색 체계 3+1(2026-07-10 owner): 버건디(최소 사용) + 흰색 + 네이비(보조) + 검정 텍스트. 라이트 단일 */
 :root {
-  /* 강조색 확정(2026-07-10): 광운대 로고 원색(≈#A61E23)에서 채도·명도 낮춘 딥 레드.
-     흰 배경 대비 약 9:1. 원색 그대로 쓰지 않기로 owner 결정 — 디자인규칙 §2 */
-  --accent: #8a2226;
+  --accent: #7a2030;           /* 광운 버건디 — CTA 버튼·헤드라인 1단어만 */
   --accent-contrast: #ffffff;
+  --secondary: #223247;        /* 딥 네이비 — 아이브로우·반전 카드·스탯 숫자 */
+  --secondary-contrast: #ffffff;
 
-  --bg: #f7f7f5;        /* 중성 회백 — 크림/아이보리 금지 */
-  --surface: #ffffff;
+  --bg: #ffffff;
+  --surface: #f7f8f9;          /* 카드 배경 — 흰 바탕 위 중성 뉴트럴 */
   --text: #141414;
   --text-sub: #555555;
-  --line: #e4e4e1;
+  --line: #e6e8ea;
 
   --radius-card: 14px;
   --radius-pill: 999px;
@@ -22,18 +23,6 @@
   /* 서체 확정(2026-07-10, 포폴·메인 공통): 디스플레이=Paperlogy, 본문=Pretendard */
   --font-display: 'Paperlogy', 'Pretendard Variable', Pretendard, sans-serif;
   --font-body: 'Pretendard Variable', Pretendard, -apple-system, sans-serif;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --accent: #d9898c;  /* 라이트 강조색과 동일 색상, 명도 올린 변형(대비 확보) */
-    --accent-contrast: #201314;
-    --bg: #1b1b1a;      /* 순흑 금지 */
-    --surface: #242423;
-    --text: #f0f0ee;
-    --text-sub: #a8a8a4;
-    --line: #3a3a38;
-  }
 }
 
 * { box-sizing: border-box; }
@@ -61,7 +50,7 @@ main { display: block; }
   display: inline-block;
   font-size: var(--fs-small);
   font-weight: 600;
-  color: var(--accent);
+  color: var(--secondary);
   letter-spacing: 0.02em;
   margin-bottom: 0.75rem;
 }
@@ -117,10 +106,10 @@ main { display: block; }
 .card h3 { margin: 0 0 0.5rem; font-size: 1.05rem; }
 .card p { margin: 0; color: var(--text-sub); font-size: var(--fs-small); }
 
-/* 강조 반전 카드 — 섹션당 1개만(디자인규칙 §1) */
-.card--invert { background: var(--accent); border-color: var(--accent); }
-.card--invert h3 { color: var(--accent-contrast); }
-.card--invert p { color: var(--accent-contrast); opacity: 0.85; }
+/* 반전 카드 — 섹션당 1개만, 보조색 사용(버건디는 최소 사용 원칙) */
+.card--invert { background: var(--secondary); border-color: var(--secondary); }
+.card--invert h3 { color: var(--secondary-contrast); }
+.card--invert p { color: var(--secondary-contrast); opacity: 0.85; }
 
 /* 팩트 스탯 — 시그니처(디자인규칙 §2) */
 .stat .num {
@@ -129,7 +118,7 @@ main { display: block; }
   font-weight: 800;
   font-size: 2.25rem;
   letter-spacing: -0.02em;
-  color: var(--accent);
+  color: var(--secondary);
   margin-bottom: 0.25rem;
 }
 .stat .src { display: block; margin-top: 0.75rem; font-size: 0.75rem; color: var(--text-sub); }
