@@ -17,6 +17,10 @@
   --fs-headline: clamp(1.75rem, 4.5vw, 2.75rem);
   --fs-body: 1rem;
   --fs-small: 0.875rem;
+
+  /* 서체 확정(2026-07-10, 포폴·메인 공통): 디스플레이=Paperlogy, 본문=Pretendard */
+  --font-display: 'Paperlogy', 'Pretendard Variable', Pretendard, sans-serif;
+  --font-body: 'Pretendard Variable', Pretendard, -apple-system, sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -35,7 +39,7 @@
 
 body {
   margin: 0;
-  font-family: 'Pretendard Variable', Pretendard, -apple-system, sans-serif;
+  font-family: var(--font-body);
   font-size: var(--fs-body);
   line-height: 1.6;
   color: var(--text);
@@ -62,7 +66,7 @@ main { display: block; }
 }
 
 .headline {
-  /* 서체 보류 중 — 임시 Pretendard ExtraBold(디자인규칙 §2) */
+  font-family: var(--font-display);
   font-weight: 800;
   font-size: var(--fs-headline);
   line-height: 1.25;
@@ -120,6 +124,7 @@ main { display: block; }
 /* 팩트 스탯 — 시그니처(디자인규칙 §2) */
 .stat .num {
   display: block;
+  font-family: var(--font-display);
   font-weight: 800;
   font-size: 2.25rem;
   letter-spacing: -0.02em;
