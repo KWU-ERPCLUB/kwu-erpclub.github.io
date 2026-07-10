@@ -127,7 +127,7 @@ export default function App() {
             </a>
           </div>
           <p className="owner-note">
-            운영 — 신해원 · 광운대 경영학부 · LG CNS AM Inspire Camp 6기 선발(고용노동부 K-디지털 트레이닝)
+            운영 — 신해원 · 광운대 경영학부 21학번
           </p>
         </section>
 
