@@ -1,25 +1,17 @@
-/* 디자인 토큰 — 원천: erp-club/docs/디자인규칙-메인.md
-   레퍼런스: NFT Ambassador 시안의 시각 문법 이식(색만 3+1 팔레트로 치환). 라이트 단일 */
+/* 디자인 토큰 — 원천: erp-club/docs/디자인규칙-메인.md (3차: Tars 격자 문법)
+   3+1: 버건디(최소) + 흰색 + 차콜(다크 앵커) + 검정 텍스트. 라이트 단일 */
 :root {
-  --accent: #7a2030;           /* 광운 버건디 — CTA·강조 1단어·하이라이트 카드 */
-  --accent-contrast: #ffffff;
-  --secondary: #223247;        /* 딥 네이비 — 다크 카드·스탯 필·라벨 */
-  --secondary-soft: #2e4160;
-  --secondary-contrast: #ffffff;
-
+  --accent: #7a2030;
+  --dark: #161616;
   --bg: #ffffff;
-  --surface: #f7f8f9;
-  --ink: #141414;              /* 검정 필 버튼용 */
+  --surface: #fafaf9;
   --text: #141414;
   --text-sub: #55606c;
-  --line: #e6e8ea;
+  --line: #e7e7e5;
 
-  --shadow-card: 0 12px 32px rgba(20, 30, 45, 0.10);
-  --shadow-chip: 0 6px 18px rgba(20, 30, 45, 0.12);
-
-  --radius-card: 22px;
+  --radius-card: 18px;
   --radius-pill: 999px;
-  --maxw: 1120px;
+  --maxw: 1040px;
 
   --font-display: 'Paperlogy', 'Pretendard Variable', Pretendard, sans-serif;
   --font-body: 'Pretendard Variable', Pretendard, -apple-system, sans-serif;
@@ -34,7 +26,7 @@ body {
   margin: 0;
   font-family: var(--font-body);
   font-size: 1rem;
-  line-height: 1.6;
+  line-height: 1.65;
   color: var(--text);
   background: var(--bg);
   -webkit-font-smoothing: antialiased;
@@ -45,15 +37,15 @@ body {
   position: sticky;
   top: 0;
   z-index: 10;
-  background: rgba(255, 255, 255, 0.88);
+  background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--line);
 }
 .nav-inner {
   max-width: var(--maxw);
   margin: 0 auto;
-  height: 64px;
-  padding: 0 1.25rem;
+  height: 60px;
+  padding: 0 1.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -62,25 +54,19 @@ body {
 .brand {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: 1.05rem;
-  letter-spacing: -0.01em;
+  font-size: 1rem;
   color: var(--text);
   text-decoration: none;
 }
 .brand em { font-style: normal; color: var(--accent); }
-.nav-links { display: flex; gap: 1.75rem; }
-.nav-links a {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--text-sub);
-  text-decoration: none;
-}
+.nav-links { display: flex; gap: 1.6rem; }
+.nav-links a { font-size: 0.88rem; font-weight: 600; color: var(--text-sub); text-decoration: none; }
 .nav-links a:hover { color: var(--text); }
 .nav-cta {
-  font-size: 0.85rem;
+  font-size: 0.83rem;
   font-weight: 700;
-  color: var(--accent-contrast);
-  background: var(--accent);
+  color: #fff;
+  background: var(--dark);
   padding: 0.45rem 1.1rem;
   border-radius: var(--radius-pill);
   text-decoration: none;
@@ -88,291 +74,290 @@ body {
 }
 @media (max-width: 820px) { .nav-links { display: none; } }
 
-/* ── 공통 섹션 리듬 ─────────────────────── */
-.section {
+/* ── 격자 래티스 (Tars 문법: 전 섹션이 1px 라인 격자 안) ── */
+.lattice {
   max-width: var(--maxw);
   margin: 0 auto;
-  padding: 5rem 1.25rem;
+  border-left: 1px solid var(--line);
+  border-right: 1px solid var(--line);
 }
-.pill-label {
-  display: inline-block;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  color: var(--secondary-contrast);
-  background: var(--secondary);
-  padding: 0.3rem 0.85rem;
-  border-radius: var(--radius-pill);
+.cell { border-bottom: 1px solid var(--line); padding: 4.5rem 2.5rem; }
+@media (max-width: 700px) { .cell { padding: 3rem 1.25rem; } }
+
+/* ── 공통 타이포 ────────────────────────── */
+.center { text-align: center; }
+.eyebrow {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-sub);
+  letter-spacing: 0.01em;
+  display: block;
   margin-bottom: 1rem;
 }
 .headline {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(1.6rem, 3.6vw, 2.4rem);
+  font-size: clamp(1.7rem, 3.8vw, 2.6rem);
   line-height: 1.22;
   letter-spacing: -0.02em;
-  margin: 0 0 2.25rem;
+  margin: 0 0 2.5rem;
 }
-.headline em { font-style: normal; color: var(--accent); }
+.headline em, .hero h1 em { font-style: normal; color: var(--accent); }
 
-/* ── 히어로 ────────────────────────────── */
+/* ── 히어로 (중앙 정렬 + 은은한 버건디 워시) ── */
 .hero {
-  display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  gap: 2.5rem;
-  align-items: center;
-  padding-top: 4.5rem;
-  padding-bottom: 3rem;
+  position: relative;
+  padding: 5.5rem 2.5rem 4rem;
+  overflow: hidden;
 }
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 320px;
+  background: radial-gradient(ellipse 70% 100% at 50% 0%, rgba(122, 32, 48, 0.07), transparent 70%);
+  pointer-events: none;
+}
+.hero > * { position: relative; }
 .hero h1 {
   font-family: var(--font-display);
   font-weight: 900;
-  font-size: clamp(2.1rem, 5vw, 3.4rem);
-  line-height: 1.16;
+  font-size: clamp(2.1rem, 5.2vw, 3.5rem);
+  line-height: 1.14;
   letter-spacing: -0.025em;
-  margin: 0 0 1.25rem;
+  margin: 0 auto 1.25rem;
+  max-width: 18ch;
 }
-.hero h1 em { font-style: normal; color: var(--accent); }
 .hero-sub {
   color: var(--text-sub);
-  max-width: 38ch;
-  margin: 0 0 1.5rem;
-}
-.chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
-.chip {
-  font-size: 0.85rem;
-  font-weight: 600;
-  padding: 0.4rem 1rem;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-pill);
-  background: #fff;
-  color: var(--text-sub);
+  max-width: 46ch;
+  margin: 0 auto 2rem;
 }
 
-/* 검정 필 CTA + 원형 화살표(레퍼런스 문법) */
+/* 필 CTA(검정) + 버건디 원형 화살표 */
 .cta {
   display: inline-flex;
   align-items: center;
-  gap: 0.9rem;
-  background: var(--ink);
+  gap: 0.8rem;
+  background: var(--dark);
   color: #fff;
   font-weight: 700;
-  font-size: 0.95rem;
-  padding: 0.45rem 0.45rem 0.45rem 1.5rem;
+  font-size: 0.92rem;
+  padding: 0.4rem 0.4rem 0.4rem 1.4rem;
   border-radius: var(--radius-pill);
   text-decoration: none;
 }
 .cta .arrow {
-  width: 38px;
-  height: 38px;
+  width: 34px; height: 34px;
   border-radius: 50%;
   background: var(--accent);
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
 }
-.cta:focus-visible, .nav-cta:focus-visible { outline: 3px solid var(--secondary); outline-offset: 2px; }
+.cta:focus-visible, .nav-cta:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
-/* 히어로 우측 비주얼 — 회전 프레임 + 브라우저 목업 + 플로팅 칩 */
-.hero-visual { position: relative; min-height: 420px; }
-.frame {
-  position: absolute;
-  border-radius: 40px;
-  transform: rotate(45deg);
+/* 히어로 하단 2칸 (Tars 하단 컬럼 문법) */
+.hero-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  margin-top: 4rem;
+  border-top: 1px solid var(--line);
+  text-align: left;
 }
-.frame--navy {
-  width: 290px; height: 290px;
-  background: var(--secondary);
-  top: 40px; right: 30px;
-}
-.frame--outline {
-  width: 130px; height: 130px;
-  border: 2px solid var(--line);
-  border-radius: 28px;
-  bottom: 24px; left: 8px;
-}
-.frame--dot {
-  width: 46px; height: 46px;
-  background: var(--accent);
-  border-radius: 14px;
-  top: 8px; left: 60px;
-}
-.mock {
-  position: absolute;
-  top: 96px; right: 92px;
-  width: min(330px, 78%);
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  box-shadow: var(--shadow-card);
-  overflow: hidden;
-}
-.mock-bar {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.6rem 0.9rem;
-  border-bottom: 1px solid var(--line);
-}
-.mock-bar .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--line); }
-.mock-url {
-  flex: 1;
-  font-size: 0.7rem;
-  color: var(--text-sub);
-  background: var(--surface);
-  border-radius: var(--radius-pill);
-  padding: 0.2rem 0.75rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.mock-body { padding: 1rem 0.9rem 1.2rem; display: grid; gap: 0.55rem; }
-.mock-h { height: 16px; width: 62%; border-radius: 6px; background: var(--secondary); }
-.mock-l { height: 9px; border-radius: 5px; background: var(--surface); }
-.mock-l.w80 { width: 80%; }
-.mock-l.w55 { width: 55%; }
-.mock-cta { height: 26px; width: 96px; border-radius: var(--radius-pill); background: var(--accent); margin-top: 0.35rem; }
-.float-chip {
-  position: absolute;
-  background: #fff;
-  border: 1px solid var(--line);
-  box-shadow: var(--shadow-chip);
-  font-size: 0.8rem;
-  font-weight: 700;
-  padding: 0.45rem 1rem;
-  border-radius: var(--radius-pill);
-  white-space: nowrap;
-}
-.float-chip--1 { top: 62px; left: 24px; }
-.float-chip--2 { bottom: 96px; right: 18px; }
-.float-chip--3 { bottom: 30px; left: 96px; }
-
-@media (max-width: 900px) {
-  .hero { grid-template-columns: 1fr; padding-top: 3rem; }
-  .hero-visual { min-height: 360px; max-width: 430px; margin: 0 auto; width: 100%; }
-  .mock { right: 50%; transform: translateX(50%); }
-  .frame--navy { right: 50%; margin-right: -170px; }
+.hero-col { padding: 1.75rem 2rem 0.25rem; }
+.hero-col + .hero-col { border-left: 1px solid var(--line); }
+.hero-col h3 { margin: 0 0 0.4rem; font-size: 0.95rem; }
+.hero-col p { margin: 0; font-size: 0.86rem; color: var(--text-sub); }
+@media (max-width: 700px) {
+  .hero-cols { grid-template-columns: 1fr; }
+  .hero-col + .hero-col { border-left: none; border-top: 1px solid var(--line); }
+  .hero-col { padding: 1.5rem 0.5rem 0.5rem; }
 }
 
-/* ── 스탯 필(다크 스타디움 카드) ─────────── */
-.stats {
+/* ── 격자 3칸 (스탯·트랙 공용) ─────────────── */
+.row3 {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  padding-top: 0;
+  border-top: 1px solid var(--line);
 }
-.stat-pill {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  background: var(--secondary);
-  color: var(--secondary-contrast);
-  border-radius: var(--radius-pill);
-  padding: 1.15rem 1.5rem;
+.row3 > div { padding: 2.25rem 2rem; }
+.row3 > div + div { border-left: 1px solid var(--line); }
+@media (max-width: 820px) {
+  .row3 { grid-template-columns: 1fr; }
+  .row3 > div + div { border-left: none; border-top: 1px solid var(--line); }
 }
-.stat-icon {
-  flex: none;
-  width: 42px; height: 42px;
-  border-radius: 50%;
-  background: var(--accent);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 800;
-  font-size: 1rem;
-}
+
 .stat-num {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: 1.55rem;
-  letter-spacing: -0.02em;
+  font-size: 2.6rem;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
   display: block;
-  line-height: 1.1;
+  margin-bottom: 0.6rem;
 }
-.stat-label { font-size: 0.76rem; color: rgba(255,255,255,0.78); line-height: 1.4; display: block; }
-.stat-src { font-size: 0.65rem; color: rgba(255,255,255,0.5); display: block; margin-top: 0.15rem; }
-@media (max-width: 900px) { .stats { grid-template-columns: 1fr; } }
+.stat-num::after {
+  content: '';
+  display: block;
+  width: 28px; height: 3px;
+  background: var(--accent);
+  border-radius: 2px;
+  margin-top: 0.7rem;
+}
+.stat-label { font-size: 0.87rem; color: var(--text); display: block; line-height: 1.5; }
+.stat-src { font-size: 0.73rem; color: var(--text-sub); display: block; margin-top: 0.4rem; }
 
-/* ── 트랙 카드(다크 카드 + 강조 1장) ─────── */
-.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; }
-@media (max-width: 900px) { .grid3 { grid-template-columns: 1fr; } }
-.track-card {
-  background: var(--secondary);
-  color: var(--secondary-contrast);
-  border-radius: var(--radius-card);
-  padding: 1.75rem;
-  min-height: 210px;
-  display: flex;
-  flex-direction: column;
-}
-.track-card .idx {
+.feat-idx {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: 1.6rem;
-  opacity: 0.28;
-  margin-bottom: auto;
+  font-size: 0.85rem;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 1.25rem;
 }
-.track-card h3 { margin: 1.5rem 0 0.5rem; font-size: 1.1rem; }
-.track-card p { margin: 0; font-size: 0.87rem; line-height: 1.55; color: rgba(255,255,255,0.75); }
-.track-card--accent { background: var(--accent); }
-.track-card--accent p { color: rgba(255,255,255,0.82); }
+.row3 h3 { margin: 0 0 0.5rem; font-size: 1.05rem; }
+.row3 p { margin: 0; font-size: 0.88rem; color: var(--text-sub); }
 
-/* ── 증거(카드 2 + 와이드 필 바) ─────────── */
-.grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.1rem; }
-@media (max-width: 900px) { .grid2 { grid-template-columns: 1fr; } }
-.proof-card {
+/* 다크 앵커 칸 (Tars 검정 카드 문법) */
+.cell-dark {
+  background: var(--dark);
+  color: #fff;
+  border-radius: var(--radius-card);
+}
+.cell-dark h3 { color: #fff; }
+.cell-dark p { color: rgba(255, 255, 255, 0.72); }
+.cell-dark .feat-idx { color: #d18f9a; }
+.row3 > .cell-dark { margin: 0.9rem; padding: 1.6rem 1.4rem; border-left: none !important; }
+
+/* ── 결과물 ─────────────────────────────── */
+.grid2 {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 1.1rem;
+}
+@media (max-width: 820px) { .grid2 { grid-template-columns: 1fr; } }
+.proof-dark {
+  background: var(--dark);
+  color: #fff;
+  border-radius: var(--radius-card);
+  padding: 1.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.proof-dark h3 { margin: 0; font-size: 1.05rem; }
+.proof-dark p { margin: 0.4rem 0 0; font-size: 0.87rem; color: rgba(255,255,255,0.72); }
+.proof-light {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius-card);
-  padding: 1.75rem;
+  padding: 1.9rem;
+  display: flex;
+  flex-direction: column;
 }
-.proof-card h3 { margin: 0 0 0.5rem; font-size: 1.05rem; }
-.proof-card p { margin: 0 0 1rem; font-size: 0.88rem; color: var(--text-sub); }
+.proof-light h3 { margin: 0 0 0.4rem; font-size: 1.05rem; }
+.proof-light p { margin: 0 0 1.25rem; font-size: 0.87rem; color: var(--text-sub); }
 .proof-link {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
   font-size: 0.85rem;
   font-weight: 700;
-  color: var(--secondary);
+  color: var(--text);
   text-decoration: none;
-  border-bottom: 2px solid var(--secondary);
+  border-bottom: 2px solid var(--accent);
   padding-bottom: 1px;
+  width: fit-content;
+  margin-top: auto;
 }
+.proof-dark .proof-link { color: #fff; }
+
+/* 브라우저 목업 (다크 카드 안) */
+.mock {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  color: var(--text);
+}
+.mock-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 0.8rem;
+  border-bottom: 1px solid var(--line);
+}
+.mock-bar .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
+.mock-url {
+  flex: 1;
+  font-size: 0.68rem;
+  color: var(--text-sub);
+  background: var(--surface);
+  border-radius: var(--radius-pill);
+  padding: 0.15rem 0.7rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mock-body { padding: 0.9rem 0.8rem 1rem; display: grid; gap: 0.5rem; }
+.mock-h { height: 14px; width: 60%; border-radius: 5px; background: var(--dark); }
+.mock-l { height: 8px; border-radius: 4px; background: var(--surface); border: 1px solid var(--line); }
+.mock-l.w80 { width: 80%; }
+.mock-l.w55 { width: 55%; }
+.mock-cta { height: 22px; width: 84px; border-radius: var(--radius-pill); background: var(--accent); margin-top: 0.3rem; }
+
 .repo-bar {
-  margin-top: 1.5rem;
+  margin-top: 1.1rem;
   display: flex;
   align-items: center;
   gap: 1rem;
   border: 1px solid var(--line);
   border-radius: var(--radius-pill);
-  padding: 0.5rem 0.5rem 0.5rem 1.5rem;
+  padding: 0.45rem 0.45rem 0.45rem 1.4rem;
 }
 .repo-bar .repo-url {
   flex: 1;
-  font-size: 0.88rem;
+  font-size: 0.87rem;
   font-weight: 600;
   color: var(--text-sub);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.repo-bar .cta { padding: 0.35rem 0.35rem 0.35rem 1.2rem; font-size: 0.85rem; }
-.repo-bar .cta .arrow { width: 32px; height: 32px; }
-.owner-note { font-size: 0.78rem; color: var(--text-sub); margin-top: 1.25rem; }
+.owner-note { font-size: 0.77rem; color: var(--text-sub); margin-top: 1.4rem; margin-bottom: 0; }
 
-/* ── 모집 ─────────────────────────────── */
-.join { text-align: center; }
-.join .chips { justify-content: center; }
-.join .headline { margin-bottom: 1.5rem; }
-
-.footer {
-  border-top: 1px solid var(--line);
-  padding: 2.25rem 1.25rem;
-  text-align: center;
-  font-size: 0.85rem;
+/* ── 모집 밴드 ──────────────────────────── */
+.join { padding-top: 5.5rem; padding-bottom: 5.5rem; }
+.join .headline { margin-bottom: 1.25rem; }
+.chips { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-bottom: 2rem; }
+.chip {
+  font-size: 0.84rem;
+  font-weight: 600;
+  padding: 0.38rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: #fff;
   color: var(--text-sub);
 }
+
+/* ── 다크 푸터 밴드 (Tars 문법) ─────────────── */
+.footer {
+  background: var(--dark);
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.85rem;
+  padding: 2.75rem 1.5rem;
+}
+.footer-inner {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.footer .f-brand { font-family: var(--font-display); font-weight: 800; color: #fff; }
+.footer a { color: rgba(255, 255, 255, 0.65); text-decoration: none; }
+.footer a:hover { color: #fff; }
