@@ -1,0 +1,139 @@
+// 문안 원천: erp-club/docs/문안-메인.md (5차 §about — ①누구인가=계보+MIS 현재형 ②왜 지금인가=4단 서사+스탯 차트)
+// 수치·출처 단일원천: erp-club/docs/선행조사-2026-07-10.md §C·§D
+// 차트: 강조 패턴(버건디 1색+회색) — 팔레트 검증 2026-07-10(대비·CVD 통과, 전 바 직접 라벨)
+import { Arrow, SiteNav, SiteFooter, FORM_URL } from './shared.jsx'
+
+const TIMELINE = [
+  { era: '학회', title: 'ERP연구회', desc: '광운대학교 경영학부에서 SAP·ERP를 공부해온 학회입니다.' },
+  { era: '2026 · 확장', title: '산하 스터디 신설', desc: '주제를 넓힙니다 — 경영·MIS에 AI를 어떻게 접목할 것인가.' },
+  { era: '지금', title: '1기 모집', desc: '비개발자의 AI 활용을 연구하고, 결과를 실물로 남깁니다.' },
+]
+
+const FACTS = [
+  {
+    idx: '01',
+    claim: '다들 씁니다',
+    sub: '20대 4명 중 3명이 이미 생성형 AI를 써 봤습니다 — 전 연령 최고.',
+    src: '과학기술정보통신부 · 2025 인터넷이용실태조사',
+    chart: {
+      caption: '생성형 AI 경험률',
+      max: 100,
+      rows: [
+        { label: '20대', value: 75.3, display: '75.3%', accent: true },
+        { label: '국민 전체', value: 44.5, display: '44.5%' },
+      ],
+    },
+  },
+  {
+    idx: '02',
+    claim: '그런데 얕게 씁니다',
+    sub: '직장인 활용 용도 1위는 정보 검색·요약 — 활용이 여기에 편중돼 있습니다.',
+    src: '나우앤서베이 · 직장인 1,000명 조사, 2025',
+    chart: {
+      caption: '직장인의 AI 활용 용도',
+      max: 100,
+      rows: [
+        { label: '정보 검색·요약', value: 75.3, display: '75.3%', accent: true },
+        { label: '문서 작성', value: 44.9, display: '44.9%' },
+      ],
+    },
+  },
+  {
+    idx: '03',
+    claim: '잘 쓰면 실제로 다릅니다 — 특히 초보자가',
+    sub: 'AI 도입 후 처리량 증가가 신입에서 평균의 두 배를 넘었습니다.',
+    src: 'Brynjolfsson 외 · NBER w31161, 2023 (상담원 5,179명)',
+    chart: {
+      caption: '시간당 업무 처리량 증가',
+      max: 40,
+      rows: [
+        { label: '신입·저숙련', value: 34, display: '+34%', accent: true },
+        { label: '전체 평균', value: 14.5, display: '+14~15%' },
+      ],
+    },
+  },
+]
+
+function BarFig({ caption, max, rows }) {
+  return (
+    <figure className="barfig">
+      <figcaption className="fig-cap">{caption}</figcaption>
+      {rows.map((r) => (
+        <div className="bar-row" key={r.label}>
+          <span className="bar-label">{r.label}</span>
+          <div className="bar-track">
+            <div
+              className={r.accent ? 'bar-fill accent' : 'bar-fill'}
+              style={{ width: `${(r.value / max) * 100}%` }}
+            />
+            <span className="bar-val">{r.display}</span>
+          </div>
+        </div>
+      ))}
+    </figure>
+  )
+}
+
+export default function About() {
+  return (
+    <>
+      <SiteNav />
+
+      <main className="lattice">
+        <section className="cell center">
+          <span className="eyebrow">소개</span>
+          <h2 className="headline">누구인가</h2>
+          <div className="tl">
+            {TIMELINE.map((n) => (
+              <div key={n.title}>
+                <span className="tl-era">{n.era}</span>
+                <h3>{n.title}</h3>
+                <p>{n.desc}</p>
+              </div>
+            ))}
+          </div>
+          <p className="mis-note">
+            MIS(경영정보시스템)는 경영 문제를 정보 시스템으로 푸는 전공입니다.
+            그 시스템을 다루는 도구가 지금 AI로 바뀌고 있습니다.
+          </p>
+        </section>
+
+        <section className="cell" id="why-about">
+          <div className="center">
+            <span className="eyebrow">왜 지금인가</span>
+            <h2 className="headline">쓰는 사람은 많지만,<br />잘 쓰는 법을 배우는 자리는 <em>없습니다</em></h2>
+          </div>
+
+          {FACTS.map((f) => (
+            <div className="why-block" key={f.idx}>
+              <div>
+                <span className="feat-idx">{f.idx}</span>
+                <h3>{f.claim}</h3>
+                <p className="why-sub">{f.sub}</p>
+                <p className="stat-src">{f.src}</p>
+              </div>
+              <BarFig {...f.chart} />
+            </div>
+          ))}
+
+          <div className="why-block why-final">
+            <div>
+              <span className="feat-idx">04</span>
+              <h3>그래서 이 스터디입니다</h3>
+              <p className="why-sub">
+                경영·MIS 맥락에서 잘 쓰는 법을 연구하고, 결과를 실물로 증명합니다.
+              </p>
+            </div>
+            <div className="why-cta">
+              <a className="cta" href={FORM_URL}>
+                지원하기 <span className="arrow"><Arrow /></span>
+              </a>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <SiteFooter />
+    </>
+  )
+}
