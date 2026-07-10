@@ -5,12 +5,13 @@
 이 사이트 자체가 스터디 방식(AI 협업 · git · 무료 배포)의 증거물.
 
 ## 현재상태
-- 스캐폴드 생성(2026-07-10): Vite + React, 디자인 토큰, 5섹션 뼈대
+- **라이브: https://kwu-erpclub.github.io/** (2026-07-10 배포 — 조직 KWU-ERPCLUB + GitHub Pages, Actions 자동 배포: main push = 배포)
+- Vite + React, 디자인 토큰, 5섹션 뼈대 + 2차 문안 반영
 - 설계 원천: `../docs/디자인규칙-메인.md`(디자인) · `../docs/문안-메인.md`(문안) · `../docs/specs/`(IA)
-- 배포 예정: GitHub 조직 + GitHub Pages (조직 생성 대기)
-- 미결: 스터디 이름(최종 보류) · 헤드라인 서체(포폴 세션 대기) · KwangWoon Brown HEX(로고 추출 예정)
+- 미결: 스터디 이름(최종 보류) · KwangWoon Brown HEX(로고 추출 예정) · 지원 폼 URL
 
 ## 다음 할 일
-- [ ] GitHub 조직 생성(수동) → repo 생성·push → Pages 배포
-- [ ] 섹션 시각 구현(디자인규칙 §1~2 토큰 적용) + 3뷰포트×2테마 검증
-- [ ] KwangWoon Brown HEX 확정, 서체 확정 반영
+- [ ] 섹션 시각 구현(Paperlogy 헤드라인 적용, 히어로 시각 요소) + 3뷰포트×2테마 검증
+- [ ] KwangWoon Brown HEX 확정(공식 로고 추출) 반영
+- [ ] 서브 /about(MPA 페이지) 추가
+- [ ] 스터디 이름·지원 폼 URL 확정 시 자리표시 교체
