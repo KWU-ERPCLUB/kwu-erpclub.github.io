@@ -1,14 +1,6 @@
-// 문안 원천: erp-club/docs/문안-메인.md (3차 — 정체성: MIS·AI 연구, 포폴=콘텐츠 1호)
+// 문안 원천: erp-club/docs/문안-메인.md (5차 — §2=존재 의의 한 줄+/about 링크, 논증·스탯은 /about)
 // 시각 문법: Tars SaaS 격자 레이아웃(디자인규칙 3차), 색=버건디 최소+흰색+차콜
-const FORM_URL = '#' // {지원폼URL} 확정 시 교체
-const PORTFOLIO_URL = '#' // {포폴URL} 확정 시 교체
-const REPO_URL = 'https://github.com/KWU-ERPCLUB/kwu-erpclub.github.io'
-
-const STATS = [
-  { num: '62.8%', label: '500대 기업 중 하반기 대졸 채용 계획 없음·미정', src: '한국경제인협회 2025' },
-  { num: '81.6%', label: '신입 채용 1순위 평가요소 = 직무 경험', src: '한국경영자총협회 2025' },
-  { num: '69.2%', label: '채용 시 AI 역량 고려 · 원하는 인재 1위는 기획·운영', src: '대한상공회의소 2025' },
-]
+import { Arrow, SiteNav, SiteFooter, FORM_URL, PORTFOLIO_URL, REPO_URL } from './shared.jsx'
 
 const TRACKS = [
   { idx: '01', title: 'AI 활용 연구', desc: '비개발자 관점에서 AI 도구와 워크플로를 공부하고 기록합니다.' },
@@ -16,29 +8,10 @@ const TRACKS = [
   { idx: '03', title: '경영 문제 프로젝트', desc: 'MIS·ERP 관점에서 실제 경영 문제를 시스템으로 풉니다. 공모전·SAP 트랙으로 연결됩니다.', dark: true },
 ]
 
-function Arrow() {
-  return (
-    <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-      <path d="M2 12L12 2M12 2H4.5M12 2V9.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
 export default function App() {
   return (
     <>
-      <header className="nav">
-        <div className="nav-inner">
-          <a className="brand" href="#top">KWU <em>ERP</em>연구회</a>
-          <nav className="nav-links" aria-label="본문 섹션">
-            <a href="#why">왜 지금인가</a>
-            <a href="#tracks">과정</a>
-            <a href="#proof">결과물</a>
-            <a href="#join">모집</a>
-          </nav>
-          <a className="nav-cta" href={FORM_URL}>지원하기</a>
-        </div>
-      </header>
+      <SiteNav />
 
       <main id="top" className="lattice">
         <section className="cell hero center">
@@ -60,18 +33,9 @@ export default function App() {
           </div>
         </section>
 
-        <section className="cell center" id="why">
-          <span className="eyebrow">왜 지금인가</span>
-          <h2 className="headline">2025년, 세 개의 <em>조사</em></h2>
-          <div className="row3" aria-label="채용 시장 조사 수치">
-            {STATS.map((s) => (
-              <div key={s.num} style={{ textAlign: 'left' }}>
-                <span className="stat-num">{s.num}</span>
-                <span className="stat-label">{s.label}</span>
-                <span className="stat-src">{s.src}</span>
-              </div>
-            ))}
-          </div>
+        <section className="cell center why-band" id="why">
+          <p className="why-line">쓰는 사람은 많지만,<br />잘 쓰는 법을 배우는 자리는 없습니다.</p>
+          <a className="proof-link" href="/about/">왜 지금인가 <Arrow /></a>
         </section>
 
         <section className="cell center" id="tracks">
@@ -145,12 +109,7 @@ export default function App() {
         </section>
       </main>
 
-      <footer className="footer">
-        <div className="footer-inner">
-          <span className="f-brand">광운대학교 ERP연구회</span>
-          <a href={REPO_URL}>GitHub</a>
-        </div>
-      </footer>
+      <SiteFooter />
     </>
   )
 }
