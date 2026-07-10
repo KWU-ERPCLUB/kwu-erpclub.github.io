@@ -1,7 +1,8 @@
 /* 디자인 토큰 — 원천: erp-club/docs/디자인규칙-메인.md */
 :root {
-  /* KwangWoon Brown 임시값 — 공식 로고에서 추출 후 교체(디자인규칙 §5-2) */
-  --accent: #6e2a2a;
+  /* 강조색 확정(2026-07-10): 광운대 로고 원색(≈#A61E23)에서 채도·명도 낮춘 딥 레드.
+     흰 배경 대비 약 9:1. 원색 그대로 쓰지 않기로 owner 결정 — 디자인규칙 §2 */
+  --accent: #8a2226;
   --accent-contrast: #ffffff;
 
   --bg: #f7f7f5;        /* 중성 회백 — 크림/아이보리 금지 */
@@ -25,8 +26,8 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --accent: #c98a8a;  /* 다크에서는 명도 올린 변형(대비 확보) */
-    --accent-contrast: #1c1211;
+    --accent: #d9898c;  /* 라이트 강조색과 동일 색상, 명도 올린 변형(대비 확보) */
+    --accent-contrast: #201314;
     --bg: #1b1b1a;      /* 순흑 금지 */
     --surface: #242423;
     --text: #f0f0ee;
