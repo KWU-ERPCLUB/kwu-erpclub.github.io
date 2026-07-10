@@ -1,7 +1,7 @@
 // 문안 원천: erp-club/docs/문안-메인.md (5차 §about — ①누구인가=계보+MIS 현재형 ②왜 지금인가=4단 서사+스탯 차트)
 // 수치·출처 단일원천: erp-club/docs/선행조사-2026-07-10.md §C·§D
 // 차트: 강조 패턴(버건디 1색+회색) — 팔레트 검증 2026-07-10(대비·CVD 통과, 전 바 직접 라벨)
-import { Arrow, SiteNav, SiteFooter, FORM_URL } from './shared.jsx'
+import { Arrow, SiteNav, SiteFooter } from './shared.jsx'
 
 const TIMELINE = [
   { era: '학회', title: 'ERP연구회', desc: '광운대학교 경영학부에서 SAP·ERP를 공부해온 학회입니다.' },
@@ -125,9 +125,8 @@ export default function About() {
               </p>
             </div>
             <div className="why-cta">
-              <a className="cta" href={FORM_URL}>
-                지원하기 <span className="arrow"><Arrow /></span>
-              </a>
+              {/* 지원하기 CTA 보류(owner 2026-07-10) — 모집 밴드로 안내만 */}
+              <a className="proof-link" href="/#join">모집 안내 <Arrow /></a>
             </div>
           </div>
         </section>

@@ -434,6 +434,7 @@ body {
   background: #fff;
   color: var(--text-sub);
 }
+.join-note { margin: 0; font-size: 0.88rem; color: var(--text-sub); }
 
 /* ── 다크 푸터 밴드 (Tars 문법) ─────────────── */
 .footer {

@@ -1,6 +1,6 @@
 // 문안 원천: erp-club/docs/문안-메인.md (5차 — §2=존재 의의 한 줄+/about 링크, 논증·스탯은 /about)
 // 시각 문법: Tars SaaS 격자 레이아웃(디자인규칙 3차), 색=버건디 최소+흰색+차콜
-import { Arrow, SiteNav, SiteFooter, FORM_URL, PORTFOLIO_URL, REPO_URL } from './shared.jsx'
+import { Arrow, SiteNav, SiteFooter, PORTFOLIO_URL, REPO_URL } from './shared.jsx'
 
 const TRACKS = [
   { idx: '01', title: 'AI 활용 연구', desc: '비개발자 관점에서 AI 도구와 워크플로를 공부하고 기록합니다.' },
@@ -18,9 +18,6 @@ export default function App() {
           <span className="eyebrow">광운대학교 ERP연구회 산하 스터디 · 1기</span>
           <h1>MIS와 <em>AI</em>를 함께<br />공부하는 경영학부 스터디</h1>
           <p className="hero-sub">비개발자가 AI를 어떻게 더 잘 활용할지 연구하고, 결과를 실물로 남깁니다.</p>
-          <a className="cta" href={FORM_URL}>
-            지원하기 <span className="arrow"><Arrow /></span>
-          </a>
           <div className="hero-cols">
             <div className="hero-col">
               <h3>ERP연구회</h3>
@@ -103,9 +100,8 @@ export default function App() {
             <span className="chip">모집 인원 미정</span>
             <span className="chip">노트북 지참</span>
           </div>
-          <a className="cta" href={FORM_URL}>
-            지원하기 <span className="arrow"><Arrow /></span>
-          </a>
+          {/* 지원하기 CTA 보류(owner 2026-07-10) — 지원 도구 확정 시 재도입 */}
+          <p className="join-note">모집 안내는 확정되는 대로 이 페이지에 공지합니다.</p>
         </section>
       </main>
 

@@ -1,5 +1,5 @@
 // 메인(/)·소개(/about/) 공용 — 네비게이션·푸터·화살표·링크 상수
-export const FORM_URL = '#' // {지원폼URL} 확정 시 교체
+// 지원 기능(지원하기 CTA·지원폼)은 보류 — 2026-07-10 owner 지시(전면에 내세우지 않음)
 export const PORTFOLIO_URL = '#' // {포폴URL} 확정 시 교체
 export const REPO_URL = 'https://github.com/KWU-ERPCLUB/kwu-erpclub.github.io'
 
@@ -22,7 +22,6 @@ export function SiteNav() {
           <a href="/#proof">결과물</a>
           <a href="/#join">모집</a>
         </nav>
-        <a className="nav-cta" href={FORM_URL}>지원하기</a>
       </div>
     </header>
   )
