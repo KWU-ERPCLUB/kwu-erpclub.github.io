@@ -125,8 +125,8 @@ export default function About() {
               </p>
             </div>
             <div className="why-cta">
-              {/* 지원하기 CTA 보류(owner 2026-07-10) — 모집 밴드로 안내만 */}
-              <a className="proof-link" href="/#join">모집 안내 <Arrow /></a>
+              {/* 지원하기 CTA 보류(owner 2026-07-10) — 모집 페이지로 안내만 */}
+              <a className="proof-link" href="/join/">모집 안내 <Arrow /></a>
             </div>
           </div>
         </section>
