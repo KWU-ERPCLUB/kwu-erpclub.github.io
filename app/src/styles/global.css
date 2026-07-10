@@ -74,12 +74,10 @@ body {
 }
 @media (max-width: 820px) { .nav-links { display: none; } }
 
-/* ── 격자 래티스 (Tars 문법: 전 섹션이 1px 라인 격자 안) ── */
+/* ── 섹션 컨테이너 — 가로 헤어라인만(세로 외곽선은 답답해서 제거, owner 2026-07-10) ── */
 .lattice {
   max-width: var(--maxw);
   margin: 0 auto;
-  border-left: 1px solid var(--line);
-  border-right: 1px solid var(--line);
 }
 .cell { border-bottom: 1px solid var(--line); padding: 4.5rem 2.5rem; }
 @media (max-width: 700px) { .cell { padding: 3rem 1.25rem; } }
