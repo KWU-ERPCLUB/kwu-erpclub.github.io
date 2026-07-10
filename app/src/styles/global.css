@@ -1,0 +1,141 @@
+/* 디자인 토큰 — 원천: erp-club/docs/디자인규칙-메인.md */
+:root {
+  /* KwangWoon Brown 임시값 — 공식 로고에서 추출 후 교체(디자인규칙 §5-2) */
+  --accent: #6e2a2a;
+  --accent-contrast: #ffffff;
+
+  --bg: #f7f7f5;        /* 중성 회백 — 크림/아이보리 금지 */
+  --surface: #ffffff;
+  --text: #141414;
+  --text-sub: #555555;
+  --line: #e4e4e1;
+
+  --radius-card: 14px;
+  --radius-pill: 999px;
+  --maxw: 1080px;
+
+  --fs-headline: clamp(1.75rem, 4.5vw, 2.75rem);
+  --fs-body: 1rem;
+  --fs-small: 0.875rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --accent: #c98a8a;  /* 다크에서는 명도 올린 변형(대비 확보) */
+    --accent-contrast: #1c1211;
+    --bg: #1b1b1a;      /* 순흑 금지 */
+    --surface: #242423;
+    --text: #f0f0ee;
+    --text-sub: #a8a8a4;
+    --line: #3a3a38;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, sans-serif;
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+main { display: block; }
+
+.section {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 4.5rem 1.25rem;
+}
+
+/* 섹션 공통 리듬: 아이브로우 → 헤드라인 → 내용 */
+.eyebrow {
+  display: inline-block;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+  margin-bottom: 0.75rem;
+}
+
+.headline {
+  /* 서체 보류 중 — 임시 Pretendard ExtraBold(디자인규칙 §2) */
+  font-weight: 800;
+  font-size: var(--fs-headline);
+  line-height: 1.25;
+  margin: 0 0 2rem;
+  letter-spacing: -0.02em;
+}
+
+.headline em {
+  font-style: normal;
+  color: var(--accent);
+}
+
+/* 칩 — 문장 대신 정보 전달(디자인규칙 §0-1) */
+.chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.chip {
+  font-size: var(--fs-small);
+  font-weight: 500;
+  padding: 0.35rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--text-sub);
+}
+
+/* 필 버튼 */
+.btn {
+  display: inline-block;
+  font-weight: 700;
+  padding: 0.8rem 1.8rem;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: var(--accent-contrast);
+  text-decoration: none;
+}
+.btn:focus-visible { outline: 3px solid var(--text); outline-offset: 2px; }
+
+/* 카드 그리드 */
+.grid { display: grid; gap: 1rem; grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 1.5rem;
+}
+.card h3 { margin: 0 0 0.5rem; font-size: 1.05rem; }
+.card p { margin: 0; color: var(--text-sub); font-size: var(--fs-small); }
+
+/* 강조 반전 카드 — 섹션당 1개만(디자인규칙 §1) */
+.card--invert { background: var(--accent); border-color: var(--accent); }
+.card--invert h3 { color: var(--accent-contrast); }
+.card--invert p { color: var(--accent-contrast); opacity: 0.85; }
+
+/* 팩트 스탯 — 시그니처(디자인규칙 §2) */
+.stat .num {
+  display: block;
+  font-weight: 800;
+  font-size: 2.25rem;
+  letter-spacing: -0.02em;
+  color: var(--accent);
+  margin-bottom: 0.25rem;
+}
+.stat .src { display: block; margin-top: 0.75rem; font-size: 0.75rem; color: var(--text-sub); }
+
+.footer {
+  border-top: 1px solid var(--line);
+  padding: 2rem 1.25rem;
+  text-align: center;
+  font-size: var(--fs-small);
+  color: var(--text-sub);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .section { scroll-margin-top: 2rem; }
+}
