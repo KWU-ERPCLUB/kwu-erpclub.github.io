@@ -2,7 +2,7 @@
 // 나머지 감쇠 → 세로로 이어져 있어도 "구분된 페이지"로 인식. 탭·라벨=영문 정책.
 // 구성(owner 지정): WHY(하단=업계 데이터) → ROADMAP(연구회→AI 스터디 분기 시각화) → PROJECTS → FAQ
 // 문안 원천: erp-club/docs/문안-메인.md. 수치=검증분만+출처(선행조사·/reports와 단일원천)
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { Arrow, SiteNav, SiteFooter, REPO_URL } from './shared.jsx'
 
 const ADSP_BOARD_URL = 'https://erpstudy.vercel.app'
@@ -50,9 +50,8 @@ const FAQ = [
     '준비 중입니다. 일정이 확정되면 모집 안내(JOIN)에 공지됩니다.'],
 ]
 
-// 섹션=페이지 스파이: 뷰포트 중앙 밴드에 걸린 섹션만 활성화 + 현재 탭 강조
+// 섹션=페이지 스파이: 뷰포트 중앙 밴드에 걸린 섹션만 활성화(시각 강조 전용 — 탭 연동은 폐지, owner 2026-07-11)
 function useSectionSpy() {
-  const [active, setActive] = useState('')
   useEffect(() => {
     const pages = document.querySelectorAll('.page')
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -64,7 +63,6 @@ function useSectionSpy() {
         if (e.isIntersecting) {
           e.target.classList.add('seen') // 한 번 활성화된 섹션은 내용 유지(비활성=감쇠만)
           pages.forEach((p) => p.classList.toggle('active', p === e.target))
-          setActive(e.target.id)
         }
       }),
       { rootMargin: '-42% 0px -42% 0px', threshold: 0 },
@@ -72,7 +70,6 @@ function useSectionSpy() {
     pages.forEach((p) => io.observe(p))
     return () => io.disconnect()
   }, [])
-  return active
 }
 
 // base 클래스와 병합해 rv를 부여한다(스프레드가 className을 덮어쓰는 사고 방지 — 리뷰 지적)
@@ -113,10 +110,10 @@ function Carousel() {
 }
 
 export default function App() {
-  const activeId = useSectionSpy()
+  useSectionSpy()
   return (
     <>
-      <SiteNav activeId={activeId} />
+      <SiteNav />
 
       <main className="lattice">
         <section className="cell hero center page" id="top">
@@ -202,7 +199,10 @@ export default function App() {
                 <p>{text}</p>
               </div>
             ))}
-            <a className="proof-link dir-more" href="/log/#roadmap">전체 로드맵 <Arrow /></a>
+            <p style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', margin: 0 }}>
+              <a className="proof-link dir-more" href="/projects/">전체 아카이브 <Arrow /></a>
+              <a className="proof-link dir-more" href="/log/#roadmap">전체 로드맵 <Arrow /></a>
+            </p>
           </div>
         </section>
 

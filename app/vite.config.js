@@ -16,6 +16,7 @@ export default defineConfig({
         join: fileURLToPath(new URL('./join/index.html', import.meta.url)),
         log: fileURLToPath(new URL('./log/index.html', import.meta.url)),
         reports: fileURLToPath(new URL('./reports/index.html', import.meta.url)),
+        projects: fileURLToPath(new URL('./projects/index.html', import.meta.url)),
       },
     },
   },
