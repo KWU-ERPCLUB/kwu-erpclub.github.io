@@ -6,9 +6,8 @@ export const PORTFOLIO_URL = '#' // {포폴URL} 확정 시 교체
 export const REPO_URL = 'https://github.com/KWU-ERPCLUB/kwu-erpclub.github.io'
 
 const NAV_LINKS = [
-  ['스터디', '/#studies'],
-  ['프로젝트', '/#projects'],
   ['결과물', '/#works'],
+  ['리포트', '/reports/'],
   ['소개', '/about/'],
   ['모집', '/join/'],
   ['기록', '/log/'],

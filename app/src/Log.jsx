@@ -2,6 +2,7 @@
 // 역할 3차 개정(2026-07-11): 세부 페이지=내부자 활용(운영 이력·로드맵·성과 기록). 수치 대시보드 아님(adsp-board 담당)
 // 내용은 확인된 사실만 기재(작업기록·저장소 기준). 추정·과장 금지
 import { SiteNav, SiteFooter, REPO_URL } from './shared.jsx'
+import DocSide from './DocSide.jsx'
 
 const ADSP_BOARD_URL = 'https://erpstudy.vercel.app'
 
@@ -39,18 +40,10 @@ export default function Log() {
       <SiteNav />
 
       <div className="doc-wrap">
-        <aside className="doc-side">
-          <nav aria-label="내부 문서">
-            <span className="side-label">이 페이지</span>
-            <a href="#roadmap">로드맵</a>
-            <a href="#history">운영 기록</a>
-            <a href="#stats">성과</a>
-            <span className="side-label" style={{ marginTop: '1.25rem' }}>내부 문서</span>
-            <a href="/log/" className="on">운영 기록</a>
-            <a href="#" aria-disabled="true">회의록 (예정)</a>
-            <a href="#" aria-disabled="true">플레이북 (예정)</a>
-          </nav>
-        </aside>
+        <DocSide
+          current="/log/"
+          sections={[['로드맵', '#roadmap'], ['운영 기록', '#history'], ['성과', '#stats']]}
+        />
 
         <main className="doc-main">
           <div className="doc-content">

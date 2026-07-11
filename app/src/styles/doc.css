@@ -119,6 +119,31 @@
 .roadmap .status { margin-bottom: 0; }
 .roadmap .td-num { font-family: var(--font-display); font-weight: 800; color: var(--text-sub); width: 2.2em; }
 
+/* ── §6 리포트 큐레이션 행 — 기관·연도 + 요지 + 원문 링크 ── */
+.rep-item {
+  display: grid;
+  grid-template-columns: 9.5em 1fr;
+  gap: 0.8rem;
+  align-items: start;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.rep-item:last-child { border-bottom: none; }
+.rep-org { font-size: 0.78rem; font-weight: 600; color: var(--text-sub); padding-top: 0.15rem; }
+.rep-item p { margin: 0; font-size: 0.88rem; line-height: 1.55; }
+.rep-src {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text);
+  text-decoration: none;
+  border-bottom: 2px solid var(--accent);
+  white-space: nowrap;
+}
+.rep-src:hover { color: var(--accent); }
+@media (max-width: 820px) {
+  .rep-item { grid-template-columns: 1fr; gap: 0.2rem; }
+}
+
 /* 완료 배지 — 로드맵 실측 중 필요 발견(규칙 v2의 배지 3종엔 없음 → owner 검토 대상) */
 .status.done { background: var(--surface); border: 1px solid var(--line); color: var(--text-sub); }
 
