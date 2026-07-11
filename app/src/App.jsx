@@ -62,6 +62,7 @@ function useSectionSpy() {
     const io = new IntersectionObserver(
       (entries) => entries.forEach((e) => {
         if (e.isIntersecting) {
+          e.target.classList.add('seen') // 한 번 활성화된 섹션은 내용 유지(비활성=감쇠만)
           pages.forEach((p) => p.classList.toggle('active', p === e.target))
           setActive(e.target.id)
         }

@@ -96,7 +96,8 @@
   transform: translateY(14px);
   transition: opacity 350ms ease-out, transform 350ms ease-out;
 }
-.page.active .rv { opacity: 1; transform: none; }
+/* seen: 한 번 활성화된 섹션은 내용을 유지 — 지나간 섹션이 '빈 페이지'로 보이는 결함 방지(실측 발견) */
+.page.active .rv, .page.seen .rv { opacity: 1; transform: none; }
 /* 키보드 포커스가 비활성(감쇠) 섹션에 들어가면 즉시 활성 취급 — 포커스 링 은닉 방지(WCAG 2.4.7) */
 .page:focus-within { opacity: 1; }
 .page:focus-within .rv { opacity: 1; transform: none; }
