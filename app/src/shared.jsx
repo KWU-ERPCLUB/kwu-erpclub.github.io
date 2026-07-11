@@ -1,16 +1,18 @@
-// 메인(/)·소개(/about/) 공용 — 네비게이션·푸터·화살표·링크 상수
-// 지원 기능(지원하기 CTA·지원폼)은 보류 — 2026-07-10 owner 지시(전면에 내세우지 않음)
+// 전 페이지 공용 — 네비게이션·푸터·화살표·링크 상수
+// 탭·라벨=영문 정책(owner 2026-07-11): 현업에서 영어로 더 자주 쓰는 용어는 영문, 본문은 한글
+// 지원 기능(지원하기 CTA·지원폼)은 보류 — 2026-07-10 owner 지시
 import { useState } from 'react'
 
-export const PORTFOLIO_URL = '#' // {포폴URL} 확정 시 교체
+export const PORTFOLIO_URL = '#' // {포폴URL} 확정 시 교체 (owner: 자리표시 유지)
 export const REPO_URL = 'https://github.com/KWU-ERPCLUB/kwu-erpclub.github.io'
 
 const NAV_LINKS = [
-  ['결과물', '/#works'],
-  ['리포트', '/reports/'],
-  ['소개', '/about/'],
-  ['모집', '/join/'],
-  ['기록', '/log/'],
+  ['WHY', '/#why'],
+  ['ROADMAP', '/#roadmap'],
+  ['PROJECTS', '/#projects'],
+  ['FAQ', '/#faq'],
+  ['JOIN', '/join/'],
+  ['LOG', '/log/'],
 ]
 
 export function Arrow() {
@@ -21,15 +23,17 @@ export function Arrow() {
   )
 }
 
-export function SiteNav() {
+// activeId: 메인 스크롤스파이가 현재 섹션 id를 넘기면 해당 탭이 강조된다(다른 페이지는 미지정)
+export function SiteNav({ activeId }) {
   const [open, setOpen] = useState(false)
+  const isOn = (href) => activeId && href === `/#${activeId}`
   return (
     <header className="nav">
       <div className="nav-inner">
         <a className="brand" href="/">KWU <em>ERP</em>연구회</a>
         <nav className="nav-links" aria-label="사이트 섹션">
           {NAV_LINKS.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+            <a key={href} href={href} className={isOn(href) ? 'on' : undefined}>{label}</a>
           ))}
         </nav>
         <button
@@ -65,7 +69,11 @@ export function SiteFooter() {
     <footer className="footer">
       <div className="footer-inner">
         <span className="f-brand">광운대학교 ERP연구회</span>
-        <a href={REPO_URL}>GitHub</a>
+        <span style={{ display: 'flex', gap: '1.25rem' }}>
+          <a href="/about/">ABOUT</a>
+          <a href="/reports/">REPORTS</a>
+          <a href={REPO_URL}>GITHUB</a>
+        </span>
       </div>
     </footer>
   )

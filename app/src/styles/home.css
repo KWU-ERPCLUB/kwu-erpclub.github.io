@@ -1,8 +1,7 @@
 /* 메인(/) 전용 — SPEC 메인 개편 v2: 방향 밴드·캐러셀·FAQ·스크롤 리빌.
    규격=디자인규칙 v2(로직: transform·opacity만, reduced-motion 존중). */
 
-/* ── 방향 밴드: 로드맵 프리뷰 리스트 ── */
-.dir-list { display: grid; text-align: left; }
+/* ── 로드맵/NEXT 행 ── */
 .dir-row {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -78,13 +77,92 @@
 .faq-item summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .faq-item p { margin: 0 0 1.1rem; padding: 0 0.25rem; font-size: 0.88rem; color: var(--text-sub); }
 
-/* ── 스크롤 리빌 — opacity·transform만, 300ms ── */
-.reveal {
-  opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 300ms ease-out, transform 300ms ease-out;
+/* ══ 메인 v3 (2026-07-11) — 섹션=페이지 강조 로직(넥스터즈 참조) ══ */
+
+/* 각 섹션이 "구분된 페이지"로 인식되게: 뷰포트 중앙에 오면 활성, 나머지는 감쇠 */
+.page {
+  min-height: 86vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  scroll-margin-top: 60px;
+  opacity: 0.35;
+  transition: opacity 350ms ease-out;
 }
-.reveal.in { opacity: 1; transform: none; }
+.page.active { opacity: 1; }
+/* 활성 섹션 안에서만 내용이 순차 등장 */
+.page .rv {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 350ms ease-out, transform 350ms ease-out;
+}
+.page.active .rv { opacity: 1; transform: none; }
+/* 키보드 포커스가 비활성(감쇠) 섹션에 들어가면 즉시 활성 취급 — 포커스 링 은닉 방지(WCAG 2.4.7) */
+.page:focus-within { opacity: 1; }
+.page:focus-within .rv { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
-  .reveal { transition: none; opacity: 1; transform: none; }
+  .page, .page .rv { transition: none; opacity: 1; transform: none; }
+}
+
+/* 섹션 머리: 인덱스(01 — WHY, 영문 라벨) + 헤드라인 */
+.page-idx {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  color: var(--accent); /* 화이트리스트 ④ 섹션 인덱스 */
+  display: block;
+  margin-bottom: 1.1rem;
+}
+
+/* ── WHY 하단 데이터 스트립 — 검증 스탯 3타일(기존 stat 문법 재사용) ── */
+.data-strip { margin-top: 3rem; }
+.data-note { font-size: 0.82rem; color: var(--text-sub); margin: 1.25rem 0 0; }
+
+/* ── ROADMAP 분기 그래프 — 트렁크(연구회 계보) → 분기(AI 스터디) ── */
+.branch { max-width: 620px; margin: 0 auto; text-align: left; }
+.b-node { position: relative; padding: 0 0 1.7rem 2.3rem; }
+.b-node::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 16px;
+  bottom: -2px;
+  width: 2px;
+  background: var(--line);
+}
+.b-node:last-child::before { display: none; }
+.b-node::after {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 5px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--text-sub);
+}
+.b-era { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; color: var(--text-sub); display: block; margin-bottom: 0.25rem; }
+.b-node h3 { margin: 0 0 0.25rem; font-size: 1rem; }
+.b-node p { margin: 0; font-size: 0.86rem; color: var(--text-sub); }
+/* 분기점: 자식 갈래 묶음 */
+.b-fork { margin: 0 0 0 2.3rem; padding: 0.2rem 0 0 1.7rem; border-left: 2px solid var(--line); }
+.b-fork .b-node { padding-left: 1.9rem; }
+.b-fork .b-node::before { left: 6px; }
+.b-fork .b-node::after { left: 0; }
+/* 신설 갈래 = 강조 노드(화이트리스트 ⑦ 타임라인 점) */
+.b-node.now::after { border-color: var(--accent); background: var(--accent); }
+.b-node.now h3 em { font-style: normal; color: var(--accent); }
+.b-node .status { margin: 0.4rem 0 0; }
+
+/* ── PROJECTS 향후 목록 ── */
+.next-list { max-width: 620px; margin: 2.25rem auto 0; text-align: left; }
+.next-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--text-sub);
+  display: block;
+  margin-bottom: 0.5rem;
 }

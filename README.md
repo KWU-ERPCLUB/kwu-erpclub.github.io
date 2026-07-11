@@ -7,7 +7,7 @@
 
 ## 현재상태 (2026-07-11 — 메인 개편 v2 배포)
 - **라이브: https://kwu-erpclub.github.io/** — 조직 KWU-ERPCLUB + GitHub Pages, main push = 자동 배포. 메인 v2 push 완료(owner 승인)
-- **메인 v2**: 소개 간판 6섹션(히어로·방향 밴드·활동·결과물 캐러셀·운영 공개·FAQ 아코디언) — SPEC=`SPEC.md`, 성과 스탯 킬(유산 관점). 로직=캐러셀(scroll-snap)·FAQ(details)·스크롤 리빌(IO)
+- **메인 v3**: 섹션=페이지 강조 로직(스크롤 시 현재 섹션만 활성·나머지 감쇠, IO 중앙 밴드) + 중앙 소형 **영문 탭 6**(WHY·ROADMAP·PROJECTS·FAQ·JOIN·LOG, 스크롤스파이). 구성: 히어로→WHY(존재 의의+데이터 스트립 3)→ROADMAP(연구회→AI 스터디 분기 그래프)→PROJECTS(캐러셀+NEXT)→FAQ. 성과 스탯 없음(유산 관점 유지). 언어 정책: 탭·라벨=영문/본문=한글
 - **내부형 2페이지**: `/log/`(운영 기록 — 로드맵·이력·성과) · `/reports/`(업계 리포트 — 선행조사 검증 팩트 11건, 효과/격차/채용) + 공용 사이드바(DocSide)
 - MPA 5엔트리(/ · /about/ · /join/ · /log/ · /reports/), 문안=`../docs/문안-메인.md` 7차(§main-v2), 디자인=디자인규칙 v2(수치 규격)
 

@@ -1,34 +1,40 @@
-// 메인(/) = 소개 간판 (역할 3차 개정 2026-07-11: 외부 방문자용 — 정체성·방향·실물·운영 공개를 한눈에)
-// SPEC=site/SPEC.md (메인 개편 v2). 콘텐츠=Hack Club 노선(투명 운영), 로직=넥스터즈 참조(캐러셀·FAQ·리빌)
-// 문안 원천: erp-club/docs/문안-메인.md. 성과 과시 금지(owner) — 수치는 검증된 것만, 출처 필수
-import { useEffect, useRef } from 'react'
+// 메인(/) v3 — 섹션=페이지 강조 로직(owner 2026-07-11): 스크롤에 따라 현재 섹션만 활성(밝게)·
+// 나머지 감쇠 → 세로로 이어져 있어도 "구분된 페이지"로 인식. 탭·라벨=영문 정책.
+// 구성(owner 지정): WHY(하단=업계 데이터) → ROADMAP(연구회→AI 스터디 분기 시각화) → PROJECTS → FAQ
+// 문안 원천: erp-club/docs/문안-메인.md. 수치=검증분만+출처(선행조사·/reports와 단일원천)
+import { useEffect, useRef, useState } from 'react'
 import { Arrow, SiteNav, SiteFooter, REPO_URL } from './shared.jsx'
 
 const ADSP_BOARD_URL = 'https://erpstudy.vercel.app'
 
-const DIRECTION = [
-  ['live', '진행중', 'ADsP 1기 — 진도 보드로 운영 중'],
-  ['prep', '모집 준비', 'MIS·AI 스터디 1기 — 스터디명·인원 확정 대기'],
-  ['planned', '예정', '1기 운영 — AI 활용 연구, 결과물 제작·배포'],
-  ['planned', '예정', '심화 — SAP 트랙 · 공모전 출품'],
+const DATA = [
+  ['69.2%', '채용 시 AI 역량 고려 — 인사담당자 조사 1위', '대한상공회의소 2025'],
+  ['36.3%', 'AI 채용공고 최대 직무군은 개발자가 아니라 기획·설계', '한국직업능력연구원 2026'],
+  ['40%', 'AI 활용 시 업무 시간 단축, 품질 평가는 +18%', 'MIT · Science 2023'],
 ]
 
-const WORKS = [
+const PROJECTS = [
   {
-    title: 'ADsP 진도 보드',
-    desc: '스터디 진도·성취도를 관리하는 웹앱. ADsP 1기가 사용 중입니다.',
+    title: 'ADsP Study Board',
+    desc: 'ADsP 1기 스터디의 진도·성취도 웹앱. 지금 운영 중입니다.',
     links: [['열어보기', ADSP_BOARD_URL]],
   },
   {
-    title: '이 사이트',
-    desc: '연구회 허브 자체가 결과물입니다 — AI 협업 · git · 무료 배포로 제작.',
-    links: [['GitHub 소스', REPO_URL]],
-  },
-  {
-    title: '운영자 포트폴리오',
+    title: 'Operator Portfolio',
     desc: '스터디에서 만들게 될 것의 원형. 제작 중입니다.',
     links: [],
   },
+  {
+    title: 'This Site',
+    desc: '이 사이트 자체가 결과물입니다 — AI 협업 · git · 무료 배포.',
+    links: [['GitHub 소스', REPO_URL]],
+  },
+]
+
+const NEXT = [
+  ['prep', '모집 준비', 'MIS·AI 스터디 1기 — 스터디명·인원 확정 대기'],
+  ['planned', '예정', '1기 결과물 아카이브 — 각자의 실물이 이 자리에 모입니다'],
+  ['planned', '예정', 'SQLD 스터디 · SAP Track · 공모전 출품'],
 ]
 
 const FAQ = [
@@ -41,26 +47,38 @@ const FAQ = [
   ['ERP연구회와는 어떤 관계인가요?',
     'ERP연구회 산하 스터디입니다. 연구회에는 SAP 실습·공모전 심화 트랙이 있습니다.'],
   ['언제 모집하나요?',
-    '준비 중입니다. 일정이 확정되면 모집 안내 페이지에 공지됩니다.'],
+    '준비 중입니다. 일정이 확정되면 모집 안내(JOIN)에 공지됩니다.'],
 ]
 
-function useReveal() {
+// 섹션=페이지 스파이: 뷰포트 중앙 밴드에 걸린 섹션만 활성화 + 현재 탭 강조
+function useSectionSpy() {
+  const [active, setActive] = useState('')
   useEffect(() => {
-    const els = document.querySelectorAll('.reveal')
+    const pages = document.querySelectorAll('.page')
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      els.forEach((el) => el.classList.add('in'))
+      pages.forEach((p) => p.classList.add('active'))
       return
     }
     const io = new IntersectionObserver(
       (entries) => entries.forEach((e) => {
-        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target) }
+        if (e.isIntersecting) {
+          pages.forEach((p) => p.classList.toggle('active', p === e.target))
+          setActive(e.target.id)
+        }
       }),
-      { threshold: 0.15 },
+      { rootMargin: '-42% 0px -42% 0px', threshold: 0 },
     )
-    els.forEach((el) => io.observe(el))
+    pages.forEach((p) => io.observe(p))
     return () => io.disconnect()
   }, [])
+  return active
 }
+
+// base 클래스와 병합해 rv를 부여한다(스프레드가 className을 덮어쓰는 사고 방지 — 리뷰 지적)
+const rv = (i, base = '') => ({
+  className: base ? `${base} rv` : 'rv',
+  style: { transitionDelay: `${i * 80}ms` },
+})
 
 function Carousel() {
   const ref = useRef(null)
@@ -70,8 +88,8 @@ function Carousel() {
   }
   return (
     <>
-      <div className="carousel" ref={ref} aria-label="결과물 목록">
-        {WORKS.map((w) => (
+      <div className="carousel" ref={ref} aria-label="프로젝트 목록">
+        {PROJECTS.map((w) => (
           <div className="car-card" key={w.title}>
             <h3>{w.title}</h3>
             <p>{w.desc}</p>
@@ -86,91 +104,111 @@ function Carousel() {
         ))}
       </div>
       <div className="car-nav">
-        <button type="button" className="btn-2nd car-btn" aria-label="이전 결과물" onClick={() => slide(-1)}>←</button>
-        <button type="button" className="btn-2nd car-btn" aria-label="다음 결과물" onClick={() => slide(1)}>→</button>
+        <button type="button" className="btn-2nd car-btn" aria-label="이전 프로젝트" onClick={() => slide(-1)}>←</button>
+        <button type="button" className="btn-2nd car-btn" aria-label="다음 프로젝트" onClick={() => slide(1)}>→</button>
       </div>
     </>
   )
 }
 
 export default function App() {
-  useReveal()
+  const activeId = useSectionSpy()
   return (
     <>
-      <SiteNav />
+      <SiteNav activeId={activeId} />
 
-      <main id="top" className="lattice">
-        <section className="cell hero center hero-hub">
-          <span className="eyebrow">광운대학교 경영학부</span>
-          <h1><em>ERP</em>연구회</h1>
-          <p className="hero-sub">경영·MIS에 AI를 접목하는 법을 연구하고, 결과를 실물로 남깁니다.</p>
+      <main className="lattice">
+        <section className="cell hero center page" id="top">
+          <span className="eyebrow rv">KWANGWOON UNIV. · SCHOOL OF BUSINESS</span>
+          <h1 {...rv(1)}><em>ERP</em>연구회</h1>
+          <p className="hero-sub rv" style={{ transitionDelay: '160ms' }}>
+            경영·MIS에 AI를 접목하는 법을 연구하고, 결과를 실물로 남깁니다.
+          </p>
         </section>
 
-        <section className="cell center" id="direction">
-          <span className="eyebrow">방향</span>
-          <h2 className="headline">앞으로 <em>할 일</em></h2>
-          <div className="row2">
-            <div style={{ textAlign: 'left' }}>
-              <h3>로드맵</h3>
-              <div className="dir-list">
-                {DIRECTION.map(([status, label, text]) => (
-                  <div className="dir-row" key={text}>
-                    <span className={`status ${status}`}>{label}</span>
-                    <p>{text}</p>
-                  </div>
-                ))}
+        <section className="cell center page" id="why">
+          <span className="page-idx rv">01 — WHY</span>
+          <h2 {...rv(1, 'headline')}>왜 <em>만들었나</em></h2>
+          <p className="why-line rv" style={{ transitionDelay: '160ms' }}>
+            쓰는 사람은 많지만, 잘 쓰는 법을 배우는 자리는 없다.
+          </p>
+          <p className="mis-note rv" style={{ transitionDelay: '240ms', marginTop: 0 }}>
+            20대 4명 중 3명이 이미 생성형 AI를 씁니다. 그러나 활용은 검색·요약 수준에 머물고,
+            경영·MIS 맥락에서 활용을 훈련하는 자리는 비어 있습니다 — 그 자리를 만들었습니다.
+          </p>
+          <div className="row3 data-strip rv" style={{ transitionDelay: '320ms' }}>
+            {DATA.map(([num, label, src]) => (
+              <div key={src} style={{ textAlign: 'left' }}>
+                <span className="stat-num">{num}</span>
+                <span className="stat-label">{label}</span>
+                <span className="stat-src">{src}</span>
               </div>
-              <a className="proof-link dir-more" href="/log/#roadmap">전체 로드맵 <Arrow /></a>
+            ))}
+          </div>
+          <p className="data-note rv" style={{ transitionDelay: '400ms' }}>
+            원문을 확인한 자료만 게재합니다 — 전체는 <a className="proof-link" href="/reports/">REPORTS <Arrow /></a>
+          </p>
+        </section>
+
+        <section className="cell center page" id="roadmap">
+          <span className="page-idx rv">02 — ROADMAP</span>
+          <h2 {...rv(1, 'headline')}>연구회에서 <em>분기</em>하다</h2>
+          <div className="branch rv" style={{ transitionDelay: '160ms' }}>
+            <div className="b-node">
+              <span className="b-era">ORIGIN</span>
+              <h3>ERP연구회</h3>
+              <p>경영학부의 MIS 스터디 — ERP와 정보시스템을 다뤄 온 뿌리.</p>
             </div>
-            <div style={{ textAlign: 'left' }}>
-              <h3>업계 리포트</h3>
-              <p>AI 활용의 효과·격차·채용에 대한 검증된 조사와 연구를 모아둡니다. 전 항목 출처를 답니다.</p>
-              <div className="card-links">
-                <a className="proof-link" href="/reports/">리포트 보기 <Arrow /></a>
+            <div className="b-node">
+              <span className="b-era">SAP ERA</span>
+              <h3>SAP 특강</h3>
+              <p>실무 컨설턴트가 이끈 MM·ABAP 교육의 시대.</p>
+            </div>
+            <div className="b-node">
+              <span className="b-era">2026</span>
+              <h3>ADsP 스터디 1기</h3>
+              <p>데이터분석 준전문가 대비 — 진도 보드로 운영 중.</p>
+              <span className="status live">진행중</span>
+            </div>
+            <div className="b-fork">
+              <div className="b-node now">
+                <span className="b-era">NEW BRANCH</span>
+                <h3>MIS·AI 스터디 <em>신설</em></h3>
+                <p>경영·MIS에 AI를 접목하는 법을 연구하는 새 갈래. 이 사이트가 그 시작입니다.</p>
+                <span className="status prep">모집 준비</span>
+              </div>
+              <div className="b-node">
+                <span className="b-era">DEEP DIVE</span>
+                <h3>SAP Track · 공모전</h3>
+                <p>AI 친숙도를 갖춘 뒤의 심화 갈래.</p>
+                <span className="status planned">예정</span>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="cell center" id="tracks">
-          <span className="eyebrow">활동</span>
-          <h2 className="headline">무엇을 <em>하나</em></h2>
-          <div className="row2">
-            <div className="reveal" style={{ textAlign: 'left' }}>
-              <span className="feat-idx">1층 — 전원</span>
-              <h3>AI 활용 연구</h3>
-              <p>경영·MIS 문제에 AI를 적용하는 법을 연구하고, 결과를 웹으로 배포합니다.</p>
-            </div>
-            <div className="reveal" style={{ textAlign: 'left', transitionDelay: '80ms' }}>
-              <span className="feat-idx">2층 — 선택 심화</span>
-              <h3>SAP 트랙 · 공모전</h3>
-              <p>AI 친숙도를 갖춘 뒤 실서버 실습과 공모전 출품으로 확장합니다.</p>
-            </div>
+        <section className="cell center page" id="projects">
+          <span className="page-idx rv">03 — PROJECTS</span>
+          <h2 {...rv(1, 'headline')}>남긴 <em>실물</em>, 그리고 다음</h2>
+          <div {...rv(2)}>
+            <Carousel />
+          </div>
+          <div className="next-list rv" style={{ transitionDelay: '240ms' }}>
+            <span className="next-label">NEXT</span>
+            {NEXT.map(([status, label, text]) => (
+              <div className="dir-row" key={text}>
+                <span className={`status ${status}`}>{label}</span>
+                <p>{text}</p>
+              </div>
+            ))}
+            <a className="proof-link dir-more" href="/log/#roadmap">전체 로드맵 <Arrow /></a>
           </div>
         </section>
 
-        <section className="cell center" id="works">
-          <span className="eyebrow">결과물</span>
-          <h2 className="headline">남긴 <em>실물</em></h2>
-          <Carousel />
-        </section>
-
-        <section className="cell" id="open">
-          <div className="cell-dark" style={{ padding: '2.5rem 2rem', textAlign: 'left' }}>
-            <h3>운영을 공개합니다</h3>
-            <p>어떻게 운영되는지 기록으로 남기고, 누구나 볼 수 있게 둡니다.</p>
-            <div className="card-links">
-              <a className="proof-link" href="/log/">운영 기록 <Arrow /></a>
-              <a className="proof-link" href="/reports/">업계 리포트 <Arrow /></a>
-              <a className="proof-link" href={`${REPO_URL}/commits/main`}>커밋 이력 <Arrow /></a>
-            </div>
-          </div>
-        </section>
-
-        <section className="cell center" id="faq">
-          <span className="eyebrow">자주 묻는 질문</span>
-          <h2 className="headline">묻고 <em>답하기</em></h2>
-          <div className="faq">
+        <section className="cell center page" id="faq">
+          <span className="page-idx rv">04 — FAQ</span>
+          <h2 {...rv(1, 'headline')}>묻고 <em>답하기</em></h2>
+          <div className="faq rv" style={{ transitionDelay: '160ms' }}>
             {FAQ.map(([q, a]) => (
               <details className="faq-item" key={q}>
                 <summary>{q}</summary>
@@ -178,8 +216,8 @@ export default function App() {
               </details>
             ))}
           </div>
-          <p className="join-note" style={{ marginTop: '1.75rem' }}>
-            모집 상세는 <a className="proof-link" href="/join/">모집 안내 <Arrow /></a>
+          <p className="join-note rv" style={{ marginTop: '1.75rem', transitionDelay: '240ms' }}>
+            모집 상세는 <a className="proof-link" href="/join/">JOIN <Arrow /></a>
           </p>
         </section>
       </main>
