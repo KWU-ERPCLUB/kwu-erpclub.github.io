@@ -11,6 +11,7 @@ const NAV_LINKS = [
   ['결과물', '/#works'],
   ['소개', '/about/'],
   ['모집', '/join/'],
+  ['기록', '/log/'],
 ]
 
 export function Arrow() {

@@ -517,3 +517,50 @@ body {
 .footer .f-brand { font-family: var(--font-display); font-weight: 800; color: #fff; }
 .footer a { color: rgba(255, 255, 255, 0.65); text-decoration: none; }
 .footer a:hover { color: #fff; }
+
+/* ══════════════════════════════════════════════
+   v2 (2026-07-11) — 디자인규칙 v2 구현
+   §5 인터랙션 4상태 · §4 버튼 위계 · §3 내부형 밀도 · §6 내부형 패턴
+   ══════════════════════════════════════════════ */
+
+/* ── §5 인터랙션 상태 — 150ms ease-out, transform·color·bg만 전환 ── */
+.cta, .nav-cta, .btn-2nd, .proof-link, .nav-links a, .footer a, .nav-toggle, .doc-side a {
+  transition: background-color 150ms ease-out, border-color 150ms ease-out,
+    color 150ms ease-out, transform 100ms ease-out;
+}
+.cta:hover, .nav-cta:hover { background: #2d2d2d; } /* 차콜 hover 시프트 */
+.cta:active, .nav-cta:active, .btn-2nd:active { transform: scale(0.98); }
+.proof-link:hover { color: var(--accent); }
+.proof-dark .proof-link:hover { color: #d18f9a; }
+[disabled], [aria-disabled='true'], .is-disabled {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cta, .nav-cta, .btn-2nd, .proof-link, .nav-links a, .footer a, .nav-toggle, .doc-side a {
+    transition: none;
+  }
+  .cta:active, .nav-cta:active, .btn-2nd:active { transform: none; }
+}
+
+/* ── §4 Secondary 버튼(헤어라인 pill) — Primary=.cta(화면당 1개), Tertiary=.proof-link ── */
+.btn-2nd {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 40px;
+  padding: 0 1.3rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: #fff;
+  color: var(--text);
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn-2nd:hover { border-color: var(--text); }
+
+/* §3 내부형 레이아웃·§6 콘텐츠 패턴(doc·log·roadmap·callout) = styles/doc.css
+   (내부형 페이지 엔트리에서만 import — 300줄 규격으로 분리) */
