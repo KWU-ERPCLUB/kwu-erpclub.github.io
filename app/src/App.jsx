@@ -20,11 +20,6 @@ const PROJECTS = [
     links: [['열어보기', ADSP_BOARD_URL]],
   },
   {
-    title: 'Operator Portfolio',
-    desc: '스터디에서 만들게 될 것의 원형. 제작 중입니다.',
-    links: [],
-  },
-  {
     title: 'This Site',
     desc: '이 사이트 자체가 결과물입니다 — AI 협업 · git · 무료 배포.',
     links: [['GitHub 소스', REPO_URL]],
@@ -33,7 +28,7 @@ const PROJECTS = [
 
 const NEXT = [
   ['prep', '모집 준비', 'MIS·AI 스터디 1기 — 스터디명·인원 확정 대기'],
-  ['planned', '예정', '1기 결과물 아카이브 — 각자의 실물이 이 자리에 모입니다'],
+  ['planned', '준비', '공모전 프레임워크 — 공모전 워크프로세스를 효율화하는 재사용 틀'],
   ['planned', '예정', 'SQLD 스터디 · SAP Track · 공모전 출품'],
 ]
 

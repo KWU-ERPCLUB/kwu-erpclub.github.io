@@ -8,6 +8,7 @@ const ADSP_BOARD_URL = 'https://erpstudy.vercel.app'
 const NOW = [
   ['live', '진행중', 'ADsP 스터디 1기 — 제50회 대비, 진도 보드로 운영'],
   ['prep', '모집 준비', 'MIS·AI 스터디 1기 — 스터디명·인원 확정 대기'],
+  ['prep', '준비', '공모전 프레임워크 — 공모전 워크프로세스를 효율화하는 재사용 틀'],
 ]
 
 // [제목, 연도, 설명, 기여, 상태(label class), 링크들]
@@ -27,14 +28,6 @@ const ARCHIVE = [
     by: '운영진 제작 · 소스 공개',
     status: ['live', '운영 중'],
     links: [['GitHub 소스', REPO_URL]],
-  },
-  {
-    title: 'Operator Portfolio',
-    year: '2026',
-    desc: '스터디에서 만들게 될 것의 원형이 되는 포트폴리오.',
-    by: '운영진 제작',
-    status: ['prep', '제작 중'],
-    links: [],
   },
 ]
 

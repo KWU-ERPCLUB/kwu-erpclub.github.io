@@ -3,7 +3,6 @@
 // 지원 기능(지원하기 CTA·지원폼)은 보류 — 2026-07-10 owner 지시
 import { useState } from 'react'
 
-export const PORTFOLIO_URL = '#' // {포폴URL} 확정 시 교체 (owner: 자리표시 유지)
 export const REPO_URL = 'https://github.com/KWU-ERPCLUB/kwu-erpclub.github.io'
 
 // 탭=페이지 이동만(owner 2026-07-11 — 메인 섹션 앵커 퀵바 폐지).

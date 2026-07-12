@@ -9,7 +9,7 @@ const ADSP_BOARD_URL = 'https://erpstudy.vercel.app'
 const ROADMAP = [
   ['0', '허브 사이트 구축·배포 (kwu-erpclub.github.io)', 'done', '완료'],
   ['1', 'MIS·AI 스터디 1기 모집 — 스터디명·인원 확정 대기', 'prep', '모집 준비'],
-  ['2', '1기 운영 — AI 활용 연구 + 결과물 제작·배포', 'planned', '예정'],
+  ['2', '1기 운영 — AI 활용 연구 + 하위 프로젝트 실전', 'planned', '예정'],
   ['3', 'SQLD 스터디', 'planned', '예정'],
   ['4', '심화 — SAP 트랙 · 공모전 출품', 'planned', '예정'],
 ]
