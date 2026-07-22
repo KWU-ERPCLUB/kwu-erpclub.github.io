@@ -29,6 +29,7 @@ export default defineConfig({
         log: fileURLToPath(new URL('./log/index.html', import.meta.url)),
         reports: fileURLToPath(new URL('./reports/index.html', import.meta.url)),
         projects: fileURLToPath(new URL('./projects/index.html', import.meta.url)),
+        membersIndex: fileURLToPath(new URL('./members/index.html', import.meta.url)),
         ...memberEntries,
       },
     },
