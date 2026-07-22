@@ -1,0 +1,23 @@
+/* 허브 신규 페이지 공용 — 디자인 정합(P3) 전 최소 스타일. 토큰은 global.css 팔레트 준수(light-only) */
+.hub-page { max-width: 880px; margin: 0 auto; padding: 56px 20px 96px; }
+.hub-head h1 { font-size: 32px; letter-spacing: 0.02em; margin: 0 0 8px; }
+.hub-head p { color: #555; margin: 0 0 28px; }
+.hub-filter { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+.hub-filter button { border: 1px solid #ddd; background: #fff; padding: 6px 14px; border-radius: 999px; cursor: pointer; font-size: 14px; }
+.hub-filter button.on { background: #7a1f2b; border-color: #7a1f2b; color: #fff; }
+.hub-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.hub-card button { width: 100%; text-align: left; background: #fff; border: 1px solid #e5e2dd; border-radius: 10px; padding: 18px 20px; cursor: pointer; display: grid; gap: 6px; }
+.hub-card button:hover { border-color: #7a1f2b; }
+.hub-card-title { font-size: 17px; font-weight: 700; }
+.hub-meta { font-size: 13px; color: #777; }
+.hub-empty { color: #777; padding: 32px 0; }
+.hub-back { background: none; border: none; color: #7a1f2b; cursor: pointer; padding: 0; margin-bottom: 20px; font-size: 14px; }
+.hub-detail h1 { font-size: 26px; margin: 0 0 6px; }
+.hub-md { line-height: 1.85; font-size: 16px; }
+.hub-md a { color: #7a1f2b; }
+.hub-badge { display: inline-block; font-size: 12px; padding: 2px 10px; border-radius: 999px; border: 1px solid #ddd; }
+.hub-badge.active { background: #1d5c3f; color: #fff; border-color: #1d5c3f; }
+.hub-badge.planned { background: #f0eeea; color: #555; }
+.hub-badge.prep { background: #b98200; color: #fff; border-color: #b98200; }
+.hub-badge.archived { background: #888; color: #fff; border-color: #888; }
+@media (max-width: 480px) { .hub-page { padding-top: 36px; } .hub-head h1 { font-size: 26px; } }

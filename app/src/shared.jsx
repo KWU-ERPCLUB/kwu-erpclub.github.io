@@ -8,6 +8,10 @@ export const REPO_URL = 'https://github.com/KWU-ERPCLUB/kwu-erpclub.github.io'
 // 탭=페이지 이동만(owner 2026-07-11 — 메인 섹션 앵커 퀵바 폐지).
 // 외부: PROJECTS·ABOUT·JOIN / 내부 진입: LOG(내부 문서 허브 — REPORTS 등은 LOG 사이드바)
 const NAV_LINKS = [
+  ['ARTICLES', '/articles/'],
+  ['SEMINARS', '/seminars/'],
+  ['LABS', '/labs/'],
+  ['MEMBERS', '/members/'],
   ['PROJECTS', '/projects/'],
   ['ABOUT', '/about/'],
   ['JOIN', '/join/'],
