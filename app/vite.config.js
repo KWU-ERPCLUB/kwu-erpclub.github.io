@@ -22,6 +22,8 @@ export default defineConfig({
       input: {
         main: fileURLToPath(new URL('./index.html', import.meta.url)),
         articles: fileURLToPath(new URL('./articles/index.html', import.meta.url)),
+        seminars: fileURLToPath(new URL('./seminars/index.html', import.meta.url)),
+        labs: fileURLToPath(new URL('./labs/index.html', import.meta.url)),
         about: fileURLToPath(new URL('./about/index.html', import.meta.url)),
         join: fileURLToPath(new URL('./join/index.html', import.meta.url)),
         log: fileURLToPath(new URL('./log/index.html', import.meta.url)),
