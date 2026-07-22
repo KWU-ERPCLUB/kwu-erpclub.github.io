@@ -1,0 +1,4 @@
+# SPEC §6 — 공용 영역 = 오너 승인. content/·members/는 멤버 직접 push 영역(소유 미지정).
+* @bapzzi
+/app/content/
+/app/members/
