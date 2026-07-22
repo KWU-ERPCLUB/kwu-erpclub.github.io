@@ -1,0 +1,6 @@
+[
+  { "id": "adsp", "name": "ADsP 자격증", "type": "자격증", "status": "active", "handoff": "신해원전담", "tool": "https://erpstudy.vercel.app", "deliverable": "제50회 대비 진도·성취 관리" },
+  { "id": "sqld", "name": "SQLD 자격증", "type": "자격증", "status": "planned", "handoff": "신해원전담", "tool": null, "deliverable": "adsp 방식 복제 진도 관리" },
+  { "id": "gongmojeon-framework", "name": "공모전 프레임워크", "type": "공모전", "status": "archived", "handoff": "신해원전담", "tool": null, "deliverable": "실패사례 아카이브" },
+  { "id": "sap", "name": "SAP 트랙", "type": "실무", "status": "planned", "handoff": "신해원전담", "tool": null, "deliverable": "서버 실습 심화(향후)" }
+]
