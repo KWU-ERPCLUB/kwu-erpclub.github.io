@@ -1,10 +1,19 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { fileURLToPath } from 'node:url'
+import { readdirSync, existsSync } from 'node:fs'
+import { join } from 'node:path'
 
-// base '/' 전제 = 조직 루트 사이트(<org>.github.io repo)로 배포.
-// 프로젝트 사이트(<org>.github.io/<repo>)로 가면 base를 '/<repo>/'로 변경할 것.
-// MPA: /about/·/join/은 별도 HTML 엔트리(dist/<dir>/index.html) — GitHub Pages가 디렉터리 index로 서빙.
+// 멤버 개인 페이지 = members/<id>/index.html 자동 엔트리 (SPEC §7 — 폴더 추가만으로 페이지 생성)
+const membersDir = fileURLToPath(new URL('./members', import.meta.url))
+const memberEntries = {}
+if (existsSync(membersDir)) {
+  for (const d of readdirSync(membersDir, { withFileTypes: true })) {
+    const html = join(membersDir, d.name, 'index.html')
+    if (d.isDirectory() && existsSync(html)) memberEntries[`member-${d.name}`] = html
+  }
+}
+
 export default defineConfig({
   plugins: [react()],
   base: '/',
@@ -17,6 +26,7 @@ export default defineConfig({
         log: fileURLToPath(new URL('./log/index.html', import.meta.url)),
         reports: fileURLToPath(new URL('./reports/index.html', import.meta.url)),
         projects: fileURLToPath(new URL('./projects/index.html', import.meta.url)),
+        ...memberEntries,
       },
     },
   },
