@@ -17,14 +17,12 @@ export default function MembersPage() {
           {list.map((m) => (
             <li key={m.id} className="hub-card">
               {m.page ? (
-                <a href={`/members/${m.id}/`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                  <div style={{ padding: '18px 20px', display: 'grid', gap: 6 }}>
-                    <span className="hub-card-title">{m.name}</span>
-                    <span className="hub-meta">{m.intro} · {(m.tracks || []).join(' · ')}</span>
-                  </div>
+                <a className="hub-card-link" href={`/members/${m.id}/`}>
+                  <span className="hub-card-title">{m.name}</span>
+                  <span className="hub-meta">{m.intro} · {(m.tracks || []).join(' · ')}</span>
                 </a>
               ) : (
-                <div style={{ padding: '18px 20px', display: 'grid', gap: 6 }}>
+                <div className="hub-card-inner">
                   <span className="hub-card-title">{m.name}</span>
                   <span className="hub-meta">{m.intro} · 개인 페이지 준비</span>
                 </div>

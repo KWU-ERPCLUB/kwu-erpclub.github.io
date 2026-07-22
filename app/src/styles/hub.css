@@ -1,23 +1,282 @@
-/* 허브 신규 페이지 공용 — 디자인 정합(P3) 전 최소 스타일. 토큰은 global.css 팔레트 준수(light-only) */
-.hub-page { max-width: 880px; margin: 0 auto; padding: 56px 20px 96px; }
-.hub-head h1 { font-size: 32px; letter-spacing: 0.02em; margin: 0 0 8px; }
-.hub-head p { color: #555; margin: 0 0 28px; }
-.hub-filter { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
-.hub-filter button { border: 1px solid #ddd; background: #fff; padding: 6px 14px; border-radius: 999px; cursor: pointer; font-size: 14px; }
-.hub-filter button.on { background: #7a1f2b; border-color: #7a1f2b; color: #fff; }
-.hub-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
-.hub-card button { width: 100%; text-align: left; background: #fff; border: 1px solid #e5e2dd; border-radius: 10px; padding: 18px 20px; cursor: pointer; display: grid; gap: 6px; }
-.hub-card button:hover { border-color: #7a1f2b; }
-.hub-card-title { font-size: 17px; font-weight: 700; }
-.hub-meta { font-size: 13px; color: #777; }
-.hub-empty { color: #777; padding: 32px 0; }
-.hub-back { background: none; border: none; color: #7a1f2b; cursor: pointer; padding: 0; margin-bottom: 20px; font-size: 14px; }
-.hub-detail h1 { font-size: 26px; margin: 0 0 6px; }
-.hub-md { line-height: 1.85; font-size: 16px; }
-.hub-md a { color: #7a1f2b; }
-.hub-badge { display: inline-block; font-size: 12px; padding: 2px 10px; border-radius: 999px; border: 1px solid #ddd; }
-.hub-badge.active { background: #1d5c3f; color: #fff; border-color: #1d5c3f; }
-.hub-badge.planned { background: #f0eeea; color: #555; }
-.hub-badge.prep { background: #b98200; color: #fff; border-color: #b98200; }
-.hub-badge.archived { background: #888; color: #fff; border-color: #888; }
-@media (max-width: 480px) { .hub-page { padding-top: 36px; } .hub-head h1 { font-size: 26px; } }
+/* 허브 신규 페이지 공용 — 디자인 정합 P3(SPEC C9).
+   기존 디자인 언어 이식: 토큰·버튼 위계·인터랙션 4상태·내부형 밀도 = 디자인규칙 v2.
+   팔레트는 global.css 토큰만(off-palette hex 금지) · light-only. */
+
+/* ── 페이지 셸 (내부형 밀도 §3) ───────────────── */
+.hub-page {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 5rem; /* 내부형 — 소개형 4.5rem의 ~55% */
+}
+@media (max-width: 700px) { .hub-page { padding: 2rem 1.25rem 3.5rem; } }
+
+/* ── 페이지 머리 — 브랜드 타이포 승계(Paperlogy display + 버건디 em) ── */
+.hub-head {
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 2rem;
+}
+.hub-head h1 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.9rem, 4vw, 2.6rem);
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.6rem;
+}
+.hub-head h1 em { font-style: normal; color: var(--accent); } /* 화이트리스트 ① */
+.hub-head p {
+  margin: 0;
+  max-width: 52ch;
+  font-size: 0.92rem;
+  color: var(--text-sub);
+}
+
+/* ── 현황판(Home) 요약 스탯 — 스탯 문법 재사용(.stat-num 언더바 §6) ── */
+.hub-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.5rem;
+  margin: 0 0 3rem;
+}
+.hub-stats > div { text-align: left; }
+.hub-stats strong {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 2.2rem;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  display: block;
+  margin-bottom: 0.55rem;
+}
+.hub-stats strong::after { /* 화이트리스트 ③ 스탯 언더바 28×3 */
+  content: '';
+  display: block;
+  width: 28px;
+  height: 3px;
+  background: var(--accent);
+  border-radius: 2px;
+  margin-top: 0.55rem;
+}
+
+/* ── 섹션 헤드(현황판) — 확립된 style(Paperlogy display), 내부형 크기 ── */
+.hub-h2 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.4rem;
+  letter-spacing: -0.02em;
+  margin: 0 0 1.1rem;
+}
+.hub-h2 + .hub-empty { margin-top: 0; }
+.hub-section { margin-bottom: 3rem; }
+.hub-section:last-child { margin-bottom: 0; }
+
+/* ── 카드 언어(.car-card·.proof-light 승계) — surface + 헤어라인 + radius 18px ── */
+.hub-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.85rem;
+}
+.hub-card { display: block; }
+.hub-card > button,
+.hub-card > a,
+.hub-card-link,
+.hub-card-inner {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 1.15rem 1.35rem;
+  color: inherit;
+  text-decoration: none;
+  font: inherit;
+  cursor: pointer;
+}
+.hub-card > div.hub-card-inner { cursor: default; }
+/* 카드 hover — §5 배경 시프트 + 테두리 차콜(버건디 면·테두리 금지) */
+.hub-card > button:hover,
+.hub-card-link:hover { background: #fff; border-color: var(--text); }
+.hub-card > button:active,
+.hub-card-link:active { transform: scale(0.99); }
+
+.hub-card-top {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.35rem;
+}
+.hub-card-title {
+  font-size: 1.05rem; /* 타이포 §2 카드 제목 */
+  font-weight: 700;
+  line-height: 1.35;
+  display: block;
+}
+.hub-card-inner .hub-card-title { margin-bottom: 0.35rem; }
+.hub-meta {
+  font-size: 0.82rem; /* 마이크로 타이포 — 내부형 메타 */
+  color: var(--text-sub);
+  display: block;
+  line-height: 1.5;
+}
+.hub-card-inner .proof-link { margin-top: 0.75rem; }
+.hub-card-inner .hub-meta + .hub-meta { margin-top: 0.4rem; }
+
+/* ── 상태 배지(.status 문법 승계) — 팔레트만, 버건디 면 금지 ── */
+.hub-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.16rem 0.65rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+.hub-badge.active { background: var(--dark); color: #fff; border-color: var(--dark); }
+.hub-badge.planned { background: #fff; color: var(--text-sub); border-color: var(--line); }
+.hub-badge.prep { background: #fff; color: var(--accent); border-color: var(--accent); } /* 화이트리스트 ⑤ */
+.hub-badge.archived { background: var(--surface); color: var(--text-sub); border-color: var(--line); }
+
+/* ── 필터 칩(.chip 승계) — Secondary 위계, 선택=차콜 필(버건디 면 금지) ── */
+.hub-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.75rem;
+}
+.hub-filter button {
+  font-size: 0.84rem;
+  font-weight: 600;
+  height: 36px;
+  padding: 0 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: #fff;
+  color: var(--text-sub);
+  cursor: pointer;
+}
+.hub-filter button:hover { border-color: var(--text); color: var(--text); }
+.hub-filter button:active { transform: scale(0.98); }
+.hub-filter button.on { background: var(--dark); color: #fff; border-color: var(--dark); }
+
+/* ── 상세 뷰 — 내부형 문서(720px 본문, doc-h1 승계) ── */
+.hub-detail { max-width: 720px; }
+.hub-back { /* Tertiary — 텍스트 링크(버건디 밑줄 없이 차콜 hover) */
+  background: none;
+  border: none;
+  padding: 0;
+  margin-bottom: 1.5rem;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text-sub);
+  cursor: pointer;
+}
+.hub-back:hover { color: var(--text); }
+.hub-detail > h1 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.6rem;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.5rem;
+}
+.hub-detail > .hub-meta { /* 페이지 메타 줄 — 마이크로 0.78rem(§3) */
+  font-size: 0.78rem;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 1.75rem;
+}
+.hub-detail > .hub-meta a { /* Tertiary 링크 — 버건디 밑줄 2px(화이트리스트 ⑥) */
+  color: var(--text);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 2px solid var(--accent);
+}
+.hub-detail > .hub-meta a:hover { color: var(--accent); }
+
+/* ── 마크다운 본문 — Pretendard 1rem/lh1.65, 45~75자 ── */
+.hub-md { font-size: 1rem; line-height: 1.65; }
+.hub-md h2 { font-family: var(--font-display); font-weight: 800; font-size: 1.2rem; margin: 2rem 0 0.75rem; }
+.hub-md h3 { font-size: 1.05rem; font-weight: 700; margin: 1.5rem 0 0.5rem; }
+.hub-md p { margin: 0 0 1.1rem; }
+.hub-md ul, .hub-md ol { margin: 0 0 1.1rem; padding-left: 1.3rem; }
+.hub-md li { margin-bottom: 0.35rem; }
+.hub-md a { /* Tertiary — 버건디 밑줄(화이트리스트 ⑥) */
+  color: var(--text);
+  text-decoration: none;
+  border-bottom: 2px solid var(--accent);
+}
+.hub-md a:hover { color: var(--accent); }
+.hub-md code {
+  font-size: 0.88em;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 0.08em 0.35em;
+}
+.hub-md pre {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.9rem 1.1rem;
+  overflow-x: auto;
+}
+.hub-md pre code { background: none; border: none; padding: 0; }
+.hub-md blockquote { /* 콜아웃 — 좌측 3px 버건디 보더(화이트리스트 ⑩) */
+  margin: 0 0 1.1rem;
+  padding: 0.1rem 0 0.1rem 1.1rem;
+  border-left: 3px solid var(--accent);
+  color: var(--text-sub);
+}
+
+/* ── 빈 상태 — 팔레트 회색 패널(버건디 없음) ── */
+.hub-empty {
+  color: var(--text-sub);
+  font-size: 0.9rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 1.75rem 1.5rem;
+  text-align: center;
+  margin: 0.5rem 0;
+}
+
+/* ── §5 인터랙션 4상태 — 150ms ease-out, transform·color·bg만 ── */
+.hub-card > button,
+.hub-card-link,
+.hub-filter button,
+.hub-back,
+.hub-md a,
+.hub-detail > .hub-meta a {
+  transition: background-color 150ms ease-out, border-color 150ms ease-out,
+    color 150ms ease-out, transform 100ms ease-out;
+}
+.hub-card > button:focus-visible,
+.hub-card-link:focus-visible,
+.hub-filter button:focus-visible,
+.hub-back:focus-visible,
+.hub-md a:focus-visible,
+.hub-detail > .hub-meta a:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hub-card > button,
+  .hub-card-link,
+  .hub-filter button,
+  .hub-back,
+  .hub-md a { transition: none; }
+  .hub-card > button:active,
+  .hub-card-link:active,
+  .hub-filter button:active { transform: none; }
+}
+
+/* ── 반응형 375/768/1440 ─────────────────────── */
+@media (max-width: 480px) {
+  .hub-stats { gap: 1.75rem; }
+  .hub-stats strong { font-size: 1.9rem; }
+}
