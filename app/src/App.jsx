@@ -116,12 +116,12 @@ function RecentActivity() {
       <h2 className="headline">최근 <em>활동</em></h2>
       <div className="recent">
         <div className="recent-col">
-          <span className="next-label">ARTICLES</span>
+          <span className="next-label">INSIGHTS</span>
           {articles.length > 0 ? (
             <ul className="recent-list">
               {articles.map((a) => (
                 <li key={a.slug}>
-                  <a className="recent-item" href={`/articles/?p=${a.slug}`}>
+                  <a className="recent-item" href={`/insights/?p=${a.slug}`}>
                     <span className="recent-item-date">{a.date}</span>
                     <span className="recent-item-title">{a.title}</span>
                   </a>
@@ -129,7 +129,7 @@ function RecentActivity() {
               ))}
             </ul>
           ) : (
-            <p className="recent-empty">첫 이슈 스캔 게재 시 여기 최신순 표시.</p>
+            <p className="recent-empty">첫 인사이트 게재 시 여기 최신순 표시.</p>
           )}
         </div>
         <div className="recent-col">
@@ -149,7 +149,7 @@ function RecentActivity() {
         </div>
       </div>
       <p className="recent-more">
-        <a className="proof-link" href="/articles/">기사 전체 <Arrow /></a>
+        <a className="proof-link" href="/insights/">인사이트 전체 <Arrow /></a>
         <a className="proof-link" href="/seminars/">세미나 전체 <Arrow /></a>
       </p>
     </section>

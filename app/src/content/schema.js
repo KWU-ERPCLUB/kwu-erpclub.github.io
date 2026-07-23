@@ -1,17 +1,16 @@
 // SPEC §5 데이터 계약 v2 — 이 파일이 검증 규칙의 유일 원천(검증기 CLI·앱 로더 공용).
-// 태그 2축(2026-07-23): 용도(주·필수 1~2) + 기술(보조·선택 0~2). 구 tags 폐지. 실습 종류 폐지(세미나로 흡수).
-export const USES = ['업무자동화', '분석·리서치', '기획·문서', '트렌드·시장', '기타'] // 용도(주)
-export const TECHS = ['에이전트', '도구', '거버넌스'] // 기술(보조)
+// 기사 분류(2026-07-23 개편): 성격(단일·필수) × 영역(단일·필수) + 지금써먹기(boolean·선택·기본 false). 구 용도/기술 2축 폐지.
+export const NATURES = ['뉴스·동향', '심층 분석', '활용법·튜토리얼', '도구·프롬프트'] // 성격(글 종류·단일)
+export const AREAS = ['마케팅·영업', '기획·전략', '고객지원·운영', '문서·지식관리', '데이터·분석', '개발·IT', 'AI 거버넌스·리스크'] // 영역(업무·단일)
 export const SEMINAR_TYPES = ['인지', '실습']
 export const KINDS = ['기사', '세미나']
 // 실습 세미나 본문 필수 헤딩(Carpentries 3블록 이식) — 전부 존재해야 통과
 export const LAB_HEADINGS = ['준비', '진행', '재현 가이드']
 
-// frontmatter 값을 배열로 정규화(파서가 단일값은 문자열, [a,b]는 배열로 준다)
-function asArray(v) {
-  if (Array.isArray(v)) return v
-  if (v === undefined || v === null || v === '') return []
-  return [v]
+// 게재·검증 대상 파일 판별 — `_` 시작 = 템플릿·초안(예: _template.md) → 로더 글롭·검증기 스캔 제외.
+// 로더·검증기 공용(계약 단일원천). `.md` 아닌 것도 제외.
+export function isContentFile(filename) {
+  return typeof filename === 'string' && filename.endsWith('.md') && !filename.startsWith('_')
 }
 
 // body에 `## <heading>` 줄이 존재하는가 (정확한 헤딩 텍스트, 후행 공백만 허용)
@@ -33,12 +32,15 @@ export function validateEntry(kind, filename, data, body = '') {
   }
   if (kind === '기사') {
     for (const k of ['source_url', 'source_name']) if (!data[k]) errs.push(`필수 필드 결측: ${k}`)
-    const uses = asArray(data['용도'])
-    if (uses.length < 1 || uses.length > 2) errs.push('용도는 1~2개 필수')
-    for (const u of uses) if (!USES.includes(u)) errs.push(`용도 enum 밖: ${u}`)
-    const techs = asArray(data['기술'])
-    if (techs.length > 2) errs.push('기술은 최대 2개')
-    for (const t of techs) if (!TECHS.includes(t)) errs.push(`기술 enum 밖: ${t}`)
+    // 성격·영역 = 문자열 단일값(배열 금지)·각 1개 필수·enum
+    const nature = data['성격']
+    if (nature === undefined || nature === null || nature === '') errs.push('성격 필수(1개)')
+    else if (typeof nature !== 'string' || !NATURES.includes(nature)) errs.push(`성격 enum 밖: ${nature}`)
+    const area = data['영역']
+    if (area === undefined || area === null || area === '') errs.push('영역 필수(1개)')
+    else if (typeof area !== 'string' || !AREAS.includes(area)) errs.push(`영역 enum 밖: ${area}`)
+    // 지금써먹기 = 선택(기본 false) — 있으면 boolean만 허용
+    if ('지금써먹기' in data && typeof data['지금써먹기'] !== 'boolean') errs.push('지금써먹기는 boolean(true/false)만 허용')
   } else if (kind === '세미나') {
     if (!/^\d+$/.test(data['회차'] || '')) errs.push('회차는 숫자여야 함')
     if (!SEMINAR_TYPES.includes(data['유형'])) errs.push(`유형 enum 밖: ${data['유형']}`)

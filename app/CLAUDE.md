@@ -1,6 +1,7 @@
 # CLAUDE.md — kwu-erpclub site app
 
-One-line: KWU ERP연구회 MIS×AI 스터디 허브 — 주=스터디원 작업면(기사→세미나 파이프라인), 부=외부 증빙면.
+One-line: KWU ERP연구회 MIS×AI 스터디 허브 — 주=스터디원 작업면(인사이트→세미나 파이프라인), 부=외부 증빙면.
+표면명 주의: 페이지 = **AI 인사이트 / INSIGHTS / `/insights/`** — 계약 내부 종류명은 `기사`(content/기사/·schema) 유지.
 Deploy: GitHub Pages, org repo `KWU-ERPCLUB/kwu-erpclub.github.io`, main push = auto deploy. Static only (no backend/BaaS).
 
 ## Commands
@@ -11,7 +12,8 @@ Deploy: GitHub Pages, org repo `KWU-ERPCLUB/kwu-erpclub.github.io`, main push = 
 ## Stack & gotchas
 - Vite 5 + React 18 (NOT 19 — older than other apps, don't bump casually), plain CSS (no Tailwind)
 - MPA: static entries in vite.config rollupOptions.input = main(하이브리드: v3 소개+최근 활동) +
-  articles/seminars + about/log/projects. new page = new dir + `src/*-entry.jsx` + input entry.
+  insights/seminars + about/log/projects. new page = new dir + `src/*-entry.jsx` + input entry.
+  (insights 페이지 컴포넌트 파일명 = `pages/Articles.jsx`·`styles/articles.css` 유지 — 내부명, URL만 insights)
 - **labs·reports·join 페이지 제거**(IA 2차 2026-07-23 — labs=세미나 흡수·reports=폐기·join=about 흡수). 재도입 = 오너 재승인.
 - 멤버 페이지(목록+개인 auto-glob)는 **전부 제거**(SPEC 2026-07-23 오너 결정). 재도입 = 오너 재승인.
 - base '/' (org root site). Fonts via CDN link tags in each entry html (Pretendard + Paperlogy).

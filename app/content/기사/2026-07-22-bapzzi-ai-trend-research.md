@@ -4,8 +4,8 @@ author: bapzzi
 date: 2026-07-22
 source_url: https://hai.stanford.edu/ai-index/2026-ai-index-report
 source_name: Stanford HAI · Gartner
-용도: [트렌드·시장]
-기술: [에이전트]
+성격: 심층 분석
+영역: 기획·전략
 ---
 
 스터디 재편에 앞서 다중 출처 리서치(출처 15건 정독, 클레임 18건 3표 적대검증)를 돌렸다. 결론은 3축.

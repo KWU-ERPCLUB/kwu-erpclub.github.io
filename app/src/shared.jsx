@@ -8,7 +8,7 @@ export const REPO_URL = 'https://github.com/KWU-ERPCLUB/kwu-erpclub.github.io'
 // 탭=페이지 이동만(owner 2026-07-11 — 메인 섹션 앵커 퀵바 폐지).
 // IA 2차(SPEC §4): 6종 = 메인(brand)·기사·세미나·about·log·projects. labs·reports·join 제거.
 const NAV_LINKS = [
-  ['ARTICLES', '/articles/'],
+  ['INSIGHTS', '/insights/'],
   ['SEMINARS', '/seminars/'],
   ['PROJECTS', '/projects/'],
   ['ABOUT', '/about/'],

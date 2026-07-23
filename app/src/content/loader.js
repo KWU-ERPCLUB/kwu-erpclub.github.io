@@ -1,4 +1,5 @@
 import { parseFrontmatter } from './frontmatter.js'
+import { isContentFile } from './schema.js'
 // 빌드타임 글롭 — content/가 리포에 커밋된 것만 실림(런타임 fetch 없음, 정적 계약)
 const modules = import.meta.glob('/content/**/*.md', { query: '?raw', import: 'default', eager: true })
 
@@ -7,6 +8,7 @@ export function loadContent(kind) {
   for (const [path, raw] of Object.entries(modules)) {
     if (!path.includes(`/content/${kind}/`)) continue
     const file = path.split('/').pop()
+    if (!isContentFile(file)) continue // `_` 시작(템플릿·초안) 제외
     const { data, body } = parseFrontmatter(raw)
     if (!data) continue
     out.push({ ...data, file, slug: file.replace(/\.md$/, ''), body })

@@ -13,7 +13,7 @@ test('RSS 2.0 구조 — channel·item·필수 태그', () => {
   expect(xml).toContain('<channel>')
   expect((xml.match(/<item>/g) || []).length).toBe(2)
   expect(xml).toContain('<title>둘째</title>')
-  expect(xml).toContain('<link>https://kwu-erpclub.github.io/articles/?p=2026-07-22-bapzzi-x</link>')
+  expect(xml).toContain('<link>https://kwu-erpclub.github.io/insights/?p=2026-07-22-bapzzi-x</link>')
   expect(xml).toContain('<pubDate>')
 })
 

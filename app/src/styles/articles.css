@@ -1,228 +1,123 @@
-/* 기사(ARTICLES) 전용 — 토스 테크·우아한형제들 기술블로그 리스트 문법 참조(2026-07-23 재설계).
-   세로 스택 리스트 + 태그 칩 필터 + 720px 문서형 상세. 토큰=global.css만 · light-only.
-   디자인규칙 v2: 버건디=화이트리스트(⑥ 링크 밑줄·⑨ focus 3px)만 · 선택 칩=차콜 필(버건디 면 금지). */
+/* 기사(INSIGHTS) 전용 — 목록=월별 그룹+조밀 행, 상세=통일 셸(문서헤더·출처카드·720px 본문·하단 내비).
+   토큰=global.css만 · light-only. 디자인규칙 v2: 버건디=화이트리스트(④눈썹·⑥링크밑줄·⑨focus·⑩좌보더)만·버건디 면 금지. */
 
-.art-page {
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 3rem 1.5rem 5rem;
-}
+.art-page { max-width: 760px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
 @media (max-width: 700px) { .art-page { padding: 2rem 1.25rem 3.5rem; } }
 
 /* ── 페이지 머리 (브랜드 타이포 승계) ── */
-.art-head {
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid var(--line);
-  margin-bottom: 1.75rem;
-}
-/* 버건디 눈썹 인덱스 — 메인 page-idx 문법 승계(화이트리스트 ④) */
-.art-idx {
-  display: block;
-  font-size: 0.82rem;
-  font-weight: 600;
-  letter-spacing: 0.07em;
-  color: var(--accent);
-  margin-bottom: 0.7rem;
-}
-/* 헤드라인 1단어 강조(화이트리스트 ①) — 섹션당 터치포인트 2/2 */
+.art-head { padding-bottom: 1.5rem; border-bottom: 1px solid var(--line); margin-bottom: 1.75rem; }
+/* 버건디 눈썹 인덱스(화이트리스트 ④) — 상세 문서헤더와 공용 */
+.art-idx { display: block; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.07em; color: var(--accent); margin-bottom: 0.7rem; }
+/* 헤드라인 1단어 강조(화이트리스트 ①) */
 .art-head h1 em { font-style: normal; color: var(--accent); }
-.art-head h1 {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(1.9rem, 4vw, 2.6rem);
-  line-height: 1.18;
-  letter-spacing: -0.02em;
-  margin: 0 0 0.6rem;
-}
-.art-head p {
-  margin: 0;
-  max-width: 52ch;
-  font-size: 0.92rem;
-  color: var(--text-sub);
-}
+.art-head h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.9rem, 4vw, 2.6rem); line-height: 1.18; letter-spacing: -0.02em; margin: 0 0 0.6rem; }
+.art-head p { margin: 0; max-width: 52ch; font-size: 0.92rem; color: var(--text-sub); }
 
-/* ── 검색 박스 (제목·요약 클라이언트 부분일치) ── */
+/* ── 검색 박스 (제목·본문 클라이언트 부분일치) ── */
 .art-search { margin-bottom: 1rem; }
 .art-search input {
-  width: 100%;
-  height: 42px;
-  padding: 0 1rem;
-  font: inherit;
-  font-size: 0.92rem;
-  color: var(--text);
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-pill);
-  transition: border-color 150ms ease-out;
+  width: 100%; height: 42px; padding: 0 1rem; font: inherit; font-size: 0.92rem; color: var(--text);
+  background: #fff; border: 1px solid var(--line); border-radius: var(--radius-pill); transition: border-color 150ms ease-out;
 }
 .art-search input::placeholder { color: var(--text-sub); }
 .art-search input:hover { border-color: var(--text); }
 .art-search input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-color: var(--text); }
 
-/* ── 태그 칩 필터 (2축: 용도=주열·기술=보조열) — 선택=차콜 필 ── */
-.art-filter {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-.art-filter-label {
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--text-sub);
-  margin-right: 0.15rem;
-}
-/* 기술(보조) — 소형 칩·한 단계 낮은 밀도 */
-.art-filter-sub { margin-bottom: 1.25rem; }
+/* ── 태그 칩 필터 (성격=주열·영역=보조열·지금써먹기=토글) — 선택=차콜 필 ── */
+.art-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+.art-filter-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.04em; color: var(--text-sub); margin-right: 0.15rem; }
+.art-filter-sub { margin-bottom: 0.5rem; } /* 영역(보조) — 소형 칩 */
 .art-filter-sub button { height: 30px; font-size: 0.78rem; padding: 0 0.8rem; }
+.art-filter-toggle { margin-bottom: 1.25rem; } /* 지금 써먹기 토글 1개 */
 .art-filter button {
-  font-size: 0.84rem;
-  font-weight: 600;
-  height: 36px;
-  padding: 0 1rem;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-pill);
-  background: #fff;
-  color: var(--text-sub);
-  cursor: pointer;
-  transition: background-color 150ms ease-out, border-color 150ms ease-out,
-    color 150ms ease-out, transform 100ms ease-out;
+  font-size: 0.84rem; font-weight: 600; height: 36px; padding: 0 1rem; border: 1px solid var(--line);
+  border-radius: var(--radius-pill); background: #fff; color: var(--text-sub); cursor: pointer;
+  transition: background-color 150ms ease-out, border-color 150ms ease-out, color 150ms ease-out, transform 100ms ease-out;
 }
 .art-filter button:hover { border-color: var(--text); color: var(--text); }
 .art-filter button:active { transform: scale(0.98); }
 .art-filter button.on { background: var(--dark); color: #fff; border-color: var(--dark); }
 .art-filter button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
+/* ── 월별 그룹 + 조밀 행 (수십 건 쌓여도 스캔 가능한 밀도) ── */
+.art-months { margin-top: 1.25rem; }
+.art-month + .art-month { margin-top: 1.75rem; }
+/* 월 헤더 "2026. 07" — 마이크로 라벨(§3-1 메타 톤) */
+.art-month-head { font-size: 0.82rem; font-weight: 700; letter-spacing: 0.04em; color: var(--text-sub); margin: 0 0 0.25rem; padding: 0 0.75rem; }
+
 /* ── 세로 스택 리스트 — 헤어라인 구분선(카드 그리드 아님) ── */
-.art-list {
-  list-style: none;
-  margin: 1.25rem 0 0;
-  padding: 0;
-  border-top: 1px solid var(--line);
-}
+.art-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
 .art-row { border-bottom: 1px solid var(--line); }
 .art-row > button {
-  display: block;
-  width: 100%;
-  text-align: left;
-  background: none;
-  border: none;
-  padding: 1.5rem 0.75rem;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
+  display: block; width: 100%; text-align: left; background: none; border: none;
+  padding: 0.7rem 0.75rem; /* 조밀 — 내부형 밀도(§3) */ color: inherit; font: inherit; cursor: pointer;
   transition: background-color 150ms ease-out;
 }
 .art-row > button:hover { background: var(--surface); }
 .art-row > button:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
-.art-row-meta {
-  display: block;
-  font-size: 0.78rem;
-  color: var(--text-sub);
-  margin-bottom: 0.4rem;
-}
-.art-row-title {
-  display: block;
-  font-size: 1.18rem;
-  font-weight: 700;
-  line-height: 1.4;
-  letter-spacing: -0.01em;
-  margin-bottom: 0.45rem;
-}
-.art-row-excerpt {
-  display: block;
-  font-size: 0.92rem;
-  line-height: 1.6;
-  color: var(--text-sub);
-}
-.art-row-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-top: 0.75rem;
-}
-.art-tag {
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--text-sub);
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-pill);
-  padding: 0.14rem 0.6rem;
-}
-/* 용도(주 축) — 차콜 테두리로 한 단계 강조(버건디 면 금지) */
-.art-tag-use { color: var(--text); border-color: var(--text-sub); }
+/* 1행: 제목 1줄(스캔용 말줄임) */
+.art-row-title { display: block; font-size: 1rem; font-weight: 700; line-height: 1.4; letter-spacing: -0.01em; margin-bottom: 0.25rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* 2행: MM-DD · 저자 · 태그 칩 */
+.art-row-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; font-size: 0.78rem; color: var(--text-sub); }
+.art-row-date { font-variant-numeric: tabular-nums; }
+.art-row-sep { color: var(--line); }
+.art-row-tags { display: inline-flex; flex-wrap: wrap; gap: 0.35rem; margin-left: 0.15rem; }
+.art-tag { font-size: 0.72rem; font-weight: 600; color: var(--text-sub); background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-pill); padding: 0.14rem 0.6rem; }
+/* 성격(주 축) — 차콜 테두리로 한 단계 강조(버건디 면 금지) */
+.art-tag-nature { color: var(--text); border-color: var(--text-sub); }
+/* 지금 써먹기 배지 — prep 배지 문법(테두리+텍스트, §1 화이트리스트 ⑤) · 버건디 면 금지 */
+.art-tag-now { color: var(--accent); border-color: var(--accent); background: #fff; }
 
 /* ── 디자인된 빈 상태 (§3-1: 무엇이 쌓이는지 + 기고 방법) ── */
 .art-empty {
-  color: var(--text-sub);
-  font-size: 0.9rem;
-  line-height: 1.6;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-left: 3px solid var(--accent); /* 화이트리스트 ⑩ = 브랜드 시그니처 */
-  border-radius: 0 var(--radius-card) var(--radius-card) 0;
-  padding: 1.5rem 1.5rem 1.6rem;
-  margin: 1.25rem 0 0;
+  color: var(--text-sub); font-size: 0.9rem; line-height: 1.6; background: var(--surface);
+  border: 1px solid var(--line); border-left: 3px solid var(--accent); /* 화이트리스트 ⑩ */
+  border-radius: 0 var(--radius-card) var(--radius-card) 0; padding: 1.5rem 1.5rem 1.6rem; margin: 1.25rem 0 0;
 }
 .art-empty p { margin: 0 0 0.7rem; }
 .art-empty p:last-child { margin-bottom: 0; }
 .art-empty-title { font-weight: 700; color: var(--text); font-size: 0.96rem; }
-.art-empty code {
-  font-size: 0.85em;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: 5px;
-  padding: 0.08em 0.4em;
-}
+.art-empty code { font-size: 0.85em; background: #fff; border: 1px solid var(--line); border-radius: 5px; padding: 0.08em 0.4em; }
 
-/* ── 상세 — 720px 문서형 ── */
+/* ── 상세 — 통일 디자인 셸(720px 문서형) ── */
 .art-detail { max-width: 720px; }
-.art-back {
-  background: none;
-  border: none;
-  padding: 0;
-  margin-bottom: 1.5rem;
-  font-size: 0.84rem;
-  font-weight: 600;
-  color: var(--text-sub);
-  cursor: pointer;
-  transition: color 150ms ease-out;
+
+/* ① 문서 헤더 블록 — 눈썹(.art-idx 승계)·제목·메타·태그 */
+.art-doc-head { padding-bottom: 1.25rem; border-bottom: 1px solid var(--line); margin-bottom: 1.5rem; }
+.art-doc-head h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.5rem, 3.4vw, 2rem); line-height: 1.3; letter-spacing: -0.02em; margin: 0 0 0.55rem; }
+.art-detail-meta { font-size: 0.8rem; color: var(--text-sub); margin: 0; }
+.art-detail-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.7rem; }
+
+/* ② 출처 카드 — surface 배경 + 헤어라인 테두리(버건디 면 금지) */
+.art-source {
+  display: flex; align-items: center; gap: 0.6rem; background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius-card); padding: 0.85rem 1.1rem; margin-bottom: 2rem; text-decoration: none;
+  color: var(--text); transition: border-color 150ms ease-out;
 }
+.art-source:hover { border-color: var(--text-sub); }
+.art-source:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.art-source-label { flex: none; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; color: var(--text-sub); border: 1px solid var(--line); border-radius: var(--radius-pill); padding: 0.1rem 0.55rem; background: #fff; }
+.art-source-name { flex: 1; min-width: 0; font-size: 0.9rem; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.art-source-go { flex: none; display: inline-flex; color: var(--text-sub); }
+.art-source:hover .art-source-go { color: var(--text); }
+
+/* ③ 본문 폭 = .hub-md(아래) · 이미지 폭 보장 = .hub-md img */
+
+/* ④ 하단 — 목록 복귀 + 이전/다음 인사이트 내비 */
+.art-foot { margin-top: 2.5rem; padding-top: 1.25rem; border-top: 1px solid var(--line); }
+.art-back { background: none; border: none; padding: 0; font-size: 0.84rem; font-weight: 600; color: var(--text-sub); cursor: pointer; transition: color 150ms ease-out; }
 .art-back:hover { color: var(--text); }
 .art-back:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-.art-detail-tags {
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--text-sub);
-  margin: 0 0 0.6rem;
+.art-foot-nav { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.1rem; }
+.art-nav-link {
+  flex: 1 1 44%; min-width: 0; display: block; text-align: left; background: none; border: 1px solid var(--line);
+  border-radius: var(--radius-card); padding: 0.75rem 0.95rem; color: inherit; font: inherit; cursor: pointer; transition: border-color 150ms ease-out;
 }
-.art-detail > h1 {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(1.5rem, 3.4vw, 1.9rem);
-  line-height: 1.3;
-  letter-spacing: -0.02em;
-  margin: 0 0 0.6rem;
-}
-.art-detail-meta {
-  font-size: 0.78rem;
-  color: var(--text-sub);
-  padding-bottom: 1.1rem;
-  border-bottom: 1px solid var(--line);
-  margin: 0 0 1.75rem;
-}
-.art-detail-meta a { /* Tertiary — 버건디 밑줄 2px(화이트리스트 ⑥) */
-  color: var(--text);
-  font-weight: 600;
-  text-decoration: none;
-  border-bottom: 2px solid var(--accent);
-  transition: color 150ms ease-out;
-}
-.art-detail-meta a:hover { color: var(--accent); }
-.art-detail-meta a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.art-nav-next { text-align: right; }
+.art-nav-link:hover { border-color: var(--text-sub); }
+.art-nav-link:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.art-nav-dir { display: block; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.03em; color: var(--text-sub); margin-bottom: 0.25rem; }
+.art-nav-title { display: block; font-size: 0.9rem; font-weight: 600; line-height: 1.4; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 /* ── 마크다운 본문 (Markdown 컴포넌트=.hub-md) — Pretendard 1rem/lh1.65 ── */
 .hub-md { font-size: 1rem; line-height: 1.65; }
@@ -231,42 +126,16 @@
 .hub-md p { margin: 0 0 1.1rem; }
 .hub-md ul, .hub-md ol { margin: 0 0 1.1rem; padding-left: 1.3rem; }
 .hub-md li { margin-bottom: 0.35rem; }
-.hub-md a { /* Tertiary — 버건디 밑줄(화이트리스트 ⑥) */
-  color: var(--text);
-  text-decoration: none;
-  border-bottom: 2px solid var(--accent);
-  transition: color 150ms ease-out;
-}
+.hub-md img { max-width: 100%; height: auto; border-radius: 10px; margin: 0.4rem 0; } /* 본문 폭 초과 방지 */
+.hub-md a { color: var(--text); text-decoration: none; border-bottom: 2px solid var(--accent); transition: color 150ms ease-out; } /* Tertiary 밑줄(⑥) */
 .hub-md a:hover { color: var(--accent); }
 .hub-md a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-.hub-md code {
-  font-size: 0.88em;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 5px;
-  padding: 0.08em 0.35em;
-}
-.hub-md pre {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 0.9rem 1.1rem;
-  overflow-x: auto;
-}
+.hub-md code { font-size: 0.88em; background: var(--surface); border: 1px solid var(--line); border-radius: 5px; padding: 0.08em 0.35em; }
+.hub-md pre { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 0.9rem 1.1rem; overflow-x: auto; }
 .hub-md pre code { background: none; border: none; padding: 0; }
-.hub-md blockquote { /* 콜아웃 — 좌측 3px 버건디 보더(화이트리스트 ⑩) */
-  margin: 0 0 1.1rem;
-  padding: 0.1rem 0 0.1rem 1.1rem;
-  border-left: 3px solid var(--accent);
-  color: var(--text-sub);
-}
+.hub-md blockquote { margin: 0 0 1.1rem; padding: 0.1rem 0 0.1rem 1.1rem; border-left: 3px solid var(--accent); color: var(--text-sub); } /* 콜아웃(⑩) */
 
 @media (prefers-reduced-motion: reduce) {
-  .art-filter button,
-  .art-row > button,
-  .art-back,
-  .art-search input,
-  .hub-md a,
-  .art-detail-meta a { transition: none; }
+  .art-filter button, .art-row > button, .art-back, .art-search input, .hub-md a, .art-source, .art-nav-link { transition: none; }
   .art-filter button:active { transform: none; }
 }

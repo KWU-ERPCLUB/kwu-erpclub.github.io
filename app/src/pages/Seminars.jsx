@@ -68,7 +68,7 @@ export default function Seminars() {
         <header className="hub-head">
           <span className="hub-idx">SEMINARS</span>
           <h1>선별 <em>실습</em></h1>
-          <p>기사로 스캔한 이슈 중 직접 해볼 것을 선별해 진행 — 실습 회차는 준비·진행·재현 가이드 3블록.</p>
+          <p>인사이트로 포착한 AI 이슈 중 직접 해볼 것을 선별해 진행 — 실습 회차는 준비·진행·재현 가이드 3블록.</p>
         </header>
         {all.length === 0 ? (
           <div className="hub-empty">

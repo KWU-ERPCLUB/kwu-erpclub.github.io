@@ -4,10 +4,11 @@ import { readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { parseFrontmatter } from '../src/content/frontmatter.js'
+import { isContentFile } from '../src/content/schema.js'
 
 export const SITE_URL = 'https://kwu-erpclub.github.io'
-const FEED_TITLE = '광운대학교 ERP연구회 — 기사'
-const FEED_DESC = '스터디원이 요약·기고한 이슈 스캔 아카이브'
+const FEED_TITLE = '광운대학교 ERP연구회 — AI 인사이트'
+const FEED_DESC = '경영·MIS 관점의 AI 이슈 분석·축적 — 스터디원 기고'
 
 export function escapeXml(s) {
   return String(s ?? '')
@@ -27,7 +28,7 @@ export function toRfc822(date) {
 // articles = [{ title, date, author, source_name, slug, body }] → RSS 2.0 문자열
 export function buildRss(articles) {
   const items = articles.map((a) => {
-    const link = `${SITE_URL}/articles/?p=${encodeURIComponent(a.slug)}`
+    const link = `${SITE_URL}/insights/?p=${encodeURIComponent(a.slug)}`
     const desc = (a.body || '').replace(/\s+/g, ' ').trim().slice(0, 280)
     return [
       '    <item>',
@@ -45,7 +46,7 @@ export function buildRss(articles) {
     '<rss version="2.0">',
     '  <channel>',
     `    <title>${escapeXml(FEED_TITLE)}</title>`,
-    `    <link>${SITE_URL}/articles/</link>`,
+    `    <link>${SITE_URL}/insights/</link>`,
     `    <description>${escapeXml(FEED_DESC)}</description>`,
     '    <language>ko</language>',
     items,
@@ -58,7 +59,7 @@ export function buildRss(articles) {
 function loadArticles() {
   const root = join(dirname(fileURLToPath(import.meta.url)), '..', 'content', '기사')
   let files = []
-  try { files = readdirSync(root).filter((f) => f.endsWith('.md')) } catch { return [] }
+  try { files = readdirSync(root).filter(isContentFile) } catch { return [] } // `_` 템플릿 제외
   return files.map((f) => {
     const { data, body } = parseFrontmatter(readFileSync(join(root, f), 'utf8'))
     return { ...data, slug: f.replace(/\.md$/, ''), body }

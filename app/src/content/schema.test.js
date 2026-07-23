@@ -1,32 +1,53 @@
 import { expect, test } from 'vitest'
-import { validateEntry } from './schema.js'
+import { validateEntry, isContentFile } from './schema.js'
+
+// ── 게재·검증 대상 판별(`_` 시작=템플릿·초안 제외) ──
+test('isContentFile — .md만·`_` 시작 제외', () => {
+  expect(isContentFile('2026-07-22-bapzzi-x.md')).toBe(true)
+  expect(isContentFile('_template.md')).toBe(false) // 템플릿 제외
+  expect(isContentFile('_draft-초안.md')).toBe(false) // 초안 제외
+  expect(isContentFile('README.txt')).toBe(false)
+  expect(isContentFile(undefined)).toBe(false)
+})
 
 const good = {
   title: 'AI 지형', author: 'bapzzi', date: '2026-07-22',
   source_url: 'https://hai.stanford.edu/x', source_name: 'Stanford HAI',
-  용도: ['트렌드·시장'], 기술: ['에이전트'],
+  성격: '심층 분석', 영역: '기획·전략',
 }
 
-test('정상 기사 통과 (용도 필수·기술 선택)', () => {
+test('정상 기사 통과 (성격·영역 필수·지금써먹기 없음)', () => {
   expect(validateEntry('기사', '2026-07-22-bapzzi-ai-trend.md', good)).toEqual([])
 })
-test('기술 없어도 통과(선택)', () => {
-  expect(validateEntry('기사', '2026-07-22-bapzzi-ai-trend.md', { ...good, 기술: undefined })).toEqual([])
+test('지금써먹기=true(boolean)면 통과', () => {
+  expect(validateEntry('기사', '2026-07-22-bapzzi-ai-trend.md', { ...good, 지금써먹기: true })).toEqual([])
+})
+test('지금써먹기=false(boolean)면 통과', () => {
+  expect(validateEntry('기사', '2026-07-22-bapzzi-ai-trend.md', { ...good, 지금써먹기: false })).toEqual([])
+})
+test('지금써먹기가 boolean 아니면 검출(문자열 위반)', () => {
+  expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 지금써먹기: 'true' }).some((e) => e.includes('지금써먹기'))).toBe(true)
 })
 test('필수 필드 결측 검출(source_url)', () => {
   expect(validateEntry('기사', '2026-07-22-bapzzi-ai-trend.md', { ...good, source_url: undefined }).length).toBeGreaterThan(0)
 })
-test('용도 결측 검출', () => {
-  expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 용도: undefined }).some((e) => e.includes('용도'))).toBe(true)
+test('성격 결측 검출', () => {
+  expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 성격: undefined }).some((e) => e.includes('성격'))).toBe(true)
 })
-test('용도 enum 밖 검출', () => {
-  expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 용도: ['블록체인'] }).some((e) => e.includes('블록체인'))).toBe(true)
+test('성격 enum 밖 검출', () => {
+  expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 성격: '블록체인' }).some((e) => e.includes('블록체인'))).toBe(true)
 })
-test('용도 3개 초과 검출(1~2개)', () => {
-  expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 용도: ['업무자동화', '분석·리서치', '기타'] }).some((e) => e.includes('용도'))).toBe(true)
+test('성격 배열이면 검출(단일 문자열만 허용)', () => {
+  expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 성격: ['심층 분석'] }).some((e) => e.includes('성격'))).toBe(true)
 })
-test('기술 enum 밖 검출', () => {
-  expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 기술: ['채용시장'] }).some((e) => e.includes('채용시장'))).toBe(true)
+test('영역 결측 검출', () => {
+  expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 영역: undefined }).some((e) => e.includes('영역'))).toBe(true)
+})
+test('영역 enum 밖 검출', () => {
+  expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 영역: '채용시장' }).some((e) => e.includes('채용시장'))).toBe(true)
+})
+test('영역 배열이면 검출(단일 문자열만 허용)', () => {
+  expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 영역: ['기획·전략'] }).some((e) => e.includes('영역'))).toBe(true)
 })
 test('파일명-frontmatter 불일치 검출(date·author 프리픽스)', () => {
   expect(validateEntry('기사', '2026-01-01-other-x.md', good).length).toBeGreaterThan(0)
