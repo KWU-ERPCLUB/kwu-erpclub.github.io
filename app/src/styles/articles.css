@@ -73,51 +73,67 @@
 .art-filter button.on { background: var(--dark); color: #fff; border-color: var(--dark); }
 .art-filter button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
-/* ── 월별 그룹 + 조밀 행 (수십 건 쌓여도 스캔 가능한 밀도) ── */
+/* ── 월별 그룹 + 카드 피드 (수십 건 쌓여도 스캔 가능) ── */
 .art-months { margin-top: 1.25rem; }
 .art-month + .art-month { margin-top: 1.75rem; }
 /* 월 헤더 "2026. 07" — 마이크로 라벨(§3-1 메타 톤) */
-.art-month-head { font-size: 0.82rem; font-weight: 700; letter-spacing: 0.04em; color: var(--text-sub); margin: 0 0 0.25rem; padding: 0 0.75rem; }
+.art-month-head { font-size: 0.82rem; font-weight: 700; letter-spacing: 0.04em; color: var(--text-sub); margin: 0 0 0.6rem; padding: 0 0.15rem; }
 
-/* ── 세로 스택 리스트 — 헤어라인 구분선(카드 그리드 아님) ── */
-.art-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
-.art-row { border-bottom: 1px solid var(--line); }
-.art-row > button {
-  display: flex; align-items: center; gap: 0.75rem; width: 100%; text-align: left; background: none; border: none;
-  padding: 0.65rem 0.75rem; /* 조밀 — 내부형 밀도(§3) */ color: inherit; font: inherit; cursor: pointer;
-  transition: background-color 150ms ease-out;
+/* ── 카드 피드 — 풀폭 흰 카드(카드 사이 간격으로 분리, 헤어라인 구분 폐지) ── */
+.art-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.75rem; }
+.art-card > button {
+  display: flex; align-items: flex-start; gap: 1rem; width: 100%; text-align: left;
+  background: #fff; border: 1px solid var(--line); border-radius: var(--radius-card);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); padding: 1rem 1.15rem; color: inherit; font: inherit; cursor: pointer;
+  transition: border-color 150ms ease-out, box-shadow 150ms ease-out, transform 100ms ease-out;
 }
-.art-row > button:hover { background: var(--surface); }
-.art-row > button:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
-.art-row-body { flex: 1; min-width: 0; }
+.art-card > button:hover { border-color: var(--text-sub); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); }
+.art-card > button:active { transform: scale(0.997); }
+.art-card > button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.art-card-body { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 
-/* ── 썸네일 타일(약 48px·radius 10px) — 이미지 있으면 이미지, 없으면 성격 모노그램 ── */
-.art-thumb {
-  flex: none; width: 48px; height: 48px; border-radius: 10px; overflow: hidden;
-  display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--line);
+/* 상단 메타 줄 — 저자 이니셜 원형(28px 차콜) + 저자명 · 날짜 */
+.art-card-meta { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: var(--text-sub); margin-bottom: 0.5rem; }
+.art-avatar {
+  flex: none; width: 28px; height: 28px; border-radius: 50%; background: var(--dark); color: #fff;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-weight: 700; font-size: 0.8rem; line-height: 1;
 }
-.art-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.art-mono { font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; line-height: 1; border-color: transparent; }
-/* 성격별 저채도 fallback 배경 4색 — §1 파생 후보(오너 육안 승인 대기).
-   §1 팔레트에 없는 신규 톤: 라이트 배경 위 저채도(파스텔 아님, L≈92%·저크로마)로 4성격 구분.
-   배경=면이지만 버건디 아님 → §1 "버건디 면 금지"와 무관(버건디 면 미사용 유지).
-   글자=같은 색상 저명도(대비 확보). 승인 시 이 4쌍을 §1 파생 토큰으로 승격. */
-.art-mono--news     { background: #e7ecf1; color: #46566a; } /* 뉴스·동향 = 저채도 슬레이트블루 */
-.art-mono--analysis { background: #ede9e4; color: #665c4f; } /* 심층 분석 = 저채도 웜토프 */
-.art-mono--howto    { background: #e6ede8; color: #4c6153; } /* 활용법·튜토리얼 = 저채도 세이지 */
-.art-mono--tools    { background: #eae8ef; color: #575067; } /* 도구·프롬프트 = 저채도 라벤더그레이 */
+.art-card-author { font-weight: 600; color: var(--text); }
+.art-card-date { font-variant-numeric: tabular-nums; }
+.art-row-sep { color: var(--line); }
+
+/* 제목 — 볼드 1.1rem */
+.art-card-title { display: block; font-size: 1.1rem; font-weight: 700; line-height: 1.4; letter-spacing: -0.01em; margin-bottom: 0.35rem; }
+/* 요약 1~2줄 — excerpt(line-clamp 2) */
+.art-card-excerpt {
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  font-size: 0.9rem; line-height: 1.55; color: var(--text-sub); margin-bottom: 0.65rem;
+}
 
 /* 핀 배지(고정) — 차콜 아이콘(버건디 미사용) */
 .art-pin { display: inline-flex; vertical-align: middle; color: var(--dark); margin-right: 0.3rem; }
 
-/* 1행: 제목 1줄(스캔용 말줄임) */
-.art-row-title { display: block; font-size: 1rem; font-weight: 700; line-height: 1.4; letter-spacing: -0.01em; margin-bottom: 0.25rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-/* 2행: MM-DD · 저자 · 태그 칩 */
-.art-row-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; font-size: 0.78rem; color: var(--text-sub); }
-.art-row-date { font-variant-numeric: tabular-nums; }
-.art-row-sep { color: var(--line); }
-.art-row-tags { display: inline-flex; flex-wrap: wrap; gap: 0.35rem; margin-left: 0.15rem; }
+/* 하단 칩 줄 — 성격 칩·주제 칩·지금써먹기 배지 */
+.art-row-tags { display: inline-flex; flex-wrap: wrap; gap: 0.35rem; }
 .art-tag { font-size: 0.72rem; font-weight: 600; color: var(--text-sub); background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-pill); padding: 0.14rem 0.6rem; }
+
+/* ── 썸네일 영역(약 96×72px·radius 10px) — 이미지 있으면 이미지, 없으면 성격 색 타일 + 성격명 풀 텍스트 ── */
+.art-thumb {
+  flex: none; width: 96px; height: 72px; border-radius: 10px; overflow: hidden;
+  display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--line);
+}
+.art-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.art-tile {
+  border-color: transparent; padding: 0 0.5rem; text-align: center; word-break: keep-all;
+  font-family: var(--font-display); font-weight: 800; font-size: 0.82rem; line-height: 1.25;
+}
+/* 성격별 저채도 타일 배경 4색 — §1 파생(오너 승인 2026-07-23).
+   라이트 배경 위 저채도(L≈92%·저크로마)로 4성격 구분. 배경=면이지만 버건디 아님 → §1 "버건디 면 금지"와 무관. */
+.art-tile--news     { background: #e7ecf1; color: #46566a; } /* 뉴스·동향 = 저채도 슬레이트블루 */
+.art-tile--analysis { background: #ede9e4; color: #665c4f; } /* 심층 분석 = 저채도 웜토프 */
+.art-tile--howto    { background: #e6ede8; color: #4c6153; } /* 활용법·튜토리얼 = 저채도 세이지 */
+.art-tile--tools    { background: #eae8ef; color: #575067; } /* 도구·프롬프트 = 저채도 라벤더그레이 */
 /* 성격(주 축) — 차콜 테두리로 한 단계 강조(버건디 면 금지) */
 .art-tag-nature { color: var(--text); border-color: var(--text-sub); }
 /* 지금 써먹기 배지 — prep 배지 문법(테두리+텍스트, §1 화이트리스트 ⑤) · 버건디 면 금지 */

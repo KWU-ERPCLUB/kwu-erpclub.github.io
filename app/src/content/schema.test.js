@@ -13,10 +13,10 @@ test('isContentFile — .md만·`_` 시작 제외', () => {
 const good = {
   title: 'AI 지형', author: 'bapzzi', date: '2026-07-22',
   source_url: 'https://hai.stanford.edu/x', source_name: 'Stanford HAI',
-  성격: '심층 분석', 영역: '기획·전략',
+  성격: '심층 분석', 주제: '시장·생태계',
 }
 
-test('정상 기사 통과 (성격·영역 필수·지금써먹기 없음)', () => {
+test('정상 기사 통과 (성격·주제 필수·지금써먹기 없음)', () => {
   expect(validateEntry('기사', '2026-07-22-bapzzi-ai-trend.md', good)).toEqual([])
 })
 test('지금써먹기=true(boolean)면 통과', () => {
@@ -56,14 +56,14 @@ test('성격 enum 밖 검출', () => {
 test('성격 배열이면 검출(단일 문자열만 허용)', () => {
   expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 성격: ['심층 분석'] }).some((e) => e.includes('성격'))).toBe(true)
 })
-test('영역 결측 검출', () => {
-  expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 영역: undefined }).some((e) => e.includes('영역'))).toBe(true)
+test('주제 결측 검출', () => {
+  expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 주제: undefined }).some((e) => e.includes('주제'))).toBe(true)
 })
-test('영역 enum 밖 검출', () => {
-  expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 영역: '채용시장' }).some((e) => e.includes('채용시장'))).toBe(true)
+test('주제 enum 밖 검출', () => {
+  expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 주제: '채용시장' }).some((e) => e.includes('채용시장'))).toBe(true)
 })
-test('영역 배열이면 검출(단일 문자열만 허용)', () => {
-  expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 영역: ['기획·전략'] }).some((e) => e.includes('영역'))).toBe(true)
+test('주제 배열이면 검출(단일 문자열만 허용)', () => {
+  expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 주제: ['에이전트'] }).some((e) => e.includes('주제'))).toBe(true)
 })
 test('파일명-frontmatter 불일치 검출(date·author 프리픽스)', () => {
   expect(validateEntry('기사', '2026-01-01-other-x.md', good).length).toBeGreaterThan(0)

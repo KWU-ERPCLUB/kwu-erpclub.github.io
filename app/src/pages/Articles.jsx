@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, useCallback } from 'react'
 import { SiteNav, SiteFooter, CONTRIBUTING_URL } from '../shared.jsx'
 import { loadContent } from '../content/loader.js'
-import { AREAS } from '../content/schema.js'
+import { TOPICS } from '../content/schema.js'
 import {
   HUB_TAB, TABS, stateFromSearch, searchFromState, filterArticles, groupByMonth,
 } from './insights-logic.js'
@@ -22,9 +22,9 @@ function Tabs({ tab, onTab }) {
   )
 }
 
-// 성격 탭 뷰 — 그 성격만 월별 그룹 목록(기존 서식) + 영역·지금써먹기·검색 필터 유지.
-function NatureList({ nature, all, area, setArea, nowUse, setNowUse, q, setQ, onOpen }) {
-  const list = filterArticles(all, { nature, area, nowUse, q })
+// 성격 탭 뷰 — 그 성격만 월별 그룹 목록(카드 피드) + 주제·지금써먹기·검색 필터 유지.
+function NatureList({ nature, all, topic, setTopic, nowUse, setNowUse, q, setQ, onOpen }) {
+  const list = filterArticles(all, { nature, topic, nowUse, q })
   return (
     <>
       <div className="art-search">
@@ -34,11 +34,11 @@ function NatureList({ nature, all, area, setArea, nowUse, setNowUse, q, setQ, on
         />
       </div>
 
-      <div className="art-filter art-filter-sub" role="group" aria-label="영역 필터">
-        <span className="art-filter-label">영역</span>
-        <button type="button" className={area ? '' : 'on'} aria-pressed={!area} onClick={() => setArea(null)}>전체</button>
-        {AREAS.map((v) => (
-          <button key={v} type="button" className={area === v ? 'on' : ''} aria-pressed={area === v} onClick={() => setArea(v)}>{v}</button>
+      <div className="art-filter art-filter-sub" role="group" aria-label="주제 필터">
+        <span className="art-filter-label">주제</span>
+        <button type="button" className={topic ? '' : 'on'} aria-pressed={!topic} onClick={() => setTopic(null)}>전체</button>
+        {TOPICS.map((v) => (
+          <button key={v} type="button" className={topic === v ? 'on' : ''} aria-pressed={topic === v} onClick={() => setTopic(v)}>{v}</button>
         ))}
       </div>
 
@@ -72,7 +72,7 @@ export default function Articles() {
   const initial = typeof window === 'undefined' ? { tab: HUB_TAB, slug: null } : stateFromSearch(window.location.search)
   const [tab, setTab] = useState(initial.tab)
   const [sel, setSel] = useState(initial.slug)
-  const [area, setArea] = useState(null)
+  const [topic, setTopic] = useState(null)
   const [nowUse, setNowUse] = useState(false)
   const [q, setQ] = useState('')
 
@@ -115,7 +115,7 @@ export default function Articles() {
         <header className="art-head">
           <span className="art-idx">AI INSIGHTS</span>
           <h1>AI <em>인사이트</em></h1>
-          <p>경영·MIS 관점의 AI 이슈 분석·축적 — 스터디원이 각자의 AI 워크플로로 기고. 분류 = 글 성격 × 업무 영역.</p>
+          <p>경영·MIS 관점의 AI 이슈 분석·축적 — 스터디원이 각자의 AI 워크플로로 기고. 분류 = 글 성격 × AI 주제.</p>
         </header>
 
         <div className="art-layout">
@@ -125,7 +125,7 @@ export default function Articles() {
               <InsightsHub all={all} onOpen={openArticle} onTab={(t) => nav({ tab: t, slug: null })} />
             ) : (
               <NatureList
-                nature={tab} all={all} area={area} setArea={setArea}
+                nature={tab} all={all} topic={topic} setTopic={setTopic}
                 nowUse={nowUse} setNowUse={setNowUse} q={q} setQ={setQ} onOpen={openArticle}
               />
             )}

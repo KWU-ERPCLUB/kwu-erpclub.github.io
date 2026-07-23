@@ -1,15 +1,15 @@
-// 인사이트 공용 UI 조각 — 썸네일·태그 칩·핀 배지·기사 행. Articles/Hub 공유.
-import { natureKey, monogram } from './insights-logic.js'
+// 인사이트 공용 UI 조각 — 썸네일·태그 칩·핀 배지·기사 카드. Articles/Hub 공유.
+import { natureKey, authorInitial, excerpt } from './insights-logic.js'
 
-// 썸네일 타일 — `이미지` 있으면 소형 이미지, 없으면 성격 모노그램 fallback(성격별 저채도 배경).
+// 썸네일 타일 — `이미지` 있으면 소형 이미지, 없으면 성격 색 타일 + 성격명 풀 텍스트(성격별 저채도 배경).
 export function Thumb({ a }) {
   if (a['이미지']) {
     return <span className="art-thumb"><img src={a['이미지']} alt="" loading="lazy" /></span>
   }
   const nk = natureKey(a['성격'])
   return (
-    <span className={`art-thumb art-mono art-mono--${nk}`} aria-hidden="true">
-      {monogram(a['성격'])}
+    <span className={`art-thumb art-tile art-tile--${nk}`} aria-hidden="true">
+      {a['성격']}
     </span>
   )
 }
@@ -26,34 +26,38 @@ export function PinBadge() {
   )
 }
 
+// 하단 칩 줄 — 성격 칩·주제 칩·지금써먹기 배지.
 export function TagChips({ a }) {
   return (
     <span className="art-row-tags">
       {a['성격'] && <span className="art-tag art-tag-nature">{a['성격']}</span>}
-      {a['영역'] && <span className="art-tag">{a['영역']}</span>}
+      {a['주제'] && <span className="art-tag">{a['주제']}</span>}
       {a['지금써먹기'] && <span className="art-tag art-tag-now">지금 써먹기</span>}
     </span>
   )
 }
 
-// 조밀 행 — 썸네일 | (제목 + 메타·태그). 목록·허브 공용. pinned=핀 배지.
+// 풀폭 카드 — [본문(메타·제목·요약·칩) | 썸네일]. 목록·허브 공용. pinned=핀 배지.
 export function ArticleRow({ a, onOpen, pinned = false }) {
+  const ex = excerpt(a.body)
   return (
-    <li className="art-row">
+    <li className="art-card">
       <button type="button" onClick={() => onOpen(a.slug)}>
-        <Thumb a={a} />
-        <span className="art-row-body">
-          <span className="art-row-title">
+        <span className="art-card-body">
+          <span className="art-card-meta">
+            <span className="art-avatar" aria-hidden="true">{authorInitial(a.author)}</span>
+            <span className="art-card-author">{a.author}</span>
+            <span className="art-row-sep" aria-hidden="true">·</span>
+            <span className="art-card-date">{(a.date || '').slice(0, 10)}</span>
+          </span>
+          <span className="art-card-title">
             {pinned && <PinBadge />}
             {a.title}
           </span>
-          <span className="art-row-meta">
-            <span className="art-row-date">{(a.date || '').slice(5)}</span>
-            <span className="art-row-sep" aria-hidden="true">·</span>
-            <span className="art-row-author">{a.author}</span>
-            <TagChips a={a} />
-          </span>
+          {ex && <span className="art-card-excerpt">{ex}</span>}
+          <TagChips a={a} />
         </span>
+        <Thumb a={a} />
       </button>
     </li>
   )

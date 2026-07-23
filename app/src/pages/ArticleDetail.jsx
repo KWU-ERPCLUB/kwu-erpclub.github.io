@@ -6,7 +6,7 @@ import Markdown from './Markdown.jsx'
 
 export default function ArticleDetail({ cur, all, onOpen, onBack }) {
   const { prev, next } = neighbors(all, cur.slug)
-  const hasTags = Boolean(cur['성격'] || cur['영역'] || cur['지금써먹기'])
+  const hasTags = Boolean(cur['성격'] || cur['주제'] || cur['지금써먹기'])
   return (
     <article className="art-detail">
       {/* ① 문서 헤더 블록 — 눈썹·제목·메타·태그 */}

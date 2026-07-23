@@ -1,7 +1,7 @@
 // SPEC §5 데이터 계약 v2 — 이 파일이 검증 규칙의 유일 원천(검증기 CLI·앱 로더 공용).
-// 기사 분류(2026-07-23 개편): 성격(단일·필수) × 영역(단일·필수) + 지금써먹기(boolean·선택·기본 false). 구 용도/기술 2축 폐지.
+// 기사 분류(2026-07-23 개편): 성격(단일·필수) × 주제(단일·필수) + 지금써먹기(boolean·선택·기본 false). 구 영역(경영기능) 축 폐지.
 export const NATURES = ['뉴스·동향', '심층 분석', '활용법·튜토리얼', '도구·프롬프트'] // 성격(글 종류·단일)
-export const AREAS = ['마케팅·영업', '기획·전략', '고객지원·운영', '문서·지식관리', '데이터·분석', '개발·IT', 'AI 거버넌스·리스크'] // 영역(업무·단일)
+export const TOPICS = ['에이전트', '모델·플랫폼', '워크플로·자동화', '거버넌스·리스크', '시장·생태계'] // 주제(AI 주제·단일)
 export const SEMINAR_TYPES = ['인지', '실습']
 export const KINDS = ['기사', '세미나']
 // 실습 세미나 본문 필수 헤딩(Carpentries 3블록 이식) — 전부 존재해야 통과
@@ -32,13 +32,13 @@ export function validateEntry(kind, filename, data, body = '') {
   }
   if (kind === '기사') {
     for (const k of ['source_url', 'source_name']) if (!data[k]) errs.push(`필수 필드 결측: ${k}`)
-    // 성격·영역 = 문자열 단일값(배열 금지)·각 1개 필수·enum
+    // 성격·주제 = 문자열 단일값(배열 금지)·각 1개 필수·enum
     const nature = data['성격']
     if (nature === undefined || nature === null || nature === '') errs.push('성격 필수(1개)')
     else if (typeof nature !== 'string' || !NATURES.includes(nature)) errs.push(`성격 enum 밖: ${nature}`)
-    const area = data['영역']
-    if (area === undefined || area === null || area === '') errs.push('영역 필수(1개)')
-    else if (typeof area !== 'string' || !AREAS.includes(area)) errs.push(`영역 enum 밖: ${area}`)
+    const topic = data['주제']
+    if (topic === undefined || topic === null || topic === '') errs.push('주제 필수(1개)')
+    else if (typeof topic !== 'string' || !TOPICS.includes(topic)) errs.push(`주제 enum 밖: ${topic}`)
     // 지금써먹기 = 선택(기본 false) — 있으면 boolean만 허용
     if ('지금써먹기' in data && typeof data['지금써먹기'] !== 'boolean') errs.push('지금써먹기는 boolean(true/false)만 허용')
     // 이미지 = 선택(썸네일 경로·URL) — 있으면 비어있지 않은 문자열만 허용

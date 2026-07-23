@@ -18,11 +18,10 @@ export const NATURE_DEFS = {
 export const NATURE_KEY = { '뉴스·동향': 'news', '심층 분석': 'analysis', '활용법·튜토리얼': 'howto', '도구·프롬프트': 'tools' }
 const KEY_TO_NATURE = Object.fromEntries(Object.entries(NATURE_KEY).map(([n, k]) => [k, n]))
 
-// 성격 모노그램(썸네일 fallback 첫 글자).
-export const MONOGRAM = { '뉴스·동향': '뉴', '심층 분석': '심', '활용법·튜토리얼': '활', '도구·프롬프트': '도' }
-
 export function natureKey(nature) { return NATURE_KEY[nature] || 'analysis' }
-export function monogram(nature) { return MONOGRAM[nature] || '?' }
+
+// 저자 이니셜(아바타 1자) — 첫 글자 대문자.
+export function authorInitial(author) { return (author || '?').trim().charAt(0).toUpperCase() || '?' }
 
 // ── URL ↔ 상태 (뒤로가기·딥링크) : ?tab=<key> · ?p=<slug> ──
 // search(location.search 문자열) → { tab, slug }. 미지의 tab 키 = 허브.
@@ -56,12 +55,12 @@ export function excerpt(body, n = 96) {
   return text.length > n ? `${text.slice(0, n).trim()}…` : text
 }
 
-// 성격·영역·지금써먹기 3필터 + 검색(제목·본문 부분일치) AND 결합.
-export function filterArticles(all, { nature = null, area = null, nowUse = false, q = '' } = {}) {
+// 성격·주제·지금써먹기 3필터 + 검색(제목·본문 부분일치) AND 결합.
+export function filterArticles(all, { nature = null, topic = null, nowUse = false, q = '' } = {}) {
   const query = q.trim().toLowerCase()
   return all.filter((a) => {
     if (nature && a['성격'] !== nature) return false
-    if (area && a['영역'] !== area) return false
+    if (topic && a['주제'] !== topic) return false
     if (nowUse && !a['지금써먹기']) return false
     if (query) {
       const hay = `${a.title || ''} ${excerpt(a.body, 100000)}`.toLowerCase()
