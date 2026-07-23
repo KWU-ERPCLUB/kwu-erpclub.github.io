@@ -57,7 +57,8 @@ export default function Articles() {
       <SiteNav />
       <main className="art-page">
         <header className="art-head">
-          <h1>ARTICLES</h1>
+          <span className="art-idx">ARTICLES</span>
+          <h1><em>기고</em> 아카이브</h1>
           <p>스터디원이 각자의 AI 워크플로로 요약·기고한 업계 소식. 형식은 계약, 방식은 자유.</p>
         </header>
 

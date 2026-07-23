@@ -15,6 +15,17 @@
   border-bottom: 1px solid var(--line);
   margin-bottom: 1.75rem;
 }
+/* 버건디 눈썹 인덱스 — 메인 page-idx 문법 승계(화이트리스트 ④) */
+.art-idx {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  color: var(--accent);
+  margin-bottom: 0.7rem;
+}
+/* 헤드라인 1단어 강조(화이트리스트 ①) — 섹션당 터치포인트 2/2 */
+.art-head h1 em { font-style: normal; color: var(--accent); }
 .art-head h1 {
   font-family: var(--font-display);
   font-weight: 800;
