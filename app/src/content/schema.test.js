@@ -28,6 +28,22 @@ test('지금써먹기=false(boolean)면 통과', () => {
 test('지금써먹기가 boolean 아니면 검출(문자열 위반)', () => {
   expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 지금써먹기: 'true' }).some((e) => e.includes('지금써먹기'))).toBe(true)
 })
+test('이미지=문자열 경로면 통과', () => {
+  expect(validateEntry('기사', '2026-07-22-bapzzi-ai-trend.md', { ...good, 이미지: '/img/기사/claude.png' })).toEqual([])
+})
+test('이미지=URL이면 통과', () => {
+  expect(validateEntry('기사', '2026-07-22-bapzzi-ai-trend.md', { ...good, 이미지: 'https://ex.com/a.png' })).toEqual([])
+})
+test('이미지가 문자열 아니면 검출(빈문자열·불리언 위반)', () => {
+  expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 이미지: '' }).some((e) => e.includes('이미지'))).toBe(true)
+  expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 이미지: true }).some((e) => e.includes('이미지'))).toBe(true)
+})
+test('고정=true(boolean)면 통과', () => {
+  expect(validateEntry('기사', '2026-07-22-bapzzi-ai-trend.md', { ...good, 고정: true })).toEqual([])
+})
+test('고정이 boolean 아니면 검출(문자열 위반)', () => {
+  expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 고정: 'true' }).some((e) => e.includes('고정'))).toBe(true)
+})
 test('필수 필드 결측 검출(source_url)', () => {
   expect(validateEntry('기사', '2026-07-22-bapzzi-ai-trend.md', { ...good, source_url: undefined }).length).toBeGreaterThan(0)
 })

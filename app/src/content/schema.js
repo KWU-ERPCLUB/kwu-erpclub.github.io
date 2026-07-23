@@ -41,6 +41,10 @@ export function validateEntry(kind, filename, data, body = '') {
     else if (typeof area !== 'string' || !AREAS.includes(area)) errs.push(`영역 enum 밖: ${area}`)
     // 지금써먹기 = 선택(기본 false) — 있으면 boolean만 허용
     if ('지금써먹기' in data && typeof data['지금써먹기'] !== 'boolean') errs.push('지금써먹기는 boolean(true/false)만 허용')
+    // 이미지 = 선택(썸네일 경로·URL) — 있으면 비어있지 않은 문자열만 허용
+    if ('이미지' in data && (typeof data['이미지'] !== 'string' || data['이미지'].trim() === '')) errs.push('이미지는 비어있지 않은 문자열(경로·URL)만 허용')
+    // 고정 = 선택(허브 뷰 상단 핀) — 있으면 boolean만 허용
+    if ('고정' in data && typeof data['고정'] !== 'boolean') errs.push('고정은 boolean(true/false)만 허용')
   } else if (kind === '세미나') {
     if (!/^\d+$/.test(data['회차'] || '')) errs.push('회차는 숫자여야 함')
     if (!SEMINAR_TYPES.includes(data['유형'])) errs.push(`유형 enum 밖: ${data['유형']}`)

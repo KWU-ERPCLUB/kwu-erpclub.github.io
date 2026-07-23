@@ -6,7 +6,7 @@ Deploy: GitHub Pages, org repo `KWU-ERPCLUB/kwu-erpclub.github.io`, main push = 
 
 ## Commands
 - dev: `npm run dev` (port 5173) / build: `npm run build` (vite build + `scripts/build-rss.mjs` → dist/rss.xml) / preview: `npm run preview`
-- test: `npm test` (vitest run — 32 tests / 7 files) / lint: `npm run lint` (oxlint src scripts)
+- test: `npm test` (vitest run — 56 tests / 8 files) / lint: `npm run lint` (oxlint src scripts)
 - validate: `npm run validate` (content contract check — node scripts/validate-content.mjs)
 
 ## Stack & gotchas
