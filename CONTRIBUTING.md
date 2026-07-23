@@ -54,7 +54,8 @@ frontmatter 규칙의 유일 원천 = `app/src/content/schema.js`. 이 문서는
 ## 이미지·고정 필드
 
 - **이미지** = 카드 우측 정사각 썸네일(80×80). 생략 시 = 성격 색 타일 + 성격명 자동 표시
-- **로고 라이브러리** = `app/public/img/logos/` — 글이 특정 도구 중심이면 해당 로고 지정. 현재 보유: `claude.svg` · `openai.svg` · `codex.png` · `gemini.jpg` (예: `이미지: /img/logos/claude.svg`). 없는 로고 = 오너에게 요청(리서치 후 보강)
+- **로고 라이브러리** = `app/public/img/logos/` — 글이 특정 도구·조직 중심이면 해당 로고 지정(예: `이미지: /img/logos/claude.svg`). 보유 18종: claude · anthropic · openai · codex(png) · gemini · meta · mistral · perplexity · huggingface · github · copilot · notion · ollama · langchain · n8n · zapier · colab · kaggle. 없는 로고 = 오너에게 요청(리서치 후 보강)
+- **이미지 생략 시** = 성격 아이콘 타일 자동(뉴스=신문 / 심층=문서+돋보기 / 활용법=단계 / 도구=터미널) — 특정 조직 소속이 아닌 글은 그대로 두면 됨
 - **고정** = `true`면 허브 뷰(전체 탭)에서 해당 성격 섹션 최상단 핀. 상시 노출용 기준 글에만 사용
 
 ## 본문 자유 원칙

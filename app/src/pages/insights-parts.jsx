@@ -1,7 +1,41 @@
 // 인사이트 공용 UI 조각 — 썸네일·태그 칩·핀 배지·기사 카드. Articles/Hub 공유.
 import { natureKey, authorInitial, excerpt } from './insights-logic.js'
 
-// 썸네일 타일 — `이미지` 있으면 소형 이미지, 없으면 성격 색 타일 + 성격명 풀 텍스트(성격별 저채도 배경).
+// 성격별 기본 아이콘(자체 제작 라인 SVG — 텍스트 타일 폐기, owner 2026-07-23).
+// 뉴스·동향=신문 / 심층 분석=문서+돋보기 / 활용법·튜토리얼=번호 단계 / 도구·프롬프트=터미널 프롬프트.
+const NATURE_ICONS = {
+  news: (
+    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="3" y="4.5" width="15" height="15" rx="1.6" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M18 8h1.6c.8 0 1.4.6 1.4 1.4v8.1a2 2 0 0 1-2 2H5" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M6 8.5h6M6 11.5h9M6 14.5h9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  ),
+  analysis: (
+    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M6 3.5h8.5L19 8v12a1.5 1.5 0 0 1-1.5 1.5H6A1.5 1.5 0 0 1 4.5 20V5A1.5 1.5 0 0 1 6 3.5Z" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M14.5 3.5V8H19" stroke="currentColor" strokeWidth="1.5" />
+      <circle cx="10.5" cy="13.5" r="2.8" stroke="currentColor" strokeWidth="1.5" />
+      <path d="m12.7 15.7 2.6 2.6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  ),
+  howto: (
+    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="6" cy="6" r="2.2" stroke="currentColor" strokeWidth="1.4" />
+      <circle cx="6" cy="12.5" r="2.2" stroke="currentColor" strokeWidth="1.4" />
+      <circle cx="6" cy="19" r="2.2" stroke="currentColor" strokeWidth="1.4" />
+      <path d="M11 6h8M11 12.5h8M11 19h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  ),
+  tools: (
+    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="3" y="4.5" width="18" height="15" rx="1.8" stroke="currentColor" strokeWidth="1.5" />
+      <path d="m7 9.5 3 2.5-3 2.5M12.5 15H17" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  ),
+}
+
+// 썸네일 타일 — `이미지` 있으면 소형 이미지, 없으면 성격 색 타일 + 성격 아이콘(성격별 저채도 배경).
 export function Thumb({ a }) {
   if (a['이미지']) {
     return <span className="art-thumb"><img src={a['이미지']} alt="" loading="lazy" /></span>
@@ -9,7 +43,7 @@ export function Thumb({ a }) {
   const nk = natureKey(a['성격'])
   return (
     <span className={`art-thumb art-tile art-tile--${nk}`} aria-hidden="true">
-      {a['성격']}
+      {NATURE_ICONS[nk]}
     </span>
   )
 }
