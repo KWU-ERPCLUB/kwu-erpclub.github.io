@@ -5,16 +5,18 @@
 **세부 페이지=내부자 활용 중심** — 스터디 운영 이력·로드맵·성과 기록 아카이브(위키·운영기록형).
 진도·성과 수치 대시보드는 아님(그건 adsp-board 등 각 스터디 앱 담당). 이 사이트 자체가 스터디 방식(AI 협업 · git · 무료 배포)의 증거물.
 
-## 현재상태 (2026-07-23 — P1 완결: C1~C5 전부 충족·라이브 배포)
-- **P1 완결** — 완료기준 C1~C5 전부 충족. C1=Actions 배포 성공+라이브 200 · C3 원격=위반 브랜치 실증(validate 단계 FAIL로 배포 차단, run 29940201559) · C2·C4·C5=로컬+CI 검증. 단일원천 = `SPEC.md`(이 폴더). ⚠CI 여담: 락파일 npm 버전 불일치 2회 수정(Node 24 정렬 + @emnapi devDep 승격).
+## 현재상태 (2026-07-23 — 표면 재구축: 로컬 완료, 오너 검토 대기)
+- **표면 전면 재구축**(SPEC 2026-07-23판 CR1~CR4 로컬 충족). 하부(콘텐츠 계약·CI 게이트)는 유지. 단일원천 = `SPEC.md`(이 폴더).
 - **지금 존재하는 것**:
-  - **콘텐츠 데이터 계약 + CI 게이트** — 기사/세미나/실습 frontmatter 규칙을 `app/src/content/schema.js` 하나로 검증(`npm run validate`), CI가 validate+test(18개)+build를 통과해야 배포. 비오너 push는 `app/content`·`app/members`만 허용(경로 가드).
-  - **멤버 개인 페이지 자동 엔트리** — `app/members/<id>/index.html` 폴더만 추가하면 독립 빌드 페이지 생성(공용 CSS import 금지 = 격리). 오너 시드 `members/bapzzi` 존재.
-  - **신규 6페이지** — 메인(현황판: 트랙 카드·요약·최근 기고)·기사·세미나·실습·멤버 목록·멤버 개인.
+  - **콘텐츠 데이터 계약 + CI 게이트** — 기사/세미나/실습 frontmatter 규칙을 `app/src/content/schema.js` 하나로 검증(`npm run validate`), CI가 validate+test(18개)+build를 통과해야 배포. 비오너 push는 `app/content`만 허용(경로 가드).
+  - **메인(/) = 과거 v3 소개형 복귀** — WHY·ROADMAP·PROJECTS·FAQ(`src/App.jsx`+`home.css`). 구 현황판(`pages/Home.jsx`·`hub.css`)은 제거.
+  - **기사(/articles/) 재설계** — 태그 칩 필터 + 세로 스택 리스트(날짜·저자·제목·요약) + 720px 문서형 상세(토스 테크·우아한형제들 문법 참조).
+  - **멤버 페이지 = 전부 제거** — 목록·개인 auto-glob·경로 가드 허용까지(오너 결정). 멤버 생산 표면 = 기사 기고(저자 표기)로 수렴.
+  - **세미나·실습 = 현상 유지(보류)** — 페이지·콘텐츠 계약 그대로. hub.css 제거에 따라 두 페이지 전용 스타일만 `src/styles/pages.css`로 이관.
   - **기존 5페이지 유지** — about·join·log·reports·projects.
-- 소스 = KWU-ERPCLUB/kwu-erpclub.github.io 공개 repo(이 폴더 자체가 중첩 독립 repo). 멤버 쓰기 = collaborator 등록(P2 온보딩).
-- **라이브: https://kwu-erpclub.github.io/** — 새 메인(현황판)·신규 4탭 반영됨. 구 SPEC(이원 구조)·hub-spec은 새 SPEC이 대체.
+- 소스 = KWU-ERPCLUB/kwu-erpclub.github.io 공개 repo(이 폴더 자체가 중첩 독립 repo).
+- **라이브: https://kwu-erpclub.github.io/** — 재구축분은 아직 배포 전(오너 육안 승인 후 push·배포).
 
 ## 다음 할 일 (새 세션 재개 지점)
-- [ ] **① P2**(C6~C8): 콘텐츠 템플릿 3종·개인 페이지 템플릿·온보딩 가이드·세미나 6회 골격·산업 현황 수치 탑재. **+경화 2건(최종 리뷰 이월)**: ⑴Markdown 링크 `javascript:` 스킴 무해화 ⑵validate가 `members/*/profile.json`(§7 스키마)도 검사(+MembersPage id 방어).
-- [ ] **③ P3**(C9): 기존 디자인 토큰 정합 + 3뷰포트 + 오너 육안.
+- [ ] **오너 육안 승인**(CR5): 3뷰포트(375/768/1440) 확인 → 승인 시 커밋·push·배포.
+- [ ] 세미나·실습 페이지 목적 재정의(자료 사전 업로드 + 사후 재현 가이드) — 별도 spec.

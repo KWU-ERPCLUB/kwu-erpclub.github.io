@@ -24,7 +24,7 @@ jobs:
         run: |
           git fetch origin ${{ github.event.before }} --depth=1 || true
           CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} 2>/dev/null || git show --name-only --format= ${{ github.sha }})
-          VIOLATION=$(echo "$CHANGED" | grep -vE '^app/(content|members)/' || true)
+          VIOLATION=$(echo "$CHANGED" | grep -vE '^app/content/' || true)
           if [ -n "$VIOLATION" ]; then
             echo "공용 영역 변경은 PR + 오너 승인이 필요합니다 (SPEC §6):"
             echo "$VIOLATION"

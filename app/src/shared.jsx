@@ -11,7 +11,6 @@ const NAV_LINKS = [
   ['ARTICLES', '/articles/'],
   ['SEMINARS', '/seminars/'],
   ['LABS', '/labs/'],
-  ['MEMBERS', '/members/'],
   ['PROJECTS', '/projects/'],
   ['ABOUT', '/about/'],
   ['JOIN', '/join/'],
