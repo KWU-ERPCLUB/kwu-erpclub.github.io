@@ -5,6 +5,7 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { Arrow, SiteNav, SiteFooter, REPO_URL } from './shared.jsx'
 import { loadContent } from './content/loader.js'
+import { nextSeminar, todayString } from './pages/seminars-logic.js'
 
 const ADSP_BOARD_URL = 'https://erpstudy.vercel.app'
 
@@ -109,7 +110,10 @@ function Carousel() {
 // 하단 최근 활동 — 살아있는 도구면(SPEC §4). 콘텐츠 로더 사용, 없으면 디자인된 빈 상태.
 function RecentActivity() {
   const articles = useMemo(() => loadContent('기사').slice(0, 3), [])
-  const seminar = useMemo(() => loadContent('세미나')[0], [])
+  // 예정 세미나 있으면 우선(라벨 NEXT), 없으면 최근 회차(loadContent 역시간순 [0]).
+  const allSem = useMemo(() => loadContent('세미나'), [])
+  const upcoming = useMemo(() => nextSeminar(allSem, todayString()), [allSem])
+  const seminar = upcoming || allSem[0]
   return (
     <section className="cell center" id="recent">
       <span className="page-idx">05 — RECENT</span>
@@ -138,7 +142,7 @@ function RecentActivity() {
             <ul className="recent-list">
               <li>
                 <a className="recent-item" href={`/seminars/?p=${seminar.slug}`}>
-                  <span className="recent-item-date">{seminar.회차}회 · {seminar.유형}</span>
+                  <span className="recent-item-date">{upcoming ? 'NEXT · ' : ''}{seminar.회차}회 · {seminar.유형}</span>
                   <span className="recent-item-title">{seminar.title}</span>
                 </a>
               </li>

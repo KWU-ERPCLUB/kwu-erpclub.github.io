@@ -88,6 +88,27 @@ test('CR4 실증 — 실습인데 헤딩 결측 → 실패(위반 픽스처)', (
   expect(errs.some((e) => e.includes('진행'))).toBe(true)
   expect(errs.some((e) => e.includes('재현 가이드'))).toBe(true)
 })
+// ── 세미나 선택 필드(슬라이드·요점·장소) 2026-07-24 ──
+test('세미나 선택 필드 전부 정상이면 통과', () => {
+  const data = { ...semBase, 유형: '인지', 슬라이드: 'https://slides/1', 요점: ['a', 'b'], 장소: '새빛관 501호' }
+  expect(validateEntry('세미나', '2026-09-01-bapzzi-s1.md', data, '본문')).toEqual([])
+})
+test('슬라이드가 빈문자열·비문자열이면 검출', () => {
+  expect(validateEntry('세미나', '2026-09-01-bapzzi-s1.md', { ...semBase, 유형: '인지', 슬라이드: '' }, 'x').some((e) => e.includes('슬라이드'))).toBe(true)
+  expect(validateEntry('세미나', '2026-09-01-bapzzi-s1.md', { ...semBase, 유형: '인지', 슬라이드: 123 }, 'x').some((e) => e.includes('슬라이드'))).toBe(true)
+})
+test('요점 1~4개 문자열 배열이면 통과, 경계 밖·비문자열·비배열이면 검출', () => {
+  expect(validateEntry('세미나', '2026-09-01-bapzzi-s1.md', { ...semBase, 유형: '인지', 요점: ['하나'] }, 'x')).toEqual([])
+  expect(validateEntry('세미나', '2026-09-01-bapzzi-s1.md', { ...semBase, 유형: '인지', 요점: [] }, 'x').some((e) => e.includes('요점'))).toBe(true) // 0개
+  expect(validateEntry('세미나', '2026-09-01-bapzzi-s1.md', { ...semBase, 유형: '인지', 요점: ['1', '2', '3', '4', '5'] }, 'x').some((e) => e.includes('요점'))).toBe(true) // 5개
+  expect(validateEntry('세미나', '2026-09-01-bapzzi-s1.md', { ...semBase, 유형: '인지', 요점: ['ok', ''] }, 'x').some((e) => e.includes('요점'))).toBe(true) // 빈 원소
+  expect(validateEntry('세미나', '2026-09-01-bapzzi-s1.md', { ...semBase, 유형: '인지', 요점: '불릿' }, 'x').some((e) => e.includes('요점'))).toBe(true) // 문자열(비배열)
+})
+test('장소가 빈문자열·비문자열이면 검출', () => {
+  expect(validateEntry('세미나', '2026-09-01-bapzzi-s1.md', { ...semBase, 유형: '인지', 장소: '  ' }, 'x').some((e) => e.includes('장소'))).toBe(true)
+  expect(validateEntry('세미나', '2026-09-01-bapzzi-s1.md', { ...semBase, 유형: '인지', 장소: true }, 'x').some((e) => e.includes('장소'))).toBe(true)
+})
+
 test('frontmatter 자체 없음(data null)', () => {
   expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', null)).toEqual(['frontmatter 없음'])
 })

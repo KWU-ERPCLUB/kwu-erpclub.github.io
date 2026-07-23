@@ -52,6 +52,16 @@ export function validateEntry(kind, filename, data, body = '') {
     if (data['유형'] === '실습') {
       for (const h of LAB_HEADINGS) if (!hasHeading(body, h)) errs.push(`실습 세미나 필수 헤딩 결측: ## ${h}`)
     }
+    // 슬라이드 = 선택(사후 자료 링크) — 있으면 비어있지 않은 문자열(URL)만 허용
+    if ('슬라이드' in data && (typeof data['슬라이드'] !== 'string' || data['슬라이드'].trim() === '')) errs.push('슬라이드는 비어있지 않은 문자열(URL)만 허용')
+    // 요점 = 선택(아코디언 요약) — 있으면 문자열 1~4개 배열만 허용
+    if ('요점' in data) {
+      const pts = data['요점']
+      if (!Array.isArray(pts) || pts.length < 1 || pts.length > 4 || pts.some((p) => typeof p !== 'string' || p.trim() === ''))
+        errs.push('요점은 비어있지 않은 문자열 1~4개 배열만 허용')
+    }
+    // 장소 = 선택(오프라인·온라인 위치) — 있으면 비어있지 않은 문자열만 허용
+    if ('장소' in data && (typeof data['장소'] !== 'string' || data['장소'].trim() === '')) errs.push('장소는 비어있지 않은 문자열만 허용')
   }
   return errs
 }

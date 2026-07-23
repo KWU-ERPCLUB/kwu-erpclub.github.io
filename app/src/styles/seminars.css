@@ -1,0 +1,115 @@
+/* 세미나 재설계 (2026-07-24) — NEXT 히어로 + 지난 세미나 아코디언.
+   목록/상세 공용 셸·마크다운은 pages.css, 이 파일은 재설계 신규 요소만. 토큰=global.css · 디자인규칙 v2 준수. */
+
+/* button을 Tertiary(.proof-link) 위계로 쓸 때 기본 버튼 스타일 리셋(border-bottom 버건디만 유지) */
+button.proof-link {
+  background: none;
+  border: none;
+  border-bottom: 2px solid var(--accent);
+  font-family: inherit;
+  cursor: pointer;
+  margin-top: 0;
+}
+
+/* ── NEXT 히어로 — 여백 극대화·대형 타이포, 강조 = 눈썹 버건디(화이트리스트 ④), 면 없음 ── */
+.sem-hero {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: #fff;
+  padding: 2.75rem 2.5rem;
+  margin-bottom: 3rem;
+}
+@media (max-width: 700px) { .sem-hero { padding: 1.9rem 1.4rem; margin-bottom: 2.25rem; } }
+.sem-hero-eyebrow { /* 화이트리스트 ④ 섹션 인덱스 = 브랜드 시그니처 */
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  color: var(--accent);
+  margin-bottom: 0.9rem;
+}
+.sem-hero-title { /* §2 섹션 헤드라인급 */
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.7rem, 3.8vw, 2.6rem);
+  line-height: 1.22;
+  letter-spacing: -0.02em;
+  word-break: keep-all;
+  margin: 0 0 1.1rem;
+}
+.sem-hero-lead {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  max-width: 52ch;
+  word-break: keep-all;
+  margin: 0 0 1.4rem;
+}
+.sem-hero-meta { /* 마이크로 — 일시·장소·발제자 한 줄 */
+  font-size: 0.8rem;
+  color: var(--text-sub);
+  margin: 0 0 0.7rem;
+}
+.sem-hero .hub-chips { margin-bottom: 1.5rem; }
+.sem-hero-links { display: flex; flex-wrap: wrap; gap: 1.5rem; }
+
+/* 예정 0건 — 디자인된 빈 상태(콜아웃 좌측 보더 = 화이트리스트 ⑩) */
+.sem-hero-empty {
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius-card) var(--radius-card) 0;
+  background: var(--surface);
+}
+.sem-hero-empty-title { font-family: var(--font-display); font-weight: 800; font-size: 1.35rem; margin: 0 0 0.8rem; }
+.sem-hero-empty-sub { font-size: 0.95rem; line-height: 1.6; color: var(--text-sub); max-width: 52ch; margin: 0 0 1.1rem; }
+.sem-hero-empty-how { font-size: 0.9rem; line-height: 1.6; color: var(--text-sub); margin: 0; }
+.sem-hero-empty-how a { color: var(--text); font-weight: 600; text-decoration: none; border-bottom: 2px solid var(--accent); }
+.sem-hero-empty-how code { font-size: 0.85em; background: #fff; border: 1px solid var(--line); border-radius: 5px; padding: 0.08em 0.4em; }
+
+/* ── 지난 세미나 — 역시간순 네이티브 아코디언(밀집 문단 금지) ── */
+.sem-past-head {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.4rem;
+  letter-spacing: -0.02em;
+  margin: 0 0 1.25rem;
+}
+.sem-acc-list { border-top: 1px solid var(--line); }
+.sem-acc { border-bottom: 1px solid var(--line); }
+.sem-acc-sum {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 0.2rem;
+  cursor: pointer;
+  list-style: none;
+}
+.sem-acc-sum::-webkit-details-marker { display: none; }
+.sem-acc-sum::marker { content: ''; }
+.sem-acc-sum:hover { background: var(--surface); }
+.sem-acc-title { font-size: 1.02rem; font-weight: 700; line-height: 1.4; word-break: keep-all; }
+.sem-acc-date { font-size: 0.78rem; color: var(--text-sub); white-space: nowrap; }
+.sem-acc-body { padding: 0 0.2rem 1.3rem; }
+.sem-points { margin: 0 0 1rem; padding-left: 1.2rem; }
+.sem-points li { margin-bottom: 0.4rem; line-height: 1.55; }
+.sem-acc-excerpt { font-size: 0.92rem; line-height: 1.6; color: var(--text-sub); margin: 0 0 1rem; }
+.sem-acc-links { display: flex; flex-wrap: wrap; align-items: center; gap: 1.25rem; }
+
+/* ── 상세 뷰 슬라이드 버튼(Secondary) ── */
+.sem-detail-slide { margin: 0 0 1.5rem; }
+
+/* ── §5 인터랙션 4상태 (세미나 신규 요소) ── */
+.sem-acc-sum,
+button.proof-link,
+.sem-hero-empty-how a {
+  transition: background-color 150ms ease-out, border-color 150ms ease-out, color 150ms ease-out;
+}
+button.proof-link:hover { color: var(--accent); }
+.sem-hero-empty-how a:hover { color: var(--accent); }
+.sem-acc-sum:focus-visible,
+button.proof-link:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sem-acc-sum, button.proof-link, .sem-hero-empty-how a { transition: none; }
+}
