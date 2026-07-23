@@ -23,7 +23,7 @@ const HISTORY = [
   ]],
   ['2026-07-10', [
     ['prep', '개선', '통합 허브 개편 배포 — 메인=링크 허브, /about(계보·존재 의의)·/join(모집 안내) 신설.'],
-    ['planned', '기록', '지원하기 CTA 보류 — 지원 폼 도구 미확정.'],
+    ['planned', '기록', '참여 안내 방식 보류 — 안내 도구 미확정.'],
     ['live', '신규', '사이트 최초 배포 — GitHub 조직(KWU-ERPCLUB) + Pages, main push 자동 배포.'],
   ]],
 ]
@@ -57,7 +57,7 @@ export default function Log() {
             <p className="doc-lead">연구회가 어떻게 운영돼 왔고 어디로 가는지의 기록입니다.</p>
 
             <p className="callout">
-              내부 운영용 페이지입니다. 연구회 소개는 <a href="/about/">소개</a>, 스터디 참여는 <a href="/join/">모집 안내</a>에서 확인하세요.
+              내부 운영용 페이지입니다. 연구회 소개와 참여 문의는 <a href="/about/">소개</a>에서 확인하세요.
             </p>
 
             <section className="doc-section" id="roadmap">

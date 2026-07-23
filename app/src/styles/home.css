@@ -157,6 +157,40 @@
 .b-node.now h3 em { font-style: normal; color: var(--accent); }
 .b-node .status { margin: 0.4rem 0 0; }
 
+/* ── RECENT 최근 활동 — 하단 도구면(2026-07-23 IA 2차) ── */
+.recent {
+  max-width: 720px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border-top: 1px solid var(--line);
+  text-align: left;
+}
+.recent-col { padding: 1.75rem 1.5rem; }
+.recent-col + .recent-col { border-left: 1px solid var(--line); }
+@media (max-width: 700px) {
+  .recent { grid-template-columns: 1fr; }
+  .recent-col + .recent-col { border-left: none; border-top: 1px solid var(--line); }
+}
+.recent-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; }
+.recent-item { display: block; text-decoration: none; color: inherit; }
+.recent-item-date { display: block; font-size: 0.75rem; color: var(--text-sub); margin-bottom: 0.15rem; }
+.recent-item-title {
+  display: block;
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.4;
+  border-bottom: 2px solid transparent;
+  width: fit-content;
+  transition: border-color 150ms ease-out, color 150ms ease-out;
+}
+.recent-item:hover .recent-item-title { color: var(--accent); border-bottom-color: var(--accent); }
+.recent-item:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.recent-empty { margin: 0; font-size: 0.86rem; color: var(--text-sub); line-height: 1.55; }
+.recent-more { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; margin: 1.75rem 0 0; }
+@media (prefers-reduced-motion: reduce) { .recent-item-title { transition: none; } }
+
 /* ── PROJECTS 향후 목록 ── */
 .next-list { max-width: 620px; margin: 2.25rem auto 0; text-align: left; }
 .next-label {

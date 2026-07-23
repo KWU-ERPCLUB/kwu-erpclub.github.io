@@ -11,8 +11,8 @@ for (const kind of KINDS) {
   let files = []
   try { files = readdirSync(join(root, kind)).filter((f) => f.endsWith('.md')) } catch { continue }
   for (const f of files) {
-    const { data } = parseFrontmatter(readFileSync(join(root, kind, f), 'utf8'))
-    const errs = validateEntry(kind, f, data)
+    const { data, body } = parseFrontmatter(readFileSync(join(root, kind, f), 'utf8'))
+    const errs = validateEntry(kind, f, data, body)
     if (errs.length) { failed = true; console.error(`FAIL ${kind}/${f}\n  - ${errs.join('\n  - ')}`) }
     else console.log(`OK   ${kind}/${f}`)
   }

@@ -1,7 +1,10 @@
 // 문안 원천: erp-club/docs/문안-메인.md (5차 §about — ①누구인가=계보+MIS 현재형 ②왜 지금인가=4단 서사+스탯 차트)
 // 수치·출처 단일원천: erp-club/docs/선행조사-2026-07-10.md §C·§D
 // 차트: 강조 패턴(버건디 1색+회색) — 팔레트 검증 2026-07-10(대비·CVD 통과, 전 바 직접 라벨)
-import { Arrow, SiteNav, SiteFooter } from './shared.jsx'
+// IA 2차(2026-07-23): join 흡수 — 운영 증빙(실측 정량, 전 항목 출처) + 모집 문의 사실 1줄
+import { useMemo } from 'react'
+import { Arrow, SiteNav, SiteFooter, REPO_URL } from './shared.jsx'
+import { loadContent } from './content/loader.js'
 
 const TIMELINE = [
   { era: '학회', title: 'ERP연구회', desc: '광운대학교 경영학부에서 SAP·ERP를 공부해온 학회입니다.' },
@@ -75,6 +78,14 @@ function BarFig({ caption, max, rows }) {
 }
 
 export default function About() {
+  // 운영 증빙 — 실측 정량만(콘텐츠 건수는 content/에서 집계, 나머지는 확인된 사실)
+  const articleCount = useMemo(() => loadContent('기사').length, [])
+  const seminarCount = useMemo(() => loadContent('세미나').length, [])
+  const PROOF = [
+    { num: '1', label: '진행 중 스터디', src: 'ADsP 1기 — 진도 보드로 운영' },
+    { num: '2', label: '라이브 실물', src: 'ADsP 진도 보드 · 이 사이트 (KWU-ERPCLUB 저장소)' },
+    { num: String(articleCount + seminarCount), label: '게재된 기사·세미나', src: 'content/ 집계 (기사 ' + articleCount + ' · 세미나 ' + seminarCount + ')' },
+  ]
   return (
     <>
       <SiteNav />
@@ -125,10 +136,27 @@ export default function About() {
               </p>
             </div>
             <div className="why-cta">
-              {/* 지원하기 CTA 보류(owner 2026-07-10) — 모집 페이지로 안내만 */}
-              <a className="proof-link" href="/join/">모집 안내 <Arrow /></a>
+              <a className="proof-link" href={REPO_URL}>GitHub 저장소 <Arrow /></a>
             </div>
           </div>
+        </section>
+
+        <section className="cell center" id="proof">
+          <span className="eyebrow">운영 증빙</span>
+          <h2 className="headline">기록으로 <em>남긴 것</em></h2>
+          <div className="row3">
+            {PROOF.map((p) => (
+              <div key={p.label} style={{ textAlign: 'left' }}>
+                <span className="stat-num">{p.num}</span>
+                <span className="stat-label">{p.label}</span>
+                <span className="stat-src">{p.src}</span>
+              </div>
+            ))}
+          </div>
+          <p className="mis-note" style={{ marginTop: '1.75rem' }}>
+            운영은 광운대 경영학부 21학번이 맡습니다. 모집은 비정기입니다 — 문의는{' '}
+            <a className="proof-link" style={{ display: 'inline' }} href={REPO_URL}>GitHub 저장소</a>로.
+          </p>
         </section>
       </main>
 

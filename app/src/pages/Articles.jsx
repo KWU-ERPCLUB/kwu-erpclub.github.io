@@ -1,10 +1,10 @@
 import { useMemo, useState } from 'react'
 import { SiteNav, SiteFooter } from '../shared.jsx'
 import { loadContent } from '../content/loader.js'
-import { TAGS } from '../content/schema.js'
+import { USES, TECHS } from '../content/schema.js'
 import Markdown from './Markdown.jsx'
 
-// 본문 마크다운 → 요약 발췌(리스트 행 4요소 중 '요약'). 순수 함수 — 테스트 대상.
+// 본문 마크다운 → 텍스트 발췌(리스트 요약행 + 검색 인덱스). 순수 함수 — 테스트 대상.
 export function excerpt(body, n = 96) {
   const text = (body || '')
     .replace(/```[\s\S]*?```/g, ' ')
@@ -17,29 +17,39 @@ export function excerpt(body, n = 96) {
   return text.length > n ? `${text.slice(0, n).trim()}…` : text
 }
 
-// 태그 칩 필터 — null이면 전체, 아니면 tags 포함 항목만. 순수 함수 — 테스트 대상.
-export function filterArticles(all, tag) {
-  return tag ? all.filter((a) => (a.tags || []).includes(tag)) : all
+// 2축 태그(용도·기술) + 검색(제목·요약 부분일치)을 AND 결합. 순수 함수 — 테스트 대상.
+export function filterArticles(all, { use = null, tech = null, q = '' } = {}) {
+  const query = q.trim().toLowerCase()
+  return all.filter((a) => {
+    if (use && !(a['용도'] || []).includes(use)) return false
+    if (tech && !(a['기술'] || []).includes(tech)) return false
+    if (query) {
+      const hay = `${a.title || ''} ${excerpt(a.body, 100000)}`.toLowerCase()
+      if (!hay.includes(query)) return false
+    }
+    return true
+  })
 }
 
 export default function Articles() {
   const all = useMemo(() => loadContent('기사'), [])
   const initial = typeof window === 'undefined' ? null : new URLSearchParams(window.location.search).get('p')
   const [sel, setSel] = useState(initial)
-  const [tag, setTag] = useState(null)
+  const [use, setUse] = useState(null)
+  const [tech, setTech] = useState(null)
+  const [q, setQ] = useState('')
   const cur = all.find((a) => a.slug === sel)
-  const list = filterArticles(all, tag)
+  const list = filterArticles(all, { use, tech, q })
 
   if (cur) {
+    const meta = [...(cur['용도'] || []), ...(cur['기술'] || [])]
     return (
       <>
         <SiteNav />
         <main className="art-page">
           <article className="art-detail">
             <button type="button" className="art-back" onClick={() => setSel(null)}>← 목록</button>
-            {(cur.tags || []).length > 0 && (
-              <p className="art-detail-tags">{(cur.tags || []).join(' · ')}</p>
-            )}
+            {meta.length > 0 && <p className="art-detail-tags">{meta.join(' · ')}</p>}
             <h1>{cur.title}</h1>
             <p className="art-detail-meta">
               {cur.date} · {cur.author} · 원문 <a href={cur.source_url}>{cur.source_name}</a>
@@ -58,29 +68,49 @@ export default function Articles() {
       <main className="art-page">
         <header className="art-head">
           <span className="art-idx">ARTICLES</span>
-          <h1><em>기고</em> 아카이브</h1>
-          <p>스터디원이 각자의 AI 워크플로로 요약·기고한 업계 소식. 형식은 계약, 방식은 자유.</p>
+          <h1>이슈 <em>스캔</em> 아카이브</h1>
+          <p>지금 무엇이 이슈고 무엇을 알아두면 좋은지 — 스터디원이 각자의 AI 워크플로로 요약·기고해 축적한다. 용도(무엇에 쓰나)로 먼저 분류한다.</p>
         </header>
 
-        <div className="art-filter" role="group" aria-label="태그 필터">
-          <button type="button" className={tag ? '' : 'on'} aria-pressed={!tag} onClick={() => setTag(null)}>
+        <div className="art-search">
+          <input
+            type="search"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="제목·요약 검색"
+            aria-label="기사 검색"
+          />
+        </div>
+
+        <div className="art-filter" role="group" aria-label="용도 필터">
+          <span className="art-filter-label">용도</span>
+          <button type="button" className={use ? '' : 'on'} aria-pressed={!use} onClick={() => setUse(null)}>
             전체
           </button>
-          {TAGS.map((t) => (
-            <button
-              key={t}
-              type="button"
-              className={tag === t ? 'on' : ''}
-              aria-pressed={tag === t}
-              onClick={() => setTag(t)}
-            >
+          {USES.map((u) => (
+            <button key={u} type="button" className={use === u ? 'on' : ''} aria-pressed={use === u} onClick={() => setUse(u)}>
+              {u}
+            </button>
+          ))}
+        </div>
+
+        <div className="art-filter art-filter-sub" role="group" aria-label="기술 필터">
+          <span className="art-filter-label">기술</span>
+          <button type="button" className={tech ? '' : 'on'} aria-pressed={!tech} onClick={() => setTech(null)}>
+            전체
+          </button>
+          {TECHS.map((t) => (
+            <button key={t} type="button" className={tech === t ? 'on' : ''} aria-pressed={tech === t} onClick={() => setTech(t)}>
               {t}
             </button>
           ))}
         </div>
 
         {list.length === 0 ? (
-          <p className="art-empty">아직 기고가 없다. 첫 기고 방법은 온보딩 가이드 참고.</p>
+          <div className="art-empty">
+            <p className="art-empty-title">조건에 맞는 기고가 없습니다.</p>
+            <p>필터·검색을 지우면 전체 목록으로 돌아갑니다. 첫 기고는 <code>content/기사/</code>에 규칙(용도·출처)에 맞는 마크다운을 추가하면 자동 게재됩니다.</p>
+          </div>
         ) : (
           <ul className="art-list">
             {list.map((a) => (
@@ -89,13 +119,14 @@ export default function Articles() {
                   <span className="art-row-meta">{a.date} · {a.author}</span>
                   <span className="art-row-title">{a.title}</span>
                   <span className="art-row-excerpt">{excerpt(a.body)}</span>
-                  {(a.tags || []).length > 0 && (
-                    <span className="art-row-tags">
-                      {(a.tags || []).map((t) => (
-                        <span key={t} className="art-tag">{t}</span>
-                      ))}
-                    </span>
-                  )}
+                  <span className="art-row-tags">
+                    {(a['용도'] || []).map((t) => (
+                      <span key={t} className="art-tag art-tag-use">{t}</span>
+                    ))}
+                    {(a['기술'] || []).map((t) => (
+                      <span key={t} className="art-tag">{t}</span>
+                    ))}
+                  </span>
                 </button>
               </li>
             ))}

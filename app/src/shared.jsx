@@ -1,19 +1,17 @@
 // 전 페이지 공용 — 네비게이션·푸터·화살표·링크 상수
 // 탭·라벨=영문 정책(owner 2026-07-11): 현업에서 영어로 더 자주 쓰는 용어는 영문, 본문은 한글
-// 지원 기능(지원하기 CTA·지원폼)은 보류 — 2026-07-10 owner 지시
+// 참여 CTA·폼 기능은 보류(owner 2026-07-10). 모집 안내 = about 사실 문장 1줄.
 import { useState } from 'react'
 
 export const REPO_URL = 'https://github.com/KWU-ERPCLUB/kwu-erpclub.github.io'
 
 // 탭=페이지 이동만(owner 2026-07-11 — 메인 섹션 앵커 퀵바 폐지).
-// 외부: PROJECTS·ABOUT·JOIN / 내부 진입: LOG(내부 문서 허브 — REPORTS 등은 LOG 사이드바)
+// IA 2차(SPEC §4): 6종 = 메인(brand)·기사·세미나·about·log·projects. labs·reports·join 제거.
 const NAV_LINKS = [
   ['ARTICLES', '/articles/'],
   ['SEMINARS', '/seminars/'],
-  ['LABS', '/labs/'],
   ['PROJECTS', '/projects/'],
   ['ABOUT', '/about/'],
-  ['JOIN', '/join/'],
   ['LOG', '/log/'],
 ]
 
@@ -77,7 +75,7 @@ export function SiteFooter() {
         <span className="f-brand">광운대학교 ERP연구회</span>
         <span style={{ display: 'flex', gap: '1.25rem' }}>
           <a href="/about/">ABOUT</a>
-          <a href="/reports/">REPORTS</a>
+          <a href="/log/">LOG</a>
           <a href={REPO_URL}>GITHUB</a>
         </span>
       </div>

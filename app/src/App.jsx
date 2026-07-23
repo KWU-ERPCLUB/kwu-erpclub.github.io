@@ -2,8 +2,9 @@
 // 나머지 감쇠 → 세로로 이어져 있어도 "구분된 페이지"로 인식. 탭·라벨=영문 정책.
 // 구성(owner 지정): WHY(하단=업계 데이터) → ROADMAP(연구회→AI 스터디 분기 시각화) → PROJECTS → FAQ
 // 문안 원천: erp-club/docs/문안-메인.md. 수치=검증분만+출처(선행조사·/reports와 단일원천)
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { Arrow, SiteNav, SiteFooter, REPO_URL } from './shared.jsx'
+import { loadContent } from './content/loader.js'
 
 const ADSP_BOARD_URL = 'https://erpstudy.vercel.app'
 
@@ -42,7 +43,7 @@ const FAQ = [
   ['ERP연구회와는 어떤 관계인가요?',
     'ERP연구회 산하 스터디입니다. 연구회에는 SAP 실습·공모전 심화 트랙이 있습니다.'],
   ['언제 모집하나요?',
-    '준비 중입니다. 일정이 확정되면 모집 안내(JOIN)에 공지됩니다.'],
+    '모집은 비정기입니다. 문의는 소개(ABOUT) 또는 GitHub 저장소로 받습니다.'],
 ]
 
 // 섹션=페이지 스파이: 뷰포트 중앙 밴드에 걸린 섹션만 활성화(시각 강조 전용 — 탭 연동은 폐지, owner 2026-07-11)
@@ -104,6 +105,56 @@ function Carousel() {
   )
 }
 
+// 하단 최근 활동 — 살아있는 도구면(SPEC §4). 콘텐츠 로더 사용, 없으면 디자인된 빈 상태.
+function RecentActivity() {
+  const articles = useMemo(() => loadContent('기사').slice(0, 3), [])
+  const seminar = useMemo(() => loadContent('세미나')[0], [])
+  return (
+    <section className="cell center" id="recent">
+      <span className="page-idx">05 — RECENT</span>
+      <h2 className="headline">최근 <em>활동</em></h2>
+      <div className="recent">
+        <div className="recent-col">
+          <span className="next-label">ARTICLES</span>
+          {articles.length > 0 ? (
+            <ul className="recent-list">
+              {articles.map((a) => (
+                <li key={a.slug}>
+                  <a className="recent-item" href={`/articles/?p=${a.slug}`}>
+                    <span className="recent-item-date">{a.date}</span>
+                    <span className="recent-item-title">{a.title}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="recent-empty">첫 이슈 스캔이 게재되면 여기 최신순으로 표시됩니다.</p>
+          )}
+        </div>
+        <div className="recent-col">
+          <span className="next-label">SEMINARS</span>
+          {seminar ? (
+            <ul className="recent-list">
+              <li>
+                <a className="recent-item" href={`/seminars/?p=${seminar.slug}`}>
+                  <span className="recent-item-date">{seminar.회차}회 · {seminar.유형}</span>
+                  <span className="recent-item-title">{seminar.title}</span>
+                </a>
+              </li>
+            </ul>
+          ) : (
+            <p className="recent-empty">세미나가 열리면 최근 회차가 여기 표시됩니다.</p>
+          )}
+        </div>
+      </div>
+      <p className="recent-more">
+        <a className="proof-link" href="/articles/">기사 전체 <Arrow /></a>
+        <a className="proof-link" href="/seminars/">세미나 전체 <Arrow /></a>
+      </p>
+    </section>
+  )
+}
+
 export default function App() {
   useSectionSpy()
   return (
@@ -139,7 +190,7 @@ export default function App() {
             ))}
           </div>
           <p className="data-note rv" style={{ transitionDelay: '400ms' }}>
-            원문을 확인한 자료만 게재합니다 — 전체는 <a className="proof-link" href="/reports/">REPORTS <Arrow /></a>
+            원문을 확인한 자료만 게재합니다.
           </p>
         </section>
 
@@ -213,9 +264,11 @@ export default function App() {
             ))}
           </div>
           <p className="join-note rv" style={{ marginTop: '1.75rem', transitionDelay: '240ms' }}>
-            모집 상세는 <a className="proof-link" href="/join/">JOIN <Arrow /></a>
+            연구회 소개는 <a className="proof-link" href="/about/">ABOUT <Arrow /></a>
           </p>
         </section>
+
+        <RecentActivity />
       </main>
 
       <SiteFooter />

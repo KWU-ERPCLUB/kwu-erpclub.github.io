@@ -30,6 +30,27 @@
   font-size: 0.92rem;
   color: var(--text-sub);
 }
+/* 눈썹 인덱스 — §3-1 page-head 골격 통일(화이트리스트 ④ 섹션 인덱스) */
+.hub-idx {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  color: var(--accent);
+  margin-bottom: 0.7rem;
+}
+
+/* ── 목록 카드 칩 — 회차·유형(선택 필 아님·정보 칩) ── */
+.hub-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.5rem; }
+.hub-chip {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-sub);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  padding: 0.14rem 0.6rem;
+}
 
 /* ── 카드 언어 — surface + 헤어라인 + radius 18px ── */
 .hub-list {
@@ -133,16 +154,47 @@
   color: var(--text-sub);
 }
 
-/* ── 빈 상태 — 팔레트 회색 패널(버건디 없음) ── */
+/* ── 발원 기사 링크 (상세) ── */
+.sem-origin { font-size: 0.84rem; color: var(--text-sub); margin: 0 0 1.5rem; }
+.sem-origin a { /* Tertiary — 버건디 밑줄(화이트리스트 ⑥) */
+  color: var(--text);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 2px solid var(--accent);
+}
+.sem-origin a:hover { color: var(--accent); }
+
+/* ── 실습 3블록(준비·진행·재현 가이드) — Carpentries 이식 ── */
+.sem-block { padding: 1.5rem 0; border-top: 1px solid var(--line); }
+.sem-block-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.15rem;
+  margin: 0 0 0.75rem;
+}
+.sem-block-empty { font-size: 0.88rem; color: var(--text-sub); margin: 0; }
+
+/* ── 디자인된 빈 상태 (§3-1: 무엇이 쌓이는지 + 기고 방법) ── */
 .hub-empty {
   color: var(--text-sub);
   font-size: 0.9rem;
+  line-height: 1.6;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: var(--radius-card);
-  padding: 1.75rem 1.5rem;
-  text-align: center;
+  border-left: 3px solid var(--accent); /* 화이트리스트 ⑩ 콜아웃 보더 = 브랜드 시그니처 */
+  border-radius: 0 var(--radius-card) var(--radius-card) 0;
+  padding: 1.5rem 1.5rem 1.6rem;
   margin: 0.5rem 0;
+}
+.hub-empty p { margin: 0 0 0.7rem; }
+.hub-empty p:last-child { margin-bottom: 0; }
+.hub-empty-title { font-weight: 700; color: var(--text); font-size: 0.96rem; }
+.hub-empty-how code {
+  font-size: 0.85em;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 0.08em 0.4em;
 }
 
 /* ── §5 인터랙션 4상태 — 150ms ease-out, transform·color·bg만 ── */
