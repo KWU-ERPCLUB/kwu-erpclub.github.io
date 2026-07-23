@@ -16,7 +16,7 @@ const ARCHIVE = [
   {
     title: 'ADsP Study Board',
     year: '2026',
-    desc: '스터디 진도·성취도를 관리하는 웹앱. ADsP 1기가 사용 중입니다.',
+    desc: '스터디 진도·성취도 관리 웹앱 — ADsP 1기 사용 중.',
     by: '운영진 제작 · ADsP 1기 사용',
     status: ['live', '운영 중'],
     links: [['열어보기', ADSP_BOARD_URL]],
@@ -41,8 +41,8 @@ export default function Projects() {
           <span className="eyebrow">PROJECTS · ARCHIVE</span>
           <h1 className="headline">만든 <em>실물</em>의 기록</h1>
           <p className="mis-note" style={{ marginTop: 0 }}>
-            연구회가 만들고 배포한 것들을 모아둡니다. 스터디원은 이 페이지로
-            본인이 기여한 부분을 한눈에 제시할 수 있습니다.
+            연구회가 만들고 배포한 것들의 모음. 스터디원의 기여 제시 =
+            이 페이지 하나로.
           </p>
         </section>
 
@@ -80,7 +80,7 @@ export default function Projects() {
             ))}
           </div>
           <p className="data-note" style={{ marginTop: '1.5rem' }}>
-            결과물은 각 제작자 소유입니다. 저장소·배포 링크가 증빙을 대신합니다.
+            결과물은 각 제작자 소유. 증빙 = 저장소·배포 링크.
           </p>
         </section>
       </main>

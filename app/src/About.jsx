@@ -7,16 +7,16 @@ import { Arrow, SiteNav, SiteFooter, REPO_URL } from './shared.jsx'
 import { loadContent } from './content/loader.js'
 
 const TIMELINE = [
-  { era: '학회', title: 'ERP연구회', desc: '광운대학교 경영학부에서 SAP·ERP를 공부해온 학회입니다.' },
-  { era: '2026 · 확장', title: '산하 스터디 신설', desc: '주제를 넓힙니다 — 경영·MIS에 AI를 어떻게 접목할 것인가.' },
-  { era: '지금', title: '1기 모집', desc: '비개발자의 AI 활용을 연구하고, 결과를 실물로 남깁니다.' },
+  { era: '학회', title: 'ERP연구회', desc: '광운대학교 경영학부에서 SAP·ERP를 공부해온 학회.' },
+  { era: '2026 · 확장', title: '산하 스터디 신설', desc: '주제 확장 — 경영·MIS에 AI를 어떻게 접목할 것인가.' },
+  { era: '지금', title: '1기 모집', desc: '비개발자의 AI 활용 연구 — 결과는 실물로.' },
 ]
 
 const FACTS = [
   {
     idx: '01',
-    claim: '다들 씁니다',
-    sub: '20대 4명 중 3명이 이미 생성형 AI를 써 봤습니다 — 전 연령 최고.',
+    claim: '다들 쓴다',
+    sub: '20대 4명 중 3명이 이미 생성형 AI 경험 — 전 연령 최고.',
     src: '과학기술정보통신부 · 2025 인터넷이용실태조사',
     chart: {
       caption: '생성형 AI 경험률',
@@ -29,8 +29,8 @@ const FACTS = [
   },
   {
     idx: '02',
-    claim: '그런데 얕게 씁니다',
-    sub: '직장인 활용 용도 1위는 정보 검색·요약 — 활용이 여기에 편중돼 있습니다.',
+    claim: '그런데 얕게 쓴다',
+    sub: '직장인 활용 용도 1위 = 정보 검색·요약 — 활용이 여기에 편중.',
     src: '나우앤서베이 · 직장인 1,000명 조사, 2025',
     chart: {
       caption: '직장인의 AI 활용 용도',
@@ -43,8 +43,8 @@ const FACTS = [
   },
   {
     idx: '03',
-    claim: '잘 쓰면 실제로 다릅니다 — 특히 초보자가',
-    sub: 'AI 도입 후 처리량 증가가 신입에서 평균의 두 배를 넘었습니다.',
+    claim: '잘 쓰면 실제로 다르다 — 특히 초보자가',
+    sub: 'AI 도입 후 처리량 증가, 신입이 평균의 두 배 이상.',
     src: 'Brynjolfsson 외 · NBER w31161, 2023 (상담원 5,179명)',
     chart: {
       caption: '시간당 업무 처리량 증가',
@@ -104,15 +104,15 @@ export default function About() {
             ))}
           </div>
           <p className="mis-note">
-            MIS(경영정보시스템)는 경영 문제를 정보 시스템으로 푸는 전공입니다.
-            그 시스템을 다루는 도구가 지금 AI로 바뀌고 있습니다.
+            MIS(경영정보시스템) = 경영 문제를 정보 시스템으로 푸는 전공.
+            그 시스템을 다루는 도구가 지금 AI로 전환 중.
           </p>
         </section>
 
         <section className="cell" id="why-about">
           <div className="center">
             <span className="eyebrow">왜 지금인가</span>
-            <h2 className="headline">쓰는 사람은 많지만,<br />잘 쓰는 법을 배우는 자리는 <em>없습니다</em></h2>
+            <h2 className="headline">쓰는 사람은 많지만,<br />잘 쓰는 법을 배우는 자리는 <em>없다</em></h2>
           </div>
 
           {FACTS.map((f) => (
@@ -130,9 +130,9 @@ export default function About() {
           <div className="why-block why-final">
             <div>
               <span className="feat-idx">04</span>
-              <h3>그래서 이 스터디입니다</h3>
+              <h3>그래서 이 스터디</h3>
               <p className="why-sub">
-                경영·MIS 맥락에서 잘 쓰는 법을 연구하고, 결과를 실물로 증명합니다.
+                경영·MIS 맥락에서 잘 쓰는 법 연구 — 결과는 실물로 증명.
               </p>
             </div>
             <div className="why-cta">
@@ -154,7 +154,7 @@ export default function About() {
             ))}
           </div>
           <p className="mis-note" style={{ marginTop: '1.75rem' }}>
-            운영은 광운대 경영학부 21학번이 맡습니다. 모집은 비정기입니다 — 문의는{' '}
+            운영 = 광운대 경영학부 21학번. 모집은 비정기 — 문의는{' '}
             <a className="proof-link" style={{ display: 'inline' }} href={REPO_URL}>GitHub 저장소</a>로.
           </p>
         </section>

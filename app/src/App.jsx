@@ -17,12 +17,12 @@ const DATA = [
 const PROJECTS = [
   {
     title: 'ADsP Study Board',
-    desc: 'ADsP 1기 스터디의 진도·성취도 웹앱. 지금 운영 중입니다.',
+    desc: 'ADsP 1기 스터디의 진도·성취도 웹앱 — 운영 중.',
     links: [['열어보기', ADSP_BOARD_URL]],
   },
   {
     title: 'This Site',
-    desc: '이 사이트 자체가 결과물입니다 — AI 협업 · git · 무료 배포.',
+    desc: '이 사이트 자체가 결과물 — AI 협업 · git · 무료 배포.',
     links: [['GitHub 소스', REPO_URL]],
   },
 ]
@@ -33,17 +33,18 @@ const NEXT = [
   ['planned', '예정', 'SQLD 스터디 · SAP Track · 공모전 출품'],
 ]
 
+// 답변 = 개조식(§0-1 전면 원칙). 질문 = 문답 UI라 구어 유지(예외 승인 범위)
 const FAQ = [
   ['코딩을 못해도 참여할 수 있나요?',
-    '네. 경영학부 대상이고, 주제는 코딩이 아니라 AI 활용입니다. 필요한 도구 사용법은 스터디에서 함께 다룹니다.'],
+    '가능. 경영학부 대상, 주제는 코딩이 아니라 AI 활용. 필요한 도구 사용법은 스터디에서 함께 다룸.'],
   ['비용이 드나요?',
-    '참가비는 없습니다. 무료 도구 스택으로 시작하고, 일부 유료 AI 도구는 선택 사항입니다.'],
+    '참가비 없음. 무료 도구 스택 기본, 일부 유료 AI 도구는 선택.'],
   ['무엇을 만들게 되나요?',
-    '각자 경영·MIS 맥락의 실물 — 배포된 웹 결과물 — 을 만듭니다. 결과물은 본인 소유입니다.'],
+    '각자 경영·MIS 맥락의 실물(배포된 웹 결과물) 제작. 결과물은 본인 소유.'],
   ['ERP연구회와는 어떤 관계인가요?',
-    'ERP연구회 산하 스터디입니다. 연구회에는 SAP 실습·공모전 심화 트랙이 있습니다.'],
+    'ERP연구회 산하 스터디. 연구회 안에 SAP 실습·공모전 심화 트랙.'],
   ['언제 모집하나요?',
-    '모집은 비정기입니다. 문의는 소개(ABOUT) 또는 GitHub 저장소로 받습니다.'],
+    '모집은 비정기. 문의 = ABOUT 페이지 또는 GitHub 저장소.'],
 ]
 
 // 섹션=페이지 스파이: 뷰포트 중앙 밴드에 걸린 섹션만 활성화(시각 강조 전용 — 탭 연동은 폐지, owner 2026-07-11)
@@ -128,7 +129,7 @@ function RecentActivity() {
               ))}
             </ul>
           ) : (
-            <p className="recent-empty">첫 이슈 스캔이 게재되면 여기 최신순으로 표시됩니다.</p>
+            <p className="recent-empty">첫 이슈 스캔 게재 시 여기 최신순 표시.</p>
           )}
         </div>
         <div className="recent-col">
@@ -143,7 +144,7 @@ function RecentActivity() {
               </li>
             </ul>
           ) : (
-            <p className="recent-empty">세미나가 열리면 최근 회차가 여기 표시됩니다.</p>
+            <p className="recent-empty">세미나 개시 후 최근 회차 표시.</p>
           )}
         </div>
       </div>
@@ -166,7 +167,7 @@ export default function App() {
           <span className="eyebrow rv">KWANGWOON UNIV. · SCHOOL OF BUSINESS</span>
           <h1 {...rv(1)}><em>ERP</em>연구회</h1>
           <p className="hero-sub rv" style={{ transitionDelay: '160ms' }}>
-            경영·MIS에 AI를 접목하는 법을 연구하고, 결과를 실물로 남깁니다.
+            경영·MIS에 AI를 접목하는 법 연구 — 결과는 실물로.
           </p>
         </section>
 
@@ -177,8 +178,8 @@ export default function App() {
             쓰는 사람은 많지만, 잘 쓰는 법을 배우는 자리는 없다.
           </p>
           <p className="mis-note rv" style={{ transitionDelay: '240ms', marginTop: 0 }}>
-            20대 4명 중 3명이 이미 생성형 AI를 씁니다. 그러나 활용은 검색·요약 수준에 머물고,
-            경영·MIS 맥락에서 활용을 훈련하는 자리는 비어 있습니다 — 그 자리를 만들었습니다.
+            20대 4명 중 3명이 이미 생성형 AI 사용. 활용은 검색·요약 수준에 정체 —
+            경영·MIS 맥락의 활용 훈련 자리는 공백. 그 자리를 만드는 스터디.
           </p>
           <div className="row3 data-strip rv" style={{ transitionDelay: '320ms' }}>
             {DATA.map(([num, label, src]) => (
@@ -190,7 +191,7 @@ export default function App() {
             ))}
           </div>
           <p className="data-note rv" style={{ transitionDelay: '400ms' }}>
-            원문을 확인한 자료만 게재합니다.
+            원문 확인 자료만 게재.
           </p>
         </section>
 
@@ -218,7 +219,7 @@ export default function App() {
               <div className="b-node now">
                 <span className="b-era">NEW BRANCH</span>
                 <h3>MIS·AI 스터디 <em>신설</em></h3>
-                <p>경영·MIS에 AI를 접목하는 법을 연구하는 새 갈래. 이 사이트가 그 시작입니다.</p>
+                <p>경영·MIS에 AI를 접목하는 법을 연구하는 새 갈래 — 이 사이트가 그 시작.</p>
                 <span className="status prep">모집 준비</span>
               </div>
               <div className="b-node">

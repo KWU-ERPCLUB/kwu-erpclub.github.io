@@ -54,10 +54,10 @@ export default function Log() {
             </div>
 
             <h1 className="doc-h1">운영 기록</h1>
-            <p className="doc-lead">연구회가 어떻게 운영돼 왔고 어디로 가는지의 기록입니다.</p>
+            <p className="doc-lead">연구회가 어떻게 운영돼 왔고 어디로 가는지의 기록.</p>
 
             <p className="callout">
-              내부 운영용 페이지입니다. 연구회 소개와 참여 문의는 <a href="/about/">소개</a>에서 확인하세요.
+              내부 운영용 페이지. 연구회 소개·참여 문의 = <a href="/about/">소개</a>.
             </p>
 
             <section className="doc-section" id="roadmap">

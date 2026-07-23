@@ -4,7 +4,7 @@ import Seminars, { splitSeminarBody } from './Seminars.jsx'
 
 test('디자인된 빈 상태 — 무엇이 쌓이는지 + 기고 방법', () => {
   const html = renderToString(<Seminars />)
-  expect(html).toContain('아직 세미나 기록이 없습니다.')
+  expect(html).toContain('세미나 기록 아직 없음.')
   expect(html).toContain('content/세미나/') // 기고 방법 안내
   expect(html).toContain('SEMINARS') // 눈썹 인덱스(§3-1)
 })

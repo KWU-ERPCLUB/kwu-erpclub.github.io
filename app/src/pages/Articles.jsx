@@ -69,7 +69,7 @@ export default function Articles() {
         <header className="art-head">
           <span className="art-idx">ARTICLES</span>
           <h1>이슈 <em>스캔</em> 아카이브</h1>
-          <p>지금 무엇이 이슈고 무엇을 알아두면 좋은지 — 스터디원이 각자의 AI 워크플로로 요약·기고해 축적한다. 용도(무엇에 쓰나)로 먼저 분류한다.</p>
+          <p>지금 무엇이 이슈고 무엇을 알아두면 좋은지 — 스터디원이 각자의 AI 워크플로로 요약·기고. 분류 기준 = 용도(무엇에 쓰나).</p>
         </header>
 
         <div className="art-search">
@@ -108,8 +108,8 @@ export default function Articles() {
 
         {list.length === 0 ? (
           <div className="art-empty">
-            <p className="art-empty-title">조건에 맞는 기고가 없습니다.</p>
-            <p>필터·검색을 지우면 전체 목록으로 돌아갑니다. 첫 기고는 <code>content/기사/</code>에 규칙(용도·출처)에 맞는 마크다운을 추가하면 자동 게재됩니다.</p>
+            <p className="art-empty-title">조건에 맞는 기고 없음.</p>
+            <p>필터·검색 해제 = 전체 목록. 첫 기고 = <code>content/기사/</code>에 규칙(용도·출처)에 맞는 마크다운 추가 → 자동 게재.</p>
           </div>
         ) : (
           <ul className="art-list">
