@@ -1,18 +1,23 @@
 import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
-import Seminars, { splitSeminarBody, NextHero, PastItem } from './Seminars.jsx'
+import Seminars, { splitSeminarBody, NextHero, PastItem, NextEmpty } from './Seminars.jsx'
 
 const noop = () => {}
 // SSR은 인접 표현식 사이에 <!-- --> 마커를 넣음 — 텍스트 조각 검증 전 제거.
 const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
 
-test('디자인된 빈 상태 — 예정 0건: 무엇이 쌓이는지 + 기고 방법', () => {
-  // content/세미나/ 비어있음(.gitkeep만) → 예정·과거 모두 0 → NextEmpty 렌더
-  const html = renderToString(<Seminars />)
+test('디자인된 빈 상태(NextEmpty 단위) — 무엇이 쌓이는지 + 기고 방법', () => {
+  // 실콘텐츠 폴더에 결합하지 않는 단위 렌더(CI가 콘텐츠 증가·날짜 경과에 깨지지 않게 — 2026-07-24 회귀 교훈)
+  const html = renderToString(<NextEmpty />)
   expect(html).toContain('다음 세미나 준비 중')
   expect(html).toContain('content/세미나/') // 기고 방법 안내
-  expect(html).toContain('SEMINARS') // 눈썹 인덱스(§3-1)
   expect(html).toContain('NEXT') // 예정 슬롯 눈썹
+})
+
+test('페이지 구조 — 눈썹 + NEXT 슬롯(히어로 또는 빈 상태) 상시 존재(콘텐츠·시점 무관)', () => {
+  const html = renderToString(<Seminars />)
+  expect(html).toContain('SEMINARS') // 눈썹 인덱스(§3-1)
+  expect(html).toContain('sem-hero') // NextHero·NextEmpty 공통 클래스
 })
 
 test('NEXT 히어로 — 제목·리드 발췌·메타(일시·장소·발제자)·회차·유형 칩', () => {

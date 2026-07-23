@@ -12,8 +12,9 @@ test('메인 하이브리드 — 상단 소개 + 하단 최근 활동 섹션', (
   expect(html).toContain('최근')
   // 최근 기사(예시 기고 1건이 실제 로더로 잡힘)
   expect(html).toContain('2026 AI 트렌드')
-  // 세미나 없음 → 디자인된 빈 상태(회색 박스 단독 아님)
-  expect(html).toContain('세미나 개시 후')
+  // 세미나 칸 — 콘텐츠·시점 무관 구조 검증: 항목(recent-item) 또는 디자인된 빈 상태(recent-empty) 중 하나
+  expect(html).toContain('SEMINARS')
+  expect(/recent-item|recent-empty/.test(html)).toBe(true)
 })
 
 test('삭제 페이지 링크 부재 — /join/ /reports/ /labs/ 없음', () => {

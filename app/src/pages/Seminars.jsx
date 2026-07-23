@@ -78,8 +78,8 @@ export function NextHero({ s, onOpen }) {
   )
 }
 
-// 예정 0건 — 디자인된 빈 상태(§3-1: 무엇이 쌓이는지 + 기고 방법).
-function NextEmpty() {
+// 예정 0건 — 디자인된 빈 상태(§3-1: 무엇이 쌓이는지 + 기고 방법). export = 콘텐츠 무관 단위 테스트용.
+export function NextEmpty() {
   return (
     <section className="sem-hero sem-hero-empty">
       <span className="sem-hero-eyebrow">NEXT</span>
