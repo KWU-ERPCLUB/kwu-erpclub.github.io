@@ -97,6 +97,100 @@ button.proof-link {
 /* ── 상세 뷰 슬라이드 버튼(Secondary) ── */
 .sem-detail-slide { margin: 0 0 1.5rem; }
 
+/* ════ 상세 = 웹 에디토리얼 롱폼(Behance 문법, 2026-07-24) ════
+   대형 타이포 위계·여백 극대화·풀폭 섹션 흐름. 버건디 = 화이트리스트(④ 섹션 인덱스)만. */
+.sem-ed-head {
+  padding-bottom: 2.5rem;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid var(--line);
+}
+.sem-ed-eyebrow { /* 화이트리스트 ④ */
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+.sem-ed-title { /* Hero급 — 타이포 위계 상향(clamp ~3rem) */
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.1rem, 5vw, 3rem);
+  line-height: 1.14;
+  letter-spacing: -0.025em;
+  word-break: keep-all;
+  max-width: 20ch;
+  margin: 0 0 1.25rem;
+}
+.sem-ed-lead { /* 리드(서문) 큰 서체 */
+  font-size: 1.15rem;
+  line-height: 1.6;
+  color: var(--text);
+  max-width: 60ch;
+  word-break: keep-all;
+  margin: 0 0 1.5rem;
+}
+.sem-ed-meta { font-size: 0.8rem; color: var(--text-sub); margin: 0 0 1.25rem; }
+.sem-ed-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1.25rem; }
+.sem-ed-intro { max-width: 720px; margin-bottom: 2.5rem; }
+
+/* 섹션 목차 — 상단 1회(sticky 아님), 3블록 앵커 링크 */
+.sem-ed-toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 2rem;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 3rem;
+}
+.sem-ed-toc-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-sub);
+  text-decoration: none;
+  transition: color 150ms ease-out;
+}
+.sem-ed-toc-num { font-family: var(--font-display); font-weight: 800; font-size: 0.8rem; color: var(--accent); } /* 화이트리스트 ④ */
+.sem-ed-toc-link:hover { color: var(--text); }
+.sem-ed-toc-link:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* 풀폭 섹션 — 번호 눈썹 01/02/03 + 대형 타이틀 + 본문 720px, 섹션 사이 여백 극대화 */
+.sem-ed-block {
+  padding: 0 0 3.5rem;
+  margin-bottom: 3.5rem;
+  border-bottom: 1px solid var(--line);
+}
+.sem-ed-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 1rem; }
+.sem-ed-num { /* 화이트리스트 ④ 섹션 인덱스 */
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+.sem-ed-block-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  word-break: keep-all;
+  margin: 0 0 1.25rem;
+}
+.sem-ed-block .hub-md { max-width: 720px; }
+
+@media (max-width: 700px) {
+  .sem-ed-head { padding-bottom: 1.75rem; margin-bottom: 1.75rem; }
+  .sem-ed-toc { margin-bottom: 2rem; }
+  .sem-ed-block { padding-bottom: 2.5rem; margin-bottom: 2.5rem; }
+}
+@media (prefers-reduced-motion: reduce) { .sem-ed-toc-link { transition: none; } }
+
 /* ── §5 인터랙션 4상태 (세미나 신규 요소) ── */
 .sem-acc-sum,
 button.proof-link,

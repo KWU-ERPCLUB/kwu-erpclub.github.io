@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
-import Seminars, { splitSeminarBody, NextHero, PastItem, NextEmpty } from './Seminars.jsx'
+import Seminars, { splitSeminarBody, splitLead, SeminarDetail, NextHero, PastItem, NextEmpty } from './Seminars.jsx'
 
 const noop = () => {}
 // SSR은 인접 표현식 사이에 <!-- --> 마커를 넣음 — 텍스트 조각 검증 전 제거.
@@ -76,4 +76,41 @@ test('헤딩 없는 본문 — intro만', () => {
   const { intro, sections } = splitSeminarBody('그냥 본문')
   expect(intro).toBe('그냥 본문')
   expect(Object.keys(sections)).toEqual([])
+})
+
+// ── 에디토리얼 상세(Behance 롱폼, 2026-07-24) ──
+test('splitLead — 첫 단락=리드, 나머지=rest', () => {
+  expect(splitLead('첫 문장.\n\n둘째 단락.\n\n셋째.')).toEqual({ lead: '첫 문장.', rest: '둘째 단락.\n\n셋째.' })
+  expect(splitLead('한 단락뿐')).toEqual({ lead: '한 단락뿐', rest: '' })
+  expect(splitLead('')).toEqual({ lead: '', rest: '' })
+})
+
+const labSem = {
+  slug: 'x', title: 'RAG 실습', author: '홍길동', date: '2026-09-01', 회차: '3', 유형: '실습',
+  장소: '새빛관 501호', 슬라이드: 'https://slides/3',
+  body: '검색증강생성으로 사내 문서 질의응답 구축.\n\n## 준비\n환경 세팅\n\n## 진행\n실습\n\n## 재현 가이드\n따라하기',
+}
+
+test('SeminarDetail 실습 — 에디토리얼 헤더(눈썹 회차·유형·대형 타이틀·리드) + 목차 3앵커 + 번호 블록', () => {
+  const html = flat(<SeminarDetail s={labSem} onBack={() => {}} />)
+  expect(html).toContain('sem-ed-head') // 대형 에디토리얼 헤더
+  expect(html).toContain('3회 · 실습') // 눈썹 회차·유형
+  expect(html).toContain('sem-ed-title') // 대형 타이틀
+  expect(html).toContain('검색증강생성') // 리드(서문)
+  expect(html).toContain('새빛관 501호') // 메타
+  expect(html).toContain('sem-ed-toc') // 섹션 목차
+  expect(html).toContain('#sec-0') // 앵커 링크
+  expect(html).toContain('#sec-2')
+  expect(html).toContain('id="sec-0"') // 블록 앵커 대상
+  expect(html).toContain('01') // 번호 눈썹
+  expect(html).toContain('재현 가이드') // 3블록 타이틀
+})
+
+test('SeminarDetail 인지 — 목차 없이 리드 + 본문', () => {
+  const cog = { slug: 'y', title: '개념', author: '김', date: '2026-10-01', 회차: '4', 유형: '인지', body: '개론 리드.\n\n본문 이어짐.' }
+  const html = flat(<SeminarDetail s={cog} onBack={() => {}} />)
+  expect(html).toContain('4회 · 인지')
+  expect(html).toContain('개론 리드') // 리드
+  expect(html).toContain('본문 이어짐') // 본문
+  expect(html).not.toContain('sem-ed-toc') // 인지 = 목차 없음
 })

@@ -1,0 +1,149 @@
+/* 프로젝트(/projects/) DPM 문법 — 2026-07-24. 대형 커버 그리드 + 호버 오버레이 + 상세 배너·프롬프트 로그.
+   셸(hub-page·hub-head·hub-idx·hub-empty·hub-back·hub-md)=pages.css · 토큰=global.css · 디자인규칙 v2 준수. */
+
+/* ── 그리드 — 데스크톱 2열·모바일 1열 ── */
+.pj-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2.25rem 1.75rem; }
+@media (max-width: 700px) { .pj-grid { grid-template-columns: 1fr; gap: 1.9rem; } }
+
+/* ── 카드 커버 (16:10, object-fit cover, radius 18px) ── */
+.pj-card-coverwrap { position: relative; }
+.pj-card-open { display: block; width: 100%; padding: 0; border: none; background: none; cursor: pointer; }
+.pj-card-cover {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+}
+.pj-cover-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 3rem;
+  color: var(--text-sub);
+  background: var(--surface);
+}
+
+/* ── 호버 오버레이 — 어두운 반투명 + 흰 필 링크(hover 디바이스 한정, 터치=미표시) ── */
+.pj-card-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-card);
+  background: rgba(22, 22, 22, 0.55);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease-out;
+}
+@media (hover: hover) { .pj-card:hover .pj-card-overlay { opacity: 1; } }
+.pj-card:focus-within .pj-card-overlay { opacity: 1; } /* 키보드 포커스 = 링크 도달 가능 */
+.pj-ov-link {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 1rem;
+  background: #fff;
+  color: var(--text);
+  border-radius: var(--radius-pill);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+.pj-ov-link:hover { background: var(--surface); }
+
+/* ── 카드 하단 정보 — 제목·설명·상태 칩 ── */
+.pj-card-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
+  width: 100%;
+  padding: 0.9rem 0.15rem 0;
+  background: none;
+  border: none;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+.pj-card-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.25rem;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  word-break: keep-all;
+}
+.pj-card-desc { font-size: 0.9rem; color: var(--text-sub); line-height: 1.5; word-break: keep-all; }
+.pj-card-info .status { margin-top: 0.15rem; }
+.pj-card-info:hover .pj-card-title { text-decoration: underline; text-underline-offset: 3px; }
+
+/* ── 상세 — 커버 배너 → 제목·설명·상태·링크 → 소개 → 프롬프트 로그 ── */
+.pj-detail { max-width: 760px; }
+.pj-detail-banner { margin-bottom: 1.75rem; }
+.pj-detail-cover {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+}
+.pj-detail-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.9rem, 4vw, 2.6rem);
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+  word-break: keep-all;
+  margin: 0 0 0.5rem;
+}
+.pj-detail-desc { font-size: 1.05rem; color: var(--text-sub); line-height: 1.5; max-width: 52ch; word-break: keep-all; margin: 0 0 1.1rem; }
+.pj-detail-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.75rem;
+  border-bottom: 1px solid var(--line);
+}
+.pj-detail-links { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+
+/* ── 프롬프트 로그 — 코드블록 스타일(다크 앵커 = 브랜드 시그니처·화면당 1면) ── */
+.pj-log-block { margin-top: 2rem; }
+.pj-log-title { font-family: var(--font-display); font-weight: 800; font-size: 1.2rem; margin: 0 0 0.75rem; }
+.pj-log-body { background: var(--dark); border-radius: 12px; padding: 1.05rem 1.25rem; }
+.pj-log-body .hub-md {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: #e7e7e5;
+}
+.pj-log-body .hub-md p { margin: 0 0 0.6rem; }
+.pj-log-body .hub-md p:last-child { margin-bottom: 0; }
+.pj-log-body .hub-md a { color: #fff; border-bottom-color: var(--accent-derived, #d18f9a); }
+
+/* ── §5 인터랙션 4상태 — 150ms ease-out, transform·opacity·color만 ── */
+.pj-card-open, .pj-card-info, .pj-ov-link {
+  transition: background-color 150ms ease-out, color 150ms ease-out, transform 100ms ease-out;
+}
+.pj-card-open:active { transform: scale(0.99); }
+.pj-ov-link:active { transform: scale(0.98); }
+.pj-card-open:focus-visible,
+.pj-card-info:focus-visible,
+.pj-ov-link:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pj-card-open, .pj-card-info, .pj-ov-link, .pj-card-overlay { transition: none; }
+  .pj-card-open:active, .pj-ov-link:active { transform: none; }
+}

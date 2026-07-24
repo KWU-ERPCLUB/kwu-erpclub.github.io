@@ -1,11 +1,11 @@
-// 메인(/) v3 — 섹션=페이지 강조 로직(owner 2026-07-11): 스크롤에 따라 현재 섹션만 활성(밝게)·
-// 나머지 감쇠 → 세로로 이어져 있어도 "구분된 페이지"로 인식. 탭·라벨=영문 정책.
-// 구성(owner 지정): WHY(하단=업계 데이터) → ROADMAP(연구회→AI 스터디 분기 시각화) → PROJECTS → FAQ
-// 문안 원천: erp-club/docs/문안-메인.md. 수치=검증분만+출처(선행조사·/reports와 단일원천)
-import { useEffect, useMemo, useRef } from 'react'
+// 메인(/) v4 — prography식 "꽉 찬" 풀 모션(색·폰트=현행 토큰 유지). 4섹션(WHY·ROADMAP·PROJECTS·FAQ).
+// 모션: 문자 스태거 리빌 · 키워드 마퀴 · 수치 카운트업 · 카드 호버 리프트 · 가벼운 패럴랙스(transform·opacity만).
+// 섹션=페이지 감쇠 로직 유지(리빌 타이밍·이동량 강화). reduced-motion = 전부 정지·즉시 표시.
+// 문안 원천: erp-club/docs/문안-메인.md. 수치=검증분만+출처(선행조사·/reports 단일원천).
+import { useRef } from 'react'
 import { Arrow, SiteNav, SiteFooter, REPO_URL } from './shared.jsx'
-import { loadContent } from './content/loader.js'
-import { nextSeminar, todayString } from './pages/seminars-logic.js'
+import { MARQUEE_KEYWORDS, marqueeTrack } from './home-logic.js'
+import { useSectionSpy, useParallax, StaggerChars, CountUp } from './home-motion.jsx'
 
 const ADSP_BOARD_URL = 'https://erpstudy.vercel.app'
 
@@ -28,6 +28,7 @@ const PROJECTS = [
   },
 ]
 
+// 로드맵/NEXT — planned·prep = "앞으로 채워갈 공간"(점선 슬롯). live = 확정 활동.
 const NEXT = [
   ['prep', '모집 준비', 'MIS·AI 스터디 1기 — 스터디명·인원 확정 대기'],
   ['planned', '준비', '공모전 프레임워크 — 공모전 워크프로세스를 효율화하는 재사용 틀'],
@@ -48,32 +49,10 @@ const FAQ = [
     '모집은 비정기. 문의 = ABOUT 페이지 또는 GitHub 저장소.'],
 ]
 
-// 섹션=페이지 스파이: 뷰포트 중앙 밴드에 걸린 섹션만 활성화(시각 강조 전용 — 탭 연동은 폐지, owner 2026-07-11)
-function useSectionSpy() {
-  useEffect(() => {
-    const pages = document.querySelectorAll('.page')
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      pages.forEach((p) => p.classList.add('active'))
-      return
-    }
-    const io = new IntersectionObserver(
-      (entries) => entries.forEach((e) => {
-        if (e.isIntersecting) {
-          e.target.classList.add('seen') // 한 번 활성화된 섹션은 내용 유지(비활성=감쇠만)
-          pages.forEach((p) => p.classList.toggle('active', p === e.target))
-        }
-      }),
-      { rootMargin: '-42% 0px -42% 0px', threshold: 0 },
-    )
-    pages.forEach((p) => io.observe(p))
-    return () => io.disconnect()
-  }, [])
-}
-
 // base 클래스와 병합해 rv를 부여한다(스프레드가 className을 덮어쓰는 사고 방지 — 리뷰 지적)
 const rv = (i, base = '') => ({
   className: base ? `${base} rv` : 'rv',
-  style: { transitionDelay: `${i * 80}ms` },
+  style: { transitionDelay: `${i * 90}ms` },
 })
 
 function Carousel() {
@@ -107,94 +86,53 @@ function Carousel() {
   )
 }
 
-// 하단 최근 활동 — 살아있는 도구면(SPEC §4). 콘텐츠 로더 사용, 없으면 디자인된 빈 상태.
-function RecentActivity() {
-  const articles = useMemo(() => loadContent('기사').slice(0, 3), [])
-  // 예정 세미나 있으면 우선(라벨 NEXT), 없으면 최근 회차(loadContent 역시간순 [0]).
-  const allSem = useMemo(() => loadContent('세미나'), [])
-  const upcoming = useMemo(() => nextSeminar(allSem, todayString()), [allSem])
-  const seminar = upcoming || allSem[0]
-  return (
-    <section className="cell center" id="recent">
-      <span className="page-idx">05 — RECENT</span>
-      <h2 className="headline">최근 <em>활동</em></h2>
-      <div className="recent">
-        <div className="recent-col">
-          <span className="next-label">INSIGHTS</span>
-          {articles.length > 0 ? (
-            <ul className="recent-list">
-              {articles.map((a) => (
-                <li key={a.slug}>
-                  <a className="recent-item" href={`/insights/?p=${a.slug}`}>
-                    <span className="recent-item-date">{a.date}</span>
-                    <span className="recent-item-title">{a.title}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="recent-empty">첫 인사이트 게재 시 여기 최신순 표시.</p>
-          )}
-        </div>
-        <div className="recent-col">
-          <span className="next-label">SEMINARS</span>
-          {seminar ? (
-            <ul className="recent-list">
-              <li>
-                <a className="recent-item" href={`/seminars/?p=${seminar.slug}`}>
-                  <span className="recent-item-date">{upcoming ? 'NEXT · ' : ''}{seminar.회차}회 · {seminar.유형}</span>
-                  <span className="recent-item-title">{seminar.title}</span>
-                </a>
-              </li>
-            </ul>
-          ) : (
-            <p className="recent-empty">세미나 개시 후 최근 회차 표시.</p>
-          )}
-        </div>
-      </div>
-      <p className="recent-more">
-        <a className="proof-link" href="/insights/">인사이트 전체 <Arrow /></a>
-        <a className="proof-link" href="/seminars/">세미나 전체 <Arrow /></a>
-      </p>
-    </section>
-  )
-}
-
 export default function App() {
   useSectionSpy()
+  useParallax()
   return (
     <>
       <SiteNav />
 
       <main className="lattice">
-        <section className="cell hero center page" id="top">
+        <section className="cell hero hero-xl center page" id="top">
           <span className="eyebrow rv">KWANGWOON UNIV. · SCHOOL OF BUSINESS</span>
-          <h1 {...rv(1)}><em>ERP</em>연구회</h1>
-          <p className="hero-sub rv" style={{ transitionDelay: '160ms' }}>
+          <h1 className="hero-title rv" style={{ transitionDelay: '80ms' }}>
+            <StaggerChars text="ERP" accent start={0} />
+            <StaggerChars text="연구회" start={3} />
+          </h1>
+          <p className="hero-sub rv" style={{ transitionDelay: '360ms' }}>
             경영·MIS에 AI를 접목하는 법 연구 — 결과는 실물로.
           </p>
+          {/* 키워드 마퀴 띠 — 다루는 주제 흐르는 텍스트(CSS 애니메이션·reduced-motion 시 정지) */}
+          <div className="marquee" data-parallax="-0.04" aria-hidden="true">
+            <div className="marquee-track">
+              {marqueeTrack(MARQUEE_KEYWORDS).map((kw, i) => (
+                <span className="marquee-item" key={`${kw}-${i}`}>{kw}</span>
+              ))}
+            </div>
+          </div>
         </section>
 
         <section className="cell center page" id="why">
           <span className="page-idx rv">01 — WHY</span>
           <h2 {...rv(1, 'headline')}>왜 <em>만들었나</em></h2>
-          <p className="why-line rv" style={{ transitionDelay: '160ms' }}>
+          <p className="why-line rv" style={{ transitionDelay: '180ms' }}>
             쓰는 사람은 많지만, 잘 쓰는 법을 배우는 자리는 없다.
           </p>
-          <p className="mis-note rv" style={{ transitionDelay: '240ms', marginTop: 0 }}>
+          <p className="mis-note rv" style={{ transitionDelay: '270ms', marginTop: 0 }}>
             20대 4명 중 3명이 이미 생성형 AI 사용. 활용은 검색·요약 수준에 정체 —
             경영·MIS 맥락의 활용 훈련 자리는 공백. 그 자리를 만드는 스터디.
           </p>
-          <div className="row3 data-strip rv" style={{ transitionDelay: '320ms' }}>
+          <div className="row3 data-strip rv" style={{ transitionDelay: '360ms' }}>
             {DATA.map(([num, label, src]) => (
               <div key={src} style={{ textAlign: 'left' }}>
-                <span className="stat-num">{num}</span>
+                <CountUp value={num} />
                 <span className="stat-label">{label}</span>
                 <span className="stat-src">{src}</span>
               </div>
             ))}
           </div>
-          <p className="data-note rv" style={{ transitionDelay: '400ms' }}>
+          <p className="data-note rv" style={{ transitionDelay: '450ms' }}>
             원문 확인 자료만 게재.
           </p>
         </section>
@@ -202,7 +140,7 @@ export default function App() {
         <section className="cell center page" id="roadmap">
           <span className="page-idx rv">02 — ROADMAP</span>
           <h2 {...rv(1, 'headline')}>연구회에서 <em>분기</em>하다</h2>
-          <div className="branch rv" style={{ transitionDelay: '160ms' }}>
+          <div className="branch rv" style={{ transitionDelay: '180ms' }}>
             <div className="b-node">
               <span className="b-era">ORIGIN</span>
               <h3>ERP연구회</h3>
@@ -226,11 +164,17 @@ export default function App() {
                 <p>경영·MIS에 AI를 접목하는 법을 연구하는 새 갈래 — 이 사이트가 그 시작.</p>
                 <span className="status prep">모집 준비</span>
               </div>
-              <div className="b-node">
+              {/* planned = "앞으로 채워갈 공간" — 점선 슬롯으로 확장 예정 시각화 */}
+              <div className="b-node b-slot">
                 <span className="b-era">DEEP DIVE</span>
                 <h3>SAP Track · 공모전</h3>
                 <p>AI 친숙도를 갖춘 뒤의 심화 갈래.</p>
                 <span className="status planned">예정</span>
+              </div>
+              <div className="b-node b-slot b-slot-empty" aria-hidden="true">
+                <span className="b-era">NEXT</span>
+                <h3>앞으로 채워갈 공간</h3>
+                <p>새 트랙·기수가 이 갈래에 이어질 자리.</p>
               </div>
             </div>
           </div>
@@ -242,10 +186,10 @@ export default function App() {
           <div {...rv(2)}>
             <Carousel />
           </div>
-          <div className="next-list rv" style={{ transitionDelay: '240ms' }}>
+          <div className="next-list rv" style={{ transitionDelay: '270ms' }}>
             <span className="next-label">NEXT</span>
             {NEXT.map(([status, label, text]) => (
-              <div className="dir-row" key={text}>
+              <div className={`dir-row${status === 'live' ? '' : ' dir-slot'}`} key={text}>
                 <span className={`status ${status}`}>{label}</span>
                 <p>{text}</p>
               </div>
@@ -260,7 +204,7 @@ export default function App() {
         <section className="cell center page" id="faq">
           <span className="page-idx rv">04 — FAQ</span>
           <h2 {...rv(1, 'headline')}>묻고 <em>답하기</em></h2>
-          <div className="faq rv" style={{ transitionDelay: '160ms' }}>
+          <div className="faq rv" style={{ transitionDelay: '180ms' }}>
             {FAQ.map(([q, a]) => (
               <details className="faq-item" key={q}>
                 <summary>{q}</summary>
@@ -268,12 +212,10 @@ export default function App() {
               </details>
             ))}
           </div>
-          <p className="join-note rv" style={{ marginTop: '1.75rem', transitionDelay: '240ms' }}>
+          <p className="join-note rv" style={{ marginTop: '1.75rem', transitionDelay: '270ms' }}>
             연구회 소개는 <a className="proof-link" href="/about/">ABOUT <Arrow /></a>
           </p>
         </section>
-
-        <RecentActivity />
       </main>
 
       <SiteFooter />

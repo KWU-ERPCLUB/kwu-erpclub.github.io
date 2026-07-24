@@ -79,66 +79,76 @@
 /* 월 헤더 "2026. 07" — 마이크로 라벨(§3-1 메타 톤) */
 .art-month-head { font-size: 0.82rem; font-weight: 700; letter-spacing: 0.04em; color: var(--text-sub); margin: 0 0 0.6rem; padding: 0 0.15rem; }
 
-/* ── 카드 피드 — 풀폭 흰 카드(카드 사이 간격으로 분리, 헤어라인 구분 폐지) ── */
-.art-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.75rem; }
+/* ── 색 면 카드 피드(AI in Use 이식) — 배경=성격별 저채도 4색, 진한 보더(--dark 1.5px)+옅은 그림자 ── */
+.art-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.85rem; }
+.art-card { list-style: none; }
 .art-card > button {
-  display: flex; align-items: center; gap: 1rem; width: 100%; text-align: left; /* 타일 세로 가운데(owner 2026-07-23) */
-  background: #fff; border: 1px solid var(--line); border-radius: var(--radius-card);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); padding: 1rem 1.15rem; color: inherit; font: inherit; cursor: pointer;
-  transition: border-color 150ms ease-out, box-shadow 150ms ease-out, transform 100ms ease-out;
+  display: flex; align-items: flex-start; gap: 1.1rem; width: 100%; text-align: left;
+  border: 1.5px solid var(--dark); border-radius: var(--radius-card); /* 또렷한 카드 윤곽 */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06); padding: 1.2rem 1.3rem; color: var(--text); font: inherit; cursor: pointer;
+  transition: box-shadow 150ms ease-out, transform 100ms ease-out;
 }
-.art-card > button:hover { border-color: var(--text-sub); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); }
-.art-card > button:active { transform: scale(0.997); }
+/* 성격별 저채도 색 면(§1 파생 4색) — 배경은 톤, 본문 텍스트는 --text 유지 가독 확보.
+   --card-fg = 대응 진한 색(성격 태그 진한 필·메타 강조에 사용). 버건디 아님 → §1 "버건디 면 금지"와 무관. */
+.art-card--news     { --card-fg: #46566a; } /* 뉴스·동향 = 슬레이트블루 */
+.art-card--analysis { --card-fg: #665c4f; } /* 심층 분석 = 웜토프 */
+.art-card--howto    { --card-fg: #4c6153; } /* 활용법·튜토리얼 = 세이지 */
+.art-card--tools    { --card-fg: #575067; } /* 도구·프롬프트 = 라벤더그레이 */
+.art-card--news > button     { background: #e7ecf1; }
+.art-card--analysis > button { background: #ede9e4; }
+.art-card--howto > button    { background: #e6ede8; }
+.art-card--tools > button    { background: #eae8ef; }
+.art-card > button:hover { box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1); transform: translateY(-2px); }
+.art-card > button:active { transform: translateY(0) scale(0.998); }
 .art-card > button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .art-card-body { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 
-/* 상단 메타 줄 — 저자 이니셜 원형(28px 차콜) + 저자명 · 날짜 */
-.art-card-meta { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: var(--text-sub); margin-bottom: 0.5rem; }
+/* 상단 메타 줄 — [아바타·저자] 좌 / 날짜 우상단(한 곳으로 정리, 과밀 금지) */
+.art-card-meta { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: var(--card-fg); margin-bottom: 0.55rem; }
 .art-avatar {
-  flex: none; width: 28px; height: 28px; border-radius: 50%; background: var(--dark); color: #fff;
+  flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--card-fg); color: #fff;
   display: inline-flex; align-items: center; justify-content: center;
-  font-family: var(--font-display); font-weight: 700; font-size: 0.8rem; line-height: 1;
+  font-family: var(--font-display); font-weight: 700; font-size: 0.78rem; line-height: 1;
 }
-.art-card-author { font-weight: 600; color: var(--text); }
-.art-card-date { font-variant-numeric: tabular-nums; }
-.art-row-sep { color: var(--line); }
+.art-card-author { font-weight: 700; color: var(--card-fg); }
+.art-card-date { margin-left: auto; font-variant-numeric: tabular-nums; } /* 우상단 날짜 */
 
-/* 제목 — 볼드 1.1rem */
-.art-card-title { display: block; font-size: 1.1rem; font-weight: 700; line-height: 1.4; letter-spacing: -0.01em; margin-bottom: 0.35rem; }
-/* 요약 = 제목 밑 한 줄(owner 2026-07-23 — 본문 노출 금지, line-clamp 1) */
+/* 제목 — 볼드·크게 */
+.art-card-title { display: block; font-size: 1.16rem; font-weight: 800; line-height: 1.35; letter-spacing: -0.015em; color: var(--text); margin-bottom: 0.55rem; }
+
+/* 주제 칩 — 흰 필(색 면 위 또렷) */
+.art-card-topic {
+  align-self: flex-start; font-size: 0.72rem; font-weight: 700; color: var(--card-fg);
+  background: #fff; border: 1px solid rgba(0, 0, 0, 0.08); border-radius: var(--radius-pill);
+  padding: 0.16rem 0.66rem; margin-bottom: 0.6rem;
+}
+
+/* 요약 = 2~3줄(line-clamp 3, 본문 텍스트 --text 계열 가독) */
 .art-card-excerpt {
-  display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;
-  font-size: 0.9rem; line-height: 1.55; color: var(--text-sub); margin-bottom: 0.65rem;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+  font-size: 0.9rem; line-height: 1.55; color: var(--text); margin-bottom: 0.85rem;
 }
 
-/* 핀 배지(고정) — 차콜 아이콘(버건디 미사용) */
-.art-pin { display: inline-flex; vertical-align: middle; color: var(--dark); margin-right: 0.3rem; }
+/* 핀 배지(고정) — 성격 진한색 아이콘(버건디 미사용) */
+.art-pin { display: inline-flex; vertical-align: middle; color: var(--card-fg); margin-right: 0.3rem; }
 
-/* 하단 칩 줄 — 성격 칩·주제 칩·지금써먹기 배지 */
+/* 하단 줄 — [성격 태그·지금써먹기] 좌 / "자세히 →" 우 */
+.art-card-foot { display: flex; align-items: center; gap: 0.75rem; margin-top: auto; }
 .art-row-tags { display: inline-flex; flex-wrap: wrap; gap: 0.35rem; }
-.art-tag { font-size: 0.72rem; font-weight: 600; color: var(--text-sub); background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-pill); padding: 0.14rem 0.6rem; }
-
-/* ── 썸네일 = 정사각형 80×80(구 96×72에서 +0.2cm 상향·정방형, owner 2026-07-23)·radius 10px.
-   이미지(로고 = /img/logos/) 있으면 contain 표시, 없으면 성격 색 타일 + 성격명 ── */
-.art-thumb {
-  flex: none; width: 80px; height: 80px; border-radius: 10px; overflow: hidden;
-  display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--line); background: #fff;
-}
-.art-thumb img { width: 100%; height: 100%; object-fit: contain; padding: 12px; display: block; }
-.art-tile {
-  border-color: transparent; padding: 0 0.5rem; text-align: center; word-break: keep-all;
-  font-family: var(--font-display); font-weight: 800; font-size: 0.82rem; line-height: 1.25;
-}
-/* 성격별 저채도 타일 배경 4색 — §1 파생(오너 승인 2026-07-23).
-   라이트 배경 위 저채도(L≈92%·저크로마)로 4성격 구분. 배경=면이지만 버건디 아님 → §1 "버건디 면 금지"와 무관. */
-.art-tile--news     { background: #e7ecf1; color: #46566a; } /* 뉴스·동향 = 저채도 슬레이트블루 */
-.art-tile--analysis { background: #ede9e4; color: #665c4f; } /* 심층 분석 = 저채도 웜토프 */
-.art-tile--howto    { background: #e6ede8; color: #4c6153; } /* 활용법·튜토리얼 = 저채도 세이지 */
-.art-tile--tools    { background: #eae8ef; color: #575067; } /* 도구·프롬프트 = 저채도 라벤더그레이 */
-/* 성격(주 축) — 차콜 테두리로 한 단계 강조(버건디 면 금지) */
-.art-tag-nature { color: var(--text); border-color: var(--text-sub); }
+.art-tag { font-size: 0.72rem; font-weight: 600; color: var(--text-sub); background: #fff; border: 1px solid var(--line); border-radius: var(--radius-pill); padding: 0.14rem 0.6rem; }
+/* 성격 태그 = 진한 필(대응 진한 색 채움·흰 텍스트) */
+.art-tag-nature { color: #fff; background: var(--card-fg); border-color: var(--card-fg); }
 /* 지금 써먹기 배지 — prep 배지 문법(테두리+텍스트, §1 화이트리스트 ⑤) · 버건디 면 금지 */
 .art-tag-now { color: var(--accent); border-color: var(--accent); background: #fff; }
+/* "자세히 →" — Tertiary(밑줄 없이 성격색 텍스트, 카드 전체가 버튼이라 밑줄 생략) */
+.art-card-more { flex: none; margin-left: auto; display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.82rem; font-weight: 700; color: var(--card-fg); }
+
+/* ── 썸네일 = 이미지(로고 = /img/logos/) 있을 때만 · 정사각형 76×76·radius 10px ── */
+.art-thumb {
+  flex: none; width: 76px; height: 76px; border-radius: 10px; overflow: hidden;
+  display: inline-flex; align-items: center; justify-content: center; border: 1px solid rgba(0, 0, 0, 0.1); background: #fff;
+}
+.art-thumb img { width: 100%; height: 100%; object-fit: contain; padding: 11px; display: block; }
 
 /* ── 디자인된 빈 상태 (§3-1: 무엇이 쌓이는지 + 기고 방법) ── */
 .art-empty {
@@ -225,7 +235,7 @@
 .hub-md blockquote { margin: 0 0 1.1rem; padding: 0.1rem 0 0.1rem 1.1rem; border-left: 3px solid var(--accent); color: var(--text-sub); } /* 콜아웃(⑩) */
 
 @media (prefers-reduced-motion: reduce) {
-  .art-filter button, .art-row > button, .art-back, .art-search input, .hub-md a, .art-source, .art-nav-link,
+  .art-filter button, .art-card > button, .art-back, .art-search input, .hub-md a, .art-source, .art-nav-link,
   .art-tabs button, .hub-sec-more, .hub-guide a { transition: none; }
-  .art-filter button:active, .art-tabs button:active { transform: none; }
+  .art-filter button:active, .art-tabs button:active, .art-card > button:hover, .art-card > button:active { transform: none; }
 }

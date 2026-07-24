@@ -147,6 +147,7 @@
   overflow-x: auto;
 }
 .hub-md pre code { background: none; border: none; padding: 0; }
+.hub-md img { max-width: 100%; height: auto; display: block; margin: 1.1rem 0; border-radius: 10px; } /* 본문 이미지 풀폭 대응(에디토리얼) */
 .hub-md blockquote { /* 콜아웃 — 좌측 3px 버건디 보더(화이트리스트 ⑩) */
   margin: 0 0 1.1rem;
   padding: 0.1rem 0 0.1rem 1.1rem;

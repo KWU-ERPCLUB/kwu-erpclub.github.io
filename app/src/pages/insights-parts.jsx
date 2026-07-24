@@ -1,49 +1,12 @@
-// 인사이트 공용 UI 조각 — 썸네일·태그 칩·핀 배지·기사 카드. Articles/Hub 공유.
+// 인사이트 공용 UI 조각 — 색 면 카드(AI in Use 문법 이식)·태그 칩·핀 배지·썸네일. Articles/Hub 공유.
+import { Arrow } from '../shared.jsx'
 import { natureKey, authorInitial, excerpt } from './insights-logic.js'
 
-// 성격별 기본 아이콘(자체 제작 라인 SVG — 텍스트 타일 폐기, owner 2026-07-23).
-// 뉴스·동향=신문 / 심층 분석=문서+돋보기 / 활용법·튜토리얼=번호 단계 / 도구·프롬프트=터미널 프롬프트.
-const NATURE_ICONS = {
-  news: (
-    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <rect x="3" y="4.5" width="15" height="15" rx="1.6" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M18 8h1.6c.8 0 1.4.6 1.4 1.4v8.1a2 2 0 0 1-2 2H5" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M6 8.5h6M6 11.5h9M6 14.5h9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  ),
-  analysis: (
-    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M6 3.5h8.5L19 8v12a1.5 1.5 0 0 1-1.5 1.5H6A1.5 1.5 0 0 1 4.5 20V5A1.5 1.5 0 0 1 6 3.5Z" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M14.5 3.5V8H19" stroke="currentColor" strokeWidth="1.5" />
-      <circle cx="10.5" cy="13.5" r="2.8" stroke="currentColor" strokeWidth="1.5" />
-      <path d="m12.7 15.7 2.6 2.6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  ),
-  howto: (
-    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <circle cx="6" cy="6" r="2.2" stroke="currentColor" strokeWidth="1.4" />
-      <circle cx="6" cy="12.5" r="2.2" stroke="currentColor" strokeWidth="1.4" />
-      <circle cx="6" cy="19" r="2.2" stroke="currentColor" strokeWidth="1.4" />
-      <path d="M11 6h8M11 12.5h8M11 19h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  ),
-  tools: (
-    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <rect x="3" y="4.5" width="18" height="15" rx="1.8" stroke="currentColor" strokeWidth="1.5" />
-      <path d="m7 9.5 3 2.5-3 2.5M12.5 15H17" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  ),
-}
-
-// 썸네일 타일 — `이미지` 있으면 소형 이미지, 없으면 성격 색 타일 + 성격 아이콘(성격별 저채도 배경).
+// 썸네일 타일 — 이미지(로고 = /img/logos/) 있을 때만 렌더. fallback 아이콘 타일 폐지(카드 색이 성격을 말함).
 export function Thumb({ a }) {
-  if (a['이미지']) {
-    return <span className="art-thumb"><img src={a['이미지']} alt="" loading="lazy" /></span>
-  }
-  const nk = natureKey(a['성격'])
   return (
-    <span className={`art-thumb art-tile art-tile--${nk}`} aria-hidden="true">
-      {NATURE_ICONS[nk]}
+    <span className="art-thumb">
+      <img src={a['이미지']} alt="" loading="lazy" />
     </span>
   )
 }
@@ -60,7 +23,7 @@ export function PinBadge() {
   )
 }
 
-// 하단 칩 줄 — 성격 칩·주제 칩·지금써먹기 배지.
+// 태그 칩 줄 — 성격 칩·주제 칩·지금써먹기 배지(상세 페이지 전용 — 목록 카드는 분산 배치).
 export function TagChips({ a }) {
   return (
     <span className="art-row-tags">
@@ -71,27 +34,36 @@ export function TagChips({ a }) {
   )
 }
 
-// 풀폭 카드 — [본문(메타·제목·요약·칩) | 썸네일]. 목록·허브 공용. pinned=핀 배지.
+// 색 면 카드(AI in Use 이식) — 배경=성격별 저채도 4색, 진한 보더(--dark 1.5px)+옅은 그림자.
+// 구조: [상단 메타: 아바타·저자 / 우상단 날짜] → 제목(볼드) → 주제 칩(흰 필) → 요약 2~3줄
+//   → [하단: 성격 태그(진한 필)·지금써먹기 배지 + "자세히 →"]. 썸네일=이미지 있을 때만.
 export function ArticleRow({ a, onOpen, pinned = false }) {
-  const ex = excerpt(a.body)
+  const nk = natureKey(a['성격'])
+  const ex = excerpt(a.body, 140)
   return (
-    <li className="art-card">
+    <li className={`art-card art-card--${nk}`}>
       <button type="button" onClick={() => onOpen(a.slug)}>
         <span className="art-card-body">
           <span className="art-card-meta">
             <span className="art-avatar" aria-hidden="true">{authorInitial(a.author)}</span>
             <span className="art-card-author">{a.author}</span>
-            <span className="art-row-sep" aria-hidden="true">·</span>
             <span className="art-card-date">{(a.date || '').slice(0, 10)}</span>
           </span>
           <span className="art-card-title">
             {pinned && <PinBadge />}
             {a.title}
           </span>
+          {a['주제'] && <span className="art-card-topic">{a['주제']}</span>}
           {ex && <span className="art-card-excerpt">{ex}</span>}
-          <TagChips a={a} />
+          <span className="art-card-foot">
+            <span className="art-row-tags">
+              {a['성격'] && <span className="art-tag art-tag-nature">{a['성격']}</span>}
+              {a['지금써먹기'] && <span className="art-tag art-tag-now">지금 써먹기</span>}
+            </span>
+            <span className="art-card-more">자세히 <Arrow /></span>
+          </span>
         </span>
-        <Thumb a={a} />
+        {a['이미지'] && <Thumb a={a} />}
       </button>
     </li>
   )

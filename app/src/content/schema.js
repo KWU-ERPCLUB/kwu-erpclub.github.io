@@ -3,7 +3,9 @@
 export const NATURES = ['뉴스·동향', '심층 분석', '활용법·튜토리얼', '도구·프롬프트'] // 성격(글 종류·단일)
 export const TOPICS = ['에이전트', '모델·플랫폼', '워크플로·자동화', '거버넌스·리스크', '시장·생태계'] // 주제(AI 주제·단일)
 export const SEMINAR_TYPES = ['인지', '실습']
-export const KINDS = ['기사', '세미나']
+// 프로젝트 상태(단일·필수) — DPM 카드 상태 칩. 2026-07-24 콘텐츠화.
+export const PROJECT_STATUSES = ['운영 중', '진행 중', '보관']
+export const KINDS = ['기사', '세미나', '프로젝트']
 // 실습 세미나 본문 필수 헤딩(Carpentries 3블록 이식) — 전부 존재해야 통과
 export const LAB_HEADINGS = ['준비', '진행', '재현 가이드']
 
@@ -62,6 +64,19 @@ export function validateEntry(kind, filename, data, body = '') {
     }
     // 장소 = 선택(오프라인·온라인 위치) — 있으면 비어있지 않은 문자열만 허용
     if ('장소' in data && (typeof data['장소'] !== 'string' || data['장소'].trim() === '')) errs.push('장소는 비어있지 않은 문자열만 허용')
+  } else if (kind === '프로젝트') {
+    // 설명 = 필수 1줄(비어있지 않은 문자열)
+    const desc = data['설명']
+    if (desc === undefined || desc === null || desc === '') errs.push('설명 필수(1줄)')
+    else if (typeof desc !== 'string' || desc.trim() === '') errs.push('설명은 비어있지 않은 문자열만 허용')
+    // 상태 = 필수·enum
+    const st = data['상태']
+    if (st === undefined || st === null || st === '') errs.push('상태 필수(1개)')
+    else if (typeof st !== 'string' || !PROJECT_STATUSES.includes(st)) errs.push(`상태 enum 밖: ${st}`)
+    // 커버·github·web = 선택 — 있으면 비어있지 않은 문자열만 허용
+    for (const k of ['커버', 'github', 'web']) {
+      if (k in data && (typeof data[k] !== 'string' || data[k].trim() === '')) errs.push(`${k}는 비어있지 않은 문자열(경로·URL)만 허용`)
+    }
   }
   return errs
 }

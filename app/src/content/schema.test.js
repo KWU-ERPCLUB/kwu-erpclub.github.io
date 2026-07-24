@@ -109,6 +109,34 @@ test('장소가 빈문자열·비문자열이면 검출', () => {
   expect(validateEntry('세미나', '2026-09-01-bapzzi-s1.md', { ...semBase, 유형: '인지', 장소: true }, 'x').some((e) => e.includes('장소'))).toBe(true)
 })
 
+// ── 프로젝트 (2026-07-24 콘텐츠화 — 설명·상태 필수, 커버·github·web 선택) ──
+const pjBase = { title: 'ADsP Board', author: 'bapzzi', date: '2026-07-24', 설명: '진도·성취도 웹앱', 상태: '운영 중' }
+
+test('정상 프로젝트 통과(설명·상태 필수만)', () => {
+  expect(validateEntry('프로젝트', '2026-07-24-bapzzi-adsp-board.md', pjBase)).toEqual([])
+})
+test('프로젝트 선택 필드(커버·github·web) 문자열이면 통과', () => {
+  const d = { ...pjBase, 커버: '/img/projects/a.png', github: 'https://github.com/x', web: 'https://x.dev' }
+  expect(validateEntry('프로젝트', '2026-07-24-bapzzi-adsp-board.md', d)).toEqual([])
+})
+test('설명 결측 검출', () => {
+  expect(validateEntry('프로젝트', '2026-07-24-bapzzi-x.md', { ...pjBase, 설명: undefined }).some((e) => e.includes('설명'))).toBe(true)
+})
+test('설명 빈 문자열 검출', () => {
+  expect(validateEntry('프로젝트', '2026-07-24-bapzzi-x.md', { ...pjBase, 설명: '   ' }).some((e) => e.includes('설명'))).toBe(true)
+})
+test('상태 결측 검출', () => {
+  expect(validateEntry('프로젝트', '2026-07-24-bapzzi-x.md', { ...pjBase, 상태: undefined }).some((e) => e.includes('상태'))).toBe(true)
+})
+test('상태 enum 밖 검출', () => {
+  expect(validateEntry('프로젝트', '2026-07-24-bapzzi-x.md', { ...pjBase, 상태: '종료' }).some((e) => e.includes('종료'))).toBe(true)
+})
+test('커버·github·web 빈문자열·비문자열이면 검출', () => {
+  expect(validateEntry('프로젝트', '2026-07-24-bapzzi-x.md', { ...pjBase, 커버: '' }).some((e) => e.includes('커버'))).toBe(true)
+  expect(validateEntry('프로젝트', '2026-07-24-bapzzi-x.md', { ...pjBase, github: 123 }).some((e) => e.includes('github'))).toBe(true)
+  expect(validateEntry('프로젝트', '2026-07-24-bapzzi-x.md', { ...pjBase, web: '  ' }).some((e) => e.includes('web'))).toBe(true)
+})
+
 test('frontmatter 자체 없음(data null)', () => {
   expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', null)).toEqual(['frontmatter 없음'])
 })

@@ -38,19 +38,12 @@ function Chips({ s }) {
   )
 }
 
-function LabDetail({ body }) {
-  const { intro, sections } = splitSeminarBody(body)
-  return (
-    <>
-      {intro && <Markdown body={intro} />}
-      {LAB_HEADINGS.map((h) => (
-        <section className="sem-block" key={h}>
-          <h2 className="sem-block-title">{h}</h2>
-          {sections[h] ? <Markdown body={sections[h]} /> : <p className="sem-block-empty">내용 준비 중.</p>}
-        </section>
-      ))}
-    </>
-  )
+// 서문(intro)을 리드(첫 단락) + 나머지로 분할. 순수 함수 — 테스트 대상.
+export function splitLead(intro) {
+  const t = (intro || '').trim()
+  if (!t) return { lead: '', rest: '' }
+  const parts = t.split(/\n\s*\n/)
+  return { lead: parts[0].trim(), rest: parts.slice(1).join('\n\n').trim() }
 }
 
 // NEXT 히어로 — 대형 타이포·여백, 핵심 1~2문장, 메타 마이크로. 강조 = 버건디 화이트리스트(눈썹)만.
@@ -123,22 +116,49 @@ export function PastItem({ s, onOpen }) {
   )
 }
 
-// 상세 뷰 — 3블록(실습)/자유(인지) + 상단 슬라이드 버튼(Secondary) + 장소·일시 메타.
-function SeminarDetail({ s, onBack }) {
+// 상세 뷰 — 웹 에디토리얼 롱폼(Behance 문법, 2026-07-24): 대형 헤더(눈썹 회차·유형 → 대형 타이틀 →
+// 리드 → 메타·액션) → 실습=섹션 목차 + 번호 블록 3개(01/02/03) / 인지=리드 + 본문. export = 단위 테스트용.
+export function SeminarDetail({ s, onBack }) {
+  const isLab = s.유형 === '실습'
+  const { intro, sections } = splitSeminarBody(s.body)
+  const { lead, rest } = splitLead(isLab ? intro : s.body)
   return (
-    <article className="hub-detail">
+    <article className="sem-ed">
       <button type="button" className="hub-back" onClick={onBack}>← 목록</button>
-      <h1>{s.title}</h1>
-      <p className="hub-meta">{s.회차}회 · {s.유형} · {metaLine(s)}</p>
-      {s['슬라이드'] && (
-        <p className="sem-detail-slide">
-          <a className="btn-2nd" href={s['슬라이드']} target="_blank" rel="noreferrer">슬라이드 <Arrow /></a>
-        </p>
+
+      <header className="sem-ed-head">
+        <span className="sem-ed-eyebrow">{s.회차}회 · {s.유형}</span>
+        <h1 className="sem-ed-title">{s.title}</h1>
+        {lead && <p className="sem-ed-lead">{lead}</p>}
+        <p className="sem-ed-meta">{metaLine(s)}</p>
+        {(s['슬라이드'] || s.발원기사) && (
+          <div className="sem-ed-actions">
+            {s['슬라이드'] && <a className="btn-2nd" href={s['슬라이드']} target="_blank" rel="noreferrer">슬라이드 <Arrow /></a>}
+            {s.발원기사 && <a className="proof-link" href={s.발원기사}>발원 기사 <Arrow /></a>}
+          </div>
+        )}
+      </header>
+
+      {rest && <div className="sem-ed-intro"><Markdown body={rest} /></div>}
+
+      {isLab && (
+        <>
+          <nav className="sem-ed-toc" aria-label="섹션 목차">
+            {LAB_HEADINGS.map((h, i) => (
+              <a className="sem-ed-toc-link" key={h} href={`#sec-${i}`}>
+                <span className="sem-ed-toc-num">{String(i + 1).padStart(2, '0')}</span>{h}
+              </a>
+            ))}
+          </nav>
+          {LAB_HEADINGS.map((h, i) => (
+            <section className="sem-ed-block" id={`sec-${i}`} key={h}>
+              <span className="sem-ed-num">{String(i + 1).padStart(2, '0')}</span>
+              <h2 className="sem-ed-block-title">{h}</h2>
+              {sections[h] ? <Markdown body={sections[h]} /> : <p className="sem-block-empty">내용 준비 중.</p>}
+            </section>
+          ))}
+        </>
       )}
-      {s.발원기사 && (
-        <p className="sem-origin">발원 기사 <a href={s.발원기사}>원문</a></p>
-      )}
-      {s.유형 === '실습' ? <LabDetail body={s.body} /> : <Markdown body={s.body} />}
     </article>
   )
 }
