@@ -24,7 +24,7 @@ const ROADMAP = [
   { era: 'ORIGIN', title: 'ERP연구회', desc: '경영학부 MIS 스터디 — ERP·정보시스템의 뿌리.' },
   { era: 'SAP ERA', title: 'SAP 특강', desc: '실무 컨설턴트가 이끈 MM·ABAP 교육의 시대.' },
   { era: '2026', title: 'ADsP 스터디 1기', desc: '데이터분석 준전문가 대비 — 진도 보드 운영 중.', status: ['live', '진행중'] },
-  { era: 'NEW BRANCH', title: 'MIS·AI 스터디', desc: '경영·MIS에 AI를 접목하는 새 갈래 — 이 사이트가 시작.', status: ['prep', '모집 준비'], now: true },
+  { era: 'NEW BRANCH', title: 'MIS·AI 스터디', desc: '학회에서 분기한 새 갈래.', status: ['prep', '모집 준비'], now: true },
   { era: 'DEEP DIVE', title: 'SAP Track · 공모전', desc: 'AI 친숙도를 갖춘 뒤의 심화 갈래.', status: ['planned', '예정'], slot: true },
   { era: 'NEXT', title: '앞으로 채워갈 공간', desc: '새 트랙·기수가 이 갈래에 이어질 자리.', slot: true },
 ]
@@ -51,16 +51,12 @@ function Hero() {
   return (
     <section className="hs hs-hero page" id="top">
       <div className="hs-in hs-hero-in">
-        <span className="hero-kicker rv">KWANGWOON UNIV. · SCHOOL OF BUSINESS · ERP연구회</span>
+        <span className="hero-kicker rv">KWANGWOON UNIV. · SCHOOL OF BUSINESS</span>
         <h1 className="hero-mega">
-          <span className="hero-l rv"><StaggerChars text="경영·MIS에" start={0} /></span>
-          <span className="hero-l rv" style={{ transitionDelay: '90ms' }}>
-            <StaggerChars text="AI" accent start={5} /><StaggerChars text="를 접목하는 법" start={7} />
-          </span>
-          <span className="hero-l rv" style={{ transitionDelay: '180ms' }}><StaggerChars text="연구 — 결과는 실물로" start={14} /></span>
+          <span className="hero-l rv"><StaggerChars text="ERP" accent start={0} /><StaggerChars text="연구회" start={3} /></span>
         </h1>
         <p className="hero-sub rv" style={{ transitionDelay: '320ms' }}>
-          쓰는 사람은 많지만, 잘 쓰는 법을 배우는 자리는 없다 — 그 자리를 만드는 스터디.
+          경영학부 MIS·AI 스터디
         </p>
       </div>
       <div className="hero-foot">
@@ -83,10 +79,7 @@ function Why() {
     <section className="hs hs-why page" id="why">
       <div className="hs-in">
         <span className="page-idx rv">01 — WHY</span>
-        <p className="why-lead rv" style={{ transitionDelay: '90ms' }}>20대 4명 중 3명이 이미 생성형 AI를 쓴다.</p>
-        <p className="why-note rv" style={{ transitionDelay: '160ms' }}>
-          하지만 활용은 검색·요약 수준에 정체 — 경영·MIS 맥락의 훈련 자리는 공백. 그 공백을 겨냥한다.
-        </p>
+        <p className="why-lead rv" style={{ transitionDelay: '90ms' }}>20대 4명 중 3명이 생성형 AI 사용.</p>
         <div className="stat-rows rv" style={{ transitionDelay: '240ms' }}>
           {DATA.map(([num, label, src]) => (
             <div className="stat-row" key={src}>
@@ -110,7 +103,7 @@ function Roadmap() {
     <section className="hs hs-roadmap page" id="roadmap">
       <div className="hs-in">
         <span className="page-idx rv">02 — ROADMAP</span>
-        <h2 className="hs-title rv" style={{ transitionDelay: '90ms' }}>연구회에서 <em>분기</em>하다</h2>
+        <h2 className="hs-title rv" style={{ transitionDelay: '90ms' }}>연혁과 <em>다음</em></h2>
         <ol className="rmap rv" style={{ transitionDelay: '180ms' }}>
           {ROADMAP.map((n) => (
             <li className={`rm-node${n.now ? ' now' : ''}${n.slot ? ' rm-slot' : ''}`} key={n.title}>
@@ -133,7 +126,7 @@ function Projects() {
     <section className="hs hs-projects page" id="projects">
       <div className="hs-in">
         <span className="page-idx rv">03 — PROJECTS</span>
-        <h2 className="hs-title rv" style={{ transitionDelay: '90ms' }}>남긴 <em>실물</em></h2>
+        <h2 className="hs-title rv" style={{ transitionDelay: '90ms' }}>만든 <em>것들</em></h2>
         <div className="hp-list rv" style={{ transitionDelay: '180ms' }}>
           {PROJECTS.map(([title, cover, href, tag]) => (
             <a className="hp-card" href={href} key={title}>

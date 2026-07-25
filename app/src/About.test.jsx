@@ -10,8 +10,8 @@ test('about = 풀블리드 .home 3섹션 + 중앙 셀(.lattice/.cell) 폐지', (
   expect(html).toContain('class="home"')
   expect(html).not.toContain('class="lattice"')
   expect(html).not.toContain('class="cell')
-  // 섹션 인덱스 3종(§5 라벨 영문 정책)
-  for (const idx of ['ABOUT', 'WHY NOW', 'PROOF']) expect(html).toContain(idx)
+  // 섹션 인덱스 3종(§5 라벨 영문 정책 — 2026-07-25 톤 개혁: WHY NOW→DATA)
+  for (const idx of ['ABOUT', 'DATA', 'PROOF']) expect(html).toContain(idx)
   // 풀블리드 섹션 골격 = .hs.page (home 문법 재사용)
   expect(/class="hs[^"]*page/.test(html)).toBe(true)
 })
@@ -26,13 +26,13 @@ test('① 누구인가 = 대형 타이포 도입 + 가로 진행 타임라인(.r
   expect(html).toContain('status prep')
 })
 
-test('② 왜 지금인가 = 뷰포트급 헤드라인 + 4단 서사 대형 블록 + BarFig', () => {
+test('② 데이터 = 뷰포트급 헤드라인 + 3단 데이터 블록 + BarFig (서사 라벨·04 선언 블록 제거 — 톤 개혁)', () => {
   const html = flat(<WhyNow />)
   expect(html).toContain('ab-claim-mega')
-  // 4단(01~04) 대형 블록
+  // 3단(01~03) 데이터 블록 — 04 "그래서 이 스터디" 선언 블록은 서사 비표기 원칙으로 제거
   const blocks = html.match(/ab-why-block/g) || []
-  expect(blocks.length).toBe(4)
-  for (const n of ['01', '02', '03', '04']) expect(html).toContain(`ab-why-idx">${n}`)
+  expect(blocks.length).toBe(3)
+  for (const n of ['01', '02', '03']) expect(html).toContain(`ab-why-idx">${n}`)
   // 기존 막대 차트 유지
   expect(html).toContain('barfig')
   expect(html).toContain('bar-fill accent') // 강조 바 1개(버건디)

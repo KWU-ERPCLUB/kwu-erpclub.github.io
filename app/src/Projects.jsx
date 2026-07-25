@@ -161,8 +161,8 @@ export default function Projects() {
       <main className="hub-page">
         <header className="hub-head">
           <span className="hub-idx">PROJECTS</span>
-          <h1>만든 <em>실물</em>의 기록</h1>
-          <p>연구회가 만들고 배포한 결과물 — 커버·한 줄 설명·상태. 스터디원의 기여 제시.</p>
+          <h1>만든 <em>것들</em></h1>
+          <p>만들고 배포한 결과물.</p>
         </header>
         <ProjectGrid list={all} onOpen={open} />
       </main>

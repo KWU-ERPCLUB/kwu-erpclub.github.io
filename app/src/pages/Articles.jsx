@@ -118,7 +118,7 @@ export default function Articles() {
         <header className="art-head">
           <span className="art-idx">AI INSIGHTS</span>
           <h1>AI <em>인사이트</em></h1>
-          <p>경영·MIS 관점의 AI 이슈 분석·축적 — 스터디원이 각자의 AI 워크플로로 기고. 분류 = 글 성격 × AI 주제.</p>
+          <p>AI 이슈의 분석·축적 — 스터디원 기고.</p>
         </header>
         <ListView
           all={all} tab={tab} onTab={(t) => nav({ tab: t, slug: null })}

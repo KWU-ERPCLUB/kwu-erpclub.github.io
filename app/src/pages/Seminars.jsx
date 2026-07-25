@@ -105,9 +105,6 @@ export function NextEmpty() {
       <div className="sem-next-in">
         <span className="sem-next-eyebrow">NEXT</span>
         <h1 className="sem-next-empty-title">다음 세미나 준비 중 — 주제 확정 시 게재.</h1>
-        <p className="sem-next-empty-sub">
-          인사이트로 포착한 AI 이슈 중 직접 해볼 것을 선별해 회차 편성. 확정 전까지 예정 칸 비움.
-        </p>
         <p className="sem-next-empty-how">
           기고 = <a href={CONTRIBUTING_URL} target="_blank" rel="noreferrer">기고 가이드</a> 참고 →
           <code> content/세미나/_template.md</code> 복사 → 규칙 채움 → 자동 게재.

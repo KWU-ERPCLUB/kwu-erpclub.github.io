@@ -3,23 +3,23 @@
 // ③ 운영 증빙 = 대형 숫자 풀폭 행 + 카운트업(.stat-rows). 콘텐츠·수치·출처 전부 유지(구조만 개혁). 사람 표기 없음.
 // 모션 = home-motion 재사용(스크롤 리빌 .rv + 카운트업) · transform·opacity만 · reduced-motion 존중.
 import { useMemo } from 'react'
-import { Arrow, SiteNav, SiteFooter, REPO_URL } from './shared.jsx'
+import { SiteNav, SiteFooter, REPO_URL } from './shared.jsx'
 import { loadContent } from './content/loader.js'
 import { useSectionSpy, CountUp } from './home-motion.jsx'
 
 // 계보 타임라인 — 학회 → 산하 스터디 신설 → 1기 모집(가로 진행). 사실 유지.
 const TIMELINE = [
   { era: '학회', title: 'ERP연구회', desc: '경영학부에서 SAP·ERP·정보시스템을 공부해온 학회.' },
-  { era: '2026 · 확장', title: '산하 스터디 신설', desc: '주제 확장 — 경영·MIS에 AI를 어떻게 접목할 것인가.' },
-  { era: '지금', title: '1기 모집', desc: '비개발자의 AI 활용 연구 — 결과는 실물로.', status: ['prep', '모집 준비'] },
+  { era: '2026 · 확장', title: '산하 스터디 신설', desc: 'MIS·AI 갈래 분기.' },
+  { era: '지금', title: '1기 모집 준비', desc: '스터디명·인원 확정 대기.', status: ['prep', '모집 준비'] },
 ]
 
 // 4단 서사 — 수치·출처 원본 유지(선행조사-2026-07-10 §C·§D). 강조 바 1개(버건디)+회색 대조.
 const FACTS = [
   {
     idx: '01',
-    claim: '다들 쓴다',
-    sub: '20대 4명 중 3명이 이미 생성형 AI 경험 — 전 연령 최고.',
+    claim: '생성형 AI 경험률',
+    sub: '20대 = 전 연령 최고.',
     src: '과학기술정보통신부 · 2025 인터넷이용실태조사',
     chart: {
       caption: '생성형 AI 경험률',
@@ -32,8 +32,8 @@ const FACTS = [
   },
   {
     idx: '02',
-    claim: '그런데 얕게 쓴다',
-    sub: '직장인 활용 용도 1위 = 정보 검색·요약 — 활용이 여기에 편중.',
+    claim: '직장인 활용 용도',
+    sub: '1위 = 정보 검색·요약.',
     src: '나우앤서베이 · 직장인 1,000명 조사, 2025',
     chart: {
       caption: '직장인의 AI 활용 용도',
@@ -46,8 +46,8 @@ const FACTS = [
   },
   {
     idx: '03',
-    claim: '잘 쓰면 실제로 다르다 — 특히 초보자가',
-    sub: 'AI 도입 후 처리량 증가, 신입이 평균의 두 배 이상.',
+    claim: 'AI 도입 후 생산성',
+    sub: '처리량 증가 — 신입이 평균의 두 배 이상.',
     src: 'Brynjolfsson 외 · NBER w31161, 2023 (상담원 5,179명)',
     chart: {
       caption: '시간당 업무 처리량 증가',
@@ -88,11 +88,8 @@ export function AboutIntro() {
       <div className="hs-in">
         <span className="page-idx rv">ABOUT</span>
         <h1 className="ab-mega rv" style={{ transitionDelay: '90ms' }}>
-          경영·MIS 맥락에서 <em>AI를 잘 쓰는 법</em>을 연구하는 스터디
+          ERP연구회 산하 <em>MIS·AI</em> 스터디
         </h1>
-        <p className="ab-sub rv" style={{ transitionDelay: '200ms' }}>
-          ERP연구회 산하 — 학회에서 분기한 MIS·AI 갈래.
-        </p>
         <ol className="rmap rv" style={{ transitionDelay: '280ms' }}>
           {TIMELINE.map((n) => (
             <li className="rm-node" key={n.title}>
@@ -117,9 +114,9 @@ export function WhyNow() {
   return (
     <section className="hs page" id="why-now">
       <div className="hs-in">
-        <span className="page-idx rv">WHY NOW</span>
+        <span className="page-idx rv">DATA</span>
         <h2 className="ab-claim-mega rv" style={{ transitionDelay: '90ms' }}>
-          쓰는 사람은 많지만,<br />잘 쓰는 법을 배우는 자리는 <em>없다</em>
+          숫자로 본 <em>배경</em>
         </h2>
         <div className="ab-why-list rv" style={{ transitionDelay: '180ms' }}>
           {FACTS.map((f) => (
@@ -134,16 +131,6 @@ export function WhyNow() {
             </div>
           ))}
 
-          <div className="ab-why-block ab-why-final">
-            <div>
-              <span className="feat-idx ab-why-idx">04</span>
-              <h3 className="ab-why-claim">그래서 이 스터디</h3>
-              <p className="ab-why-sub">경영·MIS 맥락에서 잘 쓰는 법 연구 — 결과는 실물로 증명.</p>
-            </div>
-            <div className="ab-why-cta">
-              <a className="proof-link" href={REPO_URL}>GitHub 저장소 <Arrow /></a>
-            </div>
-          </div>
         </div>
       </div>
     </section>
