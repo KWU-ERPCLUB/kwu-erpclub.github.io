@@ -28,6 +28,13 @@ test('타임라인 렌더 — 주어진 순서대로 항목 + 첫 항목만 is-f
   expect(html.indexOf('최신글')).toBeLessThan(html.indexOf('이전글')) // 주어진 순서 유지
 })
 
+test('v3.1 강조 — 최신(featured) 항목만 버건디 언더바(sem-tl-underbar) 1개', () => {
+  const items = [base({ slug: 'a', date: '2026-08-01' }), base({ slug: 'b', date: '2026-06-01' })]
+  const html = flat(<SeminarTimeline items={items} today={TODAY} onOpen={noop} />)
+  expect(html).toContain('sem-tl-underbar')
+  expect((html.match(/sem-tl-underbar/g) || []).length).toBe(1) // featured 1개만
+})
+
 // ── SeminarTimelineItem (항목 단위 — 픽스처 주입) ──
 test('겹침 카드 — 썸네일 2장이면 is-stack + 뒷장(back) 렌더 + 슬라이드 링크', () => {
   const s = base({ 썸네일: ['/slides/s1/thumb-1.png', '/slides/s1/thumb-2.png'], 슬라이드: 'https://slides/s1/' })

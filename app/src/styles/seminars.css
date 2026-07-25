@@ -40,7 +40,8 @@ button.proof-link {
 }
 .sem-filter button:hover, .sem-sort:hover { border-color: var(--text); color: var(--text); }
 .sem-filter button:active, .sem-sort:active { transform: scale(0.98); }
-.sem-filter button.on { background: var(--dark); color: #fff; border-color: var(--dark); }
+/* v3.1 세미나 한정 버건디 예외(§0-2) — 선택 탭 = 버건디 필(#7a2030·흰 글자) */
+.sem-filter button.on { background: var(--accent); color: #fff; border-color: var(--accent); }
 .sem-filter button:focus-visible, .sem-sort:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .sem-sort { color: var(--text); font-weight: 700; } /* 정렬 = 상태 라벨(최신순/과거순) */
 
@@ -60,11 +61,13 @@ button.proof-link {
   padding: 0 0 clamp(2rem, 4.5vh, 3.2rem) clamp(1.4rem, 3vw, 2.2rem);
 }
 .sem-tl-item:last-child .sem-tl-body { padding-bottom: 0.5rem; }
-.sem-tl-dot { /* 타임라인 점 9px(화이트리스트 ⑦) — 기본 회색 아웃라인, 최신만 차콜 채움(버건디 절약) */
+.sem-tl-dot { /* 타임라인 점 9px(화이트리스트 ⑦) — v3.1: 전 항목 버건디 채움(세미나 한정 예외) */
   position: absolute; left: -5.5px; top: 4px; width: 9px; height: 9px; border-radius: 50%;
-  background: #fff; border: 2px solid var(--text-sub);
+  background: var(--accent); border: 2px solid var(--accent);
 }
-.sem-tl-item.is-featured .sem-tl-dot { background: var(--text); border-color: var(--text); }
+.sem-tl-item.is-featured .sem-tl-dot { width: 12px; height: 12px; left: -7px; top: 3px; } /* 최신 = 더 크게 */
+/* 최신(featured) 제목 아래 버건디 언더바(스탯 언더바 문법 28×3px, 화이트리스트 ③) */
+.sem-tl-underbar { display: block; width: 28px; height: 3px; background: var(--accent); margin: 0 0 0.9rem; }
 .sem-tl-chips { margin: 0 0 0.55rem; }
 .sem-tl-title { /* 제목 → 상세. hover 밑줄. 최신(is-featured) = 크게(Linear 변형) */
   font-family: var(--font-display); font-weight: 800; font-size: clamp(1.1rem, 1.9vw, 1.4rem);
@@ -77,6 +80,7 @@ button.proof-link {
 .sem-tl-title:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .sem-tl-points { margin: 0.2rem 0 0; padding-left: 1.2rem; }
 .sem-tl-points li { margin-bottom: 0.35rem; line-height: 1.55; font-size: 0.92rem; }
+.sem-tl-points li::marker { color: var(--accent); } /* v3.1 요점 마커 = 버건디(세미나 한정 예외) */
 .sem-tl-excerpt { font-size: 0.92rem; line-height: 1.6; color: var(--text-sub); margin: 0.2rem 0 0; max-width: 60ch; word-break: keep-all; }
 
 /* ── 슬라이드 썸네일 겹침 카드 (클릭=발표자료 새 탭 · hover 리프트 transform·opacity만) ── */
@@ -85,6 +89,7 @@ button.proof-link {
 .sem-thumb-img {
   display: block; width: clamp(180px, 40vw, 230px); height: auto; border-radius: 10px;
   border: 1px solid var(--line); background: var(--surface); box-shadow: 0 1px 3px rgba(20, 20, 20, 0.06);
+  transition: border-color 150ms ease-out;
 }
 /* 겹침 — 뒷장 오프셋·기울임·감쇠, 앞장 위 */
 .sem-thumb.is-stack { padding: 0 14px 12px 0; }
@@ -96,6 +101,7 @@ button.proof-link {
 .sem-thumb-link { transition: transform 150ms ease-out; }
 .sem-thumb-link:not(.is-static):hover { transform: translateY(-3px); }
 .sem-thumb-link:not(.is-static):hover .sem-thumb-back { opacity: 0.85; }
+.sem-thumb-link:not(.is-static):hover .sem-thumb-img { border-color: var(--accent); } /* v3.1 hover 보더 = 버건디(리프트 유지) */
 .sem-thumb-link:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 10px; }
 
 /* ── 빈 상태 = 디자인된 1줄(회색 박스 단독 금지 — 서페이스 밴드, SPEC §4 v3 "세미나 기록 아직 없음") ── */
@@ -179,14 +185,52 @@ button.proof-link {
   .sem-ed-block { padding-bottom: 2.5rem; margin-bottom: 2.5rem; }
 }
 
+/* ════ v3.1 구조형 상세 본문 (발제 블록 → "다루는 내용" 번호 목차 → "출처" 리스트) ════ */
+/* 발제 블록 — 원형 모노그램(차콜, §6-1 이니셜 원형 문법) + 발제 author + date */
+.sem-ed-byline { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2.5rem; }
+.sem-ed-mono {
+  flex: none; width: 44px; height: 44px; border-radius: 50%; background: var(--dark); color: #fff;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-weight: 800; font-size: 1.15rem;
+}
+.sem-ed-byline-txt { display: flex; flex-direction: column; gap: 0.15rem; }
+.sem-ed-byline-name { font-weight: 700; font-size: 0.95rem; color: var(--text); }
+.sem-ed-byline-date { font-size: 0.8rem; color: var(--text-sub); }
+
+/* "다루는 내용" = 01~NN 번호 목차(데스크톱 2열 grid, 번호 = 버건디 화이트리스트 ④) */
+.sem-ed-outline { margin-bottom: 3.5rem; }
+.sem-ed-outline-grid {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 2rem;
+}
+.sem-ed-outline-item {
+  display: grid; grid-template-columns: auto 1fr; gap: 0.85rem; align-items: baseline;
+  padding: 0.9rem 0; border-top: 1px solid var(--line);
+}
+.sem-ed-outline-num { font-family: var(--font-display); font-weight: 800; font-size: 1rem; color: var(--accent); }
+.sem-ed-outline-txt { font-size: 0.95rem; line-height: 1.5; color: var(--text); word-break: keep-all; }
+
+/* "출처" = 출처 행 리스트(호버 밑줄·외부 링크 새 탭) + 말미 단서 = 소형 각주 */
+.sem-ed-sources { margin-bottom: 2rem; }
+.sem-ed-src-list { list-style: none; margin: 0; padding: 0; max-width: 720px; }
+.sem-ed-src-list li { border-top: 1px solid var(--line); }
+.sem-ed-src-row {
+  display: block; padding: 0.7rem 0; font-size: 0.92rem; line-height: 1.45; color: var(--text);
+  text-decoration: none; word-break: break-word; transition: color 150ms ease-out;
+}
+.sem-ed-src-row:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.sem-ed-src-row:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.sem-ed-footnote { margin: 1.5rem 0 0; max-width: 720px; font-size: 0.78rem; line-height: 1.55; color: var(--text-sub); }
+@media (max-width: 700px) { .sem-ed-outline-grid { grid-template-columns: 1fr; } }
+
 /* ── §5 인터랙션 4상태 (150ms ease-out · transform·opacity·color만) · reduced-motion 존중 ── */
 button.proof-link:hover { color: var(--accent); }
 button.proof-link:focus-visible, .sem-ed-back:focus-visible {
   outline: 3px solid var(--accent); outline-offset: 2px;
 }
 @media (prefers-reduced-motion: reduce) {
-  .sem-tl-title, .sem-filter button, .sem-sort, .sem-thumb-link, button.proof-link,
-  .sem-ed-toc-link, .sem-ed-back, .sem-ed-origin { transition: none; }
+  .sem-tl-title, .sem-filter button, .sem-sort, .sem-thumb-link, .sem-thumb-img, button.proof-link,
+  .sem-ed-toc-link, .sem-ed-back, .sem-ed-origin, .sem-ed-src-row { transition: none; }
   .sem-filter button:active, .sem-sort:active { transform: none; }
   .sem-thumb-link:not(.is-static):hover { transform: none; }
 }

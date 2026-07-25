@@ -37,6 +37,55 @@ test('SeminarDetail 인지 — 목차 없이 리드 + 본문 + 다크 밴드', (
   expect(html).not.toContain('sem-ed-toc') // 인지 = 목차 없음
 })
 
+// v3.1 구조형 인지 세미나 픽스처("다루는 내용"+"출처"+말미 각주) — 실데이터 아님(주입).
+const structuredSem = {
+  slug: 'q', title: '질문에서 위임으로', author: 'bapzzi', date: '2026-07-25', 회차: '1', 유형: '인지',
+  슬라이드: 'https://slides.example/s1', 발원기사: 'https://origin.example/a',
+  body: [
+    'AI 활용 구조를 3단으로 구분하는 인지 세미나.',
+    '',
+    '## 다루는 내용',
+    '',
+    '- 첫 항목 개론',
+    '- 둘째 항목 심화',
+    '',
+    '## 출처',
+    '',
+    '- [출처 문서 A](https://src.example/a)',
+    '- [출처 문서 B](https://src.example/b)',
+    '',
+    '수치는 2026-07-25 확인 기준.',
+  ].join('\n'),
+}
+
+test('SeminarDetail 구조형 — 발제 블록 + "다루는 내용" 번호 목차 + 출처 행 + 각주, 슬라이드 버튼 부재', () => {
+  const html = flat(<SeminarDetail s={structuredSem} onBack={() => {}} />)
+  // ① 발제 블록 — 모노그램(author 첫 글자 대문자) + 발제 author + date
+  expect(html).toContain('sem-ed-byline')
+  expect(html).toContain('sem-ed-mono')
+  expect(html).toContain('>B<') // 'bapzzi' → 'B'
+  expect(html).toContain('발제 bapzzi')
+  // ② "다루는 내용" 번호 목차 — 01/02 + 불릿 텍스트
+  expect(html).toContain('sem-ed-outline')
+  expect(html).toContain('sem-ed-outline-num')
+  expect(html).toContain('01')
+  expect(html).toContain('02')
+  expect(html).toContain('첫 항목 개론')
+  // ③ 출처 행 — 외부 링크 새 탭 + 각주
+  expect(html).toContain('sem-ed-src-row')
+  expect(html).toContain('https://src.example/a')
+  expect(html).toContain('target="_blank"')
+  expect(html).toContain('출처 문서 A')
+  expect(html).toContain('sem-ed-footnote')
+  expect(html).toContain('수치는 2026-07-25 확인 기준')
+  // 슬라이드 버튼 제거 — btn-2nd·슬라이드 URL 부재 / 발원기사 링크는 유지 / 실습 목차(sem-ed-toc)도 아님
+  expect(html).not.toContain('btn-2nd')
+  expect(html).not.toContain('https://slides.example/s1')
+  expect(html).not.toContain('sem-ed-toc')
+  expect(html).toContain('발원 기사')
+  expect(html).toContain('https://origin.example/a')
+})
+
 test('페이지 구조 — 목록(타임라인 소개 헤드·필터 바) 상시 렌더(콘텐츠·시점 무관)', () => {
   const html = renderToString(<Seminars />)
   expect(html).toContain('sem-head') // 소개 page-head 골격

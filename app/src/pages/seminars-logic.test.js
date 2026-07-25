@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { sortSeminars, extractTopics, filterByTopic, isUpcoming, todayString, splitSeminarBody, splitLead } from './seminars-logic.js'
+import { sortSeminars, extractTopics, filterByTopic, isUpcoming, todayString, splitSeminarBody, splitLead, parseBullets, parseSources } from './seminars-logic.js'
 
 const S = (slug, date, extra = {}) => ({ slug, date, title: slug, 회차: slug, 유형: '인지', body: '', ...extra })
 const list = [S('a', '2026-06-01'), S('b', '2026-09-05'), S('c', '2026-08-20'), S('d', '2026-07-24')]
@@ -69,4 +69,22 @@ test('splitLead — 첫 단락=리드, 나머지=rest', () => {
   expect(splitLead('첫 문장.\n\n둘째 단락.\n\n셋째.')).toEqual({ lead: '첫 문장.', rest: '둘째 단락.\n\n셋째.' })
   expect(splitLead('한 단락뿐')).toEqual({ lead: '한 단락뿐', rest: '' })
   expect(splitLead('')).toEqual({ lead: '', rest: '' })
+})
+
+test('parseBullets — "- " 불릿 텍스트만 순서대로(비불릿·빈줄 제외)', () => {
+  expect(parseBullets('- 첫째\n- 둘째\n\n- 셋째')).toEqual(['첫째', '둘째', '셋째'])
+  expect(parseBullets('머리말\n- 하나\n꼬리말')).toEqual(['하나'])
+  expect(parseBullets('')).toEqual([])
+})
+
+test('parseSources — 불릿 내 링크 전부(순서) + 말미 비불릿 단락 = note', () => {
+  const md = '- [A 문서](https://x/a)\n- [B](https://x/b) · [C](https://x/c)\n\n수치는 확인 기준.'
+  const { links, note } = parseSources(md)
+  expect(links).toEqual([
+    { text: 'A 문서', url: 'https://x/a' },
+    { text: 'B', url: 'https://x/b' },
+    { text: 'C', url: 'https://x/c' },
+  ])
+  expect(note).toBe('수치는 확인 기준.')
+  expect(parseSources('')).toEqual({ links: [], note: '' })
 })

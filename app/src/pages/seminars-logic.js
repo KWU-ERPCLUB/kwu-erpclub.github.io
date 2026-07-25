@@ -58,3 +58,32 @@ export function splitLead(intro) {
   const parts = t.split(/\n\s*\n/)
   return { lead: parts[0].trim(), rest: parts.slice(1).join('\n\n').trim() }
 }
+
+// 마크다운 불릿("- ") 텍스트만 순서대로 추출 — 상세 "다루는 내용" 번호 목차형 렌더용(순수).
+export function parseBullets(md) {
+  return (md || '')
+    .split('\n')
+    .map((l) => l.trim())
+    .filter((l) => l.startsWith('- '))
+    .map((l) => l.slice(2).trim())
+    .filter(Boolean)
+}
+
+// 출처 섹션 파싱 → { links: [{text, url}], note }. 링크 = 불릿 내 [text](url) 전부(등장 순), note = 불릿 아닌 말미 단락.
+// 상세 "출처" 리스트(출처 행 + 소형 각주) 렌더용 순수 함수.
+export function parseSources(md) {
+  const links = []
+  const noteLines = []
+  for (const raw of (md || '').split('\n')) {
+    const line = raw.trim()
+    if (!line) continue
+    if (line.startsWith('- ')) {
+      const re = /\[([^\]]+)\]\(([^)]+)\)/g
+      let m
+      while ((m = re.exec(line)) !== null) links.push({ text: m[1].trim(), url: m[2].trim() })
+    } else {
+      noteLines.push(line)
+    }
+  }
+  return { links, note: noteLines.join(' ').trim() }
+}

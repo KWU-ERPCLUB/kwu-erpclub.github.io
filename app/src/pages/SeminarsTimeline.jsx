@@ -39,6 +39,7 @@ export function SeminarTimelineItem({ s, today, featured = false, onOpen = () =>
           {s['주제'] && <span className="hub-chip">{s['주제']}</span>}
         </span>
         <button type="button" className="sem-tl-title" onClick={() => onOpen(s.slug)}>{s.title}</button>
+        {featured && <span className="sem-tl-underbar" aria-hidden="true" />}
         {thumbs.length > 0 && <SlideThumb thumbs={thumbs} slide={s['슬라이드']} title={s.title} />}
         {points ? (
           <ul className="sem-tl-points">{points.map((p) => <li key={p}>{p}</li>)}</ul>
