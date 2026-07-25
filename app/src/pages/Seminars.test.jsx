@@ -20,15 +20,16 @@ test('페이지 구조 — 풀블리드 NEXT 밴드(히어로 또는 빈 상태)
   expect(html).toContain('NEXT') // 눈썹
 })
 
-test('NEXT 히어로 — D-day 대형 표시(today 주입식) + 초대형 타이틀·리드·메타·칩', () => {
+test('NEXT 히어로 — 초대형 타이틀·리드·메타·칩 (D-day 비표기, 2026-07-25 폐지)', () => {
   const s = {
     slug: 'x', title: 'RAG 실습', author: '홍길동', date: '2026-09-01',
     회차: '3', 유형: '실습', 장소: '새빛관 501호',
     body: '검색증강생성으로 사내 문서 질의응답 구축.\n\n## 준비\n환경 세팅\n\n## 진행\n실습 단계\n\n## 재현 가이드\n따라하기',
   }
-  const html = flat(<NextHero s={s} today="2026-08-25" onOpen={noop} />)
+  const html = flat(<NextHero s={s} onOpen={noop} />)
   expect(html).toContain('sem-next') // 풀블리드 밴드
-  expect(html).toContain('D-7') // daysUntil(2026-09-01, 2026-08-25) = 7 → D-7
+  expect(html).not.toContain('sem-dday') // D-day 열 폐지
+  expect(html).not.toContain('개최까지')
   expect(html).toContain('sem-next-title') // 초대형 타이틀
   expect(html).toContain('RAG 실습')
   expect(html).toContain('검색증강생성') // 본문 첫 단락 발췌 리드
@@ -39,13 +40,12 @@ test('NEXT 히어로 — D-day 대형 표시(today 주입식) + 초대형 타이
   expect(html).toContain('사전 준비 필요') // ## 준비 있으므로 prep 배지
 })
 
-test('NEXT 히어로 — D-DAY(당일) 라벨 + 구성 미리보기 3칸(번호·헤딩·섹션 발췌)', () => {
+test('NEXT 히어로 — 구성 미리보기 3칸(번호·헤딩·섹션 발췌)', () => {
   const s = {
     slug: 'x', title: '당일 실습', author: '홍', date: '2026-09-01', 회차: '3', 유형: '실습',
     body: '서문.\n\n## 준비\n노트북 지참\n\n## 진행\n에이전트 실행\n\n## 재현 가이드\n혼자 따라하기 절차',
   }
-  const html = flat(<NextHero s={s} today="2026-09-01" onOpen={noop} />)
-  expect(html).toContain('D-DAY') // 당일
+  const html = flat(<NextHero s={s} onOpen={noop} />)
   expect(html).toContain('sem-toc-preview') // 구성 미리보기 목차
   expect(html).toContain('준비') // 헤딩 1
   expect(html).toContain('노트북 지참') // 준비 섹션 발췌
@@ -55,7 +55,7 @@ test('NEXT 히어로 — D-DAY(당일) 라벨 + 구성 미리보기 3칸(번호�
 
 test('NEXT 히어로 — 인지형은 구성 미리보기·prep 배지 없음(리드만)', () => {
   const s = { slug: 'y', title: '개념 세미나', author: '김', date: '2026-10-01', 회차: '4', 유형: '인지', body: '자유 본문.' }
-  const html = flat(<NextHero s={s} today="2026-09-20" onOpen={noop} />)
+  const html = flat(<NextHero s={s} onOpen={noop} />)
   expect(html).not.toContain('sem-toc-preview') // 인지 = 구성 미리보기 없음
   expect(html).not.toContain('사전 준비 필요') // 준비 헤딩 없음
 })

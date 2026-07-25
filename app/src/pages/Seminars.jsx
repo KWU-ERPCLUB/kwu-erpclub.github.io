@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { SiteNav, SiteFooter, Arrow, CONTRIBUTING_URL } from '../shared.jsx'
 import { loadContent } from '../content/loader.js'
 import { LAB_HEADINGS } from '../content/schema.js'
-import { splitByDate, todayString, excerpt, daysUntil, ddayLabel } from './seminars-logic.js'
+import { splitByDate, todayString, excerpt } from './seminars-logic.js'
 import Markdown from './Markdown.jsx'
 
 // 본문을 `## <헤딩>`으로 분할 → { intro, sections: { 헤딩: 본문 } }. 순수 함수 — 테스트 대상.
@@ -51,22 +51,18 @@ export function splitLead(intro) {
   return { lead: parts[0].trim(), rest: parts.slice(1).join('\n\n').trim() }
 }
 
-// NEXT 히어로 = 풀블리드 밴드. 눈썹 → D-day 대형 + 초대형 타이틀 → 리드·메타 → 구성 미리보기(실습) →
-// 사전준비 배지 + 자세히(Primary). 강조 = 버건디 화이트리스트(눈썹④·언더바③·prep⑤·arrow②) ≤4.
-export function NextHero({ s, today, onOpen }) {
+// NEXT 히어로 = 풀블리드 밴드. 눈썹 → 초대형 타이틀 → 리드·메타 → 구성 미리보기(실습) →
+// 사전준비 배지 + 자세히(Primary). 강조 = 버건디 화이트리스트(눈썹④·prep⑤·arrow②) ≤3.
+// D-day 표시 폐지(owner 2026-07-25) — date = 정렬·메타 표기용, 카운트다운 비표기.
+export function NextHero({ s, onOpen }) {
   const { sections } = splitSeminarBody(s.body)
   const isLab = s.유형 === '실습'
   const hasPrep = Boolean((sections['준비'] || '').trim())
-  const dday = ddayLabel(daysUntil(s.date, today))
   return (
     <section className="sem-next" aria-labelledby="sem-next-title">
       <div className="sem-next-in">
         <span className="sem-next-eyebrow">NEXT</span>
         <div className="sem-next-lead-row">
-          <div className="sem-dday">
-            <span className="sem-dday-num">{dday}</span>
-            <span className="sem-dday-cap">개최까지</span>
-          </div>
           <div className="sem-next-headwrap">
             <h1 className="sem-next-title" id="sem-next-title">{s.title}</h1>
             {heroLead(s.body) && <p className="sem-next-lead">{heroLead(s.body)}</p>}
@@ -233,7 +229,7 @@ export default function Seminars() {
     <>
       <SiteNav />
       <main className="sem-main">
-        {hero ? <NextHero s={hero} today={today} onOpen={openSeminar} /> : <NextEmpty />}
+        {hero ? <NextHero s={hero} onOpen={openSeminar} /> : <NextEmpty />}
 
         {past.length > 0 && (
           <section className="sem-past">

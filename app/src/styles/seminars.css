@@ -1,5 +1,5 @@
-/* 세미나 2차 구조 개혁 (2026-07-24) — 풀블리드 NEXT 밴드(D-day·구성 미리보기) + 초대형 회차 번호 카드 +
-   상세 컬러(다크) 헤더 밴드. 마크다운 본문 = pages.css(.hub-md). 토큰=global.css · 디자인규칙 v2 준수. */
+/* 세미나 2차 구조 개혁 (2026-07-24) — 풀블리드 NEXT 밴드(구성 미리보기) + 초대형 회차 번호 카드 +
+   상세 컬러(다크) 헤더 밴드. D-day 표시 폐지(2026-07-25). 마크다운 본문 = pages.css(.hub-md). 토큰=global.css. */
 
 /* ── 버튼 리셋 (위계 클래스를 button에 적용) ── */
 button.cta { border: none; font-family: inherit; cursor: pointer; }
@@ -22,17 +22,8 @@ button.proof-link {
   color: var(--accent); margin-bottom: clamp(1.25rem, 3vh, 2rem);
 }
 
-/* D-day 대형 열 + 초대형 타이틀 블록 */
+/* 초대형 타이틀 블록 (D-day 열 폐지 2026-07-25) */
 .sem-next-lead-row { display: flex; flex-wrap: wrap; align-items: flex-start; gap: clamp(1.5rem, 4vw, 3rem); }
-.sem-dday { flex: 0 0 auto; }
-.sem-dday-num { /* 대형 — 차콜(버건디 면 금지), Paperlogy */
-  font-family: var(--font-display); font-weight: 900; font-size: clamp(2.6rem, 7vw, 5rem);
-  line-height: 1; letter-spacing: -0.03em; color: var(--text); display: block;
-}
-.sem-dday-num::after { /* 화이트리스트 ③ 스탯 언더바 28×3 = 브랜드 시그니처 */
-  content: ''; display: block; width: 28px; height: 3px; background: var(--accent); border-radius: 2px; margin-top: 0.7rem;
-}
-.sem-dday-cap { font-size: 0.78rem; color: var(--text-sub); display: block; margin-top: 0.6rem; }
 .sem-next-headwrap { flex: 1 1 22ch; min-width: 0; }
 .sem-next-title { /* 초대형 — Hero급 clamp ~4rem */
   font-family: var(--font-display); font-weight: 900; font-size: clamp(2.1rem, 6vw, 4rem);
