@@ -3,18 +3,41 @@
 광운대학교 ERP연구회 MIS×AI 스터디 허브. 인사이트(`/insights/`) 기고 규칙·절차.
 frontmatter 규칙의 유일 원천 = `app/src/content/schema.js`. 이 문서는 그 사람용 설명.
 
-## 기고 흐름
+## 기고 흐름 (2026-07-25 개정 — main 직접 push는 오너 전용, 멤버 = PR)
 
 1. **collaborator 등록** — 오너에게 GitHub 계정 전달, 저장소 쓰기 권한 획득
 2. **clone** — `git clone https://github.com/KWU-ERPCLUB/kwu-erpclub.github.io.git`
-3. **템플릿 복사** — `app/content/기사/_template.md` → 같은 폴더에 새 파일로 저장
-4. **파일명 규칙** — `YYYY-MM-DD-<작성자id>-<슬러그>.md` (예: `2026-08-01-hong-agent-workflow.md`)
+3. **브랜치 생성** — `git switch -c 기고/<작성자id>-<슬러그>`
+4. **템플릿 복사** — `app/content/기사/_template.md` → 같은 폴더에 새 파일로 저장
+5. **파일명 규칙** — `YYYY-MM-DD-<작성자id>-<슬러그>.md` (예: `2026-08-01-hong-agent-workflow.md`)
    - `<작성자id>` = frontmatter `author` 값과 동일
    - `_` 시작 파일 = 게재·검증 제외(초안·템플릿 보관용)
-5. **frontmatter 채움** — 아래 필드 표 참고, 주석 줄 삭제
-6. **push** — `content/기사/` 경로는 직접 push 허용(공용 영역 변경은 PR + 오너 승인)
-7. **CI 검증** — validate + test + build 게이트. 규칙 위반 = 배포 차단
-8. **자동 게재** — main 병합 시 GitHub Pages 자동 배포
+6. **frontmatter 채움** — 아래 필드 표 참고, 주석 줄 삭제
+7. **push + PR 생성** — `git push -u origin <브랜치>` 후 GitHub에서 main으로 Pull Request
+8. **자동 게이트** — CI(validate+test+build)가 PR에서 검사. `app/content/` 안만 고친 PR = 체크 통과 시 **본인이 바로 머지 가능**(승인 불필요). 그 밖의 파일(페이지·디자인·설정)을 건드리면 = 오너 승인 없이는 머지 불가(CODEOWNERS+룰셋이 차단)
+9. **자동 게재** — main 병합 시 GitHub Pages 자동 배포
+
+> 권한 구조: 사이트 공용 영역(페이지·디자인·설정) 변경 = 오너 전용. 멤버 기고 영역 = `app/content/` 하위만. main 직접 push는 관리자 외 차단(룰셋).
+
+## AI로 기고하기 (권장)
+
+ChatGPT·Claude 등에 아래를 붙여 넣고 소재(URL)를 주면 규격에 맞는 초안이 나온다. 결과물은 반드시 본인이 읽고 사실 확인 후 제출:
+
+```
+너는 광운대 ERP연구회 'AI 인사이트' 기고 도우미다. 내가 주는 원문(URL 또는 내용)을 바탕으로
+아래 규격의 마크다운 기고문 1개를 작성하라.
+
+[frontmatter — 전부 필수 규칙 준수]
+title(개조식 한 줄·과장 금지) / author(내 아이디) / date(YYYY-MM-DD) / source_url / source_name
+/ 성격(트렌드·심층 분석·활용법·튜토리얼·도구·프롬프트 중 1) / 주제(에이전트·모델·플랫폼·워크플로·자동화·거버넌스·리스크·시장·생태계 중 1)
+
+[본문 규칙]
+- 평서문 단문. 과장·감탄·권유형 수사 금지. 모든 수치에 출처 링크.
+- 글 맨 위 ::: 요약 (2~3줄) ::: 블록.
+- ## 소제목 3~5개(번호 자동 부여됨). 핵심 문구는 *별표*(강조색), 핵심 숫자는 **볼드**.
+- 전문용어 = 위첨자 ¹²³ 표시 후 해당 섹션 끝에 ::: 용어 \n 용어 | 설명 \n ::: 블록(섹션마다 번호 1부터).
+- 글 맨 아래 ::: 출처 \n 이름 | URL | 비고 \n ::: 블록에 인용 출처 전부.
+```
 
 ## frontmatter 필드
 

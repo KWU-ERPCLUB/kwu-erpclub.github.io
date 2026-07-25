@@ -24,7 +24,9 @@ Deploy: GitHub Pages, org repo `KWU-ERPCLUB/kwu-erpclub.github.io`, main push = 
 - 기고 = `content/<종류>/YYYY-MM-DD-<작성자id>-<슬러그>.md` (종류=**기사·세미나** — 실습 폐지). frontmatter 규칙의
   **유일 원천 = `src/content/schema.js`**(검증기 CLI·앱 로더 공용). 기사=source_url·source_name·`용도`(1~2 필수)+`기술`(0~2 선택) — 구 tags 폐지, 세미나=회차·유형(+선택 발원기사)·**유형=실습이면 본문 필수 헤딩 {## 준비, ## 진행, ## 재현 가이드}**.
 - 로더 = `src/content/loader.js`(글롭 로드). 앱·CLI가 같은 스키마를 소비.
-- CI = `.github/workflows/deploy.yml`: **validate + test + build 게이트** 통과해야 배포. `guard-shared-paths` 잡 = 비오너(bapzzi 외) push는 `app/content`만 허용(공용 영역 변경은 PR+오너 승인 — CODEOWNERS).
+- CI = `.github/workflows/deploy.yml`: **validate + test + build 게이트** 통과해야 배포(PR에서도 build 실행, deploy는 push만). `guard-shared-paths` 잡 = 비오너(bapzzi 외) 변경은 `app/content`만 허용.
+- **권한 구조(2026-07-25 하드 격리)**: GitHub 룰셋(id 19734261) — main 직접 push = repo 관리자만(오너·오너 자격 Claude). 멤버 = 브랜치→PR 필수. `app/content`만 고친 PR = 체크(build) 통과 시 셀프 머지(승인 0) / 공용 영역 터치 = CODEOWNERS(오너) 승인 필수. 룰셋 관리 = repo Settings > Rules.
+- **주간 트렌드 자동화**: 클라우드 루틴 `trig_0118sfWk88m1uYZMfcYUTik4`(매주 월 09:00 KST, sonnet-5, 멱등 스킵 규칙 내장) — 관리 = claude.ai/code/routines. 수동 실행 = 로컬 스킬 `weekly-trend`.
 
 ## Design (numeric source of truth)
 - Rules: `../../docs/디자인규칙-메인.md` **v2** — 실측 고정 수치(버건디 화이트리스트 10형태·빈도 상한·
