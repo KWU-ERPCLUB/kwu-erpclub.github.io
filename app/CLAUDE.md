@@ -34,7 +34,7 @@ Deploy: GitHub Pages, org repo `KWU-ERPCLUB/kwu-erpclub.github.io`, main push = 
 
 ## Docs map
 - Project docs live OUTSIDE this repo (workspace `erp-club/docs/` — Tier2): 디자인규칙-메인.md(v2 디자인 규격) ·
-  문안-메인.md(카피 원천, 6차) · specs/2026-07-10-portfolio-mainpage-design.md(IA spec) · 선행조사-2026-07-10.md(팩트 원천)
+  정체성-북극성.md(카피 상위 기준) — 기록·근거 문서는 `erp-club/docs/_archive/`(선행조사=수치 원천·리서치 3종·구 문안 등, 2026-07-25 정리)
 - In-repo: `../README.md`(3칸 표면 — 재개 지점). 결정 여정=workspace `erp-club/roadmap.md`(아카이브·비필독).
 
 ## File rules
