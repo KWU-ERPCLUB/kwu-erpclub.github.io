@@ -193,6 +193,28 @@
 .hub-md pre code { background: none; border: none; padding: 0; }
 .hub-md blockquote { margin: 0 0 1.1rem; padding: 0.1rem 0 0.1rem 1.1rem; border-left: 3px solid var(--accent); color: var(--text-sub); } /* 콜아웃(⑩) */
 
+/* ── 기고 서식 확장 (2026-07-25) — 요약 박스·수치 카드·표·섹션 넘버링 ── */
+.hub-md .md-summary { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 10px; padding: 1.1rem 1.3rem; margin: 0 0 1.9rem; } /* 콜아웃(⑩) 문법 승계 */
+.hub-md .md-summary-label { display: block; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.05em; color: var(--accent); margin-bottom: 0.55rem; }
+.hub-md .md-summary ul, .hub-md .md-summary ol { margin: 0; padding-left: 1.15rem; }
+.hub-md .md-summary p:last-child { margin-bottom: 0; }
+
+.hub-md .md-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin: 0 0 1.9rem; }
+.hub-md .md-stat { background: var(--bg); padding: 1rem 1.1rem; display: flex; flex-direction: column; }
+.hub-md .md-stat-num { font-family: var(--font-display); font-weight: 800; font-size: 1.55rem; letter-spacing: -0.02em; line-height: 1.2; }
+.hub-md .md-stat-num::after { content: ''; display: block; width: 28px; height: 3px; background: var(--accent); margin: 0.4rem 0 0.55rem; } /* 스탯 언더바(③) */
+.hub-md .md-stat-desc { font-size: 0.86rem; color: var(--text-sub); line-height: 1.45; word-break: keep-all; }
+.hub-md .md-stat-src { font-size: 0.72rem; color: var(--text-sub); margin-top: 0.5rem; } /* 수치 출처 각주(stat-src) */
+
+.hub-md table { width: 100%; border-collapse: collapse; font-size: 0.92rem; margin: 0 0 1.6rem; display: block; overflow-x: auto; }
+.hub-md th, .hub-md td { text-align: left; padding: 0.55rem 0.8rem; border-bottom: 1px solid var(--line); line-height: 1.5; word-break: keep-all; }
+.hub-md th { background: var(--surface); font-weight: 700; font-size: 0.86rem; white-space: nowrap; }
+
+/* 섹션 넘버링 — 기사 상세 한정(세미나·프로젝트 본문 제외) */
+.art-detail .hub-md { counter-reset: mdsec; }
+.art-detail .hub-md h2 { counter-increment: mdsec; padding-top: 1.6rem; border-top: 1px solid var(--line); margin-top: 2.4rem; }
+.art-detail .hub-md h2::before { content: counter(mdsec, decimal-leading-zero); display: block; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 0.4rem; } /* 섹션 인덱스(④) */
+
 @media (prefers-reduced-motion: reduce) {
   .art-filter button, .art-card > button, .art-back, .art-search input, .hub-md a, .art-source, .art-nav-link { transition: none; }
   .art-filter button:active, .art-card > button:hover, .art-card > button:active { transform: none; }

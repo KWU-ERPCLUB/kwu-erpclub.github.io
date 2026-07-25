@@ -102,3 +102,10 @@ test('excerpt — 마크다운 기호 제거 + 길이 제한', () => {
   expect(out).toContain('링크')
   expect(excerpt('가'.repeat(200), 96).endsWith('…')).toBe(true)
 })
+test('excerpt — ::: 컨테이너 마커 제거, 내용은 유지', () => {
+  const out = excerpt('::: 요약\n- 첫 핵심\n:::\n\n본문 시작', 100)
+  expect(out).not.toContain(':::')
+  expect(out).not.toContain('요약')
+  expect(out).toContain('첫 핵심')
+  expect(out).toContain('본문 시작')
+})

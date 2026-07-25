@@ -37,6 +37,7 @@ export function searchFromState({ tab = HUB_TAB, slug = null } = {}) {
 // 본문 마크다운 → 텍스트 발췌(검색 인덱스).
 export function excerpt(body, n = 96) {
   const text = (body || '')
+    .replace(/^:{3,}.*$/gm, ' ') // ::: 요약·수치 컨테이너 마커 제거(내용은 발췌에 포함)
     .replace(/```[\s\S]*?```/g, ' ')
     .replace(/`[^`]*`/g, ' ')
     .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')
