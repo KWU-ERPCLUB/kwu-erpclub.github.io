@@ -7,7 +7,7 @@ import { ArticleRow } from './insights-parts.jsx'
 test('목록 = 상단 컨트롤 바(성격 칩+주제 칩+토글+검색) + 카운트 라인 + 2열 카드 그리드', () => {
   const html = renderToString(<Articles />)
   // 상단 컨트롤 바 — 성격 칩(전체+4)
-  for (const t of ['전체', '뉴스·동향', '심층 분석', '활용법·튜토리얼', '도구·프롬프트']) {
+  for (const t of ['전체', '트렌드', '심층 분석', '활용법·튜토리얼', '도구·프롬프트']) {
     expect(html).toContain(t)
   }
   expect(html).toContain('ins-controls')
@@ -25,7 +25,7 @@ test('목록 = 상단 컨트롤 바(성격 칩+주제 칩+토글+검색) + 카�
   // 2열 색면 카드 그리드
   expect(html).toContain('art-grid')
   expect(html).toContain('art-card-title')
-  expect(html).toContain('2026 AI 트렌드') // 예시 기고
+  expect(html).toContain('주간 AI 트렌드') // 예시 기고
   // 폐지된 구조 마크업 부재
   expect(html).not.toContain('art-tabs')      // 좌측 탭 폐지
   expect(html).not.toContain('art-month-head') // 월별 그룹 폐지
@@ -51,7 +51,7 @@ test('색 면 카드 — 성격별 배경 + 태그 줄(성격·주제·지금써
 
 // 시각 미기재 = 날짜만 표기(하위호환).
 test('시각 없는 글 = 날짜만 표기', () => {
-  const a = { slug: 'z', title: 't', author: 'A', date: '2026-07-03', body: 'b', 성격: '뉴스·동향' }
+  const a = { slug: 'z', title: 't', author: 'A', date: '2026-07-03', body: 'b', 성격: '트렌드' }
   const html = renderToString(<ArticleRow a={a} onOpen={() => {}} />)
   expect(html).toContain('2026-07-03')
   expect(html).not.toContain('2026-07-03 ')
@@ -59,14 +59,14 @@ test('시각 없는 글 = 날짜만 표기', () => {
 
 // 고정 핀 — 고정(true) 카드는 핀 배지 노출(pinned prop).
 test('고정 카드 = 핀 배지(art-pin) 노출', () => {
-  const a = { slug: 'p', title: '고정 글', author: 'A', date: '2026-07-01', body: 'b', 성격: '뉴스·동향' }
+  const a = { slug: 'p', title: '고정 글', author: 'A', date: '2026-07-01', body: 'b', 성격: '트렌드' }
   const html = renderToString(<ArticleRow a={a} onOpen={() => {}} pinned />)
   expect(html).toContain('art-pin')
 })
 
 // 4성격 색 클래스 매핑 무결 + 이미지 있을 때만 썸네일.
 test('색 면 카드 — 4성격 색 클래스 매핑 + 이미지 시 썸네일 표시', () => {
-  const cases = [['뉴스·동향', 'news'], ['심층 분석', 'analysis'], ['활용법·튜토리얼', 'howto'], ['도구·프롬프트', 'tools']]
+  const cases = [['트렌드', 'news'], ['심층 분석', 'analysis'], ['활용법·튜토리얼', 'howto'], ['도구·프롬프트', 'tools']]
   for (const [nature, key] of cases) {
     const html = renderToString(<ArticleRow a={{ slug: key, title: 't', author: 'A', date: '2026-07-01', body: 'b', 성격: nature }} onOpen={() => {}} />)
     expect(html).toContain(`art-card--${key}`)
@@ -86,7 +86,8 @@ test('성격 칩 딥링크 — ?tab=analysis 복원 + 해당 성격 카드만', 
     const html = renderToString(<Articles />)
     expect(html).toContain('art-grid')
     expect(html).toContain('art-card-title')
-    expect(html).toContain('2026 AI 트렌드')                 // 심층 분석 기고
+    expect(html).toContain('거버넌스 갭')                    // 심층 분석 기고
+    expect(html).not.toContain('주간 AI 트렌드')             // 트렌드 성격은 필터링됨
     expect(html).toContain('placeholder="제목·요약 검색"')   // 검색박스 유지
     expect(html).not.toContain('art-month-head')             // 월별 그룹 폐지
   } finally {
@@ -98,12 +99,12 @@ test('성격 칩 딥링크 — ?tab=analysis 복원 + 해당 성격 카드만', 
 // 상세 진입(?p=<slug>) = 통일 셸(변경 없음). URL 반영은 stateFromSearch 경유.
 test('상세 = 통일 셸(문서 헤더·출처 카드 승격·목록 복귀)', () => {
   const prev = globalThis.window
-  globalThis.window = { location: { search: '?p=2026-07-22-bapzzi-ai-trend-research', pathname: '/insights/' } }
+  globalThis.window = { location: { search: '?p=2026-07-25-bapzzi-weekly-trend-w30', pathname: '/insights/' } }
   try {
     const html = renderToString(<Articles />)
     expect(html).toContain('AI INSIGHTS')
     expect(html).toContain('art-source')
-    expect(html).toContain('Stanford HAI · Gartner')
+    expect(html).toContain('OpenAI · Anthropic · SAP News 외')
     expect(html).toContain('← 목록')
   } finally {
     if (prev === undefined) delete globalThis.window

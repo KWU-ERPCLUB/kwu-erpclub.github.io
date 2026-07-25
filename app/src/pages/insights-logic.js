@@ -7,7 +7,7 @@ export const HUB_TAB = '전체'
 export const TABS = [HUB_TAB, ...NATURES]
 
 // 성격 ↔ ascii 탭키(URL·CSS 클래스 안정용). Korean URL 인코딩 회피.
-export const NATURE_KEY = { '뉴스·동향': 'news', '심층 분석': 'analysis', '활용법·튜토리얼': 'howto', '도구·프롬프트': 'tools' }
+export const NATURE_KEY = { '트렌드': 'news', '심층 분석': 'analysis', '활용법·튜토리얼': 'howto', '도구·프롬프트': 'tools' }
 const KEY_TO_NATURE = Object.fromEntries(Object.entries(NATURE_KEY).map(([n, k]) => [k, n]))
 
 export function natureKey(nature) { return NATURE_KEY[nature] || 'analysis' }

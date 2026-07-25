@@ -10,7 +10,7 @@ test('stateFromSearch — ?p=<slug>는 상세, tab 없으면 허브', () => {
 })
 test('stateFromSearch — ?tab=<key> 복원(딥링크), 미지 키는 허브', () => {
   expect(stateFromSearch('?tab=analysis')).toEqual({ tab: '심층 분석', slug: null })
-  expect(stateFromSearch('?tab=news&p=y')).toEqual({ tab: '뉴스·동향', slug: 'y' })
+  expect(stateFromSearch('?tab=news&p=y')).toEqual({ tab: '트렌드', slug: 'y' })
   expect(stateFromSearch('?tab=없는키')).toEqual({ tab: HUB_TAB, slug: null })
   expect(stateFromSearch('')).toEqual({ tab: HUB_TAB, slug: null })
 })
@@ -26,7 +26,7 @@ test('searchFromState — 성격 탭·상세 쿼리 생성', () => {
 test('URL 왕복 — state→search→state 보존(pushState/popstate 순수 로직)', () => {
   for (const s of [
     { tab: HUB_TAB, slug: null },
-    { tab: '뉴스·동향', slug: null },
+    { tab: '트렌드', slug: null },
     { tab: '활용법·튜토리얼', slug: '2026-08-01-hong-x' },
     { tab: HUB_TAB, slug: 'only-detail' },
   ]) {
@@ -36,7 +36,7 @@ test('URL 왕복 — state→search→state 보존(pushState/popstate 순수 로
 
 // ── 성격 타일 키·아바타 이니셜 ──
 test('natureKey — ascii 키(타일 클래스·URL), 미지 성격 = 안전 fallback', () => {
-  expect(natureKey('뉴스·동향')).toBe('news')
+  expect(natureKey('트렌드')).toBe('news')
   expect(natureKey('심층 분석')).toBe('analysis')
   expect(natureKey('활용법·튜토리얼')).toBe('howto')
   expect(natureKey('도구·프롬프트')).toBe('tools')
@@ -70,7 +70,7 @@ test('pinnedFirst — 고정 없으면 전부 rest', () => {
 test('3필터 — 성격·주제·지금써먹기 AND 결합', () => {
   const all = [
     { slug: 'a', 성격: '심층 분석', 주제: '시장·생태계', 지금써먹기: true },
-    { slug: 'b', 성격: '뉴스·동향', 주제: '에이전트' },
+    { slug: 'b', 성격: '트렌드', 주제: '에이전트' },
     { slug: 'c', 성격: '심층 분석', 주제: '에이전트', 지금써먹기: true },
   ]
   expect(filterArticles(all, {}).map((x) => x.slug)).toEqual(['a', 'b', 'c'])
@@ -82,7 +82,7 @@ test('3필터 — 성격·주제·지금써먹기 AND 결합', () => {
 test('검색 — 제목·본문 부분일치 + 필터 AND', () => {
   const all = [
     { slug: 'a', title: '에이전트 실전', body: '업무 자동화 사례', 성격: '활용법·튜토리얼' },
-    { slug: 'b', title: '리서치 요약', body: '시장 동향 정리', 성격: '뉴스·동향' },
+    { slug: 'b', title: '리서치 요약', body: '시장 동향 정리', 성격: '트렌드' },
   ]
   expect(filterArticles(all, { q: '에이전트' }).map((x) => x.slug)).toEqual(['a'])
   expect(filterArticles(all, { q: '동향' }).map((x) => x.slug)).toEqual(['b'])
