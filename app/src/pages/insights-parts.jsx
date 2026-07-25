@@ -23,11 +23,18 @@ export function PinBadge() {
   )
 }
 
-// 태그 칩 줄 — 성격 칩·주제 칩·지금써먹기 배지(상세 페이지 전용 — 목록 카드는 분산 배치).
+// 날짜(+게재 시각) 표기 — 시각 필드 있으면 "YYYY-MM-DD HH:MM"(2026-07-25 오너 지시).
+export function dateTimeOf(a) {
+  const d = (a.date || '').slice(0, 10)
+  return a['시각'] ? `${d} ${a['시각']}` : d
+}
+
+// 태그 칩 줄 — 성격(성격색 칩)·주제·지금써먹기 한 줄 노출(카드·상세 공용, 2026-07-25 오너 지시).
 export function TagChips({ a }) {
+  const nk = natureKey(a['성격'])
   return (
     <span className="art-row-tags">
-      {a['성격'] && <span className="art-tag art-tag-nature">{a['성격']}</span>}
+      {a['성격'] && <span className={`art-tag art-tag-nature chip-${nk}`}>{a['성격']}</span>}
       {a['주제'] && <span className="art-tag">{a['주제']}</span>}
       {a['지금써먹기'] && <span className="art-tag art-tag-now">지금 써먹기</span>}
     </span>
@@ -35,8 +42,8 @@ export function TagChips({ a }) {
 }
 
 // 색 면 카드(AI in Use 이식) — 배경=성격별 저채도 4색, 진한 보더(--dark 1.5px)+옅은 그림자.
-// 구조: [상단 메타: 아바타·저자 / 우상단 날짜] → 제목(볼드) → 주제 칩(흰 필) → 요약 2~3줄
-//   → [하단: 성격 태그(진한 필)·지금써먹기 배지 + "자세히 →"]. 썸네일=이미지 있을 때만.
+// 구조: [상단 메타: 아바타·저자 / 우상단 날짜·시각] → 제목(볼드) → 태그 줄(성격·주제·지금써먹기)
+//   → 요약 2~3줄 → [하단: "자세히 →"]. 썸네일=이미지 있을 때만.
 export function ArticleRow({ a, onOpen, pinned = false }) {
   const nk = natureKey(a['성격'])
   const ex = excerpt(a.body, 140)
@@ -47,19 +54,19 @@ export function ArticleRow({ a, onOpen, pinned = false }) {
           <span className="art-card-meta">
             <span className="art-avatar" aria-hidden="true">{authorInitial(a.author)}</span>
             <span className="art-card-author">{a.author}</span>
-            <span className="art-card-date">{(a.date || '').slice(0, 10)}</span>
+            <span className="art-card-date">{dateTimeOf(a)}</span>
           </span>
           <span className="art-card-title">
             {pinned && <PinBadge />}
             {a.title}
           </span>
-          {a['주제'] && <span className="art-card-topic">{a['주제']}</span>}
+          <span className="art-card-tagline">
+            {a['성격'] && <span className="art-tag art-tag-fill">{a['성격']}</span>}
+            {a['주제'] && <span className="art-tag">{a['주제']}</span>}
+            {a['지금써먹기'] && <span className="art-tag art-tag-now">지금 써먹기</span>}
+          </span>
           {ex && <span className="art-card-excerpt">{ex}</span>}
           <span className="art-card-foot">
-            <span className="art-row-tags">
-              {a['성격'] && <span className="art-tag art-tag-nature">{a['성격']}</span>}
-              {a['지금써먹기'] && <span className="art-tag art-tag-now">지금 써먹기</span>}
-            </span>
             <span className="art-card-more">자세히 <Arrow /></span>
           </span>
         </span>

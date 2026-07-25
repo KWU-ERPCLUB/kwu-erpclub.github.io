@@ -1,7 +1,7 @@
 // 인사이트 상세 셸 — 문서 헤더·출처 카드·720px 자유 본문·이전/다음 내비. 720px 문서형.
 import { Arrow } from '../shared.jsx'
 import { neighbors } from './insights-logic.js'
-import { TagChips } from './insights-parts.jsx'
+import { TagChips, dateTimeOf } from './insights-parts.jsx'
 import Markdown from './Markdown.jsx'
 
 export default function ArticleDetail({ cur, all, onOpen, onBack }) {
@@ -13,7 +13,7 @@ export default function ArticleDetail({ cur, all, onOpen, onBack }) {
       <header className="art-doc-head">
         <span className="art-idx">AI INSIGHTS</span>
         <h1>{cur.title}</h1>
-        <p className="art-detail-meta">{cur.date} · {cur.author}</p>
+        <p className="art-detail-meta">{dateTimeOf(cur)} · {cur.author}</p>
         {hasTags && <div className="art-detail-tags"><TagChips a={cur} /></div>}
       </header>
 

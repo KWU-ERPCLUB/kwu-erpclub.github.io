@@ -42,7 +42,8 @@ export function excerpt(body, n = 96) {
     .replace(/`[^`]*`/g, ' ')
     .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')
     .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
-    .replace(/[#>*_~`|-]/g, ' ')
+    .replace(/[*_~]+/g, '') // 강조 마커 = 공백 없이 제거(단어 벌어짐 방지)
+    .replace(/[#>`|-]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim()
   return text.length > n ? `${text.slice(0, n).trim()}…` : text

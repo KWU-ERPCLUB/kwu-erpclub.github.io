@@ -32,19 +32,29 @@ test('목록 = 상단 컨트롤 바(성격 칩+주제 칩+토글+검색) + 카�
   expect(html).not.toContain('hub-sec')        // 허브 4섹션 폐지
 })
 
-// 색 면 카드(AI in Use 이식) — 배경=성격 색 클래스, fallback 아이콘 타일 폐지(합성 데이터 = 콘텐츠 무관).
-test('색 면 카드 — 성격별 배경 클래스 + 주제·성격·지금써먹기·자세히, fallback 타일 제거', () => {
+// 색 면 카드(AI in Use 이식) — 배경=성격 색 클래스, 제목 아래 태그 줄(성격·주제·지금써먹기), 날짜+시각(2026-07-25 개정).
+test('색 면 카드 — 성격별 배경 + 태그 줄(성격·주제·지금써먹기) + 날짜·시각 + 자세히', () => {
   const a = {
-    slug: 'x', title: '합성 제목', author: '홍길동', date: '2026-07-01',
+    slug: 'x', title: '합성 제목', author: '홍길동', date: '2026-07-01', 시각: '14:30',
     body: '요약용 본문 텍스트', 성격: '심층 분석', 주제: '에이전트', 지금써먹기: true,
   }
   const html = renderToString(<ArticleRow a={a} onOpen={() => {}} />)
   expect(html).toContain('art-card--analysis') // 성격 색 면 배경
-  expect(html).toContain('art-card-topic')      // 주제 흰 필
-  expect(html).toContain('art-tag-nature')      // 성격 진한 필
+  expect(html).toContain('art-card-tagline')    // 제목 아래 태그 줄
+  expect(html).toContain('art-tag-fill')        // 성격 진한 필
+  expect(html).toContain('에이전트')            // 주제 칩
   expect(html).toContain('art-tag-now')         // 지금 써먹기 배지
+  expect(html).toContain('2026-07-01 14:30')    // 날짜 + 게재 시각
   expect(html).toContain('자세히')              // View details 링크
   expect(html).not.toContain('art-thumb')       // 이미지 없음 → 썸네일 미표시
+})
+
+// 시각 미기재 = 날짜만 표기(하위호환).
+test('시각 없는 글 = 날짜만 표기', () => {
+  const a = { slug: 'z', title: 't', author: 'A', date: '2026-07-03', body: 'b', 성격: '뉴스·동향' }
+  const html = renderToString(<ArticleRow a={a} onOpen={() => {}} />)
+  expect(html).toContain('2026-07-03')
+  expect(html).not.toContain('2026-07-03 ')
 })
 
 // 고정 핀 — 고정(true) 카드는 핀 배지 노출(pinned prop).

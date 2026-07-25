@@ -27,6 +27,23 @@ describe('Markdown 서식 확장', () => {
     expect(html).toContain('&lt;b&gt;1')
   })
 
+  it('::: 용어 블록 = 용어 설명 라벨 + 번호 목록', () => {
+    const html = renderToString(<Markdown body={'::: 용어\n에이전틱 AI | 여러 단계 작업을 알아서 처리하는 AI\nSaaS | 구독형 소프트웨어\n:::'} />)
+    expect(html).toContain('md-terms')
+    expect(html).toContain('용어 설명')
+    expect(html).toContain('에이전틱 AI')
+    expect(html).toContain('구독형 소프트웨어')
+  })
+
+  it('::: 출처 블록 = 링크 목록, http 아닌 URL은 링크 미생성', () => {
+    const html = renderToString(<Markdown body={'::: 출처\n원문 A | https://example.com/a | 비고\n원문 B | javascript:alert(1)\n:::'} />)
+    expect(html).toContain('md-sources')
+    expect(html).toContain('리서치 출처')
+    expect(html).toContain('href="https://example.com/a"')
+    expect(html).toContain('비고')
+    expect(html).not.toContain('javascript:alert')
+  })
+
   it('GFM 표 = table 렌더', () => {
     const html = renderToString(<Markdown body={'| 항목 | 값 |\n|---|---|\n| 도입 | 88% |'} />)
     expect(html).toContain('<table>')

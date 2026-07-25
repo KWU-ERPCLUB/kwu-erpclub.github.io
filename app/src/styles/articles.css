@@ -93,6 +93,8 @@
 .art-card-title { display: block; font-size: 1.32rem; font-weight: 800; line-height: 1.32; letter-spacing: -0.015em; color: var(--text); margin-bottom: 0.6rem; }
 
 /* 주제 칩 — 흰 필(색 면 위 또렷) */
+.art-card-tagline { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.6rem; } /* 제목 아래 태그 줄(성격·주제·지금써먹기) */
+.art-tag.art-tag-fill { color: #fff; background: var(--card-fg); border-color: var(--card-fg); } /* 카드 위 성격 칩 = 진한 필 */
 .art-card-topic {
   align-self: flex-start; font-size: 0.72rem; font-weight: 700; color: var(--card-fg);
   background: #fff; border: 1px solid rgba(0, 0, 0, 0.08); border-radius: var(--radius-pill);
@@ -193,9 +195,9 @@
 .hub-md pre code { background: none; border: none; padding: 0; }
 .hub-md blockquote { margin: 0 0 1.1rem; padding: 0.1rem 0 0.1rem 1.1rem; border-left: 3px solid var(--accent); color: var(--text-sub); } /* 콜아웃(⑩) */
 
-/* ── 기고 서식 확장 (2026-07-25) — 요약 박스·수치 카드·표·섹션 넘버링 ── */
+/* ── 기고 서식 확장 (2026-07-25) — 요약 박스·수치 카드·표·섹션 넘버링·용어·출처·강조 ── */
 .hub-md .md-summary { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 10px; padding: 1.1rem 1.3rem; margin: 0 0 1.9rem; } /* 콜아웃(⑩) 문법 승계 */
-.hub-md .md-summary-label { display: block; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.05em; color: var(--accent); margin-bottom: 0.55rem; }
+.hub-md .md-block-label { display: block; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.05em; color: var(--accent); margin-bottom: 0.55rem; }
 .hub-md .md-summary ul, .hub-md .md-summary ol { margin: 0; padding-left: 1.15rem; }
 .hub-md .md-summary p:last-child { margin-bottom: 0; }
 
@@ -214,6 +216,27 @@
 .art-detail .hub-md { counter-reset: mdsec; }
 .art-detail .hub-md h2 { counter-increment: mdsec; padding-top: 1.6rem; border-top: 1px solid var(--line); margin-top: 2.4rem; }
 .art-detail .hub-md h2::before { content: counter(mdsec, decimal-leading-zero); display: block; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 0.4rem; } /* 섹션 인덱스(④) */
+
+/* 본문 핵심구 강조 — *별표* = 버건디 굵은 글씨(이탤릭 폐지, 2026-07-25 오너 지시 — 절제 사용) */
+.hub-md em { font-style: normal; font-weight: 700; color: var(--accent); }
+
+/* 용어 설명·리서치 출처 — 글 하단 작은 글씨 블록(2026-07-25 오너 지시) */
+.hub-md .md-terms, .hub-md .md-sources { margin: 2.4rem 0 0; padding-top: 1.1rem; border-top: 1px solid var(--line); font-size: 0.82rem; color: var(--text-sub); line-height: 1.6; }
+.hub-md .md-terms ol, .hub-md .md-sources ol { margin: 0; padding-left: 1.2rem; }
+.hub-md .md-terms li, .hub-md .md-sources li { margin-bottom: 0.3rem; }
+.hub-md .md-terms strong { color: var(--text); font-weight: 700; }
+.hub-md .md-sources a { color: var(--text); }
+.hub-md .md-source-note { color: var(--text-sub); }
+
+/* 성격색 칩 — 필터·상세 태그 공용(카드 배경 4색과 동일 계열, 2026-07-25 오너 지시) */
+.chip-news     { --nbg: #e7ecf1; --nfg: #46566a; }
+.chip-analysis { --nbg: #ede9e4; --nfg: #665c4f; }
+.chip-howto    { --nbg: #e6ede8; --nfg: #4c6153; }
+.chip-tools    { --nbg: #eae8ef; --nfg: #575067; }
+.art-filter button[class*="chip-"] { background: var(--nbg); color: var(--nfg); border-color: var(--nbg); }
+.art-filter button[class*="chip-"]:hover { border-color: var(--nfg); }
+.art-filter button[class*="chip-"].on { background: var(--nfg); color: #fff; border-color: var(--nfg); }
+.art-tag.art-tag-nature[class*="chip-"] { background: var(--nbg); color: var(--nfg); border-color: var(--nbg); }
 
 @media (prefers-reduced-motion: reduce) {
   .art-filter button, .art-card > button, .art-back, .art-search input, .hub-md a, .art-source, .art-nav-link { transition: none; }

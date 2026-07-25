@@ -6,7 +6,7 @@ import { SiteNav, SiteFooter, CONTRIBUTING_URL } from '../shared.jsx'
 import { loadContent } from '../content/loader.js'
 import { TOPICS } from '../content/schema.js'
 import {
-  HUB_TAB, TABS, stateFromSearch, searchFromState, filterArticles, pinnedFirst,
+  HUB_TAB, TABS, NATURE_KEY, stateFromSearch, searchFromState, filterArticles, pinnedFirst,
 } from './insights-logic.js'
 import { ArticleRow } from './insights-parts.jsx'
 import ArticleDetail from './ArticleDetail.jsx'
@@ -18,8 +18,9 @@ function ChipRow({ label, options, value, onSelect, sub = false }) {
       <span className="art-filter-label">{label}</span>
       {options.map((opt) => {
         const on = value === opt.val
+        const cls = [opt.cls, on ? 'on' : ''].filter(Boolean).join(' ')
         return (
-          <button key={opt.key} type="button" className={on ? 'on' : ''} aria-pressed={on} onClick={() => onSelect(opt.val)}>
+          <button key={opt.key} type="button" className={cls} aria-pressed={on} onClick={() => onSelect(opt.val)}>
             {opt.label}
           </button>
         )
@@ -33,7 +34,8 @@ function ListView({ all, tab, onTab, topic, setTopic, nowUse, setNowUse, q, setQ
   const nature = tab === HUB_TAB ? null : tab
   const filtered = filterArticles(all, { nature, topic, nowUse, q })
   const { pinned, rest } = pinnedFirst(filtered)
-  const natureOpts = TABS.map((t) => ({ key: t, val: t, label: t }))
+  // 성격 칩 = 성격색(카드 배경과 동일 4색 — 2026-07-25 오너 지시), '전체'만 무채색.
+  const natureOpts = TABS.map((t) => ({ key: t, val: t, label: t, cls: NATURE_KEY[t] ? `chip-${NATURE_KEY[t]}` : undefined }))
   const topicOpts = [{ key: '전체', val: null, label: '전체' }, ...TOPICS.map((v) => ({ key: v, val: v, label: v }))]
   return (
     <>

@@ -38,6 +38,14 @@ test('이미지가 문자열 아니면 검출(빈문자열·불리언 위반)', 
   expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 이미지: '' }).some((e) => e.includes('이미지'))).toBe(true)
   expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 이미지: true }).some((e) => e.includes('이미지'))).toBe(true)
 })
+test('시각=HH:MM이면 통과', () => {
+  expect(validateEntry('기사', '2026-07-22-bapzzi-ai-trend.md', { ...good, 시각: '16:51' })).toEqual([])
+})
+test('시각 형식 위반 검출(25:00·9:5·문자)', () => {
+  for (const bad of ['25:00', '9:5', '오후 4시']) {
+    expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 시각: bad }).some((e) => e.includes('시각'))).toBe(true)
+  }
+})
 test('고정=true(boolean)면 통과', () => {
   expect(validateEntry('기사', '2026-07-22-bapzzi-ai-trend.md', { ...good, 고정: true })).toEqual([])
 })
