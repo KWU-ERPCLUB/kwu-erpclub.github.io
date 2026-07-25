@@ -548,7 +548,7 @@ body {
    ══════════════════════════════════════════════ */
 
 /* ── §5 인터랙션 상태 — 150ms ease-out, transform·color·bg만 전환 ── */
-.cta, .nav-cta, .btn-2nd, .proof-link, .nav-links a, .footer a, .nav-toggle, .doc-side a {
+.cta, .nav-cta, .btn-2nd, .proof-link, .nav-links a, .footer a, .nav-toggle {
   transition: background-color 150ms ease-out, border-color 150ms ease-out,
     color 150ms ease-out, transform 100ms ease-out;
 }
@@ -562,7 +562,7 @@ body {
   cursor: not-allowed;
 }
 @media (prefers-reduced-motion: reduce) {
-  .cta, .nav-cta, .btn-2nd, .proof-link, .nav-links a, .footer a, .nav-toggle, .doc-side a {
+  .cta, .nav-cta, .btn-2nd, .proof-link, .nav-links a, .footer a, .nav-toggle {
     transition: none;
   }
   .cta:active, .nav-cta:active, .btn-2nd:active { transform: none; }
@@ -586,5 +586,5 @@ body {
 }
 .btn-2nd:hover { border-color: var(--text); }
 
-/* §3 내부형 레이아웃·§6 콘텐츠 패턴(doc·log·roadmap·callout) = styles/doc.css
-   (내부형 페이지 엔트리에서만 import — 300줄 규격으로 분리) */
+/* /log 전용 풀블리드 체인지로그(page-head·세로 타임라인·로드맵 리스트·성과) = styles/log.css
+   (log-entry에서만 import). 구 내부형 doc 셸·doc.css·DocSide 폐지(2026-07-25 2차 구조 개혁). */
