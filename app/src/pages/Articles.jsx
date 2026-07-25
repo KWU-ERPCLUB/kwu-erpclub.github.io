@@ -30,9 +30,9 @@ function ChipRow({ label, options, value, onSelect, sub = false }) {
 }
 
 // 목록 뷰 — 상단 컨트롤 바 + 카운트 라인 + 2열 색면 카드 그리드(고정 핀 최상단).
-function ListView({ all, tab, onTab, topic, setTopic, nowUse, setNowUse, q, setQ, onOpen }) {
+function ListView({ all, tab, onTab, topic, setTopic, q, setQ, onOpen }) {
   const nature = tab === HUB_TAB ? null : tab
-  const filtered = filterArticles(all, { nature, topic, nowUse, q })
+  const filtered = filterArticles(all, { nature, topic, q })
   const { pinned, rest } = pinnedFirst(filtered)
   // 성격 칩 = 성격색(카드 배경과 동일 4색 — 2026-07-25 오너 지시), '전체'만 무채색.
   const natureOpts = TABS.map((t) => ({ key: t, val: t, label: t, cls: NATURE_KEY[t] ? `chip-${NATURE_KEY[t]}` : undefined }))
@@ -49,9 +49,6 @@ function ListView({ all, tab, onTab, topic, setTopic, nowUse, setNowUse, q, setQ
         </div>
         <ChipRow label="성격" options={natureOpts} value={tab} onSelect={onTab} />
         <ChipRow label="주제" options={topicOpts} value={topic} onSelect={setTopic} sub />
-        <div className="art-filter art-filter-toggle" role="group" aria-label="지금 써먹기 필터">
-          <button type="button" className={nowUse ? 'on' : ''} aria-pressed={nowUse} onClick={() => setNowUse(!nowUse)}>지금 써먹기</button>
-        </div>
       </div>
 
       {/* 카운트 라인 — N건 표시 중 / 전체 M건 */}
@@ -78,7 +75,6 @@ export default function Articles() {
   const [tab, setTab] = useState(initial.tab)
   const [sel, setSel] = useState(initial.slug)
   const [topic, setTopic] = useState(null)
-  const [nowUse, setNowUse] = useState(false)
   const [q, setQ] = useState('')
 
   // 뒤로가기·앞으로가기(popstate) → URL에서 탭·상세 복원.
@@ -124,8 +120,7 @@ export default function Articles() {
         </header>
         <ListView
           all={all} tab={tab} onTab={(t) => nav({ tab: t, slug: null })}
-          topic={topic} setTopic={setTopic} nowUse={nowUse} setNowUse={setNowUse}
-          q={q} setQ={setQ} onOpen={openArticle}
+          topic={topic} setTopic={setTopic} q={q} setQ={setQ} onOpen={openArticle}
         />
       </main>
       <SiteFooter />

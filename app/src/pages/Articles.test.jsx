@@ -15,9 +15,9 @@ test('목록 = 상단 컨트롤 바(성격 칩+주제 칩+토글+검색) + 카�
   for (const v of ['에이전트', '모델·플랫폼', '워크플로·자동화', '거버넌스·리스크', '시장·생태계']) {
     expect(html).toContain(v)
   }
-  // 지금 써먹기 토글 + 검색 인풋
-  expect(html).toContain('지금 써먹기')
+  // 검색 인풋 + 지금써먹기 필터 폐지(2026-07-25 오너 지시)
   expect(html).toContain('placeholder="제목·요약 검색"')
+  expect(html).not.toContain('지금 써먹기 필터')
   // N건 표시 중 / 전체 M건 카운트 라인
   expect(html).toContain('ins-count')
   expect(html).toContain('표시 중')
@@ -88,7 +88,6 @@ test('성격 칩 딥링크 — ?tab=analysis 복원 + 해당 성격 카드만', 
     expect(html).toContain('art-card-title')
     expect(html).toContain('2026 AI 트렌드')                 // 심층 분석 기고
     expect(html).toContain('placeholder="제목·요약 검색"')   // 검색박스 유지
-    expect(html).toContain('지금 써먹기')                    // 토글 유지
     expect(html).not.toContain('art-month-head')             // 월별 그룹 폐지
   } finally {
     if (prev === undefined) delete globalThis.window
