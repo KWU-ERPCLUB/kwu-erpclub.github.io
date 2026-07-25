@@ -1,17 +1,12 @@
 // 메인(/) v5 — 구조 개혁(2026-07-24 2차): .lattice/.cell 격자 폐지 → 풀블리드 스크린 섹션.
-// prography/depromeet 문법: 100vh 히어로(뷰포트 타이포·좌정렬)·대형 숫자 풀폭 WHY·가로 타임라인·풀폭 커버 PROJECTS·대형 FAQ.
-// 모션: 문자 스태거 리빌 · 키워드 마퀴 · 수치 카운트업 · 커버 호버 리프트 · 섹션=페이지 감쇠(home-motion.jsx). transform·opacity만·reduced-motion 존중.
-// 문안 원천: erp-club/docs/문안-메인.md. 수치=검증분만+출처. 색·폰트=현행 토큰(디자인규칙 §1·§2).
+// WHY 섹션 폐지(2026-07-25 owner): 수치 노후·갱신 부담, 취업 논거는 북극성 §3 위반 소지, 논증형은 §0-1 서사 비표기와 긴장.
+// 핵심 논거(챗 단독의 한계)는 FAQ 1문으로 이관 — 문답 UI = 구어·설득 허용 예외.
+// prography/depromeet 문법: 100vh 히어로(뷰포트 타이포·좌정렬)·가로 타임라인·풀폭 커버 PROJECTS·대형 FAQ.
+// 모션: 문자 스태거 리빌 · 키워드 마퀴 · 커버 호버 리프트 · 섹션=페이지 감쇠(home-motion.jsx). transform·opacity만·reduced-motion 존중.
+// 색·폰트=현행 토큰(디자인규칙 §1·§2).
 import { Arrow, SiteNav, SiteFooter } from './shared.jsx'
 import { MARQUEE_KEYWORDS, marqueeTrack } from './home-logic.js'
-import { useSectionSpy, useParallax, StaggerChars, CountUp } from './home-motion.jsx'
-
-// WHY 데이터 스트립 — 검증분 수치만(원문 확인) + 출처.
-const DATA = [
-  ['69.2%', '채용 시 AI 역량 고려 — 인사담당자 조사 1위', '대한상공회의소 2025'],
-  ['36.3%', 'AI 채용공고 최대 직무군은 개발자가 아니라 기획·설계', '한국직업능력연구원 2026'],
-  ['40%', 'AI 활용 시 업무 시간 단축, 품질 평가는 +18%', 'MIT · Science 2023'],
-]
+import { useSectionSpy, useParallax, StaggerChars } from './home-motion.jsx'
 
 // PROJECTS — 풀폭 커버 카드(커버 캡처 + 대형 제목 오버레이). 클릭 = /projects/ 상세 딥링크.
 const PROJECTS = [
@@ -32,6 +27,7 @@ const ROADMAP = [
 // 답변 = 개조식(§0-1). 질문 = 문답 UI라 구어 유지(예외 승인 범위).
 const FAQ = [
   ['코딩을 못해도 참여할 수 있나요?', '가능. 경영학부 대상, 주제는 코딩이 아니라 AI 활용. 필요한 도구 사용법은 스터디에서 함께 다룸.'],
+  ['챗GPT는 이미 쓰는데, 스터디가 왜 필요한가요?', '챗 = 단발 질답, 업무 = 반복 프로세스 — 반복에 붙이는 워크플로·자동화가 별도 주제. 같은 도구도 문맥 설계·자료 연결에 따라 결과 차이. 도구 무게중심도 챗 밖(에이전트·업무 도구 내장)으로 이동 중.'],
   ['비용이 드나요?', '참가비 없음. 무료 도구 스택 기본, 일부 유료 AI 도구는 선택.'],
   ['무엇을 만들게 되나요?', '각자 경영·MIS 맥락의 실물(배포된 웹 결과물) 제작. 결과물은 본인 소유.'],
   ['ERP연구회와는 어떤 관계인가요?', 'ERP연구회 산하 스터디. 연구회 안에 SAP 실습·공모전 심화 트랙.'],
@@ -73,36 +69,12 @@ function Hero() {
   )
 }
 
-// WHY 풀스크린 — 존재 의의 대형 타이포 도입 + 대형 숫자 풀폭 행(숫자 좌 / 라벨·출처 우, 헤어라인 구분).
-function Why() {
-  return (
-    <section className="hs hs-why page" id="why">
-      <div className="hs-in">
-        <span className="page-idx rv">01 — WHY</span>
-        <p className="why-lead rv" style={{ transitionDelay: '90ms' }}>20대 4명 중 3명이 생성형 AI 사용.</p>
-        <div className="stat-rows rv" style={{ transitionDelay: '240ms' }}>
-          {DATA.map(([num, label, src]) => (
-            <div className="stat-row" key={src}>
-              <CountUp value={num} />
-              <div>
-                <span className="stat-row-label">{label}</span>
-                <span className="stat-row-src">{src}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-        <p className="data-note rv" style={{ transitionDelay: '320ms' }}>원문 확인 자료만 게재.</p>
-      </div>
-    </section>
-  )
-}
-
 // ROADMAP — 가로 진행 타임라인(데스크톱 노드 가로 흐름 / 모바일 세로 폴백). 점선 슬롯 = 채워갈 공간.
 function Roadmap() {
   return (
     <section className="hs hs-roadmap page" id="roadmap">
       <div className="hs-in">
-        <span className="page-idx rv">02 — ROADMAP</span>
+        <span className="page-idx rv">01 — ROADMAP</span>
         <h2 className="hs-title rv" style={{ transitionDelay: '90ms' }}>연혁과 <em>다음</em></h2>
         <ol className="rmap rv" style={{ transitionDelay: '180ms' }}>
           {ROADMAP.map((n) => (
@@ -125,7 +97,7 @@ function Projects() {
   return (
     <section className="hs hs-projects page" id="projects">
       <div className="hs-in">
-        <span className="page-idx rv">03 — PROJECTS</span>
+        <span className="page-idx rv">02 — PROJECTS</span>
         <h2 className="hs-title rv" style={{ transitionDelay: '90ms' }}>만든 <em>것들</em></h2>
         <div className="hp-list rv" style={{ transitionDelay: '180ms' }}>
           {PROJECTS.map(([title, cover, href, tag]) => (
@@ -155,7 +127,7 @@ function Faq() {
   return (
     <section className="hs hs-faq page" id="faq">
       <div className="hs-in">
-        <span className="page-idx rv">04 — FAQ</span>
+        <span className="page-idx rv">03 — FAQ</span>
         <h2 className="hs-title rv" style={{ transitionDelay: '90ms' }}>묻고 <em>답하기</em></h2>
         <div className="faq-xl rv" style={{ transitionDelay: '180ms' }}>
           {FAQ.map(([q, a]) => (
@@ -181,7 +153,6 @@ export default function App() {
       <SiteNav />
       <main className="home">
         <Hero />
-        <Why />
         <Roadmap />
         <Projects />
         <Faq />

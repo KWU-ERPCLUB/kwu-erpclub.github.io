@@ -1,17 +1,8 @@
-/* 메인(/) v5 섹션 본문 — WHY·ROADMAP·PROJECTS·FAQ. 골격·히어로·모션 = home.css(300줄 규격 분할).
+/* 메인(/) v5 섹션 본문 — ROADMAP·PROJECTS·FAQ. 골격·히어로·모션 = home.css(300줄 규격 분할).
+   (WHY 섹션 폐지 2026-07-25 — .stat-* 계열은 ABOUT 운영 증빙이 재사용하므로 유지.)
    규격=디자인규칙 v2: 색·폰트 토큰 고정 · 버건디 화이트리스트/빈도 상한 · transform·opacity만 · reduced-motion 존중. */
 
-/* ══ WHY — 대형 숫자 풀폭 블록(숫자 좌 + 라벨·출처 우, 헤어라인 구분) ══ */
-.why-lead {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(1.7rem, 4.2vw, 2.9rem);
-  line-height: 1.26;
-  letter-spacing: -0.02em;
-  margin: 0.3rem 0 1.1rem;
-  max-width: 22ch;
-}
-.why-note { max-width: 54ch; font-size: 1rem; color: var(--text-sub); margin: 0; }
+/* ══ 대형 숫자 풀폭 행(숫자 좌 + 라벨·출처 우, 헤어라인 구분) — ABOUT 공용 ══ */
 .stat-rows { margin-top: clamp(2.5rem, 6vh, 4rem); border-top: 1px solid var(--line); }
 .stat-row {
   display: grid;
@@ -29,7 +20,6 @@
 .stat-row .stat-num::after { margin-top: 1rem; } /* 버건디 언더바 28×3(화이트리스트 ③) */
 .stat-row-label { font-size: clamp(1rem, 1.7vw, 1.2rem); color: var(--text); line-height: 1.4; }
 .stat-row-src { display: block; margin-top: 0.55rem; font-size: 0.8rem; color: var(--text-sub); }
-.data-note { margin: 1.5rem 0 0; font-size: 0.82rem; color: var(--text-sub); }
 @media (max-width: 700px) {
   .stat-row { grid-template-columns: 1fr; gap: 0.6rem; padding: 1.6rem 0; }
 }
