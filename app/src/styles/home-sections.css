@@ -24,30 +24,24 @@
   .stat-row { grid-template-columns: 1fr; gap: 0.6rem; padding: 1.6rem 0; }
 }
 
-/* ══ ROADMAP — 가로 진행 타임라인(데스크톱 노드 가로 흐름, 모바일 세로 폴백) ══ */
-.rmap {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(180px, 1fr);
-  margin-top: clamp(2.5rem, 6vh, 3.5rem);
-  overflow-x: auto;
-  padding-bottom: 0.75rem;
-  scrollbar-width: thin;
-}
-.rm-node { position: relative; padding: 2.3rem 1.5rem 0 0; }
-.rm-node::before { /* 가로 연결선 */
+/* ══ ROADMAP — 계보 트리(2026-07-25): 세로 본류선 → 분기 들여쓰기 + 가지선. 전 뷰포트 세로 ══ */
+.rmap, .rm-sub { list-style: none; padding-left: 0; }
+.rmap { margin: clamp(2.5rem, 6vh, 3.5rem) 0 0; }
+.rm-node { position: relative; padding: 0 0 clamp(1.6rem, 3.5vh, 2.3rem) 1.9rem; }
+.rm-node::before { /* 세로 계보선(노드별 세그먼트가 이어져 한 줄) */
   content: '';
   position: absolute;
-  top: 7px;
-  left: 0;
-  right: 0;
-  height: 2px;
+  top: 0;
+  bottom: 0;
+  left: 6px;
+  width: 2px;
   background: var(--line);
 }
-.rm-node:last-child::before { right: auto; width: 16px; }
+.rmap > .rm-node:first-child::before { top: 3px; }
+.rm-sub > .rm-node:last-child::before { bottom: auto; height: 18px; }
 .rm-dot {
   position: absolute;
-  top: 1px;
+  top: 3px;
   left: 0;
   width: 15px;
   height: 15px;
@@ -55,8 +49,8 @@
   background: #fff;
   border: 2px solid var(--text-sub);
 }
-.rm-node.now .rm-dot { border-color: var(--accent); background: var(--accent); } /* 화이트리스트 ⑦ */
-.rm-slot .rm-dot { border-style: dashed; background: #fff; }
+.rm-node.now > .rm-dot { border-color: var(--accent); background: var(--accent); } /* 화이트리스트 ⑦ — 분기 노드 1점만(자손 금지) */
+.rm-slot > .rm-dot { border-style: dashed; background: #fff; border-color: var(--text-sub); }
 .rm-era {
   font-size: 0.72rem;
   font-weight: 700;
@@ -66,8 +60,12 @@
   margin-bottom: 0.4rem;
 }
 .rm-node h3 { margin: 0 0 0.4rem; font-size: 1.02rem; }
-.rm-node p { margin: 0 0 0.75rem; font-size: 0.85rem; color: var(--text-sub); }
+.rm-node p { margin: 0 0 0.75rem; font-size: 0.85rem; color: var(--text-sub); max-width: 58ch; }
 .rm-node .status { margin: 0; }
+/* 분기 하위 목록 — 들여쓰기 + 부모 점에서 내려오는 가지 시작 여백 */
+.rm-sub { margin: clamp(1.2rem, 2.5vh, 1.8rem) 0 0 clamp(1.6rem, 5vw, 3.2rem); }
+.rm-sub > .rm-node { padding-bottom: clamp(1.3rem, 2.8vh, 1.9rem); }
+/* 분기 노드(.now)의 세로선은 하위 목록 끝까지 이어짐(본류 지속) — li가 하위 ol을 포함하므로 자동 */
 .rm-slot { opacity: 0.85; }
 .rm-slot h3 { color: var(--text-sub); }
 .rm-slot .rm-era::after {
@@ -77,13 +75,6 @@
   border-top: 1.5px dashed var(--line);
   vertical-align: middle;
   margin-left: 0.5rem;
-}
-@media (max-width: 820px) {
-  .rmap { grid-auto-flow: row; grid-auto-columns: auto; overflow-x: visible; }
-  .rm-node { padding: 0 0 1.7rem 1.9rem; }
-  .rm-node::before { top: 0; bottom: 0; left: 6px; right: auto; width: 2px; height: auto; }
-  .rm-node:last-child::before { bottom: auto; height: 16px; width: 2px; }
-  .rm-dot { top: 3px; left: 0; }
 }
 
 /* ══ PROJECTS — 풀폭 대형 커버 카드(커버 위 대형 제목 오버레이·호버 리프트) ══ */

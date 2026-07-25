@@ -1,7 +1,7 @@
 // 메인(/) v5 — 구조 개혁(2026-07-24 2차): .lattice/.cell 격자 폐지 → 풀블리드 스크린 섹션.
 // WHY 섹션 폐지(2026-07-25 owner): 수치 노후·갱신 부담, 취업 논거는 북극성 §3 위반 소지, 논증형은 §0-1 서사 비표기와 긴장.
 // 핵심 논거(챗 단독의 한계)는 FAQ 1문으로 이관 — 문답 UI = 구어·설득 허용 예외.
-// prography/depromeet 문법: 100vh 히어로(뷰포트 타이포·좌정렬)·가로 타임라인·풀폭 커버 PROJECTS·대형 FAQ.
+// prography/depromeet 문법: 100vh 히어로(뷰포트 타이포·좌정렬·소개 2줄)·계보 트리 ROADMAP·풀폭 커버 PROJECTS·대형 FAQ.
 // 모션: 문자 스태거 리빌 · 키워드 마퀴 · 커버 호버 리프트 · 섹션=페이지 감쇠(home-motion.jsx). transform·opacity만·reduced-motion 존중.
 // 색·폰트=현행 토큰(디자인규칙 §1·§2).
 import { Arrow, SiteNav, SiteFooter } from './shared.jsx'
@@ -14,15 +14,22 @@ const PROJECTS = [
   ['KWU ERP Club Site', '/img/projects/erpclub-site.png', '/projects/?p=2026-07-24-bapzzi-erpclub-site', '운영 중'],
 ]
 
-// ROADMAP — 가로 진행 타임라인. status = [클래스, 라벨]. slot = "앞으로 채워갈 공간"(점선), now = 신설 강조.
-const ROADMAP = [
+// ROADMAP — 계보 트리(2026-07-25 개편): 본류(ERP연구회 → SAP)에서 MIS·AI 스터디 분기, 그 아래 프로젝트.
+// TRUNK = 본류 노드, BRANCH = 분기 노드(+children = 하위 프로젝트·빈 슬롯). DEEP DIVE(미개설)는 제외.
+const TRUNK = [
   { era: 'ORIGIN', title: 'ERP연구회', desc: '경영학부 MIS 스터디 — ERP·정보시스템의 뿌리.' },
-  { era: 'SAP ERA', title: 'SAP 특강', desc: '실무 컨설턴트가 이끈 MM·ABAP 교육의 시대.' },
-  { era: '2026', title: 'ADsP 스터디 1기', desc: '데이터분석 준전문가 대비 — 진도 보드 운영 중.', status: ['live', '진행중'] },
-  { era: 'NEW BRANCH', title: 'MIS·AI 스터디', desc: '학회에서 분기한 새 갈래.', status: ['prep', '모집 준비'], now: true },
-  { era: 'DEEP DIVE', title: 'SAP Track · 공모전', desc: 'AI 친숙도를 갖춘 뒤의 심화 갈래.', status: ['planned', '예정'], slot: true },
-  { era: 'NEXT', title: '앞으로 채워갈 공간', desc: '새 트랙·기수가 이 갈래에 이어질 자리.', slot: true },
+  { era: 'SAP ERA', title: 'SAP 특강', desc: '실무 컨설턴트가 이끈 MM·ABAP 교육 — 이어져 온 본류.' },
 ]
+const BRANCH = {
+  era: '2026 · NEW BRANCH',
+  title: 'MIS·AI 스터디',
+  desc: '본류에서 분기한 갈래 — AI 활용 집중.',
+  status: ['prep', '모집 준비'],
+  children: [
+    { era: 'PROJECT', title: 'ADsP 스터디 1기', desc: '데이터분석 준전문가 대비 — 진도 보드 운영 중.', status: ['live', '진행중'] },
+    { era: 'NEXT', title: '앞으로 채워갈 공간', desc: '새 트랙·기수가 이어질 자리.', slot: true },
+  ],
+}
 
 // 답변 = 개조식(§0-1). 질문 = 문답 UI라 구어 유지(예외 승인 범위).
 const FAQ = [
@@ -52,7 +59,10 @@ function Hero() {
           <span className="hero-l rv"><StaggerChars text="ERP" accent start={0} /><StaggerChars text="연구회" start={3} /></span>
         </h1>
         <p className="hero-sub rv" style={{ transitionDelay: '320ms' }}>
-          경영학부 MIS·AI 스터디
+          광운대학교 경영학부 MIS 스터디
+        </p>
+        <p className="hero-desc rv" style={{ transitionDelay: '400ms' }}>
+          AI 활용에 집중하는 산하 MIS·AI 스터디의 허브 — AI 인사이트·세미나·프로젝트 기록.
         </p>
       </div>
       <div className="hero-foot">
@@ -69,23 +79,41 @@ function Hero() {
   )
 }
 
-// ROADMAP — 가로 진행 타임라인(데스크톱 노드 가로 흐름 / 모바일 세로 폴백). 점선 슬롯 = 채워갈 공간.
+// ROADMAP — 계보 트리(세로 본류선 → 분기 들여쓰기 + 가지선). 점선 슬롯 = 채워갈 공간.
+function TreeNode({ n }) {
+  return (
+    <>
+      <span className="rm-dot" aria-hidden="true" />
+      <span className="rm-era">{n.era}</span>
+      <h3>{n.title}</h3>
+      <p>{n.desc}</p>
+      {n.status && <span className={`status ${n.status[0]}`}>{n.status[1]}</span>}
+    </>
+  )
+}
+
 function Roadmap() {
   return (
     <section className="hs hs-roadmap page" id="roadmap">
       <div className="hs-in">
         <span className="page-idx rv">01 — ROADMAP</span>
-        <h2 className="hs-title rv" style={{ transitionDelay: '90ms' }}>연혁과 <em>다음</em></h2>
+        <h2 className="hs-title rv" style={{ transitionDelay: '90ms' }}>스터디 <em>로드맵</em></h2>
         <ol className="rmap rv" style={{ transitionDelay: '180ms' }}>
-          {ROADMAP.map((n) => (
-            <li className={`rm-node${n.now ? ' now' : ''}${n.slot ? ' rm-slot' : ''}`} key={n.title}>
-              <span className="rm-dot" aria-hidden="true" />
-              <span className="rm-era">{n.era}</span>
-              <h3>{n.title}</h3>
-              <p>{n.desc}</p>
-              {n.status && <span className={`status ${n.status[0]}`}>{n.status[1]}</span>}
+          {TRUNK.map((n) => (
+            <li className="rm-node" key={n.title}>
+              <TreeNode n={n} />
             </li>
           ))}
+          <li className="rm-node now" key={BRANCH.title}>
+            <TreeNode n={BRANCH} />
+            <ol className="rm-sub">
+              {BRANCH.children.map((c) => (
+                <li className={`rm-node${c.slot ? ' rm-slot' : ''}`} key={c.title}>
+                  <TreeNode n={c} />
+                </li>
+              ))}
+            </ol>
+          </li>
         </ol>
       </div>
     </section>

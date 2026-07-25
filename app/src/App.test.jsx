@@ -2,8 +2,8 @@ import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
 import App from './App.jsx'
 
-// 구조 검증(콘텐츠·시점 무관) — v5 풀블리드 스크린 섹션: 100vh 히어로·가로 타임라인·풀폭 커버·대형 FAQ. (WHY 폐지 2026-07-25)
-test('메인 = 풀블리드 3섹션 + 100vh 히어로(뷰포트 타이포·마퀴·스크롤 유도)', () => {
+// 구조 검증(콘텐츠·시점 무관) — v5 풀블리드 스크린 섹션: 100vh 히어로·계보 트리·풀폭 커버·대형 FAQ. (WHY 폐지 2026-07-25)
+test('메인 = 풀블리드 3섹션 + 100vh 히어로(뷰포트 타이포·소개 2줄·마퀴·스크롤 유도)', () => {
   const html = renderToString(<App />)
   // 격자 폐지: .lattice/.cell 컨테이너 부재 → .home 풀블리드
   expect(html).toContain('class="home"')
@@ -12,6 +12,9 @@ test('메인 = 풀블리드 3섹션 + 100vh 히어로(뷰포트 타이포·마�
   expect(html).toContain('hs-hero')
   expect(html).toContain('hero-mega')
   expect(/class="sc"|class="sc /.test(html)).toBe(true)
+  // 소개 2줄(2026-07-25): 소속 명시 + AI 집중 허브 사실 기술
+  expect(html).toContain('광운대학교 경영학부 MIS 스터디')
+  expect(html).toContain('hero-desc')
   // 히어로 하단: 풀폭 마퀴 띠 + 스크롤 유도
   expect(html).toContain('marquee-track')
   expect(html).toContain('marquee-item')
@@ -23,9 +26,11 @@ test('섹션 인덱스 3종 + 각 섹션 구조 마크업', () => {
   for (const idx of ['01 — ROADMAP', '02 — PROJECTS', '03 — FAQ']) {
     expect(html).toContain(idx)
   }
-  // ROADMAP: 가로 진행 타임라인 + "앞으로 채워갈 공간" 점선 슬롯
+  // ROADMAP: 계보 트리(본류 → 분기 하위 목록) + "앞으로 채워갈 공간" 점선 슬롯. DEEP DIVE(미개설) 부재
   expect(html).toContain('class="rmap')
+  expect(html).toContain('rm-sub')
   expect(html).toContain('rm-slot')
+  expect(html).not.toContain('SAP Track')
   // PROJECTS: 풀폭 커버 카드 + 커버 위 대형 제목 + /projects/ 딥링크
   expect(html).toContain('hp-card')
   expect(html).toContain('hp-cover')

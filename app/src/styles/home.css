@@ -85,8 +85,16 @@
 .hero-sub {
   margin: clamp(1.5rem, 3vh, 2.25rem) 0 0;
   font-size: clamp(1rem, 1.7vw, 1.2rem);
-  color: var(--text-sub);
+  color: var(--text);
+  font-weight: 700;
   max-width: 44ch;
+}
+.hero-desc {
+  margin: 0.65rem 0 0;
+  font-size: clamp(0.92rem, 1.4vw, 1.05rem);
+  color: var(--text-sub);
+  max-width: 52ch;
+  line-height: 1.55;
 }
 
 /* 히어로 하단 = 풀폭 마퀴 + 스크롤 유도(전자 = hs-in 밖 = 뷰포트 폭) */
