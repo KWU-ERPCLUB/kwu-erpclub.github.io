@@ -5,6 +5,7 @@
 export const MARQUEE_KEYWORDS = [
   'AI 에이전트', '업무 자동화', 'MIS', '경영 데이터',
   '프롬프트', '노코드', '데이터 분석', '생성형 AI',
+  'LLM', 'RAG', 'ADsP', 'SQLD', 'ERP', 'SAP',
 ]
 
 // 무한 마퀴 = 트랙을 2배 복제해 이음매 없이 순환(CSS translateX -50%로 되돌아와 반복).

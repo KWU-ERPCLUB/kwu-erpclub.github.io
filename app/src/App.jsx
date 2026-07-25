@@ -66,7 +66,6 @@ function Hero() {
         </p>
       </div>
       <div className="hero-foot">
-        <span className="scroll-cue rv" style={{ transitionDelay: '420ms' }}>SCROLL <ChevronDown /></span>
         <div className="marquee" data-parallax="-0.03" aria-hidden="true">
           <div className="marquee-track">
             {marqueeTrack(MARQUEE_KEYWORDS).map((kw, i) => (
@@ -74,6 +73,7 @@ function Hero() {
             ))}
           </div>
         </div>
+        <span className="scroll-cue rv" style={{ transitionDelay: '420ms' }}>SCROLL <ChevronDown /></span>
       </div>
     </section>
   )

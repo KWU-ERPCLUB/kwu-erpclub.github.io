@@ -8,25 +8,37 @@ export const prefersReduced = () =>
   typeof window.matchMedia === 'function' &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-// 섹션=페이지 스파이: 뷰포트 중앙 밴드에 걸린 섹션만 활성(시각 강조 전용). reduced-motion=전부 활성.
+// 섹션=페이지 스파이: 뷰포트 중앙이 속한 섹션만 활성(시각 강조 전용). reduced-motion=전부 활성.
+// IO 경계 이벤트 방식은 빠른 스크롤에서 진입 이벤트를 놓쳐 강조가 안 바뀌는 버그가 있어(2026-07-25),
+// 스크롤마다 rAF로 중앙점 포함 섹션을 직접 계산하는 결정적 방식으로 교체. 중앙이 섹션 밖(푸터 등)이면 마지막 활성 유지.
 export function useSectionSpy() {
   useEffect(() => {
-    const pages = document.querySelectorAll('.page')
+    const pages = Array.from(document.querySelectorAll('.page'))
     if (prefersReduced()) {
       pages.forEach((p) => { p.classList.add('active'); p.classList.add('seen') })
       return
     }
-    const io = new IntersectionObserver(
-      (entries) => entries.forEach((e) => {
-        if (e.isIntersecting) {
-          e.target.classList.add('seen') // 한 번 활성화된 섹션은 내용 유지(비활성=감쇠만)
-          pages.forEach((p) => p.classList.toggle('active', p === e.target))
-        }
-      }),
-      { rootMargin: '-42% 0px -42% 0px', threshold: 0 },
-    )
-    pages.forEach((p) => io.observe(p))
-    return () => io.disconnect()
+    let raf = 0
+    const pick = () => {
+      raf = 0
+      const cy = window.innerHeight / 2
+      const cur = pages.find((p) => {
+        const r = p.getBoundingClientRect()
+        return r.top <= cy && r.bottom > cy
+      })
+      if (!cur) return
+      cur.classList.add('seen') // 한 번 활성화된 섹션은 내용 유지(비활성=감쇠만)
+      pages.forEach((p) => p.classList.toggle('active', p === cur))
+    }
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(pick) }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll, { passive: true })
+    pick()
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
   }, [])
 }
 
