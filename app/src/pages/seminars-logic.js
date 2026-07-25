@@ -1,25 +1,8 @@
-// 세미나(SEMINARS) 순수 로직 — 예정/과거 분리·NEXT 선정. 전부 순수 함수(부수효과 0)로 테스트 대상.
-// date 비교는 today 문자열('YYYY-MM-DD')을 인자로 받아 시계에 의존하지 않음(컴포넌트가 today 주입).
+// 세미나(SEMINARS) 순수 로직 — v3 타임라인 아카이브(2026-07-25). 전부 순수 함수(부수효과 0)·테스트 대상.
+// date 비교는 today 문자열('YYYY-MM-DD')을 인자로 받아 시계에 비의존(컴포넌트가 today 주입).
+// 구 splitByDate·nextSeminar(예정/과거 이분)는 v3에서 폐지 — 목록 = 단일 시간순 타임라인. 이력은 git.
+import { TOPICS } from '../content/schema.js'
 export { excerpt } from './insights-logic.js'
-
-// all(세미나 목록) → { upcoming, past }. upcoming = date ≥ today(오름차순·최근접 먼저), past = date < today(역시간순).
-// 문자열 'YYYY-MM-DD' 사전순 = 시간순이므로 그대로 비교.
-export function splitByDate(all, today) {
-  const upcoming = []
-  const past = []
-  for (const s of all || []) {
-    if ((s.date || '') >= today) upcoming.push(s)
-    else past.push(s)
-  }
-  upcoming.sort((a, b) => (a.date || '').localeCompare(b.date || ''))
-  past.sort((a, b) => (b.date || '').localeCompare(a.date || ''))
-  return { upcoming, past }
-}
-
-// NEXT 히어로 = 예정 중 최근접 1건. 예정 0건이면 null.
-export function nextSeminar(all, today) {
-  return splitByDate(all, today).upcoming[0] || null
-}
 
 // 로컬 날짜 'YYYY-MM-DD'. Date 인자를 받아(기본 = 지금) 테스트 시 고정 시각 주입 가능.
 export function todayString(d = new Date()) {
@@ -29,4 +12,49 @@ export function todayString(d = new Date()) {
   return `${y}-${m}-${day}`
 }
 
-// (daysUntil·ddayLabel 제거 2026-07-25 — D-day 표시 폐지, owner 결정. 이력은 git.)
+// 정렬 — order='newest'(최신순·date 내림차순) | 'oldest'(과거순·오름차순). 문자열 'YYYY-MM-DD' 사전순=시간순.
+export function sortSeminars(all, order = 'newest') {
+  const list = [...(all || [])]
+  const dir = order === 'oldest' ? 1 : -1
+  list.sort((a, b) => dir * (a.date || '').localeCompare(b.date || ''))
+  return list
+}
+
+// 필터 축 = 콘텐츠에 실제 등장하는 주제만(TOPICS enum 순서로 안정 정렬 — 필터 탭 생성용).
+export function extractTopics(all) {
+  const seen = new Set()
+  for (const s of all || []) if (s['주제']) seen.add(s['주제'])
+  return TOPICS.filter((t) => seen.has(t))
+}
+
+// topic=null|'' → 전체(필터 없음), 아니면 주제 일치만.
+export function filterByTopic(all, topic) {
+  if (!topic) return [...(all || [])]
+  return (all || []).filter((s) => s['주제'] === topic)
+}
+
+// date > today(엄격 미래) → "예정" 배지. today == date는 예정 아님(SPEC §4 v3).
+export function isUpcoming(s, today) {
+  return (s && s.date ? s.date : '') > (today || '')
+}
+
+// 본문을 `## <헤딩>`으로 분할 → { intro, sections: { 헤딩: 본문 } }. 상세(3블록)·발췌 공용 순수 함수.
+export function splitSeminarBody(body) {
+  const parts = (body || '').split(/^##\s+/m)
+  const intro = (parts[0] || '').trim()
+  const sections = {}
+  for (let i = 1; i < parts.length; i++) {
+    const nl = parts[i].indexOf('\n')
+    const heading = (nl === -1 ? parts[i] : parts[i].slice(0, nl)).trim()
+    sections[heading] = nl === -1 ? '' : parts[i].slice(nl + 1).trim()
+  }
+  return { intro, sections }
+}
+
+// 서문(intro)을 리드(첫 단락) + 나머지로 분할 — 상세 밴드 리드/본문 분리용.
+export function splitLead(intro) {
+  const t = (intro || '').trim()
+  if (!t) return { lead: '', rest: '' }
+  const parts = t.split(/\n\s*\n/)
+  return { lead: parts[0].trim(), rest: parts.slice(1).join('\n\n').trim() }
+}

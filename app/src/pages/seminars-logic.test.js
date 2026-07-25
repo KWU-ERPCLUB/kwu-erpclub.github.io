@@ -1,40 +1,72 @@
 import { expect, test } from 'vitest'
-import { splitByDate, nextSeminar, todayString } from './seminars-logic.js'
+import { sortSeminars, extractTopics, filterByTopic, isUpcoming, todayString, splitSeminarBody, splitLead } from './seminars-logic.js'
 
-const S = (slug, date) => ({ slug, date, title: slug, 회차: slug, 유형: '인지', body: '' })
+const S = (slug, date, extra = {}) => ({ slug, date, title: slug, 회차: slug, 유형: '인지', body: '', ...extra })
 const list = [S('a', '2026-06-01'), S('b', '2026-09-05'), S('c', '2026-08-20'), S('d', '2026-07-24')]
 
-test('splitByDate — 예정(오늘 포함, 오름차순)·과거(역시간순) 분리', () => {
-  const { upcoming, past } = splitByDate(list, '2026-07-24')
-  // 오늘(d)·미래(c,b) = 예정, 오름차순: d(07-24) → c(08-20) → b(09-05)
-  expect(upcoming.map((s) => s.slug)).toEqual(['d', 'c', 'b'])
-  // 과거(a) = 역시간순
-  expect(past.map((s) => s.slug)).toEqual(['a'])
+test('sortSeminars — newest(기본)=date 내림차순', () => {
+  expect(sortSeminars(list).map((s) => s.slug)).toEqual(['b', 'c', 'd', 'a'])
 })
 
-test('splitByDate — date == today는 예정(경계 포함)', () => {
-  const { upcoming, past } = splitByDate([S('x', '2026-07-24')], '2026-07-24')
-  expect(upcoming.map((s) => s.slug)).toEqual(['x'])
-  expect(past).toEqual([])
+test('sortSeminars — oldest=date 오름차순', () => {
+  expect(sortSeminars(list, 'oldest').map((s) => s.slug)).toEqual(['a', 'd', 'c', 'b'])
 })
 
-test('nextSeminar — 예정 중 최근접 1건', () => {
-  expect(nextSeminar(list, '2026-07-24').slug).toBe('d')
+test('sortSeminars — 원본 불변(순수)·빈 입력 안전', () => {
+  const copy = [...list]
+  sortSeminars(list)
+  expect(list.map((s) => s.slug)).toEqual(copy.map((s) => s.slug))
+  expect(sortSeminars([])).toEqual([])
+  expect(sortSeminars(undefined)).toEqual([])
 })
 
-test('nextSeminar — 예정 0건이면 null', () => {
-  expect(nextSeminar([S('a', '2026-06-01')], '2026-07-24')).toBeNull()
+test('extractTopics — 등장 주제만·TOPICS enum 순서로 안정 정렬·중복 제거', () => {
+  const withTopics = [
+    S('a', '2026-06-01', { 주제: '워크플로·자동화' }),
+    S('b', '2026-07-01', { 주제: '에이전트' }),
+    S('c', '2026-08-01', { 주제: '에이전트' }), // 중복
+    S('d', '2026-09-01' /* 주제 없음 */),
+  ]
+  // enum 순서 = [에이전트, 모델·플랫폼, 워크플로·자동화, ...] → 에이전트가 워크플로보다 앞
+  expect(extractTopics(withTopics)).toEqual(['에이전트', '워크플로·자동화'])
+  expect(extractTopics([])).toEqual([])
 })
 
-test('splitByDate — 빈/undefined 입력 안전', () => {
-  expect(splitByDate([], '2026-07-24')).toEqual({ upcoming: [], past: [] })
-  expect(splitByDate(undefined, '2026-07-24')).toEqual({ upcoming: [], past: [] })
+test('filterByTopic — null=전체·일치만 통과', () => {
+  const data = [S('a', '2026-06-01', { 주제: '에이전트' }), S('b', '2026-07-01', { 주제: '거버넌스·리스크' })]
+  expect(filterByTopic(data, null).map((s) => s.slug)).toEqual(['a', 'b'])
+  expect(filterByTopic(data, '에이전트').map((s) => s.slug)).toEqual(['a'])
+  expect(filterByTopic(data, '없는주제')).toEqual([])
+})
+
+test('isUpcoming — date>today만 예정(경계=오늘은 예정 아님)', () => {
+  expect(isUpcoming(S('x', '2026-08-07'), '2026-07-25')).toBe(true)
+  expect(isUpcoming(S('x', '2026-07-25'), '2026-07-25')).toBe(false) // 오늘 = 예정 아님
+  expect(isUpcoming(S('x', '2026-06-01'), '2026-07-25')).toBe(false)
+  expect(isUpcoming({}, '2026-07-25')).toBe(false)
 })
 
 test('todayString — 고정 Date 주입 시 로컬 YYYY-MM-DD', () => {
-  // 로컬 자정 기준 날짜 성분만 검증(시계·타임존 비의존)
   expect(todayString(new Date(2026, 6, 24))).toBe('2026-07-24') // month 6 = 7월
   expect(todayString(new Date(2026, 0, 5))).toBe('2026-01-05')
 })
 
-// (daysUntil·ddayLabel 테스트 제거 2026-07-25 — D-day 표시 폐지와 함께 함수 삭제.)
+test('splitSeminarBody — ## 헤딩 기준 분할', () => {
+  const { intro, sections } = splitSeminarBody('서문 문장\n\n## 준비\n환경 세팅\n\n## 진행\n실습 단계\n\n## 재현 가이드\n혼자 따라하기')
+  expect(intro).toBe('서문 문장')
+  expect(sections['준비']).toBe('환경 세팅')
+  expect(sections['진행']).toBe('실습 단계')
+  expect(sections['재현 가이드']).toBe('혼자 따라하기')
+})
+
+test('splitSeminarBody — 헤딩 없는 본문 = intro만', () => {
+  const { intro, sections } = splitSeminarBody('그냥 본문')
+  expect(intro).toBe('그냥 본문')
+  expect(Object.keys(sections)).toEqual([])
+})
+
+test('splitLead — 첫 단락=리드, 나머지=rest', () => {
+  expect(splitLead('첫 문장.\n\n둘째 단락.\n\n셋째.')).toEqual({ lead: '첫 문장.', rest: '둘째 단락.\n\n셋째.' })
+  expect(splitLead('한 단락뿐')).toEqual({ lead: '한 단락뿐', rest: '' })
+  expect(splitLead('')).toEqual({ lead: '', rest: '' })
+})

@@ -56,6 +56,14 @@ export function validateEntry(kind, filename, data, body = '') {
     }
     // 슬라이드 = 선택(사후 자료 링크) — 있으면 비어있지 않은 문자열(URL)만 허용
     if ('슬라이드' in data && (typeof data['슬라이드'] !== 'string' || data['슬라이드'].trim() === '')) errs.push('슬라이드는 비어있지 않은 문자열(URL)만 허용')
+    // 주제 = 선택(단일 — 기사 TOPICS enum 재사용, 세미나 v3 필터 축 2026-07-25)
+    if ('주제' in data && (typeof data['주제'] !== 'string' || !TOPICS.includes(data['주제']))) errs.push(`주제 enum 밖: ${data['주제']}`)
+    // 썸네일 = 선택(v3 겹침 카드 이미지 경로 1~2 — 없으면 카드 비표시)
+    if ('썸네일' in data) {
+      const th = data['썸네일']
+      if (!Array.isArray(th) || th.length < 1 || th.length > 2 || th.some((t) => typeof t !== 'string' || t.trim() === ''))
+        errs.push('썸네일은 비어있지 않은 문자열 1~2개 배열만 허용')
+    }
     // 요점 = 선택(아코디언 요약) — 있으면 문자열 1~4개 배열만 허용
     if ('요점' in data) {
       const pts = data['요점']

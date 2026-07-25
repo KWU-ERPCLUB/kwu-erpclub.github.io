@@ -4,6 +4,7 @@ author: bapzzi
 date: 2026-08-07
 회차: 2
 유형: 실습
+주제: 에이전트
 발원기사: https://kwu-erpclub.github.io/insights/?p=2026-07-22-bapzzi-ai-trend-research
 ---
 

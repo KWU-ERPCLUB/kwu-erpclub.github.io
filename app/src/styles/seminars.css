@@ -1,5 +1,6 @@
-/* 세미나 2차 구조 개혁 (2026-07-24) — 풀블리드 NEXT 밴드(구성 미리보기) + 초대형 회차 번호 카드 +
-   상세 컬러(다크) 헤더 밴드. D-day 표시 폐지(2026-07-25). 마크다운 본문 = pages.css(.hub-md). 토큰=global.css. */
+/* 세미나 v3 (2026-07-25) — 목록 = 세로 날짜 타임라인 아카이브(Linear changelog 변형): 소개 헤드 +
+   필터 바(주제 탭·정렬 토글) + 좌 날짜 레일·점 × 항목(제목→상세 / 슬라이드 겹침 카드 / 메타 칩 / 요점·발췌).
+   상세(.sem-ed-*)는 v3 변경 없음(컬러 다크 헤더 밴드 유지). 마크다운 본문 = pages.css(.hub-md). 토큰=global.css. */
 
 /* ── 버튼 리셋 (위계 클래스를 button에 적용) ── */
 button.cta { border: none; font-family: inherit; cursor: pointer; }
@@ -8,102 +9,115 @@ button.proof-link {
   font-family: inherit; cursor: pointer; margin-top: 0; padding: 0 0 1px;
 }
 
-/* ── 페이지 셸 = 풀블리드(밴드가 뷰포트 폭, 내부만 max-width) ── */
+/* ── 페이지 셸 ── */
 .sem-main { width: 100%; }
-.sem-wrap { max-width: 960px; margin: 0 auto; padding: 0 1.5rem; }
-@media (max-width: 700px) { .sem-wrap { padding: 0 1.25rem; } }
+.sem-list { max-width: var(--maxw); margin: 0 auto; padding: clamp(2.5rem, 6vh, 4rem) 1.5rem clamp(3rem, 6vh, 4rem); }
+@media (max-width: 700px) { .sem-list { padding: 2.25rem 1.25rem 2.5rem; } }
 
-/* ════ NEXT = 풀블리드 히어로 밴드 (surface 면 = 화면 분리, 콜아웃 박스 폐지) ════ */
-.sem-next { width: 100%; background: var(--surface); border-bottom: 1px solid var(--line); }
-.sem-next-in { max-width: var(--maxw); margin: 0 auto; padding: clamp(3rem, 7vh, 5.5rem) 1.5rem clamp(2.5rem, 5vh, 4rem); }
-@media (max-width: 700px) { .sem-next-in { padding: 2.5rem 1.25rem 2.25rem; } }
-.sem-next-eyebrow { /* 화이트리스트 ④ 섹션 인덱스 = 브랜드 시그니처 */
-  display: block; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.09em;
-  color: var(--accent); margin-bottom: clamp(1.25rem, 3vh, 2rem);
+/* ════ 소개 헤드 = page-head 골격(눈썹→h1→서브→헤어라인, §3-1) ════ */
+.sem-head { padding-bottom: 1.5rem; border-bottom: 1px solid var(--line); margin-bottom: 1.5rem; }
+.sem-eyebrow { /* 화이트리스트 ④ 섹션 인덱스 = 브랜드 시그니처 */
+  display: block; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.07em;
+  color: var(--accent); margin-bottom: 0.7rem;
 }
+.sem-head-title {
+  font-family: var(--font-display); font-weight: 800; font-size: clamp(1.9rem, 4vw, 2.6rem);
+  line-height: 1.18; letter-spacing: -0.02em; margin: 0 0 0.6rem;
+}
+.sem-head-sub { margin: 0; max-width: 56ch; font-size: 0.92rem; color: var(--text-sub); word-break: keep-all; }
 
-/* 초대형 타이틀 블록 (D-day 열 폐지 2026-07-25) */
-.sem-next-lead-row { display: flex; flex-wrap: wrap; align-items: flex-start; gap: clamp(1.5rem, 4vw, 3rem); }
-.sem-next-headwrap { flex: 1 1 22ch; min-width: 0; }
-.sem-next-title { /* 초대형 — Hero급 clamp ~4rem */
-  font-family: var(--font-display); font-weight: 900; font-size: clamp(2.1rem, 6vw, 4rem);
-  line-height: 1.08; letter-spacing: -0.03em; word-break: keep-all; max-width: 18ch; margin: 0 0 1.1rem;
+/* ════ 필터 바 = 주제 탭(좌) + 정렬 토글(우) ════ */
+.sem-filter-bar {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 0.75rem 1.25rem; margin-bottom: clamp(1.75rem, 4vh, 2.5rem);
 }
-.sem-next-lead { font-size: clamp(1rem, 1.6vw, 1.15rem); line-height: 1.6; max-width: 52ch; word-break: keep-all; margin: 0 0 1.1rem; }
-.sem-next-meta { font-size: 0.82rem; color: var(--text-sub); margin: 0 0 0.6rem; }
-.sem-next-headwrap .hub-chips { margin: 0; }
+.sem-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+/* 칩 = 테두리 pill(Secondary), 선택 = 차콜 필. 4상태(§5) — 색만 아니라 채움도 다름(§4) */
+.sem-filter button, .sem-sort {
+  height: 34px; font-family: inherit; font-size: 0.82rem; font-weight: 600; color: var(--text-sub);
+  background: #fff; border: 1px solid var(--line); border-radius: var(--radius-pill);
+  padding: 0 0.95rem; cursor: pointer; transition: border-color 150ms ease-out, color 150ms ease-out;
+}
+.sem-filter button:hover, .sem-sort:hover { border-color: var(--text); color: var(--text); }
+.sem-filter button:active, .sem-sort:active { transform: scale(0.98); }
+.sem-filter button.on { background: var(--dark); color: #fff; border-color: var(--dark); }
+.sem-filter button:focus-visible, .sem-sort:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.sem-sort { color: var(--text); font-weight: 700; } /* 정렬 = 상태 라벨(최신순/과거순) */
 
-/* 구성 미리보기 — 실습형 3칸 미니 목차(번호+제목+섹션 발췌) */
-.sem-toc-preview {
-  list-style: none; margin: clamp(2rem, 4vh, 3rem) 0 0; padding: 0;
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+/* ════ 세로 날짜 타임라인 ════ */
+.sem-tl { list-style: none; margin: 0; padding: 0; }
+.sem-tl-item { display: grid; grid-template-columns: 6rem 1fr; gap: 0 clamp(1rem, 2.5vw, 1.75rem); }
+/* 좌 날짜 레일(오른정렬) + 예정 배지 */
+.sem-tl-date { text-align: right; padding-top: 0.05rem; }
+.sem-tl-day { font-size: 0.8rem; font-weight: 700; color: var(--text); letter-spacing: 0.01em; white-space: nowrap; }
+.sem-soon-badge { /* 화이트리스트 ⑤ 배지 테두리+텍스트(버건디) */
+  display: inline-block; margin-top: 0.5rem; font-size: 0.7rem; font-weight: 700; color: var(--accent);
+  border: 1px solid var(--accent); border-radius: var(--radius-pill); padding: 0.1rem 0.55rem;
 }
-.sem-toc-cell { padding: 1.4rem 1.4rem 1.5rem; }
-.sem-toc-cell + .sem-toc-cell { border-left: 1px solid var(--line); }
-.sem-toc-no { /* 차콜(버건디 budget 절약) */
-  font-family: var(--font-display); font-weight: 800; font-size: 0.85rem; letter-spacing: 0.04em;
-  color: var(--text-sub); display: block; margin-bottom: 0.6rem;
+/* 우 본문 + 세로선(border-left)·점 */
+.sem-tl-body {
+  position: relative; min-width: 0; border-left: 2px solid var(--line);
+  padding: 0 0 clamp(2rem, 4.5vh, 3.2rem) clamp(1.4rem, 3vw, 2.2rem);
 }
-.sem-toc-title { font-family: var(--font-display); font-weight: 800; font-size: 1.1rem; display: block; margin-bottom: 0.4rem; }
-.sem-toc-desc { font-size: 0.85rem; line-height: 1.55; color: var(--text-sub); display: block; word-break: keep-all; }
-@media (max-width: 700px) {
-  .sem-toc-preview { grid-template-columns: 1fr; }
-  .sem-toc-cell + .sem-toc-cell { border-left: none; border-top: 1px solid var(--line); }
+.sem-tl-item:last-child .sem-tl-body { padding-bottom: 0.5rem; }
+.sem-tl-dot { /* 타임라인 점 9px(화이트리스트 ⑦) — 기본 회색 아웃라인, 최신만 차콜 채움(버건디 절약) */
+  position: absolute; left: -5.5px; top: 4px; width: 9px; height: 9px; border-radius: 50%;
+  background: #fff; border: 2px solid var(--text-sub);
 }
-
-/* 사전준비 배지 + 자세히(Primary .cta·화면당 1개) */
-.sem-next-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 1.25rem; margin-top: clamp(2rem, 4vh, 3rem); }
-.sem-prep-badge { /* 화이트리스트 ⑤ prep 배지 테두리+텍스트 */
-  font-size: 0.76rem; font-weight: 700; color: var(--accent);
-  border: 1px solid var(--accent); border-radius: var(--radius-pill); padding: 0.2rem 0.7rem;
-}
-
-/* 예정 0건 — 풀블리드 빈 상태(규모 상향, 카피 재사용) */
-.sem-next-empty-title {
-  font-family: var(--font-display); font-weight: 900; font-size: clamp(1.7rem, 4.5vw, 2.8rem);
-  line-height: 1.15; letter-spacing: -0.025em; word-break: keep-all; max-width: 20ch; margin: 0 0 1.1rem;
-}
-.sem-next-empty-sub { font-size: 1rem; line-height: 1.6; color: var(--text-sub); max-width: 52ch; margin: 0 0 1.2rem; }
-.sem-next-empty-how { font-size: 0.9rem; line-height: 1.6; color: var(--text-sub); margin: 0; }
-.sem-next-empty-how a { color: var(--text); font-weight: 600; text-decoration: none; border-bottom: 2px solid var(--accent); }
-.sem-next-empty-how code { font-size: 0.85em; background: #fff; border: 1px solid var(--line); border-radius: 5px; padding: 0.08em 0.4em; }
-
-/* ════ 지난 세미나 = 초대형 회차 번호 카드 리스트 (아코디언 폐지·NN/g 접지 않기) ════ */
-.sem-past { padding: clamp(2.5rem, 5vh, 4rem) 0; }
-.sem-past-head {
-  font-family: var(--font-display); font-weight: 800; font-size: clamp(1.4rem, 2.6vw, 1.8rem);
-  letter-spacing: -0.02em; margin: 0 0 1.5rem;
-}
-.sem-log { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
-.sem-row {
-  display: grid; grid-template-columns: minmax(2.6rem, auto) 1fr; gap: clamp(1rem, 3vw, 2.25rem);
-  align-items: start; padding: clamp(1.6rem, 3vh, 2.25rem) 0; border-bottom: 1px solid var(--line);
-  transition: transform 150ms ease-out;
-}
-.sem-row:hover { transform: translateY(-2px); }
-.sem-row-no { /* 초대형 회차 번호 (Paperlogy ~5rem, 01/02 패딩), 차콜(대형 = 버건디 금지) */
-  font-family: var(--font-display); font-weight: 900; font-size: clamp(2.6rem, 6vw, 5rem);
-  line-height: 0.9; letter-spacing: -0.03em; color: var(--text);
-}
-.sem-row-main { min-width: 0; }
-.sem-row-title { /* hover 강조는 자세히 링크(버건디 밑줄 ⑥)가 담당 — 대형 제목엔 버건디 미부여 */
-  font-family: var(--font-display); font-weight: 800; font-size: clamp(1.15rem, 2vw, 1.5rem);
+.sem-tl-item.is-featured .sem-tl-dot { background: var(--text); border-color: var(--text); }
+.sem-tl-chips { margin: 0 0 0.55rem; }
+.sem-tl-title { /* 제목 → 상세. hover 밑줄. 최신(is-featured) = 크게(Linear 변형) */
+  font-family: var(--font-display); font-weight: 800; font-size: clamp(1.1rem, 1.9vw, 1.4rem);
   line-height: 1.25; letter-spacing: -0.02em; word-break: keep-all; color: var(--text);
-  background: none; border: none; padding: 0; text-align: left; cursor: pointer; display: block; margin-bottom: 0.4rem;
+  background: none; border: none; padding: 0; text-align: left; cursor: pointer; display: block; margin: 0 0 0.7rem;
+  transition: color 150ms ease-out;
 }
-.sem-row-title:hover { text-decoration: underline; text-underline-offset: 3px; }
-.sem-row-meta { font-size: 0.8rem; color: var(--text-sub); margin: 0 0 0.7rem; }
-.sem-row-points { margin: 0 0 0.9rem; padding-left: 1.2rem; }
-.sem-row-points li { margin-bottom: 0.35rem; line-height: 1.55; }
-.sem-row-excerpt { font-size: 0.92rem; line-height: 1.6; color: var(--text-sub); margin: 0 0 0.9rem; max-width: 60ch; }
-.sem-row-links { display: flex; flex-wrap: wrap; align-items: center; gap: 1.25rem; }
-@media (max-width: 700px) {
-  .sem-row { grid-template-columns: 1fr; gap: 0.5rem; }
-  .sem-row-no { font-size: 2.4rem; }
+.sem-tl-item.is-featured .sem-tl-title { font-size: clamp(1.5rem, 3.2vw, 2.1rem); line-height: 1.18; }
+.sem-tl-title:hover { text-decoration: underline; text-underline-offset: 3px; }
+.sem-tl-title:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.sem-tl-points { margin: 0.2rem 0 0; padding-left: 1.2rem; }
+.sem-tl-points li { margin-bottom: 0.35rem; line-height: 1.55; font-size: 0.92rem; }
+.sem-tl-excerpt { font-size: 0.92rem; line-height: 1.6; color: var(--text-sub); margin: 0.2rem 0 0; max-width: 60ch; word-break: keep-all; }
+
+/* ── 슬라이드 썸네일 겹침 카드 (클릭=발표자료 새 탭 · hover 리프트 transform·opacity만) ── */
+.sem-thumb-link { display: inline-block; margin: 0.35rem 0 0.9rem; text-decoration: none; }
+.sem-thumb { position: relative; display: inline-block; }
+.sem-thumb-img {
+  display: block; width: clamp(180px, 40vw, 230px); height: auto; border-radius: 10px;
+  border: 1px solid var(--line); background: var(--surface); box-shadow: 0 1px 3px rgba(20, 20, 20, 0.06);
+}
+/* 겹침 — 뒷장 오프셋·기울임·감쇠, 앞장 위 */
+.sem-thumb.is-stack { padding: 0 14px 12px 0; }
+.sem-thumb.is-stack .sem-thumb-back {
+  position: absolute; top: 10px; left: 14px; width: clamp(180px, 40vw, 230px);
+  opacity: 0.72; transform: rotate(1.5deg); z-index: 0;
+}
+.sem-thumb.is-stack .sem-thumb-front { position: relative; z-index: 1; }
+.sem-thumb-link { transition: transform 150ms ease-out; }
+.sem-thumb-link:not(.is-static):hover { transform: translateY(-3px); }
+.sem-thumb-link:not(.is-static):hover .sem-thumb-back { opacity: 0.85; }
+.sem-thumb-link:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 10px; }
+
+/* ── 빈 상태 = 디자인된 1줄(회색 박스 단독 금지 — 서페이스 밴드, SPEC §4 v3 "세미나 기록 아직 없음") ── */
+.sem-tl-empty {
+  margin: 0; padding: clamp(2rem, 5vh, 3rem) 1.5rem; text-align: center; color: var(--text-sub);
+  font-size: 0.95rem; background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
 }
 
-/* ════ 상세 = 컬러 헤더 밴드(차콜 --dark 다크 앵커 — 화면당 다크 면 1개 + 푸터 밴드) ════ */
+/* 모바일 — 레일 축소(날짜 상단행) + 썸네일 카드 풀폭 */
+@media (max-width: 700px) {
+  .sem-tl-item { grid-template-columns: 1fr; gap: 0; }
+  .sem-tl-date { display: flex; align-items: center; gap: 0.7rem; text-align: left; padding: 0 0 0.5rem 1.4rem; }
+  .sem-soon-badge { margin-top: 0; }
+  .sem-tl-body { padding-left: 1.4rem; }
+  .sem-tl-dot { top: -1.4rem; } /* 날짜 행 옆으로 정렬 */
+  .sem-thumb-link, .sem-thumb, .sem-thumb-img { width: 100%; }
+  .sem-thumb.is-stack { padding: 0 0 12px; }
+  .sem-thumb.is-stack .sem-thumb-back { width: 92%; left: 8%; }
+  .sem-thumb.is-stack .sem-thumb-front { width: 100%; }
+}
+
+/* ════ 상세 = 컬러 헤더 밴드(차콜 --dark 다크 앵커 — 화면당 다크 면 1개 + 푸터 밴드) · v3 변경 없음 ════ */
 .sem-ed-band { width: 100%; background: var(--dark); color: #fff; }
 .sem-ed-band-in { max-width: var(--maxw); margin: 0 auto; padding: clamp(2.25rem, 5vh, 3.75rem) 1.5rem clamp(2.5rem, 6vh, 4rem); }
 @media (max-width: 700px) { .sem-ed-band-in { padding: 1.75rem 1.25rem 2.25rem; } }
@@ -165,16 +179,14 @@ button.proof-link {
   .sem-ed-block { padding-bottom: 2.5rem; margin-bottom: 2.5rem; }
 }
 
-/* ── §5 인터랙션 4상태 (150ms ease-out · transform·color만) ── */
-.sem-row-title, button.proof-link, .sem-row-no, .sem-next-empty-how a, .sem-ed-back, .sem-ed-origin {
-  transition: color 150ms ease-out, border-color 150ms ease-out;
-}
-button.proof-link:hover, .sem-next-empty-how a:hover { color: var(--accent); }
-.sem-row-title:focus-visible, button.proof-link:focus-visible, .sem-ed-back:focus-visible, .sem-cta:focus-visible {
+/* ── §5 인터랙션 4상태 (150ms ease-out · transform·opacity·color만) · reduced-motion 존중 ── */
+button.proof-link:hover { color: var(--accent); }
+button.proof-link:focus-visible, .sem-ed-back:focus-visible {
   outline: 3px solid var(--accent); outline-offset: 2px;
 }
 @media (prefers-reduced-motion: reduce) {
-  .sem-row, .sem-row-title, button.proof-link, .sem-row-no,
-  .sem-next-empty-how a, .sem-ed-toc-link, .sem-ed-back, .sem-ed-origin { transition: none; }
-  .sem-row:hover { transform: none; }
+  .sem-tl-title, .sem-filter button, .sem-sort, .sem-thumb-link, button.proof-link,
+  .sem-ed-toc-link, .sem-ed-back, .sem-ed-origin { transition: none; }
+  .sem-filter button:active, .sem-sort:active { transform: none; }
+  .sem-thumb-link:not(.is-static):hover { transform: none; }
 }
