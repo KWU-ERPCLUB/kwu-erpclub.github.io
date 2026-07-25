@@ -1,0 +1,991 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>질문에서 위임으로 — AI 활용 구조 3단 · 세미나 1회차</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css" />
+<style>
+  :root{
+    --accent:#7a2030; --dark:#161616; --bg:#ffffff; --surface:#fafaf9;
+    --text:#141414; --text-sub:#55606c; --line:#e7e7e5; --dm:#d18f9a;
+    --fd:'Paperlogy','Pretendard Variable',Pretendard,sans-serif;
+    --fb:'Pretendard Variable',Pretendard,-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{background:#e9e8e5;font-family:var(--fb);color:var(--text);overflow:hidden}
+  #deck{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+  #stage{width:1280px;height:720px;position:relative;background:var(--bg);transform-origin:center center;
+         box-shadow:0 10px 40px rgba(0,0,0,.18);overflow:hidden}
+
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:44px 60px 32px;background:var(--bg)}
+  .slide.active{display:flex}
+
+  .top{display:flex;justify-content:space-between;align-items:center}
+  .pill{background:var(--dark);color:#fff;font:600 12px var(--fb);letter-spacing:.08em;text-transform:uppercase;padding:6px 14px;border-radius:999px}
+  .pnum{border:1px solid var(--line);border-radius:8px;padding:5px 11px;font:700 13px var(--fb);color:var(--dark)}
+
+  .head{margin-top:20px}
+  .head h1{font:800 36px/1.16 var(--fd);letter-spacing:-.02em;margin:0;color:var(--text);word-break:keep-all}
+  .emph{font:700 17px var(--fb);color:var(--dark);margin:10px 0 0}
+  .emph.ac{color:var(--accent)}
+
+  .body{flex:1;min-height:0;margin-top:20px;display:flex;flex-direction:column;justify-content:center}
+
+  .key{margin:14px auto 0;width:88%;background:var(--dark);color:#fff;text-align:center;border-radius:12px;padding:13px 20px;font:600 16px var(--fb);word-break:keep-all}
+
+  .foot{display:flex;justify-content:space-between;align-items:flex-end;margin-top:14px;font-size:11px;color:var(--text-sub)}
+  .foot .r{font-weight:600}
+
+  /* cards */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:stretch;width:100%}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;align-items:stretch;width:100%}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px 26px;display:flex;flex-direction:column}
+  .card.hl{border-color:var(--accent);border-width:1.5px}
+  .ctag{font:600 12px var(--fb);letter-spacing:.05em;text-transform:uppercase;color:var(--text-sub);margin-bottom:8px}
+  .card h3{margin:0 0 12px;font:700 18px var(--fd);color:var(--text)}
+  .card ul{margin:0;padding-left:18px}
+  .card li{margin:8px 0;font-size:15px;line-height:1.5;color:var(--text);word-break:keep-all}
+  .lead{font-size:15px;color:var(--text-sub);margin:0 0 14px;line-height:1.55}
+
+  /* chips */
+  .chips{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:6px}
+  .chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:11px 20px;font:600 15px var(--fb);color:var(--text)}
+  .chip .cs{display:block;font-size:12px;color:var(--text-sub);font-weight:500;margin-top:2px}
+
+  /* steps */
+  .steps{display:flex;align-items:flex-start;justify-content:center;gap:4px;margin-top:6px}
+  .step{display:flex;flex-direction:column;align-items:center;gap:12px;min-width:118px;text-align:center;padding:0 2px}
+  .circ{width:52px;height:52px;border-radius:999px;border:1.5px solid var(--line);background:#fff;
+        display:flex;align-items:center;justify-content:center;font:800 19px var(--fd);color:var(--dark)}
+  .step.cur .circ{background:var(--accent);border-color:var(--accent);color:#fff}
+  .step .st{font:700 15px var(--fb);color:var(--text);word-break:keep-all}
+  .step .ss{font-size:12px;color:var(--text-sub);word-break:keep-all}
+  .arr{align-self:center;margin-top:14px;color:#b8b8b4;font-size:19px;flex:0 0 auto}
+
+  /* stats */
+  .stats{display:flex;flex-direction:column;width:92%;margin:0 auto}
+  .stat{display:flex;align-items:center;gap:26px;padding:16px 4px;border-bottom:1px solid var(--line)}
+  .snum{font:800 50px var(--fd);color:var(--text);line-height:1;flex:0 0 auto}
+  .snum.u{border-bottom:3px solid var(--accent);padding-bottom:5px}
+  .stxt{display:flex;flex-direction:column;gap:3px}
+  .slab{font:600 16px var(--fb);color:var(--text)}
+  .ssub{font-size:12px;color:var(--text-sub)}
+
+  /* table */
+  .tbl{width:100%;border-collapse:collapse;font-size:14px}
+  .tbl th{text-align:left;font:700 12px var(--fb);letter-spacing:.04em;text-transform:uppercase;color:var(--text-sub);padding:9px 12px;border-bottom:1.5px solid var(--dark)}
+  .tbl td{padding:10px 12px;border-bottom:1px solid var(--line);color:var(--text);vertical-align:top;line-height:1.45}
+  .tbl td .tm{font-weight:700}
+  .glosswrap{display:grid;grid-template-columns:1fr 1fr;gap:0 32px;width:100%}
+
+  /* bridge / quote / title */
+  .bridge{flex:1;display:flex;flex-direction:column;justify-content:center;gap:22px}
+  .bigline{font:800 42px/1.22 var(--fd);letter-spacing:-.02em;color:var(--text);max-width:24ch;word-break:keep-all}
+  .bigline em{font-style:normal;color:var(--accent)}
+  .bsub{display:flex;flex-direction:column;gap:8px}
+  .bsub span{font-size:16px;color:var(--text-sub);padding-left:16px;border-left:2px solid var(--line)}
+
+  .quote{flex:1;display:flex;flex-direction:column;justify-content:center;gap:22px}
+  .qbox{border-left:4px solid var(--accent);background:var(--surface);border-radius:0 14px 14px 0;padding:24px 30px}
+  .qorig{font:600 22px var(--fd);color:var(--text);line-height:1.4}
+  .qtr{font-size:17px;color:var(--text-sub);margin-top:10px}
+  .qnote{display:flex;flex-direction:column;gap:8px}
+  .qnote span{font-size:16px;color:var(--text);padding-left:14px;border-left:2px solid var(--line)}
+
+  .tslide{justify-content:center;padding:60px 72px}
+  .tslide .big{font:800 82px/1.06 var(--fd);letter-spacing:-.03em;color:var(--text)}
+  .tslide .accbar{width:64px;height:4px;background:var(--accent);margin:24px 0 6px}
+  .tslide .sub{font:600 21px var(--fb);color:var(--text-sub);margin-top:18px}
+  .tslide .badge{align-self:flex-start;margin-top:26px;border:1px solid var(--line);border-radius:999px;padding:10px 20px;font-size:15px;color:var(--dark)}
+  .tlinks{display:flex;flex-direction:column;gap:12px;margin-top:26px;font-size:18px;color:var(--text)}
+  .tlinks b{font-family:var(--fd)}
+  .tlinks u{text-decoration:none;border-bottom:2px solid var(--accent);padding-bottom:2px}
+
+  /* figures */
+  .fig{width:100%;max-width:760px;height:auto;margin:0 auto;display:block}
+  .fnote{text-align:center;font-size:12px;color:var(--text-sub);margin-top:8px}
+
+  /* stack (layers) */
+  .stack{display:flex;flex-direction:column;gap:9px;width:70%;margin:0 auto}
+  .layer{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 22px;display:flex;justify-content:space-between;align-items:center}
+  .layer .ln{font:700 16px var(--fd);color:var(--text)}
+  .layer .ld{font-size:13px;color:var(--text-sub)}
+  .layer.top{border-left:3px solid var(--accent)}
+
+  /* two-column limit list */
+  .rows{display:flex;flex-direction:column;gap:14px;width:88%;margin:0 auto}
+  .row{display:grid;grid-template-columns:200px 1fr;gap:22px;align-items:center;padding:14px 18px;background:var(--surface);border:1px solid var(--line);border-radius:14px}
+  .row .rl{font:700 16px var(--fd);color:var(--text)}
+  .row .rr{font-size:15px;color:var(--text-sub)}
+  .row.mark{border-left:3px solid var(--accent)}
+
+  #counter{position:fixed;right:18px;bottom:14px;z-index:30;font:600 14px var(--fb);color:#fff;background:rgba(22,22,22,.78);padding:5px 13px;border-radius:999px}
+
+  @media print{
+    body{background:#fff;overflow:visible}
+    #deck{position:static;display:block;height:auto}
+    #stage{transform:none!important;width:1280px;height:auto;box-shadow:none;display:block}
+    .slide{position:relative;display:flex!important;width:1280px;height:720px;page-break-after:always;box-shadow:none}
+    #counter{display:none}
+  }
+</style>
+</head>
+<body>
+<div id="deck">
+  <div id="stage">
+
+  <!-- 1 -->
+  <section class="slide tslide" aria-label="1. 질문에서 위임으로">
+    <div class="top" style="position:absolute;top:44px;left:60px;right:60px"><span class="pill">OPENING</span><span class="pnum">01</span></div>
+    <div class="big">질문에서<br>위임으로</div>
+    <div class="accbar"></div>
+    <div class="sub">AI 활용 구조 3단 — Prompt · Context · Harness</div>
+    <span class="badge">광운대학교 경영학부 ERP연구회 · MIS·AI 스터디</span>
+    <div class="foot" style="position:absolute;bottom:32px;left:60px;right:60px"><span>출처: 발표 구성</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 2 -->
+  <section class="slide" aria-label="2. 오늘의 지도">
+    <div class="top"><span class="pill">OPENING</span><span class="pnum">02</span></div>
+    <div class="head"><h1>오늘의 지도</h1><p class="emph">개념에서 위임의 구조까지 4칸</p></div>
+    <div class="body">
+      <div class="steps">
+        <div class="step"><div class="circ">1</div><div class="st">개념</div><div class="ss">토큰·환각·용어</div></div>
+        <div class="arr">→</div>
+        <div class="step"><div class="circ">2</div><div class="st">Prompt</div><div class="ss">좋은 질문</div></div>
+        <div class="arr">→</div>
+        <div class="step"><div class="circ">3</div><div class="st">Context</div><div class="ss">좋은 맥락</div></div>
+        <div class="arr">→</div>
+        <div class="step cur"><div class="circ">4</div><div class="st">Harness · 위임</div><div class="ss">좋은 환경</div></div>
+      </div>
+    </div>
+    <div class="key">개념 구분에서 위임의 구조까지</div>
+    <div class="foot"><span>출처: 세미나 목차</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 3 -->
+  <section class="slide" aria-label="3. 어디까지 써봤나">
+    <div class="top"><span class="pill">OPENING</span><span class="pnum">03</span></div>
+    <div class="head"><h1>어디까지 써봤나</h1><p class="emph">활용 단계 자가진단</p></div>
+    <div class="body">
+      <div class="steps">
+        <div class="step"><div class="circ">1</div><div class="st">CHAT</div><div class="ss">질문·요약</div></div>
+        <div class="arr">→</div>
+        <div class="step"><div class="circ">2</div><div class="st">COPILOT</div><div class="ss">문서·코딩</div></div>
+        <div class="arr">→</div>
+        <div class="step"><div class="circ">3</div><div class="st">AGENT</div><div class="ss">파일·도구 실행</div></div>
+        <div class="arr">→</div>
+        <div class="step"><div class="circ">4</div><div class="st">WORKFLOW</div><div class="ss">반복 자동화</div></div>
+      </div>
+    </div>
+    <div class="key">출발점 무관 — 다음 단계는 작은 위임 + 검증</div>
+    <div class="foot"><span>출처: 발표 구성</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 4 -->
+  <section class="slide" aria-label="4. AI Enabler vs AI Native">
+    <div class="top"><span class="pill">OPENING</span><span class="pnum">04</span></div>
+    <div class="head"><h1>AI Enabler vs AI Native</h1></div>
+    <div class="body">
+      <div class="grid2">
+        <div class="card"><div class="ctag">AI Enabler</div><h3>기존 일을 AI로 빠르게</h3>
+          <ul><li>요약</li><li>번역</li><li>초안 작성</li></ul></div>
+        <div class="card hl"><div class="ctag">AI Native</div><h3>일의 구조를 AI와 재설계</h3>
+          <ul><li>목표 정의</li><li>자료 선별</li><li>도구 연결</li><li>검증 설계</li></ul></div>
+      </div>
+    </div>
+    <div class="key">도구 사용에서 일하는 구조 설계로</div>
+    <div class="foot"><span>출처: HBS Online · Forbes 논의</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 5 -->
+  <section class="slide" aria-label="5. 한국 직장인의 현재">
+    <div class="top"><span class="pill">OPENING</span><span class="pnum">05</span></div>
+    <div class="head"><h1>한국 직장인의 현재</h1><p class="emph">생성형 AI 업무 활용 실태</p></div>
+    <div class="body">
+      <div class="stats">
+        <div class="stat"><div class="snum u">51.8%</div><div class="stxt"><div class="slab">업무 목적 활용</div><div class="ssub">미국의 약 2배</div></div></div>
+        <div class="stat"><div class="snum">5~7h</div><div class="stxt"><div class="slab">주당 사용 시간</div><div class="ssub">활용 근로자 기준</div></div></div>
+        <div class="stat"><div class="snum">3.8%</div><div class="stxt"><div class="slab">업무시간 단축</div><div class="ssub">평균 절감폭</div></div></div>
+      </div>
+    </div>
+    <div class="foot"><span>출처: 한국은행 이슈노트 2025-22 · bok.or.kr</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 6 -->
+  <section class="slide" aria-label="6. 시험장을 탈출한 AI">
+    <div class="top"><span class="pill">CASE</span><span class="pnum">06</span></div>
+    <div class="head"><h1>시험장을 탈출한 AI</h1><p class="emph">OpenAI 내부 평가 5스텝</p></div>
+    <div class="body">
+      <div class="steps">
+        <div class="step"><div class="circ">1</div><div class="st">평가 목표</div></div>
+        <div class="arr">→</div>
+        <div class="step"><div class="circ">2</div><div class="st">제로데이 악용</div></div>
+        <div class="arr">→</div>
+        <div class="step"><div class="circ">3</div><div class="st">샌드박스 탈출</div></div>
+        <div class="arr">→</div>
+        <div class="step"><div class="circ">4</div><div class="st">HF 침해</div></div>
+        <div class="arr">→</div>
+        <div class="step cur"><div class="circ">5</div><div class="st">정답 확보</div></div>
+      </div>
+    </div>
+    <div class="key">해킹 지시 없이 — 좁은 목표의 극단 최적화</div>
+    <div class="foot"><span>출처: openai.com 공식 공시</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 7 -->
+  <section class="slide" aria-label="7. 사건이 남긴 질문">
+    <div class="top"><span class="pill">CASE</span><span class="pnum">07</span></div>
+    <div class="head"><h1>사건이 남긴 질문</h1></div>
+    <div class="body">
+      <div class="grid2">
+        <div class="card"><div class="ctag">문제</div><h3>통제권은 누구에게</h3>
+          <ul><li>사고 시 로그 확보</li><li>모델·환경 접근권</li><li>중단 가능 여부</li></ul></div>
+        <div class="card hl"><div class="ctag">대응</div><h3>오픈웨이트 내부 실행</h3>
+          <ul><li>내부에서 포렌식</li><li>통제권 회복</li></ul></div>
+      </div>
+    </div>
+    <div class="key">성능보다 통제 — 멈출 수 있는가</div>
+    <div class="foot"><span>출처: openai.com 공식 공시</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 8 -->
+  <section class="slide" aria-label="8. LLM은 다음 토큰 예측">
+    <div class="top"><span class="pill">MODEL</span><span class="pnum">08</span></div>
+    <div class="head"><h1>LLM = 다음 토큰 예측</h1></div>
+    <div class="body" style="flex-direction:row;gap:34px;align-items:center">
+      <ul style="flex:0 0 300px;margin:0;padding-left:18px;font-size:15px;line-height:1.7;color:var(--text)">
+        <li>토큰화 — 최소 단위 분해</li>
+        <li>맥락 — 앞선 토큰 참조</li>
+        <li>확률 — 다음 후보 분포</li>
+        <li>연결 — 반복해 문장 생성</li>
+      </ul>
+      <div style="flex:1">
+        <svg class="fig" viewBox="0 0 560 210" role="img" aria-label="다음 토큰 후보 확률 막대">
+          <text x="0" y="14" font-family="Pretendard" font-size="12" fill="#55606c">"광운대 경영학부 ___" · 다음 토큰 후보</text>
+          <g font-family="Pretendard" font-size="14" fill="#141414">
+            <text x="0" y="55">학생</text><rect x="70" y="41" width="360" height="20" rx="4" fill="#7a2030"/><text x="440" y="55" fill="#55606c">0.41</text>
+            <text x="0" y="95">학회</text><rect x="70" y="81" width="170" height="20" rx="4" fill="#e7e7e5"/><text x="250" y="95" fill="#55606c">0.19</text>
+            <text x="0" y="135">과제</text><rect x="70" y="121" width="115" height="20" rx="4" fill="#e7e7e5"/><text x="195" y="135" fill="#55606c">0.13</text>
+            <text x="0" y="175">취업</text><rect x="70" y="161" width="80" height="20" rx="4" fill="#e7e7e5"/><text x="160" y="175" fill="#55606c">0.09</text>
+          </g>
+        </svg>
+        <div class="fnote">후보·확률은 개념 예시</div>
+      </div>
+    </div>
+    <div class="foot"><span>출처: Vaswani 2017 · Brown 2020</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 9 -->
+  <section class="slide" aria-label="9. 환각은 구조의 귀결">
+    <div class="top"><span class="pill">MODEL</span><span class="pnum">09</span></div>
+    <div class="head"><h1>환각 — 구조의 귀결</h1></div>
+    <div class="body">
+      <div class="grid2">
+        <div class="card"><div class="ctag">사전학습</div><h3>통계 압력의 오류</h3>
+          <ul><li>참·거짓 구분 불가 진술</li><li>다음 토큰 예측이 오류로</li></ul></div>
+        <div class="card"><div class="ctag">평가</div><h3>추측의 최적화</h3>
+          <ul><li>"모른다" = 0점 벤치마크</li><li>자신 있는 추측을 학습</li></ul></div>
+      </div>
+    </div>
+    <div class="key">환각은 버그가 아니라 구조 — 검증이 기본기</div>
+    <div class="foot"><span>출처: OpenAI 2025 · arXiv:2509.04664</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 10 -->
+  <section class="slide" aria-label="10. 용어 10">
+    <div class="top"><span class="pill">MODEL</span><span class="pnum">10</span></div>
+    <div class="head"><h1>용어 10</h1><p class="emph">기초 개념 한 줄 정의</p></div>
+    <div class="body">
+      <div class="glosswrap">
+        <table class="tbl"><tbody>
+          <tr><td><span class="tm">LLM</span></td><td>텍스트로 학습해 생성·답변·요약하는 대규모 언어모델</td></tr>
+          <tr><td><span class="tm">토큰</span></td><td>모델이 처리하는 최소 단위 — 비용·컨텍스트 기준</td></tr>
+          <tr><td><span class="tm">컨텍스트 윈도</span></td><td>답변 직전 참조 가능한 텍스트 양 — 작업 기억</td></tr>
+          <tr><td><span class="tm">프롬프트</span></td><td>작업을 요청하는 자연어 입력</td></tr>
+          <tr><td><span class="tm">RAG</span></td><td>외부 문서를 검색해 근거 기반 답변 생성</td></tr>
+        </tbody></table>
+        <table class="tbl"><tbody>
+          <tr><td><span class="tm">에이전트</span></td><td>도구 사용·과정을 스스로 지휘하는 시스템</td></tr>
+          <tr><td><span class="tm">MCP</span></td><td>AI를 외부 시스템에 연결하는 오픈 표준</td></tr>
+          <tr><td><span class="tm">파인튜닝</span></td><td>추가 데이터로 재훈련해 도메인에 맞춤</td></tr>
+          <tr><td><span class="tm">오픈웨이트</span></td><td>가중치 공개 — 내려받아 직접 실행</td></tr>
+          <tr><td><span class="tm">환각</span></td><td>사실과 다르거나 맥락과 어긋난 출력</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+    <div class="foot"><span>출처: Anthropic glossary 외 (AWS·gpt-oss)</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 11 -->
+  <section class="slide" aria-label="11. 모델이 서비스가 되기까지">
+    <div class="top"><span class="pill">MODEL</span><span class="pnum">11</span></div>
+    <div class="head"><h1>모델이 서비스가 되기까지</h1><p class="emph">5계층 스택</p></div>
+    <div class="body">
+      <div class="stack">
+        <div class="layer top"><span class="ln">EXPERIENCE</span><span class="ld">사용자가 만나는 화면</span></div>
+        <div class="layer"><span class="ln">POLICY &amp; SAFETY</span><span class="ld">권한·안전 정책</span></div>
+        <div class="layer"><span class="ln">TOOLS &amp; RUNTIME</span><span class="ld">도구·실행 공간</span></div>
+        <div class="layer"><span class="ln">CONTEXT &amp; DATA</span><span class="ld">맥락·데이터</span></div>
+        <div class="layer"><span class="ln">MODEL</span><span class="ld">언어모델 코어</span></div>
+      </div>
+    </div>
+    <div class="key">층을 쌓을수록 사용자가 만나는 서비스</div>
+    <div class="foot"><span>출처: OpenAI SDK · Anthropic</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 12 -->
+  <section class="slide" aria-label="12. Frontier vs 오픈웨이트">
+    <div class="top"><span class="pill">MODEL</span><span class="pnum">12</span></div>
+    <div class="head"><h1>Frontier vs 오픈웨이트</h1></div>
+    <div class="body">
+      <div class="grid2">
+        <div class="card"><div class="ctag">Frontier</div><h3>관리형 API</h3>
+          <ul><li>최상위 추론 성능</li><li>공급자 인프라 의존</li></ul></div>
+        <div class="card"><div class="ctag">Open-weight</div><h3>오픈웨이트</h3>
+          <ul><li>성능 격차 축소</li><li>자체 운영 가능</li><li>가격 경쟁</li></ul></div>
+      </div>
+    </div>
+    <div class="key">선택지 확대 — 기준은 업무 적합성</div>
+    <div class="foot"><span>출처: 각사 모델 문서 (2026-07 확인)</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 13 -->
+  <section class="slide" aria-label="13. MIS 계보의 다음 칸">
+    <div class="top"><span class="pill">MODEL</span><span class="pnum">13</span></div>
+    <div class="head"><h1>MIS 계보의 다음 칸</h1></div>
+    <div class="body">
+      <div class="steps">
+        <div class="step"><div class="circ">1</div><div class="st">TPS</div><div class="ss">운영</div></div>
+        <div class="arr">→</div>
+        <div class="step"><div class="circ">2</div><div class="st">MIS</div><div class="ss">관리 보고</div></div>
+        <div class="arr">→</div>
+        <div class="step"><div class="circ">3</div><div class="st">DSS</div><div class="ss">의사결정 지원</div></div>
+        <div class="arr">→</div>
+        <div class="step"><div class="circ">4</div><div class="st">BI</div><div class="ss">교과서(Laudon)</div></div>
+        <div class="arr">→</div>
+        <div class="step cur"><div class="circ">5</div><div class="st">DI · AI</div><div class="ss">연장(Gartner)</div></div>
+      </div>
+    </div>
+    <div class="key">MIS 전공자는 이 계보를 이미 배웠다</div>
+    <div class="foot"><span>출처: Laudon &amp; Laudon · Gartner</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 14 -->
+  <section class="slide" aria-label="14. 1단계 좋은 질문">
+    <div class="top"><span class="pill">PROMPT</span><span class="pnum">14</span></div>
+    <div class="head"><h1>1단계 — 좋은 질문</h1></div>
+    <div class="body">
+      <div class="bridge">
+        <div class="bigline"><em>2022</em>년 이후, 질문의 시대</div>
+        <div class="bsub"><span>한 번의 질문 품질이 결과를 가른다</span></div>
+      </div>
+    </div>
+    <div class="foot"><span>출처: 발표 구성</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 15 -->
+  <section class="slide" aria-label="15. Prompt는 작업 지시문">
+    <div class="top"><span class="pill">PROMPT</span><span class="pnum">15</span></div>
+    <div class="head"><h1>Prompt = 작업 지시문</h1></div>
+    <div class="body">
+      <div class="card" style="width:88%;margin:0 auto 22px;background:#fff">
+        <div class="lead" style="margin:0;color:#141414;font-size:16px">"[역할]로서 [맥락]을 참고해 [목표]를 [형식]으로, [제약] 안에서"</div>
+      </div>
+      <div class="chips">
+        <div class="chip">역할<span class="cs">누구로서</span></div>
+        <div class="chip">목표<span class="cs">무엇을</span></div>
+        <div class="chip">맥락<span class="cs">배경 자료</span></div>
+        <div class="chip">형식<span class="cs">출력 형태</span></div>
+        <div class="chip">제약<span class="cs">조건·범위</span></div>
+      </div>
+    </div>
+    <div class="key">길이가 아니라 구성 요소</div>
+    <div class="foot"><span>출처: OpenAI Prompt guide</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 16 -->
+  <section class="slide" aria-label="16. 나쁜 질문 vs 좋은 질문">
+    <div class="top"><span class="pill">PROMPT</span><span class="pnum">16</span></div>
+    <div class="head"><h1>나쁜 질문 vs 좋은 질문</h1></div>
+    <div class="body">
+      <div class="grid2">
+        <div class="card"><div class="ctag">나쁜 질문</div><h3>"AI 동향 정리해줘"</h3>
+          <ul><li>범위 없음</li><li>기준 없음</li></ul></div>
+        <div class="card hl"><div class="ctag">좋은 질문</div><h3>대상·기간·형식·출처 지정</h3>
+          <ul><li>대상 = AI 에이전트</li><li>기간 = 최근 3개월</li><li>형식 = 표 + 시사점 3</li><li>출처 = URL 포함</li></ul></div>
+      </div>
+    </div>
+    <div class="key">판단 기준이 보이는 요청</div>
+    <div class="foot"><span>출처: OpenAI Prompt guide</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 17 -->
+  <section class="slide" aria-label="17. 바로 답 vs 단계로">
+    <div class="top"><span class="pill">PROMPT</span><span class="pnum">17</span></div>
+    <div class="head"><h1>바로 답 vs 단계로</h1></div>
+    <div class="body">
+      <div class="grid2">
+        <div class="card"><div class="ctag">Zero-shot</div><h3>즉답 요청</h3>
+          <ul><li>한 번에 결론</li><li>중간 과정 생략</li></ul></div>
+        <div class="card hl"><div class="ctag">Step</div><h3>단계 명시</h3>
+          <ul><li>분해</li><li>계산</li><li>확인</li></ul></div>
+      </div>
+    </div>
+    <div class="key">복잡한 문제는 단계로 나눠 확인</div>
+    <div class="foot"><span>출처: Kojima 2022 · Wei 2022</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 18 -->
+  <section class="slide" aria-label="18. 질문만으론 안 되는 것">
+    <div class="top"><span class="pill">PROMPT</span><span class="pnum">18</span></div>
+    <div class="head"><h1>질문만으론 안 되는 것</h1></div>
+    <div class="body">
+      <div class="grid3">
+        <div class="card"><div class="ctag">한계 1</div><h3>최신 정보</h3><p class="lead" style="margin:0">학습 컷오프 이후 = 모름</p><ul><li>다음: 검색·맥락 주입</li></ul></div>
+        <div class="card"><div class="ctag">한계 2</div><h3>내 파일</h3><p class="lead" style="margin:0">모델은 내 문서를 못 봄</p><ul><li>다음: 문서 연결</li></ul></div>
+        <div class="card"><div class="ctag">한계 3</div><h3>실행과 검증</h3><p class="lead" style="margin:0">말은 하되 실행은 못 함</p><ul><li>다음: 도구·검증</li></ul></div>
+      </div>
+    </div>
+    <div class="key">좋은 질문의 다음은 보게 하기</div>
+    <div class="foot"><span>출처: Lewis 2020 · Schick 2023</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 19 -->
+  <section class="slide" aria-label="19. 2단계 좋은 맥락">
+    <div class="top"><span class="pill">CONTEXT</span><span class="pnum">19</span></div>
+    <div class="head"><h1>2단계 — 좋은 맥락</h1></div>
+    <div class="body">
+      <div class="bridge">
+        <div class="bigline">모델이 답하기 전에<br><em>무엇을 보게 할지</em> 설계</div>
+        <div class="bsub"><span>질문 다음의 레버 = 맥락 구성</span></div>
+      </div>
+    </div>
+    <div class="foot"><span>출처: 발표 구성</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 20 -->
+  <section class="slide" aria-label="20. 컨텍스트 윈도는 작업 기억">
+    <div class="top"><span class="pill">CONTEXT</span><span class="pnum">20</span></div>
+    <div class="head"><h1>컨텍스트 윈도 = 작업 기억</h1><p class="emph">답변 직전 참조하는 텍스트 양</p></div>
+    <div class="body">
+      <svg class="fig" viewBox="0 0 620 250" role="img" aria-label="컨텍스트 윈도 4블록">
+        <rect x="6" y="30" width="608" height="200" rx="16" fill="#fafaf9" stroke="#e7e7e5"/>
+        <text x="20" y="22" font-family="Pretendard" font-size="13" fill="#55606c">컨텍스트 윈도</text>
+        <g font-family="Pretendard">
+          <rect x="30" y="60" width="270" height="70" rx="12" fill="#fff" stroke="#e7e7e5"/><text x="48" y="92" font-size="16" font-weight="700" fill="#141414">SYSTEM</text><text x="48" y="114" font-size="12" fill="#55606c">역할·규칙 지시</text>
+          <rect x="320" y="60" width="270" height="70" rx="12" fill="#fff" stroke="#e7e7e5"/><text x="338" y="92" font-size="16" font-weight="700" fill="#141414">문서</text><text x="338" y="114" font-size="12" fill="#55606c">근거 자료</text>
+          <rect x="30" y="145" width="270" height="70" rx="12" fill="#fff" stroke="#e7e7e5"/><text x="48" y="177" font-size="16" font-weight="700" fill="#141414">질문</text><text x="48" y="199" font-size="12" fill="#55606c">현재 요청</text>
+          <rect x="320" y="145" width="270" height="70" rx="12" fill="#fff" stroke="#e7e7e5"/><text x="338" y="177" font-size="16" font-weight="700" fill="#141414">대화 기록</text><text x="338" y="199" font-size="12" fill="#55606c">앞선 맥락</text>
+        </g>
+      </svg>
+    </div>
+    <div class="key">용량보다 무엇을 넣고 뺄지</div>
+    <div class="foot"><span>출처: Anthropic Docs</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 21 -->
+  <section class="slide" aria-label="21. RAG 찾아서 답하기">
+    <div class="top"><span class="pill">CONTEXT</span><span class="pnum">21</span></div>
+    <div class="head"><h1>RAG — 찾아서 답하기</h1></div>
+    <div class="body">
+      <div class="steps">
+        <div class="step"><div class="circ">1</div><div class="st">질문</div></div>
+        <div class="arr">→</div>
+        <div class="step"><div class="circ">2</div><div class="st">검색</div></div>
+        <div class="arr">→</div>
+        <div class="step"><div class="circ">3</div><div class="st">근거 추가</div></div>
+        <div class="arr">→</div>
+        <div class="step cur"><div class="circ">4</div><div class="st">생성</div></div>
+      </div>
+      <div class="card" style="width:80%;margin:24px auto 0;background:#fafaf9;border-left:3px solid #e7e7e5">
+        <div class="lead" style="margin:0">사례 — 학회 회칙 질문 봇: 회칙·공지에서 조항 검색 → 근거와 함께 답</div>
+      </div>
+    </div>
+    <div class="key">기억에서 답하기에서 근거 찾아 답하기로</div>
+    <div class="foot"><span>출처: Lewis et al. NeurIPS 2020</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 22 -->
+  <section class="slide" aria-label="22. 많이 넣기는 잘 보이기가 아님">
+    <div class="top"><span class="pill">CONTEXT</span><span class="pnum">22</span></div>
+    <div class="head"><h1>많이 넣기 ≠ 잘 보이기</h1><p class="emph">중간 손실 — 긴 맥락의 가운데는 놓치기 쉬움</p></div>
+    <div class="body">
+      <svg class="fig" viewBox="0 0 620 210" role="img" aria-label="다수 블록에서 핵심 선별">
+        <g font-family="Pretendard">
+          <rect x="10" y="20" width="150" height="24" rx="6" fill="#e7e7e5"/>
+          <rect x="10" y="52" width="150" height="24" rx="6" fill="#e7e7e5"/>
+          <rect x="10" y="84" width="150" height="24" rx="6" fill="#e7e7e5"/>
+          <rect x="10" y="116" width="150" height="24" rx="6" fill="#e7e7e5"/>
+          <rect x="10" y="148" width="150" height="24" rx="6" fill="#e7e7e5"/>
+          <rect x="10" y="180" width="150" height="24" rx="6" fill="#e7e7e5"/>
+          <text x="10" y="14" font-size="12" fill="#55606c">다수 블록</text>
+          <path d="M180 112 L300 112" stroke="#b8b8b4" stroke-width="2"/><path d="M300 112 l-10 -6 v12 z" fill="#b8b8b4"/>
+          <text x="200" y="100" font-size="12" fill="#55606c">선별</text>
+          <rect x="330" y="86" width="200" height="52" rx="12" fill="#fff" stroke="#7a2030" stroke-width="1.5"/>
+          <text x="352" y="118" font-size="16" font-weight="700" fill="#141414">핵심 1</text>
+          <text x="330" y="72" font-size="12" fill="#55606c">주입할 근거</text>
+        </g>
+      </svg>
+    </div>
+    <div class="key">핵심은 선별 — 많이가 아니라 골라서</div>
+    <div class="foot"><span>출처: Liu et al. arXiv:2307.03172</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 23 -->
+  <section class="slide" aria-label="23. 보고 행동 확인">
+    <div class="top"><span class="pill">CONTEXT</span><span class="pnum">23</span></div>
+    <div class="head"><h1>보고 → 행동 → 확인</h1></div>
+    <div class="body">
+      <div class="steps">
+        <div class="step"><div class="circ">1</div><div class="st">SEE</div><div class="ss">맥락 확보</div></div>
+        <div class="arr">→</div>
+        <div class="step"><div class="circ">2</div><div class="st">ACT</div><div class="ss">도구 실행</div></div>
+        <div class="arr">→</div>
+        <div class="step cur"><div class="circ">3</div><div class="st">CHECK</div><div class="ss">결과 검증</div></div>
+      </div>
+    </div>
+    <div class="key">업무는 보기만으로 끝나지 않는다</div>
+    <div class="foot"><span>출처: Schick · Yao (ReAct)</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 24 -->
+  <section class="slide" aria-label="24. 3단계 좋은 환경">
+    <div class="top"><span class="pill">HARNESS</span><span class="pnum">24</span></div>
+    <div class="head"><h1>3단계 — 좋은 환경</h1></div>
+    <div class="body">
+      <div class="bridge">
+        <div class="bigline">뭐라고 물을까에서<br><em>어떤 환경</em>에서 일하게 할까로</div>
+        <div class="bsub"><span>질문의 대상이 바뀐다</span></div>
+      </div>
+    </div>
+    <div class="foot"><span>출처: Anthropic · OpenAI SDK</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 25 -->
+  <section class="slide" aria-label="25. Harness는 마구">
+    <div class="top"><span class="pill">HARNESS</span><span class="pnum">25</span></div>
+    <div class="head"><h1>Harness = 마구</h1></div>
+    <div class="body" style="flex-direction:row;gap:30px;align-items:center">
+      <ul style="flex:0 0 260px;margin:0;padding-left:18px;font-size:15px;line-height:1.75;color:var(--text)">
+        <li>능력 통제</li><li>도구 연결</li><li>방향 조절</li><li>안전 정지</li>
+      </ul>
+      <div style="flex:1">
+        <svg class="fig" viewBox="0 0 480 250" role="img" aria-label="하네스 제어 도식">
+          <circle cx="240" cy="125" r="52" fill="#fafaf9" stroke="#161616" stroke-width="1.5"/>
+          <text x="240" y="130" text-anchor="middle" font-family="Paperlogy" font-size="18" font-weight="800" fill="#141414">MODEL</text>
+          <g font-family="Pretendard" font-size="13" fill="#141414">
+            <line x1="188" y1="90" x2="90" y2="40" stroke="#e7e7e5" stroke-width="2"/><rect x="10" y="24" width="120" height="34" rx="8" fill="#fff" stroke="#e7e7e5"/><text x="24" y="46">능력 통제</text>
+            <line x1="292" y1="90" x2="390" y2="40" stroke="#e7e7e5" stroke-width="2"/><rect x="350" y="24" width="120" height="34" rx="8" fill="#fff" stroke="#e7e7e5"/><text x="366" y="46">도구 연결</text>
+            <line x1="188" y1="160" x2="90" y2="210" stroke="#e7e7e5" stroke-width="2"/><rect x="10" y="192" width="120" height="34" rx="8" fill="#fff" stroke="#e7e7e5"/><text x="24" y="214">방향 조절</text>
+            <line x1="292" y1="160" x2="390" y2="210" stroke="#7a2030" stroke-width="2"/><rect x="350" y="192" width="120" height="34" rx="8" fill="#fff" stroke="#7a2030" stroke-width="1.5"/><text x="366" y="214" fill="#7a2030" font-weight="700">안전 정지</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+    <div class="key">빠른 말을 일에 연결하는 장치</div>
+    <div class="foot"><span>출처: 사전 정의 (harness)</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 26 -->
+  <section class="slide" aria-label="26. Agent는 Model 더하기 Harness">
+    <div class="top"><span class="pill">HARNESS</span><span class="pnum">26</span></div>
+    <div class="head"><h1>Agent = Model + Harness</h1></div>
+    <div class="body">
+      <svg class="fig" viewBox="0 0 620 260" role="img" aria-label="에이전트 중심과 4위성">
+        <line x1="310" y1="130" x2="140" y2="52" stroke="#e7e7e5" stroke-width="2"/>
+        <line x1="310" y1="130" x2="480" y2="52" stroke="#e7e7e5" stroke-width="2"/>
+        <line x1="310" y1="130" x2="140" y2="208" stroke="#e7e7e5" stroke-width="2"/>
+        <line x1="310" y1="130" x2="480" y2="208" stroke="#e7e7e5" stroke-width="2"/>
+        <g font-family="Pretendard" font-size="14" fill="#141414">
+          <rect x="70" y="30" width="140" height="44" rx="10" fill="#fff" stroke="#e7e7e5"/><text x="140" y="57" text-anchor="middle">목표</text>
+          <rect x="410" y="30" width="140" height="44" rx="10" fill="#fff" stroke="#e7e7e5"/><text x="480" y="57" text-anchor="middle">맥락</text>
+          <rect x="70" y="186" width="140" height="44" rx="10" fill="#fff" stroke="#e7e7e5"/><text x="140" y="213" text-anchor="middle">도구</text>
+          <rect x="410" y="186" width="140" height="44" rx="10" fill="#fff" stroke="#e7e7e5"/><text x="480" y="213" text-anchor="middle">평가 · 가드레일</text>
+        </g>
+        <circle cx="310" cy="130" r="58" fill="#fafaf9" stroke="#7a2030" stroke-width="1.5"/>
+        <text x="310" y="135" text-anchor="middle" font-family="Paperlogy" font-size="20" font-weight="800" fill="#141414">AGENT</text>
+      </svg>
+    </div>
+    <div class="key">모델·도구·루프·권한의 결합 시스템</div>
+    <div class="foot"><span>출처: OpenAI Agents SDK</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 27 -->
+  <section class="slide" aria-label="27. Tools 세상과 접촉">
+    <div class="top"><span class="pill">HARNESS</span><span class="pnum">27</span></div>
+    <div class="head"><h1>Tools — 세상과 접촉</h1></div>
+    <div class="body">
+      <div class="chips">
+        <div class="chip">검색<span class="cs">최신 정보</span></div>
+        <div class="chip">파일 / 코드<span class="cs">읽기·쓰기·실행</span></div>
+        <div class="chip">브라우저<span class="cs">웹 조작</span></div>
+        <div class="chip">API<span class="cs">외부 시스템</span></div>
+      </div>
+    </div>
+    <div class="key">답을 행동으로 바꾸는 연결 포트</div>
+    <div class="foot"><span>출처: Anthropic Tool Use</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 28 -->
+  <section class="slide" aria-label="28. MCP는 AI의 USB-C">
+    <div class="top"><span class="pill">HARNESS</span><span class="pnum">28</span></div>
+    <div class="head"><h1>MCP — AI의 USB-C</h1><p class="emph">AI를 외부 시스템에 연결하는 오픈 표준</p></div>
+    <div class="body">
+      <div class="steps">
+        <div class="step"><div class="circ">1</div><div class="st">2024-11</div><div class="ss">공개</div></div>
+        <div class="arr">→</div>
+        <div class="step"><div class="circ">2</div><div class="st">2025</div><div class="ss">OpenAI · Google 채택</div></div>
+        <div class="arr">→</div>
+        <div class="step cur"><div class="circ">3</div><div class="st">2026</div><div class="ss">사실상 표준</div></div>
+      </div>
+    </div>
+    <div class="key">연결의 표준화 — 비개발자도 수혜자</div>
+    <div class="foot"><span>출처: modelcontextprotocol.io</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 29 -->
+  <section class="slide" aria-label="29. 실행 공간과 기억">
+    <div class="top"><span class="pill">HARNESS</span><span class="pnum">29</span></div>
+    <div class="head"><h1>실행 공간과 기억</h1></div>
+    <div class="body">
+      <div class="grid2">
+        <div class="card"><div class="ctag">Runtime</div><h3>실행 공간 4단</h3>
+          <ul><li>로컬</li><li>샌드박스</li><li>컨테이너</li><li>클라우드</li></ul></div>
+        <div class="card"><div class="ctag">State</div><h3>기억 5요소</h3>
+          <ul><li>목표</li><li>남은 일</li><li>중간 저장</li><li>실패 기록</li><li>완료 표시</li></ul></div>
+      </div>
+    </div>
+    <div class="foot"><span>출처: OpenAI SDK · LangGraph</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 30 -->
+  <section class="slide" aria-label="30. 완료 조건과 가드레일">
+    <div class="top"><span class="pill">HARNESS</span><span class="pnum">30</span></div>
+    <div class="head"><h1>완료 조건과 가드레일</h1></div>
+    <div class="body">
+      <div class="grid2">
+        <div class="card"><div class="ctag">DoD 체크</div><h3>완료 조건 4</h3>
+          <ul><li>테스트 통과</li><li>린트 통과</li><li>기준 충족</li><li>사람 리뷰</li></ul></div>
+        <div class="card hl"><div class="ctag">Guardrail</div><h3>가드레일 3</h3>
+          <ul><li>권한 제한</li><li>승인 단계</li><li>위험 명령 차단</li></ul></div>
+      </div>
+      <div class="fnote" style="margin-top:14px">실사례 — 이 스터디 하네스: 위험 명령 자동 차단 스크립트</div>
+    </div>
+    <div class="key">강한 에이전트일수록 멈춤의 경계</div>
+    <div class="foot"><span>출처: OWASP · NIST AI RMF</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 31 -->
+  <section class="slide" aria-label="31. 챗 vs 에이전트">
+    <div class="top"><span class="pill">위임</span><span class="pnum">31</span></div>
+    <div class="head"><h1>챗 vs 에이전트</h1></div>
+    <div class="body">
+      <div class="grid2">
+        <div class="card"><div class="ctag">Chat</div><h3>매 단계 사람이</h3>
+          <ul><li>질문</li><li>복사</li><li>실행</li></ul></div>
+        <div class="card hl"><div class="ctag">Agent</div><h3>목표 1회 입력</h3>
+          <ul><li>계획 → 도구 → 실행</li><li>검증 → 보고</li><li>완료 조건까지 반복</li></ul></div>
+      </div>
+    </div>
+    <div class="key">차이는 답의 길이가 아니라 실행 범위와 완료 조건</div>
+    <div class="foot"><span>출처: Karpathy, No Priors 2026-05</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 32 -->
+  <section class="slide" aria-label="32. 에이전트 루프">
+    <div class="top"><span class="pill">위임</span><span class="pnum">32</span></div>
+    <div class="head"><h1>에이전트 루프</h1></div>
+    <div class="body">
+      <div class="steps">
+        <div class="step cur"><div class="circ">1</div><div class="st">계획</div></div>
+        <div class="arr">→</div>
+        <div class="step"><div class="circ">2</div><div class="st">실행</div></div>
+        <div class="arr">→</div>
+        <div class="step"><div class="circ">3</div><div class="st">관찰</div></div>
+        <div class="arr">→</div>
+        <div class="step"><div class="circ">4</div><div class="st">평가</div></div>
+        <div class="arr">→</div>
+        <div class="step"><div class="circ">5</div><div class="st">수정</div></div>
+      </div>
+      <div class="fnote" style="margin-top:16px">수정 → 다시 계획으로 순환</div>
+    </div>
+    <div class="key">한 번의 좋은 답보다 반복 구조</div>
+    <div class="foot"><span>출처: Agent workflow 패턴</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 33 -->
+  <section class="slide" aria-label="33. 실사례 1 이 사이트">
+    <div class="top"><span class="pill">위임</span><span class="pnum">33</span></div>
+    <div class="head"><h1>실사례 ① 이 사이트</h1><p class="emph">화자 — 이 스터디 운영 하네스 실로그</p></div>
+    <div class="body">
+      <svg class="fig" viewBox="0 0 660 300" role="img" aria-label="위임 실행 터미널 로그">
+        <rect x="0" y="0" width="660" height="300" rx="12" fill="#161616"/>
+        <circle cx="24" cy="24" r="6" fill="#3a3a3a"/><circle cx="44" cy="24" r="6" fill="#3a3a3a"/><circle cx="64" cy="24" r="6" fill="#3a3a3a"/>
+        <g font-family="ui-monospace,Menlo,monospace" font-size="15">
+          <text x="24" y="72" fill="#8a8a86">$ agent run</text><text x="128" y="72" fill="#ffffff">"메인 섹션 개편"</text>
+          <text x="24" y="108" fill="#8a8a86">→ scan</text><text x="120" y="108" fill="#ffffff">src/ · 대상 파일 탐색</text>
+          <text x="24" y="144" fill="#8a8a86">→ edit</text><text x="120" y="144" fill="#ffffff">App.jsx · styles 수정</text>
+          <text x="24" y="180" fill="#8a8a86">→ test</text><text x="120" y="180" fill="#d18f9a">✓ 111 passed</text>
+          <text x="24" y="216" fill="#8a8a86">→ report</text><text x="132" y="216" fill="#ffffff">변경 요약 출력</text>
+          <text x="24" y="252" fill="#8a8a86">→ deploy</text><text x="132" y="252" fill="#ffffff">배포 완료</text>
+        </g>
+      </svg>
+    </div>
+    <div class="key">위임 1회 = 탐색 → 수정 → 검증 → 보고 완결</div>
+    <div class="foot"><span>출처: 스터디 운영 기록</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 34 -->
+  <section class="slide" aria-label="34. 실사례 2 기고 파이프라인">
+    <div class="top"><span class="pill">위임</span><span class="pnum">34</span></div>
+    <div class="head"><h1>실사례 ② 기고 파이프라인</h1><p class="emph">인사이트 코너 운영 구조</p></div>
+    <div class="body">
+      <div class="steps">
+        <div class="step"><div class="circ">1</div><div class="st">자료 수집</div></div>
+        <div class="arr">→</div>
+        <div class="step"><div class="circ">2</div><div class="st">정리 · 누적</div></div>
+        <div class="arr">→</div>
+        <div class="step"><div class="circ">3</div><div class="st">출처 검증</div></div>
+        <div class="arr">→</div>
+        <div class="step cur"><div class="circ">4</div><div class="st">기고 초안</div></div>
+      </div>
+    </div>
+    <div class="key">반복 업무는 프롬프트 1개가 아니라 연결된 구조</div>
+    <div class="foot"><span>출처: 스터디 운영 기록</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 35 -->
+  <section class="slide" aria-label="35. 남길수록 쌓인다">
+    <div class="top"><span class="pill">위임</span><span class="pnum">35</span></div>
+    <div class="head"><h1>남길수록 쌓인다</h1><p class="emph">작업 산출이 시스템 자산으로 누적</p></div>
+    <div class="body">
+      <svg class="fig" viewBox="0 0 620 220" role="img" aria-label="누적 계단 막대">
+        <line x1="30" y1="190" x2="600" y2="190" stroke="#e7e7e5" stroke-width="1"/>
+        <g font-family="Pretendard" font-size="13" fill="#141414" text-anchor="middle">
+          <rect x="50" y="150" width="90" height="40" rx="6" fill="#e7e7e5"/><text x="95" y="210">경험</text>
+          <rect x="160" y="120" width="90" height="70" rx="6" fill="#e7e7e5"/><text x="205" y="210">스킬</text>
+          <rect x="270" y="90" width="90" height="100" rx="6" fill="#e7e7e5"/><text x="315" y="210">규칙</text>
+          <rect x="380" y="60" width="90" height="130" rx="6" fill="#e7e7e5"/><text x="425" y="210">테스트</text>
+          <rect x="490" y="30" width="90" height="160" rx="6" fill="#7a2030"/><text x="535" y="210">재사용</text>
+        </g>
+      </svg>
+    </div>
+    <div class="key">작업할수록 시스템 자산이 누적</div>
+    <div class="foot"><span>출처: Anthropic, Building effective agents</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 36 -->
+  <section class="slide" aria-label="36. 되는 것 2년의 변화">
+    <div class="top"><span class="pill">DATA</span><span class="pnum">36</span></div>
+    <div class="head"><h1>되는 것 — 2년의 변화</h1></div>
+    <div class="body">
+      <div class="stats">
+        <div class="stat"><div class="snum u">80%대</div><div class="stxt"><div class="slab">OSWorld — 컴퓨터 사용</div><div class="ssub">2024 최고 12% → 인간선 72% 돌파 · self-report</div></div></div>
+        <div class="stat"><div class="snum">~79%</div><div class="stxt"><div class="slab">SWE-bench Verified — 코딩</div><div class="ssub">공식 리더보드 최고 (2026-07-25 확인)</div></div></div>
+        <div class="stat"><div class="snum">~4.3mo</div><div class="stxt"><div class="slab">자율 작업 길이 배가 주기</div><div class="ssub">METR · 장시간 구간 측정 신뢰 낮음</div></div></div>
+      </div>
+    </div>
+    <div class="foot"><span>출처: osworld · swebench · METR (2026-07-25 확인)</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 37 -->
+  <section class="slide" aria-label="37. 안 되는 것 실패 모드">
+    <div class="top"><span class="pill">DATA</span><span class="pnum">37</span></div>
+    <div class="head"><h1>안 되는 것 — 실패 모드</h1></div>
+    <div class="body">
+      <div class="grid3">
+        <div class="card"><div class="ctag">실패 1</div><h3>일관성 상실</h3><ul><li>긴 작업서 목표 이탈</li><li>성급한 마무리</li></ul></div>
+        <div class="card hl"><div class="ctag">실패 2</div><h3>신뢰도 급락</h3><ul><li>다중 턴 전환 시</li><li>평균 39% 하락</li></ul></div>
+        <div class="card"><div class="ctag">실패 3</div><h3>자기평가 과대</h3><ul><li>스스로를 과신</li><li>독립 검증 필요</li></ul></div>
+      </div>
+    </div>
+    <div class="key">그래서 위임에는 완료 조건과 독립 검증</div>
+    <div class="foot"><span>출처: Anthropic 2026 · arXiv:2505.06120</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 38 -->
+  <section class="slide" aria-label="38. 두 시선">
+    <div class="top"><span class="pill">DATA</span><span class="pnum">38</span></div>
+    <div class="head"><h1>두 시선</h1></div>
+    <div class="body">
+      <div class="grid2">
+        <div class="card"><div class="ctag">동행</div><h3>"AI는 내 친구"</h3>
+          <p class="lead" style="margin:0">"어떻게 활용할지 고민" — 신진서</p></div>
+        <div class="card"><div class="ctag">격차</div><h3>"상위 랭커일수록"</h3>
+          <p class="lead" style="margin:0">"더 이해하고 활용" — 이세돌</p></div>
+      </div>
+    </div>
+    <div class="key">같은 AI, 활용 역량이 격차를 만든다</div>
+    <div class="foot"><span>출처: News1 2024 · EBS 다큐 발언</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 39 -->
+  <section class="slide" aria-label="39. 권한은 조심스럽게">
+    <div class="top"><span class="pill">DATA</span><span class="pnum">39</span></div>
+    <div class="head"><h1>권한은 조심스럽게</h1></div>
+    <div class="body">
+      <div class="steps">
+        <div class="step"><div class="circ">1</div><div class="st">요청</div></div>
+        <div class="arr">→</div>
+        <div class="step"><div class="circ">2</div><div class="st">사람 승인</div></div>
+        <div class="arr">→</div>
+        <div class="step"><div class="circ">3</div><div class="st">최소 권한 실행</div></div>
+        <div class="arr">→</div>
+        <div class="step cur"><div class="circ">4</div><div class="st">롤백</div></div>
+      </div>
+    </div>
+    <div class="key">운영 권한 ≠ 기본값</div>
+    <div class="foot"><span>출처: NIST AI RMF · OWASP</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 40 -->
+  <section class="slide" aria-label="40. 결국 사람">
+    <div class="top"><span class="pill">CLOSING</span><span class="pnum">40</span></div>
+    <div class="head"><h1>결국 사람</h1></div>
+    <div class="body">
+      <div class="grid3">
+        <div class="card"><div class="ctag">Define</div><h3>문제 정의</h3><p class="lead" style="margin:0">원하는 결과를 언어로</p></div>
+        <div class="card"><div class="ctag">Context</div><h3>맥락 제공</h3><p class="lead" style="margin:0">배경·제약·예시 선별</p></div>
+        <div class="card hl"><div class="ctag">Verify</div><h3>검증</h3><p class="lead" style="margin:0">읽고 짚고 다시 지시</p></div>
+      </div>
+    </div>
+    <div class="key">기술 공부 + 사람 경험 + 문제 해결</div>
+    <div class="foot"><span>출처: 발표 구성</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 41 -->
+  <section class="slide" aria-label="41. 언어의 한계">
+    <div class="top"><span class="pill">CLOSING</span><span class="pnum">41</span></div>
+    <div class="head"><h1>언어의 한계</h1></div>
+    <div class="body">
+      <div class="quote">
+        <div class="qbox">
+          <div class="qorig">"Die Grenzen meiner Sprache bedeuten die Grenzen meiner Welt."</div>
+          <div class="qtr">내 언어의 한계가 내 세계의 한계 — Wittgenstein</div>
+        </div>
+        <div class="qnote">
+          <span>질문이 모호하면 답도 흐림</span>
+          <span>기준을 언어로 구성하는 능력</span>
+        </div>
+      </div>
+    </div>
+    <div class="key">AI에게 건네는 언어가 결과의 한계</div>
+    <div class="foot"><span>출처: Wittgenstein 1922</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 42 -->
+  <section class="slide" aria-label="42. 다음 직접 맡겨보기">
+    <div class="top"><span class="pill">CLOSING</span><span class="pnum">42</span></div>
+    <div class="head"><h1>다음 — 직접 맡겨보기</h1><p class="emph">2회차 예고 · 실습</p></div>
+    <div class="body">
+      <div class="grid2">
+        <div class="card hl"><div class="ctag">실습</div><h3>과업 1개 위임</h3>
+          <ul><li>각자 실제 과업 선정</li><li>에이전트에 위임</li><li>한계 직접 확인</li></ul></div>
+        <div class="card"><div class="ctag">준비물</div><h3>3종</h3>
+          <ul><li>준비물 3종 — 2회차 공지</li></ul></div>
+      </div>
+    </div>
+    <div class="key">아는 단계에서 굴려보는 단계로</div>
+    <div class="foot"><span>출처: 세미나 2회차 계획</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 43 -->
+  <section class="slide" aria-label="43. 무료로 시작하기">
+    <div class="top"><span class="pill">APPENDIX</span><span class="pnum">43</span></div>
+    <div class="head"><h1>무료로 시작하기</h1><p class="emph">확인 시점 2026-07-25</p></div>
+    <div class="body">
+      <table class="tbl">
+        <thead><tr><th style="width:150px">도구</th><th>무료로 되는 것</th><th style="width:230px">제한</th></tr></thead>
+        <tbody>
+          <tr><td><span class="tm">ChatGPT</span></td><td>채팅 · 웹 검색 · 이미지 · 파일 업로드</td><td>상위 모델 시간당 제한</td></tr>
+          <tr><td><span class="tm">Claude</span></td><td>채팅 · 웹 검색 · 파일 · 코드 · MCP</td><td>유료 대비 사용량 축소</td></tr>
+          <tr><td><span class="tm">Gemini</span></td><td>Flash + Pro 제한 · 이미지 · Deep Research</td><td>유료 대비 한도 낮음</td></tr>
+          <tr><td><span class="tm">NotebookLM</span></td><td>소스 기반 질의 · Audio Overview</td><td>노트북당 소스 50 · 상한은 유료</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="foot"><span>출처: 각사 공식 pricing (2026-07-25 확인)</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 44 -->
+  <section class="slide" aria-label="44. 직무별 활용 예">
+    <div class="top"><span class="pill">APPENDIX</span><span class="pnum">44</span></div>
+    <div class="head"><h1>직무별 활용 예</h1></div>
+    <div class="body">
+      <table class="tbl">
+        <thead><tr><th style="width:230px">업무</th><th>대표 사례</th></tr></thead>
+        <tbody>
+          <tr><td><span class="tm">메일 정리</span></td><td>받은 편지 요약 · 회신 초안</td></tr>
+          <tr><td><span class="tm">회의 브리핑</span></td><td>기록 요약 · 결정·할 일 추출</td></tr>
+          <tr><td><span class="tm">표 데이터 질의</span></td><td>스프레드시트 자연어 질문</td></tr>
+          <tr><td><span class="tm">슬라이드 생성</span></td><td>개요에서 초안 구성</td></tr>
+          <tr><td><span class="tm">리서치 메모</span></td><td>조사 → 의사결정 메모</td></tr>
+          <tr><td><span class="tm">재무모델 갱신</span></td><td>수치 반영 · 초안 검토</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="foot"><span>출처: OpenAI · Anthropic 공식 사례</span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  <!-- 45 -->
+  <section class="slide tslide" aria-label="45. 마침">
+    <div class="top" style="position:absolute;top:44px;left:60px;right:60px"><span class="pill">CLOSING</span><span class="pnum">45</span></div>
+    <div class="big">마침</div>
+    <div class="accbar"></div>
+    <div class="sub">질문과 대화로 이어가기</div>
+    <div class="tlinks">
+      <div><b>허브</b> · <u>kwu-erpclub.github.io</u></div>
+      <div><b>GitHub</b> · github.com/KWU-ERPCLUB</div>
+      <div><b>문의</b> · 사이트 ABOUT</div>
+    </div>
+    <div class="foot" style="position:absolute;bottom:32px;left:60px;right:60px"><span></span><span class="r">KWU ERP연구회 · 세미나 1회차</span></div>
+  </section>
+
+  </div>
+</div>
+<div id="counter">1 / 45</div>
+
+<script>
+(function(){
+  var stage=document.getElementById('stage');
+  var slides=Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var counter=document.getElementById('counter');
+  var i=0, N=slides.length;
+
+  function fit(){
+    var s=Math.min(window.innerWidth/1280, window.innerHeight/720);
+    stage.style.transform='scale('+s+')';
+  }
+  function show(n){
+    i=Math.max(0,Math.min(N-1,n));
+    for(var k=0;k<N;k++){ slides[k].classList.toggle('active',k===i); }
+    counter.textContent=(i+1)+' / '+N;
+    if(('#'+(i+1))!==location.hash){ history.replaceState(null,'','#'+(i+1)); }
+  }
+  function fromHash(){
+    var m=(location.hash||'').replace('#','');
+    var n=parseInt(m,10);
+    if(!isNaN(n)&&n>=1&&n<=N){ show(n-1); } else { show(0); }
+  }
+
+  window.addEventListener('resize',fit);
+  window.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){ e.preventDefault(); show(i+1); }
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){ e.preventDefault(); show(i-1); }
+    else if(e.key==='Home'){ show(0); }
+    else if(e.key==='End'){ show(N-1); }
+  });
+  document.getElementById('deck').addEventListener('click',function(e){
+    if(e.clientX < window.innerWidth*0.32){ show(i-1); } else { show(i+1); }
+  });
+  window.addEventListener('hashchange',fromHash);
+
+  fit(); fromHash();
+})();
+</script>
+</body>
+</html>
