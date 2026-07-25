@@ -3,23 +3,33 @@ import { renderToString } from 'react-dom/server'
 import Articles from './Articles.jsx'
 import { ArticleRow } from './insights-parts.jsx'
 
-// 창 없는 기본 진입 = 전체 탭 = 허브 뷰.
-test('허브 뷰(전체 탭) — 좌측 성격 탭 5개 + 성격 4섹션 헤더·정의 + 예시 기고 + 기고 가이드', () => {
+// 구조 개혁(2026-07-24 2차): 좌측 탭·허브 4섹션·월별 그룹 폐지 → AI in Use 구조(상단 컨트롤 바 + 2열 색면 카드 그리드).
+test('목록 = 상단 컨트롤 바(성격 칩+주제 칩+토글+검색) + 카운트 라인 + 2열 카드 그리드', () => {
   const html = renderToString(<Articles />)
-  // 좌측 탭(전체 + 성격 4)
+  // 상단 컨트롤 바 — 성격 칩(전체+4)
   for (const t of ['전체', '뉴스·동향', '심층 분석', '활용법·튜토리얼', '도구·프롬프트']) {
     expect(html).toContain(t)
   }
-  expect(html).toContain('art-tabs')
-  // 섹션 정의(허브 헤더 서브 = CONTRIBUTING 정의)
-  expect(html).toContain('새 소식·출시·시장 변화의 사실 전달')
-  expect(html).toContain('한 주제를 파고든 해석·시사점')
-  // 예시 기고(심층 분석 섹션에 노출)
-  expect(html).toContain('2026 AI 트렌드')
-  // 기고 가이드 링크(허브 하단)
-  expect(html).toContain('CONTRIBUTING.md')
-  // 허브 = 월별 그룹 아님(성격 탭에서만)
-  expect(html).not.toContain('art-month-head')
+  expect(html).toContain('ins-controls')
+  // 주제 칩(전체 + 5종)
+  for (const v of ['에이전트', '모델·플랫폼', '워크플로·자동화', '거버넌스·리스크', '시장·생태계']) {
+    expect(html).toContain(v)
+  }
+  // 지금 써먹기 토글 + 검색 인풋
+  expect(html).toContain('지금 써먹기')
+  expect(html).toContain('placeholder="제목·요약 검색"')
+  // N건 표시 중 / 전체 M건 카운트 라인
+  expect(html).toContain('ins-count')
+  expect(html).toContain('표시 중')
+  expect(html).toContain('전체')
+  // 2열 색면 카드 그리드
+  expect(html).toContain('art-grid')
+  expect(html).toContain('art-card-title')
+  expect(html).toContain('2026 AI 트렌드') // 예시 기고
+  // 폐지된 구조 마크업 부재
+  expect(html).not.toContain('art-tabs')      // 좌측 탭 폐지
+  expect(html).not.toContain('art-month-head') // 월별 그룹 폐지
+  expect(html).not.toContain('hub-sec')        // 허브 4섹션 폐지
 })
 
 // 색 면 카드(AI in Use 이식) — 배경=성격 색 클래스, fallback 아이콘 타일 폐지(합성 데이터 = 콘텐츠 무관).
@@ -34,8 +44,14 @@ test('색 면 카드 — 성격별 배경 클래스 + 주제·성격·지금써�
   expect(html).toContain('art-tag-nature')      // 성격 진한 필
   expect(html).toContain('art-tag-now')         // 지금 써먹기 배지
   expect(html).toContain('자세히')              // View details 링크
-  expect(html).not.toContain('art-tile')        // fallback 아이콘 타일 폐지
   expect(html).not.toContain('art-thumb')       // 이미지 없음 → 썸네일 미표시
+})
+
+// 고정 핀 — 고정(true) 카드는 핀 배지 노출(pinned prop).
+test('고정 카드 = 핀 배지(art-pin) 노출', () => {
+  const a = { slug: 'p', title: '고정 글', author: 'A', date: '2026-07-01', body: 'b', 성격: '뉴스·동향' }
+  const html = renderToString(<ArticleRow a={a} onOpen={() => {}} pinned />)
+  expect(html).toContain('art-pin')
 })
 
 // 4성격 색 클래스 매핑 무결 + 이미지 있을 때만 썸네일.
@@ -52,28 +68,25 @@ test('색 면 카드 — 4성격 색 클래스 매핑 + 이미지 시 썸네일 
   expect(withImg).toContain('/img/logos/openai.svg')
 })
 
-// 성격 탭 딥링크(?tab=analysis) = 그 성격만 월별 그룹 목록 + 필터·검색 유지.
-test('성격 탭 뷰 — 월별 그룹 + 주제 필터 5종 + 지금 써먹기 토글 + 검색박스(카드 서식)', () => {
+// 성격 칩 딥링크(?tab=analysis) = 해당 성격만 그리드 + 컨트롤 바·검색 유지(URL 상태 복원).
+test('성격 칩 딥링크 — ?tab=analysis 복원 + 해당 성격 카드만', () => {
   const prev = globalThis.window
   globalThis.window = { location: { search: '?tab=analysis', pathname: '/insights/' } }
   try {
     const html = renderToString(<Articles />)
-    expect(html).toContain('2026. 07')       // 월 헤더 유지
-    expect(html).toContain('art-month-head')
+    expect(html).toContain('art-grid')
     expect(html).toContain('art-card-title')
-    expect(html).toContain('2026 AI 트렌드')  // 심층 분석 기고
-    expect(html).toContain('placeholder="제목·요약 검색"') // 검색박스 유지
-    expect(html).toContain('지금 써먹기')      // 토글 유지
-    for (const v of ['에이전트', '모델·플랫폼', '워크플로·자동화', '거버넌스·리스크', '시장·생태계']) {
-      expect(html).toContain(v) // 주제 필터 유지
-    }
+    expect(html).toContain('2026 AI 트렌드')                 // 심층 분석 기고
+    expect(html).toContain('placeholder="제목·요약 검색"')   // 검색박스 유지
+    expect(html).toContain('지금 써먹기')                    // 토글 유지
+    expect(html).not.toContain('art-month-head')             // 월별 그룹 폐지
   } finally {
     if (prev === undefined) delete globalThis.window
     else globalThis.window = prev
   }
 })
 
-// 상세 진입(?p=<slug>) = 통일 셸. URL 반영(뒤로가기용)은 stateFromSearch 경유.
+// 상세 진입(?p=<slug>) = 통일 셸(변경 없음). URL 반영은 stateFromSearch 경유.
 test('상세 = 통일 셸(문서 헤더·출처 카드 승격·목록 복귀)', () => {
   const prev = globalThis.window
   globalThis.window = { location: { search: '?p=2026-07-22-bapzzi-ai-trend-research', pathname: '/insights/' } }

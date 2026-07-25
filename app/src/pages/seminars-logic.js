@@ -28,3 +28,19 @@ export function todayString(d = new Date()) {
   const day = String(d.getDate()).padStart(2, '0')
   return `${y}-${m}-${day}`
 }
+
+// today → date 사이 남은 일수(정수). 같은 날 = 0, 미래 = 양수, 과거 = 음수. UTC 자정 기준(타임존 비의존).
+// 순수 함수 — today 문자열 주입식으로 테스트(시계 비의존). 파싱 실패 = null.
+export function daysUntil(dateStr, todayStr) {
+  const target = new Date(`${dateStr}T00:00:00Z`).getTime()
+  const base = new Date(`${todayStr}T00:00:00Z`).getTime()
+  if (Number.isNaN(target) || Number.isNaN(base)) return null
+  return Math.round((target - base) / 86400000)
+}
+
+// 남은 일수 → D-day 라벨. 당일 = 'D-DAY', 미래 = 'D-7', 과거 = 'D+3'. null/undefined = 빈 문자열.
+export function ddayLabel(days) {
+  if (days === null || days === undefined) return ''
+  if (days === 0) return 'D-DAY'
+  return days > 0 ? `D-${days}` : `D+${-days}`
+}

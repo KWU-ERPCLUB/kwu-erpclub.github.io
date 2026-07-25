@@ -1,85 +1,19 @@
-/* 메인(/) 전용 — SPEC 메인 개편 v2: 방향 밴드·캐러셀·FAQ·스크롤 리빌.
-   규격=디자인규칙 v2(로직: transform·opacity만, reduced-motion 존중). */
+/* 메인(/) v5 — 구조 개혁(2026-07-24 2차): .lattice/.cell 격자 폐지 → 풀블리드 스크린 섹션.
+   골격·히어로·모션 = 이 파일 / 섹션 본문(WHY·ROADMAP·PROJECTS·FAQ) = home-sections.css(300줄 규격 분할).
+   규격=디자인규칙 v2: 색·폰트 토큰 고정 · 버건디 화이트리스트/빈도 상한 · transform·opacity만 · reduced-motion 존중. */
 
-/* ── 로드맵/NEXT 행 ── */
-.dir-row {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0.8rem;
-  align-items: center;
-  min-height: 40px;
-  padding: 0.45rem 0;
-  border-bottom: 1px solid var(--line);
+/* ── 풀블리드 섹션 골격 ── */
+.home { width: 100%; }
+.hs { border-bottom: 1px solid var(--line); }
+.hs-in {
+  max-width: var(--maxw);
+  width: 100%;
+  margin: 0 auto;
+  padding: clamp(3.5rem, 8vh, 6rem) 1.5rem;
 }
-.dir-row:last-of-type { border-bottom: none; }
-.dir-row .status { margin-bottom: 0; }
-.dir-row p { margin: 0; font-size: 0.88rem; }
-.dir-more { margin-top: 0.9rem; }
+@media (max-width: 700px) { .hs-in { padding: 3rem 1.25rem; } }
 
-/* ── 결과물 캐러셀 — CSS scroll-snap, 자동재생 없음 ── */
-.carousel {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: min(340px, 82%);
-  gap: 1.1rem;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  padding: 0.25rem 0.25rem 0.75rem;
-  scrollbar-width: thin;
-  text-align: left;
-}
-.car-card {
-  scroll-snap-align: start;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-card);
-  padding: 1.9rem;
-  display: flex;
-  flex-direction: column;
-}
-.car-card h3 { margin: 0 0 0.4rem; font-size: 1.05rem; }
-.car-card p { margin: 0 0 1.25rem; font-size: 0.87rem; color: var(--text-sub); }
-.car-card .card-links { margin-top: auto; }
-.car-nav { display: flex; gap: 0.6rem; justify-content: center; margin-top: 1.1rem; }
-.car-btn {
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  justify-content: center;
-  border-radius: 50%;
-}
-
-/* ── FAQ 아코디언 — 네이티브 details/summary ── */
-.faq { max-width: 720px; margin: 0 auto; text-align: left; }
-.faq-item { border-bottom: 1px solid var(--line); }
-.faq-item summary {
-  list-style: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.95rem 0.25rem;
-  font-weight: 700;
-  font-size: 0.95rem;
-  transition: color 150ms ease-out;
-}
-.faq-item summary::-webkit-details-marker { display: none; }
-.faq-item summary::after {
-  content: '+';
-  font-family: var(--font-display);
-  font-weight: 800;
-  color: var(--accent); /* 화이트리스트: 아코디언 마커(마이크로) */
-  flex: none;
-}
-.faq-item[open] summary::after { content: '\2212'; }
-.faq-item summary:hover { color: var(--accent); }
-.faq-item summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-.faq-item p { margin: 0 0 1.1rem; padding: 0 0.25rem; font-size: 0.88rem; color: var(--text-sub); }
-
-/* ══ 메인 v3 (2026-07-11) — 섹션=페이지 강조 로직(넥스터즈 참조) ══ */
-
-/* 각 섹션이 "구분된 페이지"로 인식되게: 뷰포트 중앙에 오면 활성, 나머지는 감쇠 */
+/* ── 섹션=페이지 감쇠·리빌(넥스터즈 문법 승계·강화) — 중앙 밴드 섹션만 활성 ── */
 .page {
   min-height: 86vh;
   display: flex;
@@ -90,22 +24,19 @@
   transition: opacity 350ms ease-out;
 }
 .page.active { opacity: 1; }
-/* 활성 섹션 안에서만 내용이 순차 등장 — 이동량·시간 강화(prography식 풀 모션) */
 .page .rv {
   opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 520ms ease-out, transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(30px);
+  transition: opacity 560ms ease-out, transform 620ms cubic-bezier(0.16, 1, 0.3, 1);
 }
-/* seen: 한 번 활성화된 섹션은 내용을 유지 — 지나간 섹션이 '빈 페이지'로 보이는 결함 방지(실측 발견) */
 .page.active .rv, .page.seen .rv { opacity: 1; transform: none; }
-/* 키보드 포커스가 비활성(감쇠) 섹션에 들어가면 즉시 활성 취급 — 포커스 링 은닉 방지(WCAG 2.4.7) */
 .page:focus-within { opacity: 1; }
 .page:focus-within .rv { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
   .page, .page .rv { transition: none; opacity: 1; transform: none; }
 }
 
-/* 섹션 머리: 인덱스(01 — WHY, 영문 라벨) + 헤드라인 */
+/* ── 섹션 머리 ── */
 .page-idx {
   font-family: var(--font-display);
   font-weight: 800;
@@ -115,106 +46,103 @@
   display: block;
   margin-bottom: 1.1rem;
 }
-
-/* ── WHY 하단 데이터 스트립 — 검증 스탯 3타일(기존 stat 문법 재사용) ── */
-.data-strip { margin-top: 3rem; }
-.data-note { font-size: 0.82rem; color: var(--text-sub); margin: 1.25rem 0 0; }
-
-/* ── ROADMAP 분기 그래프 — 트렁크(연구회 계보) → 분기(AI 스터디) ── */
-.branch { max-width: 620px; margin: 0 auto; text-align: left; }
-.b-node { position: relative; padding: 0 0 1.7rem 2.3rem; }
-.b-node::before {
-  content: '';
-  position: absolute;
-  left: 8px;
-  top: 16px;
-  bottom: -2px;
-  width: 2px;
-  background: var(--line);
+.hs-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.9rem, 4.5vw, 3rem);
+  line-height: 1.16;
+  letter-spacing: -0.02em;
+  margin: 0.2rem 0 0;
 }
-.b-node:last-child::before { display: none; }
-.b-node::after {
-  content: '';
-  position: absolute;
-  left: 2px;
-  top: 5px;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #fff;
-  border: 2px solid var(--text-sub);
-}
-.b-era { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; color: var(--text-sub); display: block; margin-bottom: 0.25rem; }
-.b-node h3 { margin: 0 0 0.25rem; font-size: 1rem; }
-.b-node p { margin: 0; font-size: 0.86rem; color: var(--text-sub); }
-/* 분기점: 자식 갈래 묶음 */
-.b-fork { margin: 0 0 0 2.3rem; padding: 0.2rem 0 0 1.7rem; border-left: 2px solid var(--line); }
-.b-fork .b-node { padding-left: 1.9rem; }
-.b-fork .b-node::before { left: 6px; }
-.b-fork .b-node::after { left: 0; }
-/* 신설 갈래 = 강조 노드(화이트리스트 ⑦ 타임라인 점) */
-.b-node.now::after { border-color: var(--accent); background: var(--accent); }
-.b-node.now h3 em { font-style: normal; color: var(--accent); }
-.b-node .status { margin: 0.4rem 0 0; }
+.hs-title em { font-style: normal; color: var(--accent); } /* 화이트리스트 ① */
 
-/* ══ v4 (2026-07-24) 풀 모션 — 히어로 XL·문자 스태거·마퀴·슬롯·호버 리프트 ══ */
-
-/* ── 히어로 XL — 타이포 스케일 상향(뷰포트 압도), 색·폰트=현행 토큰 ── */
-.hero-xl { padding-top: 6.5rem; padding-bottom: 5rem; }
-.hero-xl .hero-title {
-  font-size: clamp(2.8rem, 9vw, 5.2rem);
-  line-height: 1.05;
-  max-width: 16ch;
+/* ══ 히어로 100vh — 뷰포트 타이포(좌정렬·2~3줄 스택), 하단 풀폭 마퀴 띠 ══ */
+.hs-hero {
+  min-height: 100vh;
+  padding: 0;
+  justify-content: flex-start;
 }
-.hero-xl .hero-sub {
-  font-size: clamp(1rem, 1.8vw, 1.2rem);
-  max-width: 40ch;
+.hs-hero-in { margin-top: auto; padding-bottom: clamp(1.5rem, 4vh, 3rem); }
+.hero-kicker {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-sub);
+  display: block;
+  margin-bottom: clamp(1.25rem, 3vh, 2rem);
+}
+.hero-mega {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(2.5rem, 8.5vw, 7rem);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  margin: 0;
+  max-width: 15ch;
+}
+.hero-l { display: block; }
+.hero-sub {
+  margin: clamp(1.5rem, 3vh, 2.25rem) 0 0;
+  font-size: clamp(1rem, 1.7vw, 1.2rem);
+  color: var(--text-sub);
+  max-width: 44ch;
 }
 
-/* ── 문자 단위 스태거 리빌 — 글자별 순차 등장(transform·opacity만) ── */
-.sc {
-  display: inline-block;
-  opacity: 0;
-  transform: translateY(0.55em);
-  transition: opacity 460ms ease-out, transform 560ms cubic-bezier(0.16, 1, 0.3, 1);
-  transition-delay: inherit;
-  white-space: pre; /* 공백 문자 보존(단어 경계) */
+/* 히어로 하단 = 풀폭 마퀴 + 스크롤 유도(전자 = hs-in 밖 = 뷰포트 폭) */
+.hero-foot { margin-top: auto; padding-bottom: clamp(1.25rem, 3vh, 2rem); }
+.scroll-cue {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: var(--maxw);
+  margin: 0 auto clamp(1.5rem, 4vh, 2.5rem);
+  padding: 0 1.5rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--text-sub);
 }
-.page.active .sc, .page.seen .sc, .page:focus-within .sc { opacity: 1; transform: none; }
-.sc-accent { color: var(--accent); } /* 화이트리스트 ① 헤드라인 강조 */
+.scroll-cue svg { animation: cue-bounce 1.8s ease-in-out infinite; }
+@keyframes cue-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(4px); }
+}
 
-/* ── 키워드 마퀴 띠 — 흐르는 텍스트(CSS 애니메이션·reduced-motion 시 정지) ── */
+/* ── 키워드 마퀴 띠(흐르는 텍스트·reduced-motion 시 정지) ── */
 .marquee {
-  margin-top: 2.75rem;
   overflow: hidden;
   width: 100%;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 1.1rem 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
 }
 .marquee-track {
   display: inline-flex;
   align-items: center;
   white-space: nowrap;
-  animation: marquee-scroll 30s linear infinite;
+  animation: marquee-scroll 32s linear infinite;
   will-change: transform;
 }
 .marquee-item {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: 0.92rem;
-  letter-spacing: 0.02em;
-  color: var(--text-sub);
-  padding: 0 1.1rem;
+  font-size: clamp(1.1rem, 2.4vw, 1.9rem);
+  letter-spacing: -0.01em;
+  color: var(--text);
+  padding: 0 1.4rem;
   display: inline-flex;
   align-items: center;
 }
 .marquee-item::after {
   content: '';
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: var(--line);
-  margin-left: 2.2rem;
+  margin-left: 2.8rem;
 }
 @keyframes marquee-scroll {
   from { transform: translateX(0); }
@@ -222,52 +150,20 @@
 }
 .marquee:hover .marquee-track { animation-play-state: paused; }
 
-/* ── 결과물 카드 호버 리프트(쇼케이스 확대) ── */
-.car-card {
-  transition: transform 150ms ease-out, box-shadow 150ms ease-out, border-color 150ms ease-out;
+/* ── 문자 단위 스태거 리빌(글자별 순차 등장·transform·opacity만) ── */
+.sc {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.6em);
+  transition: opacity 480ms ease-out, transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: inherit;
+  white-space: pre;
 }
-.car-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
-  border-color: var(--text-sub);
-}
-
-/* ── ROADMAP "앞으로 채워갈 공간" — 점선 슬롯(확장 예정 시각화) ── */
-.b-fork .b-slot {
-  border: 1.5px dashed var(--line);
-  border-radius: 12px;
-  padding: 0.85rem 1rem 0.85rem 1.7rem;
-  margin-bottom: 0.9rem;
-}
-.b-fork .b-slot::before { display: none; } /* 슬롯은 실선 레일 대신 점선 박스로 대체 */
-.b-fork .b-slot::after {
-  border-style: dashed;
-  border-color: var(--text-sub);
-  background: #fff;
-  top: 0.95rem;
-  left: -5px;
-}
-.b-slot h3 { color: var(--text-sub); }
-.b-slot-empty { opacity: 0.72; }
-.b-slot-empty h3 { font-weight: 700; }
-
-/* ── NEXT 예정 행 — 점선 좌측 보더로 "채워갈 자리" 결 맞춤 ── */
-.dir-row.dir-slot { border-left: 2px dashed var(--line); padding-left: 0.85rem; }
+.page.active .sc, .page.seen .sc, .page:focus-within .sc { opacity: 1; transform: none; }
+.sc-accent { color: var(--accent); } /* 화이트리스트 ① */
 
 @media (prefers-reduced-motion: reduce) {
   .sc { transition: none; opacity: 1; transform: none; }
   .marquee-track { animation: none; }
-  .car-card { transition: none; }
-  .car-card:hover { transform: none; }
-}
-
-/* ── PROJECTS 향후 목록 ── */
-.next-list { max-width: 620px; margin: 2.25rem auto 0; text-align: left; }
-.next-label {
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  color: var(--text-sub);
-  display: block;
-  margin-bottom: 0.5rem;
+  .scroll-cue svg { animation: none; }
 }

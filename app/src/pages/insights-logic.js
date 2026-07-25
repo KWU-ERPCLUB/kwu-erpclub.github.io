@@ -2,17 +2,9 @@
 // 전부 순수 함수(부수효과 0) — 테스트 대상. UI 컴포넌트(Articles.jsx 등)가 소비.
 import { NATURES } from '../content/schema.js'
 
-// 좌측 탭 = 전체 + 성격 4종. '전체' = 허브 뷰.
+// 성격 칩 = 전체 + 성격 4종. '전체' = 성격 필터 없음(AI in Use 구조: 상단 컨트롤 바 성격 칩).
 export const HUB_TAB = '전체'
 export const TABS = [HUB_TAB, ...NATURES]
-
-// 성격 정의 한 줄(허브 섹션 헤더 서브) — 원천 = CONTRIBUTING.md 성격 정의표.
-export const NATURE_DEFS = {
-  '뉴스·동향': '새 소식·출시·시장 변화의 사실 전달',
-  '심층 분석': '한 주제를 파고든 해석·시사점',
-  '활용법·튜토리얼': '따라 할 수 있는 절차·실습',
-  '도구·프롬프트': '특정 도구·프롬프트가 주인공인 소개·사용기',
-}
 
 // 성격 ↔ ascii 탭키(URL·CSS 클래스 안정용). Korean URL 인코딩 회피.
 export const NATURE_KEY = { '뉴스·동향': 'news', '심층 분석': 'analysis', '활용법·튜토리얼': 'howto', '도구·프롬프트': 'tools' }
@@ -70,16 +62,12 @@ export function filterArticles(all, { nature = null, topic = null, nowUse = fals
   })
 }
 
-// 역시간순 리스트 → 월별 그룹("YYYY. MM" 헤더). 정렬 순서 유지.
-export function groupByMonth(list) {
-  const groups = []
-  let key = null
-  for (const a of list) {
-    const k = (a.date || '').slice(0, 7)
-    if (k !== key) { key = k; groups.push({ month: k.replace('-', '. '), items: [] }) }
-    groups[groups.length - 1].items.push(a)
+// 고정 우선 분리 — 고정(true) 먼저 + 나머지(둘 다 입력 순서=역시간순 유지). all=역시간순 정렬 가정.
+export function pinnedFirst(list) {
+  return {
+    pinned: list.filter((a) => a['고정'] === true),
+    rest: list.filter((a) => a['고정'] !== true),
   }
-  return groups
 }
 
 // 상세 하단 이웃(역시간순: prev=과거, next=최근).
@@ -89,13 +77,4 @@ export function neighbors(all, slug) {
     prev: i >= 0 && i < all.length - 1 ? all[i + 1] : null,
     next: i > 0 ? all[i - 1] : null,
   }
-}
-
-// 허브 뷰 한 성격 섹션: 고정(전부·최상단) + 비고정 최신 n건 + 총건수.
-// all = 역시간순 정렬 가정. 고정 항목도 역시간순.
-export function hubSection(all, nature, n = 2) {
-  const items = all.filter((a) => a['성격'] === nature)
-  const pinned = items.filter((a) => a['고정'] === true)
-  const rest = items.filter((a) => a['고정'] !== true).slice(0, n)
-  return { pinned, rest, total: items.length }
 }

@@ -1,7 +1,7 @@
 import { expect, test } from 'vitest'
 import {
-  excerpt, filterArticles, groupByMonth, neighbors,
-  stateFromSearch, searchFromState, natureKey, authorInitial, hubSection, HUB_TAB,
+  excerpt, filterArticles, pinnedFirst, neighbors,
+  stateFromSearch, searchFromState, natureKey, authorInitial, HUB_TAB,
 } from './insights-logic.js'
 
 // ── URL ↔ 상태 (뒤로가기·딥링크) ──
@@ -48,23 +48,22 @@ test('authorInitial — 첫 글자 대문자, 빈 값 = ?', () => {
   expect(authorInitial('')).toBe('?')
 })
 
-// ── 허브 섹션(고정 우선) ──
-test('hubSection — 고정 최상단(전부) + 비고정 최신 2 + total', () => {
+// ── 고정 우선 분리(그리드 정렬) ──
+test('pinnedFirst — 고정(true) 먼저 + 나머지, 각 입력 순서(역시간순) 유지', () => {
   const all = [ // 역시간순 가정
-    { slug: 'd4', date: '2026-07-30', 성격: '심층 분석', 고정: true },
-    { slug: 'd3', date: '2026-07-20', 성격: '심층 분석' },
-    { slug: 'd2', date: '2026-07-10', 성격: '심층 분석' },
-    { slug: 'd1', date: '2026-07-01', 성격: '심층 분석' },
-    { slug: 'x', date: '2026-07-15', 성격: '뉴스·동향' },
+    { slug: 'd4', date: '2026-07-30' },
+    { slug: 'd3', date: '2026-07-20', 고정: true },
+    { slug: 'd2', date: '2026-07-10' },
+    { slug: 'd1', date: '2026-07-01', 고정: true },
   ]
-  const s = shell(all)
-  expect(s.total).toBe(4)
-  expect(s.pinned.map((a) => a.slug)).toEqual(['d4']) // 고정만
-  expect(s.rest.map((a) => a.slug)).toEqual(['d3', 'd2']) // 비고정 최신 2
+  const { pinned, rest } = pinnedFirst(all)
+  expect(pinned.map((a) => a.slug)).toEqual(['d3', 'd1']) // 고정만(역시간순 유지)
+  expect(rest.map((a) => a.slug)).toEqual(['d4', 'd2'])   // 나머지(역시간순 유지)
 })
-function shell(all) { return hubSection(all, '심층 분석', 2) }
-test('hubSection — 0건 성격은 total 0', () => {
-  expect(hubSection([{ slug: 'a', 성격: '뉴스·동향' }], '도구·프롬프트').total).toBe(0)
+test('pinnedFirst — 고정 없으면 전부 rest', () => {
+  const { pinned, rest } = pinnedFirst([{ slug: 'a' }, { slug: 'b' }])
+  expect(pinned).toEqual([])
+  expect(rest.map((a) => a.slug)).toEqual(['a', 'b'])
 })
 
 // ── 필터·그룹·이웃·발췌(기존 계약 승계) ──
@@ -89,13 +88,6 @@ test('검색 — 제목·본문 부분일치 + 필터 AND', () => {
   expect(filterArticles(all, { q: '동향' }).map((x) => x.slug)).toEqual(['b'])
   expect(filterArticles(all, { q: '없는말' })).toEqual([])
   expect(filterArticles(all, { nature: '활용법·튜토리얼', q: '리서치' })).toEqual([])
-})
-test('groupByMonth — 같은 달 묶고 순서 유지 · "YYYY. MM"', () => {
-  const g = groupByMonth([
-    { slug: 'a', date: '2026-07-22' }, { slug: 'b', date: '2026-07-01' }, { slug: 'c', date: '2026-06-30' },
-  ])
-  expect(g.map((x) => x.month)).toEqual(['2026. 07', '2026. 06'])
-  expect(g[0].items.map((x) => x.slug)).toEqual(['a', 'b'])
 })
 test('neighbors — 역시간순 prev=과거·next=최근, 경계 null', () => {
   const all = [{ slug: 'new' }, { slug: 'mid' }, { slug: 'old' }]

@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { splitByDate, nextSeminar, todayString } from './seminars-logic.js'
+import { splitByDate, nextSeminar, todayString, daysUntil, ddayLabel } from './seminars-logic.js'
 
 const S = (slug, date) => ({ slug, date, title: slug, 회차: slug, 유형: '인지', body: '' })
 const list = [S('a', '2026-06-01'), S('b', '2026-09-05'), S('c', '2026-08-20'), S('d', '2026-07-24')]
@@ -35,4 +35,23 @@ test('todayString — 고정 Date 주입 시 로컬 YYYY-MM-DD', () => {
   // 로컬 자정 기준 날짜 성분만 검증(시계·타임존 비의존)
   expect(todayString(new Date(2026, 6, 24))).toBe('2026-07-24') // month 6 = 7월
   expect(todayString(new Date(2026, 0, 5))).toBe('2026-01-05')
+})
+
+test('daysUntil — today 주입식 남은 일수(미래=양수·당일=0·과거=음수)', () => {
+  expect(daysUntil('2026-09-01', '2026-08-25')).toBe(7) // 7일 뒤
+  expect(daysUntil('2026-09-01', '2026-09-01')).toBe(0) // 당일
+  expect(daysUntil('2026-08-20', '2026-09-01')).toBe(-12) // 과거
+  expect(daysUntil('2026-09-01', '2026-08-31')).toBe(1) // 하루 앞(월 경계)
+})
+
+test('daysUntil — 파싱 불가 입력은 null', () => {
+  expect(daysUntil('bad', '2026-09-01')).toBeNull()
+  expect(daysUntil('2026-09-01', 'bad')).toBeNull()
+})
+
+test('ddayLabel — D-7 / D-DAY / D+n / 빈값', () => {
+  expect(ddayLabel(7)).toBe('D-7')
+  expect(ddayLabel(0)).toBe('D-DAY')
+  expect(ddayLabel(-3)).toBe('D+3')
+  expect(ddayLabel(null)).toBe('')
 })
