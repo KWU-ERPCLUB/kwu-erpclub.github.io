@@ -19,6 +19,26 @@ source_name: SAP News · OpenAI · CNBC 외
 
 2026년 7월에 시작한 인사이트가 다루지 못한 상반기를 한 장으로 정리한다. 각 축은 시간순이고, 모든 사건에 출처를 붙였다.
 
+::: 수치
+1,220억 달러 | OpenAI 조달 — 기업가치 8,520억 달러 | CNBC 3/31
+200개+ | SAP가 예고한 ERP 에이전트 | SAP News 5/12
+12억 달러 | Salesforce Agentforce 연간 반복 매출 | Salesforce IR 5/27
+37.6조 원 | SK하이닉스 분기 영업이익 — 창사 최대 | SK하이닉스 4월
+:::
+
+여섯 달을 사건 하나씩으로 압축하면 이렇다. 상세는 아래 각 축에서.
+
+::: 로드맵
+1/12 | Claude Cowork 공개 | 사무직용 컴퓨터 에이전트의 시작
+1/22 | 한국 AI기본법 시행 | 세계 두 번째 포괄 AI 규제
+2/5 | OpenAI Frontier 출시 | 에이전트를 직원처럼 관리하는 기업 플랫폼
+3/31 | OpenAI 1,220억 달러 조달 | 역대 최대 — 일부는 AGI 달성 조건부
+4/23 | GPT-5.5 가격 2배 인상 | "성능값 받기" 시대의 신호탄
+5/12 | SAP 자율 기업 선언 | ERP에 에이전트 200개+ 예고
+6/12 | 미국, 최상위 모델 수출통제 | 쓰던 AI가 정부 명령으로 중단
+6/16 | SpaceX, Cursor 600억 달러 인수 | 코딩 에이전트 = 전략 자산
+:::
+
 ## 모델 경쟁
 
 성능 경쟁의 축이 "더 싸게"에서 "성능값 받기"로 꺾인 반기였다.
@@ -50,7 +70,13 @@ MCP | Model Context Protocol. AI와 외부 시스템(파일·DB·업무 도구)�
 
 ## 규제·거버넌스
 
-방향이 하나가 아니다 — 제도화(한국·EU), 완화(미국), 그리고 국가 통제(수출통제)가 동시에 진행됐다.
+방향이 하나가 아니다 — 세 갈래가 동시에 진행됐다.
+
+::: 결정
+한국·EU | 제도화 | 한국은 1/22 AI기본법 시행, EU는 고위험 의무를 2027년으로 미루며 속도 조절
+미국 행정부 | 완화·연방 단일화 | 3/20 국가 AI 정책 프레임워크 — 주(州)별 규제를 걷어내는 방향
+미 상무부 | 국가 통제 | 6/12 최상위 모델 수출통제 발동 — 규제 완화와 별개로 전략물자 취급
+:::
 
 - **1/22** — 한국 AI기본법 시행. EU에 이어 세계 두 번째 포괄 규제 — 고영향 AI¹ 안전성 확보 의무, 생성물 워터마크 표시 의무 ([법무법인 세종](https://www.shinkim.com/kor/media/newsletter/3114)) — 채용·대출·의료 등에 AI를 쓰면 지켜야 할 법이 생겼다.
 - **3/20** — 미 행정부, 국가 AI 정책 프레임워크 발표. 규제 완화·연방 단일화 방향 ([Morrison Foerster](https://www.mofo.com/resources/insights/260402-trump-administration-releases-national-ai-policy-framework)) — 2025년 12월 행정명령([Seyfarth](https://www.seyfarth.com/news-insights/president-trump-signs-executive-order-preempting-state-ai-laws-and-centralizing-federal-oversight.html))의 후속.
@@ -80,7 +106,9 @@ SI | 시스템 통합(System Integration). 기업 전산 시스템을 대신 구
 
 ## 돈의 흐름
 
-역대급 조달·투자·실적이 한 반기에 몰렸다. 상위 소수 집중이 뚜렷하다.
+역대급 조달·투자·실적이 한 반기에 몰렸다. 규모 차이가 곧 구조다 — 개별 회사 조달이 아무리 커도 빅테크 인프라 투자 앞에선 한 칸이다.
+
+![2026 상반기 공개된 AI 조달·투자·인수 금액 비교 막대 그래프](/img/기사/h1-2026-funding.svg)
 
 - **2/2** — SpaceX가 xAI 인수 — 합병 기업가치 **1.25조 달러**, 사상 최대 비상장 합병 ([CNBC](https://www.cnbc.com/2026/02/03/musk-xai-spacex-biggest-merger-ever.html))
 - **2/6** — 빅테크 4사(구글·MS·메타·아마존) 2026년 설비투자 합계 약 **7,000억 달러** 규모로 확대 ([CNBC](https://www.cnbc.com/2026/02/06/google-microsoft-meta-amazon-ai-cash.html)) — 회수 실패 시 시장 조정으로 직결되는 규모.
@@ -92,6 +120,12 @@ SI | 시스템 통합(System Integration). 기업 전산 시스템을 대신 구
 ## 한국
 
 규제(1/22 AI기본법 — 위 규제 축)와 함께, 소버린 AI¹ 선발전과 반도체 실적이 상반기를 채웠다.
+
+::: 수치
+37.6조 원 | SK하이닉스 1분기 영업이익 — 이익률 72% | SK하이닉스 뉴스룸
+57.2조 원 | 삼성전자 1분기 영업이익 — 전분기 대비 +185% | 삼성전자 뉴스룸
+99개 | AI 기본계획(2026–2028) 실행과제 | 국가AI전략위 2/25
+:::
 
 - **1/15** — 정부 독자 AI 파운데이션 모델 1차 평가 — LG·SKT·업스테이지 진출, 네이버클라우드 탈락 ([AI타임스](https://www.aitimes.kr/news/articleView.html?idxno=38163)) — 국가가 AI 국가대표를 예산·심사로 선발하는 중.
 - **2/25** — 국가AI전략위, AI 기본계획(2026–2028) 확정 — **99개** 실행과제 ([AI타임스](https://www.aitimes.kr/news/articleView.html?idxno=38806)) — 향후 3년 국내 AI 예산이 이 문서를 따라 움직인다.

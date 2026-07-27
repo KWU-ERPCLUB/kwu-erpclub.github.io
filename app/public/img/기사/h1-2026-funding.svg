@@ -1,0 +1,41 @@
+<svg width="720" height="330" viewBox="0 0 720 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="2026 상반기 공개된 AI 조달·투자·인수 금액 막대 그래프. 빅테크 4사 설비투자 약 7,000억 달러, OpenAI 조달 1,220억, SpaceX IPO 750억, SpaceX의 Cursor 인수 600억, Anthropic 조달 300억 달러.">
+  <style>
+    text { font-family: Pretendard, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+    .t { font-size: 15px; font-weight: 700; fill: #141414; }
+    .s { font-size: 12px; fill: #55606c; }
+    .lb { font-size: 12.5px; fill: #141414; }
+    .v { font-size: 12px; font-weight: 700; fill: #55606c; }
+  </style>
+  <rect width="720" height="330" fill="#ffffff"/>
+  <text class="t" x="16" y="30">2026 상반기 — 돈의 단위</text>
+  <text class="s" x="16" y="50">공개된 조달·투자·인수 금액 · 단위 = 억 달러</text>
+
+  <line x1="228" y1="70" x2="228" y2="300" stroke="#e7e7e5" stroke-width="1"/>
+
+  <!-- 빅테크 4사 설비투자 7,000 -->
+  <text class="lb" x="216" y="93" text-anchor="end">빅테크 4사 설비투자(연 계획)</text>
+  <path d="M228,76 h436 a4,4 0 0 1 4,4 v18 a4,4 0 0 1 -4,4 h-436 z" fill="#a94b5c"/>
+  <text class="v" x="536" y="93" style="fill:#ffffff">약 7,000</text>
+
+  <!-- OpenAI 조달 1,220 -->
+  <text class="lb" x="216" y="139" text-anchor="end">OpenAI 조달(3월)</text>
+  <path d="M228,122 h72.7 a4,4 0 0 1 4,4 v18 a4,4 0 0 1 -4,4 h-72.7 z" fill="#a94b5c"/>
+  <text class="v" x="313" y="139">1,220</text>
+
+  <!-- SpaceX IPO 750 -->
+  <text class="lb" x="216" y="185" text-anchor="end">SpaceX IPO 조달(6월)</text>
+  <path d="M228,168 h43.1 a4,4 0 0 1 4,4 v18 a4,4 0 0 1 -4,4 h-43.1 z" fill="#a94b5c"/>
+  <text class="v" x="283" y="185">750</text>
+
+  <!-- Cursor 인수 600 -->
+  <text class="lb" x="216" y="231" text-anchor="end">SpaceX의 Cursor 인수(6월)</text>
+  <path d="M228,214 h33.7 a4,4 0 0 1 4,4 v18 a4,4 0 0 1 -4,4 h-33.7 z" fill="#a94b5c"/>
+  <text class="v" x="274" y="231">600</text>
+
+  <!-- Anthropic 300 -->
+  <text class="lb" x="216" y="277" text-anchor="end">Anthropic 조달(2월)</text>
+  <path d="M228,260 h15 a4,4 0 0 1 4,4 v18 a4,4 0 0 1 -4,4 h-15 z" fill="#a94b5c"/>
+  <text class="v" x="255" y="277">300</text>
+
+  <text class="s" x="16" y="322">출처: CNBC(설비투자 2/6·OpenAI 3/31·Cursor 6/16) · NPR(IPO 6/11) · TechCrunch(Anthropic 2/12)</text>
+</svg>
