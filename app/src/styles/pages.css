@@ -155,6 +155,25 @@
   color: var(--text-sub);
 }
 
+/* ── ::: 로드맵 / ::: 결정 — Markdown 컨테이너(articles.css와 동일 정의 — 두 셸이 분리 로드되는 구조라 중복 유지) ── */
+.hub-md .md-roadmap { list-style: none; margin: 0 0 1.9rem; padding: 1.15rem 1.3rem; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.hub-md .md-roadmap li { display: flex; gap: 0.85rem; margin: 0; padding: 0 0 0.85rem; align-items: baseline; }
+.hub-md .md-roadmap li:last-child { padding-bottom: 0; }
+.hub-md .md-rm-date { flex: 0 0 3.2rem; font-size: 0.75rem; font-weight: 700; color: var(--text-sub); font-variant-numeric: tabular-nums; }
+.hub-md .md-rm-mark { flex: 0 0 9px; position: relative; align-self: stretch; }
+.hub-md .md-rm-mark::before { content: ''; position: absolute; left: 3px; top: 0.6em; bottom: -0.5em; width: 1px; background: var(--line); }
+.hub-md .md-roadmap li:last-child .md-rm-mark::before { display: none; }
+.hub-md .md-rm-mark::after { content: ''; position: absolute; left: 0; top: 0.3em; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); } /* 타임라인 도트(화이트리스트 — 홈 rm-dot 승계) */
+.hub-md .md-rm-body { flex: 1; font-size: 0.92rem; line-height: 1.5; word-break: keep-all; }
+.hub-md .md-rm-sub { display: block; font-size: 0.83rem; color: var(--text-sub); }
+.hub-md .md-decisions { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin: 0 0 1.9rem; }
+.hub-md .md-decision { background: var(--bg); padding: 0.85rem 1.1rem; }
+.hub-md .md-dc-flow { margin: 0; font-size: 0.92rem; line-height: 1.5; word-break: keep-all; }
+.hub-md .md-dc-q { color: var(--text-sub); }
+.hub-md .md-dc-arrow { margin: 0 0.45rem; color: var(--text-sub); }
+.hub-md .md-dc-a { font-weight: 700; }
+.hub-md .md-dc-why { margin: 0.3rem 0 0; font-size: 0.8rem; color: var(--text-sub); line-height: 1.5; word-break: keep-all; }
+
 /* ── 발원 기사 링크 (상세) ── */
 .sem-origin { font-size: 0.84rem; color: var(--text-sub); margin: 0 0 1.5rem; }
 .sem-origin a { /* Tertiary — 버건디 밑줄(화이트리스트 ⑥) */

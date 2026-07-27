@@ -44,6 +44,25 @@ describe('Markdown 서식 확장', () => {
     expect(html).not.toContain('javascript:alert')
   })
 
+  it('::: 로드맵 블록 = 날짜·제목·한줄 타임라인 렌더', () => {
+    const html = renderToString(<Markdown body={'::: 로드맵\n06-26 | 스터디 시작 | 운영 모델 확정\n06-28 | 보드 탄생\n:::'} />)
+    expect(html).toContain('md-roadmap')
+    expect(html).toContain('06-26')
+    expect(html).toContain('스터디 시작')
+    expect(html).toContain('운영 모델 확정')
+    expect(html).toContain('보드 탄생')
+  })
+
+  it('::: 결정 블록 = 문제→결정·근거 카드 렌더 + 이스케이프', () => {
+    const html = renderToString(<Markdown body={'::: 결정\n수기 집계인가 | 웹앱 제작 | 매주 걷는 비용 제거\n<b>x | y\n:::'} />)
+    expect(html).toContain('md-decisions')
+    expect(html).toContain('수기 집계인가')
+    expect(html).toContain('웹앱 제작')
+    expect(html).toContain('매주 걷는 비용 제거')
+    expect(html).not.toContain('<b>x')
+    expect(html).toContain('&lt;b&gt;x')
+  })
+
   it('GFM 표 = table 렌더', () => {
     const html = renderToString(<Markdown body={'| 항목 | 값 |\n|---|---|\n| 도입 | 88% |'} />)
     expect(html).toContain('<table>')

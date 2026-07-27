@@ -12,7 +12,7 @@ const container = {
     return m ? m.index + (m[1] ? 1 : 0) : undefined
   },
   tokenizer(src) {
-    const m = /^:::\s*(요약|수치|용어|출처)\s*\n([\s\S]*?)\n:::\s*(?:\n+|$)/.exec(src)
+    const m = /^:::\s*(요약|수치|용어|출처|로드맵|결정)\s*\n([\s\S]*?)\n:::\s*(?:\n+|$)/.exec(src)
     if (!m) return
     const token = { type: 'container', raw: m[0], kind: m[1], text: m[2], tokens: [] }
     if (m[1] === '요약') this.lexer.blockTokens(m[2], token.tokens)
@@ -27,6 +27,18 @@ const container = {
       const items = rows(token.text).map(([num, desc, src]) =>
         `<div class="md-stat"><span class="md-stat-num">${esc(num)}</span><span class="md-stat-desc">${esc(desc || '')}</span>${src ? `<span class="md-stat-src">${esc(src)}</span>` : ''}</div>`).join('')
       return `<div class="md-stats">${items}</div>`
+    }
+    if (token.kind === '로드맵') {
+      // 행 형식: 날짜 | 제목 | 한 줄(선택) — 프로젝트 여정 세로 타임라인
+      const items = rows(token.text).map(([date, title, sub]) =>
+        `<li><span class="md-rm-date">${esc(date)}</span><span class="md-rm-mark" aria-hidden="true"></span><span class="md-rm-body"><strong>${esc(title || '')}</strong>${sub ? `<span class="md-rm-sub">${esc(sub)}</span>` : ''}</span></li>`).join('')
+      return `<ol class="md-roadmap">${items}</ol>`
+    }
+    if (token.kind === '결정') {
+      // 행 형식: 문제 | 결정 | 근거(선택) — 의사결정 로직 카드
+      const items = rows(token.text).map(([q, a, why]) =>
+        `<div class="md-decision"><p class="md-dc-flow"><span class="md-dc-q">${esc(q)}</span><span class="md-dc-arrow" aria-hidden="true">→</span><strong class="md-dc-a">${esc(a || '')}</strong></p>${why ? `<p class="md-dc-why">${esc(why)}</p>` : ''}</div>`).join('')
+      return `<div class="md-decisions">${items}</div>`
     }
     if (token.kind === '용어') {
       // 행 형식: 용어 | 설명 — 본문 ¹⁾²⁾ 각주 마커와 순번 대응(글 하단 작은 글씨)
