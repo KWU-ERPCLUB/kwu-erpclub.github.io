@@ -49,6 +49,17 @@ export function validateEntry(kind, filename, data, body = '') {
     if ('이미지' in data && (typeof data['이미지'] !== 'string' || data['이미지'].trim() === '')) errs.push('이미지는 비어있지 않은 문자열(경로·URL)만 허용')
     // 고정 = 선택(허브 뷰 상단 핀) — 있으면 boolean만 허용
     if ('고정' in data && typeof data['고정'] !== 'boolean') errs.push('고정은 boolean(true/false)만 허용')
+    // 설명 = 필수 1줄(카드 표시용 핵심 설명 — 본문 발췌 대체, 2026-07-27 오너 지시)
+    const desc = data['설명']
+    if (desc === undefined || desc === null || desc === '') errs.push('설명 필수(1줄)')
+    else if (typeof desc !== 'string' || desc.trim() === '') errs.push('설명은 비어있지 않은 문자열만 허용')
+    // 태그 = 선택(카드 해시태그 — 표시 전용·필터 없음) — 문자열 1~5개 배열, '#' 없이 저장(렌더 시 부착)
+    if ('태그' in data) {
+      const tags = data['태그']
+      if (!Array.isArray(tags) || tags.length < 1 || tags.length > 5
+        || tags.some((t) => typeof t !== 'string' || t.trim() === '' || t.includes('#')))
+        errs.push('태그는 # 없는 문자열 1~5개 배열만 허용')
+    }
   } else if (kind === '세미나') {
     if (!/^\d+$/.test(data['회차'] || '')) errs.push('회차는 숫자여야 함')
     if (!SEMINAR_TYPES.includes(data['유형'])) errs.push(`유형 enum 밖: ${data['유형']}`)

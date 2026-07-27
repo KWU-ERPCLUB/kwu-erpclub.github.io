@@ -1,6 +1,6 @@
 // 인사이트 공용 UI 조각 — 색 면 카드(AI in Use 문법 이식)·태그 칩·핀 배지·썸네일. Articles/Hub 공유.
 import { Arrow } from '../shared.jsx'
-import { natureKey, authorInitial, excerpt } from './insights-logic.js'
+import { natureKey, authorInitial } from './insights-logic.js'
 
 // 썸네일 타일 — 이미지(로고 = /img/logos/) 있을 때만 렌더. fallback 아이콘 타일 폐지(카드 색이 성격을 말함).
 export function Thumb({ a }) {
@@ -43,10 +43,11 @@ export function TagChips({ a }) {
 
 // 색 면 카드(AI in Use 이식) — 배경=성격별 저채도 4색, 진한 보더(--dark 1.5px)+옅은 그림자.
 // 구조: [상단 메타: 아바타·저자 / 우상단 날짜·시각] → 제목(볼드) → 태그 줄(성격·주제·지금써먹기)
-//   → 요약 2~3줄 → [하단: "자세히 →"]. 썸네일=이미지 있을 때만.
+//   → 설명 1~2줄(frontmatter 설명 — 본문 발췌 폐지, 2026-07-27 오너 지시) → #해시태그(표시 전용)
+//   → [하단: "자세히 →"]. 썸네일=이미지 있을 때만.
 export function ArticleRow({ a, onOpen, pinned = false }) {
   const nk = natureKey(a['성격'])
-  const ex = excerpt(a.body, 140)
+  const tags = Array.isArray(a['태그']) ? a['태그'] : []
   return (
     <li className={`art-card art-card--${nk}`}>
       <button type="button" onClick={() => onOpen(a.slug)}>
@@ -65,7 +66,8 @@ export function ArticleRow({ a, onOpen, pinned = false }) {
             {a['주제'] && <span className="art-tag">{a['주제']}</span>}
             {a['지금써먹기'] && <span className="art-tag art-tag-now">지금 써먹기</span>}
           </span>
-          {ex && <span className="art-card-excerpt">{ex}</span>}
+          {a['설명'] && <span className="art-card-excerpt">{a['설명']}</span>}
+          {tags.length > 0 && <span className="art-card-hashtags">{tags.map((t) => `#${t}`).join(' ')}</span>}
           <span className="art-card-foot">
             <span className="art-card-more">자세히 <Arrow /></span>
           </span>

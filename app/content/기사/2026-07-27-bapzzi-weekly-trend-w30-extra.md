@@ -7,6 +7,8 @@ source_url: https://www.salesforce.com/news/press-releases/2026/07/24/missionfor
 source_name: Salesforce · OpenAI · 삼성SDS 외
 성격: 트렌드
 주제: 시장·생태계
+설명: 매주 월요일 발행하는 주간 AI 트렌드. 7/20–7/26 소식 보강판.
+태그: [에이전트, 클로드, 삼성SDS, 보안]
 ---
 
 ::: 요약

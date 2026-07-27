@@ -49,7 +49,7 @@ export function excerpt(body, n = 96) {
   return text.length > n ? `${text.slice(0, n).trim()}…` : text
 }
 
-// 성격·주제·지금써먹기 3필터 + 검색(제목·본문 부분일치) AND 결합.
+// 성격·주제·지금써먹기 3필터 + 검색(제목·설명·태그·본문 부분일치) AND 결합.
 export function filterArticles(all, { nature = null, topic = null, nowUse = false, q = '' } = {}) {
   const query = q.trim().toLowerCase()
   return all.filter((a) => {
@@ -57,7 +57,8 @@ export function filterArticles(all, { nature = null, topic = null, nowUse = fals
     if (topic && a['주제'] !== topic) return false
     if (nowUse && !a['지금써먹기']) return false
     if (query) {
-      const hay = `${a.title || ''} ${excerpt(a.body, 100000)}`.toLowerCase()
+      const tags = Array.isArray(a['태그']) ? a['태그'].join(' ') : ''
+      const hay = `${a.title || ''} ${a['설명'] || ''} ${tags} ${excerpt(a.body, 100000)}`.toLowerCase()
       if (!hay.includes(query)) return false
     }
     return true

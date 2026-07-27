@@ -7,6 +7,8 @@ source_url: https://openai.com/index/introducing-openai-presence/
 source_name: OpenAI · Anthropic · SAP News 외
 성격: 트렌드
 주제: 시장·생태계
+설명: 매주 발행하는 주간 AI 트렌드. 7/18–7/25 소식.
+태그: [클로드, GPT, SAP, 에이전트]
 ---
 
 ::: 요약

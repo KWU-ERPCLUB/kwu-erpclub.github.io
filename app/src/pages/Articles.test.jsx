@@ -57,6 +57,19 @@ test('시각 없는 글 = 날짜만 표기', () => {
   expect(html).not.toContain('2026-07-03 ')
 })
 
+// 설명·해시태그 — 카드 = frontmatter 설명(본문 발췌 폐지) + #태그 표시 전용(2026-07-27 오너 지시).
+test('카드 = 설명 표시(본문 발췌 아님) + #해시태그 줄', () => {
+  const a = {
+    slug: 'd', title: 't', author: 'A', date: '2026-07-27', 성격: '트렌드',
+    body: '본문에만 있는 문장', 설명: '매주 발행하는 주간 AI 트렌드.', 태그: ['클로드', '에이전트'],
+  }
+  const html = renderToString(<ArticleRow a={a} onOpen={() => {}} />)
+  expect(html).toContain('매주 발행하는 주간 AI 트렌드.')
+  expect(html).not.toContain('본문에만 있는 문장')   // 본문 발췌 폐지
+  expect(html).toContain('art-card-hashtags')
+  expect(html).toContain('#클로드 #에이전트')
+})
+
 // 고정 핀 — 고정(true) 카드는 핀 배지 노출(pinned prop).
 test('고정 카드 = 핀 배지(art-pin) 노출', () => {
   const a = { slug: 'p', title: '고정 글', author: 'A', date: '2026-07-01', body: 'b', 성격: '트렌드' }

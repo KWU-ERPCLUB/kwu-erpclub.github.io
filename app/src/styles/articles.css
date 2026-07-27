@@ -102,11 +102,13 @@
   padding: 0.16rem 0.66rem; margin-bottom: 0.6rem;
 }
 
-/* 요약 = 2~3줄(line-clamp 3, 본문 텍스트 --text 계열 가독) */
+/* 설명 = frontmatter 핵심 1~2줄(본문 발췌 폐지 2026-07-27 — clamp 2줄 안전망) */
 .art-card-excerpt {
-  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
-  font-size: 0.9rem; line-height: 1.55; color: var(--text); margin-bottom: 0.85rem;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  font-size: 0.9rem; line-height: 1.55; color: var(--text); margin-bottom: 0.55rem;
 }
+/* 해시태그 줄 — 표시 전용(필터 없음)·성격 진한색 텍스트, 칩 아님(§1 화이트리스트 밖 면 추가 금지) */
+.art-card-hashtags { display: block; font-size: 0.8rem; font-weight: 600; color: var(--card-fg); margin-bottom: 0.85rem; }
 
 /* 핀 배지(고정) — 성격 진한색 아이콘(버건디 미사용) */
 .art-pin { display: inline-flex; vertical-align: middle; color: var(--card-fg); margin-right: 0.3rem; }

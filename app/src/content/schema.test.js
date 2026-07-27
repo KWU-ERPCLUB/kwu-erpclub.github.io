@@ -13,8 +13,24 @@ test('isContentFile — .md만·`_` 시작 제외', () => {
 const good = {
   title: 'AI 지형', author: 'bapzzi', date: '2026-07-22',
   source_url: 'https://hai.stanford.edu/x', source_name: 'Stanford HAI',
-  성격: '심층 분석', 주제: '시장·생태계',
+  성격: '심층 분석', 주제: '시장·생태계', 설명: 'AI 지형 보고서 핵심 요약',
 }
+
+// ── 설명(필수)·태그(선택) — 카드 표시 계약(2026-07-27) ──
+test('설명 결측 검출(기사 필수)', () => {
+  expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 설명: undefined }).some((e) => e.includes('설명'))).toBe(true)
+})
+test('설명 빈 문자열 검출', () => {
+  expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 설명: '   ' }).some((e) => e.includes('설명'))).toBe(true)
+})
+test('태그 = 문자열 1~5개 배열이면 통과', () => {
+  expect(validateEntry('기사', '2026-07-22-bapzzi-ai-trend.md', { ...good, 태그: ['클로드', 'GPT'] })).toEqual([])
+})
+test('태그 형식 위반 검출(빈 배열·6개·#포함·비문자열)', () => {
+  for (const bad of [[], ['a', 'b', 'c', 'd', 'e', 'f'], ['#클로드'], [1], '클로드']) {
+    expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 태그: bad }).some((e) => e.includes('태그'))).toBe(true)
+  }
+})
 
 test('정상 기사 통과 (성격·주제 필수·지금써먹기 없음)', () => {
   expect(validateEntry('기사', '2026-07-22-bapzzi-ai-trend.md', good)).toEqual([])

@@ -7,6 +7,8 @@ source_url: https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-
 source_name: McKinsey · Gartner · PwC
 성격: 심층 분석
 주제: 거버넌스·리스크
+설명: 에이전트 도입 79% vs 확장 23% — 격차의 1순위 원인인 보안·거버넌스를 사고 사례로 분석.
+태그: [에이전트, 거버넌스, 보안]
 ---
 
 ::: 요약
