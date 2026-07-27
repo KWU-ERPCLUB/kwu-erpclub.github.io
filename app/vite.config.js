@@ -11,6 +11,7 @@ export default defineConfig({
         main: fileURLToPath(new URL('./index.html', import.meta.url)),
         insights: fileURLToPath(new URL('./insights/index.html', import.meta.url)),
         seminars: fileURLToPath(new URL('./seminars/index.html', import.meta.url)),
+        recruit: fileURLToPath(new URL('./recruit/index.html', import.meta.url)),
         about: fileURLToPath(new URL('./about/index.html', import.meta.url)),
         log: fileURLToPath(new URL('./log/index.html', import.meta.url)),
         projects: fileURLToPath(new URL('./projects/index.html', import.meta.url)),

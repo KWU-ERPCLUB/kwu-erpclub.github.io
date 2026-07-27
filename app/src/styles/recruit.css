@@ -1,0 +1,85 @@
+/* /recruit (IA 3차 2026-07-27) — AIM 기수 안내. log.css 문법 승계(page-head·밴드·리스트).
+   규격 = 디자인규칙 v2: 토큰 고정 · 버건디 화이트리스트(눈썹④·em①·점⑦·콜아웃 보더⑩·prep 배지⑤) · 빈도 상한 · 라이트 단일.
+   + 메인(/) 모집 밴드(.recruit-band) — 히어로 직하 슬림 공고(섹션 스파이 .page 제외). */
+
+/* ══ 메인 모집 밴드 ══ */
+.recruit-band { width: 100%; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--surface); }
+.rb-in {
+  max-width: var(--maxw); margin: 0 auto; padding: 0.9rem 1.5rem;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem;
+}
+.rb-in .status { margin: 0; }
+.rb-text { margin: 0; font-size: 0.95rem; font-weight: 600; word-break: keep-all; }
+.rb-in .proof-link { margin-left: auto; }
+@media (max-width: 700px) {
+  .rb-in { padding: 0.85rem 1.25rem; gap: 0.7rem; }
+  .rb-in .proof-link { margin-left: 0; }
+}
+
+/* ══ /recruit 페이지 셸 ══ */
+.rc-main { width: 100%; }
+.rc-band-in { max-width: var(--maxw); margin: 0 auto; padding: clamp(2.5rem, 6vh, 4rem) 1.5rem; }
+@media (max-width: 700px) { .rc-band-in { padding: 2.25rem 1.25rem; } }
+
+/* page-head (§3-1 골격: 눈썹 → h1 → 서브 → 메타 → 헤어라인) */
+.rc-head { width: 100%; border-bottom: 1px solid var(--line); }
+.rc-head-in { max-width: var(--maxw); margin: 0 auto; padding: clamp(2.75rem, 7vh, 4.5rem) 1.5rem clamp(2rem, 4vh, 2.75rem); }
+@media (max-width: 700px) { .rc-head-in { padding: 2.5rem 1.25rem 1.75rem; } }
+.rc-eyebrow { /* 화이트리스트 ④ — 브랜드 시그니처 */
+  display: block; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.09em;
+  color: var(--accent); margin-bottom: clamp(1rem, 2.5vh, 1.5rem);
+}
+.rc-h1 {
+  font-family: var(--font-display); font-weight: 900; font-size: clamp(2rem, 5vw, 3.4rem);
+  line-height: 1.12; letter-spacing: -0.03em; word-break: keep-all; max-width: 20ch; margin: 0 0 1rem;
+}
+.rc-h1 em { font-style: normal; color: var(--accent); } /* 화이트리스트 ① */
+.rc-lead { font-size: clamp(1rem, 1.6vw, 1.15rem); line-height: 1.6; color: var(--text-sub); max-width: 52ch; margin: 0 0 1.1rem; }
+.rc-meta { font-size: 0.78rem; color: var(--text-sub); margin: 0; }
+
+/* 섹션 키커·소제목 (차콜 — 버건디 예산 절약) */
+.rc-kicker {
+  display: block; font-family: var(--font-display); font-weight: 800; font-size: 0.78rem;
+  letter-spacing: 0.1em; color: var(--text-sub); margin-bottom: 0.75rem;
+}
+.rc-h2 {
+  font-family: var(--font-display); font-weight: 800; font-size: clamp(1.5rem, 3vw, 2.1rem);
+  line-height: 1.18; letter-spacing: -0.02em; margin: 0;
+}
+
+/* ══ 요강 표 — 라벨·값 2열 행 ══ */
+.rc-facts { list-style: none; margin: clamp(1.5rem, 3.5vh, 2.5rem) 0 0; padding: 0; border-top: 1px solid var(--line); }
+.rc-fact {
+  display: grid; grid-template-columns: minmax(5.5rem, 8rem) minmax(0, 1fr);
+  gap: clamp(1rem, 3vw, 2rem); padding: clamp(0.85rem, 2vh, 1.15rem) 0; border-bottom: 1px solid var(--line);
+}
+.rc-fact dt { font-size: 0.85rem; font-weight: 700; color: var(--text-sub); letter-spacing: 0.02em; }
+.rc-fact dd { margin: 0; font-size: clamp(0.96rem, 1.4vw, 1.05rem); line-height: 1.55; word-break: keep-all; }
+@media (max-width: 700px) { .rc-fact { grid-template-columns: 5rem 1fr; } }
+
+/* ══ 활동 구성 — 페이즈 스텝(세로 라인·점 문법) ══ */
+.rc-secs { width: 100%; border-top: 1px solid var(--line); }
+.rc-steps { list-style: none; margin: clamp(1.75rem, 4vh, 2.75rem) 0 0; padding: 0; }
+.rc-step { position: relative; padding: 0 0 clamp(1.6rem, 4vh, 2.4rem) clamp(1.5rem, 3vw, 2rem); border-left: 2px solid var(--line); }
+.rc-step:last-child { border-left-color: transparent; padding-bottom: 0; }
+.rc-step::before { /* 화이트리스트 ⑦ 타임라인 점 */
+  content: ''; position: absolute; left: -6px; top: 0.35rem;
+  width: 10px; height: 10px; border-radius: 50%; background: var(--accent); border: 2px solid var(--bg);
+}
+.rc-step-era { display: block; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; color: var(--text-sub); margin-bottom: 0.35rem; }
+.rc-step h3 {
+  font-family: var(--font-display); font-weight: 800; font-size: clamp(1.05rem, 1.8vw, 1.3rem);
+  letter-spacing: -0.01em; word-break: keep-all; margin: 0 0 0.4rem;
+}
+.rc-step p { margin: 0; font-size: 0.94rem; line-height: 1.65; color: var(--text-sub); max-width: 62ch; word-break: keep-all; }
+.rc-step ol { margin: 0.6rem 0 0; padding-left: 1.2rem; font-size: 0.94rem; line-height: 1.8; color: var(--text-sub); }
+
+/* ══ 콜아웃(화이트리스트 ⑩) · 참여 방법 ══ */
+.rc-callout {
+  background: var(--surface); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0;
+  padding: 0.85rem 1.1rem; font-size: 0.9rem; color: var(--text-sub);
+  margin: clamp(1.75rem, 4vh, 2.5rem) 0 0; max-width: 62ch;
+}
+.rc-callout a { color: var(--text); font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--text-sub); }
+.rc-callout a:hover { border-color: var(--text); }
+.rc-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem; margin-top: clamp(1.5rem, 3vh, 2rem); }

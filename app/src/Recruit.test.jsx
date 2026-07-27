@@ -1,0 +1,43 @@
+import { expect, test } from 'vitest'
+import { renderToString } from 'react-dom/server'
+import Recruit from './Recruit.jsx'
+
+// 구조·계약 검증 — IA 3차(2026-07-27): 모집 페이지 = 요강·활동 구성·참여 방법. 사실 서술만.
+const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
+
+test('page-head(§3-1) = 눈썹 RECRUIT + 헤드라인 + 서브 + 메타 줄', () => {
+  const html = flat(<Recruit />)
+  expect(html).toContain('rc-eyebrow">RECRUIT')
+  expect(html).toContain('rc-h1')
+  expect(html).toContain('rc-lead')
+  expect(html).toContain('rc-meta')
+})
+
+test('요강 = 확정값만 게재(운영틀 §2·§3·§7) — 기간·인원·대상·모임·비용', () => {
+  const html = flat(<Recruit />)
+  expect(html).toContain('2026-08-25 ~ 2026-09-08')
+  expect(html).toContain('6~10명')
+  expect(html).toContain('전공 무관')
+  expect(html).toContain('매주 대면 60분')
+  expect(html).toContain('참가비 없음')
+})
+
+test('활동 구성 = 2페이즈 스텝(전반 5회 목록·시험 휴지·후반 팀) + 콜아웃', () => {
+  const html = flat(<Recruit />)
+  expect(html).toContain('rc-steps')
+  expect(html).toContain('킥오프')
+  expect(html).toContain('중간 쇼케이스')
+  expect(html).toContain('중간고사 기간 휴식')
+  expect(html).toContain('팀 프로젝트')
+  expect(html).toContain('rc-callout')
+})
+
+test('마케팅 어투 금지(SPEC §4 개정 목록) + 참여 방법 = 문의 링크만(폼 없음)', () => {
+  const html = flat(<Recruit />)
+  for (const banned of ['지금 바로', '놓치지', '마지막 기회', '서두르', '얼른']) {
+    expect(html).not.toContain(banned)
+  }
+  expect(html).not.toContain('<form')
+  expect(html).toContain('btn-2nd') // GitHub 문의 링크(Secondary)
+  expect(html).toContain('href="/#faq"') // 메인 FAQ 연결
+})

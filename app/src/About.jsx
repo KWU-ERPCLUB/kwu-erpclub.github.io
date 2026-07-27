@@ -11,7 +11,7 @@ import { useSectionSpy, CountUp } from './home-motion.jsx'
 const TIMELINE = [
   { era: '학회', title: 'ERP연구회', desc: '경영학부에서 SAP·ERP·정보시스템을 공부해온 학회.' },
   { era: '2026 · 확장', title: '산하 스터디 신설', desc: 'MIS·AI 갈래 분기.' },
-  { era: '지금', title: '1기 모집 준비', desc: '스터디명·인원 확정 대기.', status: ['prep', '모집 준비'] },
+  { era: '지금', title: 'AIM 1기 모집 준비', desc: '2026 2학기 운영 — 모집 08-25 ~ 09-08.', status: ['prep', '모집 준비'] },
 ]
 
 // 4단 서사 — 수치·출처 원본 유지(선행조사-2026-07-10 §C·§D). 강조 바 1개(버건디)+회색 대조.
@@ -156,8 +156,9 @@ export function Proof({ proof }) {
           ))}
         </div>
         <p className="ab-note rv" style={{ transitionDelay: '260ms' }}>
-          운영 = 광운대 경영학부 21학번. 모집은 비정기 — 문의는 스터디 단톡방 또는{' '}
-          <a className="proof-link" style={{ display: 'inline' }} href={REPO_URL}>GitHub 저장소</a>로.
+          운영 = 광운대 경영학부 21학번. AIM 1기 모집 = 2026-08-25 ~ 09-08 — 요강은{' '}
+          <a className="proof-link" style={{ display: 'inline' }} href="/recruit/">모집 페이지</a>,
+          문의는 스터디 단톡방 또는 <a className="proof-link" style={{ display: 'inline' }} href={REPO_URL}>GitHub 저장소</a>로.
         </p>
       </div>
     </section>

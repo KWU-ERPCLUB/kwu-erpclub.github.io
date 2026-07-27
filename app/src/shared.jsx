@@ -1,17 +1,18 @@
 // 전 페이지 공용 — 네비게이션·푸터·화살표·링크 상수
 // 탭·라벨=영문 정책(owner 2026-07-11): 현업에서 영어로 더 자주 쓰는 용어는 영문, 본문은 한글
-// 참여 CTA·폼 기능은 보류(owner 2026-07-10). 모집 안내 = about 사실 문장 1줄.
+// 모집 = /recruit/ 페이지(IA 3차 2026-07-27 — 사실 서술만·마케팅 어투 금지). 폼 기능 없음(문의 = 단톡방·GitHub).
 import { useState } from 'react'
 
 export const REPO_URL = 'https://github.com/KWU-ERPCLUB/kwu-erpclub.github.io'
 export const CONTRIBUTING_URL = `${REPO_URL}/blob/main/CONTRIBUTING.md`
 
 // 탭=페이지 이동만(owner 2026-07-11 — 메인 섹션 앵커 퀵바 폐지).
-// IA 2차(SPEC §4): 6종 = 메인(brand)·기사·세미나·about·log·projects. labs·reports·join 제거.
+// IA 3차(SPEC §4, 2026-07-27): 7종 = 메인(brand)·인사이트·세미나·프로젝트·모집·about·log. labs·reports·join 제거 유지.
 const NAV_LINKS = [
   ['INSIGHTS', '/insights/'],
   ['SEMINARS', '/seminars/'],
   ['PROJECTS', '/projects/'],
+  ['RECRUIT', '/recruit/'],
   ['ABOUT', '/about/'],
   ['LOG', '/log/'],
 ]

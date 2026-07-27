@@ -6,14 +6,17 @@ Deploy: GitHub Pages, org repo `KWU-ERPCLUB/kwu-erpclub.github.io`, main push = 
 
 ## Commands
 - dev: `npm run dev` (port 5173) / build: `npm run build` (vite build + `scripts/build-rss.mjs` → dist/rss.xml) / preview: `npm run preview`
-- test: `npm test` (vitest run — 56 tests / 8 files) / lint: `npm run lint` (oxlint src scripts)
+- test: `npm test` (vitest run) / lint: `npm run lint` (oxlint src scripts)
 - validate: `npm run validate` (content contract check — node scripts/validate-content.mjs)
 
 ## Stack & gotchas
 - Vite 5 + React 18 (NOT 19 — older than other apps, don't bump casually), plain CSS (no Tailwind)
-- MPA: static entries in vite.config rollupOptions.input = main(하이브리드: v3 소개+최근 활동) +
-  insights/seminars + about/log/projects. new page = new dir + `src/*-entry.jsx` + input entry.
+- MPA: static entries in vite.config rollupOptions.input = main(하이브리드: v3 소개+**모집 밴드**+최근 활동) +
+  insights/seminars + **recruit**(IA 3차 2026-07-27 — AIM 기수 안내) + about/log/projects. new page = new dir + `src/*-entry.jsx` + input entry.
   (insights 페이지 컴포넌트 파일명 = `pages/Articles.jsx`·`styles/articles.css` 유지 — 내부명, URL만 insights)
+- **모집 카피 규칙(SPEC §4 개정 2026-07-27)**: 사실 서술 허용(요강·기간·참여 방법 — 개조식) / 마케팅 어투 금지
+  grep {지금 바로, 놓치지, 마지막 기회, 서두르, 얼른} = 0. 모집 밴드 국면 전환 = `home-logic.js recruitPhase`(창 = RECRUIT_WINDOW 유일 원천).
+  [미정] 값(요일·회차 세부주제·주제 풀) 게재 금지 — 원천 = workspace `erp-club/docs/specs/2026-07-27-aim-운영틀.md`.
 - **labs·reports·join 페이지 제거**(IA 2차 2026-07-23 — labs=세미나 흡수·reports=폐기·join=about 흡수). 재도입 = 오너 재승인.
 - 멤버 페이지(목록+개인 auto-glob)는 **전부 제거**(SPEC 2026-07-23 오너 결정). 재도입 = 오너 재승인.
 - base '/' (org root site). Fonts via CDN link tags in each entry html (Pretendard + Paperlogy).

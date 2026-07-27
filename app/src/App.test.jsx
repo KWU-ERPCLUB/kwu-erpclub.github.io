@@ -50,6 +50,17 @@ test('WHY 섹션 부재(2026-07-25 폐지) — 수치 스트립·섹션 앵커 �
   expect(html).not.toContain('data-note')
 })
 
+test('모집 밴드(IA 3차) = 히어로 직하 공고 + /recruit/ 링크 + 상태 배지 · 섹션 스파이 제외(.page 미부여)', () => {
+  const html = renderToString(<App />)
+  expect(html).toContain('recruit-band')
+  expect(html).toContain('href="/recruit/"')
+  expect(html).toContain('AIM 1기')
+  expect(/class="recruit-band[^"]*page/.test(html)).toBe(false)
+  // FAQ 모집 답 = 확정 기간 반영(비정기 문구 폐지)
+  expect(html).toContain('2026-08-25 ~ 09-08')
+  expect(html).not.toContain('모집은 비정기')
+})
+
 test('RECENT 섹션 부재 + 삭제 페이지 링크(/join /reports /labs) 부재', () => {
   const html = renderToString(<App />)
   expect(html).not.toContain('id="recent"')

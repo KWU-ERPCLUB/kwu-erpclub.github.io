@@ -5,7 +5,7 @@
 // 모션: 문자 스태거 리빌 · 키워드 마퀴 · 커버 호버 리프트 · 섹션=페이지 감쇠(home-motion.jsx). transform·opacity만·reduced-motion 존중.
 // 색·폰트=현행 토큰(디자인규칙 §1·§2).
 import { Arrow, SiteNav, SiteFooter } from './shared.jsx'
-import { MARQUEE_KEYWORDS, marqueeTrack } from './home-logic.js'
+import { MARQUEE_KEYWORDS, marqueeTrack, localYmd, recruitPhase, RECRUIT_WINDOW } from './home-logic.js'
 import { useSectionSpy, useParallax, StaggerChars } from './home-motion.jsx'
 
 // PROJECTS — 풀폭 커버 카드(커버 캡처 + 대형 제목 오버레이). 클릭 = /projects/ 상세 딥링크.
@@ -38,7 +38,7 @@ const FAQ = [
   ['비용이 드나요?', '참가비 없음. 무료 도구 스택 기본, 일부 유료 AI 도구는 선택.'],
   ['무엇을 만들게 되나요?', '각자 경영·MIS 맥락의 실물(배포된 웹 결과물) 제작. 결과물은 본인 소유.'],
   ['ERP연구회와는 어떤 관계인가요?', 'ERP연구회 산하 스터디. 연구회 안에 SAP 실습·공모전 심화 트랙.'],
-  ['언제 모집하나요?', '모집은 비정기. 문의 = 스터디 단톡방 또는 GitHub 저장소.'],
+  ['언제 모집하나요?', '1기 모집 = 2026-08-25 ~ 09-08(2학기 운영). 요강·일정 = 모집(RECRUIT) 페이지. 문의 = 스터디 단톡방 또는 GitHub 저장소.'],
 ]
 
 function ChevronDown() {
@@ -74,6 +74,27 @@ function Hero() {
           </div>
         </div>
         <span className="scroll-cue rv" style={{ transitionDelay: '420ms' }}>SCROLL <ChevronDown /></span>
+      </div>
+    </section>
+  )
+}
+
+// 모집 밴드(IA 3차 2026-07-27) — 히어로 직하 공고. 기간 밖 = 예정/다음 기수 안내로 전환(SPEC §4).
+// .page 미부여 = 섹션 스파이(감쇠) 제외. 카피 = 사실 서술만.
+const RECRUIT_COPY = {
+  before: ['prep', '모집 예정', `AIM 1기 — ${RECRUIT_WINDOW.start} 모집 시작`],
+  open: ['live', '모집 중', `AIM 1기 — ${RECRUIT_WINDOW.end} 마감`],
+  after: ['planned', '안내', 'AIM 1기 모집 종료 — 다음 기수는 모집 페이지 참조'],
+}
+
+function RecruitBand() {
+  const [badge, badgeLabel, text] = RECRUIT_COPY[recruitPhase(localYmd())]
+  return (
+    <section className="recruit-band" id="recruit" aria-label="AIM 모집 안내">
+      <div className="rb-in">
+        <span className={`status ${badge}`}>{badgeLabel}</span>
+        <p className="rb-text">{text}</p>
+        <a className="proof-link" href="/recruit/">모집 안내 <Arrow /></a>
       </div>
     </section>
   )
@@ -181,6 +202,7 @@ export default function App() {
       <SiteNav />
       <main className="home">
         <Hero />
+        <RecruitBand />
         <Roadmap />
         <Projects />
         <Faq />

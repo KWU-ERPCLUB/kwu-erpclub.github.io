@@ -1,5 +1,22 @@
 import { expect, test } from 'vitest'
-import { MARQUEE_KEYWORDS, marqueeTrack, parseStat, easeOutCubic, countupFrame } from './home-logic.js'
+import { MARQUEE_KEYWORDS, marqueeTrack, parseStat, easeOutCubic, countupFrame, localYmd, recruitPhase, RECRUIT_WINDOW } from './home-logic.js'
+
+// ── 모집 국면(경계일 포함·기간 밖 전환 — SPEC §4) ──
+test('recruitPhase — before/open/after 경계(시작·마감일 = open 포함)', () => {
+  expect(recruitPhase('2026-08-24')).toBe('before')
+  expect(recruitPhase('2026-08-25')).toBe('open')
+  expect(recruitPhase('2026-09-01')).toBe('open')
+  expect(recruitPhase('2026-09-08')).toBe('open')
+  expect(recruitPhase('2026-09-09')).toBe('after')
+})
+test('recruitPhase — 창 주입 가능(운영틀 캘린더가 유일 원천)', () => {
+  expect(RECRUIT_WINDOW.start < RECRUIT_WINDOW.end).toBe(true)
+  expect(recruitPhase('2099-01-05', { start: '2099-01-01', end: '2099-01-10' })).toBe('open')
+})
+test('localYmd — YYYY-MM-DD 0패딩', () => {
+  expect(localYmd(new Date(2026, 0, 5))).toBe('2026-01-05')
+  expect(localYmd(new Date(2026, 11, 31))).toBe('2026-12-31')
+})
 
 // ── 마퀴 트랙(이음매 없는 순환 = 2배 복제) ──
 test('marqueeTrack — 트랙을 2배 복제(translateX -50% 순환용)', () => {

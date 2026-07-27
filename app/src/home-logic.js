@@ -21,6 +21,22 @@ export function parseStat(s) {
   return { prefix: m[1] || '', value: parseFloat(m[2]), decimals: m[3] ? m[3].length : 0, suffix: m[4] || '' }
 }
 
+// ── AIM 1기 모집 창(운영틀 §2 확정 캘린더) — 메인 모집 밴드가 소비 ──
+export const RECRUIT_WINDOW = { start: '2026-08-25', end: '2026-09-08' }
+
+// 로컬 기준 오늘을 YYYY-MM-DD로 — 문자열 비교로 시간대 함정 회피.
+export function localYmd(d = new Date()) {
+  const p = (n) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`
+}
+
+// 모집 국면 — before(예정) / open(모집 중, 경계일 포함) / after(다음 기수 안내. SPEC §4 전환 규칙).
+export function recruitPhase(ymd, win = RECRUIT_WINDOW) {
+  if (ymd < win.start) return 'before'
+  if (ymd > win.end) return 'after'
+  return 'open'
+}
+
 // ease-out cubic — 카운트업 감속(끝에서 부드럽게 멈춤).
 export function easeOutCubic(t) {
   const p = Math.max(0, Math.min(1, t))

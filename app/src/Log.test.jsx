@@ -57,7 +57,7 @@ test('page-head(§3-1) = 눈썹 LOG + 헤드라인 + 설명 + 최종 갱신(데�
   expect(html).toContain('log-eyebrow">LOG')
   expect(html).toContain('log-h1')
   expect(html).toContain('log-lead')
-  expect(html).toContain('최종 갱신 2026-07-11') // HISTORY 최상단에서 파생(하드코딩 아님)
+  expect(html).toContain('최종 갱신 2026-07-27') // HISTORY 최상단에서 파생(하드코딩 아님)
   // "내부 운영용" 콜아웃 유지 + ABOUT 링크
   expect(html).toContain('log-callout')
   expect(html).toContain('href="/about/"')
