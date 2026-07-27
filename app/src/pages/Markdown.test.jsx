@@ -63,6 +63,14 @@ describe('Markdown 서식 확장', () => {
     expect(html).toContain('&lt;b&gt;x')
   })
 
+  it('::: 비교 블록 = 2열 figure 렌더, 외부/비루트 경로는 제외', () => {
+    const html = renderToString(<Markdown body={'::: 비교\n/img/a.png | 개편 전\n/img/b.png | 개편 후\nhttps://evil.com/x.png | 외부\n:::'} />)
+    expect(html).toContain('md-compare')
+    expect(html).toContain('src="/img/a.png"')
+    expect(html).toContain('개편 후')
+    expect(html).not.toContain('evil.com')
+  })
+
   it('GFM 표 = table 렌더', () => {
     const html = renderToString(<Markdown body={'| 항목 | 값 |\n|---|---|\n| 도입 | 88% |'} />)
     expect(html).toContain('<table>')

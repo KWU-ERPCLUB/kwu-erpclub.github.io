@@ -173,6 +173,11 @@
 .hub-md .md-dc-arrow { margin: 0 0.45rem; color: var(--text-sub); }
 .hub-md .md-dc-a { font-weight: 700; }
 .hub-md .md-dc-why { margin: 0.3rem 0 0; font-size: 0.8rem; color: var(--text-sub); line-height: 1.5; word-break: keep-all; }
+.hub-md .md-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; margin: 0 0 1.9rem; }
+@media (max-width: 700px) { .hub-md .md-compare { grid-template-columns: 1fr; } }
+.hub-md .md-cmp-item { margin: 0; }
+.hub-md .md-cmp-item img { display: block; width: 100%; height: auto; margin: 0; border: 1px solid var(--line); border-radius: 10px; }
+.hub-md .md-cmp-item figcaption { margin-top: 0.4rem; font-size: 0.78rem; color: var(--text-sub); line-height: 1.4; word-break: keep-all; }
 
 /* ── 발원 기사 링크 (상세) ── */
 .sem-origin { font-size: 0.84rem; color: var(--text-sub); margin: 0 0 1.5rem; }

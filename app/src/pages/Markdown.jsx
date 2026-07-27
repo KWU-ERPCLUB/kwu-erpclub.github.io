@@ -12,7 +12,7 @@ const container = {
     return m ? m.index + (m[1] ? 1 : 0) : undefined
   },
   tokenizer(src) {
-    const m = /^:::\s*(요약|수치|용어|출처|로드맵|결정)\s*\n([\s\S]*?)\n:::\s*(?:\n+|$)/.exec(src)
+    const m = /^:::\s*(요약|수치|용어|출처|로드맵|결정|비교)\s*\n([\s\S]*?)\n:::\s*(?:\n+|$)/.exec(src)
     if (!m) return
     const token = { type: 'container', raw: m[0], kind: m[1], text: m[2], tokens: [] }
     if (m[1] === '요약') this.lexer.blockTokens(m[2], token.tokens)
@@ -39,6 +39,14 @@ const container = {
       const items = rows(token.text).map(([q, a, why]) =>
         `<div class="md-decision"><p class="md-dc-flow"><span class="md-dc-q">${esc(q)}</span><span class="md-dc-arrow" aria-hidden="true">→</span><strong class="md-dc-a">${esc(a || '')}</strong></p>${why ? `<p class="md-dc-why">${esc(why)}</p>` : ''}</div>`).join('')
       return `<div class="md-decisions">${items}</div>`
+    }
+    if (token.kind === '비교') {
+      // 행 형식: 이미지경로 | 캡션 — 2열 나란히(변경 전→후). 경로는 사이트 내부(/) 한정
+      const items = rows(token.text).map(([src, cap]) => {
+        const safe = (src || '').startsWith('/') ? src : ''
+        return safe ? `<figure class="md-cmp-item"><img src="${esc(safe)}" alt="${esc(cap || '')}" loading="lazy"><figcaption>${esc(cap || '')}</figcaption></figure>` : ''
+      }).join('')
+      return `<div class="md-compare">${items}</div>`
     }
     if (token.kind === '용어') {
       // 행 형식: 용어 | 설명 — 본문 ¹⁾²⁾ 각주 마커와 순번 대응(글 하단 작은 글씨)
