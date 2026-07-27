@@ -15,6 +15,7 @@ source_name: SAP News · OpenAI · CNBC 외
 - 2026년 1–6월, AI는 *대답하는 도구에서 일을 끝내는 에이전트로* 무게중심을 옮겼다. 무대도 개발자 화면에서 일반 사무직 PC와 ERP 코어로 넓어졌다.
 - 규제는 갈라졌다 — 한국·EU는 제도화(강도 조절), 미국은 완화·연방 단일화. 대신 미국은 수출통제로 최상위 모델을 직접 껐다 켰다.
 - 돈은 상위 소수에 몰렸고(OpenAI 1,220억 달러 조달·빅테크 4사 설비투자 약 7,000억 달러), 그 투자가 SK하이닉스·삼성전자 역대 실적으로 되돌아왔다.
+- 각 축 끝의 "우리에게"와 마지막 "그래서 우리는"에 경영학부·MIS·ERP 관점의 시사점을 정리했다.
 :::
 
 2026년 7월에 시작한 인사이트가 다루지 못한 상반기를 한 장으로 정리한다. 각 축은 시간순이고, 모든 사건에 출처를 붙였다.
@@ -49,9 +50,12 @@ source_name: SAP News · OpenAI · CNBC 외
 - **5/28** — Anthropic, Claude Opus 4.8 출시. 가격 동결, 코딩 벤치마크 SWE-bench **88.6%** ([Anthropic](https://www.anthropic.com/news/claude-opus-4-8)) — 상반기 기업용 업무 자동화의 사실상 기준 모델.
 - **6/9** — Anthropic, 최상위 모델 Fable 5·Mythos 5 출시. 사흘 뒤 미 정부 수출통제로 전면 중단됐다가 6월 말 해제 ([InfoQ](https://www.infoq.com/news/2026/06/claude-5-release/)) — 상세는 아래 규제 축.
 
+> **우리에게 —** 모델 가격이 오르내리는 시대엔 "어떤 모델을 쓰나"보다 *모델이 바뀌어도 무너지지 않는 활용 구조*가 자산이다. 이 스터디가 특정 모델 종속 없이 맥락 설계·검증 구조를 익히는 이유다. 기업 도입 관점에선 API 단가가 한 번에 2배가 될 수 있다는 사실 자체가 총소유비용(TCO³) 계산 항목이 됐다 — "도입하면 얼마 드나"라는 질문에 단가 변동 리스크까지 넣어야 한다.
+
 ::: 용어
 오픈웨이트 | 모델 내부 값(가중치)을 공개해 누구나 내려받아 쓰고 고칠 수 있게 한 배포 방식
 컨텍스트 | 모델이 한 번에 읽을 수 있는 입력 분량. 토큰 = 글자·단어를 쪼갠 단위
+TCO | 총소유비용(Total Cost of Ownership). 도입가만이 아니라 운영·변동 비용까지 합친 값
 :::
 
 ## 에이전트
@@ -63,6 +67,8 @@ source_name: SAP News · OpenAI · CNBC 외
 - **3/9** — MCP¹ 2026 로드맵 공개. 감사추적·SSO 등 기업 대응을 우선순위로 명시 ([MCP 블로그](https://blog.modelcontextprotocol.io/posts/2026-mcp-roadmap/)) — AI를 사내 시스템에 꽂는 "표준 콘센트"가 잡혀야 ERP 연동이 싸진다.
 - **5월** — Microsoft Copilot Studio, 화면을 직접 조작하는 Computer-Using Agents 정식 출시 ([Microsoft](https://www.microsoft.com/en-us/microsoft-copilot/blog/copilot-studio/new-and-improved-computer-using-agents-a-new-workflows-experience-and-real-time-voice-experiences/)) — API가 없는 낡은 시스템도 자동화 대상이 됐다.
 - **6/16** — SpaceX, 코딩 도구 Cursor 운영사를 **600억 달러** 전액 주식 인수 ([CNBC](https://www.cnbc.com/2026/06/16/spacex-spcx-cursor-acquisition-ipo.html)) — 코딩 에이전트가 수십조 원짜리 전략 자산으로 평가받았다.
+
+> **우리에게 —** 에이전트에 권한을 주고, 완료 조건을 정하고, 성과를 관리하는 일은 코드가 아니라 *조직 설계의 언어*다. OpenAI가 에이전트 플랫폼에 "신분·권한·성과관리"를 넣었다는 건 이 일이 경영학 전공자의 자리라는 뜻이기도 하다. MCP 같은 표준은 MIS 수업의 "시스템 통합"이 AI 시대에 어떻게 번역되는지 보여주는 실물이고, 화면을 직접 조작하는 에이전트는 API 없는 낡은 전산이 많은 국내 기업에서 수요가 클 수밖에 없다 — SI·DX 직무 면접에서 나올 이야기다.
 
 ::: 용어
 MCP | Model Context Protocol. AI와 외부 시스템(파일·DB·업무 도구)을 연결하는 공개 표준 규격
@@ -84,6 +90,8 @@ MCP | Model Context Protocol. AI와 외부 시스템(파일·DB·업무 도구)�
 - **6/1** — 플로리다주, OpenAI와 CEO 개인을 제소. 주 정부의 첫 AI 소송 ([CNBC](https://www.cnbc.com/2026/06/01/florida-ag-open-ai-altman-lawsuit.html)) — 책임이 회사를 넘어 경영진 개인까지 갔다.
 - **6/12** — 미 상무부, 최상위 모델(Fable 5·Mythos 5)에 수출통제² 발동 — 전 세계 서비스 즉시 중단, 6월 말 조건부 해제 ([Mayer Brown](https://www.mayerbrown.com/en/insights/publications/2026/06/commerce-department-extends-export-controls-to-advanced-ai-models-authorizes-release-to-specific-trusted-partners)) — 쓰던 AI가 정부 명령으로 하루아침에 끊길 수 있다. 특정 모델 하나에 업무를 묶어두면 안 되는 이유.
 
+> **우리에게 —** 고영향 AI 목록(채용·대출·의료)은 곧 경영 직무 목록이다. 인사·재무·마케팅에서 AI를 쓰는 순간 준법 점검이 따라오는데, "AI 거버넌스를 아는 경영학도"는 아직 드물다 — 차별화 지점이다. 수출통제 사례는 공급망 리스크 관리의 실물 교재이기도 하다. 특정 외산 모델 하나에 업무 프로세스를 묶으면 어떤 일이 생기는지, 상반기에 실제로 벌어졌다.
+
 ::: 용어
 고영향 AI | 채용·대출·의료처럼 사람의 권리·안전에 큰 영향을 주는 영역에 쓰이는 AI. 법이 별도 의무를 부과
 수출통제 | 무기·첨단기술을 외국에 넘길 때 정부 허가를 요구하는 제도. 최상위 AI 모델이 처음 이 대상이 됐다
@@ -99,6 +107,8 @@ MCP | Model Context Protocol. AI와 외부 시스템(파일·DB·업무 도구)�
 - **5월** — SAP, Joule Studio 발표. 기업이 직접 에이전트를 만들고 관리, 파트너 지원에 **1억 유로** 배정 ([SAP News](https://news.sap.com/2026/05/new-joule-studio-enterprise-scale-agentic-development/)) — 에이전트 제작이 SI¹·컨설팅의 새 일감이 됐다.
 - **5/27** — Salesforce, Agentforce 연간 반복 매출 **12억 달러** (전년 대비 +205%) 공시 ([Salesforce IR](https://investor.salesforce.com/news/news-details/2026/Salesforce-Delivers-Record-First-Quarter-Fiscal-2027-Results/default.aspx)) — 에이전트가 실제로 돈이 된다는 첫 공식 숫자.
 - **6월** — AI 연계 감원 누적 약 5만 건. 스탠퍼드 연구 기준 AI 노출 직무의 22–25세 고용 약 **6%** 감소, 고연령층은 오히려 증가 ([CBS News](https://www.cbsnews.com/news/ai-layoffs-hiring-entry-level-workers/)) — 타격은 해고보다 신입 채용 축소로 나타난다.
+
+> **우리에게 —** 이 축이 우리 스터디의 본진이다. ERP가 "사람이 입력하는 시스템"에서 "스스로 도는 시스템"으로 가면 사람의 일은 입력·운영이 아니라 *프로세스 설계와 에이전트 감독*으로 옮겨간다 — SAP 수업에서 배운 트랜잭션 처리 위에 "이 프로세스를 에이전트에게 어디까지 맡길까"라는 질문이 얹히는 것이다. DX·ERP 지망이라면 Joule과 Agentforce가 만들 직무 변화를 지금부터 추적할 것. 신입 채용 6% 감소는 뒤집으면 "AI로 일을 끝내본 증거를 가진 신입"이 그만큼 귀해졌다는 뜻이다 — 배포물과 기록이 이력서가 된다.
 
 ::: 용어
 SI | 시스템 통합(System Integration). 기업 전산 시스템을 대신 구축·운영해 주는 사업
@@ -117,6 +127,8 @@ SI | 시스템 통합(System Integration). 기업 전산 시스템을 대신 구
 - **5/20** — 엔비디아 분기 실적 — 매출 **820억 달러** (+85%), 데이터센터 752억 달러 ([Motley Fool](https://www.fool.com/earnings/call-transcripts/2026/05/20/nvidia-nvda-q1-2027-earnings-transcript/)) — AI 경기의 계기판.
 - **6/11** — SpaceX 사상 최대 IPO — 약 **750억 달러** 조달, 첫날 시총 약 2.1조 달러 ([NPR](https://www.npr.org/2026/06/11/nx-s1-5853199/spacex-ipo-price-elon-musk)) — 뒤이을 AI 기업 상장의 가격 기준점.
 
+> **우리에게 —** 이 투자 규모는 흐름이 당분간 멈추지 않는다는 신호지만, 회수가 어긋나면 조정도 그만큼 크다. 진로를 "AI 붐" 하나에 걸기보다, 붐이 식어도 남는 것 — 프로세스를 읽고 시스템으로 푸는 힘 — 에 투자하는 편이 안전하다. 그게 MIS라는 전공의 원래 자리이기도 하다.
+
 ## 한국
 
 규제(1/22 AI기본법 — 위 규제 축)와 함께, 소버린 AI¹ 선발전과 반도체 실적이 상반기를 채웠다.
@@ -132,10 +144,25 @@ SI | 시스템 통합(System Integration). 기업 전산 시스템을 대신 구
 - **4월** — SK하이닉스 1분기 영업이익 **37.6조 원** (영업이익률 72%, 창사 최대) ([SK하이닉스](https://news.skhynix.co.kr/q1-2026-business-results/)) — 미국 AI 투자가 HBM²을 타고 한국 실적으로.
 - **4월** — 삼성전자 1분기 영업이익 **57.2조 원** (전분기 대비 +185%) ([삼성전자 뉴스룸](https://news.samsung.com/kr/삼성전자-2026년-1분기-실적-발표)) — AI 사이클과 한국 경제가 한 몸이 됐다.
 
+> **우리에게 —** 반도체 실적과 정부 예산은 국내 취업 지형도다. AI 인프라·소버린 AI 관련 채용과 인턴·공모전이 실행과제 99개의 예산 흐름을 따라 생긴다 — 기회가 어디서 열릴지 보려면 뉴스보다 이 계획 문서를 먼저 보는 편이 빠르다.
+
 ::: 용어
 소버린 AI | 외국 기술에 의존하지 않는 자국 소유·통제 AI. 정부가 직접 육성하는 흐름
 HBM | 고대역폭 메모리(High Bandwidth Memory). AI 칩에 붙는 고성능 메모리 — SK하이닉스·삼성의 주력
 :::
+
+## 그래서 우리는
+
+상반기 흐름을 광운대 경영학부·MIS·ERP라는 우리 분모의 언어로 바꾸면 네 가지다.
+
+::: 결정
+에이전트가 조직 문제가 됐다 | 위임 구조를 익힌다 | 권한·완료 조건·검증 설계는 개발이 아니라 경영의 언어 — 스터디의 핵심 근육
+ERP가 자율 기업으로 간다 | SAP×AI 접점을 추적한다 | Joule·Agentforce가 DX·ERP 직무의 실무 어휘가 된다
+신입 채용이 줄었다 | 활용 증거를 쌓는다 | 배포물·기록이 "AI로 일을 끝내는 사람"의 증명 — 이 허브가 그 저장소
+규제가 실무가 됐다 | 거버넌스 문해력을 챙긴다 | 고영향 AI 점검은 경영 직무의 새 기본기, 아는 사람이 아직 드물다
+:::
+
+인사이트는 앞으로도 사건 정리에서 멈추지 않는다. 같은 사건이라도 우리 분모에서 무엇을 보고 무엇을 준비할지까지 적는다.
 
 ::: 출처
 GPT-5.5 출시 — OpenAI (4/23) | https://openai.com/index/introducing-gpt-5-5/
