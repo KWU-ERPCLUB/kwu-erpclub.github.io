@@ -50,8 +50,8 @@ export function ListView({ all, tab, onTab, topic, setTopic, month, setMonth, q,
         </div>
         <ChipRow label="성격" options={natureOpts} value={tab} onSelect={onTab} />
         <ChipRow label="주제" options={topicOpts} value={topic} onSelect={setTopic} sub />
-        {/* 기간(월) 필터 — 쌓인 월만 옵션으로(2개월 이상일 때만 노출, 2026-07-27 오너 지시) */}
-        {months.length >= 2 && (
+        {/* 기간(월) 필터 — 쌓인 월만 옵션으로, 기사 있으면 상시 노출(2026-07-27 오너 지시) */}
+        {months.length > 0 && (
           <div className="art-filter art-filter-sub">
             <span className="art-filter-label">기간</span>
             <select

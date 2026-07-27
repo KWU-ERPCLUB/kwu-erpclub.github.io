@@ -32,13 +32,13 @@ test('목록 = 상단 컨트롤 바(성격 칩+주제 칩+토글+검색) + 카�
   expect(html).not.toContain('hub-sec')        // 허브 4섹션 폐지
 })
 
-// 월 필터 — 1개월뿐이면 비노출, 2개월 이상이면 select 노출(픽스처 주입 — 콘텐츠 비의존).
-test('월 필터 — 2개월 이상 쌓이면 기간 select 노출·1개월이면 숨김', () => {
+// 월 필터 — 기사 있으면 상시 노출, 0건이면 숨김(픽스처 주입 — 콘텐츠 비의존).
+test('월 필터 — 기사 있으면 기간 select 노출(쌓인 월 전부 옵션)·0건이면 숨김', () => {
   const art = (slug, date) => ({ slug, title: slug, author: 'A', date, 성격: '트렌드', 설명: 'd', body: '' })
   const noop = () => {}
   const props = { tab: '전체', onTab: noop, topic: null, setTopic: noop, month: null, setMonth: noop, q: '', setQ: noop, onOpen: noop }
-  const one = renderToString(<ListView all={[art('a', '2026-07-25')]} {...props} />)
-  expect(one).not.toContain('art-month')
+  const none = renderToString(<ListView all={[]} {...props} />)
+  expect(none).not.toContain('art-month')
   const two = renderToString(<ListView all={[art('a', '2026-07-25'), art('b', '2026-08-03')]} {...props} />)
   expect(two).toContain('art-month')
   expect(two).toContain('2026.08')
