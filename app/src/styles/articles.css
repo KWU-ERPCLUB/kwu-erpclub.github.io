@@ -2,7 +2,9 @@
    토큰=global.css만 · light-only. 디자인규칙 v2: 버건디=화이트리스트(④눈썹·⑥링크밑줄·⑨focus·⑩좌보더)만·버건디 면 금지. */
 
 .art-page { margin: 0 auto; padding: 3rem 1.5rem 5rem; }
-.art-page--doc { max-width: 760px; }   /* 상세 = 720px 문서형 셸 */
+/* 상세 셸 폭 상한 해제(2026-07-28 도판 브레이크아웃) — 폭 책임 = .hub-md 그리드 트랙.
+   본문 텍스트 720px 유지, 비본문 요소(헤더·출처카드·하단내비)는 720 중앙 정렬로 승계. */
+.art-page--doc { max-width: none; }
 .art-page--list { max-width: var(--maxw); } /* 목록 = 상단 컨트롤 바 + 2열 색면 카드 그리드(AI in Use 구조) */
 @media (max-width: 700px) { .art-page { padding: 2rem 1.25rem 3.5rem; } }
 
@@ -149,8 +151,9 @@
 .art-empty-title { font-weight: 700; color: var(--text); font-size: 0.96rem; }
 .art-empty code { font-size: 0.85em; background: #fff; border: 1px solid var(--line); border-radius: 5px; padding: 0.08em 0.4em; }
 
-/* ── 상세 — 통일 디자인 셸(720px 문서형) ── */
-.art-detail { max-width: 720px; }
+/* ── 상세 — 통일 디자인 셸(텍스트 720px 문서형 + 도판 브레이크아웃) ── */
+.art-detail { max-width: none; }
+.art-detail > :not(.hub-md) { max-width: 720px; margin-inline: auto; }
 
 /* ① 문서 헤더 블록 — 눈썹(.art-idx 승계)·제목·메타·태그 */
 .art-doc-head { padding-bottom: 1.25rem; border-bottom: 1px solid var(--line); margin-bottom: 1.5rem; }
@@ -189,84 +192,10 @@
 .art-nav-dir { display: block; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.03em; color: var(--text-sub); margin-bottom: 0.25rem; }
 .art-nav-title { display: block; font-size: 0.9rem; font-weight: 600; line-height: 1.4; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-/* ── 마크다운 본문 (Markdown 컴포넌트=.hub-md) — Pretendard 1rem/lh1.65 ── */
-.hub-md { font-size: 1rem; line-height: 1.65; }
-.hub-md h2 { font-family: var(--font-display); font-weight: 800; font-size: 1.2rem; margin: 2rem 0 0.75rem; }
-.hub-md h3 { font-size: 1.05rem; font-weight: 700; margin: 1.5rem 0 0.5rem; }
-.hub-md p { margin: 0 0 1.1rem; }
-.hub-md ul, .hub-md ol { margin: 0 0 1.1rem; padding-left: 1.3rem; }
-.hub-md li { margin-bottom: 0.35rem; }
-.hub-md img { max-width: 100%; height: auto; border-radius: 10px; margin: 0.4rem 0; } /* 본문 폭 초과 방지 */
-.hub-md a { color: var(--text); text-decoration: none; border-bottom: 2px solid var(--accent); transition: color 150ms ease-out; } /* Tertiary 밑줄(⑥) */
-.hub-md a:hover { color: var(--accent); }
-.hub-md a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-.hub-md code { font-size: 0.88em; background: var(--surface); border: 1px solid var(--line); border-radius: 5px; padding: 0.08em 0.35em; }
-.hub-md pre { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 0.9rem 1.1rem; overflow-x: auto; }
-.hub-md pre code { background: none; border: none; padding: 0; }
-.hub-md blockquote { margin: 0 0 1.1rem; padding: 0.1rem 0 0.1rem 1.1rem; border-left: 3px solid var(--accent); color: var(--text-sub); } /* 콜아웃(⑩) */
-
-/* ── 기고 서식 확장 (2026-07-25) — 요약 박스·수치 카드·표·섹션 넘버링·용어·출처·강조 ── */
-.hub-md .md-summary { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 10px; padding: 1.1rem 1.3rem; margin: 0 0 1.9rem; } /* 콜아웃(⑩) 문법 승계 */
-.hub-md .md-block-label { display: block; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.05em; color: var(--accent); margin-bottom: 0.55rem; }
-.hub-md .md-summary ul, .hub-md .md-summary ol { margin: 0; padding-left: 1.15rem; }
-.hub-md .md-summary p:last-child { margin-bottom: 0; }
-
-.hub-md .md-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin: 0 0 1.9rem; }
-.hub-md .md-stat { background: var(--bg); padding: 1rem 1.1rem; display: flex; flex-direction: column; }
-.hub-md .md-stat-num { font-family: var(--font-display); font-weight: 800; font-size: 1.55rem; letter-spacing: -0.02em; line-height: 1.2; }
-.hub-md .md-stat-num::after { content: ''; display: block; width: 28px; height: 3px; background: var(--accent); margin: 0.4rem 0 0.55rem; } /* 스탯 언더바(③) */
-.hub-md .md-stat-desc { font-size: 0.86rem; color: var(--text-sub); line-height: 1.45; word-break: keep-all; }
-.hub-md .md-stat-src { font-size: 0.72rem; color: var(--text-sub); margin-top: 0.5rem; } /* 수치 출처 각주(stat-src) */
-
-/* ── ::: 로드맵 — 프로젝트 여정 세로 타임라인(레일+도트, 홈 rmap 문법 축소판) ── */
-.hub-md .md-roadmap { list-style: none; margin: 0 0 1.9rem; padding: 1.15rem 1.3rem; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
-.hub-md .md-roadmap li { display: flex; gap: 0.85rem; margin: 0; padding: 0 0 0.85rem; align-items: baseline; }
-.hub-md .md-roadmap li:last-child { padding-bottom: 0; }
-.hub-md .md-rm-date { flex: 0 0 3.2rem; font-size: 0.75rem; font-weight: 700; color: var(--text-sub); font-variant-numeric: tabular-nums; }
-.hub-md .md-rm-mark { flex: 0 0 9px; position: relative; align-self: stretch; }
-.hub-md .md-rm-mark::before { content: ''; position: absolute; left: 3px; top: 0.6em; bottom: -0.5em; width: 1px; background: var(--line); }
-.hub-md .md-roadmap li:last-child .md-rm-mark::before { display: none; }
-.hub-md .md-rm-mark::after { content: ''; position: absolute; left: 0; top: 0.3em; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); } /* 타임라인 도트(화이트리스트 — 홈 rm-dot 승계) */
-.hub-md .md-rm-body { flex: 1; font-size: 0.92rem; line-height: 1.5; word-break: keep-all; }
-.hub-md .md-rm-sub { display: block; font-size: 0.83rem; color: var(--text-sub); }
-
-/* ── ::: 비교 — 변경 전→후 2열(모바일 1열) ── */
-.hub-md .md-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; margin: 0 0 1.9rem; }
-@media (max-width: 700px) { .hub-md .md-compare { grid-template-columns: 1fr; } }
-.hub-md .md-cmp-item { margin: 0; }
-.hub-md .md-cmp-item img { display: block; width: 100%; height: auto; margin: 0; border: 1px solid var(--line); border-radius: 10px; }
-.hub-md .md-cmp-item figcaption { margin-top: 0.4rem; font-size: 0.78rem; color: var(--text-sub); line-height: 1.4; word-break: keep-all; }
-
-/* ── ::: 결정 — 의사결정 로직 카드(문제 → 결정 / 근거) ── */
-.hub-md .md-decisions { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin: 0 0 1.9rem; }
-.hub-md .md-decision { background: var(--bg); padding: 0.85rem 1.1rem; }
-.hub-md .md-dc-flow { margin: 0; font-size: 0.92rem; line-height: 1.5; word-break: keep-all; }
-.hub-md .md-dc-q { color: var(--text-sub); }
-.hub-md .md-dc-arrow { margin: 0 0.45rem; color: var(--text-sub); }
-.hub-md .md-dc-a { font-weight: 700; }
-.hub-md .md-dc-why { margin: 0.3rem 0 0; font-size: 0.8rem; color: var(--text-sub); line-height: 1.5; word-break: keep-all; }
-
-.hub-md table { width: 100%; border-collapse: collapse; font-size: 0.92rem; margin: 0 0 1.6rem; display: block; overflow-x: auto; }
-.hub-md th, .hub-md td { text-align: left; padding: 0.55rem 0.8rem; border-bottom: 1px solid var(--line); line-height: 1.5; word-break: keep-all; }
-.hub-md th { background: var(--surface); font-weight: 700; font-size: 0.86rem; white-space: nowrap; }
-
 /* 섹션 넘버링 — 기사 상세 한정(세미나·프로젝트 본문 제외) */
 .art-detail .hub-md { counter-reset: mdsec; }
 .art-detail .hub-md h2 { counter-increment: mdsec; padding-top: 1.6rem; border-top: 1px solid var(--line); margin-top: 2.4rem; }
 .art-detail .hub-md h2::before { content: counter(mdsec, decimal-leading-zero); display: block; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 0.4rem; } /* 섹션 인덱스(④) */
-
-/* 본문 핵심구 강조 — *별표* = 버건디 굵은 글씨(이탤릭 폐지, 2026-07-25 오너 지시 — 절제 사용) */
-.hub-md em { font-style: normal; font-weight: 700; color: var(--accent); }
-
-/* 용어 설명 = 섹션 끝 소프트 박스(단락 단위 배치, 2026-07-25 오너 2차 지시) / 출처 = 글 하단 */
-.hub-md .md-terms { margin: 1.4rem 0 0; padding: 0.8rem 1.1rem; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; font-size: 0.8rem; color: var(--text-sub); line-height: 1.6; }
-.hub-md .md-terms .md-block-label { font-size: 0.72rem; margin-bottom: 0.35rem; color: var(--text-sub); }
-.hub-md .md-sources { margin: 2.4rem 0 0; padding-top: 1.1rem; border-top: 1px solid var(--line); font-size: 0.82rem; color: var(--text-sub); line-height: 1.6; }
-.hub-md .md-terms ol, .hub-md .md-sources ol { margin: 0; padding-left: 1.2rem; }
-.hub-md .md-terms li, .hub-md .md-sources li { margin-bottom: 0.3rem; }
-.hub-md .md-terms strong { color: var(--text); font-weight: 700; }
-.hub-md .md-sources a { color: var(--text); }
-.hub-md .md-source-note { color: var(--text-sub); }
 
 /* 성격색 칩 — 필터·상세 태그 공용(카드 배경 4색과 동일 계열, 2026-07-25 오너 지시) */
 .chip-news     { --nbg: #e5f0fb; --nfg: #38618c; }

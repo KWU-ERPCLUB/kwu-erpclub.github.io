@@ -1,0 +1,51 @@
+<!-- ROC 곡선과 AUROC · ADsP 보드 개념 도해(교재 무관 일반 개념) -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 360" role="img" aria-label="ROC 곡선: 무작위 모형 대각선과 좋은 모형 곡선, AUROC 면적" font-family="Pretendard, system-ui, sans-serif" fill="currentColor">
+  <title>ROC 곡선과 AUROC</title>
+
+  <!-- AUROC 음영 -->
+  <path d="M90 310 C120 160 190 70 350 50 L350 310 Z" fill="#E8A23C" fill-opacity="0.16"/>
+
+  <!-- 축 -->
+  <g stroke="currentColor" fill="none" stroke-width="1.4">
+    <path d="M90 310 H358"/>
+    <path d="M90 310 V44"/>
+  </g>
+  <g stroke="currentColor" stroke-width="1" opacity="0.35" fill="none">
+    <path d="M220 310 V50"/>
+    <path d="M90 180 H350"/>
+  </g>
+
+  <!-- 무작위 모형(대각선) -->
+  <path d="M90 310 L350 50" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="6 5" opacity="0.75"/>
+  <!-- 좋은 모형 곡선 -->
+  <path d="M90 310 C120 160 190 70 350 50" fill="none" stroke="#E8A23C" stroke-width="2.6" stroke-linecap="round"/>
+
+  <!-- 눈금 -->
+  <g font-size="12" opacity="0.8">
+    <text x="90" y="330" text-anchor="middle">0.0</text>
+    <text x="220" y="330" text-anchor="middle">0.5</text>
+    <text x="350" y="330" text-anchor="middle">1.0</text>
+    <text x="82" y="314" text-anchor="end">0.0</text>
+    <text x="82" y="184" text-anchor="end">0.5</text>
+    <text x="82" y="54" text-anchor="end">1.0</text>
+  </g>
+
+  <!-- 축 이름 -->
+  <text x="220" y="352" text-anchor="middle" font-size="13">FPR = 1 − 특이도</text>
+  <text x="36" y="180" text-anchor="middle" font-size="13" transform="rotate(-90 36 180)">TPR = 민감도</text>
+
+  <!-- 범례 -->
+  <g font-size="12.5">
+    <path d="M382 112 H408" stroke="#E8A23C" stroke-width="2.6" fill="none"/>
+    <text x="416" y="116">좋은 모형 (AUC ≈ 0.9)</text>
+    <path d="M382 142 H408" stroke="currentColor" stroke-width="1.6" stroke-dasharray="6 5" opacity="0.75" fill="none"/>
+    <text x="416" y="146">무작위 모형 (AUC = 0.5)</text>
+    <rect x="382" y="164" width="26" height="14" fill="#E8A23C" fill-opacity="0.16" stroke="#E8A23C" stroke-opacity="0.5"/>
+    <text x="416" y="176">AUROC = 곡선 아래 면적</text>
+  </g>
+  <g font-size="12.5" opacity="0.85">
+    <text x="382" y="218">곡선이 좌상단에 붙을수록</text>
+    <text x="382" y="236">AUC가 1에 가깝고 분류 성능이 좋다.</text>
+    <text x="382" y="262">AUC 0.5 = 아무 정보 없음</text>
+  </g>
+</svg>

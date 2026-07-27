@@ -71,6 +71,37 @@ describe('Markdown 서식 확장', () => {
     expect(html).not.toContain('evil.com')
   })
 
+  it('::: 결정 4번째 칸(폐기한 대안) = 선택 렌더, 3칸 기존 형식은 무변경(하위호환)', () => {
+    const four = renderToString(<Markdown body={'::: 결정\n두 벌 운영인가 | 제자리 UPDATE | 표기만 바뀜 | 개정판 별도 시드\n:::'} />)
+    expect(four).toContain('md-dc-dropped')
+    expect(four).toContain('개정판 별도 시드')
+    const three = renderToString(<Markdown body={'::: 결정\n수기 집계인가 | 웹앱 제작 | 매주 걷는 비용 제거\n:::'} />)
+    expect(three).not.toContain('md-dc-dropped')
+  })
+
+  it('::: 로드맵 ⭐ 접두 = 대형 분기점 마커 클래스 + 별 제거된 제목', () => {
+    const html = renderToString(<Markdown body={'::: 로드맵\n06-26 | 스터디 시작\n07-01 | ⭐교재 단일원천 전환 | 전량 폐기\n:::'} />)
+    expect(html).toContain('md-rm-major')
+    expect(html).toContain('교재 단일원천 전환')
+    expect(html).not.toContain('⭐교재')
+  })
+
+  it('::: 분기점 블록 = 5행 고정 라벨 카드, 누락 행 미표시 + 이스케이프', () => {
+    const html = renderToString(<Markdown body={'::: 분기점\n문제 | 강의 자료가 교재와 어긋남\n따진 대안 | 부분 수정 유지\n결정 | 전량 폐기·교재 단일원천\n버린 것 | 1·2과목 정리본 전부\n결과 | 919문항 전부 역참조\n:::'} />)
+    expect(html).toContain('md-branch')
+    expect(html).toContain('전량 폐기·교재 단일원천')
+    expect(html).toContain('919문항 전부 역참조')
+    const partial = renderToString(<Markdown body={'::: 분기점\n문제 | <b>x\n결정 | y\n:::'} />)
+    expect(partial).toContain('&lt;b&gt;x')
+    expect(partial).not.toContain('버린 것')
+  })
+
+  it('::: 비교 4항목 = 4개 figure 전부 렌더(2×2 갤러리 재사용)', () => {
+    const html = renderToString(<Markdown body={'::: 비교\n/img/1.svg | 상자그림\n/img/2.svg | 혼동행렬\n/img/3.svg | ROC\n/img/4.svg | 덴드로그램\n:::'} />)
+    expect((html.match(/md-cmp-item/g) || []).length).toBe(4)
+    expect(html).toContain('덴드로그램')
+  })
+
   it('GFM 표 = table 렌더', () => {
     const html = renderToString(<Markdown body={'| 항목 | 값 |\n|---|---|\n| 도입 | 88% |'} />)
     expect(html).toContain('<table>')

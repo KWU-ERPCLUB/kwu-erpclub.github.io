@@ -86,7 +86,11 @@
 .pj-card-info:hover .pj-card-title { text-decoration: underline; text-underline-offset: 3px; }
 
 /* ── 상세 — 커버 배너 → 제목·설명·상태·링크 → 소개 → 프롬프트 로그 ── */
-.pj-detail { max-width: 760px; }
+/* 폭 상한 해제(2026-07-28 도판 브레이크아웃) — 본문 = .hub-md 그리드(text 720), 비본문 요소는 720 중앙 */
+.pj-detail { max-width: none; }
+.pj-detail > :not(.hub-md, .pj-log-block) { max-width: 720px; margin-inline: auto; }
+.pj-log-block .pj-log-title,
+.pj-log-block .pj-log-body { max-width: 720px; margin-inline: auto; } /* 프롬프트 로그 = 텍스트 패널 — 720 유지 */
 .pj-detail-banner { margin-bottom: 1.75rem; }
 .pj-detail-cover {
   display: block;

@@ -1,0 +1,125 @@
+/* 마크다운 본문(.hub-md) 공용 — 기사·세미나·프로젝트 상세가 공유(2026-07-28 articles.css·pages.css 중복 통합).
+   토큰=global.css만 · light-only · 디자인규칙 v2(버건디 화이트리스트 ③⑥⑦⑩·면 금지). */
+
+/* ── 도판 브레이크아웃 3계층(디자인규칙 §3, 2026-07-28) ──
+   text 720(본문·표·리스트) / wide ≤1040(스탯·타임라인·결정·분기점) / full(비교쌍·단독 이미지).
+   named-track 그리드 단일 정의 — 음수 마진·100vw 금지, 미디어쿼리 없이 자연 붕괴. */
+.hub-md {
+  font-size: 1rem;
+  line-height: 1.65;
+  display: grid;
+  grid-template-columns:
+    [full-start] minmax(0, 1fr)
+    [wide-start] minmax(0, 160px)
+    [text-start] min(100%, 720px) [text-end]
+    minmax(0, 160px) [wide-end]
+    minmax(0, 1fr) [full-end];
+}
+.hub-md > * { grid-column: text; }
+.hub-md > .md-stats,
+.hub-md > .md-roadmap,
+.hub-md > .md-decisions,
+.hub-md > .md-branch { grid-column: wide; }
+/* full 계층 — 대형 모니터 업스케일 방지 1400px 상한 + 중앙 */
+.hub-md > .md-compare,
+.hub-md > p:has(> img:only-child) { grid-column: full; width: 100%; max-width: 1400px; justify-self: center; }
+
+/* ── 기본 타이포 ── */
+.hub-md h2 { font-family: var(--font-display); font-weight: 800; font-size: 1.2rem; margin: 2rem 0 0.75rem; }
+.hub-md h3 { font-size: 1.05rem; font-weight: 700; margin: 1.5rem 0 0.5rem; }
+.hub-md p { margin: 0 0 1.1rem; }
+.hub-md ul, .hub-md ol { margin: 0 0 1.1rem; padding-left: 1.3rem; }
+.hub-md li { margin-bottom: 0.35rem; }
+.hub-md img { max-width: 100%; height: auto; display: block; margin: 0.4rem 0; border-radius: 10px; }
+.hub-md a { color: var(--text); text-decoration: none; border-bottom: 2px solid var(--accent); transition: color 150ms ease-out; } /* Tertiary 밑줄(⑥) */
+.hub-md a:hover { color: var(--accent); }
+.hub-md a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.hub-md code { font-size: 0.88em; background: var(--surface); border: 1px solid var(--line); border-radius: 5px; padding: 0.08em 0.35em; }
+.hub-md pre { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 0.9rem 1.1rem; overflow-x: auto; }
+.hub-md pre code { background: none; border: none; padding: 0; }
+.hub-md blockquote { margin: 0 0 1.1rem; padding: 0.1rem 0 0.1rem 1.1rem; border-left: 3px solid var(--accent); color: var(--text-sub); } /* 콜아웃(⑩) */
+.hub-md table { width: 100%; border-collapse: collapse; font-size: 0.92rem; margin: 0 0 1.6rem; display: block; overflow-x: auto; }
+.hub-md th, .hub-md td { text-align: left; padding: 0.55rem 0.8rem; border-bottom: 1px solid var(--line); line-height: 1.5; word-break: keep-all; }
+.hub-md th { background: var(--surface); font-weight: 700; font-size: 0.86rem; white-space: nowrap; }
+/* 본문 핵심구 강조 — *별표* = 버건디 굵은 글씨(이탤릭 폐지, 2026-07-25 오너 지시 — 절제 사용) */
+.hub-md em { font-style: normal; font-weight: 700; color: var(--accent); }
+
+/* ── ::: 요약 ── */
+.hub-md .md-summary { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 10px; padding: 1.1rem 1.3rem; margin: 0 0 1.9rem; } /* 콜아웃(⑩) */
+.hub-md .md-block-label { display: block; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.05em; color: var(--accent); margin-bottom: 0.55rem; }
+.hub-md .md-summary ul, .hub-md .md-summary ol { margin: 0; padding-left: 1.15rem; }
+.hub-md .md-summary p:last-child { margin-bottom: 0; }
+
+/* ── ::: 수치 — 스탯 카드 ── */
+.hub-md .md-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin: 0 0 1.9rem; }
+.hub-md .md-stat { background: var(--bg); padding: 1rem 1.1rem; display: flex; flex-direction: column; }
+.hub-md .md-stat-num { font-family: var(--font-display); font-weight: 800; font-size: 1.55rem; letter-spacing: -0.02em; line-height: 1.2; }
+.hub-md .md-stat-num::after { content: ''; display: block; width: 28px; height: 3px; background: var(--accent); margin: 0.4rem 0 0.55rem; } /* 스탯 언더바(③) */
+.hub-md .md-stat-desc { font-size: 0.86rem; color: var(--text-sub); line-height: 1.45; word-break: keep-all; }
+.hub-md .md-stat-src { font-size: 0.72rem; color: var(--text-sub); margin-top: 0.5rem; }
+
+/* ── ::: 로드맵 — 모바일 세로 타임라인(레일+도트) ── */
+.hub-md .md-roadmap { list-style: none; margin: 0 0 1.9rem; padding: 1.15rem 1.3rem; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.hub-md .md-roadmap li { display: flex; gap: 0.85rem; margin: 0; padding: 0 0 0.85rem; align-items: baseline; }
+.hub-md .md-roadmap li:last-child { padding-bottom: 0; }
+.hub-md .md-rm-date { flex: 0 0 3.2rem; font-size: 0.75rem; font-weight: 700; color: var(--text-sub); font-variant-numeric: tabular-nums; }
+.hub-md .md-rm-mark { flex: 0 0 9px; position: relative; align-self: stretch; }
+.hub-md .md-rm-mark::before { content: ''; position: absolute; left: 3px; top: 0.6em; bottom: -0.5em; width: 1px; background: var(--line); }
+.hub-md .md-roadmap li:last-child .md-rm-mark::before { display: none; }
+.hub-md .md-rm-mark::after { content: ''; position: absolute; left: 0; top: 0.3em; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); } /* 타임라인 도트(⑦) */
+.hub-md .md-rm-body { flex: 1; font-size: 0.92rem; line-height: 1.5; word-break: keep-all; }
+.hub-md .md-rm-sub { display: block; font-size: 0.83rem; color: var(--text-sub); }
+/* ⭐ 대형 분기점 마커 — 도트 확대 + 날짜 버건디(빈도: 로드맵당 최대 2 권장) */
+.hub-md .md-rm-major .md-rm-date { color: var(--accent); }
+.hub-md .md-rm-major .md-rm-mark::after { width: 11px; height: 11px; left: -2px; top: 0.22em; }
+.hub-md .md-rm-major .md-rm-body strong { font-weight: 800; }
+/* 데스크톱 = 가로 레일(컨테이너 내 overflow-x 허용) */
+@media (min-width: 701px) {
+  .hub-md .md-roadmap { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(8.5rem, 1fr); overflow-x: auto; padding: 1.25rem 1.3rem 1.15rem; }
+  .hub-md .md-roadmap li { display: flex; flex-direction: column; padding: 0 0.8rem 0 0; }
+  .hub-md .md-roadmap li:last-child { padding-right: 0; }
+  .hub-md .md-rm-date { flex: none; margin-bottom: 0.45rem; }
+  .hub-md .md-rm-mark { flex: none; align-self: stretch; height: 9px; margin-bottom: 0.55rem; }
+  .hub-md .md-rm-mark::before { top: 4px; bottom: auto; left: 12px; right: -0.85rem; width: auto; height: 1px; }
+  .hub-md .md-rm-mark::after { top: 1px; left: 0; }
+  .hub-md .md-rm-major .md-rm-mark::after { top: -1px; left: 0; }
+  .hub-md .md-rm-body { font-size: 0.88rem; }
+}
+
+/* ── ::: 비교 — 전→후 2열·4항목=2×2 갤러리(모바일 1열) ── */
+.hub-md .md-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; margin: 0 0 1.9rem; }
+@media (max-width: 700px) { .hub-md .md-compare { grid-template-columns: 1fr; } }
+.hub-md .md-cmp-item { margin: 0; }
+.hub-md .md-cmp-item img { display: block; width: 100%; height: auto; margin: 0; border: 1px solid var(--line); border-radius: 10px; }
+.hub-md .md-cmp-item figcaption { margin-top: 0.4rem; font-size: 0.78rem; color: var(--text-sub); line-height: 1.4; word-break: keep-all; }
+
+/* ── ::: 결정 — 의사결정 로직 카드(문제 → 결정 / 근거 / 폐기 대안) ── */
+.hub-md .md-decisions { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin: 0 0 1.9rem; }
+.hub-md .md-decision { background: var(--bg); padding: 0.85rem 1.1rem; }
+.hub-md .md-dc-flow { margin: 0; font-size: 0.92rem; line-height: 1.5; word-break: keep-all; }
+.hub-md .md-dc-q { color: var(--text-sub); }
+.hub-md .md-dc-arrow { margin: 0 0.45rem; color: var(--text-sub); }
+.hub-md .md-dc-a { font-weight: 700; }
+.hub-md .md-dc-why { margin: 0.3rem 0 0; font-size: 0.8rem; color: var(--text-sub); line-height: 1.5; word-break: keep-all; }
+.hub-md .md-dc-dropped { margin: 0.2rem 0 0; font-size: 0.8rem; color: var(--text-sub); line-height: 1.5; word-break: keep-all; }
+.hub-md .md-dc-dropped s { text-decoration-color: var(--text-sub); }
+
+/* ── ::: 분기점 — 대형 분기점 보록(5행 고정: 문제·따진 대안·결정·버린 것·결과) ── */
+.hub-md .md-branch { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0; padding: 1.1rem 1.3rem 0.6rem; margin: 0 0 1.9rem; } /* 좌보더(⑩) */
+.hub-md .md-branch .md-block-label { margin-bottom: 0.3rem; }
+.hub-md .md-br-row { display: grid; grid-template-columns: 5.2rem 1fr; gap: 0.7rem; padding: 0.5rem 0; border-top: 1px solid var(--line); }
+.hub-md .md-branch .md-block-label + .md-br-row { border-top: none; }
+.hub-md .md-br-label { font-size: 0.78rem; font-weight: 700; color: var(--text-sub); padding-top: 0.18rem; }
+.hub-md .md-br-body { font-size: 0.92rem; line-height: 1.55; word-break: keep-all; }
+.hub-md .md-br-key .md-br-body { font-weight: 700; }
+@media (max-width: 700px) { .hub-md .md-br-row { grid-template-columns: 1fr; gap: 0.15rem; } }
+
+/* ── ::: 용어 / ::: 출처 ── */
+.hub-md .md-terms { margin: 1.4rem 0 0; padding: 0.8rem 1.1rem; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; font-size: 0.8rem; color: var(--text-sub); line-height: 1.6; }
+.hub-md .md-terms .md-block-label { font-size: 0.72rem; margin-bottom: 0.35rem; color: var(--text-sub); }
+.hub-md .md-sources { margin: 2.4rem 0 0; padding-top: 1.1rem; border-top: 1px solid var(--line); font-size: 0.82rem; color: var(--text-sub); line-height: 1.6; }
+.hub-md .md-terms ol, .hub-md .md-sources ol { margin: 0; padding-left: 1.2rem; }
+.hub-md .md-terms li, .hub-md .md-sources li { margin-bottom: 0.3rem; }
+.hub-md .md-terms strong { color: var(--text); font-weight: 700; }
+.hub-md .md-sources a { color: var(--text); }
+.hub-md .md-source-note { color: var(--text-sub); }

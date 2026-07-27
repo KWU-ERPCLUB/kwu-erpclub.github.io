@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 330" role="img" aria-label="문항 919문항 구성 — 절 퀴즈 358, 모의고사 185, 전과목 기출 150, 예상 146, 기출유형 80. 학습 단위 절 29개 — 1과목 11, 2과목 6, 3과목 12">
+  <style>
+    text { font-family: Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; }
+    .t { font-size: 15px; font-weight: 700; fill: #161616; }
+    .n { font-size: 13px; fill: #55524e; }
+    .in { font-size: 13px; font-weight: 700; fill: #ffffff; }
+    .cap { font-size: 12px; fill: #55524e; }
+  </style>
+  <!-- 상단: 문항 919 스택바 (강조 바 1개 = 절 퀴즈, 버건디) -->
+  <text class="t" x="40" y="30">문항 919 — 전부 교재 역참조</text>
+  <g>
+    <rect x="40"  y="48" width="358" height="46" fill="#7A2030"/>
+    <rect x="398" y="48" width="186" height="46" fill="#161616"/>
+    <rect x="584" y="48" width="150" height="46" fill="#3d3b38"/>
+    <rect x="734" y="48" width="146" height="46" fill="#6b6864"/>
+    <rect x="880" y="48" width="80"  height="46" fill="#9a9691"/>
+    <text class="in" x="219" y="76" text-anchor="middle">절 퀴즈 358</text>
+    <text class="in" x="491" y="76" text-anchor="middle">모의 185</text>
+    <text class="in" x="659" y="76" text-anchor="middle">기출 150</text>
+    <text class="in" x="807" y="76" text-anchor="middle">예상 146</text>
+  </g>
+  <g>
+    <text class="n" x="40"  y="118">■ 절 퀴즈 358 — 29절 전 범위</text>
+    <text class="n" x="280" y="118">■ 모의고사 185 (3회)</text>
+    <text class="n" x="470" y="118">■ 전과목 기출 150 (45~47회)</text>
+    <text class="n" x="700" y="118">■ 예상 146</text>
+    <text class="n" x="820" y="118">■ 기출유형 80</text>
+  </g>
+  <!-- 하단: 학습 단위 절 29 -->
+  <text class="t" x="40" y="176">학습 단위 — 절 29개 (교재 목차 그대로)</text>
+  <g>
+    <rect x="40"  y="194" width="349" height="46" fill="#161616"/>
+    <rect x="389" y="194" width="190" height="46" fill="#55524e"/>
+    <rect x="579" y="194" width="381" height="46" fill="#83807b"/>
+    <text class="in" x="214" y="222" text-anchor="middle">1과목 11절</text>
+    <text class="in" x="484" y="222" text-anchor="middle">2과목 6절</text>
+    <text class="in" x="769" y="222" text-anchor="middle">3과목 12절</text>
+  </g>
+  <text class="cap" x="40" y="268">절 = 교재 목차의 실제 단위. 임의 배분(Day)이 아니라 어느 절을 아는지가 드러나는 단위.</text>
+  <text class="cap" x="40" y="290">퀴즈 문항 수 상한 없음 — 절마다 중요도가 달라 균등 배분은 핵심문제를 잘라냄.</text>
+</svg>

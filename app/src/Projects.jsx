@@ -147,7 +147,7 @@ export default function Projects() {
     return (
       <>
         <SiteNav />
-        <main className="hub-page">
+        <main className="hub-page hub-page--wide">
           <ProjectDetail p={cur} onBack={back} />
         </main>
         <SiteFooter />

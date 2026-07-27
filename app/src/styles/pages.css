@@ -8,6 +8,8 @@
   padding: 3rem 1.5rem 5rem; /* 내부형 — 소개형 4.5rem의 ~55% */
 }
 @media (max-width: 700px) { .hub-page { padding: 2rem 1.25rem 3.5rem; } }
+/* 상세 전용 폭 해제(2026-07-28 도판 브레이크아웃) — 목록 셸은 920 유지, 폭 책임 = .hub-md 그리드(hub-md.css) */
+.hub-page--wide { max-width: none; }
 
 /* ── 페이지 머리 — 브랜드 타이포 승계(Paperlogy display + 버건디 em) ── */
 .hub-head {
@@ -118,66 +120,6 @@
   border-bottom: 1px solid var(--line);
   margin-bottom: 1.75rem;
 }
-
-/* ── 마크다운 본문 — Pretendard 1rem/lh1.65, 45~75자 ── */
-.hub-md { font-size: 1rem; line-height: 1.65; }
-.hub-md h2 { font-family: var(--font-display); font-weight: 800; font-size: 1.2rem; margin: 2rem 0 0.75rem; }
-.hub-md h3 { font-size: 1.05rem; font-weight: 700; margin: 1.5rem 0 0.5rem; }
-.hub-md p { margin: 0 0 1.1rem; }
-.hub-md ul, .hub-md ol { margin: 0 0 1.1rem; padding-left: 1.3rem; }
-.hub-md li { margin-bottom: 0.35rem; }
-.hub-md a { /* Tertiary — 버건디 밑줄(화이트리스트 ⑥) */
-  color: var(--text);
-  text-decoration: none;
-  border-bottom: 2px solid var(--accent);
-}
-.hub-md a:hover { color: var(--accent); }
-.hub-md code {
-  font-size: 0.88em;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 5px;
-  padding: 0.08em 0.35em;
-}
-.hub-md pre {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 0.9rem 1.1rem;
-  overflow-x: auto;
-}
-.hub-md pre code { background: none; border: none; padding: 0; }
-.hub-md img { max-width: 100%; height: auto; display: block; margin: 1.1rem 0; border-radius: 10px; } /* 본문 이미지 풀폭 대응(에디토리얼) */
-.hub-md blockquote { /* 콜아웃 — 좌측 3px 버건디 보더(화이트리스트 ⑩) */
-  margin: 0 0 1.1rem;
-  padding: 0.1rem 0 0.1rem 1.1rem;
-  border-left: 3px solid var(--accent);
-  color: var(--text-sub);
-}
-
-/* ── ::: 로드맵 / ::: 결정 — Markdown 컨테이너(articles.css와 동일 정의 — 두 셸이 분리 로드되는 구조라 중복 유지) ── */
-.hub-md .md-roadmap { list-style: none; margin: 0 0 1.9rem; padding: 1.15rem 1.3rem; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
-.hub-md .md-roadmap li { display: flex; gap: 0.85rem; margin: 0; padding: 0 0 0.85rem; align-items: baseline; }
-.hub-md .md-roadmap li:last-child { padding-bottom: 0; }
-.hub-md .md-rm-date { flex: 0 0 3.2rem; font-size: 0.75rem; font-weight: 700; color: var(--text-sub); font-variant-numeric: tabular-nums; }
-.hub-md .md-rm-mark { flex: 0 0 9px; position: relative; align-self: stretch; }
-.hub-md .md-rm-mark::before { content: ''; position: absolute; left: 3px; top: 0.6em; bottom: -0.5em; width: 1px; background: var(--line); }
-.hub-md .md-roadmap li:last-child .md-rm-mark::before { display: none; }
-.hub-md .md-rm-mark::after { content: ''; position: absolute; left: 0; top: 0.3em; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); } /* 타임라인 도트(화이트리스트 — 홈 rm-dot 승계) */
-.hub-md .md-rm-body { flex: 1; font-size: 0.92rem; line-height: 1.5; word-break: keep-all; }
-.hub-md .md-rm-sub { display: block; font-size: 0.83rem; color: var(--text-sub); }
-.hub-md .md-decisions { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin: 0 0 1.9rem; }
-.hub-md .md-decision { background: var(--bg); padding: 0.85rem 1.1rem; }
-.hub-md .md-dc-flow { margin: 0; font-size: 0.92rem; line-height: 1.5; word-break: keep-all; }
-.hub-md .md-dc-q { color: var(--text-sub); }
-.hub-md .md-dc-arrow { margin: 0 0.45rem; color: var(--text-sub); }
-.hub-md .md-dc-a { font-weight: 700; }
-.hub-md .md-dc-why { margin: 0.3rem 0 0; font-size: 0.8rem; color: var(--text-sub); line-height: 1.5; word-break: keep-all; }
-.hub-md .md-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; margin: 0 0 1.9rem; }
-@media (max-width: 700px) { .hub-md .md-compare { grid-template-columns: 1fr; } }
-.hub-md .md-cmp-item { margin: 0; }
-.hub-md .md-cmp-item img { display: block; width: 100%; height: auto; margin: 0; border: 1px solid var(--line); border-radius: 10px; }
-.hub-md .md-cmp-item figcaption { margin-top: 0.4rem; font-size: 0.78rem; color: var(--text-sub); line-height: 1.4; word-break: keep-all; }
 
 /* ── 발원 기사 링크 (상세) ── */
 .sem-origin { font-size: 0.84rem; color: var(--text-sub); margin: 0 0 1.5rem; }

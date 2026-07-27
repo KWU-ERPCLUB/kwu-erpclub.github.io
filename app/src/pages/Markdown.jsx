@@ -12,7 +12,7 @@ const container = {
     return m ? m.index + (m[1] ? 1 : 0) : undefined
   },
   tokenizer(src) {
-    const m = /^:::\s*(요약|수치|용어|출처|로드맵|결정|비교)\s*\n([\s\S]*?)\n:::\s*(?:\n+|$)/.exec(src)
+    const m = /^:::\s*(요약|수치|용어|출처|로드맵|결정|비교|분기점)\s*\n([\s\S]*?)\n:::\s*(?:\n+|$)/.exec(src)
     if (!m) return
     const token = { type: 'container', raw: m[0], kind: m[1], text: m[2], tokens: [] }
     if (m[1] === '요약') this.lexer.blockTokens(m[2], token.tokens)
@@ -29,16 +29,29 @@ const container = {
       return `<div class="md-stats">${items}</div>`
     }
     if (token.kind === '로드맵') {
-      // 행 형식: 날짜 | 제목 | 한 줄(선택) — 프로젝트 여정 세로 타임라인
-      const items = rows(token.text).map(([date, title, sub]) =>
-        `<li><span class="md-rm-date">${esc(date)}</span><span class="md-rm-mark" aria-hidden="true"></span><span class="md-rm-body"><strong>${esc(title || '')}</strong>${sub ? `<span class="md-rm-sub">${esc(sub)}</span>` : ''}</span></li>`).join('')
+      // 행 형식: 날짜 | 제목 | 한 줄(선택) — 여정 타임라인(데스크톱 가로 레일·모바일 세로).
+      // 제목 앞 ⭐ = 대형 분기점 마커(li.md-rm-major, 별 문자는 제거하고 클래스로 표현).
+      const items = rows(token.text).map(([date, title, sub]) => {
+        const major = (title || '').startsWith('⭐')
+        const label = major ? (title || '').slice(1).trim() : title || ''
+        return `<li${major ? ' class="md-rm-major"' : ''}><span class="md-rm-date">${esc(date)}</span><span class="md-rm-mark" aria-hidden="true"></span><span class="md-rm-body"><strong>${esc(label)}</strong>${sub ? `<span class="md-rm-sub">${esc(sub)}</span>` : ''}</span></li>`
+      }).join('')
       return `<ol class="md-roadmap">${items}</ol>`
     }
     if (token.kind === '결정') {
-      // 행 형식: 문제 | 결정 | 근거(선택) — 의사결정 로직 카드
-      const items = rows(token.text).map(([q, a, why]) =>
-        `<div class="md-decision"><p class="md-dc-flow"><span class="md-dc-q">${esc(q)}</span><span class="md-dc-arrow" aria-hidden="true">→</span><strong class="md-dc-a">${esc(a || '')}</strong></p>${why ? `<p class="md-dc-why">${esc(why)}</p>` : ''}</div>`).join('')
+      // 행 형식: 문제 | 결정 | 근거(선택) | 폐기한 대안(선택) — 의사결정 로직 카드
+      const items = rows(token.text).map(([q, a, why, dropped]) =>
+        `<div class="md-decision"><p class="md-dc-flow"><span class="md-dc-q">${esc(q)}</span><span class="md-dc-arrow" aria-hidden="true">→</span><strong class="md-dc-a">${esc(a || '')}</strong></p>${why ? `<p class="md-dc-why">${esc(why)}</p>` : ''}${dropped ? `<p class="md-dc-dropped">폐기 — <s>${esc(dropped)}</s></p>` : ''}</div>`).join('')
       return `<div class="md-decisions">${items}</div>`
+    }
+    if (token.kind === '분기점') {
+      // 행 형식: 5행 고정 라벨(문제·따진 대안·결정·버린 것·결과) | 내용 — 대형 분기점 보록(wide).
+      // 라벨 순서 고정, 누락 행은 미표시. 라벨 밖 행은 무시(오타 안전).
+      const ORDER = ['문제', '따진 대안', '결정', '버린 것', '결과']
+      const map = new Map(rows(token.text).map(([label, body]) => [(label || '').trim(), body || '']))
+      const items = ORDER.filter((l) => map.get(l)).map((l) =>
+        `<div class="md-br-row${l === '결정' ? ' md-br-key' : ''}"><span class="md-br-label">${esc(l)}</span><span class="md-br-body">${esc(map.get(l))}</span></div>`).join('')
+      return `<aside class="md-branch"><span class="md-block-label">분기점</span>${items}</aside>`
     }
     if (token.kind === '비교') {
       // 행 형식: 이미지경로 | 캡션 — 2열 나란히(변경 전→후). 경로는 사이트 내부(/) 한정
