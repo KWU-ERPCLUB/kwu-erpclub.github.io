@@ -66,6 +66,13 @@ test('예정 배지 — date>today면 "예정", 과거면 없음', () => {
   expect(past).not.toContain('sem-soon-badge')
 })
 
+test('일정미정 — 과거 date여도 "일정 미정" 표기 + 예정 배지(날짜 비표시)', () => {
+  const html = flat(<SeminarTimelineItem s={base({ date: '2026-06-01', 일정미정: true })} today={TODAY} onOpen={noop} />)
+  expect(html).toContain('일정 미정')
+  expect(html).toContain('sem-soon-badge')
+  expect(html).not.toContain('2026.06.01') // 날짜 대신 미정 표기
+})
+
 test('간략 설명 — 요점 배열이면 불릿, 없으면 본문 발췌', () => {
   const withPts = flat(<SeminarTimelineItem s={base({ 요점: ['첫 요점', '둘째 요점'] })} today={TODAY} onOpen={noop} />)
   expect(withPts).toContain('sem-tl-points')

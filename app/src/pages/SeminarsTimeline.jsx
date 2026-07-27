@@ -28,7 +28,9 @@ export function SeminarTimelineItem({ s, today, featured = false, onOpen = () =>
   return (
     <li className={`sem-tl-item${featured ? ' is-featured' : ''}`}>
       <div className="sem-tl-date">
-        <time className="sem-tl-day" dateTime={s.date}>{(s.date || '').replace(/-/g, '.')}</time>
+        {s['일정미정'] === true
+          ? <span className="sem-tl-day">일정 미정</span>
+          : <time className="sem-tl-day" dateTime={s.date}>{(s.date || '').replace(/-/g, '.')}</time>}
         {upcoming && <span className="sem-soon-badge">예정</span>}
       </div>
       <div className="sem-tl-body">

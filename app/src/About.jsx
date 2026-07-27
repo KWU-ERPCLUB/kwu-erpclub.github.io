@@ -156,7 +156,7 @@ export function Proof({ proof }) {
           ))}
         </div>
         <p className="ab-note rv" style={{ transitionDelay: '260ms' }}>
-          운영 = 광운대 경영학부 21학번. 모집은 비정기 — 문의는{' '}
+          운영 = 광운대 경영학부 21학번. 모집은 비정기 — 문의는 스터디 단톡방 또는{' '}
           <a className="proof-link" style={{ display: 'inline' }} href={REPO_URL}>GitHub 저장소</a>로.
         </p>
       </div>

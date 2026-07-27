@@ -32,6 +32,15 @@ test('태그 형식 위반 검출(빈 배열·6개·#포함·비문자열)', () 
   }
 })
 
+// ── 세미나 일정미정(선택 boolean — 개최일 미확정, 2026-07-27) ──
+const semMin = { title: '세미나', author: 'bapzzi', date: '2026-07-25', 회차: '1', 유형: '인지' }
+test('일정미정=true(boolean)면 통과', () => {
+  expect(validateEntry('세미나', '2026-07-25-bapzzi-x.md', { ...semMin, 일정미정: true })).toEqual([])
+})
+test('일정미정이 boolean 아니면 검출(문자열 위반)', () => {
+  expect(validateEntry('세미나', '2026-07-25-bapzzi-x.md', { ...semMin, 일정미정: 'true' }).some((e) => e.includes('일정미정'))).toBe(true)
+})
+
 test('정상 기사 통과 (성격·주제 필수·지금써먹기 없음)', () => {
   expect(validateEntry('기사', '2026-07-22-bapzzi-ai-trend.md', good)).toEqual([])
 })

@@ -33,8 +33,10 @@ export function filterByTopic(all, topic) {
   return (all || []).filter((s) => s['주제'] === topic)
 }
 
-// date > today(엄격 미래) → "예정" 배지. today == date는 예정 아님(SPEC §4 v3).
+// date > today(엄격 미래) ∨ 일정미정=true → "예정" 배지. today == date는 예정 아님(SPEC §4 v3).
+// 일정미정 = 개최일 미확정 세미나(과거 date여도 예정 취급 — 2026-07-27 오너 지시).
 export function isUpcoming(s, today) {
+  if (s && s['일정미정'] === true) return true
   return (s && s.date ? s.date : '') > (today || '')
 }
 

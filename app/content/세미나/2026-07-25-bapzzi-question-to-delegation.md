@@ -5,6 +5,7 @@ date: 2026-07-25
 회차: 1
 유형: 인지
 주제: 에이전트
+일정미정: true
 슬라이드: https://kwu-erpclub.github.io/slides/s1/
 썸네일: [/slides/s1/thumb-1.png, /slides/s1/thumb-2.png]
 요점: [챗과 에이전트의 차이 = 실행 범위와 완료 조건, Prompt → Context → Harness — 활용 구조 3단, 환각은 구조의 귀결 — 검증이 기본기, 위임에는 완료 조건과 독립 검증]

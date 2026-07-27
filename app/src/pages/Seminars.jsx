@@ -6,9 +6,10 @@ import { todayString, splitSeminarBody, splitLead, parseBullets, parseSources } 
 import SeminarsTimeline from './SeminarsTimeline.jsx'
 import Markdown from './Markdown.jsx'
 
-// 일시·장소·발제자 한 줄(마이크로) — 장소는 있을 때만. 상세 밴드 메타용.
+// 일시·장소·발제자 한 줄(마이크로) — 장소는 있을 때만, 일정미정=true면 날짜 대신 '일정 미정'. 상세 밴드 메타용.
 function metaLine(s) {
-  return [s.date, s['장소'], `발제 ${s.author}`].filter(Boolean).join(' · ')
+  const when = s['일정미정'] === true ? '일정 미정' : s.date
+  return [when, s['장소'], `발제 ${s.author}`].filter(Boolean).join(' · ')
 }
 
 // "다루는 내용" 섹션 → 01~NN 번호 목차형(번호=버건디, 데스크톱 2열 grid·모바일 1열). 불릿 0개면 비표시.
@@ -86,7 +87,7 @@ export function SeminarDetail({ s, onBack }) {
             <span className="sem-ed-mono" aria-hidden="true">{(s.author || '?').charAt(0).toUpperCase()}</span>
             <span className="sem-ed-byline-txt">
               <span className="sem-ed-byline-name">발제 {s.author}</span>
-              <span className="sem-ed-byline-date">{s.date}</span>
+              <span className="sem-ed-byline-date">{s['일정미정'] === true ? '일정 미정' : s.date}</span>
             </span>
           </div>
         )}

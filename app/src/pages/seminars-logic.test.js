@@ -46,6 +46,11 @@ test('isUpcoming — date>today만 예정(경계=오늘은 예정 아님)', () =
   expect(isUpcoming({}, '2026-07-25')).toBe(false)
 })
 
+test('isUpcoming — 일정미정=true면 과거 date여도 예정', () => {
+  expect(isUpcoming({ ...S('x', '2026-06-01'), 일정미정: true }, '2026-07-25')).toBe(true)
+  expect(isUpcoming({ ...S('x', '2026-06-01'), 일정미정: false }, '2026-07-25')).toBe(false)
+})
+
 test('todayString — 고정 Date 주입 시 로컬 YYYY-MM-DD', () => {
   expect(todayString(new Date(2026, 6, 24))).toBe('2026-07-24') // month 6 = 7월
   expect(todayString(new Date(2026, 0, 5))).toBe('2026-01-05')
