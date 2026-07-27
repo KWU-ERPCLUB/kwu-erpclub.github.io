@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
-import Articles from './Articles.jsx'
+import Articles, { ListView } from './Articles.jsx'
 import { ArticleRow } from './insights-parts.jsx'
 
 // 구조 개혁(2026-07-24 2차): 좌측 탭·허브 4섹션·월별 그룹 폐지 → AI in Use 구조(상단 컨트롤 바 + 2열 색면 카드 그리드).
@@ -30,6 +30,19 @@ test('목록 = 상단 컨트롤 바(성격 칩+주제 칩+토글+검색) + 카�
   expect(html).not.toContain('art-tabs')      // 좌측 탭 폐지
   expect(html).not.toContain('art-month-head') // 월별 그룹 폐지
   expect(html).not.toContain('hub-sec')        // 허브 4섹션 폐지
+})
+
+// 월 필터 — 1개월뿐이면 비노출, 2개월 이상이면 select 노출(픽스처 주입 — 콘텐츠 비의존).
+test('월 필터 — 2개월 이상 쌓이면 기간 select 노출·1개월이면 숨김', () => {
+  const art = (slug, date) => ({ slug, title: slug, author: 'A', date, 성격: '트렌드', 설명: 'd', body: '' })
+  const noop = () => {}
+  const props = { tab: '전체', onTab: noop, topic: null, setTopic: noop, month: null, setMonth: noop, q: '', setQ: noop, onOpen: noop }
+  const one = renderToString(<ListView all={[art('a', '2026-07-25')]} {...props} />)
+  expect(one).not.toContain('art-month')
+  const two = renderToString(<ListView all={[art('a', '2026-07-25'), art('b', '2026-08-03')]} {...props} />)
+  expect(two).toContain('art-month')
+  expect(two).toContain('2026.08')
+  expect(two).toContain('2026.07')
 })
 
 // 색 면 카드(AI in Use 이식) — 배경=성격 색 클래스, 제목 아래 태그 줄(성격·주제·지금써먹기), 날짜+시각(2026-07-25 개정).

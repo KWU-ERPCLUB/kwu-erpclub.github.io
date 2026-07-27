@@ -1,8 +1,24 @@
 import { expect, test } from 'vitest'
 import {
-  excerpt, filterArticles, pinnedFirst, neighbors,
+  excerpt, filterArticles, pinnedFirst, neighbors, extractMonths,
   stateFromSearch, searchFromState, natureKey, authorInitial, HUB_TAB,
 } from './insights-logic.js'
+
+// ── 월 필터(2026-07-27 오너 지시 — 쌓인 월만 옵션·최신 먼저) ──
+test('extractMonths — 등장 월만 중복 없이 최신순', () => {
+  const data = [{ date: '2026-07-25' }, { date: '2026-07-27' }, { date: '2026-06-01' }, { date: '' }, {}]
+  expect(extractMonths(data)).toEqual(['2026-07', '2026-06'])
+  expect(extractMonths([])).toEqual([])
+})
+test('filterArticles — month=YYYY-MM 일치만, 다른 필터와 AND 결합', () => {
+  const data = [
+    { title: 'a', date: '2026-07-25', 성격: '트렌드', body: '' },
+    { title: 'b', date: '2026-06-10', 성격: '트렌드', body: '' },
+  ]
+  expect(filterArticles(data, { month: '2026-07' }).map((x) => x.title)).toEqual(['a'])
+  expect(filterArticles(data, { month: '2026-06', nature: '트렌드' }).map((x) => x.title)).toEqual(['b'])
+  expect(filterArticles(data, { month: null }).length).toBe(2)
+})
 
 // ── URL ↔ 상태 (뒤로가기·딥링크) ──
 test('stateFromSearch — ?p=<slug>는 상세, tab 없으면 허브', () => {

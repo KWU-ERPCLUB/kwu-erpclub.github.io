@@ -49,12 +49,20 @@ export function excerpt(body, n = 96) {
   return text.length > n ? `${text.slice(0, n).trim()}…` : text
 }
 
-// 성격·주제·지금써먹기 3필터 + 검색(제목·설명·태그·본문 부분일치) AND 결합.
-export function filterArticles(all, { nature = null, topic = null, nowUse = false, q = '' } = {}) {
+// 콘텐츠에 실제 등장하는 월('YYYY-MM') 목록 — 최신 먼저. 월 필터 옵션 생성용(2026-07-27 오너 지시).
+export function extractMonths(all) {
+  const seen = new Set()
+  for (const a of all || []) if (a.date && /^\d{4}-\d{2}/.test(a.date)) seen.add(a.date.slice(0, 7))
+  return [...seen].sort().reverse()
+}
+
+// 성격·주제·월·지금써먹기 필터 + 검색(제목·설명·태그·본문 부분일치) AND 결합. month='YYYY-MM'|null.
+export function filterArticles(all, { nature = null, topic = null, month = null, nowUse = false, q = '' } = {}) {
   const query = q.trim().toLowerCase()
   return all.filter((a) => {
     if (nature && a['성격'] !== nature) return false
     if (topic && a['주제'] !== topic) return false
+    if (month && (a.date || '').slice(0, 7) !== month) return false
     if (nowUse && !a['지금써먹기']) return false
     if (query) {
       const tags = Array.isArray(a['태그']) ? a['태그'].join(' ') : ''

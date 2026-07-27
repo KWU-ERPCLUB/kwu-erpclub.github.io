@@ -6,7 +6,7 @@ import { SiteNav, SiteFooter, CONTRIBUTING_URL } from '../shared.jsx'
 import { loadContent } from '../content/loader.js'
 import { TOPICS } from '../content/schema.js'
 import {
-  HUB_TAB, TABS, NATURE_KEY, stateFromSearch, searchFromState, filterArticles, pinnedFirst,
+  HUB_TAB, TABS, NATURE_KEY, stateFromSearch, searchFromState, filterArticles, pinnedFirst, extractMonths,
 } from './insights-logic.js'
 import { ArticleRow } from './insights-parts.jsx'
 import ArticleDetail from './ArticleDetail.jsx'
@@ -29,10 +29,11 @@ function ChipRow({ label, options, value, onSelect, sub = false }) {
   )
 }
 
-// 목록 뷰 — 상단 컨트롤 바 + 카운트 라인 + 2열 색면 카드 그리드(고정 핀 최상단).
-function ListView({ all, tab, onTab, topic, setTopic, q, setQ, onOpen }) {
+// 목록 뷰 — 상단 컨트롤 바 + 카운트 라인 + 2열 색면 카드 그리드(고정 핀 최상단). export = 픽스처 주입 테스트용.
+export function ListView({ all, tab, onTab, topic, setTopic, month, setMonth, q, setQ, onOpen }) {
   const nature = tab === HUB_TAB ? null : tab
-  const filtered = filterArticles(all, { nature, topic, q })
+  const months = extractMonths(all)
+  const filtered = filterArticles(all, { nature, topic, month, q })
   const { pinned, rest } = pinnedFirst(filtered)
   // 성격 칩 = 성격색(카드 배경과 동일 4색 — 2026-07-25 오너 지시), '전체'만 무채색.
   const natureOpts = TABS.map((t) => ({ key: t, val: t, label: t, cls: NATURE_KEY[t] ? `chip-${NATURE_KEY[t]}` : undefined }))
@@ -49,6 +50,19 @@ function ListView({ all, tab, onTab, topic, setTopic, q, setQ, onOpen }) {
         </div>
         <ChipRow label="성격" options={natureOpts} value={tab} onSelect={onTab} />
         <ChipRow label="주제" options={topicOpts} value={topic} onSelect={setTopic} sub />
+        {/* 기간(월) 필터 — 쌓인 월만 옵션으로(2개월 이상일 때만 노출, 2026-07-27 오너 지시) */}
+        {months.length >= 2 && (
+          <div className="art-filter art-filter-sub">
+            <span className="art-filter-label">기간</span>
+            <select
+              className="art-month" value={month || ''} aria-label="월 필터"
+              onChange={(e) => setMonth(e.target.value || null)}
+            >
+              <option value="">전체</option>
+              {months.map((m) => <option key={m} value={m}>{m.replace('-', '.')}</option>)}
+            </select>
+          </div>
+        )}
       </div>
 
       {/* 카운트 라인 — N건 표시 중 / 전체 M건 */}
@@ -75,6 +89,7 @@ export default function Articles() {
   const [tab, setTab] = useState(initial.tab)
   const [sel, setSel] = useState(initial.slug)
   const [topic, setTopic] = useState(null)
+  const [month, setMonth] = useState(null)
   const [q, setQ] = useState('')
 
   // 뒤로가기·앞으로가기(popstate) → URL에서 탭·상세 복원.
@@ -120,7 +135,8 @@ export default function Articles() {
         </header>
         <ListView
           all={all} tab={tab} onTab={(t) => nav({ tab: t, slug: null })}
-          topic={topic} setTopic={setTopic} q={q} setQ={setQ} onOpen={openArticle}
+          topic={topic} setTopic={setTopic} month={month} setMonth={setMonth}
+          q={q} setQ={setQ} onOpen={openArticle}
         />
       </main>
       <SiteFooter />
