@@ -81,7 +81,7 @@ export function ProjectGrid({ list, onOpen }) {
     return (
       <div className="hub-empty hub-empty-how">
         <p className="hub-empty-title">등재된 프로젝트 아직 없음.</p>
-        <p>스터디가 만들어 배포한 결과물이 여기 쌓임 — 커버 캡처 + 한 줄 설명 + 상태.</p>
+        <p>스터디의 프로젝트·활동 기록이 여기 쌓임 — 배포물이 아니어도 됨. 커버 캡처 + 한 줄 설명 + 상태.</p>
         <p>
           기고 = <a href={CONTRIBUTING_URL} target="_blank" rel="noreferrer">기고 가이드</a> 참고 →
           <code> content/프로젝트/_template.md</code> 복사 → 규칙 채움 → 자동 게재.
@@ -161,8 +161,8 @@ export default function Projects() {
       <main className="hub-page">
         <header className="hub-head">
           <span className="hub-idx">PROJECTS</span>
-          <h1>만든 <em>것들</em></h1>
-          <p>만들고 배포한 결과물.</p>
+          <h1><em>프로젝트</em></h1>
+          <p>스터디가 만들고 운영한 것 — 배포물과 활동 기록.</p>
         </header>
         <ProjectGrid list={all} onOpen={open} />
       </main>

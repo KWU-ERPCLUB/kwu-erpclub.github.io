@@ -10,7 +10,7 @@ import { useSectionSpy, useParallax, StaggerChars } from './home-motion.jsx'
 
 // PROJECTS — 풀폭 커버 카드(커버 캡처 + 대형 제목 오버레이). 클릭 = /projects/ 상세 딥링크.
 const PROJECTS = [
-  ['ADsP Study Board', '/img/projects/adsp-board.png', '/projects/?p=2026-07-24-bapzzi-adsp-board', '운영 중'],
+  ['ADsP 스터디 1기', '/img/projects/adsp-board.png', '/projects/?p=2026-07-24-bapzzi-adsp-board', '진행 중'],
   ['KWU ERP Club Site', '/img/projects/erpclub-site.png', '/projects/?p=2026-07-24-bapzzi-erpclub-site', '운영 중'],
 ]
 
@@ -126,7 +126,7 @@ function Projects() {
     <section className="hs hs-projects page" id="projects">
       <div className="hs-in">
         <span className="page-idx rv">02 — PROJECTS</span>
-        <h2 className="hs-title rv" style={{ transitionDelay: '90ms' }}>만든 <em>것들</em></h2>
+        <h2 className="hs-title rv" style={{ transitionDelay: '90ms' }}><em>프로젝트</em></h2>
         <div className="hp-list rv" style={{ transitionDelay: '180ms' }}>
           {PROJECTS.map(([title, cover, href, tag]) => (
             <a className="hp-card" href={href} key={title}>
