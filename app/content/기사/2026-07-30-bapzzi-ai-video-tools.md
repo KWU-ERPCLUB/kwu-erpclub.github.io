@@ -1,120 +1,129 @@
 ---
-title: AI 영상 도구 지형 — 생성·아바타·편집 3계층과 용도별 조합
+title: AI 영상 제작 현업 파이프라인 — 단계별 표준 도구와 실제 광고 제작 사례
 author: bapzzi
 date: 2026-07-30
-시각: 16:00
-source_url: https://artificialanalysis.ai/video/leaderboard/text-to-video
-source_name: Artificial Analysis Video Arena
+시각: 16:35
+source_url: https://techcrunch.com/2026/03/26/bytedances-new-ai-video-generation-model-dreamina-seedance-2-0-comes-to-capcut/
+source_name: TechCrunch · Luma · Adobe 외
 성격: 도구·프롬프트
 주제: 크리에이티브·미디어
-설명: 과제·발표·홍보 릴스용 AI 영상 도구 15종 — 3계층 지형, 가격, 실사용 평가, 용도별 조합
-태그: [영상생성, 브루, 캡컷, Veo]
+설명: 상업 제작 기준 AI 영상 파이프라인 — 기획→이미지→영상 생성→편집→음성·음악 단계별 표준 도구, 코카콜라·Kalshi·삼성증권 실제 사례
+태그: [영상생성, Seedance, Kling, Higgsfield, 워크플로우]
 지금써먹기: true
 ---
 
 ::: 요약
-- 2026년 7월 기준 AI 영상 도구 15종을 생성·아바타·편집 3계층으로 정리. 스터디원 요청으로 조사
-- 결론은 단일 도구가 아니라 조합 — 발표 영상은 브루 중심, 홍보 숏폼은 생성 모델+캡컷, 강의형은 브루·Descript
-- 전부 무료 티어로 시작 가능. 유료 전환 시 현실 구간은 월 $10~29
+- 현업 상업 제작 기준 AI 영상 파이프라인을 단계별로 정리 — 기획(Claude·GPT) → 스타일프레임(Midjourney·FLUX) → 영상 생성(Seedance·Kling·Higgsfield·Veo) → 편집(Premiere·Resolve) → 음성(ElevenLabs) → 음악(Suno)
+- 실제 광고 3사례의 수치 포함 — 코카콜라(12개월→2개월), Kalshi NBA 광고($2,000·채택률 4~5%), 삼성증권 100% AI 광고
+- 2026 상반기 구도: 중국계 모델 강세·멀티모델 허브화·"이미지→영상+후반작업이 프로 방식"이라는 컨센서스
 :::
 
-경영학부 학생이 영상을 만드는 상황은 대체로 셋이다. 과제·발표 영상, 홍보 숏폼(릴스·쇼츠), 강의·설명 콘텐츠.
+이 글은 학생 과제용이 아니라 *현업 상업 제작 기준*으로 쓴다. 어떤 도구가 어느 단계의 표준이 되고 있는지, 실제 광고는 어떤 조합으로 만들어졌는지를 본다.
 
-이 글은 그 세 용도 기준으로 2026년 7월 시점의 도구 지형을 정리한다. 공식 발표(가격·스펙)와 실사용 평가(유튜브·커뮤니티·리뷰)를 구분해 표기한다 — 후자는 단정이 아니라 참고다.
+버전·가격은 공식 발표 기준이고, 사용감·시장 점유 같은 업계 평가는 실사용·업계 소스 기준의 비단정 서술이다.
 
-## 한 장 요약 — 3계층으로 보면 된다
+## 파이프라인 한 장 — 단계별 표준 구도
 
-도구 이름이 쏟아져도 층은 셋뿐이다. 자기 용도가 어느 층에 걸리는지만 알면 선택지가 줄어든다.
+2026년 현재 업계에서 통용되는 서술은 대체로 이 순서다. 촬영 없이도 광고 한 편이 이 체인으로 완성된다.
 
-| 계층 | 하는 일 | 대표 도구 |
-|------|---------|-----------|
-| 생성 | 프롬프트 → 영상 클립(수 초~수십 초) | Veo 3.1 · Sora 2 · Runway · Kling · Hailuo · Luma · Pika |
-| 아바타·발표 | 대본 → 발표자(아바타) 영상 | HeyGen · Synthesia |
-| 편집·자막 | 촬영본·생성본 → 완성 영상 | 브루(Vrew) · CapCut · Descript · Opus Clip |
+| 단계 | 표준 도구 | 비고 |
+|------|-----------|------|
+| 기획·스크립트 | Claude · ChatGPT · Gemini | 샷리스트·대본. 대본 일관성은 Claude가 낫다는 평 |
+| 스타일프레임¹ | Midjourney V8.1 · GPT Image 2 · FLUX.2 | 무드 탐색 후 가장 강한 프레임을 영상 단계로 |
+| 업스케일·디테일 | Magnific(Freepik) · Topaz | AI 영상 특유의 아티팩트 보정 전용 모델도 등장 |
+| 영상 생성 | Seedance · Kling · Higgsfield · Veo 3.1 · Runway · Luma | 다음 섹션 |
+| 연기·립싱크 | Runway Act-Two · OmniHuman · HeyGen | 배우 연기를 캐릭터에 전이 |
+| 편집·합성 | Premiere Pro · After Effects · DaVinci Resolve | 최종 마감은 여전히 전통 NLE²라는 관행 |
+| 음성·더빙 | ElevenLabs | 더빙 $0.33~0.50/분 |
+| 음악·효과음 | Suno · Udio · ElevenLabs SFX | 저작권 소송 변수는 마지막 섹션 |
 
-학생 작업의 대부분은 *편집 계층에서 끝난다*. 생성 모델은 배경·삽화 클립을 보충하는 재료 공급원에 가깝다.
+핵심 관행 하나. 실무 사례들에서 공통으로 확인되는 패턴은 *AI 클립을 촬영 원본처럼 취급하고, 편집·색보정·합성은 전통 편집 툴에서 마감*한다는 것이다.
 
-## 생성 모델 — 벤치마크와 실사용은 다르다
-
-블라인드 선호 투표(Elo¹) 기준 상위권은 Google·ByteDance·Alibaba 계열이 차지하고 있다. 다만 이 순위엔 가격·접근성이 반영되지 않는다 — 실사용 추천과는 별개 지표다.
-
-::: 수치
-1246 | Text-to-Video 아레나 1위 Gemini Omni Flash의 Elo 점수 | Artificial Analysis
-50크레딧 | Veo 계열 비구독자 하루 무료 제공량 | Google
-$10 | Kling Standard 월 요금 — "가성비 최고"라는 실사용 평가 다수 | eesel.ai
-:::
-
-| 도구 | 최신 | 특징 | 가격 진입점 |
-|------|------|------|------------|
-| Google Veo | 3.1 | 오디오 동시 생성·1080p~4K. Gemini 앱·AI Studio로 접근 | 하루 50크레딧 무료 |
-| OpenAI Sora | 2 | 15~25초 클립·물리 표현 강점 평가 | $0.10/초(API) |
-| Runway | Gen-4.5 | 편집 통합·타사 모델 허브화 | 무료 125크레딧, 월 $12 |
-| Kling | 2.5 Turbo | 모션 컨트롤·네이티브 4K | 월 $10 (Standard) |
-| Hailuo | 02~2.3 | 생성 속도·유려한 모션 평가 | 월 $9.99 |
-| Luma | Ray3 | 키프레임·HDR | 무료 티어, 월 $9.99 |
-| Pika | 2.5~3.0 | 이펙트 특화(Pikaffects) | 무료 80크레딧, 월 $8 |
-
-실사용 비교에서는 *복잡한 장면 일관성은 Veo, 클립 길이는 Sora라는* 평가가 반복된다. Hailuo는 커뮤니티(r/aivideo)에서 "숨은 명작"으로 불리며 프롬프트 테스트용으로 쓰인다는 팁이 있다 — 전부 비단정 참고다.
-
-주의할 것 둘. **Sora 2는** 소비자 앱이 2026년 4월에 종료됐고 API도 9월 종료 예정이다 — 지금 신규로 의존하기엔 리스크가 있다. **Kling은** 글로벌 공식 사이트가 조사 시점에 봇 차단으로 접속 확인이 안 됐다 — 가격 수치는 정리 사이트 기준이라 결제 전 직접 확인이 필요하다.
-
-오픈소스는 Wan2.2(Apache 2.0)와 HunyuanVideo-1.5가 실제 구동 가능한 축이다. 다만 요구 GPU(VRAM 14GB+)가 학생 개인 장비 기준으론 부담이라, 이름만 알아둬도 충분하다. "Wan 2.5/2.6/2.7"을 내건 사이트는 유료 API 상품이지 다운로드 가능한 오픈 웨이트²가 아니라는 커뮤니티 확인이 있다.
+텍스트→영상 직행은 아마추어용이고, 이미지→영상 변환에 후반작업을 얹는 게 프로 방식이라는 인식이 커뮤니티에서 컨센서스화되고 있다는 관찰도 같은 맥락이다.
 
 ::: 용어
-Elo | 1:1 블라인드 비교 승패를 누적해 매기는 상대 순위 점수(체스 레이팅 방식)
-오픈 웨이트 | 모델 파라미터 파일 자체를 내려받아 내 장비에서 실행할 수 있게 공개한 형태
+스타일프레임 | 영상의 룩(색·조명·구도)을 확정하기 위해 먼저 만드는 대표 정지 이미지
+NLE | 비선형 편집기(Non-Linear Editor) — Premiere·Resolve 같은 전통 편집 소프트웨어
 :::
 
-## 아바타와 편집 — 발표·숏폼의 실전 구간
+## 영상 생성 — 중국계 강세와 허브화
 
-실물 출연 없이 발표 영상을 만들 때는 아바타 도구를 쓴다. 독립 리뷰 기준 HeyGen이 표현력(9.2/10), Synthesia가 포멀함(8.2/10)에서 각각 우위라는 평가가 있다 — 팀플 발표면 HeyGen, 격식 있는 보고서형이면 Synthesia 쪽이 맞다는 구도다.
+2026년 상반기 지형의 두 축은 **중국계 모델의 물량 장악**과 **멀티모델 허브화**다.
 
-편집 계층에서는 한국 사용자 기준 구도가 뚜렷하다. *브루(Vrew)는 롱폼·설명형, 캡컷(CapCut)은 숏폼·트렌드형*이라는 비교가 한국 리뷰에서 반복된다.
+::: 수치
+80%+ | Seedance 2.0의 일일 컴퓨트 점유율이라는 업계 분석 — 광고·커머스 대량 생산의 사실상 표준 | RedHub
+7/8 | 세계 상위 8개 영상 모델 중 중국계 수 — 서구권 상위권은 Runway 유일이라는 분석 | RedHub
+$0.11 | Kling 3.0 Turbo 720p 초당 단가(오디오 포함, ¥0.8) | Atlas Cloud
+:::
 
-- **브루** — 음성을 텍스트로 바꿔 문서 편집하듯 컷 편집. 자막 정확도가 강점이라는 평. 한국어 UI. 무료 월 200크레딧
-- **캡컷** — 숏폼 템플릿·AI 툴킷. "학생을 위한 최고의 무료 옵션"이라는 커뮤니티 평(무료 워터마크 없이 내보내기 가능하다는 리뷰 — 단 AI 풀기능은 Pro $19.99/월)
-- **Descript** — 텍스트 기반 편집+AI 코에디터. 인터뷰·팟캐스트형에 적합. 영문 UI
-- **Opus Clip** — 롱폼 녹화본에서 하이라이트를 자동 발췌해 숏폼화. 무료 월 60분
+- **Seedance**(ByteDance) — 2.0이 CapCut·Dreamina에 통합돼 커머스 물량전의 표준이 됐다는 분석. 2.5는 30초 생성·레퍼런스 50개 입력으로 6월 발표(7월 공개 예정). 실제 인물 얼굴 생성 차단·비가시 워터마크 내장
+- **Kling**(Kuaishou) — 3.0 Turbo(오디오 내장·립싱크)와 Omni(4K 입출력). 연환산 매출 2.4억 달러·크리에이터 6천만 명 규모로 알려져 있다. 초사실적 인물·모션의 선두라는 평
+- **Higgsfield** — 단일 모델이 아니라 *15개 이상 모델을 한 구독으로 묶은 허브*다($9/월부터). 카메라 디렉팅(Cinema Studio)·캐릭터 일관성(Soul ID)·광고 자동 변형(Marketing Studio) 등 광고 제작 특화 레이어가 채택 이유로 꼽힌다
+- **Veo 3.1**(Google) — 레퍼런스 3장으로 캐릭터·제품 정체성 유지, 48kHz 오디오 내장. Lite $0.15/초~
+- **Runway Gen-4.5** — 블라인드 벤치마크(Artificial Analysis) 1위를 기록했다는 발표. 서구권의 대표 주자
+- **Luma Ray3.2** — 클립당 키프레임 16개로 프레임 단위 제어, 16비트 EXR — 스튜디오·에이전시 겨냥
 
-## 그래서 우리는 — 용도별 조합 3종
+가격 구도가 채택을 좌우한다. 중국계 모델의 초당 단가는 **$0.018~0.153** 수준으로 서구 모델 대비 10~30배 저렴하다는 분석이 있다 — 품질 경쟁 못지않게 *물량·속도·단가가 상업 채택의 변수*가 된 구도다.
 
-스터디·학과 활동 기준으로 조합하면 이렇게 된다. 전부 무료 티어에서 시작해 필요할 때만 올리면 된다.
+## 이미지·업스케일·음성·음악 — 앞뒤 단계
 
-| 용도 | 조합 | 근거 |
-|------|------|------|
-| 과제·발표 영상 | 브루(편집·자막) + 필요 시 HeyGen 무료(아바타) | 발표 스크립트 기반 롱폼에 브루가 최적이라는 한국 실사용 평 |
-| 홍보 숏폼·릴스 | Kling 또는 Hailuo(배경 생성) → 캡컷(마감) | 저비용 생성+템플릿 마감. 세미나 녹화본은 Opus Clip으로 발췌 |
-| 강의·설명 영상 | 브루 또는 Descript + Veo 무료 크레딧(삽화) | 자막 완성도 중심 롱폼 + 하루 50크레딧 무료 삽화 보충 |
+영상 생성 앞뒤의 단계들도 2026년 상반기에 세대가 바뀌었다.
 
-## 쓰기 전 확인 — 저작권·요금 함정
+- **Midjourney V8.1**(4월) — 렌더링 4~5배 고속화. 정지 이미지를 5초×4클립으로 움직이는 V1 Video 내장
+- **GPT Image 2**(4월) — 이미지 모델 최초로 추론(reasoning) 탑재: 생성 전 구도·개수·제약을 검증. 최대 2000px·다국어 텍스트 렌더링. DALL-E 2·3은 5월 종료
+- **FLUX.2**(Black Forest Labs) — 참조 이미지 10장으로 캐릭터·스타일 일관성. 경량 오픈소스 klein(Apache 2.0)도 출시
+- **Magnific** — 4월부로 Freepik이 Magnific으로 리브랜딩, 독립 구독($39~299) 폐지 후 통합 요금제(월 $5.75~)에 번들. 업스케일 표준 지위
+- **Topaz** — Astra 2가 *AI 생성 영상 특유의 아티팩트 보정 전용*으로 나옴. 로컬 구동 강화(VRAM 최대 95% 절감)
+- **ElevenLabs** — TTS $0.05~0.10/1,000자·더빙 $0.33~0.50/분·효과음 $0.12/분. 원 화자 음색 유지 더빙이 현지화 표준
+- **Suno·Udio** — 다음 섹션의 소송 변수와 함께 볼 것
 
-과제·비상업 발표는 대부분 무료 티어로 문제가 없다. 함정은 "학과·학회 공식 계정 게시"부터다.
+## 실제 제작 사례 — 수치로 본 현업
 
-- 무료 티어 상업이용 불가가 흔하다(Pika Free·Runway Free 등). 공식 계정 게시는 상업/공식 용도로 취급될 수 있어 요금표의 상업이용 항목을 개별 확인해야 한다
-- 미국 저작권청은 AI 단독 생성물의 저작권 등록을 인정하지 않는 입장을 유지 중이다 — 도구가 "상업이용권"을 줘도 소유권은 회색지대라는 해석이 있다
-- Veo 출력물에는 SynthID 워터마크가 강제 삽입되고, 유튜브 업로드 시 변경된 콘텐츠 라벨 고지 의무가 있다는 실무 가이드가 있다
-- 학습데이터 소송(NYT v. OpenAI 등)이 진행 중이라, 스톡 영상 대체 용도의 상업 사용은 유사도 리스크를 따로 점검할 필요가 있다
+**사례 1 — 코카콜라 홀리데이 캠페인.** AI 스튜디오 3곳(Secret Level·Silverside·Wild Card)에 맡겨 Leonardo·Luma·Runway·Kling 조합으로 제작. 전통 12개월+ 일정이 **2개월로** 단축됐고, 1만 프레임·5천 세그먼트를 40여 명이 원격 협업으로 처리했다.
+
+다만 2025년판은 여론 역풍을 맞았다 — 감성 분석 기준 긍정 반응이 **23.8%에서 10.2%로** 급락했다는 조사가 있다. 비용 절감과 브랜드 수용성은 별개 문제라는 사례다.
+
+**사례 2 — Kalshi NBA 파이널 광고.** 15년 경력 감독 1인이 **2~3일, $2,000으로** 완성해 전통 대비 약 95% 절감이라는 보도. 워크플로우 = Gemini 샷리스트(한 번에 5프롬프트 제한) → Veo 3 생성 → Premiere·CapCut 마감.
+
+핵심 수치는 채택률이다. **300~400회** 생성 시도에서 채택 클립은 **15개** — 4~5%다. 감독 본인은 "저렴하다고 아무나 만드는 게 아니다"라며 연출·코미디 작법이 방어 가능한 스킬이라고 강조했다.
+
+**사례 3 — 삼성증권 mPOP 광고(한국).** 배우·촬영 없이 100% 생성형 AI로 제작, 음악까지 AI 작곡. 예고편+본편 300만 회 조회라는 보도. 세부 사용 모델은 비공개다.
+
+**참고 — 개인 크리에이터 18개월 회고.** 사용 가능 클립 1,200개 중 80% 폐기·240개만 채택, 총 투자 $15,000. 교훈으로 "텍스트→영상은 클라이언트 작업에 너무 랜덤 — 반드시 이미지→영상으로", "씬을 통으로 만들지 말고 4초 단위 모듈로"가 제시된다.
+
+## 흐름 읽기 — 그래서 무엇을 보나
+
+미디어·제작 지망이라면 진입로가 명확해졌다. Higgsfield류 허브 하나($9/월~)로 주요 모델을 전부 체험할 수 있고, 위 사례들의 채택률 수치가 실무 감각의 기준선이 된다 — *생성은 싸고, 선별과 연출이 실력*이라는 구도다.
+
+경영·마케팅 관점의 변수는 셋이다.
+
+- **비용 구조 붕괴**: 제작비 95% 절감 사례가 방송 광고까지 올라왔다 — 외주·대행 시장의 가격 재편 신호
+- **브랜드 리스크**: 코카콜라 역풍처럼 절감과 수용성이 따로 간다. AI 표기 여부가 브랜드 의사결정 변수가 됨
+- **법적 변수**: Suno·Udio 저작권 소송에서 Warner·UMG는 화해(라이선싱 전환), UMG·Sony 대 Suno 건은 7월 판결을 앞두고 있다는 보도 — 결과에 따라 AI 음악의 라이선스 의무화 여부가 갈린다. 한국은 AI 광고 표기 법제가 없는 규제 공백 상태라는 지적도 있다
 
 ::: 출처
-Artificial Analysis Video Arena | https://artificialanalysis.ai/video/leaderboard/text-to-video | A — Elo 순위(2026-07 접속 확인)
-Google DeepMind Veo | https://deepmind.google/models/veo/ | A — Veo 3.1 기능·접근 경로
-Runway Pricing | https://runway.com/pricing | A — 요금제·크레딧
-Luma Dream Machine Pricing | https://lumalabs.ai/learning-hub/dream-machine-support-pricing-information | A — 요금제
-Pika Pricing | https://pika.art/pricing | A — 요금제
-Wan2.2 GitHub | https://github.com/Wan-Video/Wan2.2 | A — 라이선스·사양
-HunyuanVideo-1.5 GitHub | https://github.com/Tencent-Hunyuan/HunyuanVideo-1.5 | A — 파라미터·VRAM
-HeyGen Pricing | https://www.heygen.com/pricing | A — 요금제
-Synthesia Pricing | https://www.synthesia.io/pricing | A — 요금제
-Vrew 공식·요금 개편 공지 | https://vrew.ai/pricing | A — 크레딧제 구조(2026-04 개편)
-Descript Pricing | https://www.descript.com/pricing | A — 요금제
-Opus Clip Pricing | https://www.opus.pro/pricing | A — 요금제
-ElevenLabs Pricing | https://elevenlabs.io/pricing | A — 음성·더빙 요금
-Kuaishou — Kling 2.5 Turbo 보도자료 | https://ir.kuaishou.com/news-releases/news-release-details/kling-ai-launches-25-turbo-video-model-industry-leading | A — 출시 사실(본문 재확인 권장)
-eesel.ai — Kling 가격 정리 | https://www.eesel.ai/blog/kling-ai-pricing | B — Kling 요금(공식 접속 차단으로 대체, 결제 전 재확인)
-G2 Learn — Synthesia vs HeyGen | https://learn.g2.com/synthesia-vs-heygen | B — 아바타 품질 비교 평가
-Tom's Guide — Sora 2 vs Veo 3.1 실측 | https://www.tomsguide.com/ai/ai-image-video/sora-2-vs-veo-3-1-i-tested-both-ai-video-generators-with-7-audio-prompts-heres-the-winner | B — 오디오 프롬프트 비교
-fixframe — AI 영상편집 툴 비교 | https://fixframe.co.kr/ai-video-editing-tools-comparison-2026/ | B — 브루·캡컷 한국 실사용 구도
-dropshot — 브루 vs 캡컷 후기 | https://match.dropshot.io/blog/나에게-맞는-무료-영상-편집-툴은-브루-vs-캡컷-비교-후기-10261 | B — 편집 도구 장단점
-apiyi — Sora 2 정책 변경 정리 | https://help.apiyi.com/en/openai-sora-2-policy-change-plus-pro-only-en.html | B — 서비스 종료 일정(공식 페이지 봇 차단으로 대체)
-sustainabletechpartner — AI 저작권 소송 타임라인 | https://sustainabletechpartner.com/topics/ai/generative-ai-lawsuit-timeline/ | B — 소송 현황
+TechCrunch — Seedance 2.0 CapCut 통합 | https://techcrunch.com/2026/03/26/bytedances-new-ai-video-generation-model-dreamina-seedance-2-0-comes-to-capcut/ | A — 출시·기능
+Atlas Cloud — Kling 3.0 Turbo·Omni | https://www.atlascloud.ai/blog/guides/kling-3.0-turbo-kling-omni | A/B — 스펙·가격
+Higgsfield 공식 블로그 | https://higgsfield.ai/blog/best-all-in-one-subscription-ai-images-video | A — 허브 구성·요금
+Luma — Ray3.2 발표 | https://lumalabs.ai/news/introducing-ray-3-2 | A — 키프레임·타깃
+eWeek — Runway Gen-4.5 | https://www.eweek.com/news/runway-ai-video-model/ | A — 발표·벤치마크
+Black Forest Labs — FLUX.2 | https://bfl.ai/blog/flux-2 | A — 공식 발표
+Neurohive — GPT Image 2 정리 | https://neurohive.io/en/news/chatgpt-images-2-0-openai-launches-image-generation-model-with-reasoning-2k-resolution-and-multilingual-text/ | A/B — 추론·해상도(OpenAI 원문 봇 차단으로 대체)
+Topaz Labs — 2026-04 릴리스 | https://www.topazlabs.com/news/the-next-gen-release---april-2026 | A — Astra 2·로컬 구동
+ElevenLabs — API 가격 | https://elevenlabs.io/pricing/api | A — TTS·더빙·SFX 단가
+Adobe — Premiere/AE 25.2 발표 | https://blog.adobe.com/en/publish/2025/04/02/introducing-new-ai-powered-features-workflow-enhancements-premiere-pro-after-effects | A — Generative Extend 등
+PetaPixel — DaVinci Resolve 21 | https://petapixel.com/2026/06/03/davinci-resolve-21-officially-released-with-new-photo-editing-ai-tools-and-much-more/ | B — AI 툴 8종
+BytePlus — OmniHuman-1 | https://www.byteplus.com/en/blog/omnihuman-1 | A — 멀티모달 입력·용도
+ImagineArt — Runway Act-Two | https://www.imagine.art/blogs/runway-act-two-overview | B — 퍼포먼스 전이(공식 헬프 봇 차단으로 대체)
+HeyGen — 광고용 사례 | https://www.heygen.com/blog/best-ai-video-generator-for-ads | B — Trivago 현지화
+Silverside AI — 코카콜라 프로젝트 | https://www.silverside.ai/projects/coca-cola | A — 일정·규모
+Forbes — 코카콜라 2025 역풍 | https://www.forbes.com/sites/danidiplacido/2025/11/04/coca-cola-sparks-backlash-with-ai-generated-christmas-ad-again/ | B — 감성 지수
+MarkTechPost — Kalshi NBA 광고 | https://www.marktechpost.com/2025/06/14/ai-generated-ad-created-with-googles-veo3-airs-during-nba-finals-slashing-production-costs-by-95/ | A/B — 비용·방영
+The Daring Creatives — PJ Ace 워크플로우 | https://www.thedaringcreatives.com/pj-ace-made-an-nba-finals-ad-for-2-000-and-published-the-prompts/ | B — 채택률·프롬프트 공개
+한국경제 — 삼성증권 100% AI 광고 | https://www.hankyung.com/article/2025100196871 | B — 사례·조회수
+Clixie — 18개월 1,200클립 회고 | https://www.clixie.ai/blog/my-2026-ai-video-journey-1-200-clips-15k-spent-and-what-actually-works | B — 채택률·교훈
+RedHub — 중국계 모델 시장 분석 | https://blog.redhub.ai/chinese-ai-video-models/ | B — 점유율·단가 분석
+MusicBusinessWorldwide — UMG·Udio 합의 | https://www.musicbusinessworldwide.com/universal-music-settles-udio-lawsuit-strikes-deal-for-licensed-ai-music-platform/ | A — 라이선싱 전환
+StudioBinder — AI 필름메이킹 가이드 | https://www.studiobinder.com/blog/ai-filmmaking-tools/ | B — 파이프라인 관행
+OpenAds — 국내 AI 광고 규제 공백 | https://openads.co.kr/content/contentDetail?contsId=17394 | B — 한국 규제 지적
 :::
