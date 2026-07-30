@@ -6,7 +6,7 @@ test('기사 로드 — 예시 기고가 보인다', () => {
   expect(list.length).toBeGreaterThanOrEqual(1)
   expect(list[0]).toHaveProperty('title')
   expect(list[0]).toHaveProperty('slug')
-  expect(list[0].body).toContain('에이전트')
+  expect(list[0].body.trim().length).toBeGreaterThan(0) // 본문 로드 확인 — 특정 단어 결합 금지(최신 기사가 바뀌면 깨짐)
 })
 test('없는 종류는 빈 배열 — 실콘텐츠 폴더에 결합하지 않음', () => {
   expect(loadContent('없는종류')).toEqual([])
