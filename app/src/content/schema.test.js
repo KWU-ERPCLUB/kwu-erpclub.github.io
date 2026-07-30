@@ -95,6 +95,9 @@ test('주제 결측 검출', () => {
 test('주제 enum 밖 검출', () => {
   expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 주제: '채용시장' }).some((e) => e.includes('채용시장'))).toBe(true)
 })
+test('주제 크리에이티브·미디어 통과(2026-07-30 추가 값)', () => {
+  expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 주제: '크리에이티브·미디어' })).toEqual([])
+})
 test('주제 배열이면 검출(단일 문자열만 허용)', () => {
   expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 주제: ['에이전트'] }).some((e) => e.includes('주제'))).toBe(true)
 })
