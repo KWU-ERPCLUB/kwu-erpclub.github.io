@@ -125,12 +125,12 @@ test('성격 칩 딥링크 — ?tab=analysis 복원 + 해당 성격 카드만', 
 // 상세 진입(?p=<slug>) = 통일 셸(변경 없음). URL 반영은 stateFromSearch 경유.
 test('상세 = 통일 셸(문서 헤더·출처 카드 승격·목록 복귀)', () => {
   const prev = globalThis.window
-  globalThis.window = { location: { search: '?p=2026-07-25-bapzzi-weekly-trend-w30', pathname: '/insights/' } }
+  globalThis.window = { location: { search: '?p=2026-07-25-bapzzi-agent-governance-gap', pathname: '/insights/' } }
   try {
     const html = renderToString(<Articles />)
     expect(html).toContain('AI INSIGHTS')
     expect(html).toContain('art-source')
-    expect(html).toContain('OpenAI · Anthropic · SAP News 외')
+    expect(html).toContain('McKinsey · Gartner · PwC')
     expect(html).toContain('← 목록')
   } finally {
     if (prev === undefined) delete globalThis.window
