@@ -23,6 +23,7 @@ export function toDbRow({ slug, data, body }) {
     지금써먹기: data['지금써먹기'] === true,
     고정: data['고정'] === true,
     이미지: data['이미지'] || null,
+    이미지설명: data['이미지설명'] || null,
   }
 }
 
@@ -42,6 +43,7 @@ export function fromDbRow(row) {
     '지금써먹기': row['지금써먹기'] === true,
     '고정': row['고정'] === true,
     '이미지': row['이미지'] || undefined,
+    '이미지설명': row['이미지설명'] || undefined,
     source_url: row.source_url || '',
     source_name: row.source_name || '',
   }

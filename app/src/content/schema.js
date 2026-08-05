@@ -45,8 +45,11 @@ export function validateEntry(kind, filename, data, body = '') {
     if ('지금써먹기' in data && typeof data['지금써먹기'] !== 'boolean') errs.push('지금써먹기는 boolean(true/false)만 허용')
     // 시각 = 선택(게재 시각 HH:MM — 카드·상세 날짜 옆 표기, 2026-07-25 오너 지시)
     if ('시각' in data && !/^([01]\d|2[0-3]):[0-5]\d$/.test(data['시각'] || '')) errs.push('시각 형식(HH:MM) 위반')
-    // 이미지 = 선택(썸네일 경로·URL) — 있으면 비어있지 않은 문자열만 허용
+    // 이미지 = 선택(썸네일 경로·URL) — 있으면 비어있지 않은 문자열만 허용.
+    // 신규 기고는 내용과 실제 관련된 이미지 필수(운영 규칙 = CONTRIBUTING.md). 계약은 선택 유지 = 레거시 통과용.
     if ('이미지' in data && (typeof data['이미지'] !== 'string' || data['이미지'].trim() === '')) errs.push('이미지는 비어있지 않은 문자열(경로·URL)만 허용')
+    // 이미지설명 = 선택 1줄(그 이미지가 무엇이고 기사와 무슨 관계인지 — 상세 히어로 캡션·카드 alt, 2026-08-05 오너 지시)
+    if ('이미지설명' in data && (typeof data['이미지설명'] !== 'string' || data['이미지설명'].trim() === '')) errs.push('이미지설명은 비어있지 않은 문자열 1줄만 허용')
     // 고정 = 선택(허브 뷰 상단 핀) — 있으면 boolean만 허용
     if ('고정' in data && typeof data['고정'] !== 'boolean') errs.push('고정은 boolean(true/false)만 허용')
     // 설명 = 필수 1줄(카드 표시용 핵심 설명 — 본문 발췌 대체, 2026-07-27 오너 지시)

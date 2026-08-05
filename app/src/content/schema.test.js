@@ -63,6 +63,19 @@ test('이미지가 문자열 아니면 검출(빈문자열·불리언 위반)', 
   expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 이미지: '' }).some((e) => e.includes('이미지'))).toBe(true)
   expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 이미지: true }).some((e) => e.includes('이미지'))).toBe(true)
 })
+test('이미지설명=문자열 1줄이면 통과', () => {
+  expect(validateEntry('기사', '2026-07-22-bapzzi-ai-trend.md', {
+    ...good, 이미지: '/img/logos/openai.svg', 이미지설명: 'OpenAI 로고 — 가격을 내린 개발사',
+  })).toEqual([])
+})
+test('이미지설명 생략 = 통과(선택 필드)', () => {
+  expect(validateEntry('기사', '2026-07-22-bapzzi-ai-trend.md', { ...good, 이미지: '/img/logos/openai.svg' })).toEqual([])
+})
+test('이미지설명이 문자열 아니거나 비면 검출', () => {
+  expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 이미지설명: '' }).some((e) => e.includes('이미지설명'))).toBe(true)
+  expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 이미지설명: '   ' }).some((e) => e.includes('이미지설명'))).toBe(true)
+  expect(validateEntry('기사', '2026-07-22-bapzzi-x.md', { ...good, 이미지설명: 12 }).some((e) => e.includes('이미지설명'))).toBe(true)
+})
 test('시각=HH:MM이면 통과', () => {
   expect(validateEntry('기사', '2026-07-22-bapzzi-ai-trend.md', { ...good, 시각: '16:51' })).toEqual([])
 })
