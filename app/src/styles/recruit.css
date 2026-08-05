@@ -258,8 +258,9 @@
 /* PROGRAM 로드맵 스파이 — 뷰포트 중앙 최근접 회차/단계만 활성(.on = 훅 부여), 나머지 opacity 감쇠만(§6-2a B3) */
 .rc-spy-js .rc-steps-spy > li,
 .rc-spy-js .rc-steps-spy .rc-rounds > li { transition: opacity 300ms ease-out; }
-.rc-spy-js .rc-steps-spy > li:not(.on) { opacity: 0.35; }
-.rc-spy-js .rc-steps-spy > li.on .rc-rounds > li:not(.on) { opacity: 0.45; }
+/* 감쇠 하한 = 0.55/0.6(2026-08-05 스톨 수정 일괄 — 구 0.35/0.45는 반투명 정체로 읽힘) */
+.rc-spy-js .rc-steps-spy > li:not(.on) { opacity: 0.55; }
+.rc-spy-js .rc-steps-spy > li.on .rc-rounds > li:not(.on) { opacity: 0.6; }
 /* 2차 팀 구간(버건디 포인트) = 활성 시 더 도드라지게 — 타임라인 점 확대(transform)·제목 버건디(즉시 스왑) */
 .rc-spy-js .rc-steps-spy > li::before { transition: transform 300ms ease-out; }
 .rc-spy-js .rc-steps-spy > li.rc-step-hl.on::before { transform: scale(1.4); }

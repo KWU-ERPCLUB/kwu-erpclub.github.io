@@ -8,26 +8,35 @@ export const prefersReduced = () =>
   typeof window.matchMedia === 'function' &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-// 섹션=페이지 스파이: 뷰포트 중앙이 속한 섹션만 활성(시각 강조 전용). reduced-motion=전부 활성.
+// 섹션=페이지 스파이: 뷰포트 중앙이 속한 섹션만 활성(시각 강조 전용).
 // IO 경계 이벤트 방식은 빠른 스크롤에서 진입 이벤트를 놓쳐 강조가 안 바뀌는 버그가 있어(2026-07-25),
 // 스크롤마다 rAF로 중앙점 포함 섹션을 직접 계산하는 결정적 방식으로 교체. 중앙이 섹션 밖(푸터 등)이면 마지막 활성 유지.
+// 스톨 수정(2026-08-05):
+//   ① seen = 중앙 도달이 아니라 **뷰포트 진입 전**(위아래 REVEAL_MARGIN=0.25vh 여유)에 부여 → 리빌이 늦어
+//      반투명에 걸리는 정체 제거. ② seen은 한 번 붙으면 제거하지 않음(once). ③ html.home-js 게이트를 이 훅이 부여 —
+//      JS 미작동·reduced-motion이면 클래스가 없어 CSS 감쇠 규칙 자체가 꺼짐(= opacity 1).
+const REVEAL_MARGIN = 0.25
+
 export function useSectionSpy() {
   useEffect(() => {
     const pages = Array.from(document.querySelectorAll('.page'))
-    if (prefersReduced()) {
-      pages.forEach((p) => { p.classList.add('active'); p.classList.add('seen') })
-      return
-    }
+    if (pages.length === 0) return
+    if (prefersReduced()) return // 게이트 미부여 = 감쇠·리빌 전부 비적용(정적 선명)
+    const root = document.documentElement
+    root.classList.add('home-js')
     let raf = 0
     const pick = () => {
       raf = 0
-      const cy = window.innerHeight / 2
-      const cur = pages.find((p) => {
+      const vh = window.innerHeight
+      const cy = vh / 2
+      const ahead = vh * REVEAL_MARGIN
+      let cur = null
+      for (const p of pages) {
         const r = p.getBoundingClientRect()
-        return r.top <= cy && r.bottom > cy
-      })
+        if (r.top < vh + ahead && r.bottom > -ahead) p.classList.add('seen') // once — 제거하지 않음
+        if (r.top <= cy && r.bottom > cy) cur = p
+      }
       if (!cur) return
-      cur.classList.add('seen') // 한 번 활성화된 섹션은 내용 유지(비활성=감쇠만)
       pages.forEach((p) => p.classList.toggle('active', p === cur))
     }
     const onScroll = () => { if (!raf) raf = requestAnimationFrame(pick) }
@@ -38,6 +47,7 @@ export function useSectionSpy() {
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onScroll)
       if (raf) cancelAnimationFrame(raf)
+      root.classList.remove('home-js')
     }
   }, [])
 }

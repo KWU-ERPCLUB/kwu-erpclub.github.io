@@ -8,11 +8,12 @@
 .wl-item {
   padding: clamp(1.1rem, 2.8vh, 1.7rem) 0;
   border-bottom: 1px solid var(--line);
-  opacity: 0.26; /* 비활성 흐림 — 전환은 opacity만(§6-2a B3) */
   transition: opacity 300ms ease-out;
 }
+/* 감쇠 = JS 게이트(html.home-spy-js) 안에서만 — no-JS = 전부 선명. 하한 0.26 → 0.55(2026-08-05 스톨 수정 일괄) */
+.home-spy-js .wl-item { opacity: 0.55; }
 .wl-item:first-child { border-top: 1px solid var(--line); }
-.wl-item.on { opacity: 1; }
+.home-spy-js .wl-item.on { opacity: 1; }
 .wl-era {
   display: block;
   font-size: 0.72rem;
@@ -33,7 +34,7 @@
 .wl-slot .wl-word { color: var(--text-sub); font-weight: 800; } /* 빈 슬롯 = 톤 다운(점선 슬롯 문법 승계) */
 .wl-desc { display: block; margin-top: 0.55rem; font-size: 0.88rem; color: var(--text-sub); max-width: 58ch; }
 .wl-desc .status { margin: 0 0 0 0.55rem; vertical-align: 1px; }
-@media (prefers-reduced-motion: reduce) { .wl-item { transition: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .wl-item, .home-spy-js .wl-item { transition: none; opacity: 1; } }
 
 /* ══ PROJECTS — 풀폭 대형 커버 카드(커버 위 대형 제목 오버레이·호버 리프트) ══ */
 .hp-list { display: grid; grid-template-columns: 1fr; gap: 1.75rem; margin-top: clamp(2.5rem, 6vh, 3.5rem); }

@@ -41,12 +41,15 @@ function ChevronDown() {
 }
 
 // B3 스크롤 연동 — 뷰포트 중앙에 가장 가까운 워드만 활성(opacity만·rAF 스로틀, useSectionSpy 문법 승계).
-// reduced-motion = 전부 활성. 허용 파일 제약으로 home-motion.jsx가 아니라 여기 지역 정의.
+// 게이트 = html.home-spy-js(2026-08-05 스톨 수정) — no-JS·reduced-motion이면 클래스가 없어 감쇠 규칙 자체가 꺼짐.
+// 허용 파일 제약으로 home-motion.jsx가 아니라 여기 지역 정의.
 function useWordSpy() {
   useEffect(() => {
     const items = Array.from(document.querySelectorAll('.wl-item'))
     if (items.length === 0) return
-    if (prefersReduced()) { items.forEach((el) => el.classList.add('on')); return }
+    if (prefersReduced()) return
+    const root = document.documentElement
+    root.classList.add('home-spy-js')
     let raf = 0
     const pick = () => {
       raf = 0
@@ -68,6 +71,7 @@ function useWordSpy() {
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onScroll)
       if (raf) cancelAnimationFrame(raf)
+      root.classList.remove('home-spy-js')
     }
   }, [])
 }

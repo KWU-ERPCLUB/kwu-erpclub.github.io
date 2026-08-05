@@ -17,27 +17,32 @@
 }
 @media (max-width: 700px) { .hs-in { padding: 3rem 1.25rem; } }
 
-/* ── 섹션=페이지 감쇠·리빌(넥스터즈 문법 승계·강화) — 중앙 밴드 섹션만 활성 ── */
+/* ── 섹션=페이지 감쇠·리빌(넥스터즈 문법 승계·강화) — 중앙 밴드 섹션만 활성 ──
+   결함 수정(2026-08-05): 라이브에서 섹션이 반투명(0.35)에 걸린 채 정체 → 4가지 동시 적용.
+   ① 감쇠 하한 0.35 → 0.55(비활성도 읽히는 수준) ② seen 트리거 = 뷰포트 진입 전(margin 25vh, home-motion.jsx)
+   ③ once — seen은 JS가 제거하지 않음(한 번 나타난 섹션 재은닉 없음) ④ JS 게이트 = html.home-js.
+   게이트가 없으면(no-JS·스크립트 오류·reduced-motion) 감쇠·리빌 규칙 자체가 적용되지 않아 opacity 1 = 전부 선명. */
 .page {
   min-height: 86vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   scroll-margin-top: 60px;
-  opacity: 0.35;
   transition: opacity 350ms ease-out;
 }
-.page.active { opacity: 1; }
-.page .rv {
+.home-js .page { opacity: 0.55; }
+.home-js .page.active { opacity: 1; }
+.home-js .page .rv {
   opacity: 0;
   transform: translateY(30px);
   transition: opacity 560ms ease-out, transform 620ms cubic-bezier(0.16, 1, 0.3, 1);
 }
-.page.active .rv, .page.seen .rv { opacity: 1; transform: none; }
-.page:focus-within { opacity: 1; }
-.page:focus-within .rv { opacity: 1; transform: none; }
+.home-js .page.active .rv, .home-js .page.seen .rv { opacity: 1; transform: none; }
+.home-js .page:focus-within { opacity: 1; }
+.home-js .page:focus-within .rv { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
-  .page, .page .rv { transition: none; opacity: 1; transform: none; }
+  .page, .page .rv,
+  .home-js .page, .home-js .page .rv { transition: none; opacity: 1; transform: none; }
 }
 
 /* ══ v3.1 B2 — 좌 라벨 컬럼 골격: 좌 sticky 라벨(버건디 ■ 마이크로 불릿 + 소형 영문) / 우 콘텐츠 ══ */
@@ -206,17 +211,17 @@
 /* ── 문자 단위 스태거 리빌(글자별 순차 등장·transform·opacity만) ── */
 .sc {
   display: inline-block;
-  opacity: 0;
-  transform: translateY(0.6em);
   transition: opacity 480ms ease-out, transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
   transition-delay: inherit;
   white-space: pre;
 }
-.page.active .sc, .page.seen .sc, .page:focus-within .sc { opacity: 1; transform: none; }
+/* 초기 은닉도 JS 게이트 안에서만 — no-JS = 글자 그대로 노출(히어로 통째 실종 방지) */
+.home-js .sc { opacity: 0; transform: translateY(0.6em); }
+.home-js .page.active .sc, .home-js .page.seen .sc, .home-js .page:focus-within .sc { opacity: 1; transform: none; }
 .sc-accent { color: var(--accent); } /* 화이트리스트 ① */
 
 @media (prefers-reduced-motion: reduce) {
-  .sc { transition: none; opacity: 1; transform: none; }
+  .sc, .home-js .sc { transition: none; opacity: 1; transform: none; }
   .marquee-track { animation: none; }
   .scroll-cue svg { animation: none; }
 }
