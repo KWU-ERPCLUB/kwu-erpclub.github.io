@@ -202,6 +202,66 @@ test('supabase 저장소 — 명단은 members_public 뷰 조회(학번·전공 
   expect(seen.join(' ')).not.toContain('member_private')
 })
 
+// ── M3: 워크스페이스 저장소 확장(프로필·세션·자료·과제·제출·공지) ──
+function spyBackend(rows = []) {
+  const calls = []
+  const fakeFetch = async (url, options = {}) => {
+    calls.push({ url, method: options.method || 'GET', body: options.body ? JSON.parse(options.body) : null })
+    return { ok: true, text: async () => JSON.stringify(rows) }
+  }
+  const backend = createBackend({ url: 'https://x.supabase.co', key: 'anon' }, { fetch: fakeFetch, storage: null })
+  backend.auth.getSession = () => ({ user: { id: 'u1' } })
+  return { calls, repos: createSupabaseRepositories(backend) }
+}
+
+test('supabase 저장소 — 프로필 수정은 본인 행 PATCH, 전공은 member_private 조회', async () => {
+  const { calls, repos } = spyBackend([{ id: 'u1' }])
+  await repos.members.updateMe({ 자기소개: 'ㅇ', 관심사: ['자동화'] })
+  expect(calls[0].method).toBe('PATCH')
+  expect(calls[0].url).toContain('/rest/v1/members?')
+  expect(calls[0].url).toContain('id=eq.u1')
+  expect(calls[0].body).toEqual({ 자기소개: 'ㅇ', 관심사: ['자동화'] })   // role 미포함(정책 통과 조건)
+
+  await repos.members.listPrivate()
+  expect(calls[1].url).toContain('/rest/v1/member_private')
+})
+
+test('supabase 저장소 — 운영 콘텐츠 저장: id 없으면 POST, 있으면 해당 행 PATCH', async () => {
+  const { calls, repos } = spyBackend([{ id: 'n1' }])
+  await repos.notices.save({ 제목: 'ㄱ', 본문: '', 내부여부: true })
+  expect(calls[0].method).toBe('POST')
+  expect(calls[0].url).toContain('/rest/v1/notices')
+
+  await repos.sessions.save({ id: 's1', 제목: 'ㄴ' })
+  expect(calls[1].method).toBe('PATCH')
+  expect(calls[1].url).toContain('id=eq.s1')
+  expect(calls[1].body.id).toBeUndefined()      // id는 필터로만 쓰고 본문에 싣지 않는다
+
+  await repos.materials.save({ session_id: 's1', 제목: '자료', url: 'https://example.com' })
+  expect(calls[2].url).toContain('/rest/v1/session_materials')
+  await repos.assignments.save({ 제목: '과제' })
+  expect(calls[3].url).toContain('/rest/v1/assignments')
+})
+
+test('supabase 저장소 — 과제 제출은 본인 member_id 강제, 재제출은 본인 행 PATCH', async () => {
+  const { calls, repos } = spyBackend([{ id: 'sub1' }])
+  await repos.submissions.submit({ assignment_id: 'h1', url: 'https://example.com/a', 메모: 'ㅁ' })
+  expect(calls[0].method).toBe('POST')
+  expect(calls[0].body.member_id).toBe('u1')
+
+  await repos.submissions.submit({ id: 'sub1', assignment_id: 'h1', url: 'https://example.com/b' })
+  expect(calls[1].method).toBe('PATCH')
+  expect(calls[1].url).toContain('id=eq.sub1')
+  expect(calls[1].url).toContain('member_id=eq.u1')     // 남의 행에 닿지 않는다
+})
+
+test('supabase 저장소 — 삭제 경로는 M3에서도 추가되지 않음(세션·과제·공지 삭제 불가)', () => {
+  const { repos } = spyBackend()
+  for (const domain of ['sessions', 'materials', 'assignments', 'notices', 'members']) {
+    expect(Object.keys(repos[domain])).not.toContain('remove')
+  }
+})
+
 test('supabase 저장소 — 실패 응답은 메시지가 담긴 Error', async () => {
   const fakeFetch = async () => ({ ok: false, status: 400, text: async () => JSON.stringify({ msg: '잘못된 로그인' }) })
   const backend = createBackend({ url: 'https://x.supabase.co', key: 'anon' }, { fetch: fakeFetch, storage: null })

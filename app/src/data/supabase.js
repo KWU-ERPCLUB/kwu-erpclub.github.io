@@ -3,7 +3,7 @@
 // 키 규칙(§1): anon key만 클라이언트에 둔다. service key는 이 repo 어디에도 두지 않는다(P2).
 // 의존성 0 — PostgREST·GoTrue를 fetch로 직접 호출(패키지 추가 = 오너 승인 사항).
 
-const SESSION_KEY = 'erpclub.workspace.session'
+import { SESSION_KEY } from './session-key.js'
 
 // env 미설정이면 null. throw 금지 — 미설정 화면(백엔드 연결 대기)이 이 null을 보고 분기한다.
 export function readEnv(env) {

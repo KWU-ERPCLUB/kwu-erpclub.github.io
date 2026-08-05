@@ -11,7 +11,12 @@ const SEED = {
     { id: 'mock-a1', 슬러그: 'sample-published', 제목: '샘플 게재 기사', 설명: '목 데이터', 성격: '트렌드', 주제: '에이전트', 상태: '게재', 작성자: 'mock-staff', 게재일: '2026-09-10' },
     { id: 'mock-a2', 슬러그: 'sample-draft', 제목: '샘플 초안', 설명: '목 데이터', 성격: '심층 분석', 주제: '시장·생태계', 상태: '초안', 작성자: 'mock-member', 게재일: null },
   ],
+  member_private: [
+    { member_id: 'mock-staff', 전공: '샘플학부' },
+    { member_id: 'mock-member', 전공: '샘플학부' },
+  ],
   sessions: [{ id: 'mock-s1', 회차: 1, 날짜: '2026-09-08', 제목: '샘플 세션', 설명: '목 데이터' }],
+  session_materials: [{ id: 'mock-m1', session_id: 'mock-s1', 제목: '샘플 자료', url: 'https://example.com/deck' }],
   assignments: [{ id: 'mock-h1', session_id: 'mock-s1', 제목: '샘플 과제', 마감: null }],
   submissions: [{ id: 'mock-sub1', assignment_id: 'mock-h1', member_id: 'mock-member', url: 'https://example.com/sample', 메모: '' }],
   notices: [{ id: 'mock-n1', 제목: '샘플 공지', 본문: '목 데이터', 내부여부: true }],
@@ -31,6 +36,21 @@ export function createMockRepositories({ user = null, data = {} } = {}) {
   let currentId = user
 
   const memberOf = (id) => store.members.find((m) => m.id === id) || null
+  const isStaff = () => memberOf(currentId)?.role === '운영진'
+
+  // 운영 콘텐츠 저장(공지·세션·자료·과제) — RLS *_write_staff를 목에서도 흉내낸다.
+  const saveRow = (table, prefix) => async (row) => {
+    if (!isStaff()) throw new Error('권한 없음')
+    if (row.id) {
+      const found = store[table].find((r) => r.id === row.id)
+      if (!found) throw new Error('대상 없음')
+      Object.assign(found, { ...row, id: found.id })
+      return { ...found }
+    }
+    const created = { ...row, id: `${prefix}${store[table].length + 1}` }
+    store[table].push(created)
+    return { ...created }
+  }
 
   // 상호작용 토글 — 메모리 배열에서 본인 행만 넣고 뺀다(DB 삭제 아님).
   function toggle(table, articleId, on) {
@@ -65,6 +85,27 @@ export function createMockRepositories({ user = null, data = {} } = {}) {
       async list() {
         // 전공은 목 데이터에도 없다(P5 — 사적 필드는 member_private). 학번 = 로그인 ID(§0-5 개정)로 명단에 포함.
         return clone(store.members)
+      },
+      // 전공 — 운영진은 전원, 스터디원은 본인 1행만(RLS member_private_select_self_or_staff 동형)
+      async listPrivate() {
+        if (!currentId) return []
+        if (isStaff()) return clone(store.member_private)
+        return clone(store.member_private.filter((p) => p.member_id === currentId))
+      },
+      async updateMe(patch) {
+        const row = memberOf(currentId)
+        if (!row) throw new Error('로그인 필요')
+        const { role, id, ...safe } = patch   // role·id는 본인 수정 대상이 아니다(RLS와 동형)
+        void role; void id
+        Object.assign(row, safe)
+        return { ...row }
+      },
+      async setRole(memberId, role) {
+        if (!isStaff()) throw new Error('권한 없음')
+        const row = memberOf(memberId)
+        if (!row) throw new Error('대상 없음')
+        row.role = role
+        return { ...row }
       },
     },
     articles: {
@@ -133,14 +174,42 @@ export function createMockRepositories({ user = null, data = {} } = {}) {
       async toggleLike(articleId, on) { return toggle('article_likes', articleId, on) },
       async toggleBookmark(articleId, on) { return toggle('article_bookmarks', articleId, on) },
     },
-    sessions: { async list() { return clone(store.sessions) } },
-    assignments: { async list() { return clone(store.assignments) } },
+    sessions: {
+      async list() { return clone(store.sessions) },
+      save: saveRow('sessions', 'mock-s'),
+    },
+    materials: {
+      async list() { return clone(store.session_materials) },
+      save: saveRow('session_materials', 'mock-m'),
+    },
+    assignments: {
+      async list() { return clone(store.assignments) },
+      save: saveRow('assignments', 'mock-h'),
+    },
     submissions: {
       async listMine() {
         return clone(store.submissions.filter((s) => s.member_id === currentId))
       },
+      async submit({ id, assignment_id, url, 메모 = '' }) {
+        if (!currentId) throw new Error('로그인 필요')
+        if (id) {
+          const row = store.submissions.find((s) => s.id === id && s.member_id === currentId)
+          if (!row) throw new Error('대상 없음')
+          Object.assign(row, { url, 메모 })
+          return { ...row }
+        }
+        const row = {
+          id: `mock-sub${store.submissions.length + 1}`,
+          assignment_id, member_id: currentId, url, 메모,
+        }
+        store.submissions.push(row)
+        return { ...row }
+      },
     },
-    notices: { async listInternal() { return clone(store.notices) } },
+    notices: {
+      async listInternal() { return clone(store.notices) },
+      save: saveRow('notices', 'mock-n'),
+    },
     collections: {
       async listMine() {
         return clone(store.collections.filter((c) => c.member_id === currentId))

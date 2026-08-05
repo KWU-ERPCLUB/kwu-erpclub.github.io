@@ -13,19 +13,31 @@ export const newSlug = () => `${today()}-ws-${Math.random().toString(36).slice(2
 // 저장소 계약(키 = 도메인, 값 = 메서드 이름 목록). mock·supabase 구현 양쪽을 이 표로 검사한다.
 export const REPO_CONTRACT = {
   auth: ['currentUser', 'signIn', 'signOut'],
-  members: ['me', 'list'],
+  members: ['me', 'list', 'listPrivate', 'updateMe', 'setRole'],
   articles: ['listPublished', 'listMine', 'listPending', 'save', 'setStatus'],
   interactions: ['counts', 'mine', 'listBookmarked', 'toggleLike', 'toggleBookmark'],
-  sessions: ['list'],
-  assignments: ['list'],
-  submissions: ['listMine'],
-  notices: ['listInternal'],
+  sessions: ['list', 'save'],
+  materials: ['list', 'save'],
+  assignments: ['list', 'save'],
+  submissions: ['listMine', 'submit'],
+  notices: ['listInternal', 'save'],
   collections: ['listMine', 'add', 'update', 'remove'],
   seminars: ['list'],
 }
 
 export function createSupabaseRepositories(backend) {
   const uid = () => backend.auth.getSession()?.user?.id || null
+
+  // 운영 콘텐츠 저장(공지·세션·자료·과제) 공통 — id 있으면 수정, 없으면 신규.
+  // 권한 판정은 서버 RLS(*_write_staff)가 한다. 여기 코드는 운영진 여부를 묻지 않는다.
+  const saveRow = (table) => async (row) => {
+    const patch = { ...row }
+    delete patch.id
+    const rows = row.id
+      ? await backend.db.update(table, { id: row.id }, patch)
+      : await backend.db.insert(table, patch)
+    return rows?.[0] || null
+  }
 
   // 켜기 = insert, 끄기 = 본인 행만 remove(화이트리스트 테이블). 반환 = 적용된 상태(boolean).
   async function toggleRow(table, articleId, on) {
@@ -51,8 +63,22 @@ export function createSupabaseRepositories(backend) {
         const rows = await backend.db.select('members', { filters: { id }, limit: 1 })
         return rows?.[0] || null
       },
-      // 명단은 members_public 뷰 경유(학번·전공 컬럼 자체가 없음 — P5 구조적 보장)
+      // 명단은 members_public 뷰 경유(전공 컬럼 자체가 없음 — P5 구조적 보장. 학번 = 로그인 ID로 포함)
       list: () => backend.db.select('members_public', { order: '이름.asc' }),
+      // 전공 = member_private. RLS(본인 ∨ 운영진)가 거르므로 스터디원이 부르면 본인 1행만 온다.
+      listPrivate: () => backend.db.select('member_private'),
+      // 본인 프로필 수정 — 자기소개·관심사만 보낸다(role을 함께 보내면 members_update_self가 거부).
+      async updateMe(patch) {
+        const id = uid()
+        if (!id) throw new Error('로그인 필요')
+        const rows = await backend.db.update('members', { id }, patch)
+        return rows?.[0] || null
+      },
+      // 역할 변경 = 운영진 정책(members_manage_staff)으로만 통과.
+      async setRole(memberId, role) {
+        const rows = await backend.db.update('members', { id: memberId }, { role })
+        return rows?.[0] || null
+      },
     },
     articles: {
       listPublished: () => backend.db.select('articles', { filters: { 상태: '게재' }, order: '게재일.desc' }),
@@ -115,9 +141,16 @@ export function createSupabaseRepositories(backend) {
     },
     sessions: {
       list: () => backend.db.select('sessions', { order: '회차.asc' }),
+      save: saveRow('sessions'),
+    },
+    // 세션 자료 = 링크 기반(M3). 파일 업로드(Storage)는 M4 — 파일경로 컬럼은 비워둔다.
+    materials: {
+      list: () => backend.db.select('session_materials', { order: 'created_at.asc' }),
+      save: saveRow('session_materials'),
     },
     assignments: {
       list: () => backend.db.select('assignments', { order: 'created_at.desc' }),
+      save: saveRow('assignments'),
     },
     submissions: {
       async listMine() {
@@ -125,9 +158,19 @@ export function createSupabaseRepositories(backend) {
         if (!id) return []
         return backend.db.select('submissions', { filters: { member_id: id }, order: '제출일시.desc' })
       },
+      // 과제×멤버 1건(unique) — 기존 제출이 있으면 id를 넘겨 수정한다(본인 행만).
+      async submit({ id, assignment_id, url, 메모 = '' }) {
+        const me = uid()
+        if (!me) throw new Error('로그인 필요')
+        const rows = id
+          ? await backend.db.update('submissions', { id, member_id: me }, { url, 메모 })
+          : await backend.db.insert('submissions', { assignment_id, member_id: me, url, 메모 })
+        return rows?.[0] || null
+      },
     },
     notices: {
       listInternal: () => backend.db.select('notices', { order: 'created_at.desc' }),
+      save: saveRow('notices'),
     },
     collections: {
       async listMine() {

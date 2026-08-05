@@ -63,16 +63,36 @@ test('P2 — service key·JWT 실값 문자열 0건(repo 전역)', () => {
 // ── P4: 공개면이 데이터 계층에 닿는 지점은 1곳만(M2 — 인사이트 DB 서빙 전환) ──
 // M1에서는 "공개면은 데이터 계층 무의존"이었으나, M2에서 인사이트가 DB 서빙으로 바뀌었다.
 // 규칙을 없애는 대신 좁힌다: 어댑터 1개(pages/insights-source.js)만 허용 — 컴포넌트 산개 금지.
-const DATA_CONSUMERS = ['pages/insights-source.js']
-test('P4 — 공개 페이지에서 data/index.js를 쓰는 파일 = 허용된 어댑터 1곳뿐', () => {
+// M3에서 규칙을 한 단계 더 좁힌다: "어떤 data/* 모듈을" 쓰는지까지 화이트리스트로 고정.
+//   insights-source.js → data/index.js  (인사이트 DB 서빙 어댑터)
+//   shared.jsx         → data/session-flag.js (공개 헤더의 로그인 표시 — localStorage 동기 확인만)
+const DATA_CONSUMERS = {
+  'pages/insights-source.js': ['index'],
+  'shared.jsx': ['session-flag'],
+}
+// 백엔드와 무관한 정적 상수 모듈(모집 창·운영 로그) — 경계 규칙의 대상이 아니다.
+const STATIC_DATA = ['recruit', 'log']
+test('P4 — 공개 페이지가 쓰는 data/ 모듈 = 화이트리스트 2쌍뿐', () => {
   const workspaceDir = path.join(SRC_DIR, 'workspace')
-  const offenders = srcFiles
-    .filter((f) => !f.startsWith(DATA_DIR) && !f.startsWith(workspaceDir))
-    .filter((f) => !f.includes('workspace-entry'))
-    .filter((f) => /from\s+['"][^'"]*data\/index\.js['"]/.test(read(f)))
-    .map((f) => path.relative(SRC_DIR, f).replace(/\\/g, '/'))
-    .filter((rel) => !DATA_CONSUMERS.includes(rel))
+  const offenders = []
+  for (const file of srcFiles) {
+    if (file.startsWith(DATA_DIR) || file.startsWith(workspaceDir)) continue
+    if (file.includes('workspace-entry')) continue
+    if (/\.test\.(js|jsx)$/.test(file)) continue
+    const rel = path.relative(SRC_DIR, file).replace(/\\/g, '/')
+    const allowed = [...STATIC_DATA, ...(DATA_CONSUMERS[rel] || [])]
+    for (const m of read(file).matchAll(/from\s+['"][^'"]*data\/([a-z-]+)\.js['"]/g)) {
+      if (!allowed.includes(m[1])) offenders.push(`${rel} → data/${m[1]}.js`)
+    }
+  }
   expect(offenders).toEqual([])
+})
+
+// 공개 헤더의 세션 판정은 저장소 읽기 1회뿐 — 토큰 해석·복호화·네트워크가 끼면 공개면 성능 규칙 위반.
+test('P4 — session-flag는 localStorage 동기 확인만(네트워크·JSON 파싱 없음)', () => {
+  const body = read(path.join(DATA_DIR, 'session-flag.js'))
+  expect(body).toContain('getItem')
+  for (const bad of ['fetch(', 'JSON.parse', 'await ']) expect(body).not.toContain(bad)
 })
 
 // 삭제 연산 = 화이트리스트 3테이블에서만(상호작용 취소·스크랩 삭제). 스키마 파괴 연산은 여전히 0건.
