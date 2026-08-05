@@ -36,11 +36,16 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
 - **권한 구조(2026-07-25 하드 격리)**: GitHub 룰셋(id 19734261) — main 직접 push = repo 관리자만(오너·오너 자격 Claude). 멤버 = 브랜치→PR 필수. `app/content`만 고친 PR = 체크(build) 통과 시 셀프 머지(승인 0) / 공용 영역 터치 = CODEOWNERS(오너) 승인 필수. 룰셋 관리 = repo Settings > Rules.
 - **주간 트렌드 자동화**: 클라우드 루틴 `trig_0118sfWk88m1uYZMfcYUTik4`(매주 월 09:00 KST, sonnet-5, 멱등 스킵 규칙 내장) — 관리 = claude.ai/code/routines. 수동 실행 = 로컬 스킬 `weekly-trend`.
 
-## Workspace & data layer (SPEC 2026-08-05 워크스페이스-백엔드, M1 완료)
+## Workspace & data layer (SPEC 2026-08-05 워크스페이스-백엔드, M1·M2 완료)
 - `/workspace/` = 로그인 영역. entry = `workspace/index.html` + `src/workspace-entry.jsx` + `src/workspace/`, CSS = `styles/workspace.css`
   (공개 6페이지 코드·CSS와 공유 금지. 공개 nav에 링크 없음 — M3에서 판단).
+  탭 = 컬렉션(`Collections.jsx`)·기고(`Contribute.jsx`+운영진 `Review.jsx`) 탑재 / 세션·과제·공지 = M3.
+- **로그인 ID = 학번**(§0-4 개정). 매핑 = `src/data/login-id.js`(학번 → `s<학번>@member.erpclub`, `@` 포함 = 이메일 폴백).
+- **공개 인사이트 = DB 서빙**(M2): 데이터 출처 = `src/pages/insights-source.js`(`useArticles`·`useInteractions`).
+  env 미설정이면 md 글롭 폴백. 공개면에서 `data/index.js`를 import 해도 되는 파일은 이 어댑터 1곳뿐(boundary 테스트가 고정).
 - **Supabase 접근 = `src/data/` 경유만**(P1). 컴포넌트가 `data/supabase.js`·`repositories.js`를 직접 import 하면
   `src/data/boundary.test.js`가 FAIL — 우회 금지. 화면은 `data/index.js`의 `getRepositories()`만 쓴다.
+- 행 삭제는 `db.remove` + `DELETABLE` 화이트리스트(article_likes·article_bookmarks·collections)에서만. 콘텐츠·멤버 테이블은 삭제 경로 없음.
 - env 2종(`VITE_SUPABASE_URL`·`VITE_SUPABASE_ANON_KEY`) 미설정 = 정상 상태 → 목 저장소 폴백 + 대기 화면.
   키 이름 문서 = `.env.example`, 프로비저닝 = `../supabase/README.md`, 스키마·RLS = `../supabase/migrations/`.
 - 저장소 계약 변경 시 `REPO_CONTRACT`(repositories.js)와 `mock.js`를 함께 고친다(계약 테스트가 불일치를 잡음).

@@ -4,10 +4,12 @@ import { useEffect, useState } from 'react'
 import { SiteNav, SiteFooter } from '../shared.jsx'
 import { getRepositories, isBackendConfigured } from '../data/index.js'
 import Collections from './Collections.jsx'
+import Contribute from './Contribute.jsx'
 
 // 기능 탭 — [이름, 한 줄 설명, 상태]. 상태 'ready' = M2에서 탑재됨, 'prep' = M3 범위.
 export const WS_TABS = [
   ['컬렉션', '개인 스크랩·북마크', 'ready'],
+  ['기고', '초안 작성·승인 요청', 'ready'],
   ['세션', '회차·자료 열람', 'prep'],
   ['과제', '링크 제출·내 제출 확인', 'prep'],
   ['공지', '내부 공지·운영 로그', 'prep'],
@@ -101,6 +103,7 @@ export function Shell({ member, onSignOut, store }) {
       </nav>
 
       {tab === '컬렉션' && store && <Collections store={store} />}
+      {tab === '기고' && store && <Contribute store={store} staff={member?.role === '운영진'} />}
       {WS_PREP_TABS.some(([name]) => name === tab) && (
         <ul className="ws-tabs">
           {WS_PREP_TABS.map(([name, desc]) => (

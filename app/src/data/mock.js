@@ -74,6 +74,35 @@ export function createMockRepositories({ user = null, data = {} } = {}) {
       async listMine() {
         return clone(store.articles.filter((a) => a.작성자 === currentId))
       },
+      async listPending() {
+        if (memberOf(currentId)?.role !== '운영진') return []   // RLS가 하는 일을 목에서도 흉내낸다
+        return clone(store.articles.filter((a) => a.상태 === '승인대기'))
+      },
+      async save(draft) {
+        if (!currentId) throw new Error('로그인 필요')
+        if (draft.id) {
+          const row = store.articles.find((a) => a.id === draft.id && a.작성자 === currentId)
+          if (!row) throw new Error('대상 없음')
+          Object.assign(row, { ...draft, id: row.id })
+          return { ...row }
+        }
+        const row = {
+          ...draft,
+          id: `mock-a${store.articles.length + 1}`,
+          슬러그: draft['슬러그'] || `mock-slug-${store.articles.length + 1}`,
+          작성자: currentId,
+        }
+        store.articles.push(row)
+        return { ...row }
+      },
+      async setStatus(articleId, 상태) {
+        if (memberOf(currentId)?.role !== '운영진') throw new Error('권한 없음')
+        const row = store.articles.find((a) => a.id === articleId)
+        if (!row) throw new Error('대상 없음')
+        row.상태 = 상태
+        if (상태 === '게재' && !row.게재일) row.게재일 = '2026-09-01'
+        return { ...row }
+      },
     },
     interactions: {
       // 총계 = 게재 기사에 한정(뷰 article_interaction_counts와 같은 모양)

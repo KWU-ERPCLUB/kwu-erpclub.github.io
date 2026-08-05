@@ -55,7 +55,8 @@ test('Shell = 멤버 이름·역할 + 탭바(활성 탭 = 컬렉션) + 로그아
 test('Shell = 미탑재 탭(M3)만 준비 중 칩 — 개수 일치', () => {
   const html = flat(<Shell member={{ 이름: 'ㄱ', role: '스터디원' }} store={createMockRepositories({ user: 'mock-member' })} tab="세션" />)
   // 기본 탭은 컬렉션이므로 준비 중 칩은 렌더되지 않는다 — 목록 자체는 WS_PREP_TABS로 고정.
-  expect(WS_PREP_TABS.length).toBe(WS_TABS.length - 1)
+  expect(WS_PREP_TABS.length).toBe(WS_TABS.filter(([, , s]) => s === 'prep').length)
+  expect(WS_TABS.filter(([, , s]) => s === 'ready').map(([n]) => n)).toEqual(['컬렉션', '기고'])
   expect(html).toContain('ws-tabbtn')
 })
 

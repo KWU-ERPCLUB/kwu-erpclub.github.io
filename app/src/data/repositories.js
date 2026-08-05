@@ -4,11 +4,17 @@
 
 import { toLoginEmail } from './login-id.js'
 
+export const today = () => new Date().toISOString().slice(0, 10)
+
+// 워크스페이스 기고분 슬러그 — 제목이 한글이라 URL 안전한 값을 날짜+난수로 만든다.
+// md 발행분(파일명 스템)과 형태가 달라도 무방: 둘 다 unique 키 역할만 한다.
+export const newSlug = () => `${today()}-ws-${Math.random().toString(36).slice(2, 8)}`
+
 // 저장소 계약(키 = 도메인, 값 = 메서드 이름 목록). mock·supabase 구현 양쪽을 이 표로 검사한다.
 export const REPO_CONTRACT = {
   auth: ['currentUser', 'signIn', 'signOut'],
   members: ['me', 'list'],
-  articles: ['listPublished', 'listMine'],
+  articles: ['listPublished', 'listMine', 'listPending', 'save', 'setStatus'],
   interactions: ['counts', 'mine', 'listBookmarked', 'toggleLike', 'toggleBookmark'],
   sessions: ['list'],
   assignments: ['list'],
@@ -54,6 +60,28 @@ export function createSupabaseRepositories(backend) {
         const id = uid()
         if (!id) return []
         return backend.db.select('articles', { filters: { 작성자: id }, order: 'created_at.desc' })
+      },
+      // 운영진 승인 대기함(§0-8). 스터디원이 호출하면 RLS가 빈 배열을 준다.
+      listPending: () => backend.db.select('articles', { filters: { 상태: '승인대기' }, order: 'updated_at.desc' }),
+      // 초안 저장·수정. 상태는 '초안'∨'승인대기'만 — '게재' 전환은 setStatus(운영진 정책)로만 간다.
+      async save(draft) {
+        const id = uid()
+        if (!id) throw new Error('로그인 필요')
+        const patch = { ...draft }
+        delete patch.id
+        if (draft.id) {
+          const rows = await backend.db.update('articles', { id: draft.id, 작성자: id }, patch)
+          return rows?.[0] || null
+        }
+        const rows = await backend.db.insert('articles', { ...patch, 작성자: id, 슬러그: draft['슬러그'] || newSlug() })
+        return rows?.[0] || null
+      },
+      // 게재 전환 시 게재일이 비어 있으면 오늘로 채운다(제약 articles_published_needs_date).
+      async setStatus(articleId, 상태) {
+        const patch = { 상태 }
+        if (상태 === '게재') patch['게재일'] = today()
+        const rows = await backend.db.update('articles', { id: articleId }, patch)
+        return rows?.[0] || null
       },
     },
     // 북마크·좋아요(D3) — 열람은 공개, 상호작용은 로그인 멤버.
