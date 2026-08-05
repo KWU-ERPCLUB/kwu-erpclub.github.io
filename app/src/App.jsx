@@ -1,14 +1,16 @@
-// 메인(/) v5 — 구조 개혁(2026-07-24 2차): .lattice/.cell 격자 폐지 → 풀블리드 스크린 섹션.
-// WHY 섹션 폐지(2026-07-25 owner): 수치 노후·갱신 부담, 취업 논거는 북극성 §3 위반 소지, 논증형은 §0-1 서사 비표기와 긴장.
-// 핵심 논거(챗 단독의 한계)는 FAQ 1문으로 이관 — 문답 UI = 구어·설득 허용 예외.
-// prography/depromeet 문법: 100vh 히어로(뷰포트 타이포·좌정렬·소개 2줄)·계보 트리 ROADMAP·풀폭 커버 PROJECTS·대형 FAQ.
-// 모션: 문자 스태거 리빌 · 키워드 마퀴 · 커버 호버 리프트 · 섹션=페이지 감쇠(home-motion.jsx). transform·opacity만·reduced-motion 존중.
-// 색·폰트=현행 토큰(디자인규칙 §1·§2).
+// 메인(/) v6 — §6-2a v3.1 개조(2026-08-05, NEXTERS 실측 문법): 불변 3종(화이트 배경·폰트·버건디)만 유지, 지면 골격 개조.
+// B1 블랙 통계 밴드(모집 직하·페이지 블랙 대면적 1개·CountUp 재사용·실측 수치만) ·
+// B2 좌 라벨 컬럼 골격(ROADMAP·PROJECTS·FAQ = 좌 고정 라벨(버건디 ■)+우 콘텐츠 2단) ·
+// B3 ROADMAP = 계보 트리 폐지 → 대형 워드 스택 + 스크롤 연동(중앙 최근접 항목만 진하게·opacity만) ·
+// B4 버건디 모집 면 철회(블랙 밴드와 경합 → recruit.css 기본 라이트 밴드로 복귀) — 근거 = home.css 주석.
+// 모션: 문자 스태거 리빌 · 키워드 마퀴 · 커버 호버 리프트 · 섹션=페이지 감쇠(home-motion.jsx). 신규 무한루프 0 · transform·opacity만 · reduced-motion 존중.
+import { useEffect } from 'react'
 import { Arrow, SiteNav, SiteFooter } from './shared.jsx'
 import { MARQUEE_KEYWORDS, marqueeTrack, localYmd, recruitPhase } from './home-logic.js'
 import { RECRUIT, COHORT_LABEL, formatWindowShort } from './data/recruit.js'
 import { FAQ } from './data/faq.js'
-import { useSectionSpy, useParallax, StaggerChars } from './home-motion.jsx'
+import { loadContent } from './content/loader.js'
+import { useSectionSpy, useParallax, StaggerChars, CountUp, prefersReduced } from './home-motion.jsx'
 
 // PROJECTS — 풀폭 커버 카드(커버 캡처 + 대형 제목 오버레이). 클릭 = /projects/ 상세 딥링크.
 // ?p= 슬러그는 content/프로젝트/<슬러그>.md와 1:1이어야 한다(어긋나면 빈 상세 = 조용한 깨짐).
@@ -18,22 +20,15 @@ export const PROJECTS = [
   ['KWU ERP Club Site', '/img/projects/erpclub-site.png', '/projects/?p=2026-07-24-bapzzi-erpclub-site', '운영 중'],
 ]
 
-// ROADMAP — 계보 트리(2026-07-25 개편): 본류(ERP연구회 → SAP)에서 MIS·AI 스터디 분기, 그 아래 프로젝트.
-// TRUNK = 본류 노드, BRANCH = 분기 노드(+children = 하위 프로젝트·빈 슬롯). DEEP DIVE(미개설)는 제외.
-const TRUNK = [
+// ROADMAP — B3 워드 스택(2026-08-05 v3.1): 계보를 대형 워드 5노드로 평탄화(ORIGIN→SAP→분기→프로젝트→슬롯).
+// 내용·상태는 구 계보 트리(2026-07-25)와 동일 — 렌더 형태만 개조. DEEP DIVE(미개설)는 제외.
+const LINEAGE = [
   { era: 'ORIGIN', title: 'ERP연구회', desc: '경영학부 MIS 스터디 — ERP·정보시스템의 뿌리.' },
   { era: 'SAP ERA', title: 'SAP 특강', desc: '실무 컨설턴트가 이끈 MM·ABAP 교육 — 이어져 온 본류.' },
+  { era: '2026 · NEW BRANCH', title: 'MIS·AI 스터디', desc: '본류에서 분기한 갈래 — AI 활용 집중.', status: ['prep', '모집 준비'] },
+  { era: 'PROJECT', title: 'ADsP 스터디 1기', desc: '데이터분석 준전문가 대비 — 진도 보드 운영 중.', status: ['live', '진행중'] },
+  { era: 'NEXT', title: '앞으로 채워갈 공간', desc: '새 트랙·기수가 이어질 자리.', slot: true },
 ]
-const BRANCH = {
-  era: '2026 · NEW BRANCH',
-  title: 'MIS·AI 스터디',
-  desc: '본류에서 분기한 갈래 — AI 활용 집중.',
-  status: ['prep', '모집 준비'],
-  children: [
-    { era: 'PROJECT', title: 'ADsP 스터디 1기', desc: '데이터분석 준전문가 대비 — 진도 보드 운영 중.', status: ['live', '진행중'] },
-    { era: 'NEXT', title: '앞으로 채워갈 공간', desc: '새 트랙·기수가 이어질 자리.', slot: true },
-  ],
-}
 
 // FAQ 원천 = data/faq.js(E4 공용화 2026-08-05) — 메인은 전체 렌더, /recruit는 서브셋.
 
@@ -43,6 +38,38 @@ function ChevronDown() {
       <path d="M3 5L7 9L11 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
+}
+
+// B3 스크롤 연동 — 뷰포트 중앙에 가장 가까운 워드만 활성(opacity만·rAF 스로틀, useSectionSpy 문법 승계).
+// reduced-motion = 전부 활성. 허용 파일 제약으로 home-motion.jsx가 아니라 여기 지역 정의.
+function useWordSpy() {
+  useEffect(() => {
+    const items = Array.from(document.querySelectorAll('.wl-item'))
+    if (items.length === 0) return
+    if (prefersReduced()) { items.forEach((el) => el.classList.add('on')); return }
+    let raf = 0
+    const pick = () => {
+      raf = 0
+      const cy = window.innerHeight / 2
+      let best = null
+      let bd = Infinity
+      for (const el of items) {
+        const r = el.getBoundingClientRect()
+        const d = Math.abs((r.top + r.bottom) / 2 - cy)
+        if (d < bd) { bd = d; best = el }
+      }
+      items.forEach((el) => el.classList.toggle('on', el === best))
+    }
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(pick) }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll, { passive: true })
+    pick()
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
 }
 
 // 히어로 100vh — 브랜드 키커 → 뷰포트 타이포(AIM) → 확장 라인(AI × MIS, AIM 폭 정렬) → 서브 → 풀폭 마퀴 + 스크롤 유도.
@@ -83,7 +110,8 @@ function Hero() {
   )
 }
 
-// 모집 섹션(확대 개편 2026-08-05 오너) — 히어로 직하 한 축. 기간 종료(after) = 메인 미표시(모집 페이지·나브는 유지).
+// 모집 섹션 — 히어로 직하 한 축. 기간 종료(after) = 메인 미표시(모집 페이지·나브는 유지).
+// v3.1 B4: 버건디 면 철회 — recruit.css 기본(라이트 surface 밴드)로 렌더. 마크업 불변.
 // .page 미부여 = 섹션 스파이(감쇠) 제외. 카피 = 사실 서술만. export = 국면별(전·중·후) 렌더 테스트용.
 const RECRUIT_COPY = {
   before: ['prep', '모집 예정', `${RECRUIT.window.start} 모집 시작`],
@@ -109,43 +137,65 @@ export function RecruitBand({ today = localYmd() }) {
   )
 }
 
-// ROADMAP — 계보 트리(세로 본류선 → 분기 들여쓰기 + 가지선). 점선 슬롯 = 채워갈 공간.
-function TreeNode({ n }) {
+// B1 블랙 통계 밴드 — 잉크 대면적 + 뷰포트급 흰 숫자 2×2(십자 헤어라인·CountUp 재사용).
+// 수치 = 실측만(recruit 증빙 RecruitProof와 동일 원천: content/ 집계 + 확인된 사실 2건). 출처 = 셀별 소형 표기.
+// .page 미부여 = 감쇠 제외(블랙 면 감쇠는 지면 파손). export = 수치·출처 단언 테스트용.
+export function StatsBand() {
+  const 기사수 = loadContent('기사').length
+  const 세미나수 = loadContent('세미나').length
+  const cells = [
+    [String(기사수), '게재 기사', 'content/ 집계'],
+    [String(세미나수), '세미나 기록', 'content/ 집계'],
+    ['2', '라이브 실물', 'ADsP 진도 보드 · 이 사이트'],
+    ['1', '진행 중 스터디', 'ADsP 1기 — 진도 보드 운영'],
+  ]
   return (
-    <>
-      <span className="rm-dot" aria-hidden="true" />
-      <span className="rm-era">{n.era}</span>
-      <h3>{n.title}</h3>
-      <p>{n.desc}</p>
-      {n.status && <span className={`status ${n.status[0]}`}>{n.status[1]}</span>}
-    </>
+    <section className="stats-band" aria-label="운영 실측 수치">
+      <div className="sb-in">
+        <span className="sb-kicker">RECORD — 실측 집계</span>
+        <div className="sb-grid">
+          {cells.map(([num, label, src]) => (
+            <div className="sb-cell" key={label}>
+              <CountUp value={num} />
+              <span className="sb-label">{label}</span>
+              <span className="sb-src">{src}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
   )
 }
 
+// B2 좌 라벨 컬럼 골격 — 좌 고정 라벨(버건디 ■ + 소형 영문) / 우 콘텐츠. 폰(≤820px) = 상하 적층.
+function Cols({ label, children }) {
+  return (
+    <div className="hs-in hs-cols">
+      <div className="hs-side"><span className="hs-label rv">{label}</span></div>
+      <div className="hs-body">{children}</div>
+    </div>
+  )
+}
+
+// ROADMAP — B3 대형 워드 스택(스크롤 연동·활성만 진하게). 점선 슬롯 문법은 톤 다운으로 승계.
 function Roadmap() {
   return (
     <section className="hs hs-roadmap page" id="roadmap">
-      <div className="hs-in">
-        <span className="page-idx rv">01 — ROADMAP</span>
+      <Cols label="01 — ROADMAP">
         <h2 className="hs-title rv" style={{ transitionDelay: '90ms' }}>스터디 <em>로드맵</em></h2>
-        <ol className="rmap rv" style={{ transitionDelay: '180ms' }}>
-          {TRUNK.map((n) => (
-            <li className="rm-node" key={n.title}>
-              <TreeNode n={n} />
+        <ol className="wl rv" style={{ transitionDelay: '180ms' }}>
+          {LINEAGE.map((n) => (
+            <li className={`wl-item${n.slot ? ' wl-slot' : ''}`} key={n.title}>
+              <span className="wl-era">{n.era}</span>
+              <span className="wl-word">{n.title}</span>
+              <span className="wl-desc">
+                {n.desc}
+                {n.status && <span className={`status ${n.status[0]}`}>{n.status[1]}</span>}
+              </span>
             </li>
           ))}
-          <li className="rm-node now" key={BRANCH.title}>
-            <TreeNode n={BRANCH} />
-            <ol className="rm-sub">
-              {BRANCH.children.map((c) => (
-                <li className={`rm-node${c.slot ? ' rm-slot' : ''}`} key={c.title}>
-                  <TreeNode n={c} />
-                </li>
-              ))}
-            </ol>
-          </li>
         </ol>
-      </div>
+      </Cols>
     </section>
   )
 }
@@ -154,8 +204,7 @@ function Roadmap() {
 function Projects() {
   return (
     <section className="hs hs-projects page" id="projects">
-      <div className="hs-in">
-        <span className="page-idx rv">02 — PROJECTS</span>
+      <Cols label="02 — PROJECTS">
         <h2 className="hs-title rv" style={{ transitionDelay: '90ms' }}><em>프로젝트</em></h2>
         <div className="hp-list rv" style={{ transitionDelay: '180ms' }}>
           {PROJECTS.map(([title, cover, href, tag]) => (
@@ -174,17 +223,16 @@ function Projects() {
         <p className="hp-more-links rv" style={{ transitionDelay: '260ms' }}>
           <a className="proof-link" href="/projects/">전체 아카이브 <Arrow /></a>
         </p>
-      </div>
+      </Cols>
     </section>
   )
 }
 
-// FAQ — 대형 아코디언(질문 타이포 1.4rem급·풀폭 헤어라인) + ABOUT 링크.
+// FAQ — 대형 아코디언(질문 타이포 1.4rem급·풀폭 헤어라인).
 function Faq() {
   return (
     <section className="hs hs-faq page" id="faq">
-      <div className="hs-in">
-        <span className="page-idx rv">03 — FAQ</span>
+      <Cols label="03 — FAQ">
         <h2 className="hs-title rv" style={{ transitionDelay: '90ms' }}>묻고 <em>답하기</em></h2>
         <div className="faq-xl rv" style={{ transitionDelay: '180ms' }}>
           {FAQ.map(({ q, a }) => (
@@ -194,7 +242,7 @@ function Faq() {
             </details>
           ))}
         </div>
-      </div>
+      </Cols>
     </section>
   )
 }
@@ -202,12 +250,14 @@ function Faq() {
 export default function App() {
   useSectionSpy()
   useParallax()
+  useWordSpy()
   return (
     <>
       <SiteNav />
       <main className="home">
         <Hero />
         <RecruitBand />
+        <StatsBand />
         <Roadmap />
         <Projects />
         <Faq />

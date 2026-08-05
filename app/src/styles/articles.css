@@ -1,8 +1,10 @@
-/* 기사(INSIGHTS) 전용 — 목록 = 피처 행 + 성격 탭·필터 바 + 썸네일 카드 그리드 + 더보기(2026-08-05 오너 픽),
-   상세 = 통일 셸(문서헤더·출처카드·720px 본문·하단 내비 — 이번 개편 대상 아님).
-   토큰=global.css만 · light-only. 디자인규칙 v2: 버건디=화이트리스트(④눈썹·⑥링크밑줄·⑨focus·⑩좌보더)만·버건디 면 금지.
-   v3(§6-2 NEXTERS 강조 문법, 2026-08-05): N1 카운트 숫자=대형+스탯 언더바(③) / N2 페이지 h1·피처 제목 스케일 상향(본문 크기 불변)
-   / N3 색면 = 피처 행 배경 버건디 틴트 1곳뿐(페이지당 ≤1 — 틴트 면 위 직접 텍스트 없음, 카드=흰 면이라 대비 AA 자명). 신규 모션 0.
+/* 기사(INSIGHTS) 목록 전용 — 피처 행 + 성격 탭·필터 바 + 썸네일 카드 그리드 + 더보기(2026-08-05 오너 픽).
+   상세 셸 = styles/insights-detail.css로 분할(2026-08-05 v3.1 — 값 무변경 이관).
+   토큰=global.css만 · light-only. 디자인규칙 v2: 버건디=화이트리스트(④눈썹·⑥링크밑줄·⑨focus·⑩좌보더)+v3.1 ■불릿만·버건디 면 금지.
+   v3(§6-2): N1 카운트 숫자=대형+스탯 언더바(③) / N2 페이지 h1·피처 제목 스케일 상향(본문 크기 불변)
+   / N3 색면 = 피처 행 배경 버건디 틴트 1곳뿐(면 위 직접 텍스트 없음, 카드=흰 면이라 대비 AA 자명).
+   v3.1(§6-2a NEXTERS 실측, 2026-08-05 2차): B1 블랙 통계 밴드(페이지당 블랙 대면적 1·2×2 흰 대형 숫자+십자 헤어라인)
+   / B2 좌 고정 라벨 컬럼(버건디 ■ + 영문 라벨) 2단 골격 — 헤드·FEATURED·LATEST. 신규 무한루프 모션 0.
    반응형 3계층(2026-08-05 규범): 폰 <760 1열 리스트 / 태블릿 760~1199 2열 / 데스크톱 ≥1200 피처+3열+필터 상시 레일. */
 
 .art-page { margin: 0 auto; padding: 3rem 1.5rem 5rem; }
@@ -212,103 +214,57 @@
 .art-empty-title { font-weight: 700; color: var(--text); font-size: 0.96rem; }
 .art-empty code { font-size: 0.85em; background: #fff; border: 1px solid var(--line); border-radius: 5px; padding: 0.08em 0.4em; }
 
-/* ── 상세 — 통일 디자인 셸(텍스트 720px 문서형 + 도판 브레이크아웃) ── */
-.art-detail { max-width: none; }
-.art-detail > :not(.hub-md) { max-width: 720px; margin-inline: auto; }
+/* ── 상세 셸 = styles/insights-detail.css로 이관(2026-08-05 v3.1 — 315줄 부채 분할, 값 무변경) ── */
 
-/* ① 문서 헤더 블록 — 눈썹(.art-idx 승계)·제목·메타·태그 */
-.art-doc-head { padding-bottom: 1.25rem; border-bottom: 1px solid var(--line); margin-bottom: 1.5rem; }
-.art-doc-head h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.5rem, 3.4vw, 2rem); line-height: 1.3; letter-spacing: -0.02em; margin: 0 0 0.55rem; }
-.art-detail-meta { font-size: 0.8rem; color: var(--text-sub); margin: 0; }
-.art-detail-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.7rem; }
+/* ── v3.1(§6-2a) B2 — 좌 고정 라벨 컬럼 + 우 콘텐츠 2단 골격(헤드·FEATURED·LATEST 공통) ── */
+.ins-sec { display: block; }
+.ins-sec-label {
+  display: flex; align-items: center; gap: 0.55rem; margin-bottom: 0.9rem; padding-top: 0.35rem;
+  font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; color: var(--text);
+}
+/* 버건디 ■ 마이크로 불릿 — v3.1 B2 규범이 정의(B4: 버건디 = 마이크로 액센트로 후퇴) */
+.ins-sq { display: inline-block; width: 9px; height: 9px; background: var(--accent); }
+@media (min-width: 760px) {
+  .ins-sec { display: grid; grid-template-columns: 156px minmax(0, 1fr); column-gap: 1.7rem; align-items: start; }
+  /* 라벨 = 스크롤 따라 좌측 고정(NEXTERS 실측 — 위치 고정, 모션 없음) */
+  .ins-sec-label { position: sticky; top: 5.2rem; align-self: start; margin-bottom: 0; }
+}
+@media (min-width: 1200px) { .ins-sec { grid-template-columns: 184px minmax(0, 1fr); } }
+.ins-sec-body { min-width: 0; }
 
-/* 상호작용 줄(M2 D3) — 헤어라인 필 2개. 켜짐 = 차콜 반전(버건디 면 아님) */
-.art-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.9rem; }
-.art-act {
-  display: inline-flex; align-items: center; gap: 0.35rem;
-  border: 1px solid var(--line); border-radius: var(--radius-pill); background: #fff;
-  color: var(--text-sub); font: inherit; font-size: 0.8rem; padding: 0.3rem 0.8rem; cursor: pointer;
-  transition: border-color 120ms ease-out, color 120ms ease-out, background 120ms ease-out;
+/* ── v3.1 B1 — 블랙 통계 밴드(페이지당 블랙 대면적 1 · 흑백 대비가 핵) ──
+   흰 대형 숫자 2×2 + 십자 헤어라인(NEXTERS 실측 문법). 수치 = 게재 데이터 집계 + 출처 각주. */
+.ins-band { background: var(--dark); border-radius: var(--radius-card); color: #fff; padding: 1.8rem 2rem 2rem; margin: 0 0 2.5rem; }
+.ins-band-cap {
+  display: flex; align-items: baseline; gap: 0.7rem; flex-wrap: wrap; margin: 0 0 1.5rem;
+  font-size: 0.74rem; font-weight: 700; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.58);
 }
-.art-act b { font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
-.art-act:hover { border-color: var(--text-sub); color: var(--text); }
-.art-act:active { transform: translateY(1px); }
-.art-act:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.art-act.on { background: var(--dark); border-color: var(--dark); color: #fff; }
-.art-act.on b { color: #fff; }
-.art-act-note { flex-basis: 100%; margin: 0.15rem 0 0; font-size: 0.78rem; color: var(--text-sub); }
-
-/* ② 히어로 — 기고 맨 위 이미지 + 캡션 줄(오너 판정 2026-08-05: 이미지만 봐도 내용을 알게).
-   본문과 같은 720px 정렬(.art-detail > :not(.hub-md) 규칙 승계). 캡션 = 메타 톤(사진 설명). */
-.art-hero { margin: 0 auto 1.5rem; }
-.art-hero img {
-  display: block; width: 100%; border: 1px solid var(--line); border-radius: var(--radius-card); background: #fff;
+.ins-band-cap span { font-weight: 500; letter-spacing: 0.02em; color: rgba(255, 255, 255, 0.38); } /* 출처 각주(§6 스탯 문법) */
+.ins-band-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; }
+.ins-band-cell { padding: 1.05rem 1.5rem; }
+/* 십자 헤어라인 — 2×2 경계에만(외곽 없음) */
+.ins-band-cell:nth-child(even) { border-left: 1px solid rgba(255, 255, 255, 0.16); }
+.ins-band-cell:nth-child(n+3) { border-top: 1px solid rgba(255, 255, 255, 0.16); }
+.ins-band-num {
+  display: block; font-family: var(--font-display); font-weight: 900; color: #fff;
+  font-size: clamp(2.5rem, 6.5vw, 4.6rem); line-height: 1; letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
 }
-/* 사진·도판 = 폭 꽉 채움(비율 유지) */
-.art-hero--fit-cover img { height: auto; }
-/* 시리즈 커버(컴포넌트형 SVG) = 이미지와 같은 프레임(16:10·보더·라운드) */
-.art-hero-svg { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; border: 1px solid var(--line); border-radius: var(--radius-card); }
-/* 로고 = 세로 제한 + surface 면 위 여백(작은 벡터를 720px로 늘리지 않는다) */
-.art-hero--fit-contain img {
-  height: 168px; object-fit: contain; background: var(--surface); padding: 1.6rem 1.2rem;
-}
-.art-hero-cap {
-  margin: 0.55rem 0 0; font-size: 0.78rem; line-height: 1.55; color: var(--text-sub);
-  padding-left: 0.6rem; border-left: 2px solid var(--line);
+.ins-band-label { display: block; margin-top: 0.55rem; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; color: rgba(255, 255, 255, 0.62); }
+.ins-band-label em { font-style: normal; font-weight: 500; letter-spacing: 0; color: rgba(255, 255, 255, 0.44); margin-left: 0.35rem; }
+@media (max-width: 759px) {
+  .ins-band { padding: 1.3rem 1.15rem 1.4rem; margin-bottom: 1.75rem; }
+  .ins-band-cell { padding: 0.85rem 1rem; }
 }
 
-/* ③ 출처 카드 — surface 배경 + 헤어라인 테두리(버건디 면 금지) */
-.art-source {
-  display: flex; align-items: center; gap: 0.6rem; background: var(--surface); border: 1px solid var(--line);
-  border-radius: var(--radius-card); padding: 0.85rem 1.1rem; margin-bottom: 2rem; text-decoration: none;
-  color: var(--text); transition: border-color 150ms ease-out;
-}
-.art-source:hover { border-color: var(--text-sub); }
-.art-source:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-.art-source-label { flex: none; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; color: var(--text-sub); border: 1px solid var(--line); border-radius: var(--radius-pill); padding: 0.1rem 0.55rem; background: #fff; }
-.art-source-name { flex: 1; min-width: 0; font-size: 0.9rem; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.art-source-go { flex: none; display: inline-flex; color: var(--text-sub); }
-.art-source:hover .art-source-go { color: var(--text); }
-
-/* ④ 본문 폭 = .hub-md(아래) · 이미지 폭 보장 = .hub-md img */
-
-/* ⑤ 하단 — 목록 복귀 + 이전/다음 인사이트 내비 */
-.art-foot { margin-top: 2.5rem; padding-top: 1.25rem; border-top: 1px solid var(--line); }
-.art-back { background: none; border: none; padding: 0; font-size: 0.84rem; font-weight: 600; color: var(--text-sub); cursor: pointer; transition: color 150ms ease-out; }
-.art-back:hover { color: var(--text); }
-.art-back:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-.art-foot-nav { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.1rem; }
-.art-nav-link {
-  flex: 1 1 44%; min-width: 0; display: block; text-align: left; background: none; border: 1px solid var(--line);
-  border-radius: var(--radius-card); padding: 0.75rem 0.95rem; color: inherit; font: inherit; cursor: pointer; transition: border-color 150ms ease-out;
-}
-.art-nav-next { text-align: right; }
-.art-nav-link:hover { border-color: var(--text-sub); }
-.art-nav-link:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-.art-nav-dir { display: block; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.03em; color: var(--text-sub); margin-bottom: 0.25rem; }
-.art-nav-title { display: block; font-size: 0.9rem; font-weight: 600; line-height: 1.4; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-/* 섹션 넘버링 — 기사 상세 한정(세미나·프로젝트 본문 제외) */
-.art-detail .hub-md { counter-reset: mdsec; }
-.art-detail .hub-md h2 { counter-increment: mdsec; padding-top: 1.6rem; border-top: 1px solid var(--line); margin-top: 2.4rem; }
-.art-detail .hub-md h2::before { content: counter(mdsec, decimal-leading-zero); display: block; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 0.4rem; } /* 섹션 인덱스(④) */
-
-/* 상세 태그 칩 — 성격색(§1 파생 4색) */
-.art-row-tags { display: inline-flex; flex-wrap: wrap; gap: 0.35rem; }
-.art-tag { font-size: 0.72rem; font-weight: 600; color: var(--text-sub); background: #fff; border: 1px solid var(--line); border-radius: var(--radius-pill); padding: 0.14rem 0.6rem; }
-.art-tag-nature { color: #fff; background: var(--dark); border-color: var(--dark); }
-/* 지금 써먹기 배지 — prep 배지 문법(테두리+텍스트, §1 화이트리스트 ⑤) · 버건디 면 금지 */
-.art-tag-now { color: var(--accent); border-color: var(--accent); background: #fff; }
-
-/* 성격색 토큰 — 탭(선택)·카드 라벨·상세 태그 공용(§1 파생 4색) */
+/* 성격색 토큰 — 탭(선택)·카드 라벨·상세 태그 공용(§1 파생 4색. 상세 소비처 = insights-detail.css) */
 .chip-news     { --nbg: #e5f0fb; --nfg: #38618c; }
 .chip-analysis { --nbg: #faf0e1; --nfg: #8c6a38; }
 .chip-howto    { --nbg: #e4f3e8; --nfg: #39734a; }
 .chip-tools    { --nbg: #eee9fa; --nfg: #63549e; }
-.art-tag.art-tag-nature[class*="chip-"] { background: var(--nbg); color: var(--nfg); border-color: var(--nbg); }
 
 @media (prefers-reduced-motion: reduce) {
-  .art-filter button, .ins-tab, .art-card > button, .art-feature > button, .art-more, .art-back, .art-search input, .hub-md a, .art-source, .art-nav-link { transition: none; }
+  .art-filter button, .ins-tab, .art-card > button, .art-feature > button, .art-more, .art-search input { transition: none; }
   .art-filter button:active, .ins-tab:active, .art-more:active,
   .art-card > button:hover, .art-card > button:active,
   .art-feature > button:hover, .art-feature > button:active { transform: none; }

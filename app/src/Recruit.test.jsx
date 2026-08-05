@@ -127,9 +127,35 @@ test('E5 키비주얼 = 교차·겹침 장식 존재, 조준점(reticle) 부재(
   expect(html).not.toContain('reticle')
 })
 
-test('E6 CTA = 헤더 신청하기 앵커 → 하단 폼 섹션 id 연결', () => {
+test('E6 CTA = 헤더 신청하기 앵커 → 하단 폼 섹션 id 연결 + 대형 CTA(v3.1 상향)', () => {
   const html = flat(<Recruit />)
   expect(html).toContain('신청하기')
   expect(html).toContain('href="#apply"')
   expect(html).toContain('id="apply"')
+  expect(html).toContain('rc-cta-xl') // 대형 CTA(차콜 필 + 버건디 원형 화살표 — Primary 확대판)
+})
+
+// ── v3.1 개조(디자인규칙 §6-2a — NEXTERS 실측 문법, 2026-08-05 2차) ──
+
+test('v3.1 B1 블랙 밴드 = 운영 증빙 1개(rc-black) + 스탯 4셀(2×2) — 수치·출처 유지', () => {
+  const html = flat(<Recruit />)
+  expect((html.match(/rc-black/g) || []).length, '페이지당 블랙 대면적 = 1').toBe(1)
+  expect((html.match(/class="stat-row"/g) || []).length, '2×2 십자 그리드 = 4셀').toBe(4)
+  expect(html).toContain('참가비 (원)') // 추가 스탯도 실측·확정값만(운영틀 — 참가비 0원)
+})
+
+test('v3.1 B2 좌 라벨 컬럼 = 전 섹션 8개(버건디 ■ + 영문 라벨)', () => {
+  const html = flat(<Recruit />)
+  expect((html.match(/class="rc-label"/g) || []).length).toBe(8)
+  for (const en of ['OVERVIEW', 'RECORD', 'TARGET', 'SCHEDULE', 'PROGRAM', 'FAQ', 'APPLY', 'CONTACT']) {
+    expect(html, `좌 라벨 부재: ${en}`).toContain(`>${en}<`)
+  }
+})
+
+test('v3.1 B3 워드 스택 = 1차 프로젝트 5회 흐름(대형 워드·스크롤 하이라이트는 CSS/JS)', () => {
+  const html = flat(<Recruit />)
+  expect(html).toContain('rc-words')
+  expect((html.match(/class="rc-word"/g) || []).length).toBe(5)
+  expect(html).toContain('킥오프 — 소재 선정')
+  expect(html).toContain('중간 쇼케이스 — 발표·사이트 게재')
 })

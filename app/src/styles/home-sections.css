@@ -1,60 +1,39 @@
-/* 메인(/) v5 섹션 본문 — ROADMAP·PROJECTS·FAQ. 골격·히어로·모션 = home.css(300줄 규격 분할).
-   (WHY 섹션 폐지 2026-07-25 · .stat-rows 계열 = recruit.css로 이동 2026-08-05 — about 폐지, 증빙은 /recruit 하단.)
-   규격=디자인규칙 v3(§6-2, 2026-08-05): N4 쇼케이스 카드 강조(hp-title 상향·스크림 심화) — 구조·모션 문법 불변.
-   색·폰트 토큰 고정 · 버건디 화이트리스트/빈도 상한 · transform·opacity만 · reduced-motion 존중. */
+/* 메인(/) v6 섹션 본문 — ROADMAP 워드 스택·PROJECTS·FAQ. 골격·히어로·B1·B2 = home.css(300줄 규격 분할).
+   규격 = §6-2a v3.1(2026-08-05 2차): B3 스크롤 연동 워드 리스트(구 계보 트리 폐지 — 대형 워드 스택,
+   활성 항목만 진하게·opacity 전환만) · N4 쇼케이스 카드 강조 유지.
+   색·폰트 토큰 고정 · 버건디 화이트리스트 · transform·opacity만 · reduced-motion 존중. */
 
-/* ══ ROADMAP — 계보 트리(2026-07-25): 세로 본류선 → 분기 들여쓰기 + 가지선. 전 뷰포트 세로 ══ */
-.rmap, .rm-sub { list-style: none; padding-left: 0; }
-.rmap { margin: clamp(2.5rem, 6vh, 3.5rem) 0 0; }
-.rm-node { position: relative; padding: 0 0 clamp(1.6rem, 3.5vh, 2.3rem) 1.9rem; }
-.rm-node::before { /* 세로 계보선(노드별 세그먼트가 이어져 한 줄) */
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 6px;
-  width: 2px;
-  background: var(--line);
+/* ══ ROADMAP — B3 대형 워드 스택(뷰포트 중앙 최근접 항목만 활성 = .on, 나머지 흐림) ══ */
+.wl { list-style: none; margin: clamp(2rem, 5vh, 3rem) 0 0; padding: 0; }
+.wl-item {
+  padding: clamp(1.1rem, 2.8vh, 1.7rem) 0;
+  border-bottom: 1px solid var(--line);
+  opacity: 0.26; /* 비활성 흐림 — 전환은 opacity만(§6-2a B3) */
+  transition: opacity 300ms ease-out;
 }
-.rmap > .rm-node:first-child::before { top: 3px; }
-.rm-sub > .rm-node:last-child::before { bottom: auto; height: 18px; }
-.rm-dot {
-  position: absolute;
-  top: 3px;
-  left: 0;
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  background: #fff;
-  border: 2px solid var(--text-sub);
-}
-.rm-node.now > .rm-dot { border-color: var(--accent); background: var(--accent); } /* 화이트리스트 ⑦ — 분기 노드 1점만(자손 금지) */
-.rm-slot > .rm-dot { border-style: dashed; background: #fff; border-color: var(--text-sub); }
-.rm-era {
+.wl-item:first-child { border-top: 1px solid var(--line); }
+.wl-item.on { opacity: 1; }
+.wl-era {
+  display: block;
   font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
   color: var(--text-sub);
-  display: block;
   margin-bottom: 0.4rem;
 }
-.rm-node h3 { margin: 0 0 0.4rem; font-size: 1.02rem; }
-.rm-node p { margin: 0 0 0.75rem; font-size: 0.85rem; color: var(--text-sub); max-width: 58ch; }
-.rm-node .status { margin: 0; }
-/* 분기 하위 목록 — 들여쓰기 + 부모 점에서 내려오는 가지 시작 여백 */
-.rm-sub { margin: clamp(1.2rem, 2.5vh, 1.8rem) 0 0 clamp(1.6rem, 5vw, 3.2rem); }
-.rm-sub > .rm-node { padding-bottom: clamp(1.3rem, 2.8vh, 1.9rem); }
-/* 분기 노드(.now)의 세로선은 하위 목록 끝까지 이어짐(본류 지속) — li가 하위 ol을 포함하므로 자동 */
-.rm-slot { opacity: 0.85; }
-.rm-slot h3 { color: var(--text-sub); }
-.rm-slot .rm-era::after {
-  content: '';
-  display: inline-block;
-  width: 1.6rem;
-  border-top: 1.5px dashed var(--line);
-  vertical-align: middle;
-  margin-left: 0.5rem;
+.wl-word {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.9rem, 4.8vw, 3.6rem); /* 대형 워드 — 섹션 h2급 이상 */
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  word-break: keep-all;
 }
+.wl-slot .wl-word { color: var(--text-sub); font-weight: 800; } /* 빈 슬롯 = 톤 다운(점선 슬롯 문법 승계) */
+.wl-desc { display: block; margin-top: 0.55rem; font-size: 0.88rem; color: var(--text-sub); max-width: 58ch; }
+.wl-desc .status { margin: 0 0 0 0.55rem; vertical-align: 1px; }
+@media (prefers-reduced-motion: reduce) { .wl-item { transition: none; opacity: 1; } }
 
 /* ══ PROJECTS — 풀폭 대형 커버 카드(커버 위 대형 제목 오버레이·호버 리프트) ══ */
 .hp-list { display: grid; grid-template-columns: 1fr; gap: 1.75rem; margin-top: clamp(2.5rem, 6vh, 3.5rem); }

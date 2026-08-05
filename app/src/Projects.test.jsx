@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
-import { splitProjectBody, ProjectCard, ProjectGrid, ProjectDetail } from './Projects.jsx'
+import { splitProjectBody, ProjectCard, ProjectGrid, ProjectDetail, ProjectStats } from './Projects.jsx'
 
 const noop = () => {}
 const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
@@ -51,6 +51,25 @@ test('ProjectGrid — 항목이면 그리드, 0건이면 디자인된 빈 상태
   const empty = flat(<ProjectGrid list={[]} onOpen={noop} />)
   expect(empty).toContain('등재된 프로젝트 아직 없음')
   expect(empty).toContain('content/프로젝트/') // 기고 방법 안내
+})
+
+// ── v3.1 신설 — B1 통계 밴드·쇼케이스 번호 ──
+test('ProjectStats — 실측 지표만 렌더(0건 미표기) + 출처 각주', () => {
+  const html = flat(<ProjectStats projects={[P, { ...P, slug: 'b', 상태: '보관' }]} articleCount={14} seminarCount={0} />)
+  expect(html).toContain('pj-stat-num')
+  expect(html).toContain('프로젝트')
+  expect(html).toContain('게재 기사')
+  expect(html).toContain('14')
+  expect(html).not.toContain('세미나 기록') // 0건 지표 = 미표기
+  expect(html).toContain('실측') // 출처 각주(stat-src 문법)
+})
+test('ProjectStats — 유효 지표 2개 미만이면 밴드 미렌더', () => {
+  expect(flat(<ProjectStats projects={[]} articleCount={0} seminarCount={0} />)).toBe('')
+})
+test('ProjectCard — idx 전달 시 쇼케이스 번호(01), 미전달 시 미렌더', () => {
+  expect(flat(<ProjectCard p={P} idx={0} onOpen={noop} />)).toContain('pj-card-idx')
+  expect(flat(<ProjectCard p={P} idx={0} onOpen={noop} />)).toContain('01')
+  expect(flat(<ProjectCard p={P} onOpen={noop} />)).not.toContain('pj-card-idx')
 })
 
 // ── 상세(커버 배너 → 제목·설명·상태·링크 → 소개 → 프롬프트 로그) ──

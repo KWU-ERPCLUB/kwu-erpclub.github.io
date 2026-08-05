@@ -51,6 +51,26 @@ test('v3 N3 — 일정미정 featured도 예정 취급 = is-next', () => {
   expect(html).toContain('is-next')
 })
 
+// §6-2a v3.1 B1 — 예정 featured = 블랙 대면적 밴드(구 버건디 면 철회). 과거 featured = 일반 레일(밴드 0)
+test('v3.1 B1 — 예정 featured = 블랙 밴드(sem-next-band·NEXT 키커·대형 회차/날짜), 과거 featured는 밴드 없음', () => {
+  const html = flat(<SeminarTimelineItem s={base({ date: '2026-08-07', 회차: '2' })} today={TODAY} featured onOpen={noop} />)
+  expect(html).toContain('sem-next-band') // 블랙 밴드
+  expect(html).toContain('NEXT SEMINAR') // 키커
+  expect(html).toContain('sem-next-ep') // 대형 회차 숫자
+  expect(html).toContain('sem-next-when') // 대형 날짜
+  expect(html).toContain('2026.08.07')
+  const past = flat(<SeminarTimelineItem s={base({ date: '2026-06-01' })} today={TODAY} featured onOpen={noop} />)
+  expect(past).not.toContain('sem-next-band') // 예정 없으면 밴드 0
+  expect(past).toContain('sem-tl-underbar') // 과거 featured = 일반 레일 + 언더바 유지
+})
+
+test('v3.1 B1 — 일정미정 featured 밴드 = 날짜 대신 "일정 미정"', () => {
+  const html = flat(<SeminarTimelineItem s={base({ date: '2026-06-01', 일정미정: true })} today={TODAY} featured onOpen={noop} />)
+  expect(html).toContain('sem-next-band')
+  expect(html).toContain('일정 미정')
+  expect(html).not.toContain('2026.06.01')
+})
+
 // ── SeminarTimelineItem (항목 단위 — 픽스처 주입) ──
 test('겹침 카드 — 썸네일 2장이면 is-stack + 뒷장(back) 렌더 + 슬라이드 링크', () => {
   const s = base({ 썸네일: ['/slides/s1/thumb-1.png', '/slides/s1/thumb-2.png'], 슬라이드: 'https://slides/s1/' })
@@ -116,5 +136,13 @@ test('필터 바 — 주제 탭(전체 + 등장 주제만) + 정렬 토글 기�
   expect(html).toContain('거버넌스·리스크')
   expect(html).not.toContain('모델·플랫폼') // 미등장 주제는 탭 없음
   expect(html).toContain('최신순') // 정렬 토글 기본 라벨
-  expect(html).toContain('SEMINARS') // 소개 눈썹
+  expect(html).toContain('SEMINARS') // 좌 라벨 컬럼 텍스트
+})
+
+// §6-2a v3.1 B2 — 좌 고정 라벨 컬럼 골격(버건디 ■ + SEMINARS/ARCHIVE 2구간)
+test('v3.1 B2 — 좌 라벨 컬럼(SEMINARS·ARCHIVE + ■ 불릿 2개) 골격', () => {
+  const html = flat(<SeminarsTimeline all={[base()]} today={TODAY} onOpen={noop} />)
+  expect(html).toContain('sem-col-label') // 라벨 컬럼
+  expect(html).toContain('ARCHIVE') // 타임라인 구간 라벨
+  expect((html.match(/sem-col-sq/g) || []).length).toBe(2) // 헤드·아카이브 두 구간 ■
 })

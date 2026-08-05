@@ -74,7 +74,8 @@ export default function RecruitForm({ configured, repos }) {
       ))}
       <p className="rc-form-privacy">제출 정보 용도 = 모집 연락·기수 운영 — 그 외 사용 없음.</p>
       {failure && <p className="rc-field-error" role="alert">{failure}</p>}
-      <button className="btn-2nd rc-form-submit" type="submit" disabled={phase === 'busy'}>
+      {/* v3.1(2026-08-05) — 제출 = 대형 CTA 승계(시각만 — 로직·상태 무변경) */}
+      <button className="rc-cta-xl rc-form-submit" type="submit" disabled={phase === 'busy'}>
         {phase === 'busy' ? '제출 중' : '신청 제출'}
       </button>
     </form>

@@ -1,7 +1,9 @@
 // 인사이트 공용 UI 조각 — 썸네일 카드(오너 픽 2026-08-05 B·C). 색면 카드 폐지: 카드 배경 = 흰/중립 통일,
 // 성격 = 컬러 라벨로 강등. 그리드 카드 요소 상한 = [썸네일 · 성격 라벨 · 제목 · 설명 1문장 · 날짜].
 // 해시태그·아바타 = 카드에서 제거(데이터는 유지 — 상세에서만 표시).
-import { natureKey } from './insights-logic.js'
+// + v3.1(§6-2a, 2026-08-05 2차) 골격 조각: SectionLabel(B2 좌 라벨 컬럼)·StatBand(B1 블랙 통계 밴드).
+import { NATURES } from '../content/schema.js'
+import { natureKey, extractMonths, seriesOptions } from './insights-logic.js'
 import { resolveThumb } from './thumb-resolver.js'
 import { InsightCover } from './insights-cover.jsx'
 import SeriesCover from './SeriesCover.jsx'
@@ -18,6 +20,39 @@ export function Thumb({ a, big = false }) {
         : t.src ? <img src={t.src} alt={t.alt} loading="lazy" />
           : <InsightCover a={a} />}
     </span>
+  )
+}
+
+// v3.1 B2 — 좌 고정 라벨(버건디 ■ 마이크로 불릿 + 영문 소형 라벨). 섹션 골격 = .ins-sec 2단 그리드(articles.css).
+export function SectionLabel({ children }) {
+  return (
+    <span className="ins-sec-label">
+      <i className="ins-sq" aria-hidden="true" />{children}
+    </span>
+  )
+}
+
+// v3.1 B1 — 블랙 통계 밴드(페이지당 블랙 대면적 1개 · 흰 대형 숫자 2×2 + 십자 헤어라인).
+// 수치 = 게재 데이터 자동 집계만(날조 0) — 출처 각주 동봉(§6 스탯 문법).
+export function StatBand({ all }) {
+  const stats = [
+    { n: all.length, en: 'ARTICLES', ko: '누적 기고' },
+    { n: NATURES.length, en: 'CATEGORIES', ko: '성격 분류' },
+    { n: seriesOptions(all).length, en: 'SERIES', ko: '정기 연재' },
+    { n: extractMonths(all).length, en: 'MONTHS', ko: '발행 개월' },
+  ]
+  return (
+    <section className="ins-band" aria-label="인사이트 게재 수치">
+      <p className="ins-band-cap">INSIGHTS IN NUMBERS <span>출처 · 게재 데이터 자동 집계</span></p>
+      <ul className="ins-band-grid">
+        {stats.map((s) => (
+          <li key={s.en} className="ins-band-cell">
+            <strong className="ins-band-num">{s.n}</strong>
+            <span className="ins-band-label">{s.en} <em>{s.ko}</em></span>
+          </li>
+        ))}
+      </ul>
+    </section>
   )
 }
 

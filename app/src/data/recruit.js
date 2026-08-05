@@ -49,6 +49,69 @@ export function shortDate(ymd) {
   return String(ymd).slice(5)
 }
 
+// ── /recruit 페이지 정적 카피(2026-08-05 v3.1 개조 때 Recruit.jsx에서 이관 — 300줄 규격) ──
+// 값 파생 = 위 RECRUIT·PHASES(운영틀 §2·§3·§7)만. [미정] 게재 금지·개조식 사실 서술 유지.
+
+// 요강 — 인원·모임·대상 개정 = 오너 확정 2026-08-05(인원 미정, 요일 추후 확정, 경영학부 중심 명시).
+export const RECRUIT_FACTS = [
+  ['스터디', `${RECRUIT.study} — ERP연구회 산하 MIS·AI 스터디`],
+  ['대상', '경영학부 중심 — 전공 무관'],
+  ['인원', '미정 — 추후 확정'],
+  ['모집 기간', formatWindow()],
+  ['활동 기간', RECRUIT.활동기간],
+  ['모임', '매주 대면 60분 — 요일 추후 확정'],
+  ['비용', '참가비 없음 — 무료 도구 기준(유료 도구 = 개인 선택)'],
+]
+
+// 이런 사람(E2) — 자격·지향 사실 서술 4카드(권유형 수사 금지).
+export const RECRUIT_FIT = [
+  ['경영학부 중심', '전공 무관 — 지원 제한 없음.'],
+  ['코딩 경험 불필요', '주제 = 코딩이 아니라 AI 활용. 도구 사용법은 스터디에서 함께 다룸.'],
+  ['매주 대면 60분', '주 1회 교내 모임 참여 가능 전제 — 요일은 참가자 조율로 확정.'],
+  ['AI 활용 직접 실험', '본인 반복 작업(수업·과제·시험공부)의 자동화를 직접 만들어 보는 사람.'],
+]
+
+// 모집 일정(E1) — 확정 단계만(선발 방식 미정 → 단계 날조 금지).
+const 시작월 = RECRUIT.일정.전반.기간.split(' ')[0] // '9월'
+export const RECRUIT_TIMELINE = [
+  {
+    era: `서류 접수 · ${formatWindow()}`,
+    title: '신청 폼 제출',
+    desc: '이 페이지 하단 폼에서 온라인 제출 — 기간 내 접수분만 유효.',
+  },
+  {
+    era: '접수 마감 후',
+    title: '개별 안내',
+    desc: '접수 정보 기준 개별 연락 — 이후 절차는 연락 시 안내.',
+  },
+  {
+    era: `활동 시작 · ${시작월}`,
+    title: `${RECRUIT.study} ${RECRUIT.cohort} 활동 개시`,
+    desc: `첫 회차 = ${PHASES.p1.라벨} 킥오프(${shortDate(PHASES.p1.킥오프주간)} 주간, 소재 선정) — 활동 기간 ${RECRUIT.활동기간}.`,
+  },
+]
+
+// 활동 구성 — 1차(개인)→휴지→2차(팀). 명명 = 운영틀 개정 이력(2026-08-05). 최종 발표 주간 [미정] 게재 금지.
+// 1차 5회 흐름 = words(B3 워드 스택 — 대형 워드 + 스크롤 연동 하이라이트 렌더).
+export const RECRUIT_STEPS = [
+  {
+    era: `${PHASES.p1.라벨} · ${shortDate(PHASES.p1.킥오프주간)} 주간 ~ ${shortDate(PHASES.p1.쇼케이스주간)} 주간 · ${PHASES.p1.회차}회`,
+    title: `${PHASES.p1.형태} — 각자 반복 작업 하나를 AI로 자동화`,
+    desc: '본인이 매주 반복하는 작업(수업·과제·시험공부)에서 소재 선정 — 만든 것을 계속 쓰는 구조. 마지막 회 = 중간 쇼케이스.',
+    words: ['킥오프 — 소재 선정', 'AI 도구 개괄·체험', '공통 미니과제', '개인 산출물 제작·첨삭', '중간 쇼케이스 — 발표·사이트 게재'],
+  },
+  {
+    era: `시험 휴지 · ${shortDate(PHASES.휴지.start)} ~ ${shortDate(PHASES.휴지.end)}`,
+    title: '중간고사 기간 활동 중지',
+    desc: `중간고사 ${shortDate(PHASES.휴지.중간고사.start)} ~ ${shortDate(PHASES.휴지.중간고사.end)} — 시험 2주 전부터 세션 없음.`,
+  },
+  {
+    era: `${PHASES.p2.라벨} · ${shortDate(PHASES.p2.개시주간)} 주간 ~ ${shortDate(PHASES.p2.상한주간)} 주간`,
+    title: `${PHASES.p2.형태} 프로젝트 — 경영·업무 맥락`,
+    desc: `제시된 주제 풀에서 팀별 선택 → 매주 체크인 → 최종 발표·사이트 게재. 활동 = 기말고사(${shortDate(PHASES.p2.기말고사.start)}~) 2주 전까지, 발표 주간 = 추후 확정.`,
+  },
+]
+
 // '2026-08-25 ~ 2026-09-08' — 요강 등 전체 표기.
 export function formatWindow(win = RECRUIT.window) {
   return `${win.start} ~ ${win.end}`

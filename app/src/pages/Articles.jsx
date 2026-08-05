@@ -1,6 +1,6 @@
-// 인사이트(INSIGHTS) — 목록 리디자인(2026-08-05 오너 픽, 레퍼런스 = 당근 careers 블로그 계열).
-// [page-head] → 피처 행(고정+최신 2건·큰 썸네일, 기본 뷰만) → 필터 바(성격 탭 5 + 검색 + 주제 칩 + 시리즈 칩 + 기간)
-//   → 썸네일 카드 그리드(배경 통일·성격=컬러 라벨) → 더보기(무한스크롤 금지).
+// 인사이트(INSIGHTS) — 목록 리디자인(2026-08-05 오너 픽, 레퍼런스 = 당근 careers 블로그 계열)
+//   + v3.1 NEXTERS 실측 문법(§6-2a, 같은 날 2차): B2 좌 라벨 컬럼 골격(INSIGHTS/FEATURED/LATEST ■) + B1 블랙 통계 밴드.
+// [page-head(B2)] → 블랙 통계 밴드(B1·집계 수치) → FEATURED(피처 행 2건, 기본 뷰만) → LATEST(필터 바 + 그리드 + 더보기).
 // 3계층 반응형 = articles.css(폰 <760 1열 리스트 / 태블릿 760~1199 2열 / 데스크톱 ≥1200 피처+3열+필터 상시 레일).
 // 시리즈(2026-08-05 오너 재판정) = **필터 칩 1개**뿐. 밴드·전용 아카이브 폐지 — 시리즈 글도 일반 흐름(피처·그리드·카운트 포함).
 // URL: ?tab=<key>=성격 선택 · ?series=<id>=시리즈 필터 · ?p=<slug>=상세(문서 셸 변경 없음). 0건=디자인된 빈 상태.
@@ -12,8 +12,10 @@ import {
   HUB_TAB, TABS, NATURE_KEY, PAGE_SIZE, stateFromSearch, searchFromState,
   filterArticles, pinnedFirst, extractMonths, splitFeature, pageSlice, seriesOptions,
 } from './insights-logic.js'
-import { ArticleRow, FeatureCard } from './insights-parts.jsx'
+import { ArticleRow, FeatureCard, SectionLabel, StatBand } from './insights-parts.jsx'
 import ArticleDetail from './ArticleDetail.jsx'
+// v3.1 골격 분할 CSS(상세 셸 이관분 — articles.css 315줄 부채 분할). 이 JSX가 상세도 그리므로 여기서 로드.
+import '../styles/insights-detail.css'
 
 // 성격 탭 — 5개 상한(전체+4). 선택 = 언더라인 탭(칩 색면 아님 — 성격색은 카드 라벨이 담당).
 function NatureTabs({ value, onSelect }) {
@@ -108,13 +110,25 @@ export function ListView({ all, tab, onTab, topic, setTopic, series = null, setS
 
   return (
     <>
-      {/* 피처 행 — 고정 기사 + 최신, 큰 썸네일(2건) */}
+      {/* v3.1 B1 — 블랙 통계 밴드(헤드 임팩트). 수치 = 게재 데이터 집계 → 확정(ready) 후에만. */}
+      {status === 'ready' && all.length > 0 && <StatBand all={all} />}
+
+      {/* v3.1 B2 — FEATURED: 좌 라벨 / 우 피처 카드(고정+최신 2건, 기본 뷰만) */}
       {status === 'ready' && feature.length > 0 && (
-        <ul className="art-features">
-          {feature.map((a) => <FeatureCard key={a.slug} a={a} onOpen={onOpen} pinned={pinnedSlugs.has(a.slug)} />)}
-        </ul>
+        <section className="ins-sec">
+          <SectionLabel>FEATURED</SectionLabel>
+          <div className="ins-sec-body">
+            <ul className="art-features">
+              {feature.map((a) => <FeatureCard key={a.slug} a={a} onOpen={onOpen} pinned={pinnedSlugs.has(a.slug)} />)}
+            </ul>
+          </div>
+        </section>
       )}
 
+      {/* v3.1 B2 — LATEST: 좌 라벨 / 우 필터·카운트·그리드·더보기(기능 계약 불변) */}
+      <section className="ins-sec">
+      <SectionLabel>LATEST</SectionLabel>
+      <div className="ins-sec-body">
       {/* 필터 바 — 데스크톱(≥1200) 상시 노출 레일, 그 이하는 세로 스택 */}
       <div className="ins-controls">
         <NatureTabs value={tab} onSelect={onTab} />
@@ -166,6 +180,8 @@ export function ListView({ all, tab, onTab, topic, setTopic, series = null, setS
           )}
         </>
       )}
+      </div>
+      </section>
     </>
   )
 }
@@ -231,10 +247,13 @@ export default function Articles({ repos, configured }) {
     <>
       <SiteNav />
       <main className="art-page art-page--list">
-        <header className="art-head">
-          <span className="art-idx">AI INSIGHTS</span>
-          <h1>AI <em>인사이트</em></h1>
-          <p>AI 이슈의 분석·축적 — 스터디원 기고.</p>
+        {/* v3.1 B2 — 페이지 헤드도 좌 라벨 컬럼 골격(눈썹 역할 = 좌 라벨 INSIGHTS가 승계) */}
+        <header className="art-head ins-sec">
+          <SectionLabel>INSIGHTS</SectionLabel>
+          <div className="ins-sec-body">
+            <h1>AI <em>인사이트</em></h1>
+            <p>AI 이슈의 분석·축적 — 스터디원 기고.</p>
+          </div>
         </header>
         <ListView
           all={all} tab={tab} onTab={(t) => nav({ tab: t, slug: null })}

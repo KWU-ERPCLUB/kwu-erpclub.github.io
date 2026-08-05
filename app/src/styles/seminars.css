@@ -1,8 +1,7 @@
-/* 세미나 v3 (2026-07-25) — 목록 = 세로 날짜 타임라인 아카이브(Linear changelog 변형): 소개 헤드 +
-   필터 바(주제 탭·정렬 토글) + 좌 날짜 레일·점 × 항목(제목→상세 / 슬라이드 겹침 카드 / 메타 칩 / 요점·발췌).
-   상세(.sem-ed-*)는 v3 변경 없음(컬러 다크 헤더 밴드 유지). 마크다운 본문 = pages.css(.hub-md). 토큰=global.css.
-   §6-2 v3(2026-08-05 NEXTERS 문법): N2 타이포 상향(헤드 h1·항목 제목 — 본문 크기 불변) +
-   N1 featured 날짜 숫자 대형화(디스플레이 폰트) + N3 예정 featured(.is-next) = 버건디 면 승격(페이지당 1개·AA). */
+/* 세미나 목록 v3.1 (2026-08-05 §6-2a NEXTERS 실측 문법): B2 좌 고정 라벨 컬럼(버건디 ■+SEMINARS/ARCHIVE)×우 콘텐츠 2단 +
+   B1 다음 예정(is-next) = 블랙 대면적 밴드(--dark·흰 대형 회차/날짜 숫자 — 구 N3 버건디 면 철회) +
+   B3 대형 워드 스택(호버 하이라이트 opacity만) + B4 흑백 대비(버건디 = 마이크로 후퇴). 상세(.sem-ed-*) = 변경 없음.
+   토큰=global.css. 모션 자제: 신규 무한루프 0 · transform/opacity/color만 · reduced-motion 존중. */
 
 /* ── 버튼 리셋 (위계 클래스를 button에 적용) ── */
 button.cta { border: none; font-family: inherit; cursor: pointer; }
@@ -11,30 +10,41 @@ button.proof-link {
   font-family: inherit; cursor: pointer; margin-top: 0; padding: 0 0 1px;
 }
 
-/* ── 페이지 셸 ── */
+/* ── 페이지 셸 — v3.1 목록 한정 폭 상향(≥1200 데스크톱 여유, §3-2 감각) ── */
 .sem-main { width: 100%; }
-.sem-list { max-width: var(--maxw); margin: 0 auto; padding: clamp(2.5rem, 6vh, 4rem) 1.5rem clamp(3rem, 6vh, 4rem); }
+.sem-list { max-width: 1200px; margin: 0 auto; padding: clamp(2.5rem, 6vh, 4rem) 1.5rem clamp(3rem, 6vh, 4rem); }
 @media (max-width: 700px) { .sem-list { padding: 2.25rem 1.25rem 2.5rem; } }
 
-/* ════ 소개 헤드 = page-head 골격(눈썹→h1→서브→헤어라인, §3-1) ════ */
-.sem-head { padding-bottom: 1.5rem; border-bottom: 1px solid var(--line); margin-bottom: 1.5rem; }
-.sem-eyebrow { /* 화이트리스트 ④ 섹션 인덱스 = 브랜드 시그니처 */
-  display: block; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.07em;
-  color: var(--accent); margin-bottom: 0.7rem;
+/* ════ B2 — 좌 고정 라벨 컬럼 × 우 콘텐츠 2단 골격 ════ */
+.sem-sec { display: grid; grid-template-columns: clamp(130px, 15vw, 190px) minmax(0, 1fr); gap: 0 clamp(1.5rem, 4vw, 3.5rem); }
+.sem-sec-archive { border-top: 1px solid var(--line); padding-top: clamp(1.75rem, 4vh, 2.5rem); margin-top: clamp(1.25rem, 3vh, 2rem); }
+.sem-col-label { /* 좌 고정 라벨 — 스크롤 동안 컬럼 상단 고정(sticky) */
+  display: inline-flex; align-items: center; gap: 0.55rem; align-self: start;
+  position: sticky; top: 5.5rem;
+  font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; color: var(--text);
 }
-.sem-head-title { /* §6-2 N2 — 페이지 헤드 한 단계 상향(구 1.9~2.6rem) */
-  font-family: var(--font-display); font-weight: 800; font-size: clamp(2.2rem, 5vw, 3.2rem);
-  line-height: 1.14; letter-spacing: -0.02em; margin: 0 0 0.6rem;
+.sem-col-sq { width: 8px; height: 8px; background: var(--accent); flex: none; } /* B4 — 버건디 ■ 마이크로 불릿 */
+.sem-sec-body { min-width: 0; }
+@media (max-width: 820px) {
+  .sem-sec { grid-template-columns: 1fr; }
+  .sem-col-label { position: static; margin-bottom: 1rem; }
+}
+
+/* ════ 페이지 헤드(우 컬럼 안 — 눈썹은 B2 좌 라벨이 대체) ════ */
+.sem-head { padding-bottom: 1.5rem; border-bottom: 1px solid var(--line); margin-bottom: 1.5rem; }
+.sem-head-title { /* B3 스케일 — 뷰포트급 워드(구 2.2~3.2rem 상향) */
+  font-family: var(--font-display); font-weight: 900; font-size: clamp(2.6rem, 6.5vw, 4.2rem);
+  line-height: 1.08; letter-spacing: -0.03em; margin: 0 0 0.7rem;
 }
 .sem-head-sub { margin: 0; max-width: 56ch; font-size: 0.92rem; color: var(--text-sub); word-break: keep-all; }
 
 /* ════ 필터 바 = 주제 탭(좌) + 정렬 토글(우) ════ */
 .sem-filter-bar {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
-  gap: 0.75rem 1.25rem; margin-bottom: clamp(1.75rem, 4vh, 2.5rem);
+  gap: 0.75rem 1.25rem; margin-bottom: clamp(1.25rem, 3vh, 2rem);
 }
 .sem-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
-/* 칩 = 테두리 pill(Secondary), 선택 = 차콜 필. 4상태(§5) — 색만 아니라 채움도 다름(§4) */
+/* 칩 = 테두리 pill(Secondary), 4상태(§5) — 색만 아니라 채움도 다름(§4) */
 .sem-filter button, .sem-sort {
   height: 34px; font-family: inherit; font-size: 0.82rem; font-weight: 600; color: var(--text-sub);
   background: #fff; border: 1px solid var(--line); border-radius: var(--radius-pill);
@@ -51,7 +61,7 @@ button.proof-link {
 .sem-tl { list-style: none; margin: 0; padding: 0; }
 .sem-tl-item { display: grid; grid-template-columns: 6rem 1fr; gap: 0 clamp(1rem, 2.5vw, 1.75rem); }
 /* 좌 날짜 레일(오른정렬) + 예정 배지 */
-.sem-tl-date { text-align: right; padding-top: 0.05rem; }
+.sem-tl-date { text-align: right; padding-top: 0.35rem; }
 .sem-tl-day { font-size: 0.8rem; font-weight: 700; color: var(--text); letter-spacing: 0.01em; white-space: nowrap; }
 .sem-soon-badge { /* 화이트리스트 ⑤ 배지 테두리+텍스트(버건디) */
   display: inline-block; margin-top: 0.5rem; font-size: 0.7rem; font-weight: 700; color: var(--accent);
@@ -63,23 +73,26 @@ button.proof-link {
   padding: 0 0 clamp(2rem, 4.5vh, 3.2rem) clamp(1.4rem, 3vw, 2.2rem);
 }
 .sem-tl-item:last-child .sem-tl-body { padding-bottom: 0.5rem; }
-.sem-tl-dot { /* 타임라인 점 9px(화이트리스트 ⑦) — v3.1: 전 항목 버건디 채움(세미나 한정 예외) */
-  position: absolute; left: -5.5px; top: 4px; width: 9px; height: 9px; border-radius: 50%;
+.sem-tl-dot { /* 타임라인 점 9px(화이트리스트 ⑦) — 전 항목 버건디 채움(세미나 한정 예외) */
+  position: absolute; left: -5.5px; top: 8px; width: 9px; height: 9px; border-radius: 50%;
   background: var(--accent); border: 2px solid var(--accent);
 }
-.sem-tl-item.is-featured .sem-tl-dot { width: 12px; height: 12px; left: -7px; top: 3px; } /* 최신 = 더 크게 */
+.sem-tl-item.is-featured .sem-tl-dot { width: 12px; height: 12px; left: -7px; top: 7px; } /* 최신 = 더 크게 */
 /* 최신(featured) 제목 아래 버건디 언더바(스탯 언더바 문법 28×3px, 화이트리스트 ③) */
 .sem-tl-underbar { display: block; width: 28px; height: 3px; background: var(--accent); margin: 0 0 0.9rem; }
 .sem-tl-chips { margin: 0 0 0.55rem; }
-.sem-tl-title { /* 제목 → 상세. hover 밑줄. 최신(is-featured) = 크게(Linear 변형). §6-2 N2 상향(구 1.1~1.4rem) */
-  font-family: var(--font-display); font-weight: 800; font-size: clamp(1.2rem, 2.1vw, 1.55rem);
-  line-height: 1.25; letter-spacing: -0.02em; word-break: keep-all; color: var(--text);
+
+/* ════ B3 — 대형 워드 스택(제목 타이포 상향 + 활성/호버 하이라이트 opacity만) ════ */
+.sem-tl-title { /* 제목 → 상세. 구 1.2~1.55rem 상향 */
+  font-family: var(--font-display); font-weight: 800; font-size: clamp(1.45rem, 2.6vw, 2rem);
+  line-height: 1.2; letter-spacing: -0.02em; word-break: keep-all; color: var(--text);
   background: none; border: none; padding: 0; text-align: left; cursor: pointer; display: block; margin: 0 0 0.7rem;
-  transition: color 150ms ease-out;
+  transition: opacity 150ms ease-out, color 150ms ease-out;
 }
-/* §6-2 N2 — featured 제목 상향(구 1.5~2.1rem) */
-.sem-tl-item.is-featured .sem-tl-title { font-size: clamp(1.75rem, 3.8vw, 2.5rem); line-height: 1.16; }
-/* §6-2 N1 — featured 날짜 숫자 = 디스플레이 폰트 대형(레일의 스탯 문법. 구 0.8rem 공통) */
+.sem-tl-item.is-featured .sem-tl-title { font-size: clamp(1.9rem, 4vw, 2.7rem); line-height: 1.14; }
+/* 리스트 호버 시 비활성 항목 감쇠(opacity만) — 호버·포커스 항목·블랙 밴드는 원상 */
+.sem-tl:hover .sem-tl-item:not(:hover):not(:focus-within):not(.is-next) .sem-tl-title { opacity: 0.35; }
+/* featured 날짜 숫자 = 디스플레이 폰트 대형(레일의 스탯 문법) */
 .sem-tl-item.is-featured .sem-tl-day {
   font-family: var(--font-display); font-weight: 800; font-size: clamp(1rem, 1.7vw, 1.25rem);
   letter-spacing: -0.01em; line-height: 1.2;
@@ -91,18 +104,38 @@ button.proof-link {
 .sem-tl-points li::marker { color: var(--accent); } /* v3.1 요점 마커 = 버건디(세미나 한정 예외) */
 .sem-tl-excerpt { font-size: 0.92rem; line-height: 1.6; color: var(--text-sub); margin: 0.2rem 0 0; max-width: 60ch; word-break: keep-all; }
 
-/* ════ §6-2 N3 — 예정 featured(.is-next) = 버건디 대면적 면 승격(페이지당 최대 1개 = featured 유일) ════
-   버건디 #7a2030 × #fff 대비 ≈ 10.2:1(AA+), rgba(255,255,255,.85)도 ≥7:1. 구조·마크업 불변 — 색 면만. */
-.sem-tl-item.is-next .sem-tl-body {
-  background: var(--accent); color: #fff; border-left-color: transparent; border-radius: 16px;
-  padding: clamp(1.5rem, 3vh, 2rem) clamp(1.4rem, 3vw, 2.2rem);
-  margin-bottom: clamp(2rem, 4.5vh, 3.2rem);
+/* ════ B1 — 블랙 대면적 밴드(is-next = featured ∧ 예정). 페이지당 블랙 대면적 1개(+푸터 밴드) — 예정 없으면 밴드 0.
+   #161616 × #fff 대비 ≈ 16:1(AA+), rgba(255,255,255,.85)도 ≥11:1. ════ */
+.sem-tl-item.is-next { display: block; margin-bottom: clamp(2.5rem, 5vh, 3.5rem); }
+.sem-next-band {
+  background: var(--dark); color: #fff; border-radius: 20px;
+  padding: clamp(1.75rem, 4vh, 3rem) clamp(1.4rem, 3.5vw, 3rem);
 }
-.sem-tl-item.is-next .sem-tl-dot { display: none; } /* 면 위 점 생략 — 레일 선도 면 뒤로 숨김 */
-.sem-tl-item.is-next .sem-tl-title { color: #fff; }
-.sem-tl-item.is-next .sem-tl-title:focus-visible { outline-color: #fff; }
-.sem-tl-item.is-next .sem-tl-underbar { background: #fff; }
+.sem-next-top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: clamp(1.25rem, 3vh, 2rem); }
+.sem-next-kicker {
+  display: inline-flex; align-items: center; gap: 0.55rem;
+  font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; color: rgba(255, 255, 255, 0.85); }
+.sem-next-sq { width: 8px; height: 8px; background: #d18f9a; flex: none; } /* B4 — 다크 위 파생 강조, 버건디 = 마이크로 후퇴 */
+.sem-next-band .sem-soon-badge { margin-top: 0; color: #fff; border-color: rgba(255, 255, 255, 0.55); }
+/* 흰 대형 숫자 행 — 상하 헤어라인 + 세로 헤어라인 분할(십자 헤어라인 변형, B1 허용) */
+.sem-next-figures {
+  display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.5rem clamp(1.25rem, 3vw, 2.5rem);
+  border-top: 1px solid rgba(255, 255, 255, 0.16); border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+  padding: clamp(0.75rem, 2vh, 1.25rem) 0; margin-bottom: clamp(1.25rem, 3vh, 1.75rem); }
+.sem-next-ep { /* 뷰포트급 회차 숫자 */
+  font-family: var(--font-display); font-weight: 900; font-size: clamp(3rem, 8.5vw, 5.5rem);
+  line-height: 1; letter-spacing: -0.03em; color: #fff;
+}
+.sem-next-unit { font-size: clamp(1.1rem, 2.2vw, 1.6rem); font-weight: 800; margin-left: 0.3rem; }
+.sem-next-when { /* 대형 날짜 숫자(∨ 일정 미정) */
+  font-family: var(--font-display); font-weight: 800; font-size: clamp(1.5rem, 4vw, 2.6rem);
+  line-height: 1.1; letter-spacing: -0.01em; color: rgba(255, 255, 255, 0.92);
+  padding-left: clamp(1.25rem, 3vw, 2.5rem); border-left: 1px solid rgba(255, 255, 255, 0.16);
+}
 .sem-tl-item.is-next .hub-chip { background: transparent; border-color: rgba(255, 255, 255, 0.5); color: #fff; }
+.sem-tl-item.is-next .sem-tl-title { color: #fff; margin-top: 0.5rem; font-size: clamp(1.9rem, 4.2vw, 2.9rem); line-height: 1.12; }
+.sem-tl-item.is-next .sem-tl-title:focus-visible { outline-color: #fff; }
+.sem-tl-item.is-next .sem-tl-underbar { background: #d18f9a; }
 .sem-tl-item.is-next .sem-tl-points li { color: #fff; }
 .sem-tl-item.is-next .sem-tl-points li::marker { color: rgba(255, 255, 255, 0.7); }
 .sem-tl-item.is-next .sem-tl-excerpt { color: rgba(255, 255, 255, 0.85); }
@@ -128,7 +161,7 @@ button.proof-link {
 .sem-thumb-link { transition: transform 150ms ease-out; }
 .sem-thumb-link:not(.is-static):hover { transform: translateY(-3px); }
 .sem-thumb-link:not(.is-static):hover .sem-thumb-back { opacity: 0.85; }
-.sem-thumb-link:not(.is-static):hover .sem-thumb-img { border-color: var(--accent); } /* v3.1 hover 보더 = 버건디(리프트 유지) */
+.sem-thumb-link:not(.is-static):hover .sem-thumb-img { border-color: var(--accent); } /* v3.1 hover 보더 = 버건디(세미나 한정) */
 .sem-thumb-link:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 10px; }
 
 /* ── 빈 상태 = 디자인된 1줄(회색 박스 단독 금지 — 서페이스 밴드, SPEC §4 v3 "세미나 기록 아직 없음") ── */
@@ -137,7 +170,7 @@ button.proof-link {
   font-size: 0.95rem; background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
 }
 
-/* 모바일 — 레일 축소(날짜 상단행) + 썸네일 카드 풀폭 */
+/* 모바일 — 레일 축소(날짜 상단행) + 썸네일 카드·블랙 밴드 풀폭 */
 @media (max-width: 700px) {
   .sem-tl-item { grid-template-columns: 1fr; gap: 0; }
   .sem-tl-date { display: flex; align-items: center; gap: 0.7rem; text-align: left; padding: 0 0 0.5rem 1.4rem; }
@@ -148,9 +181,11 @@ button.proof-link {
   .sem-thumb.is-stack { padding: 0 0 12px; }
   .sem-thumb.is-stack .sem-thumb-back { width: 92%; left: 8%; }
   .sem-thumb.is-stack .sem-thumb-front { width: 100%; }
+  .sem-next-band { border-radius: 16px; padding: 1.5rem 1.25rem 1.75rem; }
+  .sem-tl-item.is-next { margin-bottom: 2rem; }
 }
 
-/* ════ 상세 = 컬러 헤더 밴드(차콜 --dark 다크 앵커 — 화면당 다크 면 1개 + 푸터 밴드) · v3 변경 없음 ════ */
+/* ════ 상세 = 컬러 헤더 밴드(차콜 --dark 다크 앵커 — 화면당 다크 면 1개 + 푸터 밴드) · v3.1 변경 없음 ════ */
 .sem-ed-band { width: 100%; background: var(--dark); color: #fff; }
 .sem-ed-band-in { max-width: var(--maxw); margin: 0 auto; padding: clamp(2.25rem, 5vh, 3.75rem) 1.5rem clamp(2.5rem, 6vh, 4rem); }
 @media (max-width: 700px) { .sem-ed-band-in { padding: 1.75rem 1.25rem 2.25rem; } }

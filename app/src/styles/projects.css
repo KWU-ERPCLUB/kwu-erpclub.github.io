@@ -1,22 +1,81 @@
-/* 프로젝트(/projects/) DPM 문법 — 2026-07-24. 대형 커버 그리드 + 호버 오버레이 + 상세 배너·프롬프트 로그.
-   셸(hub-page·hub-head·hub-idx·hub-empty·hub-back·hub-md)=pages.css · 토큰=global.css.
-   v3(2026-08-05, 디자인규칙 §6-2 NEXTERS): N2 타이포 상향(pj-head h1·카드/상세 제목 — 본문 불변) +
-   N4 쇼케이스 카드(커버 하단 스크림·호버 리프트+그림자·오버레이 확대). N3 색 면 = 이 페이지 미배치(자연 후보 없음).
-   신규 모션 없음 — 기존 호버 리프트(translateY)·150ms 문법 재사용, transform/opacity만. */
+/* 프로젝트(/projects/) — v3.1 NEXTERS 실측 문법(2026-08-05, 디자인규칙 §6-2a).
+   골격 = B2 좌 고정 라벨 컬럼(버건디 ■+PROJECTS, sticky·폰 상하 적층) + B1 블랙 통계 밴드(흰 대형 숫자·
+   헤어라인 분할·출처 각주) + N4 쇼케이스 1열 대형 커버(캐러셀은 카드 2장 현실에서 기각).
+   셸(hub-page·hub-empty·hub-back·hub-md)=pages.css · 토큰=global.css. 상세(.pj-detail)=v3 유지.
+   모션 = 기존 문법 재사용만(호버 리프트·150ms), transform/opacity만 · 무한루프 0 · reduced-motion 존중. */
 
-/* ── v3 N2 — page-head 타이포 한 단계 상향(projects 한정 스코프, pages.css 불변) ── */
-.pj-head h1 {
-  font-weight: 900;
-  font-size: clamp(2.2rem, 5vw, 3.2rem);
-  line-height: 1.14;
-  letter-spacing: -0.025em;
+/* ── B2 — 페이지 셸: 좌 레일 168px + 우 콘텐츠(폰=적층) ── */
+.pj-page { max-width: 1200px; }
+.pj-shell { display: grid; grid-template-columns: 168px minmax(0, 1fr); gap: 0 2.75rem; }
+.pj-rail-label {
+  position: sticky;
+  top: 5.25rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--text);
+}
+.pj-rail-dot { width: 9px; height: 9px; background: var(--accent); } /* 버건디 ■ 마이크로 불릿 */
+@media (max-width: 979px) {
+  .pj-shell { grid-template-columns: 1fr; }
+  .pj-rail-label { position: static; margin-bottom: 1rem; }
 }
 
-/* ── 그리드 — 데스크톱 2열·모바일 1열 ── */
-.pj-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2.25rem 1.75rem; }
-@media (max-width: 700px) { .pj-grid { grid-template-columns: 1fr; gap: 1.9rem; } }
+/* ── 페이지 헤드 — 뷰포트급 타이포(본문 크기 불변, 화려함은 골격·숫자 담당) ── */
+.pj-head { margin: 0 0 2.75rem; }
+.pj-head h1 {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(2.6rem, 6.5vw, 4.2rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  word-break: keep-all;
+  margin: 0 0 0.8rem;
+}
+.pj-head h1 em { font-style: normal; color: var(--accent); } /* 화이트리스트 ① */
+.pj-head p { margin: 0; max-width: 52ch; font-size: 0.95rem; color: var(--text-sub); }
 
-/* ── 카드 커버 (16:10, object-fit cover, radius 18px) — v3 N4 쇼케이스 확대 ── */
+/* ── B1 — 블랙 통계 밴드: 잉크 대면적 1개 + 흰 대형 숫자 + 헤어라인 분할 + 출처 각주 ── */
+.pj-stats {
+  background: var(--dark);
+  border-radius: var(--radius-card);
+  padding: 2.5rem 2.25rem 1.8rem;
+  margin: 0 0 3.25rem;
+}
+.pj-stats-grid { display: flex; flex-wrap: wrap; }
+.pj-stat { flex: 1 1 140px; padding: 0.25rem 1.6rem; border-left: 1px solid rgba(255, 255, 255, 0.16); }
+.pj-stat:first-child { border-left: none; padding-left: 0; }
+.pj-stat-num {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(3rem, 7.5vw, 5.5rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: #fff;
+}
+.pj-stat-label {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.66);
+}
+.pj-stats-src { margin: 1.6rem 0 0; font-size: 0.72rem; color: rgba(255, 255, 255, 0.42); }
+@media (max-width: 700px) {
+  .pj-stats { padding: 1.9rem 1.4rem 1.4rem; }
+  .pj-stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.4rem 1rem; }
+  .pj-stat { padding: 0; border-left: none; }
+}
+
+/* ── N4 — 쇼케이스 그리드: 1열 대형 커버(16:9) 스택 ── */
+.pj-grid { display: grid; grid-template-columns: 1fr; gap: 3.5rem; }
+@media (max-width: 700px) { .pj-grid { gap: 2.5rem; } }
+
 .pj-card-coverwrap { position: relative; }
 .pj-card-open { display: block; position: relative; width: 100%; padding: 0; border: none; background: none; cursor: pointer; }
 /* 커버 하단 상시 스크림 — NEXTERS 커버 깊이감(장식 없는 톤 오버레이, 인사이트 썸네일 문법과 동형) */
@@ -38,7 +97,7 @@
 .pj-card-cover {
   display: block;
   width: 100%;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 16 / 9;
   object-fit: cover;
   border: 1px solid var(--line);
   border-radius: var(--radius-card);
@@ -49,7 +108,7 @@
   justify-content: center;
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: 3rem;
+  font-size: 4rem;
   color: var(--text-sub);
   background: var(--surface);
 }
@@ -63,7 +122,7 @@
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-card);
-  background: rgba(22, 22, 22, 0.62); /* v3 N4 — 오버레이 확대(구 0.55) */
+  background: rgba(22, 22, 22, 0.62);
   opacity: 0;
   pointer-events: none;
   transition: opacity 150ms ease-out;
@@ -79,20 +138,20 @@
   background: #fff;
   color: var(--text);
   border-radius: var(--radius-pill);
-  font-size: 0.9rem; /* v3 N4 — 오버레이 링크 확대(구 0.82/0.5×1) */
+  font-size: 0.9rem;
   font-weight: 600;
   text-decoration: none;
 }
 .pj-ov-link:hover { background: var(--surface); }
 
-/* ── 카드 하단 정보 — 제목·설명·상태 칩 ── */
+/* ── 카드 하단 정보 — 쇼케이스 번호·제목·설명·상태 칩 ── */
 .pj-card-info {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.4rem;
+  gap: 0.45rem;
   width: 100%;
-  padding: 0.9rem 0.15rem 0;
+  padding: 1.05rem 0.15rem 0;
   background: none;
   border: none;
   text-align: left;
@@ -100,19 +159,26 @@
   color: inherit;
   cursor: pointer;
 }
+.pj-card-idx { /* 화이트리스트 ④ 섹션 인덱스 숫자 문법 승계 */
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+}
 .pj-card-title {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: 1.45rem; /* v3 N2 — 카드 제목 한 단계 상향(구 1.25) */
-  line-height: 1.22;
-  letter-spacing: -0.015em;
+  font-size: clamp(1.55rem, 3.2vw, 2.2rem); /* v3.1 쇼케이스 — 대형 제목(구 1.45 고정) */
+  line-height: 1.18;
+  letter-spacing: -0.02em;
   word-break: keep-all;
 }
 .pj-card-desc { font-size: 0.9rem; color: var(--text-sub); line-height: 1.5; word-break: keep-all; }
 .pj-card-info .status { margin-top: 0.15rem; }
 .pj-card-info:hover .pj-card-title { text-decoration: underline; text-underline-offset: 3px; }
 
-/* ── 상세 — 커버 배너 → 제목·설명·상태·링크 → 소개 → 프롬프트 로그 ── */
+/* ── 상세 — 커버 배너 → 제목·설명·상태·링크 → 소개 → 프롬프트 로그(v3 유지) ── */
 /* 폭 상한 해제(2026-07-28 도판 브레이크아웃) — 본문 = .hub-md 그리드(text 720), 비본문 요소는 720 중앙 */
 .pj-detail { max-width: none; }
 .pj-detail > :not(.hub-md, .pj-log-block) { max-width: 720px; margin-inline: auto; }
@@ -130,7 +196,7 @@
 .pj-detail-title {
   font-family: var(--font-display);
   font-weight: 900;
-  font-size: clamp(2.2rem, 4.6vw, 3rem); /* v3 N2 — 상세 제목 상향(구 1.9~2.6/800) */
+  font-size: clamp(2.2rem, 4.6vw, 3rem);
   line-height: 1.14;
   letter-spacing: -0.025em;
   word-break: keep-all;
@@ -148,9 +214,9 @@
 }
 .pj-detail-links { display: flex; flex-wrap: wrap; gap: 0.75rem; }
 
-/* ── 프롬프트 로그 — 코드블록 스타일(다크 앵커 = 브랜드 시그니처·화면당 1면) ── */
+/* ── 프롬프트 로그 — 코드블록 스타일(다크 앵커 = 상세 화면의 다크 면) ── */
 .pj-log-block { margin-top: 2rem; }
-.pj-log-title { font-family: var(--font-display); font-weight: 800; font-size: 1.35rem; margin: 0 0 0.75rem; } /* v3 N2(구 1.2) */
+.pj-log-title { font-family: var(--font-display); font-weight: 800; font-size: 1.35rem; margin: 0 0 0.75rem; }
 .pj-log-body { background: var(--dark); border-radius: 12px; padding: 1.05rem 1.25rem; }
 .pj-log-body .hub-md {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;

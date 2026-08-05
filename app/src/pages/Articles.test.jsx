@@ -133,6 +133,24 @@ test('피처 행 = 기본 뷰 상단 2건 · 필터 뷰에서는 미표시', () 
   expect(few).not.toContain('art-features')
 })
 
+// v3.1(§6-2a NEXTERS 실측 문법) — B2 좌 라벨 컬럼 골격 + B1 블랙 통계 밴드(집계 수치·출처 각주).
+test('v3.1 골격 — 좌 라벨(INSIGHTS·FEATURED·LATEST + ■) + 블랙 통계 밴드(집계·출처)', () => {
+  const all = Array.from({ length: 6 }, (_, i) => art(`v${i}`))
+  const page = renderToString(<Articles configured={false} />)
+  expect(page).toContain('ins-sec-label')          // B2 좌 라벨 컬럼
+  expect(page).toContain('ins-sq')                 // 버건디 ■ 마이크로 불릿
+  expect(page).toContain('INSIGHTS')               // 헤드 좌 라벨
+  const html = renderToString(<ListView all={all} {...listProps} />)
+  expect(html).toContain('FEATURED')               // 피처 구간 라벨
+  expect(html).toContain('LATEST')                 // 그리드 구간 라벨
+  expect(html).toContain('ins-band')               // B1 블랙 통계 밴드
+  expect(html).toContain('ins-band-num">6<')       // 숫자 = 게재 데이터 집계(합성 6건)
+  expect(html).toContain('출처')                   // 수치 출처 각주(§6 스탯 문법)
+  // 밴드 = 데이터 확정 후에만(로딩·0건 = 미표시)
+  expect(renderToString(<ListView all={[]} {...listProps} status="loading" />)).not.toContain('ins-band')
+  expect(renderToString(<ListView all={[]} {...listProps} />)).not.toContain('ins-band')
+})
+
 // 더보기(무한스크롤 금지) — PAGE_SIZE 초과분은 접히고 남은 건수를 버튼에 표기.
 test('더보기 = PAGE_SIZE 초과 시 노출 + 남은 건수 표기', () => {
   const many = Array.from({ length: PAGE_SIZE + FEATURE_COUNT + 4 }, (_, i) => art(`m${i}`))
