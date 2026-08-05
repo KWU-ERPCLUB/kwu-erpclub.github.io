@@ -90,6 +90,31 @@
 .rc-callout a:hover { border-color: var(--text); }
 .rc-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem; margin-top: clamp(1.5rem, 3vh, 2rem); }
 
+/* ══ 신청 폼(온사이트 접수 — 오너 보류 해제 2026-08-05). 토큰·라인 문법은 요강 표 승계 ══ */
+.rc-form { margin-top: clamp(1.75rem, 4vh, 2.5rem); max-width: 46rem; }
+.rc-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem 1.5rem; }
+@media (max-width: 700px) { .rc-form-grid { grid-template-columns: 1fr; } }
+.rc-field { margin: 0 0 1.1rem; display: flex; flex-direction: column; gap: 0.4rem; }
+.rc-form-grid .rc-field { margin: 0; }
+.rc-field label { font-size: 0.85rem; font-weight: 700; color: var(--text); letter-spacing: 0.02em; }
+.rc-req { font-size: 0.72rem; font-weight: 600; color: var(--text-sub); } /* 버건디 예산 절약 — 차콜 */
+.rc-hint { font-weight: 500; color: var(--text-sub); }
+.rc-field input, .rc-field textarea {
+  font: inherit; font-size: 0.94rem; color: var(--text);
+  padding: 0.6rem 0.8rem; border: 1px solid var(--line); border-radius: 8px; background: #fff;
+}
+.rc-field input:focus-visible, .rc-field textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.rc-field input[aria-invalid='true'] { border-color: var(--accent); }
+.rc-field-error { font-size: 0.8rem; color: var(--accent); }
+.rc-form-privacy { margin: 0.5rem 0 1rem; font-size: 0.8rem; color: var(--text-sub); }
+.rc-form-submit { font-family: inherit; }
+.rc-form-submit:disabled { opacity: 0.55; cursor: default; }
+.rc-form-done {
+  margin-top: clamp(1.75rem, 4vh, 2.5rem); max-width: 46rem;
+  background: var(--surface); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0;
+  padding: 0.85rem 1.1rem; font-size: 0.94rem; font-weight: 600;
+}
+
 /* ══ 운영 증빙 — 대형 숫자 풀폭 행(구 ABOUT Proof 이관 2026-08-05, home-sections.css에서 이동 — 수치 그대로) ══ */
 .stat-rows { margin-top: clamp(2.5rem, 6vh, 4rem); border-top: 1px solid var(--line); }
 .stat-row {

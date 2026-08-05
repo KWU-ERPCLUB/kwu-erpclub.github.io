@@ -25,7 +25,8 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
 - 멤버 페이지(목록+개인 auto-glob)는 **전부 제거**(SPEC 2026-07-23 오너 결정). 재도입 = 오너 재승인.
 - base '/' (org root site). Fonts via CDN link tags in each entry html (Pretendard + Paperlogy).
 - No router, no state lib. Shared nav/footer = `src/shared.jsx`. 메인 = `src/App.jsx`(과거 v3 소개형)/`styles/home.css`. (구 현황판 `pages/Home.jsx`·`styles/hub.css`는 2026-07-23 제거.)
-- 지원(CTA·폼) 기능은 전면 보류(owner 2026-07-10) — do not re-add without owner call.
+- 신청 폼 = /recruit 온사이트 폼(2026-08-05 오너 해제·Supabase `applications`) — 어댑터 = `pages/apply-source.js`,
+  RLS = 익명 insert만·열람 = 운영진(migration 0006). env 미설정 = 폼 대신 제출 불가 안내(목 폴백 성공 연출 금지).
 
 ## Content contract & CI (SPEC §5·§6)
 - 기고 = `content/<종류>/YYYY-MM-DD-<작성자id>-<슬러그>.md` (종류=**기사·세미나** — 실습 폐지). frontmatter 규칙의
@@ -59,7 +60,7 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
   env 미설정이면 md 글롭 폴백. 공개면에서 `data/index.js`를 import 해도 되는 파일은 이 어댑터 1곳뿐(boundary 테스트가 고정).
 - **Supabase 접근 = `src/data/` 경유만**(P1). 컴포넌트가 `data/supabase.js`·`repositories.js`를 직접 import 하면
   `src/data/boundary.test.js`가 FAIL — 우회 금지. 화면은 `data/index.js`의 `getRepositories()`만 쓴다.
-  공개면이 쓸 수 있는 data 모듈 = 화이트리스트 2쌍(`insights-source.js→index`, `shared.jsx→session-flag`) + 정적 상수(recruit·log).
+  공개면이 쓸 수 있는 data 모듈 = 화이트리스트 3쌍(`insights-source.js→index`, `apply-source.js→index`, `shared.jsx→session-flag`) + 정적 상수(recruit·log).
 - 행 삭제는 `db.remove` + `DELETABLE` 화이트리스트(article_likes·article_bookmarks·collections)에서만. 콘텐츠·멤버 테이블은 삭제 경로 없음.
 - env 2종(`VITE_SUPABASE_URL`·`VITE_SUPABASE_ANON_KEY`) 미설정 = 정상 상태 → 목 저장소 폴백 + 대기 화면.
   키 이름 문서 = `.env.example`, 프로비저닝 = `../supabase/README.md`, 스키마·RLS = `../supabase/migrations/`.

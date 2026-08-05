@@ -7,15 +7,17 @@ import { SiteNav, SiteFooter, REPO_URL, Arrow } from './shared.jsx'
 import { RECRUIT, formatWindow, shortDate } from './data/recruit.js'
 import { loadContent } from './content/loader.js'
 import { CountUp } from './home-motion.jsx'
+import RecruitForm from './RecruitForm.jsx'
 
 // 요강 — 기수·기간·일정 값의 원천 = data/recruit.js(그 원천 = erp-club docs/specs/2026-07-27-aim-운영틀.md §2·§3·§7)
+// 인원·모임·대상 개정 = 오너 확정 2026-08-05(인원 6~10명 → 미정, 요일 추후 확정, 경영학부 중심 명시)
 const FACTS = [
   ['스터디', `${RECRUIT.study} — ERP연구회 산하 MIS·AI 스터디`],
-  ['대상', '광운대 재학생 — 전공 무관'],
-  ['인원', '6~10명'],
+  ['대상', '경영학부 중심 — 전공 무관'],
+  ['인원', '미정 — 추후 확정'],
   ['모집 기간', formatWindow()],
   ['활동 기간', RECRUIT.활동기간],
-  ['모임', '매주 대면 60분 — 요일·시간 = 참가자 시간표 조율로 확정'],
+  ['모임', '매주 대면 60분 — 요일 추후 확정'],
   ['비용', '참가비 없음 — 무료 도구 기준(유료 도구 = 개인 선택)'],
 ]
 
@@ -79,8 +81,11 @@ export default function Recruit() {
           <div className="rc-head-in">
             <span className="rc-eyebrow">RECRUIT</span>
             <h1 className="rc-h1">{RECRUIT.study} <em>{RECRUIT.cohort}</em> 모집</h1>
-            <p className="rc-lead">ERP연구회 산하 MIS·AI 스터디 — 2026 {RECRUIT.term} 첫 기수.</p>
-            <p className="rc-meta">게재 2026-07-27 · 담당 운영진</p>
+            <p className="rc-lead">
+              {RECRUIT.study} = ERP연구회 산하 스터디 · 경영학부를 대상으로 AI와 MIS를 함께 공부하기 위해 개설 ·
+              전공 무관 모집 — 2026 {RECRUIT.term} 첫 기수.
+            </p>
+            <p className="rc-meta">게재 2026-07-27 · 개정 2026-08-05 · 담당 운영진</p>
           </div>
         </header>
 
@@ -120,6 +125,14 @@ export default function Recruit() {
                 </li>
               ))}
             </ol>
+          </div>
+        </section>
+
+        <section className="rc-secs" aria-labelledby="rc-apply-h">
+          <div className="rc-band-in">
+            <span className="rc-kicker">신청</span>
+            <h2 className="rc-h2" id="rc-apply-h">신청 폼 — 이 페이지에서 제출</h2>
+            <RecruitForm />
           </div>
         </section>
 

@@ -66,14 +66,16 @@ test('P2 — service key·JWT 실값 문자열 0건(repo 전역)', () => {
 // M3에서 규칙을 한 단계 더 좁힌다: "어떤 data/* 모듈을" 쓰는지까지 화이트리스트로 고정.
 //   insights-source.js → data/index.js  (인사이트 DB 서빙 어댑터)
 //   shared.jsx         → data/session-flag.js (공개 헤더의 로그인 표시 — localStorage 동기 확인만)
+//   pages/apply-source.js → data/index.js  (/recruit 신청 폼 어댑터 — 2026-08-05 오너 보류 해제)
 const DATA_CONSUMERS = {
   'pages/insights-source.js': ['index'],
+  'pages/apply-source.js': ['index'],
   'shared.jsx': ['session-flag'],
 }
 // 백엔드와 무관한 정적 상수 모듈(모집 창) — 경계 규칙의 대상이 아니다.
 // (log.js는 워크스페이스 공지 탭 전용으로 내부화 — 공개면 소비 금지, IA 4차 2026-08-05)
 const STATIC_DATA = ['recruit']
-test('P4 — 공개 페이지가 쓰는 data/ 모듈 = 화이트리스트 2쌍뿐', () => {
+test('P4 — 공개 페이지가 쓰는 data/ 모듈 = 화이트리스트 3쌍뿐', () => {
   const workspaceDir = path.join(SRC_DIR, 'workspace')
   const offenders = []
   for (const file of srcFiles) {
