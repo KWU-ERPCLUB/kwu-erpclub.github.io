@@ -38,27 +38,34 @@ export function NotConfigured() {
 }
 
 // ② 로그인 폼 — 계정 생성 경로 없음(운영진 초대 생성, SPEC §0-4)
+// ID = 학번(개정 2026-08-05). '@' 포함 입력 = 이메일 폴백(오너·운영진) — 검증은 통과시키고 서버가 판정한다.
 export function LoginForm({ onSubmit, error, busy }) {
-  const [email, setEmail] = useState('')
+  const [loginId, setLoginId] = useState('')
   const [password, setPassword] = useState('')
+  const [local, setLocal] = useState('')
+  function submit(e) {
+    e.preventDefault()
+    const id = loginId.replace(/[\s　]/g, '')
+    if (!id) return setLocal('학번 입력 필요')
+    if (!id.includes('@') && !/^[0-9]{4,12}$/.test(id)) return setLocal('학번은 숫자만(4~12자리)')
+    setLocal('')
+    return onSubmit?.(id, password)
+  }
   return (
     <section className="ws-panel">
-      <form
-        className="ws-form"
-        onSubmit={(e) => {
-          e.preventDefault()
-          onSubmit?.(email, password)
-        }}
-      >
+      <form className="ws-form" onSubmit={submit}>
         <label className="ws-field">
-          <span>이메일</span>
-          <input type="email" value={email} autoComplete="username" required onChange={(e) => setEmail(e.target.value)} />
+          <span>학번</span>
+          <input
+            type="text" value={loginId} autoComplete="username" inputMode="numeric"
+            placeholder="학번(숫자)" required onChange={(e) => setLoginId(e.target.value)}
+          />
         </label>
         <label className="ws-field">
           <span>비밀번호</span>
           <input type="password" value={password} autoComplete="current-password" required onChange={(e) => setPassword(e.target.value)} />
         </label>
-        {error && <p className="ws-error" role="alert">{error}</p>}
+        {(local || error) && <p className="ws-error" role="alert">{local || error}</p>}
         <button type="submit" className="ws-submit" disabled={busy}>{busy ? '확인 중' : '로그인'}</button>
       </form>
       <p className="ws-note">계정 발급 = 운영진 초대 생성(자가입 없음). 문의 = 단톡방.</p>
@@ -111,11 +118,11 @@ export default function Workspace({ repos, configured }) {
     return () => { alive = false }
   }, [store, user])
 
-  async function signIn(email, password) {
+  async function signIn(loginId, password) {
     setBusy(true)
     setError('')
     try {
-      await store.auth.signIn(email, password)
+      await store.auth.signIn(loginId, password)
       setUser(store.auth.currentUser())
     } catch (e) {
       setError(e?.message || '로그인 실패')

@@ -4,8 +4,8 @@
 
 const SEED = {
   members: [
-    { id: 'mock-staff', 이름: '운영진 A', role: '운영진', 자기소개: '샘플 소개', 관심사: ['자동화'], 가입일: '2026-09-01' },
-    { id: 'mock-member', 이름: '스터디원 B', role: '스터디원', 자기소개: '샘플 소개', 관심사: ['에이전트'], 가입일: '2026-09-01' },
+    { id: 'mock-staff', 이름: '운영진 A', role: '운영진', 학번: '2020000001', 자기소개: '샘플 소개', 관심사: ['자동화'], 가입일: '2026-09-01' },
+    { id: 'mock-member', 이름: '스터디원 B', role: '스터디원', 학번: '2020000002', 자기소개: '샘플 소개', 관심사: ['에이전트'], 가입일: '2026-09-01' },
   ],
   articles: [
     { id: 'mock-a1', 슬러그: 'sample-published', 제목: '샘플 게재 기사', 설명: '목 데이터', 성격: '트렌드', 주제: '에이전트', 상태: '게재', 작성자: 'mock-staff', 게재일: '2026-09-10' },
@@ -33,10 +33,14 @@ export function createMockRepositories({ user = null, data = {} } = {}) {
   return {
     auth: {
       currentUser: () => (currentId ? { id: currentId, email: `${currentId}@example.com` } : null),
-      async signIn(email) {
-        const found = store.members.find((m) => `${m.id}@example.com` === email) || store.members[0]
+      // 입력 = 학번(§0-4) 또는 이메일. 목에서는 학번·id 어느 쪽으로도 찾고, 못 찾으면 첫 멤버로 로그인.
+      async signIn(loginId) {
+        const key = String(loginId ?? '').trim()
+        const found = store.members.find((m) => m.학번 === key)
+          || store.members.find((m) => `${m.id}@example.com` === key)
+          || store.members[0]
         currentId = found.id
-        return { user: { id: currentId, email } }
+        return { user: { id: currentId, email: `${currentId}@example.com` } }
       },
       async signOut() {
         currentId = null
@@ -47,7 +51,7 @@ export function createMockRepositories({ user = null, data = {} } = {}) {
         return memberOf(currentId)
       },
       async list() {
-        // 학번·전공은 애초에 목 데이터에도 없다(P5 — 명단 표면에 사적 정보 미포함)
+        // 전공은 목 데이터에도 없다(P5 — 사적 필드는 member_private). 학번 = 로그인 ID(§0-5 개정)로 명단에 포함.
         return clone(store.members)
       },
     },

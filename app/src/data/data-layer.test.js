@@ -3,6 +3,29 @@ import { readEnv, createBackend } from './supabase.js'
 import { createSupabaseRepositories, REPO_CONTRACT } from './repositories.js'
 import { createMockRepositories } from './mock.js'
 import { getRepositories, isBackendConfigured } from './index.js'
+import { toLoginEmail, isHakbeon, MEMBER_EMAIL_DOMAIN } from './login-id.js'
+
+// ── 학번 로그인 매핑(SPEC §0-4 개정) ──
+test('toLoginEmail — 학번은 가상 이메일로, @ 포함 입력은 그대로(오너 폴백)', () => {
+  expect(toLoginEmail('2021123456')).toBe(`s2021123456@${MEMBER_EMAIL_DOMAIN}`)
+  expect(toLoginEmail('  2021123456 ')).toBe(`s2021123456@${MEMBER_EMAIL_DOMAIN}`)
+  expect(toLoginEmail('owner@example.com')).toBe('owner@example.com')
+  expect(() => toLoginEmail('')).toThrow('학번 입력 필요')
+  expect(() => toLoginEmail('20a1')).toThrow('숫자만')
+  expect(isHakbeon('2021123456')).toBe(true)
+  expect(isHakbeon('abc')).toBe(false)
+})
+
+test('supabase 저장소 — signIn에 학번을 넘기면 가상 이메일로 GoTrue 호출', async () => {
+  let sent = null
+  const fakeFetch = async (url, options) => {
+    sent = JSON.parse(options.body)
+    return { ok: true, text: async () => JSON.stringify({ access_token: 't', user: { id: 'u1' } }) }
+  }
+  const backend = createBackend({ url: 'https://x.supabase.co', key: 'anon' }, { fetch: fakeFetch, storage: null })
+  await createSupabaseRepositories(backend).auth.signIn('2021123456', 'pw')
+  expect(sent.email).toBe(`s2021123456@${MEMBER_EMAIL_DOMAIN}`)
+})
 
 // ── env 미설정 = null (throw 금지) ──
 test('readEnv — 키 없으면 null, 있으면 후행 슬래시 제거', () => {
@@ -47,11 +70,12 @@ test('목 저장소 — 비로그인은 개인 데이터 0건, 로그인 시 본
   expect((await mine.articles.listMine()).every((a) => a.작성자 === 'mock-member')).toBe(true)
 })
 
-test('목 저장소 — 명단에 학번·전공 없음(P5)', async () => {
+// P5 재해석(§0-5 개정 2026-08-05): 학번 = 로그인 ID → 명단 포함. 사적 필드로 남는 것은 전공뿐.
+test('목 저장소 — 명단에 전공 없음(P5), 학번은 로그인 ID로 포함', async () => {
   const repos = createMockRepositories({ user: 'mock-staff' })
   for (const m of await repos.members.list()) {
-    expect(m).not.toHaveProperty('학번')
     expect(m).not.toHaveProperty('전공')
+    expect(typeof m.학번).toBe('string')
   }
 })
 

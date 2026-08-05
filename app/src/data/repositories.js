@@ -2,6 +2,8 @@
 // 여기서 정의한 메서드 집합 = 목 저장소(mock.js)와 동일해야 한다(계약 테스트가 강제).
 // 실제 권한 판정은 서버 RLS(0002_rls.sql)가 한다 — 여기 필터는 편의일 뿐 방어선이 아니다.
 
+import { toLoginEmail } from './login-id.js'
+
 // 저장소 계약(키 = 도메인, 값 = 메서드 이름 목록). mock·supabase 구현 양쪽을 이 표로 검사한다.
 export const REPO_CONTRACT = {
   auth: ['currentUser', 'signIn', 'signOut'],
@@ -21,7 +23,8 @@ export function createSupabaseRepositories(backend) {
   return {
     auth: {
       currentUser: () => backend.auth.getSession()?.user || null,
-      signIn: (email, password) => backend.auth.signIn(email, password),
+      // 입력 = 학번(§0-4). '@' 포함이면 이메일 그대로 — 변환 규칙 = login-id.js
+      signIn: (loginId, password) => backend.auth.signIn(toLoginEmail(loginId), password),
       signOut: () => backend.auth.signOut(),
     },
     members: {

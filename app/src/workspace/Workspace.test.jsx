@@ -19,10 +19,14 @@ test('미설정 안내 = 프로비저닝 문서 경로 명시', () => {
 })
 
 // ── ② 로그인 폼 — 자가입 경로 없음(SPEC §0-4) ──
-test('설정됨·비로그인 = 이메일·비밀번호 폼', () => {
+test('설정됨·비로그인 = 학번·비밀번호 폼(이메일 입력 아님 — §0-4 개정)', () => {
   const html = flat(<Workspace repos={createMockRepositories()} configured />)
   expect(html).toContain('ws-form')
-  expect(html).toContain('type="email"')
+  expect(html).toContain('>학번<')
+  expect(html).toContain('placeholder="학번(숫자)"')
+  expect(html).toContain('numeric')
+  expect(html).not.toContain('type="email"')
+  expect(html).not.toContain('이메일')
   expect(html).toContain('type="password"')
   expect(html).toContain('운영진 초대 생성')
   // 회원가입·비밀번호 재설정 등 자가입 경로 미노출

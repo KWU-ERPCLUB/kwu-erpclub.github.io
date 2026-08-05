@@ -6,6 +6,8 @@ import { createSupabaseRepositories } from './repositories.js'
 import { createMockRepositories } from './mock.js'
 
 export { REPO_CONTRACT } from './repositories.js'
+// 학번 로그인 규칙(§0-4) — 폼 검증이 쓰는 표면. 실제 변환은 저장소 signIn 안에서 일어난다.
+export { toLoginEmail, isHakbeon, normalizeLoginId, MEMBER_EMAIL_DOMAIN } from './login-id.js'
 
 export function isBackendConfigured(env) {
   return readEnv(env) !== null

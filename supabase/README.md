@@ -29,7 +29,11 @@
 1. 좌측 메뉴 **SQL Editor** → New query
 2. `supabase/migrations/0001_schema.sql` 전체 복사 → 붙여넣기 → Run
 3. New query → `supabase/migrations/0002_rls.sql` 전체 복사 → 붙여넣기 → Run
-4. **순서 엄수**(0001 먼저). 성공 시 각각 "Success" 표시
+4. New query → `supabase/migrations/0003_hakbeon_slug.sql` 전체 복사 → 붙여넣기 → Run
+5. **순서 엄수**(0001 → 0002 → 0003). 성공 시 각각 "Success" 표시
+
+0003이 하는 일: 학번 로그인 컬럼(`members.학번`) · 명단 뷰 갱신 · 동기화 키(`articles.슬러그`) 보강 ·
+상호작용 카운트 뷰(`article_interaction_counts`). 재실행해도 안전(멱등).
 
 CLI를 쓰는 경우(선택): `supabase link --project-ref <ref>` 후 `supabase db push`.
 
@@ -51,6 +55,51 @@ insert into members (id, 이름, role) values ('<복사한 UID>', '신해원', '
 ```
 
 4. 스터디원 추가도 같은 방식(3번 SQL의 role만 `'스터디원'`)
+
+## 3-1단계 — 학번 계정 초대 생성 (스터디원 — 2026-08-05 개정)
+
+로그인 ID = **학번**(이메일 아님, spec §0-4). 내부적으로는 학번을 가상 이메일로 바꿔 저장한다.
+
+- 매핑 규칙: 학번 `2021123456` → `s2021123456@member.erpclub`
+- 규칙 원천 = `app/src/data/login-id.js` (변경 시 이 문서도 같이 고친다)
+- `member.erpclub` = 실존하지 않는 도메인 — 메일 발송 기능이 없으므로 문제되지 않는다
+- 오너·운영진은 이메일 로그인 유지 가능(입력창에 `@`가 들어가면 이메일 그대로 처리)
+
+### 방법 A — 대시보드(1~2명)
+
+1. Authentication > Users > Add user > Create new user
+   - Email: `s<학번>@member.erpclub` / Password: 임시 비밀번호 / **Auto Confirm User 체크**
+2. 생성된 UID 복사 → SQL Editor
+
+```sql
+insert into members (id, 이름, role, 학번)
+values ('<복사한 UID>', '<이름>', '스터디원', '<학번>');
+```
+
+3. 전공을 받아뒀다면(운영진만 열람):
+
+```sql
+insert into member_private (member_id, 전공) values ('<복사한 UID>', '<전공>');
+```
+
+### 방법 B — admin API(여러 명 한 번에)
+
+service 키가 필요하다. **로컬 터미널에서만** 환경변수로 넘기고, 파일·커밋에 남기지 않는다(판정 P2).
+
+```bash
+curl -X POST "$SUPABASE_URL/auth/v1/admin/users" \
+  -H "apikey: $SUPABASE_SERVICE_KEY" -H "Authorization: Bearer $SUPABASE_SERVICE_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"s2021123456@member.erpclub","password":"<임시>","email_confirm":true}'
+```
+
+응답의 `id`가 UID → 위 `members` insert를 그대로 실행한다.
+
+### 확인
+
+- `/workspace/` 로그인창에 **학번**과 임시 비밀번호 입력 → 이름·역할 표시
+- `members.학번`은 unique — 같은 학번으로 계정 2개를 만들 수 없다
+- 비밀번호 변경은 당분간 운영진이 대시보드에서 재설정(셀프 재설정 = 메일 발송 필요 → 비범위 §7)
 
 ## 4단계 — 키 확인
 
