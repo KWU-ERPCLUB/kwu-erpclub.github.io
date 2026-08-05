@@ -1,10 +1,14 @@
 // /recruit (IA 3차 2026-07-27) — AIM 기수 안내: 요강·활동 구성·참여 방법.
 // + 운영 증빙(IA 4차 2026-08-05 — about 폐지로 이관): 실측 정량 3종 + 출처(stat-rows/CountUp 문법 재사용).
+// + 레퍼런스 픽 E1~E6(오너 확정 2026-08-05, 원천 = erp-club docs/2026-08-05-리쿠르트-레퍼런스-후보.md §2):
+//   E1 모집 일정 타임라인(확정 단계만) · E2 이런 사람 카드 · E3 증빙 요강 직후 상향 · E4 FAQ 서브셋(원천 = data/faq.js)
+//   E5 교차·겹침 키비주얼(조준점 재사용 금지 — 히어로 반려 이력) · E6 헤더 '신청하기' 앵커 CTA.
 // 카피 = 개조식·사실 서술만(SPEC §4 개정 — 마케팅 어투 금지). [미정] 값 게재 금지(운영틀 §8):
 // 확정값(운영틀 2026-07-27 오너 인터뷰)만 싣고, 요일·시간은 "참가자 조율로 확정" 과정 서술로만.
 import { useMemo } from 'react'
 import { SiteNav, SiteFooter, REPO_URL, Arrow } from './shared.jsx'
-import { RECRUIT, formatWindow, shortDate } from './data/recruit.js'
+import { RECRUIT, COHORT_LABEL, formatWindow, shortDate } from './data/recruit.js'
+import { RECRUIT_FAQ } from './data/faq.js'
 import { loadContent } from './content/loader.js'
 import { CountUp } from './home-motion.jsx'
 import RecruitForm from './RecruitForm.jsx'
@@ -19,6 +23,34 @@ const FACTS = [
   ['활동 기간', RECRUIT.활동기간],
   ['모임', '매주 대면 60분 — 요일 추후 확정'],
   ['비용', '참가비 없음 — 무료 도구 기준(유료 도구 = 개인 선택)'],
+]
+
+// 이런 사람(E2) — 자격·지향 사실 서술 4카드(권유형 수사 금지). 콜아웃의 '코딩 경험 불필요'는 여기로 이동.
+const FIT = [
+  ['경영학부 중심', '전공 무관 — 지원 제한 없음.'],
+  ['코딩 경험 불필요', '주제 = 코딩이 아니라 AI 활용. 도구 사용법은 스터디에서 함께 다룸.'],
+  ['매주 대면 60분', '주 1회 교내 모임 참여 가능 전제 — 요일은 참가자 조율로 확정.'],
+  ['AI 활용 직접 실험', '본인 반복 작업(수업·과제·시험공부)의 자동화를 직접 만들어 보는 사람.'],
+]
+
+// 모집 일정(E1) — 확정 단계만(선발 방식 미정 → 단계 날조 금지, 픽 시트 §3). 날짜 = data/recruit.js 파생.
+const 시작월 = RECRUIT.일정.전반.기간.split(' ')[0] // '9월'
+const TIMELINE = [
+  {
+    era: `서류 접수 · ${formatWindow()}`,
+    title: '신청 폼 제출',
+    desc: '이 페이지 하단 폼에서 온라인 제출 — 기간 내 접수분만 유효.',
+  },
+  {
+    era: '접수 마감 후',
+    title: '개별 안내',
+    desc: '접수 정보 기준 개별 연락 — 이후 절차는 연락 시 안내.',
+  },
+  {
+    era: `활동 시작 · ${시작월}`,
+    title: `${COHORT_LABEL} 활동 개시`,
+    desc: `활동 기간 ${RECRUIT.활동기간} — 첫 회차 = 킥오프(소재 선정).`,
+  },
 ]
 
 // 활동 구성 — 2페이즈(전반 개인 산출물 → 후반 팀 프로젝트) + 시험 휴지. 기간 문자열 = 데이터에서 파생.
@@ -42,7 +74,20 @@ const STEPS = [
   },
 ]
 
+// 키비주얼(E5) — AI×MIS 교차(×)·겹침(두 원) 모티프. 라인·그레이만(버건디 예산 0 — §1 빈도 상한 보호).
+// 조준점(원+십자 관통) 도형 재사용 금지 — 오너가 히어로에서 반려(2026-08-05). ×는 원을 관통하지 않고 겹침 렌즈 안에만.
+function CrossVisual() {
+  return (
+    <svg className="rc-visual" viewBox="0 0 320 240" fill="none" aria-hidden="true" focusable="false">
+      <circle cx="122" cy="120" r="92" stroke="var(--line)" strokeWidth="2" />
+      <circle cx="198" cy="120" r="92" stroke="#D9D9D6" strokeWidth="2" />
+      <path d="M142 102 L178 138 M178 102 L142 138" stroke="#C9C9C5" strokeWidth="2.5" strokeLinecap="round" />
+    </svg>
+  )
+}
+
 // 운영 증빙 — 실측 정량만(콘텐츠 건수 = content/ 집계, 나머지 = 확인된 사실). 구 About Proof 이관(수치·출처 그대로).
+// 위치 = 요강 직후(E3 상향 2026-08-05 — 구 페이지 최하단).
 export function RecruitProof() {
   const articleCount = useMemo(() => loadContent('기사').length, [])
   const seminarCount = useMemo(() => loadContent('세미나').length, [])
@@ -79,6 +124,7 @@ export default function Recruit() {
       <main className="rc-main">
         <header className="rc-head">
           <div className="rc-head-in">
+            <CrossVisual />
             <span className="rc-eyebrow">RECRUIT</span>
             <h1 className="rc-h1">{RECRUIT.study} <em>{RECRUIT.cohort}</em> 모집</h1>
             <p className="rc-lead">
@@ -86,6 +132,9 @@ export default function Recruit() {
               전공 무관 모집 — 2026 {RECRUIT.term} 첫 기수.
             </p>
             <p className="rc-meta">게재 2026-07-27 · 개정 2026-08-05 · 담당 운영진</p>
+            <div className="rc-head-cta">
+              <a className="btn-2nd" href="#apply">신청하기</a>
+            </div>
           </div>
         </header>
 
@@ -101,9 +150,41 @@ export default function Recruit() {
               ))}
             </dl>
             <p className="rc-callout">
-              코딩 경험 불필요 — 주제는 코딩이 아니라 AI 활용. 산출물 = 본인 소유,
-              기록은 <a href="/seminars/">세미나</a>·<a href="/projects/">프로젝트</a> 페이지에 축적.
+              산출물 = 본인 소유, 기록은 <a href="/seminars/">세미나</a>·<a href="/projects/">프로젝트</a> 페이지에 축적.
             </p>
+          </div>
+        </section>
+
+        <RecruitProof />
+
+        <section className="rc-secs" aria-labelledby="rc-fit-h">
+          <div className="rc-band-in">
+            <span className="rc-kicker">대상</span>
+            <h2 className="rc-h2" id="rc-fit-h">이런 사람</h2>
+            <ul className="rc-fit">
+              {FIT.map(([title, desc]) => (
+                <li key={title}>
+                  <h3>{title}</h3>
+                  <p>{desc}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        <section className="rc-secs" aria-labelledby="rc-timeline-h">
+          <div className="rc-band-in">
+            <span className="rc-kicker">모집 일정</span>
+            <h2 className="rc-h2" id="rc-timeline-h">접수부터 활동 시작까지</h2>
+            <ol className="rc-steps">
+              {TIMELINE.map((t) => (
+                <li className="rc-step" key={t.title}>
+                  <span className="rc-step-era">{t.era}</span>
+                  <h3>{t.title}</h3>
+                  <p>{t.desc}</p>
+                </li>
+              ))}
+            </ol>
           </div>
         </section>
 
@@ -128,7 +209,25 @@ export default function Recruit() {
           </div>
         </section>
 
-        <section className="rc-secs" aria-labelledby="rc-apply-h">
+        <section className="rc-secs" aria-labelledby="rc-faq-h">
+          <div className="rc-band-in">
+            <span className="rc-kicker">FAQ</span>
+            <h2 className="rc-h2" id="rc-faq-h">자주 묻는 질문 — 모집 관련</h2>
+            <div className="rc-faq">
+              {RECRUIT_FAQ.map(({ q, a }) => (
+                <details className="rc-faq-item" key={q}>
+                  <summary>{q}</summary>
+                  <p>{a}</p>
+                </details>
+              ))}
+            </div>
+            <p className="rc-faq-more">
+              <a className="proof-link" href="/#faq">전체 FAQ <Arrow /></a>
+            </p>
+          </div>
+        </section>
+
+        <section className="rc-secs" id="apply" aria-labelledby="rc-apply-h">
           <div className="rc-band-in">
             <span className="rc-kicker">신청</span>
             <h2 className="rc-h2" id="rc-apply-h">신청 폼 — 이 페이지에서 제출</h2>
@@ -146,8 +245,6 @@ export default function Recruit() {
             </div>
           </div>
         </section>
-
-        <RecruitProof />
       </main>
       <SiteFooter />
     </>

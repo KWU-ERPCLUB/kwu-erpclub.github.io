@@ -27,9 +27,21 @@
 .rc-band-in { max-width: var(--maxw); margin: 0 auto; padding: clamp(2.5rem, 6vh, 4rem) 1.5rem; }
 @media (max-width: 700px) { .rc-band-in { padding: 2.25rem 1.25rem; } }
 
-/* page-head (§3-1 골격: 눈썹 → h1 → 서브 → 메타 → 헤어라인) */
+/* page-head (§3-1 골격: 눈썹 → h1 → 서브 → 메타 → CTA → 헤어라인) + E5 키비주얼 + E6 앵커 CTA */
 .rc-head { width: 100%; border-bottom: 1px solid var(--line); }
-.rc-head-in { max-width: var(--maxw); margin: 0 auto; padding: clamp(2.75rem, 7vh, 4.5rem) 1.5rem clamp(2rem, 4vh, 2.75rem); }
+.rc-head-in { position: relative; max-width: var(--maxw); margin: 0 auto; padding: clamp(2.75rem, 7vh, 4.5rem) 1.5rem clamp(2rem, 4vh, 2.75rem); }
+/* E5 — 교차(×)·겹침(두 원) 장식. 라인·그레이만(버건디 예산 0), 텍스트 뒤 배경 요소. 조준점(원+십자) 금지(오너 반려 2026-08-05) */
+.rc-visual {
+  position: absolute; right: 1.5rem; top: 50%; transform: translateY(-50%);
+  width: clamp(200px, 26vw, 320px); height: auto; pointer-events: none; z-index: 0;
+}
+.rc-head-in > :not(.rc-visual) { position: relative; z-index: 1; }
+@media (max-width: 900px) { .rc-visual { display: none; } }
+.rc-head-cta { margin-top: clamp(1.25rem, 3vh, 1.75rem); }
+/* 페이지 내 앵커 스크롤(E6) — 모션 선호 시에만 부드럽게 */
+@media (prefers-reduced-motion: no-preference) {
+  html:has(.rc-main) { scroll-behavior: smooth; }
+}
 @media (max-width: 700px) { .rc-head-in { padding: 2.5rem 1.25rem 1.75rem; } }
 .rc-eyebrow { /* 화이트리스트 ④ — 브랜드 시그니처 */
   display: block; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.09em;
@@ -79,6 +91,37 @@
 }
 .rc-step p { margin: 0; font-size: 0.94rem; line-height: 1.65; color: var(--text-sub); max-width: 62ch; word-break: keep-all; }
 .rc-step ol { margin: 0.6rem 0 0; padding-left: 1.2rem; font-size: 0.94rem; line-height: 1.8; color: var(--text-sub); }
+
+/* ══ 이런 사람(E2) — 사실 서술 카드 그리드(라인 보더·버건디 0) ══ */
+.rc-fit {
+  list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem; margin: clamp(1.5rem, 3.5vh, 2.5rem) 0 0; padding: 0;
+}
+@media (max-width: 700px) { .rc-fit { grid-template-columns: 1fr; } }
+.rc-fit li { border: 1px solid var(--line); border-radius: 18px; background: var(--bg); padding: 1.25rem 1.4rem; }
+.rc-fit h3 {
+  font-family: var(--font-display); font-weight: 800; font-size: clamp(1rem, 1.6vw, 1.15rem);
+  letter-spacing: -0.01em; word-break: keep-all; margin: 0 0 0.4rem;
+}
+.rc-fit p { margin: 0; font-size: 0.9rem; line-height: 1.6; color: var(--text-sub); word-break: keep-all; }
+
+/* ══ FAQ 서브셋(E4) — 헤어라인 아코디언(details/summary·4상태) ══ */
+.rc-faq { margin-top: clamp(1.5rem, 3.5vh, 2.5rem); border-top: 1px solid var(--line); }
+.rc-faq-item { border-bottom: 1px solid var(--line); }
+.rc-faq-item summary {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 1rem;
+  cursor: pointer; list-style: none; padding: clamp(0.9rem, 2vh, 1.2rem) 0;
+  font-weight: 700; font-size: clamp(0.98rem, 1.6vw, 1.12rem); word-break: keep-all;
+  transition: color 150ms ease-out;
+}
+.rc-faq-item summary::-webkit-details-marker { display: none; }
+.rc-faq-item summary::after { content: '+'; font-weight: 500; color: var(--text-sub); flex: none; }
+.rc-faq-item[open] summary::after { content: '−'; }
+.rc-faq-item summary:hover { color: var(--text-sub); }
+.rc-faq-item summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.rc-faq-item summary:active { opacity: 0.8; }
+.rc-faq-item p { margin: 0 0 1.1rem; font-size: 0.94rem; line-height: 1.65; color: var(--text-sub); max-width: 62ch; word-break: keep-all; }
+.rc-faq-more { margin: clamp(1.25rem, 3vh, 1.75rem) 0 0; }
 
 /* ══ 콜아웃(화이트리스트 ⑩) · 참여 방법 ══ */
 .rc-callout {
