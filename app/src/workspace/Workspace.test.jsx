@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
-import Workspace, { NotConfigured, LoginForm, Shell, WS_TABS } from './Workspace.jsx'
+import Workspace, { NotConfigured, LoginForm, Shell, WS_TABS, WS_PREP_TABS } from './Workspace.jsx'
 import { createMockRepositories } from '../data/mock.js'
 
 const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
@@ -41,17 +41,26 @@ test('LoginForm — 오류 메시지는 role=alert, 처리 중이면 버튼 비�
 })
 
 // ── ③ 로그인 후 셸 ──
-test('Shell = 멤버 이름·역할 + 기능 탭 4종(전부 준비 중)', () => {
-  const html = flat(<Shell member={{ 이름: '홍길동', role: '운영진' }} />)
+test('Shell = 멤버 이름·역할 + 탭바(활성 탭 = 컬렉션) + 로그아웃', () => {
+  const html = flat(<Shell member={{ 이름: '홍길동', role: '운영진' }} store={createMockRepositories({ user: 'mock-staff' })} />)
   expect(html).toContain('홍길동')
   expect(html).toContain('운영진')
   for (const [name] of WS_TABS) expect(html).toContain(name)
-  expect(html.match(/status prep/g)).toHaveLength(WS_TABS.length)
+  expect(html).toContain('ws-tabbar')
+  expect(html).toContain('ws-collections')      // 기본 탭 = 컬렉션(M2 탑재분)
+  expect(html).not.toContain('status prep')     // 활성 탭에는 준비 중 칩 없음
   expect(html).toContain('로그아웃')
 })
 
+test('Shell = 미탑재 탭(M3)만 준비 중 칩 — 개수 일치', () => {
+  const html = flat(<Shell member={{ 이름: 'ㄱ', role: '스터디원' }} store={createMockRepositories({ user: 'mock-member' })} tab="세션" />)
+  // 기본 탭은 컬렉션이므로 준비 중 칩은 렌더되지 않는다 — 목록 자체는 WS_PREP_TABS로 고정.
+  expect(WS_PREP_TABS.length).toBe(WS_TABS.length - 1)
+  expect(html).toContain('ws-tabbtn')
+})
+
 test('Shell = 학번·전공 미표시(P5 — 셸 표면에 사적 정보 없음)', () => {
-  const html = flat(<Shell member={{ 이름: '홍길동', role: '스터디원', 학번: '2021000000', 전공: '경영학부' }} />)
+  const html = flat(<Shell member={{ 이름: '홍길동', role: '스터디원', 학번: '2021000000', 전공: '경영학부' }} store={createMockRepositories({ user: 'mock-member' })} />)
   expect(html).not.toContain('2021000000')
   expect(html).not.toContain('경영학부')
 })
@@ -75,7 +84,7 @@ test('공개 내비에 워크스페이스 링크 없음(M3에서 판단)', () =>
 test('카피 = 개조식(경어체 종결 0건)', () => {
   const html = flat(<Workspace repos={createMockRepositories()} configured />)
     + flat(<NotConfigured />)
-    + flat(<Shell member={{ 이름: 'ㄱ', role: '스터디원' }} />)
+    + flat(<Shell member={{ 이름: 'ㄱ', role: '스터디원' }} store={createMockRepositories({ user: 'mock-member' })} />)
   const text = html.replace(/<[^>]+>/g, ' ')
   for (const bad of ['합니다', '입니다', '됩니다', '하세요', '주세요']) expect(text).not.toContain(bad)
 })

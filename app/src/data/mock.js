@@ -122,6 +122,18 @@ export function createMockRepositories({ user = null, data = {} } = {}) {
         store.collections.push(row)
         return { ...row }
       },
+      async update(rowId, patch) {
+        const row = store.collections.find((c) => c.id === rowId && c.member_id === currentId)
+        if (!row) throw new Error('대상 없음')
+        Object.assign(row, patch)
+        return { ...row }
+      },
+      async remove(rowId) {
+        const at = store.collections.findIndex((c) => c.id === rowId && c.member_id === currentId)
+        if (at < 0) throw new Error('대상 없음')
+        store.collections.splice(at, 1)
+        return rowId
+      },
     },
     seminars: { async list() { return clone(store.seminars) } },
   }

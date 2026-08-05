@@ -14,7 +14,7 @@ export const REPO_CONTRACT = {
   assignments: ['list'],
   submissions: ['listMine'],
   notices: ['listInternal'],
-  collections: ['listMine', 'add'],
+  collections: ['listMine', 'add', 'update', 'remove'],
   seminars: ['list'],
 }
 
@@ -112,6 +112,19 @@ export function createSupabaseRepositories(backend) {
         if (!id) throw new Error('로그인 필요')
         const rows = await backend.db.insert('collections', { member_id: id, url, 메모 })
         return rows?.[0] || null
+      },
+      // 본인 행만 — 필터에 member_id를 함께 걸어 RLS 이전 단계에서도 남의 행에 닿지 않는다.
+      async update(rowId, patch) {
+        const id = uid()
+        if (!id) throw new Error('로그인 필요')
+        const rows = await backend.db.update('collections', { id: rowId, member_id: id }, patch)
+        return rows?.[0] || null
+      },
+      async remove(rowId) {
+        const id = uid()
+        if (!id) throw new Error('로그인 필요')
+        await backend.db.remove('collections', { id: rowId, member_id: id })
+        return rowId
       },
     },
     seminars: {

@@ -3,14 +3,16 @@
 import { useEffect, useState } from 'react'
 import { SiteNav, SiteFooter } from '../shared.jsx'
 import { getRepositories, isBackendConfigured } from '../data/index.js'
+import Collections from './Collections.jsx'
 
-// M3에서 채울 기능 탭 — [이름, 한 줄 설명]. M1에서는 전부 '준비 중'.
+// 기능 탭 — [이름, 한 줄 설명, 상태]. 상태 'ready' = M2에서 탑재됨, 'prep' = M3 범위.
 export const WS_TABS = [
-  ['세션', '회차·자료 열람'],
-  ['과제', '링크 제출·내 제출 확인'],
-  ['공지', '내부 공지·운영 로그'],
-  ['컬렉션', '개인 스크랩·북마크'],
+  ['컬렉션', '개인 스크랩·북마크', 'ready'],
+  ['세션', '회차·자료 열람', 'prep'],
+  ['과제', '링크 제출·내 제출 확인', 'prep'],
+  ['공지', '내부 공지·운영 로그', 'prep'],
 ]
+export const WS_PREP_TABS = WS_TABS.filter(([, , s]) => s === 'prep')
 
 function PageHead({ sub }) {
   return (
@@ -73,8 +75,9 @@ export function LoginForm({ onSubmit, error, busy }) {
   )
 }
 
-// ③ 로그인 후 셸 — 멤버 이름·역할 + 기능 탭 자리표시
-export function Shell({ member, onSignOut }) {
+// ③ 로그인 후 셸 — 멤버 이름·역할 + 기능 탭. 활성 탭만 패널을 그린다.
+export function Shell({ member, onSignOut, store }) {
+  const [tab, setTab] = useState(WS_TABS[0][0])
   return (
     <section className="ws-panel">
       <div className="ws-me">
@@ -84,16 +87,32 @@ export function Shell({ member, onSignOut }) {
         </div>
         <button type="button" className="ws-signout" onClick={onSignOut}>로그아웃</button>
       </div>
-      <ul className="ws-tabs">
-        {WS_TABS.map(([name, desc]) => (
-          <li key={name} className="ws-tab">
-            <p className="ws-tab-name">{name}</p>
-            <p className="ws-tab-desc">{desc}</p>
-            <span className="status prep">준비 중</span>
-          </li>
+
+      <nav className="ws-tabbar" aria-label="워크스페이스 기능">
+        {WS_TABS.map(([name, , state]) => (
+          <button
+            key={name} type="button" aria-pressed={tab === name}
+            className={`ws-tabbtn${tab === name ? ' on' : ''}${state === 'prep' ? ' dim' : ''}`}
+            onClick={() => setTab(name)}
+          >
+            {name}
+          </button>
         ))}
-      </ul>
-      <p className="ws-note">기능 탑재 = M3 범위. 지금은 로그인·프로필 확인만.</p>
+      </nav>
+
+      {tab === '컬렉션' && store && <Collections store={store} />}
+      {WS_PREP_TABS.some(([name]) => name === tab) && (
+        <ul className="ws-tabs">
+          {WS_PREP_TABS.map(([name, desc]) => (
+            <li key={name} className="ws-tab">
+              <p className="ws-tab-name">{name}</p>
+              <p className="ws-tab-desc">{desc}</p>
+              <span className="status prep">준비 중</span>
+            </li>
+          ))}
+        </ul>
+      )}
+      {WS_PREP_TABS.some(([name]) => name === tab) && <p className="ws-note">세션·과제·공지 탑재 = M3 범위.</p>}
     </section>
   )
 }
@@ -147,7 +166,7 @@ export default function Workspace({ repos, configured }) {
         <PageHead sub={sub} />
         {!ready && <NotConfigured />}
         {ready && !user && <LoginForm onSubmit={signIn} error={error} busy={busy} />}
-        {ready && user && <Shell member={member} onSignOut={signOut} />}
+        {ready && user && <Shell member={member} onSignOut={signOut} store={store} />}
       </main>
       <SiteFooter />
     </>
