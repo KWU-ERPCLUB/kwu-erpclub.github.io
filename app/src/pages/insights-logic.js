@@ -1,6 +1,7 @@
 // 인사이트(INSIGHTS) 순수 로직 — 필터·그룹·이웃·URL 상태·허브 섹션·모노그램.
 // 전부 순수 함수(부수효과 0) — 테스트 대상. UI 컴포넌트(Articles.jsx 등)가 소비.
 import { NATURES } from '../content/schema.js'
+import { SERIES, seriesById } from '../content/series.js'
 
 // 성격 칩 = 전체 + 성격 4종. '전체' = 성격 필터 없음(AI in Use 구조: 상단 컨트롤 바 성격 칩).
 export const HUB_TAB = '전체'
@@ -15,20 +16,23 @@ export function natureKey(nature) { return NATURE_KEY[nature] || 'analysis' }
 // 저자 이니셜(아바타 1자) — 첫 글자 대문자.
 export function authorInitial(author) { return (author || '?').trim().charAt(0).toUpperCase() || '?' }
 
-// ── URL ↔ 상태 (뒤로가기·딥링크) : ?tab=<key> · ?p=<slug> ──
-// search(location.search 문자열) → { tab, slug }. 미지의 tab 키 = 허브.
+// ── URL ↔ 상태 (뒤로가기·딥링크) : ?tab=<key> · ?series=<id> · ?p=<slug> ──
+// 기존 계약(?tab·?p)은 불변 — series 파라미터만 추가(2026-08-05 시리즈 체계).
+// search(location.search 문자열) → { tab, slug, series }. 미지의 tab 키 = 허브, 미지의 series = null.
 export function stateFromSearch(search) {
   const p = new URLSearchParams(search || '')
   const slug = p.get('p') || null
   const key = p.get('tab')
   const tab = key && KEY_TO_NATURE[key] ? KEY_TO_NATURE[key] : HUB_TAB
-  return { tab, slug }
+  const sid = p.get('series')
+  return { tab, slug, series: sid && seriesById(sid) ? sid : null }
 }
 
-// { tab, slug } → "?tab=..&p=..". 허브·무값이면 빈 문자열.
-export function searchFromState({ tab = HUB_TAB, slug = null } = {}) {
+// { tab, slug, series } → "?tab=..&series=..&p=..". 허브·무값이면 빈 문자열.
+export function searchFromState({ tab = HUB_TAB, slug = null, series = null } = {}) {
   const p = new URLSearchParams()
   if (tab && tab !== HUB_TAB && NATURE_KEY[tab]) p.set('tab', NATURE_KEY[tab])
+  if (series && seriesById(series)) p.set('series', series)
   if (slug) p.set('p', slug)
   const s = p.toString()
   return s ? `?${s}` : ''
@@ -98,6 +102,40 @@ export function pageSlice(list, shown) {
   const src = list || []
   const n = Math.max(0, shown || 0)
   return { visible: src.slice(0, n), remaining: Math.max(0, src.length - n) }
+}
+
+// ── 시리즈(2026-08-05 오너 확정) — 정기 연재를 목록에서 분리한다 ──
+// 규칙 3개:
+//   ① 소속 판정 = a['시리즈'](로더·fromDbRow가 슬러그 자동 인식까지 끝내 정규화해 넣는다).
+//   ② 메인 그리드에서 제외 — 회차가 쌓여 목록을 덮지 않게. 노출 = 상단 밴드 + 전용 아카이브뿐.
+//   ③ 단, 검색 중에는 포함 — 찾을 수는 있어야 한다.
+export function seriesIdOfArticle(a) {
+  const v = a && a['시리즈']
+  return typeof v === 'string' && seriesById(v) ? v : null
+}
+
+export function isSeriesArticle(a) { return seriesIdOfArticle(a) !== null }
+
+// 시리즈 글 제외(메인 그리드용).
+export function excludeSeries(list) { return (list || []).filter((a) => !isSeriesArticle(a)) }
+
+// 해당 시리즈 글만(입력 순서 = 역시간순 유지 → 회차 역순).
+export function seriesEntries(list, id) {
+  return (list || []).filter((a) => seriesIdOfArticle(a) === id)
+}
+
+export const SERIES_PREV_COUNT = 3 // 밴드에 거는 이전 회차 링크 수 상한
+
+// 밴드 소재 — 목록에 걸 시리즈들. list = 이미 필터(성격·주제·기간)가 적용된 배열.
+// 반환 = [{ series, latest, prev, total }] — 소속 글 0건인 시리즈는 나오지 않는다(빈 밴드 금지).
+export function seriesBands(list, n = SERIES_PREV_COUNT) {
+  const out = []
+  for (const rec of SERIES) {
+    const items = seriesEntries(list, rec.id)
+    if (items.length === 0) continue
+    out.push({ series: rec, latest: items[0], prev: items.slice(1, 1 + n), total: items.length })
+  }
+  return out
 }
 
 // 상세 하단 이웃(역시간순: prev=과거, next=최근).

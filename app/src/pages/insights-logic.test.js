@@ -48,14 +48,15 @@ test('filterArticles — month=YYYY-MM 일치만, 다른 필터와 AND 결합', 
 })
 
 // ── URL ↔ 상태 (뒤로가기·딥링크) ──
+// series 필드는 2026-08-05 시리즈 체계에서 추가 — 시리즈 딥링크 단언은 insights-series.test.jsx.
 test('stateFromSearch — ?p=<slug>는 상세, tab 없으면 허브', () => {
-  expect(stateFromSearch('?p=2026-07-22-x')).toEqual({ tab: HUB_TAB, slug: '2026-07-22-x' })
+  expect(stateFromSearch('?p=2026-07-22-x')).toEqual({ tab: HUB_TAB, slug: '2026-07-22-x', series: null })
 })
 test('stateFromSearch — ?tab=<key> 복원(딥링크), 미지 키는 허브', () => {
-  expect(stateFromSearch('?tab=analysis')).toEqual({ tab: '심층 분석', slug: null })
-  expect(stateFromSearch('?tab=news&p=y')).toEqual({ tab: '트렌드', slug: 'y' })
-  expect(stateFromSearch('?tab=없는키')).toEqual({ tab: HUB_TAB, slug: null })
-  expect(stateFromSearch('')).toEqual({ tab: HUB_TAB, slug: null })
+  expect(stateFromSearch('?tab=analysis')).toEqual({ tab: '심층 분석', slug: null, series: null })
+  expect(stateFromSearch('?tab=news&p=y')).toEqual({ tab: '트렌드', slug: 'y', series: null })
+  expect(stateFromSearch('?tab=없는키')).toEqual({ tab: HUB_TAB, slug: null, series: null })
+  expect(stateFromSearch('')).toEqual({ tab: HUB_TAB, slug: null, series: null })
 })
 test('searchFromState — 허브·무값이면 빈 문자열', () => {
   expect(searchFromState({ tab: HUB_TAB, slug: null })).toBe('')
@@ -68,10 +69,12 @@ test('searchFromState — 성격 탭·상세 쿼리 생성', () => {
 })
 test('URL 왕복 — state→search→state 보존(pushState/popstate 순수 로직)', () => {
   for (const s of [
-    { tab: HUB_TAB, slug: null },
-    { tab: '트렌드', slug: null },
-    { tab: '활용법·튜토리얼', slug: '2026-08-01-hong-x' },
-    { tab: HUB_TAB, slug: 'only-detail' },
+    { tab: HUB_TAB, slug: null, series: null },
+    { tab: '트렌드', slug: null, series: null },
+    { tab: '활용법·튜토리얼', slug: '2026-08-01-hong-x', series: null },
+    { tab: HUB_TAB, slug: 'only-detail', series: null },
+    { tab: HUB_TAB, slug: null, series: 'weekly' },
+    { tab: '트렌드', slug: 'x', series: 'weekly' },
   ]) {
     expect(stateFromSearch(searchFromState(s))).toEqual(s)
   }

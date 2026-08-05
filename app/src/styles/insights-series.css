@@ -1,0 +1,101 @@
+/* 인사이트 시리즈 전용 CSS — 목록 상단 고정 밴드 + 시리즈 아카이브(?series=<id>).
+   articles.css에서 분리(300줄 규격). 토큰 = global.css만 · light-only.
+   디자인규칙 v2: 버건디 = 화이트리스트(④눈썹·⑥링크밑줄 2px·⑨focus)만 · 버건디 면 금지.
+
+   ── 시리즈 밴드(2026-08-05) — 목록 최상단 고정 자리. 정기 연재를 한 덩어리로 묶어 가장 먼저 보이게 ──
+   구성 = 고정 커버(좌) + 시리즈명·설명 + 최신 회차(크게) + 이전 회차 링크 + 전체 보기.
+   팔레트 = surface 면 + 헤어라인(버건디 면 금지 — 강조는 눈썹 텍스트 ④ 하나). 3계층 = 폰 세로 스택(커버 소형). */
+.ins-series {
+  display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 1.6rem;
+  align-items: center; background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius-card); padding: 1.4rem; margin-bottom: 2rem;
+}
+.ins-series-cover { display: block; overflow: hidden; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+.ins-series-cover img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
+.ins-series-body { min-width: 0; }
+/* 버건디 눈썹(화이트리스트 ④) — 밴드의 유일한 강조 터치포인트 */
+.ins-series-idx { display: block; font-size: 0.76rem; font-weight: 700; letter-spacing: 0.09em; color: var(--accent); margin-bottom: 0.45rem; }
+.ins-series-name { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.25rem, 2.4vw, 1.6rem); line-height: 1.25; letter-spacing: -0.02em; margin: 0 0 0.3rem; }
+.ins-series-desc { margin: 0 0 0.95rem; font-size: 0.87rem; color: var(--text-sub); }
+
+/* 최신 회차 = 밴드의 주 행동(제목 크게) */
+.ins-series-latest {
+  display: block; width: 100%; text-align: left; background: #fff; border: 1px solid var(--line);
+  border-radius: 12px; padding: 0.8rem 1rem; color: inherit; font: inherit; cursor: pointer;
+  transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
+}
+.ins-series-latest:hover { border-color: var(--text-sub); box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06); }
+.ins-series-latest:active { transform: translateY(1px); }
+.ins-series-latest:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.ins-series-latest-label { display: block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; color: var(--text-sub); margin-bottom: 0.25rem; }
+.ins-series-latest-title { display: block; font-size: 1.04rem; font-weight: 700; line-height: 1.4; letter-spacing: -0.01em; margin-bottom: 0.25rem; }
+.ins-series-latest-date { display: block; font-size: 0.76rem; color: var(--text-sub); font-variant-numeric: tabular-nums; }
+
+/* 이전 회차 = 텍스트 행(헤어라인 구분 — 카드 반복 금지) */
+.ins-series-prev { list-style: none; margin: 0.55rem 0 0; padding: 0; }
+.ins-series-prev button {
+  display: flex; align-items: baseline; gap: 0.7rem; width: 100%; text-align: left;
+  background: none; border: 0; border-bottom: 1px solid var(--line); padding: 0.5rem 0.15rem;
+  color: var(--text-sub); font: inherit; font-size: 0.85rem; cursor: pointer; transition: color 120ms ease-out;
+}
+.ins-series-prev button:hover { color: var(--text); }
+.ins-series-prev button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.ins-series-prev-title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ins-series-prev-date { flex: none; font-size: 0.75rem; font-variant-numeric: tabular-nums; }
+
+/* 전체 보기 = Tertiary(텍스트 + 버건디 밑줄 2px — §4 위계) */
+.ins-series-all {
+  margin-top: 0.85rem; background: none; border: 0; padding: 0.1rem 0; font: inherit; font-size: 0.85rem; font-weight: 700;
+  color: var(--text); border-bottom: 2px solid var(--accent); cursor: pointer;
+}
+.ins-series-all span { color: var(--text-sub); font-weight: 500; }
+.ins-series-all:hover { color: var(--accent); }
+.ins-series-all:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+@media (max-width: 759px) {
+  .ins-series { grid-template-columns: 1fr; gap: 1rem; padding: 1rem; margin-bottom: 1.5rem; }
+  .ins-series-cover { max-width: 260px; }
+  .ins-series-latest-title { font-size: 0.98rem; }
+}
+
+/* ── 시리즈 아카이브(?series=<id>) — 회차 역순 콤팩트 리스트. 고정 커버는 머리에서 1회만 ──
+   폭 주의: main(.art-page)은 #root 세로 flex의 아이템 + `margin: 0 auto` → 내용이 좁으면 shrink-to-fit 된다.
+   목록 페이지는 그리드가 넓어 티가 안 나지만 아카이브는 텍스트 리스트라 쪼그라든다.
+   그래서 main에 width:100%(--series 모디파이어)를 주고, 리스트 폭은 여기서 잡는다(좌변 = 목록 페이지와 동일). */
+.art-page--series { width: 100%; }
+.ins-arch { max-width: 900px; }
+.ins-arch-head {
+  display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 1.6rem; align-items: center;
+  padding-bottom: 1.5rem; border-bottom: 1px solid var(--line); margin-bottom: 1.5rem;
+}
+.ins-arch-cover { overflow: hidden; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+.ins-arch-cover img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
+.ins-arch-meta { min-width: 0; }
+.ins-arch-meta h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.6rem, 3.4vw, 2.2rem); line-height: 1.2; letter-spacing: -0.02em; margin: 0 0 0.45rem; }
+.ins-arch-desc { margin: 0 0 0.5rem; font-size: 0.92rem; color: var(--text-sub); }
+.ins-arch-count { margin: 0; font-size: 0.84rem; color: var(--text-sub); }
+.ins-arch-count strong { font-family: var(--font-display); font-weight: 800; color: var(--text); }
+
+.ins-arch-list { list-style: none; margin: 0; padding: 0; }
+.ins-arch-list button {
+  display: flex; align-items: baseline; gap: 1.1rem; width: 100%; text-align: left;
+  background: none; border: 0; border-bottom: 1px solid var(--line); padding: 0.95rem 0.2rem;
+  color: inherit; font: inherit; cursor: pointer; transition: background 120ms ease-out;
+}
+.ins-arch-list li:last-child button { border-bottom: 0; } /* 하단 내비 border-top과 이중선 방지 */
+.ins-arch-list button:hover { background: var(--surface); }
+.ins-arch-list button:focus-visible { outline: 3px solid var(--accent); outline-offset: -1px; }
+.ins-arch-date { flex: none; width: 6.5rem; font-size: 0.8rem; color: var(--text-sub); font-variant-numeric: tabular-nums; }
+.ins-arch-text { flex: 1; min-width: 0; }
+.ins-arch-title { display: block; font-size: 0.98rem; font-weight: 700; line-height: 1.4; }
+.ins-arch-desc-row {
+  display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;
+  margin-top: 0.2rem; font-size: 0.84rem; color: var(--text-sub);
+}
+@media (max-width: 759px) {
+  .ins-arch-head { grid-template-columns: 1fr; gap: 1rem; }
+  .ins-arch-cover { max-width: 260px; }
+  .ins-arch-list button { flex-direction: column; align-items: flex-start; gap: 0.2rem; }
+  .ins-arch-date { width: auto; }
+}
+
