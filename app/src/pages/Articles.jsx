@@ -1,9 +1,9 @@
 // 인사이트(INSIGHTS) — 구조 개혁(2026-07-24 2차): 좌측 탭·허브 4섹션·월별 그룹 폐지 → AI in Use 구조.
 // [page-head] → 상단 컨트롤 바(성격 칩+주제 칩+지금써먹기 토글+검색) → N건 카운트 → 2열 대형 색면 카드 그리드(고정 핀 최상단).
 // URL: ?tab=<key>=성격 칩 선택 · ?p=<slug>=상세(문서 셸 변경 없음). 0건=디자인된 빈 상태.
-import { useEffect, useMemo, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { SiteNav, SiteFooter, CONTRIBUTING_URL } from '../shared.jsx'
-import { loadContent } from '../content/loader.js'
+import { useArticles } from './insights-source.js'
 import { TOPICS } from '../content/schema.js'
 import {
   HUB_TAB, TABS, NATURE_KEY, stateFromSearch, searchFromState, filterArticles, pinnedFirst, extractMonths,
@@ -29,8 +29,29 @@ function ChipRow({ label, options, value, onSelect, sub = false }) {
   )
 }
 
+// 로딩 골격 — DB 페치 대기(카드 그리드와 같은 자리·같은 크기, 색면 없이 회색 면만).
+function LoadingGrid() {
+  return (
+    <ul className="art-grid art-grid--loading" role="status" aria-label="인사이트 불러오는 중">
+      {[0, 1, 2, 3].map((i) => <li key={i} className="art-card art-card--skeleton" aria-hidden="true" />)}
+    </ul>
+  )
+}
+
+// 오류 — 짧은 안내 + 재시도(빈 상태 블록과 같은 문법: surface 면 + accent 좌변).
+function LoadError({ onRetry }) {
+  return (
+    <div className="art-empty" role="alert">
+      <p className="art-empty-title">인사이트를 불러오지 못함.</p>
+      <p>네트워크 또는 백엔드 일시 오류. 잠시 후 재시도.</p>
+      <button type="button" className="art-retry" onClick={onRetry}>다시 시도</button>
+    </div>
+  )
+}
+
 // 목록 뷰 — 상단 컨트롤 바 + 카운트 라인 + 2열 색면 카드 그리드(고정 핀 최상단). export = 픽스처 주입 테스트용.
-export function ListView({ all, tab, onTab, topic, setTopic, month, setMonth, q, setQ, onOpen }) {
+// status/onRetry = DB 페치 상태(기본 'ready' — md 폴백·픽스처 주입 시 기존 동작 그대로).
+export function ListView({ all, tab, onTab, topic, setTopic, month, setMonth, q, setQ, onOpen, status = 'ready', onRetry }) {
   const nature = tab === HUB_TAB ? null : tab
   const months = extractMonths(all)
   const filtered = filterArticles(all, { nature, topic, month, q })
@@ -65,10 +86,12 @@ export function ListView({ all, tab, onTab, topic, setTopic, month, setMonth, q,
         )}
       </div>
 
-      {/* 카운트 라인 — N건 표시 중 / 전체 M건 */}
-      <p className="ins-count"><strong>{filtered.length}</strong>건 표시 중 <span>· 전체 {all.length}건</span></p>
+      {/* 카운트 라인 — N건 표시 중 / 전체 M건 (로딩 중에는 숫자 대신 골격) */}
+      {status === 'ready' && (
+        <p className="ins-count"><strong>{filtered.length}</strong>건 표시 중 <span>· 전체 {all.length}건</span></p>
+      )}
 
-      {filtered.length === 0 ? (
+      {status === 'loading' ? <LoadingGrid /> : status === 'error' ? <LoadError onRetry={onRetry} /> : filtered.length === 0 ? (
         <div className="art-empty">
           <p className="art-empty-title">조건에 맞는 기고 없음.</p>
           <p>필터·검색 해제 = 전체. 첫 기고 = <a href={CONTRIBUTING_URL} target="_blank" rel="noreferrer">기고 가이드</a> 참고 → 템플릿 <code>content/기사/_template.md</code> 복사 → 규칙 채움 → 자동 게재.</p>
@@ -83,8 +106,9 @@ export function ListView({ all, tab, onTab, topic, setTopic, month, setMonth, q,
   )
 }
 
-export default function Articles() {
-  const all = useMemo(() => loadContent('기사'), [])
+// repos·configured = 테스트 주입구(P4). 미지정 = env 판정(설정됨 → DB, 미설정 → md 글롭).
+export default function Articles({ repos, configured }) {
+  const { items: all, status, retry } = useArticles({ repos, configured })
   const initial = typeof window === 'undefined' ? { tab: HUB_TAB, slug: null } : stateFromSearch(window.location.search)
   const [tab, setTab] = useState(initial.tab)
   const [sel, setSel] = useState(initial.slug)
@@ -137,6 +161,7 @@ export default function Articles() {
           all={all} tab={tab} onTab={(t) => nav({ tab: t, slug: null })}
           topic={topic} setTopic={setTopic} month={month} setMonth={setMonth}
           q={q} setQ={setQ} onOpen={openArticle}
+          status={status} onRetry={retry}
         />
       </main>
       <SiteFooter />

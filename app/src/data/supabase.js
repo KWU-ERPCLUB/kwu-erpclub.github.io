@@ -101,6 +101,10 @@ export function createBackend(config = readEnv(), deps = {}) {
     return `?${params.toString()}`
   }
 
+  // 행 삭제가 허용된 테이블(M2) — 상호작용 취소·개인 스크랩 삭제뿐.
+  // 콘텐츠·멤버 테이블은 여기 없다 = 앱이 원천 데이터를 지울 경로가 구조적으로 없음.
+  const DELETABLE = new Set(['article_likes', 'article_bookmarks', 'collections'])
+
   const db = {
     select: (table, opts) => request(`/rest/v1/${table}${buildQuery(opts)}`),
     insert: (table, row) => request(`/rest/v1/${table}`, {
@@ -113,6 +117,11 @@ export function createBackend(config = readEnv(), deps = {}) {
       headers: { Prefer: 'return=representation' },
       body: JSON.stringify(patch),
     }),
+    // 화이트리스트 밖 테이블은 요청 자체를 만들지 않는다(오타·리팩터로 원천이 지워지는 사고 차단).
+    remove: (table, filters) => {
+      if (!DELETABLE.has(table)) throw new Error(`삭제 불가 테이블: ${table}`)
+      return request(`/rest/v1/${table}${buildQuery({ filters })}`, { method: 'DELETE' })
+    },
   }
 
   return { auth, db, config }

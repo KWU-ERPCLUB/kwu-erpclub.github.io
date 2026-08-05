@@ -60,22 +60,33 @@ test('P2 — service key·JWT 실값 문자열 0건(repo 전역)', () => {
   expect(hits).toEqual([])
 })
 
-// ── P4: 공개면 테스트가 네트워크 없이 GREEN ──
-test('P4 — 공개 페이지 컴포넌트는 데이터 계층에 의존하지 않음(정적 콘텐츠 유지)', () => {
+// ── P4: 공개면이 데이터 계층에 닿는 지점은 1곳만(M2 — 인사이트 DB 서빙 전환) ──
+// M1에서는 "공개면은 데이터 계층 무의존"이었으나, M2에서 인사이트가 DB 서빙으로 바뀌었다.
+// 규칙을 없애는 대신 좁힌다: 어댑터 1개(pages/insights-source.js)만 허용 — 컴포넌트 산개 금지.
+const DATA_CONSUMERS = ['pages/insights-source.js']
+test('P4 — 공개 페이지에서 data/index.js를 쓰는 파일 = 허용된 어댑터 1곳뿐', () => {
   const workspaceDir = path.join(SRC_DIR, 'workspace')
   const offenders = srcFiles
     .filter((f) => !f.startsWith(DATA_DIR) && !f.startsWith(workspaceDir))
     .filter((f) => !f.includes('workspace-entry'))
     .filter((f) => /from\s+['"][^'"]*data\/index\.js['"]/.test(read(f)))
+    .map((f) => path.relative(SRC_DIR, f).replace(/\\/g, '/'))
+    .filter((rel) => !DATA_CONSUMERS.includes(rel))
   expect(offenders).toEqual([])
 })
 
-test('P4 — 목 저장소·supabase 모듈 어디에도 삭제 연산(delete·truncate·drop) 없음', () => {
+// 삭제 연산 = 화이트리스트 3테이블에서만(상호작용 취소·스크랩 삭제). 스키마 파괴 연산은 여전히 0건.
+test('P4 — 데이터 계층에 truncate·drop 0건, 행 삭제는 화이트리스트 테이블만', () => {
   for (const f of walk(DATA_DIR)) {
     if (f.endsWith('.test.js')) continue
     const body = read(f).toLowerCase()
-    for (const op of ['truncate', 'drop table', '.delete(']) expect(body).not.toContain(op)
+    for (const op of ['truncate', 'drop table', 'drop column']) expect(body).not.toContain(op)
   }
+  const supa = read(path.join(DATA_DIR, 'supabase.js'))
+  expect(supa).toContain('DELETABLE')
+  for (const t of ['article_likes', 'article_bookmarks', 'collections']) expect(supa).toContain(t)
+  // 기사·멤버 등 콘텐츠 테이블은 삭제 대상이 아니다(md·DB 원천 보호)
+  expect(/DELETABLE\s*=\s*new Set\(\[[^\]]*'articles'/.test(supa)).toBe(false)
 })
 
 // ── env 키는 참조만(실값 하드코딩 금지) ──

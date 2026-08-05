@@ -3,6 +3,12 @@ import { renderToString } from 'react-dom/server'
 import Articles, { ListView } from './Articles.jsx'
 import { ArticleRow } from './insights-parts.jsx'
 import { loadContent } from '../content/loader.js'
+import { toDbRow, fromDbRow } from '../content/db-map.js'
+import { createMockRepositories } from '../data/mock.js'
+
+// M2 — 서빙 원천이 DB로 바뀌었다. 두 경로 모두 네트워크 없이 검증한다(P4):
+//   configured={false} = md 글롭 폴백(아래 기존 단언 전부 — 로컬 dev·포크·백엔드 미설정 상태)
+//   configured + repos = DB 경로(목 저장소 주입 — 파일 하단 3건)
 
 // 실 콘텐츠 비결합 원칙: 특정 기사(슬러그·제목·본문 문자열)에 단언을 묶지 않는다 —
 // 기사 1건 삭제로 CI 전체가 죽는 사고 방지(2026-07-31 사고 1회). 실 콘텐츠가 필요한 단언은
@@ -17,7 +23,7 @@ const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
 
 // 구조 개혁(2026-07-24 2차): 좌측 탭·허브 4섹션·월별 그룹 폐지 → AI in Use 구조(상단 컨트롤 바 + 2열 색면 카드 그리드).
 test('목록 = 상단 컨트롤 바(성격 칩+주제 칩+토글+검색) + 카운트 라인 + 2열 카드 그리드', () => {
-  const html = renderToString(<Articles />)
+  const html = renderToString(<Articles configured={false} />)
   // 상단 컨트롤 바 — 성격 칩(전체+4)
   for (const t of ['전체', '트렌드', '심층 분석', '활용법·튜토리얼', '도구·프롬프트']) {
     expect(html).toContain(t)
@@ -124,7 +130,7 @@ test('성격 칩 딥링크 — ?tab=analysis 복원 + 해당 성격 카드만', 
   const prev = globalThis.window
   globalThis.window = { location: { search: '?tab=analysis', pathname: '/insights/' } }
   try {
-    const html = flat(<Articles />)
+    const html = flat(<Articles configured={false} />)
     expect(html).toContain('art-grid')
     expect(html).toContain('art-card-title')
     if (inTab) expect(html).toContain(esc(inTab.title))       // 심층 분석 기고 = 표시
@@ -137,6 +143,50 @@ test('성격 칩 딥링크 — ?tab=analysis 복원 + 해당 성격 카드만', 
   }
 })
 
+// ── M2: DB 서빙 경로(목 저장소 — 네트워크 0, P4) ──
+
+// 페치 대기 = 카드 그리드 자리에 골격(레이아웃 점프 없음). 컨트롤 바는 그대로 노출.
+test('DB 경로 — 페치 전 = 로딩 골격(role=status) + 컨트롤 바 유지', () => {
+  const repos = createMockRepositories()
+  const html = renderToString(<Articles configured repos={repos} />)
+  expect(html).toContain('art-card--skeleton')
+  expect(html).toContain('role="status"')
+  expect(html).toContain('ins-controls')          // 컨트롤 바 = 로딩 중에도 동일
+  expect(html).not.toContain('ins-count')         // 숫자는 확정 후에만
+})
+
+// 오류 = 짧은 안내 + 재시도 버튼(빈 상태와 같은 블록 문법).
+test('DB 경로 — 오류 상태 = 안내 + 다시 시도 버튼', () => {
+  const noop = () => {}
+  const props = { tab: '전체', onTab: noop, topic: null, setTopic: noop, month: null, setMonth: noop, q: '', setQ: noop, onOpen: noop }
+  const html = renderToString(<ListView all={[]} {...props} status="error" onRetry={noop} />)
+  expect(html).toContain('role="alert"')
+  expect(html).toContain('불러오지 못함')
+  expect(html).toContain('art-retry')
+  expect(html).toContain('다시 시도')
+})
+
+// DB 행 → 카드 마크업이 md 경로와 동일(디자인 불변 조건).
+test('DB 행으로 그린 카드 = md 경로와 같은 마크업(색면·태그줄·자세히)', async () => {
+  const rows = await createMockRepositories().articles.listPublished()
+  const items = rows.map(fromDbRow)
+  expect(items.length).toBeGreaterThan(0)
+  const html = renderToString(<ArticleRow a={items[0]} onOpen={() => {}} />)
+  expect(html).toContain('art-card--')
+  expect(html).toContain('art-card-title')
+  expect(html).toContain(esc(items[0].title))
+  expect(html).toContain('자세히')
+})
+
+// md 파일에서 만든 DB 행도 같은 화면 객체로 돌아온다(이전 무손실 — P6의 화면 측 대응).
+test('md → DB 행 → 화면 객체 왕복에서 제목·슬러그 보존', () => {
+  if (ALL.length === 0) return
+  const src = ALL[0]
+  const ui = fromDbRow(toDbRow({ slug: src.slug, data: src, body: src.body }))
+  expect(ui.title).toBe(src.title)
+  expect(ui.slug).toBe(src.slug)
+})
+
 // 상세 진입(?p=<slug>) = 통일 셸(변경 없음). URL 반영은 stateFromSearch 경유.
 // 대상 기사 = 출처 있는 아무 기사(동적 선택) — 특정 슬러그에 묶지 않는다.
 test('상세 = 통일 셸(문서 헤더·출처 카드 승격·목록 복귀)', () => {
@@ -145,7 +195,7 @@ test('상세 = 통일 셸(문서 헤더·출처 카드 승격·목록 복귀)', 
   const prev = globalThis.window
   globalThis.window = { location: { search: `?p=${cur.slug}`, pathname: '/insights/' } }
   try {
-    const html = flat(<Articles />)
+    const html = flat(<Articles configured={false} />)
     expect(html).toContain('AI INSIGHTS')
     expect(html).toContain('art-source')
     expect(html).toContain(esc(cur.source_name || cur.source_url))
