@@ -7,11 +7,12 @@ import { SESSION_KEY } from './data/session-key.js'
 
 const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
 
-test('비로그인 헤더 = 워크스페이스 링크 없음(기존 6탭 그대로)', () => {
+test('비로그인 헤더 = 워크스페이스 링크 없음(공개 탭만)', () => {
   const html = flat(<SiteNav signedIn={false} />)
   expect(html).not.toContain('/workspace/')
   expect(html).not.toContain('WORKSPACE')
-  for (const label of ['INSIGHTS', 'SEMINARS', 'PROJECTS', 'RECRUIT', 'ABOUT', 'LOG']) {
+  expect(html).not.toContain('/about/') // about 폐지(IA 4차 2026-08-05)
+  for (const label of ['INSIGHTS', 'SEMINARS', 'PROJECTS', 'RECRUIT', 'LOG']) {
     expect(html).toContain(label)
   }
 })

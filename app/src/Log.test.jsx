@@ -59,9 +59,9 @@ test('page-head(§3-1) = 눈썹 LOG + 헤드라인 + 설명 + 최종 갱신(데�
   expect(html).toContain('log-h1')
   expect(html).toContain('log-lead')
   expect(html).toContain(`최종 갱신 ${HISTORY[0][0]}`) // HISTORY 최상단에서 파생(하드코딩 아님 — 기록 추가 시 자동 추종)
-  // "내부 운영용" 콜아웃 유지 + ABOUT 링크
+  // "내부 운영용" 콜아웃 유지 + RECRUIT 링크(about 폐지 2026-08-05)
   expect(html).toContain('log-callout')
-  expect(html).toContain('href="/about/"')
+  expect(html).toContain('href="/recruit/"')
 })
 
 test('로드맵 = 대형 리스트(단계 번호 + 상태 칩 4종) · 성과 = 스탯 스트립', () => {

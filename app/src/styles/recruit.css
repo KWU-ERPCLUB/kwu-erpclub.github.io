@@ -83,3 +83,25 @@
 .rc-callout a { color: var(--text); font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--text-sub); }
 .rc-callout a:hover { border-color: var(--text); }
 .rc-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem; margin-top: clamp(1.5rem, 3vh, 2rem); }
+
+/* ══ 운영 증빙 — 대형 숫자 풀폭 행(구 ABOUT Proof 이관 2026-08-05, home-sections.css에서 이동 — 수치 그대로) ══ */
+.stat-rows { margin-top: clamp(2.5rem, 6vh, 4rem); border-top: 1px solid var(--line); }
+.stat-row {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 1.25rem 2.5rem;
+  align-items: center;
+  padding: clamp(1.6rem, 3.5vh, 2.6rem) 0;
+  border-bottom: 1px solid var(--line);
+}
+.stat-row .stat-num {
+  margin: 0;
+  font-size: clamp(3rem, 8.5vw, 6.5rem);
+  line-height: 0.95;
+}
+.stat-row .stat-num::after { margin-top: 1rem; } /* 버건디 언더바 28×3(화이트리스트 ③) */
+.stat-row-label { font-size: clamp(1rem, 1.7vw, 1.2rem); color: var(--text); line-height: 1.4; }
+.stat-row-src { display: block; margin-top: 0.55rem; font-size: 0.8rem; color: var(--text-sub); }
+@media (max-width: 700px) {
+  .stat-row { grid-template-columns: 1fr; gap: 0.6rem; padding: 1.6rem 0; }
+}

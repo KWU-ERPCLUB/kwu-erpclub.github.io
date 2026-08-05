@@ -189,9 +189,6 @@ function Faq() {
             </details>
           ))}
         </div>
-        <p className="hs-about rv" style={{ transitionDelay: '260ms' }}>
-          연구회 소개는 <a className="proof-link" href="/about/">ABOUT <Arrow /></a>
-        </p>
       </div>
     </section>
   )

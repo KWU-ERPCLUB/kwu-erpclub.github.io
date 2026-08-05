@@ -61,7 +61,7 @@ export default function Log() {
         <section className="log-timeline-sec" aria-labelledby="log-history">
           <div className="log-band-in">
             <p className="log-callout">
-              내부 운영용 페이지. 연구회 소개·참여 문의 = <a href="/about/">ABOUT</a>.
+              내부 운영용 페이지. 스터디 소개·참여 문의 = <a href="/recruit/">RECRUIT</a>.
             </p>
             <span className="log-kicker" id="log-history">CHANGELOG · 역시간순</span>
             <Changelog history={HISTORY} />

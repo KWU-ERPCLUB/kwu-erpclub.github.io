@@ -15,7 +15,6 @@ const NAV_LINKS = [
   ['SEMINARS', '/seminars/'],
   ['PROJECTS', '/projects/'],
   ['RECRUIT', '/recruit/'],
-  ['ABOUT', '/about/'],
   ['LOG', '/log/'],
 ]
 
@@ -84,7 +83,6 @@ export function SiteFooter() {
       <div className="footer-inner">
         <span className="f-brand">AIM — 광운대학교 ERP연구회 산하 MIS·AI 스터디</span>
         <span style={{ display: 'flex', gap: '1.25rem' }}>
-          <a href="/about/">ABOUT</a>
           <a href="/log/">LOG</a>
           <a href={REPO_URL}>GITHUB</a>
         </span>

@@ -1,28 +1,6 @@
 /* 메인(/) v5 섹션 본문 — ROADMAP·PROJECTS·FAQ. 골격·히어로·모션 = home.css(300줄 규격 분할).
-   (WHY 섹션 폐지 2026-07-25 — .stat-* 계열은 ABOUT 운영 증빙이 재사용하므로 유지.)
+   (WHY 섹션 폐지 2026-07-25 · .stat-rows 계열 = recruit.css로 이동 2026-08-05 — about 폐지, 증빙은 /recruit 하단.)
    규격=디자인규칙 v2: 색·폰트 토큰 고정 · 버건디 화이트리스트/빈도 상한 · transform·opacity만 · reduced-motion 존중. */
-
-/* ══ 대형 숫자 풀폭 행(숫자 좌 + 라벨·출처 우, 헤어라인 구분) — ABOUT 공용 ══ */
-.stat-rows { margin-top: clamp(2.5rem, 6vh, 4rem); border-top: 1px solid var(--line); }
-.stat-row {
-  display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-  gap: 1.25rem 2.5rem;
-  align-items: center;
-  padding: clamp(1.6rem, 3.5vh, 2.6rem) 0;
-  border-bottom: 1px solid var(--line);
-}
-.stat-row .stat-num {
-  margin: 0;
-  font-size: clamp(3rem, 8.5vw, 6.5rem);
-  line-height: 0.95;
-}
-.stat-row .stat-num::after { margin-top: 1rem; } /* 버건디 언더바 28×3(화이트리스트 ③) */
-.stat-row-label { font-size: clamp(1rem, 1.7vw, 1.2rem); color: var(--text); line-height: 1.4; }
-.stat-row-src { display: block; margin-top: 0.55rem; font-size: 0.8rem; color: var(--text-sub); }
-@media (max-width: 700px) {
-  .stat-row { grid-template-columns: 1fr; gap: 0.6rem; padding: 1.6rem 0; }
-}
 
 /* ══ ROADMAP — 계보 트리(2026-07-25): 세로 본류선 → 분기 들여쓰기 + 가지선. 전 뷰포트 세로 ══ */
 .rmap, .rm-sub { list-style: none; padding-left: 0; }

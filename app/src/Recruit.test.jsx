@@ -1,7 +1,8 @@
 import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
-import Recruit from './Recruit.jsx'
+import Recruit, { RecruitProof } from './Recruit.jsx'
 import { RECRUIT, formatWindow, shortDate } from './data/recruit.js'
+import { loadContent } from './content/loader.js'
 
 // 구조·계약 검증 — IA 3차(2026-07-27): 모집 페이지 = 요강·활동 구성·참여 방법. 사실 서술만.
 const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
@@ -43,4 +44,18 @@ test('마케팅 어투 금지(SPEC §4 개정 목록) + 참여 방법 = 문의 �
   expect(html).not.toContain('<form')
   expect(html).toContain('btn-2nd') // GitHub 문의 링크(Secondary)
   expect(html).toContain('href="/#faq"') // 메인 FAQ 연결
+})
+
+// 운영 증빙(IA 4차 2026-08-05 — about 폐지 이관): 실측 정량 3종 + 출처, 콘텐츠 건수 = content/ 집계 파생.
+test('운영 증빙 = stat-rows 3행(스터디·실물·게재 건수) + 출처 표기 + content 집계 일치', () => {
+  const html = flat(<RecruitProof />)
+  expect(html).toContain('stat-rows')
+  expect(html).toContain('진행 중 스터디')
+  expect(html).toContain('라이브 실물')
+  expect(html).toContain('게재된 기사·세미나')
+  expect(html).toContain('stat-row-src') // 수치엔 출처 각주 의무(디자인규칙 §6)
+  const total = loadContent('기사').length + loadContent('세미나').length
+  expect(html).toContain(`>${total}<`) // 하드코딩 아님 — 콘텐츠 글롭에서 파생
+  // 전체 페이지에도 섹션이 붙는다
+  expect(flat(<Recruit />)).toContain('운영 증빙')
 })

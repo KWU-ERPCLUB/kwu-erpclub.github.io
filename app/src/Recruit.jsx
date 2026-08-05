@@ -1,8 +1,12 @@
 // /recruit (IA 3차 2026-07-27) — AIM 기수 안내: 요강·활동 구성·참여 방법.
+// + 운영 증빙(IA 4차 2026-08-05 — about 폐지로 이관): 실측 정량 3종 + 출처(stat-rows/CountUp 문법 재사용).
 // 카피 = 개조식·사실 서술만(SPEC §4 개정 — 마케팅 어투 금지). [미정] 값 게재 금지(운영틀 §8):
 // 확정값(운영틀 2026-07-27 오너 인터뷰)만 싣고, 요일·시간은 "참가자 조율로 확정" 과정 서술로만.
+import { useMemo } from 'react'
 import { SiteNav, SiteFooter, REPO_URL, Arrow } from './shared.jsx'
 import { RECRUIT, formatWindow, shortDate } from './data/recruit.js'
+import { loadContent } from './content/loader.js'
+import { CountUp } from './home-motion.jsx'
 
 // 요강 — 기수·기간·일정 값의 원천 = data/recruit.js(그 원천 = erp-club docs/specs/2026-07-27-aim-운영틀.md §2·§3·§7)
 const FACTS = [
@@ -35,6 +39,36 @@ const STEPS = [
     desc: '제시된 주제 풀에서 팀별 선택 → 매주 체크인 → 최종 발표·사이트 게재.',
   },
 ]
+
+// 운영 증빙 — 실측 정량만(콘텐츠 건수 = content/ 집계, 나머지 = 확인된 사실). 구 About Proof 이관(수치·출처 그대로).
+export function RecruitProof() {
+  const articleCount = useMemo(() => loadContent('기사').length, [])
+  const seminarCount = useMemo(() => loadContent('세미나').length, [])
+  const proof = [
+    { num: '1', label: '진행 중 스터디', src: 'ADsP 1기 — 진도 보드로 운영' },
+    { num: '2', label: '라이브 실물', src: 'ADsP 진도 보드 · 이 사이트 (KWU-ERPCLUB 저장소)' },
+    { num: String(articleCount + seminarCount), label: '게재된 기사·세미나', src: 'content/ 집계 (기사 ' + articleCount + ' · 세미나 ' + seminarCount + ')' },
+  ]
+  return (
+    <section className="rc-secs" aria-labelledby="rc-proof-h">
+      <div className="rc-band-in">
+        <span className="rc-kicker">기록</span>
+        <h2 className="rc-h2" id="rc-proof-h">운영 증빙</h2>
+        <div className="stat-rows">
+          {proof.map((p) => (
+            <div className="stat-row" key={p.label}>
+              <CountUp value={p.num} />
+              <div>
+                <span className="stat-row-label">{p.label}</span>
+                <span className="stat-row-src">{p.src}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
 
 export default function Recruit() {
   return (
@@ -99,6 +133,8 @@ export default function Recruit() {
             </div>
           </div>
         </section>
+
+        <RecruitProof />
       </main>
       <SiteFooter />
     </>
