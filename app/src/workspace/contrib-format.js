@@ -35,7 +35,7 @@ export function buildPromptKit() {
   }
   const format = FIELD_NAMES.map((n) => `${delimOf(n)}\n${guide[n]}`).join('\n')
   return [
-    '광운대 ERP연구회 AI 인사이트 기고 초안 작성 요청.',
+    'AIM(광운대 ERP연구회 산하 MIS·AI 스터디) 인사이트 기고 초안 작성 요청.',
     '',
     '[할 일]',
     '- 아래 소재 URL의 내용을 읽고 기고 초안 1건 작성',
