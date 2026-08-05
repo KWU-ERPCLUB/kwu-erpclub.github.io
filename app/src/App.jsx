@@ -142,7 +142,9 @@ export function RecruitBand({ today = localYmd() }) {
         </div>
         <h2 className="rb-title">{title}</h2>
         <p className="rb-text">{text}</p>
-        <a className="proof-link rb-cta" href="/recruit/">{ctaLabel} <Arrow /></a>
+        {/* Primary CTA(§4 위계) — 메인의 유일한 Primary. 구 proof-link(Tertiary)에서 승격 2026-08-05.
+            형태 = recruit.css .rc-cta-xl 재사용(차콜 필 + 버건디 원형 화살표) — 새 버튼 형태 발명 0. */}
+        <a className="rc-cta-xl rb-cta" href="/recruit/">{ctaLabel} <Arrow /></a>
       </div>
     </section>
   )

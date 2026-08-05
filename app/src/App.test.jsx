@@ -117,6 +117,9 @@ test('모집 섹션(확대 2026-08-05) = 국면별 렌더 — 전·중=대형 �
   expect(before).toContain(COHORT_LABEL) // 기수 표기 = 모집 데이터에서 파생
   expect(before).toContain(formatWindowShort())
   expect(before).toContain('href="/recruit/"')
+  // Primary 승격(2026-08-05) — 모집 밴드 CTA = 대형 Primary(.rc-cta-xl), Tertiary(proof-link) 아님
+  expect(before).toContain('rc-cta-xl')
+  expect(before).not.toContain('proof-link rb-cta')
   expect(/class="recruit-band[^"]*page/.test(before)).toBe(false) // 섹션 스파이 제외
   // 모집 중 — 마감 안내
   const open = renderToString(<RecruitBand today="2026-09-01" />)
@@ -167,4 +170,11 @@ test('구 RECENT 현황판 부재 유지 + 삭제 페이지 링크(/join /report
   expect(html).not.toContain('/join/')
   expect(html).not.toContain('/reports/')
   expect(html).not.toContain('/labs/')
+})
+
+// 디자인규칙 §4 — Primary는 화면당 1개. 메인의 Primary = 모집 밴드 CTA 하나뿐이어야 한다.
+test('메인 Primary = 1개(모집 밴드 CTA) — 나머지 행동 유도는 Secondary·Tertiary', () => {
+  const html = renderToString(<App />)
+  expect((html.match(/rc-cta-xl/g) || []).length).toBe(1)
+  expect((html.match(/class="cta[ "]/g) || []).length).toBe(0) // 구 Primary(.cta) 병존 금지
 })
