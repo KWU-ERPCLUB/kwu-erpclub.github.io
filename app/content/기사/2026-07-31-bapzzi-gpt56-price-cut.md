@@ -10,6 +10,8 @@ source_name: OpenAI · CNBC · VentureBeat
 설명: 7월 30일 OpenAI가 Luna 80%·Terra 20% 인하 — 티어별 단가 표와 실제 업무 비용 계산, 왜 지금 내렸는지
 태그: [OpenAI, GPT, 가격, 비용, 토큰]
 지금써먹기: true
+이미지: /img/logos/openai.svg
+이미지설명: 오픈AI 로고 — 출시 3주 만에 GPT-5.6 저가 티어 가격을 80% 내린 개발사
 ---
 
 ::: 요약

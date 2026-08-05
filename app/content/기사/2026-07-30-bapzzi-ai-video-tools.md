@@ -10,6 +10,8 @@ source_name: TechCrunch · Luma · Adobe 외
 설명: 상업 제작 기준 AI 영상 파이프라인 — 기획→이미지→영상 생성→편집→음성·음악 단계별 표준 도구, 코카콜라·Kalshi·삼성증권 실제 사례
 태그: [영상생성, Seedance, Kling, Higgsfield, 워크플로우]
 지금써먹기: true
+이미지: /img/기사/ai-video-pipeline.svg
+이미지설명: AI 영상 제작 8단계 흐름도 — 이 글의 「파이프라인 한 장」 표를 단계·표준 도구 순서 그대로 옮긴 도판
 ---
 
 ::: 요약

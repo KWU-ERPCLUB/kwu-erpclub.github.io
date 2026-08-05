@@ -1,5 +1,6 @@
 import { expect, test } from 'vitest'
-import { readdirSync } from 'node:fs'
+import { readdirSync, existsSync } from 'node:fs'
+import { readEntries } from '../../scripts/content-files.mjs'
 import { resolveThumb, resolveHero, captionOf, firstBodyImage, brandLogo, stockFile, TOPIC_STOCK, DEFAULT_STOCK, BRAND_RULES, SUBJECT_RULES } from './thumb-resolver.js'
 
 // 썸네일 4계층 폴백(오너 픽 2026-08-05 D) — 우선순위대로 하나씩 내려가는지 고정한다.
@@ -92,4 +93,18 @@ test('스톡·로고 매핑 파일 = public에 실재', () => {
     expect(stocks.has(f), `스톡 결측: ${f}`).toBe(true)
   }
   for (const [, f] of BRAND_RULES) expect(logos.has(f), `로고 결측: ${f}`).toBe(true)
+})
+
+// 기고가 지정한 이미지가 실재하는지 + 캡션이 붙었는지(오너 규칙 = CONTRIBUTING 「이미지·이미지설명」).
+// 콘텐츠 비결합: 특정 기사에 묶지 않고 전량을 훑는다.
+test('기사가 지정한 이미지 = public에 실재 + 이미지설명 동반', () => {
+  for (const e of readEntries('기사')) {
+    const src = e.data['이미지']
+    if (!src) continue
+    if (src.startsWith('/')) {
+      expect(existsSync(`public${decodeURIComponent(src)}`), `이미지 파일 결측: ${e.file} → ${src}`).toBe(true)
+    }
+    const cap = e.data['이미지설명']
+    expect(typeof cap === 'string' && cap.trim() !== '', `이미지설명 결측: ${e.file}`).toBe(true)
+  }
 })

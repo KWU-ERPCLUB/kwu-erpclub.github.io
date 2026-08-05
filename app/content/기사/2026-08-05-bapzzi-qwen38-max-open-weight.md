@@ -9,6 +9,8 @@ source_name: Alibaba Cloud · VentureBeat · SCMP
 주제: 모델·플랫폼
 설명: 8월 3일 알리바바가 2.4조 파라미터 Qwen3.8-Max를 공개하고 다음 주 가중치를 푼다 — Max급 최초 오픈웨이트가 기업의 모델 선택 계산을 어떻게 바꾸나
 태그: [알리바바, Qwen, 오픈웨이트, 모델가격, 에이전트]
+이미지: /img/logos/alibabacloud.svg
+이미지설명: 알리바바 클라우드 로고 — 이번에 Qwen3.8-Max를 공개하고 다음 주 가중치를 푸는 개발사(모델 스튜디오 API가 첫 배포 경로)
 ---
 
 ::: 요약

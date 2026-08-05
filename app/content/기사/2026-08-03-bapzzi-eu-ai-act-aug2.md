@@ -9,6 +9,8 @@ source_name: European Commission · artificialintelligenceact.eu · 법률신문
 주제: 거버넌스·리스크
 설명: 8월 2일 EU AI법의 최대 분수령이 도착했다 — 그런데 켜진 것은 챗봇·딥페이크 표시 의무이고 고위험 규제는 16개월 밀렸다. 무엇이 바뀌었고 한국 기업엔 무엇이 걸리나
 태그: [규제, EUAI법, 거버넌스, 표시의무, AI기본법]
+이미지: /img/logos/eu-flag.svg
+이미지설명: 유럽연합기 — 8월 2일 자로 생성 AI 표시 의무를 켜고 고위험 규제를 16개월 미룬 EU AI법의 관할 주체
 ---
 
 ::: 요약

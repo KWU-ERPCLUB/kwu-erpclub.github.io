@@ -10,6 +10,8 @@ source_name: Runway AIF · Google · BIFAN 외
 설명: 해외 5대 AI 영화제·국내 공모전 최신 수상작을 시청 링크로 정리 — 지금 접수 가능한 대회 3건 포함
 태그: [영화제, 공모전, 수상작, Runway, BIFAN]
 지금써먹기: true
+이미지: /img/기사/ai-film-awards-prizes.svg
+이미지설명: 해외 AI 영화제 상금 규모 비교 막대 — 이 글이 정리한 대회들의 공개 상금(Google 그랑프리 100만 달러 · Chroma 시즌2 25만 달러+)
 ---
 
 ::: 요약
