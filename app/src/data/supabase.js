@@ -51,14 +51,47 @@ export function createBackend(config = readEnv(), deps = {}) {
     'Content-Type': 'application/json',
   })
 
-  async function request(path, options = {}) {
+  // 만료 세션 복구 — access_token 만료(401) 시 refresh 1회, 실패하면 익명 강등.
+  // 이게 없으면 로그인했던 브라우저에서 공개 페이지까지 401로 죽는다(2026-08-05 라이브 사고).
+  async function refreshSession() {
+    if (!session?.refresh_token) return false
+    try {
+      const res = await doFetch(`${config.url}/auth/v1/token?grant_type=refresh_token`, {
+        method: 'POST',
+        headers: { apikey: config.key, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refresh_token: session.refresh_token }),
+      })
+      if (!res.ok) return false
+      const body = await res.json()
+      session = { access_token: body.access_token, refresh_token: body.refresh_token, user: body.user || session.user }
+      saveSession(storage, session)
+      return true
+    } catch {
+      return false
+    }
+  }
+
+  async function request(path, options = {}, retried = false) {
     const res = await doFetch(`${config.url}${path}`, {
       ...options,
       headers: { ...baseHeaders(), ...options.headers },
     })
     const text = await res.text()
-    const body = text ? JSON.parse(text) : null
+    let body = null
+    try {
+      body = text ? JSON.parse(text) : null
+    } catch {
+      /* 비JSON 오류 응답(프록시 HTML 등) — body 없이 상태코드로 처리 */
+    }
     if (!res.ok) {
+      if (res.status === 401 && session && !retried) {
+        const ok = await refreshSession()
+        if (!ok) {
+          session = null
+          saveSession(storage, null)
+        }
+        return request(path, options, true)
+      }
       const message = body?.msg || body?.message || body?.error_description || `요청 실패(${res.status})`
       throw new Error(message)
     }

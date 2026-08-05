@@ -46,6 +46,33 @@ test('isBackendConfigured / getRepositories — 미설정이면 목 저장소로
   expect(await repos.articles.listPublished()).toHaveLength(1)
 })
 
+// ── 만료 세션 복구(2026-08-05 라이브 사고 회귀) — 401이면 refresh 시도, 실패 시 익명 강등 재시도 ──
+test('request — 만료 토큰 401 → refresh 실패 → 세션 버리고 익명으로 재시도 성공', async () => {
+  const store = new Map([[
+    'erpclub.workspace.session',
+    JSON.stringify({ access_token: 'expired', refresh_token: 'dead', user: { id: 'u1' } }),
+  ]])
+  const storage = {
+    getItem: (k) => store.get(k) ?? null,
+    setItem: (k, v) => store.set(k, v),
+    removeItem: (k) => store.delete(k),
+  }
+  const calls = []
+  const fakeFetch = async (url, options = {}) => {
+    calls.push({ url, auth: options.headers?.Authorization })
+    if (url.includes('grant_type=refresh_token')) return { ok: false, status: 401, text: async () => '{}', json: async () => ({}) }
+    if (options.headers?.Authorization === 'Bearer expired') {
+      return { ok: false, status: 401, text: async () => JSON.stringify({ message: 'JWT expired' }) }
+    }
+    return { ok: true, status: 200, text: async () => JSON.stringify([{ 슬러그: 'a' }]) }
+  }
+  const backend = createBackend({ url: 'https://x.supabase.co', key: 'anon' }, { fetch: fakeFetch, storage })
+  const rows = await backend.db.select('articles', { filters: { 상태: '게재' } })
+  expect(rows).toEqual([{ 슬러그: 'a' }])
+  expect(calls.at(-1).auth).toBe('Bearer anon')                     // 익명 강등 재시도
+  expect(store.has('erpclub.workspace.session')).toBe(false)       // 죽은 세션 제거
+})
+
 // ── 계약 일치: 목 구현과 supabase 구현의 메서드 집합이 같아야 화면이 갈아끼워도 안전 ──
 test('저장소 계약 — mock·supabase 구현이 REPO_CONTRACT를 동일하게 만족', () => {
   const fakeBackend = { auth: { getSession: () => null }, db: { select: async () => [], insert: async () => [] } }
