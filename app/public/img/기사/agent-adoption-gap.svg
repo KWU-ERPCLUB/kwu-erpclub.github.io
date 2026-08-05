@@ -1,0 +1,39 @@
+<svg width="720" height="300" viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AI 도입에서 에이전트 확장까지 좁아지는 비율 막대 그래프. AI 상시 사용 조직 88퍼센트, AI 에이전트 도입 기업 79퍼센트, 측정 가능한 생산성 향상 보고 66퍼센트, 에이전트를 확장 단계까지 끌고 간 조직 23퍼센트.">
+  <style>
+    text { font-family: Pretendard, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+    .t { font-size: 15px; font-weight: 700; fill: #141414; }
+    .s { font-size: 12px; fill: #55606c; }
+    .lb { font-size: 12.5px; fill: #141414; }
+    .v { font-size: 12px; font-weight: 700; fill: #55606c; }
+  </style>
+  <rect width="720" height="300" fill="#ffffff"/>
+  <text class="t" x="16" y="30">도입은 다수파, 확장은 소수파</text>
+  <text class="s" x="16" y="50">조직 비율 · 단위 = %</text>
+
+  <line x1="228" y1="70" x2="228" y2="272" stroke="#e7e7e5" stroke-width="1"/>
+
+  <!-- 88% -->
+  <text class="lb" x="216" y="93" text-anchor="end">AI 상시 사용 조직</text>
+  <path d="M228,76 h404 a4,4 0 0 1 4,4 v18 a4,4 0 0 1 -4,4 h-404 z" fill="#c9b7bb"/>
+  <text class="v" x="646" y="93">88</text>
+
+  <!-- 79% -->
+  <text class="lb" x="216" y="133" text-anchor="end">AI 에이전트 도입 기업</text>
+  <path d="M228,116 h359 a4,4 0 0 1 4,4 v18 a4,4 0 0 1 -4,4 h-359 z" fill="#c9b7bb"/>
+  <text class="v" x="601" y="133">79</text>
+
+  <!-- 66% -->
+  <text class="lb" x="216" y="173" text-anchor="end">생산성 향상을 측정해 보고</text>
+  <path d="M228,156 h296 a4,4 0 0 1 4,4 v18 a4,4 0 0 1 -4,4 h-296 z" fill="#c9b7bb"/>
+  <text class="v" x="538" y="173">66</text>
+
+  <!-- 23% -->
+  <text class="lb" x="216" y="213" text-anchor="end">확장 단계까지 간 조직</text>
+  <path d="M228,196 h101 a4,4 0 0 1 4,4 v18 a4,4 0 0 1 -4,4 h-101 z" fill="#a94b5c"/>
+  <text class="v" x="343" y="213" style="fill:#a94b5c">23</text>
+
+  <line x1="228" y1="236" x2="704" y2="236" stroke="#e7e7e5" stroke-width="1"/>
+  <text class="s" x="228" y="256">도입 79 → 확장 23. 이 격차의 1순위 원인은 기술이 아니라 보안·거버넌스다.</text>
+
+  <text class="s" x="16" y="292">출처: McKinsey State of AI(88·23) · PwC Agent Survey(79·66)</text>
+</svg>
