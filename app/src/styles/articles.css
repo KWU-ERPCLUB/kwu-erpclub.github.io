@@ -233,6 +233,8 @@
 }
 /* 사진·도판 = 폭 꽉 채움(비율 유지) */
 .art-hero--fit-cover img { height: auto; }
+/* 시리즈 커버(컴포넌트형 SVG) = 이미지와 같은 프레임(16:10·보더·라운드) */
+.art-hero-svg { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; border: 1px solid var(--line); border-radius: var(--radius-card); }
 /* 로고 = 세로 제한 + surface 면 위 여백(작은 벡터를 720px로 늘리지 않는다) */
 .art-hero--fit-contain img {
   height: 168px; object-fit: contain; background: var(--surface); padding: 1.6rem 1.2rem;

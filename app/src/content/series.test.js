@@ -8,8 +8,9 @@ test('레지스트리 — 레코드 5필드 + 1기 weekly 등록', () => {
   expect(SERIES.length).toBeGreaterThan(0)
   for (const s of SERIES) {
     expect(typeof s.id).toBe('string')
-    for (const k of ['표시명', '설명', '주기', '커버']) expect(typeof s[k]).toBe('string')
-    expect(s.커버.startsWith('/img/')).toBe(true)
+    // 커버 = 정적 파일 경로가 아니라 **컴포넌트 id**(v3, 2026-08-05 — 커버에 회차 주차 텍스트가 들어감)
+    for (const k of ['표시명', '설명', '주기', '커버컴포넌트']) expect(typeof s[k]).toBe('string')
+    expect(s.커버).toBe(undefined)
   }
   expect(SERIES_IDS).toContain('weekly')
   expect(seriesById('weekly').표시명).toBe('주간 AI 트렌드')

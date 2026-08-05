@@ -10,7 +10,8 @@
 //   신규 기고는 ①에 명시 이미지 + `이미지설명`을 반드시 넣는다(운영 규칙 = 루트 CONTRIBUTING.md).
 //   ③의 주제 스톡은 글 내용과 무관할 수 있어 상세 히어로에는 쓰지 않는다 — 목록 카드 전용 폴백.
 //
-// 반환 = { kind, src, fit, alt } · kind='cover'면 src 없음(InsightCover가 그림).
+// 반환 = { kind, src, fit, alt } · kind='cover'면 src 없음(InsightCover가 그림) ·
+//        kind='series'면 src 없이 `cover`(컴포넌트 id) — SeriesCover가 그린다(회차 주차 텍스트 포함).
 // alt = `이미지설명`(있을 때). 자동 계층에서 나온 이미지는 내용을 대표하지 않으므로 alt를 비운다(장식 이미지 취급).
 // fit: 'contain' = 로고(여백 필요) · 'cover' = 사진(꽉 채움). 전 계층 동일 비율 프레임(CSS .art-cover)이 이질감을 흡수한다.
 
@@ -112,9 +113,9 @@ export function captionOf(a) {
 // 자동 계층(본문 도판·브랜드 로고·주제 스톡)은 히어로에 쓰지 않는다 — 목록 카드 전용(위 주석 참조).
 // 반환 = { src, fit, caption } 또는 null.
 export function resolveHero(a) {
-  // ⓪ 시리즈 = 고정 커버 + 자동 캡션(개별 `이미지`·`이미지설명` 불필요).
+  // ⓪ 시리즈 = 고정 커버(컴포넌트) + 자동 캡션(개별 `이미지`·`이미지설명` 불필요).
   const s = seriesOf(a)
-  if (s) return { src: s.커버, fit: 'cover', caption: seriesCaption(s) }
+  if (s) return { src: null, cover: s.커버컴포넌트, fit: 'cover', caption: seriesCaption(s) }
   const field = a && typeof a['이미지'] === 'string' ? a['이미지'].trim() : ''
   if (!field) return null
   return { src: field, fit: field.startsWith(LOGO_DIR) ? 'contain' : 'cover', caption: captionOf(a) }
@@ -124,7 +125,7 @@ export function resolveHero(a) {
 export function resolveThumb(a) {
   if (!a) return { kind: 'cover', src: null, fit: 'cover', alt: '' }
   const series = seriesOf(a)
-  if (series) return { kind: 'series', src: series.커버, fit: 'cover', alt: `${series.표시명} 시리즈 커버` }
+  if (series) return { kind: 'series', src: null, cover: series.커버컴포넌트, fit: 'cover', alt: `${series.표시명} 시리즈 커버` }
   const field = typeof a['이미지'] === 'string' ? a['이미지'].trim() : ''
   if (field) {
     const logo = field.startsWith(LOGO_DIR)

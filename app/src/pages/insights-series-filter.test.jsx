@@ -90,22 +90,27 @@ test('?series=weekly 딥링크 = 필터 걸린 목록(아카이브 셸 아님)',
 })
 
 // ── 고정 커버 우선순위(썸네일·히어로) = 유지 ──
-test('썸네일 — 시리즈 고정 커버가 개별 이미지보다 우선', () => {
+test('썸네일 — 시리즈 고정 커버(컴포넌트)가 개별 이미지보다 우선', () => {
   const t = resolveThumb(wk('w1', { 이미지: '/img/covers/other.jpg', 이미지설명: '개별 캡션' }))
   expect(t.kind).toBe('series')
-  expect(t.src).toBe('/img/covers/series-weekly.svg')
+  expect(t.src).toBe(null)          // v3 = 정적 파일 아님
+  expect(t.cover).toBe('weekly')    // 컴포넌트 id
   expect(t.alt).toBe('주간 AI 트렌드 시리즈 커버')
   // 비시리즈 글은 기존 4계층 그대로
   expect(resolveThumb(art('a', { 이미지: '/img/covers/other.jpg' })).kind).toBe('field')
-  expect(flat(<ArticleRow a={wk('w1')} onOpen={noop} />)).toContain('/img/covers/series-weekly.svg')
+  // 카드 썸네일 = 인라인 SVG(개별 이미지 경로가 나오지 않는다)
+  const card = flat(<ArticleRow a={wk('w1', { title: '주간 AI 트렌드 — 7월 5주', 이미지: '/img/covers/other.jpg' })} onOpen={noop} />)
+  expect(card).toContain('주간 AI 트렌드')
+  expect(card).not.toContain('/img/covers/other.jpg')
 })
 
 test('상세 히어로 — 고정 커버 + 자동 캡션(개별 이미지설명 불필요)', () => {
   expect(resolveHero(wk('w1'))).toEqual({
-    src: '/img/covers/series-weekly.svg', fit: 'cover',
+    src: null, cover: 'weekly', fit: 'cover',
     caption: '주간 AI 트렌드 — 매주 월요일 발행하는 시리즈',
   })
   const html = flat(<ArticleHero a={wk('w1')} />)
+  expect(html).toContain('art-hero-svg')
   expect(html).toContain('art-hero-cap')
   expect(html).toContain('매주 월요일 발행하는 시리즈')
 })
@@ -115,5 +120,5 @@ test('슬러그 인식만으로 필터·커버 동작(frontmatter 시리즈 없�
   const a = art('2026-08-10-bapzzi-weekly-trend-w32')
   expect(filterArticles([a], { series: 'weekly' }).length).toBe(1)
   expect(resolveThumb(a).kind).toBe('series')
-  expect(resolveHero(a).src).toBe('/img/covers/series-weekly.svg')
+  expect(resolveHero(a).cover).toBe('weekly')
 })

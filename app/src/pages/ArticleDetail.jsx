@@ -3,17 +3,21 @@ import { Arrow } from '../shared.jsx'
 import { neighbors } from './insights-logic.js'
 import { TagChips, dateTimeOf } from './insights-parts.jsx'
 import { resolveHero } from './thumb-resolver.js'
+import SeriesCover from './SeriesCover.jsx'
 import Markdown from './Markdown.jsx'
 import ArticleActions from './ArticleActions.jsx'
 
 // 히어로 — 기고 맨 위 이미지 + 그 이미지가 무엇인지 밝히는 캡션 줄(오너 판정 2026-08-05).
 // 명시 `이미지`가 없으면 통째로 생략(자동 커버는 목록 전용). `이미지설명`이 없으면 캡션 줄만 생략.
+// 시리즈 글 = 컴포넌트형 고정 커버(SeriesCover) + 자동 캡션.
 export function ArticleHero({ a }) {
   const hero = resolveHero(a)
   if (!hero) return null
   return (
     <figure className={`art-hero art-hero--fit-${hero.fit}`}>
-      <img src={hero.src} alt={hero.caption} />
+      {hero.cover
+        ? <SeriesCover id={hero.cover} a={a} className="art-hero-svg" />
+        : <img src={hero.src} alt={hero.caption} />}
       {hero.caption && <figcaption className="art-hero-cap">{hero.caption}</figcaption>}
     </figure>
   )
