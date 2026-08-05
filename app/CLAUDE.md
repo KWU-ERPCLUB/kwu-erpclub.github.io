@@ -68,10 +68,15 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
 - service 키 = 이 repo 금지(P2). 외부 패키지 추가 없음 — PostgREST·GoTrue를 fetch로 호출.
 
 ## Design (numeric source of truth)
-- Rules: `../../docs/디자인규칙-메인.md` **v2** — 실측 고정 수치(버건디 화이트리스트 11형태·빈도 상한·
-  버튼 3단 위계·인터랙션 4상태·내부형 밀도). UI 작업 전 필독. 위반=재작업.
-- CSS: `src/styles/global.css`(공용 — 566줄, pre-v2 debt >300) + `src/styles/doc.css`(내부형 전용).
-- Copy tone: AI-ish phrasing forbidden (규칙 §0-1). 3 viewports 375/768/1440, light-only.
+- Rules: `../../docs/디자인규칙-메인.md` **v2 + 2026-08-05 3차 현행화** — 실측 고정 수치(버건디 화이트리스트 15형태·
+  빈도 상한·버튼 3단 위계·인터랙션 4상태·내부형 밀도·§2 타이포 실값 표). UI 작업 전 필독. 위반=재작업.
+- **PageHead 강제(3차)**: 페이지 헤드 = `src/shared.jsx` `PageHead` 1개(좌 라벨 레일 + h1 + 서브 + 갱신 메타 + children).
+  페이지별 head CSS 신설 금지. 레일 폭 = 토큰 `--rail-w`/`--rail-gap`(global.css)만 소비.
+- CSS 11개(`src/styles/`): global(269줄 — 토큰·nav·PageHead·푸터·버튼) · home · home-sections · hero-visual ·
+  pages(공용 셸) · hub-md(도판 브레이크아웃) · articles · insights-detail · seminars · projects · recruit · workspace.
+  (`doc.css` = 2026-07-25 폐지 — 내부형 doc 셸·DocSide와 함께 제거됨.)
+- 3차 신설 토큰: `--rail-w`/`--rail-gap`(레일) · `--tint-accent` · `--accent-on-dark` · `--focus-on-dark` · `--btn-hover`.
+- Copy tone: AI-ish phrasing forbidden (규칙 §0-1). 3 viewports 375/768/1440, light-only(`color-scheme: light`).
 
 ## Docs map
 - Project docs live OUTSIDE this repo (workspace `erp-club/docs/` — Tier2): 디자인규칙-메인.md(v2 디자인 규격) ·
