@@ -64,6 +64,30 @@ jobs:
         with:
           path: app/dist
 
+  # md → DB 동기화(SPEC §0-6): 루틴·PR로 들어온 기사 md를 articles 테이블에 upsert.
+  # deploy를 막지 않는다(deploy는 build만 needs) — 다만 실패하면 이 잡이 빨갛게 남아 Actions에서 보인다.
+  # 삭제 연산 없음(스크립트가 upsert만 한다). service 키는 secret에서만 온다(P2).
+  sync-content:
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: sync md -> DB
+        working-directory: app
+        env:
+          SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_SERVICE_KEY" ]; then
+            echo "::notice::SUPABASE secrets 미등록 — md→DB 동기화 건너뜀(사이트 배포는 정상)"
+            exit 0
+          fi
+          node scripts/sync-content-db.mjs
+
   deploy:
     needs: build
     if: github.event_name != 'pull_request'
