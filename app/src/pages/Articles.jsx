@@ -1,21 +1,18 @@
 // 인사이트(INSIGHTS) — 목록 리디자인(2026-08-05 오너 픽, 레퍼런스 = 당근 careers 블로그 계열).
-// [page-head] → 피처 행(고정+최신 2건·큰 썸네일, 기본 뷰만) → 필터 바(성격 탭 5 + 검색 + 주제 칩 + 기간)
+// [page-head] → 피처 행(고정+최신 2건·큰 썸네일, 기본 뷰만) → 필터 바(성격 탭 5 + 검색 + 주제 칩 + 시리즈 칩 + 기간)
 //   → 썸네일 카드 그리드(배경 통일·성격=컬러 라벨) → 더보기(무한스크롤 금지).
 // 3계층 반응형 = articles.css(폰 <760 1열 리스트 / 태블릿 760~1199 2열 / 데스크톱 ≥1200 피처+3열+필터 상시 레일).
-// 시리즈(2026-08-05) = page-head 아래 고정 밴드 + ?series=<id> 아카이브. 시리즈 글은 메인 그리드에서 제외(검색 중에는 포함).
-// URL: ?tab=<key>=성격 선택 · ?series=<id>=시리즈 아카이브 · ?p=<slug>=상세(문서 셸 변경 없음). 0건=디자인된 빈 상태.
+// 시리즈(2026-08-05 오너 재판정) = **필터 칩 1개**뿐. 밴드·전용 아카이브 폐지 — 시리즈 글도 일반 흐름(피처·그리드·카운트 포함).
+// URL: ?tab=<key>=성격 선택 · ?series=<id>=시리즈 필터 · ?p=<slug>=상세(문서 셸 변경 없음). 0건=디자인된 빈 상태.
 import { useEffect, useState, useCallback } from 'react'
 import { SiteNav, SiteFooter, CONTRIBUTING_URL } from '../shared.jsx'
 import { useArticles, useInteractions } from './insights-source.js'
 import { TOPICS } from '../content/schema.js'
-import { seriesById } from '../content/series.js'
 import {
   HUB_TAB, TABS, NATURE_KEY, PAGE_SIZE, stateFromSearch, searchFromState,
-  filterArticles, pinnedFirst, extractMonths, splitFeature, pageSlice,
-  excludeSeries, seriesEntries, seriesBands,
+  filterArticles, pinnedFirst, extractMonths, splitFeature, pageSlice, seriesOptions,
 } from './insights-logic.js'
 import { ArticleRow, FeatureCard } from './insights-parts.jsx'
-import { SeriesBand, SeriesArchive } from './insights-series.jsx'
 import ArticleDetail from './ArticleDetail.jsx'
 
 // 성격 탭 — 5개 상한(전체+4). 선택 = 언더라인 탭(칩 색면 아님 — 성격색은 카드 라벨이 담당).
@@ -49,6 +46,27 @@ function TopicChips({ value, onSelect }) {
   )
 }
 
+// 시리즈 칩 열 — 정기 연재(주간·분기 등) 필터. 레지스트리 기반 = 시리즈 추가 시 칩 자동 증가.
+// 소속 글이 0건이면 열 전체를 그리지 않는다(빈 필터 금지).
+function SeriesChips({ options, value, onSelect }) {
+  if (options.length === 0) return null
+  return (
+    <div className="art-filter art-filter-sub" role="group" aria-label="시리즈 필터">
+      <span className="art-filter-label">시리즈</span>
+      <button
+        type="button" aria-pressed={value === null}
+        className={value === null ? 'on' : ''} onClick={() => onSelect(null)}
+      >전체</button>
+      {options.map((o) => (
+        <button
+          key={o.id} type="button" aria-pressed={value === o.id}
+          className={value === o.id ? 'on' : ''} onClick={() => onSelect(o.id)}
+        >{o.label} <span className="art-filter-n">{o.count}</span></button>
+      ))}
+    </div>
+  )
+}
+
 // 로딩 골격 — DB 페치 대기(카드 그리드와 같은 자리·같은 크기).
 function LoadingGrid() {
   return (
@@ -70,33 +88,26 @@ function LoadError({ onRetry }) {
 }
 
 // 목록 뷰. export = 픽스처 주입 테스트용. status/onRetry = DB 페치 상태(기본 'ready').
-export function ListView({ all, tab, onTab, topic, setTopic, month, setMonth, q, setQ, onOpen, onSeries = () => {}, status = 'ready', onRetry }) {
+export function ListView({ all, tab, onTab, topic, setTopic, series = null, setSeries = () => {}, month, setMonth, q, setQ, onOpen, status = 'ready', onRetry }) {
   const [shown, setShown] = useState(PAGE_SIZE)
   const nature = tab === HUB_TAB ? null : tab
   const months = extractMonths(all)
-  const filtered = filterArticles(all, { nature, topic, month, q })
-  // 시리즈 = 밴드로만 노출하고 그리드에서 뺀다. 단 검색 중에는 그리드에도 포함(찾을 수는 있게).
-  const searching = q.trim() !== ''
-  const bands = searching ? [] : seriesBands(filtered)
-  const gridSource = searching ? filtered : excludeSeries(filtered)
-  const { pinned, rest } = pinnedFirst(gridSource)
+  const serieses = seriesOptions(all)
+  // 시리즈 = 다른 필터와 같은 문법(AND 결합). 시리즈 글은 그리드·피처·카운트에 일반 기사와 동일하게 포함된다.
+  const filtered = filterArticles(all, { nature, topic, series, month, q })
+  const { pinned, rest } = pinnedFirst(filtered)
   const ordered = [...pinned, ...rest]
   const pinnedSlugs = new Set(pinned.map((a) => a.slug))
   // 피처 행 = 필터·검색이 하나도 없는 기본 뷰에서만(필터 뷰 = 위계 없이 전량 그리드).
-  const isDefault = !nature && !topic && !month && !q.trim()
+  const isDefault = !nature && !topic && !series && !month && !q.trim()
   const { feature, list } = isDefault ? splitFeature(ordered) : { feature: [], list: ordered }
   const { visible, remaining } = pageSlice(list, shown)
 
   // 필터 변경 = 노출 개수 초기화(더보기 상태가 조건을 넘어 남지 않게).
-  useEffect(() => { setShown(PAGE_SIZE) }, [tab, topic, month, q])
+  useEffect(() => { setShown(PAGE_SIZE) }, [tab, topic, series, month, q])
 
   return (
     <>
-      {/* 시리즈 밴드 — 목록 최상단(피처 행보다 위). 고정 커버 + 최신 회차 + 이전 회차 + 전체 보기 */}
-      {status === 'ready' && bands.map((b) => (
-        <SeriesBand key={b.series.id} band={b} onOpen={onOpen} onSeries={onSeries} />
-      ))}
-
       {/* 피처 행 — 고정 기사 + 최신, 큰 썸네일(2건) */}
       {status === 'ready' && feature.length > 0 && (
         <ul className="art-features">
@@ -115,6 +126,7 @@ export function ListView({ all, tab, onTab, topic, setTopic, month, setMonth, q,
             />
           </div>
           <TopicChips value={topic} onSelect={setTopic} />
+          <SeriesChips options={serieses} value={series} onSelect={setSeries} />
           {months.length > 0 && (
             <div className="art-filter art-filter-sub">
               <span className="art-filter-label">기간</span>
@@ -199,7 +211,6 @@ export default function Articles({ repos, configured }) {
 
   const openArticle = useCallback((slug) => nav({ slug }), [nav])
   const cur = all.find((a) => a.slug === sel)
-  const curSeries = seriesById(series)
 
   if (cur) {
     return (
@@ -209,22 +220,6 @@ export default function Articles({ repos, configured }) {
           <ArticleDetail
             cur={cur} all={all} onOpen={openArticle}
             onBack={() => nav({ slug: null })} interactions={interactions}
-          />
-        </main>
-        <SiteFooter />
-      </>
-    )
-  }
-
-  // 시리즈 아카이브(?series=<id>) — 해당 시리즈만 회차 역순 콤팩트 리스트.
-  if (curSeries) {
-    return (
-      <>
-        <SiteNav />
-        <main className="art-page art-page--list art-page--series">
-          <SeriesArchive
-            series={curSeries} items={seriesEntries(all, curSeries.id)}
-            onOpen={openArticle} onBack={() => nav({ series: null, slug: null })}
           />
         </main>
         <SiteFooter />
@@ -244,7 +239,8 @@ export default function Articles({ repos, configured }) {
         <ListView
           all={all} tab={tab} onTab={(t) => nav({ tab: t, slug: null })}
           topic={topic} setTopic={setTopic} month={month} setMonth={setMonth}
-          q={q} setQ={setQ} onOpen={openArticle} onSeries={(id) => nav({ series: id, slug: null })}
+          series={series} setSeries={(id) => nav({ series: id })}
+          q={q} setQ={setQ} onOpen={openArticle}
           status={status} onRetry={retry}
         />
       </main>

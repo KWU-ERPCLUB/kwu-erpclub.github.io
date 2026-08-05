@@ -1,7 +1,7 @@
 // 인사이트(INSIGHTS) 순수 로직 — 필터·그룹·이웃·URL 상태·허브 섹션·모노그램.
 // 전부 순수 함수(부수효과 0) — 테스트 대상. UI 컴포넌트(Articles.jsx 등)가 소비.
 import { NATURES } from '../content/schema.js'
-import { SERIES, seriesById } from '../content/series.js'
+import { SERIES, seriesById, seriesIdOf } from '../content/series.js'
 
 // 성격 칩 = 전체 + 성격 4종. '전체' = 성격 필터 없음(AI in Use 구조: 상단 컨트롤 바 성격 칩).
 export const HUB_TAB = '전체'
@@ -60,12 +60,13 @@ export function extractMonths(all) {
   return [...seen].sort().reverse()
 }
 
-// 성격·주제·월·지금써먹기 필터 + 검색(제목·설명·태그·본문 부분일치) AND 결합. month='YYYY-MM'|null.
-export function filterArticles(all, { nature = null, topic = null, month = null, nowUse = false, q = '' } = {}) {
+// 성격·주제·시리즈·월·지금써먹기 필터 + 검색(제목·설명·태그·본문 부분일치) AND 결합. month='YYYY-MM'|null.
+export function filterArticles(all, { nature = null, topic = null, series = null, month = null, nowUse = false, q = '' } = {}) {
   const query = q.trim().toLowerCase()
   return all.filter((a) => {
     if (nature && a['성격'] !== nature) return false
     if (topic && a['주제'] !== topic) return false
+    if (series && seriesIdOfArticle(a) !== series) return false
     if (month && (a.date || '').slice(0, 7) !== month) return false
     if (nowUse && !a['지금써먹기']) return false
     if (query) {
@@ -104,36 +105,24 @@ export function pageSlice(list, shown) {
   return { visible: src.slice(0, n), remaining: Math.max(0, src.length - n) }
 }
 
-// ── 시리즈(2026-08-05 오너 확정) — 정기 연재를 목록에서 분리한다 ──
-// 규칙 3개:
-//   ① 소속 판정 = a['시리즈'](로더·fromDbRow가 슬러그 자동 인식까지 끝내 정규화해 넣는다).
-//   ② 메인 그리드에서 제외 — 회차가 쌓여 목록을 덮지 않게. 노출 = 상단 밴드 + 전용 아카이브뿐.
-//   ③ 단, 검색 중에는 포함 — 찾을 수는 있어야 한다.
-export function seriesIdOfArticle(a) {
-  const v = a && a['시리즈']
-  return typeof v === 'string' && seriesById(v) ? v : null
-}
+// ── 시리즈(2026-08-05 확정 → 08-05 오너 재판정으로 「필터」로 축소) ──
+// 규칙 2개:
+//   ① 소속 판정 = seriesIdOf(frontmatter `시리즈` 우선, 없으면 슬러그 자동 인식).
+//   ② 시리즈 글은 **다른 기사와 동일하게** 흐른다 — 피처 선정·그리드·카운트에 전부 포함.
+//      분리 노출(상단 밴드·전용 아카이브)은 폐지(오너 재판정: "필터 하나면 된다").
+//      유일한 시리즈 전용 장치 = ⑴ 필터 칩(아래 seriesOptions) ⑵ 고정 커버(thumb-resolver ⓪).
+export function seriesIdOfArticle(a) { return seriesIdOf(a) }
 
 export function isSeriesArticle(a) { return seriesIdOfArticle(a) !== null }
 
-// 시리즈 글 제외(메인 그리드용).
-export function excludeSeries(list) { return (list || []).filter((a) => !isSeriesArticle(a)) }
-
-// 해당 시리즈 글만(입력 순서 = 역시간순 유지 → 회차 역순).
-export function seriesEntries(list, id) {
-  return (list || []).filter((a) => seriesIdOfArticle(a) === id)
-}
-
-export const SERIES_PREV_COUNT = 3 // 밴드에 거는 이전 회차 링크 수 상한
-
-// 밴드 소재 — 목록에 걸 시리즈들. list = 이미 필터(성격·주제·기간)가 적용된 배열.
-// 반환 = [{ series, latest, prev, total }] — 소속 글 0건인 시리즈는 나오지 않는다(빈 밴드 금지).
-export function seriesBands(list, n = SERIES_PREV_COUNT) {
+// 시리즈 필터 칩 소재 — 레지스트리 순서. list에 소속 글이 1건도 없는 시리즈는 칩을 만들지 않는다.
+// 반환 = [{ id, label, count }]. 새 시리즈(분기 등) 등록 = 레지스트리 1줄 → 칩 자동 증가.
+export function seriesOptions(list) {
+  const src = list || []
   const out = []
   for (const rec of SERIES) {
-    const items = seriesEntries(list, rec.id)
-    if (items.length === 0) continue
-    out.push({ series: rec, latest: items[0], prev: items.slice(1, 1 + n), total: items.length })
+    const count = src.filter((a) => seriesIdOfArticle(a) === rec.id).length
+    if (count > 0) out.push({ id: rec.id, label: rec.표시명, count })
   }
   return out
 }

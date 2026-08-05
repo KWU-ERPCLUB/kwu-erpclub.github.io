@@ -63,6 +63,8 @@
 .art-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; margin-bottom: 0.4rem; }
 .art-filter-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.04em; color: var(--text-sub); margin-right: 0.15rem; }
 .art-filter-sub button { height: 30px; font-size: 0.78rem; padding: 0 0.8rem; }
+.art-filter-n { margin-left: 0.3rem; font-size: 0.7rem; font-weight: 700; color: var(--text-sub); } /* 시리즈 칩 회차 수 */
+.art-filter button.on .art-filter-n { color: rgba(255, 255, 255, 0.72); }
 .art-month {
   height: 30px; font-size: 0.78rem; font-weight: 600; padding: 0 0.8rem; border: 1px solid var(--line);
   border-radius: var(--radius-pill); background: #fff; color: var(--text-sub); cursor: pointer;
@@ -291,8 +293,7 @@
 .art-tag.art-tag-nature[class*="chip-"] { background: var(--nbg); color: var(--nfg); border-color: var(--nbg); }
 
 @media (prefers-reduced-motion: reduce) {
-  .art-filter button, .ins-tab, .art-card > button, .art-feature > button, .art-more,
-  .art-back, .art-search input, .hub-md a, .art-source, .art-nav-link { transition: none; }
+  .art-filter button, .ins-tab, .art-card > button, .art-feature > button, .art-more, .art-back, .art-search input, .hub-md a, .art-source, .art-nav-link { transition: none; }
   .art-filter button:active, .ins-tab:active, .art-more:active,
   .art-card > button:hover, .art-card > button:active,
   .art-feature > button:hover, .art-feature > button:active { transform: none; }

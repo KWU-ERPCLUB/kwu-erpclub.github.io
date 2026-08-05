@@ -48,7 +48,7 @@ test('filterArticles — month=YYYY-MM 일치만, 다른 필터와 AND 결합', 
 })
 
 // ── URL ↔ 상태 (뒤로가기·딥링크) ──
-// series 필드는 2026-08-05 시리즈 체계에서 추가 — 시리즈 딥링크 단언은 insights-series.test.jsx.
+// series 필드는 2026-08-05 시리즈 체계에서 추가 — 시리즈 필터 단언은 insights-series-filter.test.jsx.
 test('stateFromSearch — ?p=<slug>는 상세, tab 없으면 허브', () => {
   expect(stateFromSearch('?p=2026-07-22-x')).toEqual({ tab: HUB_TAB, slug: '2026-07-22-x', series: null })
 })
