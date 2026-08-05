@@ -1,6 +1,7 @@
 # CLAUDE.md — kwu-erpclub site app
 
-One-line: KWU ERP연구회 MIS×AI 스터디 허브 — 주=스터디원 작업면(인사이트→세미나 파이프라인), 부=외부 증빙면.
+One-line: AIM(광운대 ERP연구회 산하 MIS·AI 스터디) 허브 — 주=스터디원 작업면(인사이트→세미나 파이프라인), 부=외부 증빙면.
+브랜드 표기 = **AIM 단독 + 산하 한 줄**(2026-08-05 오너) — 계보(ROADMAP ORIGIN·FAQ 관계 문항)는 유지.
 표면명 주의: 페이지 = **AI 인사이트 / INSIGHTS / `/insights/`** — 계약 내부 종류명은 `기사`(content/기사/·schema) 유지.
 Deploy: GitHub Pages, org repo `KWU-ERPCLUB/kwu-erpclub.github.io`, main push = auto deploy.
 Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이지는 여전히 정적).
@@ -12,13 +13,15 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
 
 ## Stack & gotchas
 - Vite 5 + React 18 (NOT 19 — older than other apps, don't bump casually), plain CSS (no Tailwind)
-- MPA: static entries in vite.config rollupOptions.input = main(하이브리드: v3 소개+**모집 밴드**+최근 활동) +
-  insights/seminars + **recruit**(IA 3차 2026-07-27 — AIM 기수 안내) + about/log/projects. new page = new dir + `src/*-entry.jsx` + input entry.
+- MPA: static entries in vite.config rollupOptions.input = main(하이브리드: v3 소개+**모집 밴드**) +
+  insights/seminars + **recruit**(AIM 기수 안내 + **운영 증빙** — 구 about Proof 이관) + projects + workspace.
+  new page = new dir + `src/*-entry.jsx` + input entry. 나브 = INSIGHTS·SEMINARS·PROJECTS·RECRUIT(+로그인 시 WORKSPACE).
   (insights 페이지 컴포넌트 파일명 = `pages/Articles.jsx`·`styles/articles.css` 유지 — 내부명, URL만 insights)
 - **모집 카피 규칙(SPEC §4 개정 2026-07-27)**: 사실 서술 허용(요강·기간·참여 방법 — 개조식) / 마케팅 어투 금지
   grep {지금 바로, 놓치지, 마지막 기회, 서두르, 얼른} = 0. 모집 밴드 국면 전환 = `home-logic.js recruitPhase`(창 = RECRUIT_WINDOW 유일 원천).
   [미정] 값(요일·회차 세부주제·주제 풀) 게재 금지 — 원천 = workspace `erp-club/docs/specs/2026-07-27-aim-운영틀.md`.
-- **labs·reports·join 페이지 제거**(IA 2차 2026-07-23 — labs=세미나 흡수·reports=폐기·join=about 흡수). 재도입 = 오너 재승인.
+- **labs·reports·join 페이지 제거**(IA 2차 2026-07-23). **about·log 제거**(IA 4차 2026-08-05 — about 증빙→recruit 하단,
+  log 데이터 `src/data/log.js`→워크스페이스 공지 탭 '운영 기록'(OpsLog) 읽기 전용 내부화). 재도입 = 오너 재승인.
 - 멤버 페이지(목록+개인 auto-glob)는 **전부 제거**(SPEC 2026-07-23 오너 결정). 재도입 = 오너 재승인.
 - base '/' (org root site). Fonts via CDN link tags in each entry html (Pretendard + Paperlogy).
 - No router, no state lib. Shared nav/footer = `src/shared.jsx`. 메인 = `src/App.jsx`(과거 v3 소개형)/`styles/home.css`. (구 현황판 `pages/Home.jsx`·`styles/hub.css`는 2026-07-23 제거.)

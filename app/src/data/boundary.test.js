@@ -70,8 +70,9 @@ const DATA_CONSUMERS = {
   'pages/insights-source.js': ['index'],
   'shared.jsx': ['session-flag'],
 }
-// 백엔드와 무관한 정적 상수 모듈(모집 창·운영 로그) — 경계 규칙의 대상이 아니다.
-const STATIC_DATA = ['recruit', 'log']
+// 백엔드와 무관한 정적 상수 모듈(모집 창) — 경계 규칙의 대상이 아니다.
+// (log.js는 워크스페이스 공지 탭 전용으로 내부화 — 공개면 소비 금지, IA 4차 2026-08-05)
+const STATIC_DATA = ['recruit']
 test('P4 — 공개 페이지가 쓰는 data/ 모듈 = 화이트리스트 2쌍뿐', () => {
   const workspaceDir = path.join(SRC_DIR, 'workspace')
   const offenders = []

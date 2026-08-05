@@ -250,6 +250,14 @@
 .ws-admin-content .ws-block:first-child { border-top: 0; padding-top: 0; }
 .ws-mypage .ws-block + .ws-block { border-top: 1px solid var(--line); padding-top: 1.3rem; }
 
+/* 운영 기록(구 /log 내부화 2026-08-05) — 공지 탭 하단 읽기 전용. 원천 = src/data/log.js */
+.ws-oplog { border-top: 1px solid var(--line); margin-top: 1.6rem; padding-top: 1.4rem; }
+.ws-oplog-list { list-style: none; margin: 0.3rem 0 0; padding: 0; }
+.ws-oplog-list li { font-size: 0.87rem; line-height: 1.8; color: var(--text); }
+.ws-oplog-no { display: inline-block; min-width: 1.1rem; font-weight: 700; color: var(--text-sub); }
+.ws-oplog-date { display: block; margin-top: 0.7rem; font-size: 0.78rem; font-weight: 700; color: var(--text-sub); }
+.ws-oplog-desc { color: var(--text-sub); }
+
 @media (max-width: 700px) {
   .ws-main { padding: 1.8rem 1.1rem 2.6rem; }
   .ws-panel { padding: 1.5rem 1.2rem; }

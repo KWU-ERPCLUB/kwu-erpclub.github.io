@@ -1,4 +1,4 @@
-// 운영 로그 데이터 — /log 페이지가 렌더만 하고 값은 전부 여기서 온다.
+// 운영 로그 데이터 — 소비처 = 워크스페이스 공지 탭 OpsLog(구 /log 페이지 폐지·내부화, IA 4차 2026-08-05).
 // 기록 1줄 추가 = 이 파일 1줄 추가(컴포넌트 수정 불필요). 사실 그대로만 — 신규 날조 금지.
 import { RECRUIT, COHORT_LABEL, formatWindowShort } from './recruit.js'
 

@@ -167,7 +167,6 @@ function Projects() {
         </div>
         <p className="hp-more-links rv" style={{ transitionDelay: '260ms' }}>
           <a className="proof-link" href="/projects/">전체 아카이브 <Arrow /></a>
-          <a className="proof-link" href="/log/#roadmap">전체 로드맵 <Arrow /></a>
         </p>
       </div>
     </section>

@@ -11,8 +11,9 @@ test('비로그인 헤더 = 워크스페이스 링크 없음(공개 탭만)', ()
   const html = flat(<SiteNav signedIn={false} />)
   expect(html).not.toContain('/workspace/')
   expect(html).not.toContain('WORKSPACE')
-  expect(html).not.toContain('/about/') // about 폐지(IA 4차 2026-08-05)
-  for (const label of ['INSIGHTS', 'SEMINARS', 'PROJECTS', 'RECRUIT', 'LOG']) {
+  expect(html).not.toContain('/about/') // about·log 폐지(IA 4차 2026-08-05)
+  expect(html).not.toContain('/log/')
+  for (const label of ['INSIGHTS', 'SEMINARS', 'PROJECTS', 'RECRUIT']) {
     expect(html).toContain(label)
   }
 })

@@ -9,13 +9,13 @@ export const REPO_URL = 'https://github.com/KWU-ERPCLUB/kwu-erpclub.github.io'
 export const CONTRIBUTING_URL = `${REPO_URL}/blob/main/CONTRIBUTING.md`
 
 // 탭=페이지 이동만(owner 2026-07-11 — 메인 섹션 앵커 퀵바 폐지).
-// IA 3차(SPEC §4, 2026-07-27): 7종 = 메인(brand)·인사이트·세미나·프로젝트·모집·about·log. labs·reports·join 제거 유지.
+// IA 4차(2026-08-05): 5종 = 메인(brand)·인사이트·세미나·프로젝트·모집 — about·log 폐지(증빙→recruit 하단,
+// 운영 기록→워크스페이스 공지 탭 내부화). labs·reports·join 제거 유지. 재도입 = 오너 재승인.
 const NAV_LINKS = [
   ['INSIGHTS', '/insights/'],
   ['SEMINARS', '/seminars/'],
   ['PROJECTS', '/projects/'],
   ['RECRUIT', '/recruit/'],
-  ['LOG', '/log/'],
 ]
 
 export function Arrow() {
@@ -83,7 +83,6 @@ export function SiteFooter() {
       <div className="footer-inner">
         <span className="f-brand">AIM — 광운대학교 ERP연구회 산하 MIS·AI 스터디</span>
         <span style={{ display: 'flex', gap: '1.25rem' }}>
-          <a href="/log/">LOG</a>
           <a href={REPO_URL}>GITHUB</a>
         </span>
       </div>
