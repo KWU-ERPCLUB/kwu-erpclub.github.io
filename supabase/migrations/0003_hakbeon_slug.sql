@@ -61,7 +61,9 @@ alter table member_private drop column if exists 학번;
 --    사적 필드로 남는 것은 전공 하나 → member_private + RLS(본인 ∨ 운영진)가 계속 방어한다.
 --    뷰 자체는 security_invoker = true 유지 → members RLS(멤버만 select)가 그대로 적용된다(익명 차단).
 -- ─────────────────────────────────────────────
-create or replace view members_public
+-- create or replace는 뷰 컬럼 재배치 불가(42P16) → drop 후 재생성(멱등·권한 재부여 포함)
+drop view if exists members_public;
+create view members_public
 with (security_invoker = true) as
   select id, 이름, role, 학번, 자기소개, 관심사, 가입일 from members;
 
