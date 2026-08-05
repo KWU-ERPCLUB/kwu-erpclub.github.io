@@ -1,7 +1,10 @@
 import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
 import Recruit from './Recruit.jsx'
-import { RECRUIT, PHASES, ACADEMIC_RULE, COHORT_LABEL, RECRUIT_DO, RECRUIT_STEPS, formatWindow, shortDate } from './data/recruit.js'
+import {
+  RECRUIT, PHASES, ACADEMIC_RULE, COHORT_LABEL, RECRUIT_DO, RECRUIT_STEPS,
+  RECRUIT_SHOWCASE, SHOWCASE_LEAD, formatWindow, shortDate,
+} from './data/recruit.js'
 import { FAQ, RECRUIT_FAQ } from './data/faq.js'
 
 // 구조·계약 검증 — IA 3차(2026-07-27) + v3.2 조정(2026-08-05 오너 피드백). 사실 서술만.
@@ -45,6 +48,31 @@ test('v3.2 WHAT WE DO = 이 스터디가 하는 일 — 활동 4카드(기고·�
   for (const [t] of RECRUIT_DO) expect(html, `활동 카드 부재: ${t}`).toContain(t)
   expect(html).toContain('주 1건 기고')
   expect(html).toContain('세미나')
+})
+
+// SHOWCASE(2026-08-05 2차) — "챗GPT면 충분" 반론에 대한 실물 증거 3건.
+test('SHOWCASE = 실물 3건(보드·허브·세미나 자료) — 이름·사실 1줄·링크·썸네일', () => {
+  const html = flat(<Recruit />)
+  expect(html).toContain('rc-show-h')
+  expect(html).toContain('>SHOWCASE<')
+  expect(RECRUIT_SHOWCASE.length).toBe(3)
+  for (const { name, fact, href, img } of RECRUIT_SHOWCASE) {
+    expect(html, `실물 이름 부재: ${name}`).toContain(name)
+    expect(html, `사실 서술 부재: ${name}`).toContain(fact)
+    expect(html, `링크 부재: ${name}`).toContain(`href="${href}"`)
+    expect(html, `썸네일 부재: ${name}`).toContain(`src="${img}"`)
+  }
+  expect(html).toContain(SHOWCASE_LEAD)
+  expect(html).toContain('rc-fit rc-show') // 카드 문법 = 기존 rc-fit 승계(새 시각 언어 0)
+})
+
+test('SHOWCASE 카피 = 개조식·과장 없음(경어체·마케팅 어휘 0)', () => {
+  const strs = [SHOWCASE_LEAD, ...RECRUIT_SHOWCASE.flatMap((s) => [s.name, s.fact])]
+  for (const s of strs) {
+    for (const banned of ['습니다', '입니다', '됩니다', '하세요', '최고', '완벽', '혁신']) {
+      expect(s, `금지 표현 «${banned}» 포함: ${s}`).not.toContain(banned)
+    }
+  }
 })
 
 // v3.2 ② — 활동 구성 = 로드맵 단순화: 회차 수 + 회차별 주제 한 줄. 세로 레일 문법 재사용.
@@ -127,7 +155,7 @@ test('E2 이런 사람 = 사실 서술 카드 4장(경영학부·코딩 불필�
 
 test('E3 순서 = WHAT WE DO가 요강 직후(구 운영 증빙 자리) — 전체 섹션 순서 고정', () => {
   const html = flat(<Recruit />)
-  const order = ['id="rc-facts"', 'rc-do-h', 'rc-fit-h', 'rc-timeline-h', 'rc-steps-h', 'rc-faq-h', 'rc-apply-h', 'rc-join-h']
+  const order = ['id="rc-facts"', 'rc-do-h', 'rc-show-h', 'rc-fit-h', 'rc-timeline-h', 'rc-steps-h', 'rc-faq-h', 'rc-apply-h', 'rc-join-h']
   const idx = order.map((k) => html.indexOf(k))
   idx.forEach((v, i) => expect(v, `${order[i]} 부재`).toBeGreaterThan(-1))
   expect([...idx].sort((a, b) => a - b)).toEqual(idx)
@@ -166,10 +194,10 @@ test('v3.3 인터랙션 = 런타임 클래스 게이트 — 정적 렌더에 rc-
   expect(html).not.toContain('rc-step on')
 })
 
-test('B2 좌 라벨 컬럼 = 전 섹션 8개(버건디 ■ + 영문 라벨) — RECORD → WHAT WE DO 교체', () => {
+test('B2 좌 라벨 컬럼 = 전 섹션 9개(버건디 ■ + 영문 라벨) — RECORD → WHAT WE DO 교체 + SHOWCASE 신설', () => {
   const html = flat(<Recruit />)
-  expect((html.match(/class="rc-label"/g) || []).length).toBe(8)
-  for (const en of ['OVERVIEW', 'WHAT WE DO', 'TARGET', 'SCHEDULE', 'PROGRAM', 'FAQ', 'APPLY', 'CONTACT']) {
+  expect((html.match(/class="rc-label"/g) || []).length).toBe(9)
+  for (const en of ['OVERVIEW', 'WHAT WE DO', 'SHOWCASE', 'TARGET', 'SCHEDULE', 'PROGRAM', 'FAQ', 'APPLY', 'CONTACT']) {
     expect(html, `좌 라벨 부재: ${en}`).toContain(`>${en}<`)
   }
   expect(html).not.toContain('>RECORD<')

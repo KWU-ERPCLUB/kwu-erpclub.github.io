@@ -167,6 +167,24 @@
 }
 .rc-fit p { margin: 0; font-size: 0.9rem; line-height: 1.6; color: var(--text-sub); word-break: keep-all; }
 
+/* ══ SHOWCASE(2026-08-05 2차) — 실물 3건. .rc-fit 카드 문법 승계(보더·radius·타이포 동일),
+   차이 = 3열 + 상단 썸네일 프레임(16:10 고정 크롭·헤어라인). 새 시각 언어 없음·버건디 0(화살표 = 기존 Arrow). ══ */
+.rc-show { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 900px) { .rc-show { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 700px) { .rc-show { grid-template-columns: 1fr; } }
+.rc-show li { padding: 1rem 1rem 1.15rem; }
+.rc-show-link { display: block; text-decoration: none; color: inherit; }
+.rc-show-link:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 12px; }
+.rc-show-thumb {
+  display: block; aspect-ratio: 16 / 10; overflow: hidden;
+  border: 1px solid var(--line); border-radius: 12px; background: var(--surface);
+}
+.rc-show-thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
+.rc-show-link h3 { display: flex; align-items: center; gap: 0.45rem; margin: 0.85rem 0 0.4rem; }
+.rc-show-link h3 svg { width: 14px; height: 14px; flex: none; color: var(--text-sub); }
+.rc-show-link:hover h3 { text-decoration: underline; text-underline-offset: 3px; }
+.rc-show li p { margin: 0; }
+
 /* ══ FAQ 서브셋(E4) — 좌 라벨/우 아코디언(details/summary·4상태) ══ */
 .rc-faq { margin-top: clamp(1.5rem, 3.5vh, 2.5rem); border-top: 1px solid var(--line); }
 .rc-faq-item { border-bottom: 1px solid var(--line); }

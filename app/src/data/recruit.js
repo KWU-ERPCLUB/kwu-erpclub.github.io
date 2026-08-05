@@ -93,6 +93,30 @@ export const RECRUIT_DO = [
   ['팀 프로젝트 — 2차', '2차 구간 — 팀 단위 프로젝트, 경영·업무 맥락 주제.'],
 ]
 
+// SHOWCASE(2026-08-05 2차) — 스터디가 실제로 만든 실물 3건. 값 = 이미 사이트에 존재하는 사실만
+// (프로젝트 md 수치·세미나 frontmatter·라이브 URL). 새 사실·미검증 수치 추가 금지.
+export const SHOWCASE_LEAD = '코딩을 배워 만든 것이 아니라 AI에 시켜 만든 결과물 — 전부 접속 가능.'
+export const RECRUIT_SHOWCASE = [
+  {
+    name: 'ADsP 진도 보드',
+    fact: '스터디 1기 운영 도구 — 진도·성취도 웹앱, 문항 919(2026-07-26 기준).',
+    href: 'https://erpstudy.vercel.app',
+    img: '/img/projects/adsp-board.png',
+  },
+  {
+    name: '이 허브 사이트',
+    fact: 'AI 인사이트 집계·세미나 기록·워크스페이스가 도는 지면 — 지금 보고 있는 사이트.',
+    href: '/',
+    img: '/img/projects/erpclub-site.png',
+  },
+  {
+    name: '세미나 1회차 자료',
+    fact: '질문에서 위임으로 — AI 활용 구조 3단, 발표자료 45장.',
+    href: '/seminars/?p=2026-07-25-bapzzi-question-to-delegation',
+    img: '/slides/s1/thumb-1.png',
+  },
+]
+
 // 모집 일정(E1) — 확정 단계만(선발 방식 미정 → 단계 날조 금지).
 const 시작월 = RECRUIT.일정.전반.기간.split(' ')[0] // '9월'
 export const RECRUIT_TIMELINE = [

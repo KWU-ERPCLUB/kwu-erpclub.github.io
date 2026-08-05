@@ -10,12 +10,15 @@
 //   ① PROGRAM 로드맵 스파이(useStepSpy — App.jsx useWordSpy 문법 복제) ② 섹션 진입 스태거 리빌(useSectionReveal —
 //   home.css .rv 문법 복제, IO 1회 발화) ③ WHAT WE DO 카드 리빌 스태거+호버 리프트(CSS).
 //   전 인터랙션 = JS 클래스 게이트(rc-js·rc-spy-js) → no-JS·reduced-motion = 전부 선명·정지.
-// 정적 카피(FACTS·DO·FIT·TIMELINE·STEPS) = data/recruit.js(300줄 규격) — 카피 규칙 주석도 그쪽.
+// v3.4(2026-08-05 2차) — SHOWCASE 섹션 신설: WHAT WE DO 직후, 스터디가 만든 실물 3건(보드·이 사이트·세미나 자료).
+//   근거 = "챗GPT면 충분한데 왜 스터디" 반론에 텍스트 카드만 있고 증거가 0이던 문제. 카드 문법 = rc-fit 승계.
+// 정적 카피(FACTS·DO·SHOWCASE·FIT·TIMELINE·STEPS) = data/recruit.js(300줄 규격) — 카피 규칙 주석도 그쪽.
 import { useEffect } from 'react'
 import { SiteNav, SiteFooter, REPO_URL, Arrow } from './shared.jsx'
 import {
   RECRUIT, ACADEMIC_RULE, formatWindow, CONTACT, KAKAO_PENDING, hasKakaoChat,
   RECRUIT_FACTS, RECRUIT_DO, RECRUIT_FIT, RECRUIT_TIMELINE, RECRUIT_STEPS,
+  RECRUIT_SHOWCASE, SHOWCASE_LEAD,
 } from './data/recruit.js'
 import { RECRUIT_FAQ } from './data/faq.js'
 import RecruitForm from './RecruitForm.jsx'
@@ -141,6 +144,31 @@ export default function Recruit() {
                   <li key={title}>
                     <h3>{title}</h3>
                     <p>{desc}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* SHOWCASE(2026-08-05 2차) — WHAT WE DO 직후 실물 증거 3건. 카드 문법 = rc-fit 승계(+썸네일 rc-show).
+            카피·링크·이미지 = data/recruit.js RECRUIT_SHOWCASE(사실 서술만). 외부 링크 1건 = 새 창 없이 동일 탭. */}
+        <section className="rc-secs" aria-labelledby="rc-show-h">
+          <div className="rc-band-in rc-grid">
+            <SecLabel en="SHOWCASE" />
+            <div className="rc-body">
+              <h2 className="rc-h2" id="rc-show-h">실물</h2>
+              <p className="rc-sched-rule">{SHOWCASE_LEAD}</p>
+              <ul className="rc-fit rc-show">
+                {RECRUIT_SHOWCASE.map(({ name, fact, href, img }) => (
+                  <li key={name}>
+                    <a className="rc-show-link" href={href}>
+                      <span className="rc-show-thumb">
+                        <img src={img} alt="" loading="lazy" />
+                      </span>
+                      <h3>{name} <Arrow /></h3>
+                    </a>
+                    <p>{fact}</p>
                   </li>
                 ))}
               </ul>
