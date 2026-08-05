@@ -218,3 +218,59 @@
   background: var(--surface); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0;
   padding: 0.85rem 1.1rem; font-size: 0.94rem; font-weight: 600;
 }
+
+/* ══ v3.3 스크롤 인터랙션 복원(2026-08-05 — "화려하던 로직") — 전 규칙 = JS 게이트(html.rc-js / html.rc-spy-js) 뒤.
+   게이트 클래스는 Recruit.jsx 훅이 런타임에만 부여 → no-JS·reduced-motion = 정적 상태 = 전부 선명·정지.
+   transform·opacity만 · 신규 무한루프 0(.rc-in = IO 1회 발화). 수치 = home.css .rv 문법 복제. ══ */
+
+/* 섹션 진입 스태거 리빌 — 헤더·각 섹션(좌 라벨 + 우 콘텐츠 직계 자식), nth-child 지연 스태거 */
+.rc-js .rc-head .rc-head-in > *,
+.rc-js .rc-secs .rc-label,
+.rc-js .rc-secs .rc-body > * {
+  opacity: 0; transform: translateY(26px);
+  transition: opacity 560ms ease-out, transform 620ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.rc-js .rc-head .rc-head-in > :nth-child(2), .rc-js .rc-secs .rc-body > :nth-child(2) { transition-delay: 90ms; }
+.rc-js .rc-head .rc-head-in > :nth-child(3), .rc-js .rc-secs .rc-body > :nth-child(3) { transition-delay: 180ms; }
+.rc-js .rc-head .rc-head-in > :nth-child(4), .rc-js .rc-secs .rc-body > :nth-child(4) { transition-delay: 270ms; }
+.rc-js .rc-head .rc-head-in > :nth-child(n + 5), .rc-js .rc-secs .rc-body > :nth-child(n + 5) { transition-delay: 360ms; }
+.rc-js .rc-head.rc-in .rc-head-in > *,
+.rc-js .rc-secs.rc-in .rc-label,
+.rc-js .rc-secs.rc-in .rc-body > *,
+.rc-js .rc-secs:focus-within .rc-label,
+.rc-js .rc-secs:focus-within .rc-body > * { opacity: 1; transform: none; }
+
+/* WHAT WE DO·TARGET 카드 = 리빌 내부 2차 스태거 */
+.rc-js .rc-secs .rc-fit li {
+  opacity: 0; transform: translateY(18px);
+  transition: opacity 480ms ease-out, transform 540ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.rc-js .rc-secs .rc-fit li:nth-child(2) { transition-delay: 80ms; }
+.rc-js .rc-secs .rc-fit li:nth-child(3) { transition-delay: 160ms; }
+.rc-js .rc-secs .rc-fit li:nth-child(4) { transition-delay: 240ms; }
+.rc-js .rc-secs.rc-in .rc-fit li,
+.rc-js .rc-secs:focus-within .rc-fit li { opacity: 1; transform: none; }
+
+/* WHAT WE DO 카드 호버 리프트(기존 카드 호버 문법 수준 — CSS 단독이라 no-JS에서도 동작) */
+.rc-do li { transition: transform 200ms ease-out; }
+.rc-do li:hover { transform: translateY(-4px); }
+
+/* PROGRAM 로드맵 스파이 — 뷰포트 중앙 최근접 회차/단계만 활성(.on = 훅 부여), 나머지 opacity 감쇠만(§6-2a B3) */
+.rc-spy-js .rc-steps-spy > li,
+.rc-spy-js .rc-steps-spy .rc-rounds > li { transition: opacity 300ms ease-out; }
+.rc-spy-js .rc-steps-spy > li:not(.on) { opacity: 0.35; }
+.rc-spy-js .rc-steps-spy > li.on .rc-rounds > li:not(.on) { opacity: 0.45; }
+/* 2차 팀 구간(버건디 포인트) = 활성 시 더 도드라지게 — 타임라인 점 확대(transform)·제목 버건디(즉시 스왑) */
+.rc-spy-js .rc-steps-spy > li::before { transition: transform 300ms ease-out; }
+.rc-spy-js .rc-steps-spy > li.rc-step-hl.on::before { transform: scale(1.4); }
+.rc-steps-spy > li.rc-step-hl.on h3 { color: var(--accent); }
+
+/* 이중 안전망 — 훅이 게이트 클래스를 안 붙이지만, 세션 중 선호 전환 대비 전부 선명·정지 */
+@media (prefers-reduced-motion: reduce) {
+  .rc-js .rc-head .rc-head-in > *, .rc-js .rc-secs .rc-label, .rc-js .rc-secs .rc-body > *,
+  .rc-js .rc-secs .rc-fit li, .rc-do li,
+  .rc-spy-js .rc-steps-spy > li, .rc-spy-js .rc-steps-spy .rc-rounds > li,
+  .rc-spy-js .rc-steps-spy > li:not(.on), .rc-spy-js .rc-steps-spy > li.on .rc-rounds > li:not(.on),
+  .rc-spy-js .rc-steps-spy > li::before { transition: none; opacity: 1; transform: none; }
+  .rc-do li:hover { transform: none; }
+}

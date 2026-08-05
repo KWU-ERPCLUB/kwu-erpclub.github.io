@@ -6,7 +6,12 @@
 //   ③ 타이포 한 단계 다운 — h1 상한 6.4rem → 3.8rem, h2·요강 값 축소(수치 = recruit.css). 본문 불변.
 //   ④ 과녁/원 키비주얼(두 원+× 그래픽) 완전 삭제.
 // 유지 = B2 좌 고정 라벨 컬럼(버건디 ■ + 영문 라벨) / 우 콘텐츠 2단 골격 · B4 라이트 헤더 · 대형 CTA(E6).
+// v3.3(2026-08-05 오너 "화려하던 로직 복원") — 스크롤 인터랙션 지역 구현(콘텐츠·타이포·섹션 구성 무변경):
+//   ① PROGRAM 로드맵 스파이(useStepSpy — App.jsx useWordSpy 문법 복제) ② 섹션 진입 스태거 리빌(useSectionReveal —
+//   home.css .rv 문법 복제, IO 1회 발화) ③ WHAT WE DO 카드 리빌 스태거+호버 리프트(CSS).
+//   전 인터랙션 = JS 클래스 게이트(rc-js·rc-spy-js) → no-JS·reduced-motion = 전부 선명·정지.
 // 정적 카피(FACTS·DO·FIT·TIMELINE·STEPS) = data/recruit.js(300줄 규격) — 카피 규칙 주석도 그쪽.
+import { useEffect } from 'react'
 import { SiteNav, SiteFooter, REPO_URL, Arrow } from './shared.jsx'
 import {
   RECRUIT, ACADEMIC_RULE, formatWindow,
@@ -20,7 +25,70 @@ function SecLabel({ en }) {
   return <div className="rc-label" aria-hidden="true">{en}</div>
 }
 
+// ── v3.3 스크롤 인터랙션(지역 구현 — App.jsx·home-motion.jsx 수정 금지 규칙에 따라 문법만 복제) ──
+const prefersReduced = () =>
+  typeof window !== 'undefined' &&
+  typeof window.matchMedia === 'function' &&
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+// PROGRAM 로드맵 스파이 — 뷰포트 중앙 최근접 회차/단계만 활성(.on)·나머지 감쇠(useWordSpy rAF 문법 복제).
+// 활성이 회차(rc-rounds li)면 부모 단계도 함께 활성(중첩 opacity 이중 감쇠 방지).
+// 게이트 = <html>.rc-spy-js — reduced-motion·no-JS면 클래스 자체가 없어 전부 선명.
+function useStepSpy() {
+  useEffect(() => {
+    const list = document.querySelector('.rc-steps-spy')
+    if (!list || prefersReduced()) return
+    const items = Array.from(list.querySelectorAll(':scope > li, .rc-rounds > li'))
+    if (items.length === 0) return
+    document.documentElement.classList.add('rc-spy-js')
+    let raf = 0
+    const pick = () => {
+      raf = 0
+      const cy = window.innerHeight / 2
+      let best = null
+      let bd = Infinity
+      for (const el of items) {
+        const r = el.getBoundingClientRect()
+        const d = Math.abs((r.top + r.bottom) / 2 - cy)
+        if (d < bd) { bd = d; best = el }
+      }
+      const parent = best && best.closest('.rc-steps-spy > li')
+      items.forEach((el) => el.classList.toggle('on', el === best || el === parent))
+    }
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(pick) }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll, { passive: true })
+    pick()
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (raf) cancelAnimationFrame(raf)
+      document.documentElement.classList.remove('rc-spy-js')
+    }
+  }, [])
+}
+
+// 섹션 진입 스태거 리빌 — IO 1회 발화(.rc-in 부여 후 unobserve — 무한 반복 없음). 스태거 = CSS nth-child 지연.
+// 게이트 = <html>.rc-js — reduced-motion·no-JS면 정적 상태 그대로(전부 선명).
+function useSectionReveal() {
+  useEffect(() => {
+    if (prefersReduced()) return
+    const secs = Array.from(document.querySelectorAll('.rc-head, .rc-secs'))
+    if (secs.length === 0) return
+    document.documentElement.classList.add('rc-js')
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) { e.target.classList.add('rc-in'); io.unobserve(e.target) }
+      })
+    }, { rootMargin: '0px 0px -8% 0px' })
+    secs.forEach((s) => io.observe(s))
+    return () => { io.disconnect(); document.documentElement.classList.remove('rc-js') }
+  }, [])
+}
+
 export default function Recruit() {
+  useStepSpy()
+  useSectionReveal()
   return (
     <>
       <SiteNav />
@@ -122,7 +190,7 @@ export default function Recruit() {
             <div className="rc-body">
               <h2 className="rc-h2" id="rc-steps-h">1차 프로젝트 — 개인 · 2차 프로젝트 — 팀</h2>
               <p className="rc-sched-rule">{ACADEMIC_RULE}</p>
-              <ol className="rc-steps">
+              <ol className="rc-steps rc-steps-spy">
                 {RECRUIT_STEPS.map((s) => (
                   <li className={s.hl ? 'rc-step rc-step-hl' : 'rc-step'} key={s.title}>
                     <span className="rc-step-era">{s.era}</span>

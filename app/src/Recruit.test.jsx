@@ -153,6 +153,19 @@ test('E6 CTA = 헤더 신청하기 앵커 → 하단 폼 섹션 id 연결 + 대�
 
 // ── v3.1 골격 유지분(B2 좌 라벨 2단) — v3.2에서도 불변 ──
 
+// ── v3.3 스크롤 인터랙션 복원(2026-08-05) — SSR/no-JS 폴백 가드: 게이트 클래스가 정적 렌더에 없어야 전부 선명 ──
+
+test('v3.3 인터랙션 = 런타임 클래스 게이트 — 정적 렌더에 rc-js·rc-spy-js·rc-in·on 없음 + 스파이 대상 클래스 존재', () => {
+  const html = flat(<Recruit />)
+  expect(html).toContain('rc-steps rc-steps-spy') // PROGRAM 로드맵 = 스파이 대상(SCHEDULE은 비대상)
+  expect((html.match(/rc-steps-spy/g) || []).length).toBe(1)
+  // 감쇠·리빌은 훅이 런타임에만 부여(rc-js/rc-spy-js/rc-in/.on) → no-JS 정적 렌더 = 전부 선명
+  expect(html).not.toContain('rc-js')
+  expect(html).not.toContain('rc-spy-js')
+  expect(html).not.toContain('rc-in"')
+  expect(html).not.toContain('rc-step on')
+})
+
 test('B2 좌 라벨 컬럼 = 전 섹션 8개(버건디 ■ + 영문 라벨) — RECORD → WHAT WE DO 교체', () => {
   const html = flat(<Recruit />)
   expect((html.match(/class="rc-label"/g) || []).length).toBe(8)
