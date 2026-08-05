@@ -1,6 +1,7 @@
 import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
 import Log, { splitEntry, Changelog } from './Log.jsx'
+import { HISTORY } from './data/log.js'
 
 // 구조 검증(콘텐츠·시점 무관) — 2차 구조 개혁: 내부형 doc 셸 폐지 → linear.app 체인지로그 톤 풀블리드.
 const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
@@ -57,7 +58,7 @@ test('page-head(§3-1) = 눈썹 LOG + 헤드라인 + 설명 + 최종 갱신(데�
   expect(html).toContain('log-eyebrow">LOG')
   expect(html).toContain('log-h1')
   expect(html).toContain('log-lead')
-  expect(html).toContain('최종 갱신 2026-07-27') // HISTORY 최상단에서 파생(하드코딩 아님)
+  expect(html).toContain(`최종 갱신 ${HISTORY[0][0]}`) // HISTORY 최상단에서 파생(하드코딩 아님 — 기록 추가 시 자동 추종)
   // "내부 운영용" 콜아웃 유지 + ABOUT 링크
   expect(html).toContain('log-callout')
   expect(html).toContain('href="/about/"')
