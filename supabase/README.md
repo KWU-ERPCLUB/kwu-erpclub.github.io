@@ -30,15 +30,20 @@
 2. `supabase/migrations/0001_schema.sql` 전체 복사 → 붙여넣기 → Run
 3. New query → `supabase/migrations/0002_rls.sql` 전체 복사 → 붙여넣기 → Run
 4. New query → `supabase/migrations/0003_hakbeon_slug.sql` 전체 복사 → 붙여넣기 → Run
-5. **순서 엄수**(0001 → 0002 → 0003). 성공 시 각각 "Success" 표시
+5. 같은 방식으로 `0004_image_caption.sql` → `0005_series.sql` → `0006_applications.sql` 순서대로 Run
+6. **순서 엄수**(0001 → 0002 → 0003 → 0004 → 0005 → 0006). 성공 시 각각 "Success" 표시
 
 0003이 하는 일: 학번 로그인 컬럼(`members.학번`) · 명단 뷰 갱신 · 동기화 키(`articles.슬러그`) 보강 ·
 상호작용 카운트 뷰(`article_interaction_counts`). 재실행해도 안전(멱등).
 
+0006이 하는 일: `/recruit` 온사이트 신청 폼 접수 테이블(`applications`) + RLS(익명 = insert만 /
+열람·수정·삭제 = 운영진만). 미적용 상태에서도 사이트는 무해 — 폼 제출 시 오류 메시지 표시일 뿐.
+이미 운영 중인 DB에는 이 파일 하나만 추가로 Run 하면 된다(0001~0005 재실행 불필요).
+
 CLI를 쓰는 경우(선택): `supabase link --project-ref <ref>` 후 `supabase db push`.
 
 확인:
-- Table Editor에 테이블 13개(members·articles·sessions 등) 표시
+- Table Editor에 테이블 14개(members·articles·sessions·applications 등) 표시
 - 각 테이블 이름 옆 RLS enabled 표시
 
 ## 3단계 — 첫 운영진 계정 만들기 (자가입 없음)
@@ -137,7 +142,7 @@ Project Settings > API 에서 2개 값 확인:
 
 ## 확인 체크리스트 (전부 T여야 완료)
 
-- [ ] Table Editor에 테이블 13개 + RLS enabled 표시
+- [ ] Table Editor에 테이블 14개 + RLS enabled 표시
 - [ ] 운영진 멤버 1행이 `members`에 존재
 - [ ] `/workspace/`에서 로그인 성공 → 이름·역할 표시
 - [ ] 로그아웃 상태에서 SQL Editor 아닌 브라우저 콘솔로 내부 테이블 조회 시도 = 거부(판정 P3)

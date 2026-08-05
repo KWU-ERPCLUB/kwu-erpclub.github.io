@@ -140,9 +140,10 @@ export function createBackend(config = readEnv(), deps = {}) {
 
   const db = {
     select: (table, opts) => request(`/rest/v1/${table}${buildQuery(opts)}`),
-    insert: (table, row) => request(`/rest/v1/${table}`, {
+    // opts.minimal = 반환 행 없이 insert만(익명 insert 전용 테이블 — representation은 select 권한을 요구해 실패).
+    insert: (table, row, opts) => request(`/rest/v1/${table}`, {
       method: 'POST',
-      headers: { Prefer: 'return=representation' },
+      headers: { Prefer: opts?.minimal ? 'return=minimal' : 'return=representation' },
       body: JSON.stringify(row),
     }),
     update: (table, filters, patch) => request(`/rest/v1/${table}${buildQuery({ filters })}`, {

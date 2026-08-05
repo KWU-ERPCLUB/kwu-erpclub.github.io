@@ -24,6 +24,9 @@ const SEED = {
   article_likes: [{ member_id: 'mock-member', article_id: 'mock-a1' }],
   article_bookmarks: [{ member_id: 'mock-member', article_id: 'mock-a1' }],
   seminars: [{ id: 'mock-sem1', 회차: 1, 날짜: '2026-09-20', 제목: '샘플 세미나', 유형: '인지', 공개여부: true }],
+  applications: [
+    { id: 'mock-app1', 이름: '지원자 C', 학번: '2023000003', 전공: '샘플학부', 전화번호: '010-0000-0000', 써본ai: '샘플 도구', 관심주제: '샘플 주제', created_at: '2026-08-25T09:00:00Z' },
+  ],
 }
 
 const clone = (rows) => rows.map((r) => ({ ...r }))
@@ -234,5 +237,17 @@ export function createMockRepositories({ user = null, data = {} } = {}) {
       },
     },
     seminars: { async list() { return clone(store.seminars) } },
+    // 신청서 — 제출은 로그인 불필요(RLS applications_insert_anyone 동형), 열람은 운영진만(비운영진 = 0행).
+    applications: {
+      async submit(form) {
+        const row = { ...form, id: `mock-app${store.applications.length + 1}`, created_at: new Date().toISOString() }
+        store.applications.push(row)
+        return true
+      },
+      async list() {
+        if (!isStaff()) return []
+        return clone(store.applications)
+      },
+    },
   }
 }

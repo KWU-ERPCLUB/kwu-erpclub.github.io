@@ -23,6 +23,7 @@ export const REPO_CONTRACT = {
   notices: ['listInternal', 'save'],
   collections: ['listMine', 'add', 'update', 'remove'],
   seminars: ['list'],
+  applications: ['submit', 'list'],
 }
 
 export function createSupabaseRepositories(backend) {
@@ -200,6 +201,16 @@ export function createSupabaseRepositories(backend) {
     },
     seminars: {
       list: () => backend.db.select('seminars', { order: '회차.desc' }),
+    },
+    // /recruit 신청 폼(0006) — 제출 = 익명 허용(RLS applications_insert_anyone), 열람 = 운영진만.
+    applications: {
+      // return=minimal — 익명은 select 권한이 없어 representation 반환이 곧 실패이기 때문(0006 주석 참조).
+      async submit(form) {
+        await backend.db.insert('applications', form, { minimal: true })
+        return true
+      },
+      // 운영진이 아니면 RLS가 0행을 준다(오류 아님 — 화면은 그대로 빈 목록).
+      list: () => backend.db.select('applications', { order: 'created_at.desc' }),
     },
   }
 }
