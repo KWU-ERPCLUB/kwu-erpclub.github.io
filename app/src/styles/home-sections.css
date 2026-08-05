@@ -117,6 +117,32 @@
 .fx-item p { margin: 0 0 1.35rem; font-size: 0.96rem; color: var(--text-sub); max-width: 68ch; }
 .hs-about { margin: 2rem 0 0; font-size: 0.92rem; color: var(--text-sub); }
 
+/* ══ INSIGHTS — 메인 하단 최근 기사 3건(헤어라인 리스트 = .wl·.fx-item 문법 승계, 새 시각 언어 0) ══ */
+.hi-list { list-style: none; margin: clamp(2.5rem, 6vh, 3.5rem) 0 0; padding: 0; border-top: 1px solid var(--line); }
+.hi-item { border-bottom: 1px solid var(--line); }
+.hi-link {
+  display: block; padding: clamp(1.1rem, 2.5vh, 1.6rem) 0;
+  text-decoration: none; color: var(--text);
+  transition: opacity 150ms ease-out;
+}
+.hi-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.45rem; }
+.hi-nature { /* 성격 라벨 — 헤어라인 pill(중립. 버건디 예산 절약) */
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.02em;
+  border: 1px solid var(--line); border-radius: var(--radius-pill); padding: 0.12rem 0.6rem;
+}
+.hi-date { font-size: 0.78rem; font-weight: 600; color: var(--text-sub); }
+.hi-title {
+  display: block; font-family: var(--font-display); font-weight: 800;
+  font-size: clamp(1.05rem, 1.8vw, 1.35rem); line-height: 1.3; letter-spacing: -0.015em; word-break: keep-all;
+}
+.hi-desc {
+  display: block; margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-sub);
+  max-width: 68ch; line-height: 1.55; word-break: keep-all;
+}
+.hi-link:hover .hi-title { color: var(--accent); } /* 화이트리스트 ⑤ 링크 호버 */
+.hi-link:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .hi-link { transition: none; } }
+
 @media (prefers-reduced-motion: reduce) {
   .hp-card, .hp-cover, .fx-item summary { transition: none; }
   .hp-card:hover { transform: none; }

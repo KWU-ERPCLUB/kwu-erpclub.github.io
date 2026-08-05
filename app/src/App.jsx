@@ -11,6 +11,7 @@ import { RECRUIT, COHORT_LABEL, formatWindowShort } from './data/recruit.js'
 import { FAQ } from './data/faq.js'
 import { loadContent } from './content/loader.js'
 import { useSectionSpy, useParallax, StaggerChars, CountUp, prefersReduced } from './home-motion.jsx'
+import { Cols, HomeInsights } from './home-parts.jsx'
 
 // PROJECTS — 풀폭 커버 카드(커버 캡처 + 대형 제목 오버레이). 클릭 = /projects/ 상세 딥링크.
 // ?p= 슬러그는 content/프로젝트/<슬러그>.md와 1:1이어야 한다(어긋나면 빈 상세 = 조용한 깨짐).
@@ -178,16 +179,6 @@ export function StatsBand({ today = localYmd() }) {
   )
 }
 
-// B2 좌 라벨 컬럼 골격 — 좌 고정 라벨(버건디 ■ + 소형 영문) / 우 콘텐츠. 폰(≤820px) = 상하 적층.
-function Cols({ label, children }) {
-  return (
-    <div className="hs-in hs-cols">
-      <div className="hs-side"><span className="hs-label rv">{label}</span></div>
-      <div className="hs-body">{children}</div>
-    </div>
-  )
-}
-
 // ROADMAP — B3 대형 워드 스택(스크롤 연동·활성만 진하게). 점선 슬롯 문법은 톤 다운으로 승계.
 function Roadmap() {
   return (
@@ -272,6 +263,7 @@ export default function App() {
         <Roadmap />
         <Projects />
         <Faq />
+        <HomeInsights />
       </main>
       <SiteFooter />
     </>

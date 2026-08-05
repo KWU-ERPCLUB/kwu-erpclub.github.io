@@ -5,6 +5,7 @@ import { COHORT_LABEL, formatWindowShort } from './data/recruit.js'
 import { FAQ } from './data/faq.js'
 import { loadContent } from './content/loader.js'
 import { heldSeminars } from './home-logic.js'
+import { HomeInsights, HOME_INSIGHTS_COUNT } from './home-parts.jsx'
 
 // 구조 검증(콘텐츠·시점 무관) — v5 풀블리드 스크린 섹션: 100vh 히어로·계보 트리·풀폭 커버·대형 FAQ. (WHY 폐지 2026-07-25)
 test('메인 = 풀블리드 3섹션 + 100vh 히어로(뷰포트 타이포·소개 2줄·마퀴·스크롤 유도)', () => {
@@ -30,14 +31,14 @@ test('메인 = 풀블리드 3섹션 + 100vh 히어로(뷰포트 타이포·소�
   expect(html).toContain('scroll-cue')
 })
 
-test('섹션 라벨 3종(B2 좌 라벨 컬럼) + 각 섹션 구조 마크업', () => {
+test('섹션 라벨 4종(B2 좌 라벨 컬럼) + 각 섹션 구조 마크업', () => {
   const html = renderToString(<App />)
-  for (const idx of ['01 — ROADMAP', '02 — PROJECTS', '03 — FAQ']) {
+  for (const idx of ['01 — ROADMAP', '02 — PROJECTS', '03 — FAQ', '04 — INSIGHTS']) {
     expect(html).toContain(idx)
   }
-  // B2(v3.1): ROADMAP·PROJECTS·FAQ = 좌 라벨 컬럼(hs-cols/hs-side/hs-label) 골격 3회
-  expect((html.match(/hs-cols/g) || []).length).toBe(3)
-  expect((html.match(/hs-label/g) || []).length).toBe(3)
+  // B2(v3.1): ROADMAP·PROJECTS·FAQ·INSIGHTS = 좌 라벨 컬럼(hs-cols/hs-side/hs-label) 골격 4회
+  expect((html.match(/hs-cols/g) || []).length).toBe(4)
+  expect((html.match(/hs-label/g) || []).length).toBe(4)
   // ROADMAP: B3 워드 스택 — 계보 5노드(본류 2 + 분기 + 프로젝트 + 슬롯) 전량 + 톤다운 슬롯. DEEP DIVE(미개설) 부재
   expect(html).toContain('class="wl ')
   expect((html.match(/wl-item/g) || []).length).toBe(5)
@@ -142,7 +143,23 @@ test('FAQ 모집 답 = 확정 기간 반영(비정기 문구 폐지) — 기간�
   expect(html).not.toContain('모집은 비정기')
 })
 
-test('RECENT 섹션 부재 + 삭제 페이지 링크(/join /reports /labs) 부재', () => {
+// 메인 하단 최근 활동(북극성 §5) — 구 v5 'RECENT 현황판'은 폐지 유지, 대신 INSIGHTS 리스트 3건.
+test('메인 하단 INSIGHTS = 최근 기사 3건(제목·성격·날짜·설명) + 전체 보기 링크', () => {
+  const html = renderToString(<HomeInsights />)
+  const recent = loadContent('기사').slice(0, HOME_INSIGHTS_COUNT)
+  expect(recent.length).toBe(3)
+  expect((html.match(/hi-item/g) || []).length).toBe(3)
+  for (const a of recent) {
+    expect(html).toContain(a.title)
+    expect(html).toContain(a['성격'])
+    expect(html).toContain(a.date)
+    expect(html).toContain(`/insights/?p=${a.slug}`)
+  }
+  expect(html).toContain('전체 보기')
+  expect(html).toContain('href="/insights/"')
+})
+
+test('구 RECENT 현황판 부재 유지 + 삭제 페이지 링크(/join /reports /labs) 부재', () => {
   const html = renderToString(<App />)
   expect(html).not.toContain('id="recent"')
   expect(html).not.toContain('RECENT')
