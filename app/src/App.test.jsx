@@ -1,7 +1,8 @@
 import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
-import App from './App.jsx'
+import App, { PROJECTS } from './App.jsx'
 import { COHORT_LABEL, formatWindowShort } from './data/recruit.js'
+import { loadContent } from './content/loader.js'
 
 // 구조 검증(콘텐츠·시점 무관) — v5 풀블리드 스크린 섹션: 100vh 히어로·계보 트리·풀폭 커버·대형 FAQ. (WHY 폐지 2026-07-25)
 test('메인 = 풀블리드 3섹션 + 100vh 히어로(뷰포트 타이포·소개 2줄·마퀴·스크롤 유도)', () => {
@@ -41,6 +42,17 @@ test('섹션 인덱스 3종 + 각 섹션 구조 마크업', () => {
   expect(html).toContain('faq-xl')
   expect(html).toContain('fx-item')
   expect(html).toContain('스터디가 왜 필요한가요')
+})
+
+// 메인 PROJECTS 딥링크는 content/프로젝트/<슬러그>.md에 의존 — 어긋나면 빈 상세로 조용히 깨진다.
+// 슬러그 존재 여부를 콘텐츠 글롭과 대조해 "조용한 깨짐"을 CI 실패로 드러낸다(개별 슬러그에 단언하지 않음).
+test('메인 PROJECTS 딥링크 슬러그 = 실제 프로젝트 md 존재', () => {
+  const slugs = new Set(loadContent('프로젝트').map((p) => p.slug))
+  for (const [, , href] of PROJECTS) {
+    const slug = new URLSearchParams(href.split('?')[1] || '').get('p')
+    expect(slug, `${href} — ?p= 슬러그 없음`).toBeTruthy()
+    expect(slugs.has(slug), `content/프로젝트/${slug}.md 없음`).toBe(true)
+  }
 })
 
 test('WHY 섹션 부재(2026-07-25 폐지) — 수치 스트립·섹션 앵커 없음', () => {

@@ -10,7 +10,9 @@ import { RECRUIT, COHORT_LABEL, formatWindowShort } from './data/recruit.js'
 import { useSectionSpy, useParallax, StaggerChars } from './home-motion.jsx'
 
 // PROJECTS — 풀폭 커버 카드(커버 캡처 + 대형 제목 오버레이). 클릭 = /projects/ 상세 딥링크.
-const PROJECTS = [
+// ?p= 슬러그는 content/프로젝트/<슬러그>.md와 1:1이어야 한다(어긋나면 빈 상세 = 조용한 깨짐).
+// export = 슬러그 존재 여부를 테스트가 콘텐츠 글롭과 대조하기 위함.
+export const PROJECTS = [
   ['ADsP 스터디 1기', '/img/projects/adsp-board.png', '/projects/?p=2026-07-24-bapzzi-adsp-board', '진행 중'],
   ['KWU ERP Club Site', '/img/projects/erpclub-site.png', '/projects/?p=2026-07-24-bapzzi-erpclub-site', '운영 중'],
 ]
