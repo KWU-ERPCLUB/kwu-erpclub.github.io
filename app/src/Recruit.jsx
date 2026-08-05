@@ -16,7 +16,7 @@
 import { useEffect } from 'react'
 import { SiteNav, SiteFooter, PageHead, REPO_URL, Arrow } from './shared.jsx'
 import {
-  RECRUIT, ACADEMIC_RULE, formatWindow, CONTACT, KAKAO_PENDING, hasKakaoChat,
+  RECRUIT, ACADEMIC_RULE, formatWindow, CONTACT, CONTACT_MAILTO,
   RECRUIT_FACTS, RECRUIT_DO, RECRUIT_FIT, RECRUIT_TIMELINE, RECRUIT_STEPS,
   RECRUIT_SHOWCASE, SHOWCASE_LEAD,
 } from './data/recruit.js'
@@ -271,12 +271,10 @@ export default function Recruit() {
           <div className="rc-band-in rc-grid">
             <SecLabel en="CONTACT" />
             <div className="rc-body">
-              <h2 className="rc-h2" id="rc-join-h">문의 — 스터디 단톡방</h2>
-              {/* 단톡방 = CONTACT 상수 파생. URL 미제공이면 링크 대신 안내 문구(깨진 링크 금지) */}
+              <h2 className="rc-h2" id="rc-join-h">문의 — 이메일</h2>
+              {/* 문의 채널 = CONTACT 상수 파생(이메일 확정 2026-08-05) */}
               <div className="rc-actions">
-                {hasKakaoChat()
-                  ? <a className="btn-2nd" href={CONTACT.kakaoOpenChatUrl}>스터디 단톡방</a>
-                  : <span className="rc-cta-note">{KAKAO_PENDING}</span>}
+                <a className="btn-2nd" href={CONTACT_MAILTO}>{CONTACT.email}</a>
                 <a className="btn-2nd" href={REPO_URL}>GitHub 저장소</a>
                 <a className="proof-link" href="/#faq">자주 묻는 질문 <Arrow /></a>
               </div>

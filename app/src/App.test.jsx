@@ -4,7 +4,6 @@ import App, { PROJECTS, RecruitBand, StatsBand } from './App.jsx'
 import { COHORT_LABEL, formatWindowShort } from './data/recruit.js'
 import { FAQ } from './data/faq.js'
 import { loadContent } from './content/loader.js'
-import { heldSeminars } from './home-logic.js'
 import { HomeInsights, HOME_INSIGHTS_COUNT } from './home-parts.jsx'
 
 // 구조 검증(콘텐츠·시점 무관) — v5 풀블리드 스크린 섹션: 100vh 히어로·계보 트리·풀폭 커버·대형 FAQ. (WHY 폐지 2026-07-25)
@@ -79,22 +78,17 @@ test('WHY 섹션 부재 유지 + B1 블랙 통계 밴드 1개(2×2 실측 수치
   // 블랙 대면적 = 페이지당 1개(§6-2a 판정 기준)
   expect((html.match(/class="stats-band"/g) || []).length).toBe(1)
   const band = renderToString(<StatsBand today="2026-08-05" />)
-  expect((band.match(/sb-cell/g) || []).length).toBe(4) // 2×2
+  expect((band.match(/sb-cell/g) || []).length).toBe(3) // 1×3
   // 수치 = 실측만: 게재 건수 = content/ 글롭 집계와 일치(recruit 증빙과 동일 원천)
   expect(band).toContain(`>${loadContent('기사').length}</span>`)
-  for (const label of ['게재 기사', '세미나 기록', '라이브 실물']) expect(band).toContain(label)
-  expect((band.match(/sb-src/g) || []).length).toBe(4) // 수치엔 출처 각주 의무(디자인규칙 §6)
+  for (const label of ['게재 기사', '라이브 실물']) expect(band).toContain(label)
+  expect((band.match(/sb-src/g) || []).length).toBe(3) // 수치엔 출처 각주 의무(디자인규칙 §6)
 })
 
-// 정직성(2026-08-05) — "세미나 기록"은 개최 완료 집계다. 예정(일정미정·미래 date)이 1로 집계되면 허위 기록.
-test('RECORD 세미나 기록 = 개최 완료만 집계(예정·일정미정 제외)', () => {
-  const all = loadContent('세미나')
-  const today = '2026-08-05'
-  const held = heldSeminars(all, today).length
-  expect(held).toBeLessThan(all.length) // 현재 콘텐츠 = 일정미정 1건 존재
-  const band = renderToString(<StatsBand today={today} />)
-  expect(band).toContain(`>${held}</span>`)
-  expect(band).toContain('개최 완료만')
+// 신생 스터디 원칙(2026-08-05 오너) — 0건 지표(세미나)는 밴드에 싣지 않는다. 재도입 = 개최 시작 후.
+test('RECORD = 0건 지표 미게재(세미나 셀 없음)', () => {
+  const band = renderToString(<StatsBand today="2026-08-05" />)
+  expect(band).not.toContain('세미나 기록')
 })
 
 // "진행 중 스터디 1"은 ADsP 시험(2026-08-08) 이후 허위 → 날짜 파생 라벨.

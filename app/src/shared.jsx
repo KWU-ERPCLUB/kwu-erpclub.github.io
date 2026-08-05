@@ -1,6 +1,6 @@
 // 전 페이지 공용 — 네비게이션·푸터·화살표·링크 상수
 // 탭·라벨=영문 정책(owner 2026-07-11): 현업에서 영어로 더 자주 쓰는 용어는 영문, 본문은 한글
-// 모집 = /recruit/ 페이지(IA 3차 2026-07-27 — 사실 서술만·마케팅 어투 금지). 폼 기능 없음(문의 = 단톡방·GitHub).
+// 모집 = /recruit/ 페이지(IA 3차 2026-07-27 — 사실 서술만·마케팅 어투 금지). 문의 = 이메일·GitHub(CONTACT 상수).
 import { useState } from 'react'
 // 로그인 상태 동적 표시(M3 ④) — localStorage 동기 확인 1회. 네트워크 호출 없음 = 공개 페이지 성능·정적성 유지.
 import { hasWorkspaceSession } from './data/session-flag.js'

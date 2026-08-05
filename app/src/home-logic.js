@@ -1,7 +1,6 @@
 // 메인(/) 순수 로직 — 마퀴 트랙·스탯 파싱·카운트업 프레임. 부수효과 0(테스트 대상).
 // UI(App.jsx)가 IntersectionObserver·rAF로 이 순수 함수를 구동. reduced-motion = 즉시 최종값.
 import { RECRUIT } from './data/recruit.js'
-import { isUpcoming } from './pages/seminars-logic.js'
 
 // 히어로 하단 키워드 마퀴 띠 — 다루는 주제(현업 용어=영문 정책 승계, 한글 주제 병기).
 export const MARQUEE_KEYWORDS = [
@@ -37,12 +36,8 @@ export function recruitPhase(ymd, win = RECRUIT.window) {
   return 'open'
 }
 
-// ── RECORD 밴드 파생 집계(정직성 수정 2026-08-05) ──
-// 구현: 세미나 건수를 loadContent 길이 그대로 썼더니 "예정"(일정미정) 1건이 기록 1로 집계됐다.
-// 규칙 = 개최 완료만 기록 — 예정 판정의 유일 원천 = seminars-logic.isUpcoming(목록 배지와 같은 규칙).
-export function heldSeminars(all, ymd) {
-  return (all || []).filter((s) => !isUpcoming(s, ymd))
-}
+// ── RECORD 밴드 파생 집계 ──
+// 세미나 셀 = 밴드에서 제거(2026-08-05 오너 — 신생 스터디 원칙: 0건 지표 미게재. 개최 시작 후 재도입 검토).
 
 // ADsP 1기 시험일 — 이 날짜 이후 "진행 중"은 허위가 된다(시험 종료 = 기수 완주).
 export const ADSP_EXAM_YMD = '2026-08-08'

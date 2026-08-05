@@ -1,6 +1,6 @@
 /* 메인(/) v6 — §6-2a v3.1(NEXTERS 실측 문법, 2026-08-05 2차): 골격·히어로·B1·B2 = 이 파일 /
    섹션 본문(ROADMAP 워드 스택·PROJECTS·FAQ) = home-sections.css(300줄 규격 분할).
-   B1 블랙 통계 밴드(.stats-band — 페이지 블랙 대면적 1개·뷰포트급 흰 숫자 2×2·십자 헤어라인) ·
+   B1 블랙 통계 밴드(.stats-band — 페이지 블랙 대면적 1개·흰 숫자 1×3·세로 헤어라인) ·
    B2 좌 라벨 컬럼 골격(.hs-cols — 버건디 ■ 불릿 라벨/우 콘텐츠, 820px 이하 적층) ·
    B4 버건디 모집 면 철회(구 .home .recruit-band 승격 재정의 삭제 — 블랙 밴드와 대면적 경합·과밀,
    §6-2a "구 N3 버건디 대면적 면은 블랙 밴드와 경합 시 철회 허용" 적용 → recruit.css 기본 라이트 밴드 복귀).
@@ -245,12 +245,11 @@
   color: rgba(255, 255, 255, 0.6);
   margin-bottom: clamp(1.5rem, 4vh, 2.75rem);
 }
-.sb-grid { display: grid; grid-template-columns: 1fr 1fr; }
-/* 십자 헤어라인 — 2×2 셀 경계에만 흰 알파 선(외곽 무선) */
+.sb-grid { display: grid; grid-template-columns: repeat(3, 1fr); }
+/* 세로 헤어라인 — 1×3 셀 경계에만 흰 알파 선(외곽 무선). 세미나 셀 제거로 2×2 → 1×3(2026-08-05) */
 .sb-cell { padding: clamp(1.6rem, 4.5vh, 2.9rem) clamp(1.25rem, 3vw, 2.75rem); }
-.sb-cell:nth-child(odd) { padding-left: 0; }
-.sb-cell:nth-child(even) { border-left: 1px solid rgba(255, 255, 255, 0.22); }
-.sb-cell:nth-child(n + 3) { border-top: 1px solid rgba(255, 255, 255, 0.22); }
+.sb-cell:first-child { padding-left: 0; }
+.sb-cell + .sb-cell { border-left: 1px solid rgba(255, 255, 255, 0.22); }
 .sb-cell .stat-num {
   font-weight: 900;
   font-size: clamp(2.8rem, 7.5vw, 5.5rem); /* v3.2: 뷰포트급(8.5) → 5.5rem대 축소(오너 "부담 제거") */
@@ -265,6 +264,5 @@
 @media (max-width: 700px) {
   .sb-grid { grid-template-columns: 1fr; }
   .sb-cell { padding-left: 0; padding-right: 0; }
-  .sb-cell:nth-child(even) { border-left: 0; }
-  .sb-cell + .sb-cell { border-top: 1px solid rgba(255, 255, 255, 0.22); }
+  .sb-cell + .sb-cell { border-left: 0; border-top: 1px solid rgba(255, 255, 255, 0.22); }
 }

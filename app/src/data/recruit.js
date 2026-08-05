@@ -44,18 +44,14 @@ export const PRIVACY_NOTE = '제출 정보 용도 = 모집 연락·기수 운영
 // 학사일정 연동 원칙(운영틀 개정 2026-08-05 명문화) — 활동 안내 공용 1줄(사실 서술·개조식).
 export const ACADEMIC_RULE = '광운대 학사일정 연동 — 시험(중간·기말) 2주 전부터 활동 중지'
 
-// ── 연락 채널 단일원천(2026-08-05 일원화) ──
-// 단톡방을 언급하는 전 위치(모집 페이지 문의·신청 폼 안내·FAQ·워크스페이스)가 이 상수만 참조한다.
-// kakaoOpenChatUrl = 빈 값(오너 제공 대기) — 빈 값이면 링크 대신 KAKAO_PENDING 문구를 렌더(깨진 링크 금지),
-// 값이 채워지면 같은 자리에서 자동으로 링크로 전환된다.
+// ── 연락 채널 단일원천(2026-08-05 일원화 · 같은 날 저녁 이메일 확정 — 오픈채팅 대체) ──
+// 문의를 언급하는 전 위치(모집 페이지 문의·신청 폼 안내·FAQ·워크스페이스)가 이 상수만 참조한다.
+// 이양 시 공용 계정으로 교체 예정(개인 학교 메일 = 1기 한시) — 교체 지점 = 이 상수 1곳.
 export const CONTACT = {
-  kakaoOpenChatUrl: '',
+  email: 'win7374@kw.ac.kr',
   githubUrl: 'https://github.com/KWU-ERPCLUB/kwu-erpclub.github.io',
 }
-export const KAKAO_PENDING = '단톡방 링크 = 모집 시작 전 공개'
-export function hasKakaoChat() {
-  return Boolean(CONTACT.kakaoOpenChatUrl)
-}
+export const CONTACT_MAILTO = `mailto:${CONTACT.email}`
 
 // 'AIM 1기' — 기수 전체 표기(밴드·로그·모집 페이지 공용).
 export const COHORT_LABEL = `${RECRUIT.study} ${RECRUIT.cohort}`
@@ -108,7 +104,7 @@ export const RECRUIT_SHOWCASE = [
   },
   {
     name: '이 허브 사이트',
-    fact: 'AI 인사이트 집계·세미나 기록·워크스페이스가 도는 지면 — 지금 보고 있는 사이트.',
+    fact: 'AI 인사이트 집계·워크스페이스가 도는 지면 — 지금 보고 있는 사이트.',
     href: '/',
     img: '/img/projects/erpclub-site.png',
   },
