@@ -1,0 +1,38 @@
+/* 히어로 키비주얼(2026-08-05 2차) — 마크업 = src/hero-visual.jsx. 기준 컨테이너 = .hs-hero-in(home.css position: relative).
+   배치 = 히어로 우측 배경 레이어(1040 그리드 안). 텍스트가 주인공 — 타이포 z-index 1 / 비주얼 0 + 저대비, 클릭 통과.
+   색 = 토큰만(--line 격자 · --dark 노드 · --accent 궤적) · 버건디 = 선·점만(대면적 0, §1 금지 준수).
+   모션 = CSS 1회 발화만(궤적 드로잉 → 노드 → 링). 신규 무한루프 0 · JS 애니메이션 루프 0 · reduced-motion = 최종 상태로 정지.
+   과하면 App.jsx의 <HeroVisual /> 한 줄 + 이 파일 제거로 원복(독립 단위). */
+.hs-hero-in > *:not(.hero-kv) { position: relative; z-index: 1; }
+
+.hero-kv {
+  position: absolute;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-46%);
+  width: min(32vw, 380px);
+  height: auto;
+  z-index: 0;
+  pointer-events: none;
+}
+.kv-grid { opacity: 0.8; }
+.kv-dot { opacity: 0.26; }
+
+.kv-trace {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: kv-draw 1500ms cubic-bezier(0.16, 1, 0.3, 1) 350ms forwards;
+}
+.kv-node, .kv-ring { opacity: 0; animation: kv-pop 500ms ease-out 1100ms forwards; }
+.kv-ring { animation-delay: 1500ms; }
+@keyframes kv-draw { to { stroke-dashoffset: 0; } }
+@keyframes kv-pop { to { opacity: 1; } }
+
+/* 반응형 — 태블릿 축소, 폰(≤700) 미표시(텍스트 우선) */
+@media (max-width: 1100px) { .hero-kv { width: 26vw; opacity: 0.6; } }
+@media (max-width: 700px) { .hero-kv { display: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .kv-trace { stroke-dashoffset: 0; animation: none; }
+  .kv-node, .kv-ring { opacity: 1; animation: none; }
+}

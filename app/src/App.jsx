@@ -12,6 +12,7 @@ import { FAQ } from './data/faq.js'
 import { loadContent } from './content/loader.js'
 import { useSectionSpy, useParallax, StaggerChars, CountUp, prefersReduced } from './home-motion.jsx'
 import { Cols, HomeInsights } from './home-parts.jsx'
+import HeroVisual from './hero-visual.jsx'
 
 // PROJECTS — 풀폭 커버 카드(커버 캡처 + 대형 제목 오버레이). 클릭 = /projects/ 상세 딥링크.
 // ?p= 슬러그는 content/프로젝트/<슬러그>.md와 1:1이어야 한다(어긋나면 빈 상세 = 조용한 깨짐).
@@ -83,6 +84,8 @@ function Hero() {
   return (
     <section className="hs hs-hero page" id="top">
       <div className="hs-in hs-hero-in">
+        {/* 키비주얼(2026-08-05 2차) — 우측 배경 레이어. 타이포가 계속 주인공(텍스트 위 z-index 우선·폰에서 미표시). */}
+        <HeroVisual />
         <span className="hero-kicker rv">KWANGWOON UNIV. · SCHOOL OF BUSINESS</span>
         <div className="hero-brand">
           <h1 className="hero-mega">
