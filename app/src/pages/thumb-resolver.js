@@ -1,9 +1,15 @@
-// 인사이트 카드 썸네일 해석 — 4계층 폴백(오너 픽 2026-08-05 D). 순수 함수(부수효과 0) = 테스트 대상.
-//   ① frontmatter `이미지`(기존 로고 방식 존치)
+// 인사이트 카드 썸네일 해석 — 4계층 폴백. 순수 함수(부수효과 0) = 테스트 대상.
+//   ① frontmatter `이미지` — **신규 기고의 정규 경로**(내용과 실제 관련된 이미지 + `이미지설명` 캡션 필수)
 //   ② 본문 md 첫 이미지 — `/img/기사/` 경로만 허용(외부 URL·타 경로 무시)
 //   ③ 브랜드 로고(`/img/logos/`) → 없으면 주제 스톡(`/img/thumbs/`)
 //   ④ 자동 타이포 커버(인라인 SVG — 외부 의존 0)
+//
+// ⚠ 자동 계층(②③④) = **레거시 안전망**이다(오너 판정 2026-08-05: 주제 스톡 자동 매핑 = 보여주기식).
+//   신규 기고는 ①에 명시 이미지 + `이미지설명`을 반드시 넣는다(운영 규칙 = 루트 CONTRIBUTING.md).
+//   ③의 주제 스톡은 글 내용과 무관할 수 있어 상세 히어로에는 쓰지 않는다 — 목록 카드 전용 폴백.
+//
 // 반환 = { kind, src, fit, alt } · kind='cover'면 src 없음(InsightCover가 그림).
+// alt = `이미지설명`(있을 때). 자동 계층에서 나온 이미지는 내용을 대표하지 않으므로 alt를 비운다(장식 이미지 취급).
 // fit: 'contain' = 로고(여백 필요) · 'cover' = 사진(꽉 채움). 전 계층 동일 비율 프레임(CSS .art-cover)이 이질감을 흡수한다.
 
 const ARTICLE_IMG_PREFIX = '/img/기사/'
@@ -92,13 +98,28 @@ export function stockFile(a) {
   return null
 }
 
+// 캡션 = frontmatter `이미지설명`(1줄). 없거나 공백뿐이면 ''.
+export function captionOf(a) {
+  const c = a && typeof a['이미지설명'] === 'string' ? a['이미지설명'].trim() : ''
+  return c
+}
+
+// 상세 히어로 — 기고 맨 위에 거는 이미지. **명시 `이미지`가 있을 때만** 존재한다.
+// 자동 계층(본문 도판·브랜드 로고·주제 스톡)은 히어로에 쓰지 않는다 — 목록 카드 전용(위 주석 참조).
+// 반환 = { src, fit, caption } 또는 null.
+export function resolveHero(a) {
+  const field = a && typeof a['이미지'] === 'string' ? a['이미지'].trim() : ''
+  if (!field) return null
+  return { src: field, fit: field.startsWith(LOGO_DIR) ? 'contain' : 'cover', caption: captionOf(a) }
+}
+
 // 4계층 폴백 해석. 반환 kind = 'field' | 'body' | 'logo' | 'stock' | 'cover'.
 export function resolveThumb(a) {
   if (!a) return { kind: 'cover', src: null, fit: 'cover', alt: '' }
   const field = typeof a['이미지'] === 'string' ? a['이미지'].trim() : ''
   if (field) {
     const logo = field.startsWith(LOGO_DIR)
-    return { kind: 'field', src: field, fit: logo ? 'contain' : 'cover', alt: '' }
+    return { kind: 'field', src: field, fit: logo ? 'contain' : 'cover', alt: captionOf(a) }
   }
   const inBody = firstBodyImage(a.body)
   if (inBody) return { kind: 'body', src: inBody, fit: 'contain', alt: '' }

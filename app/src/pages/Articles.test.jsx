@@ -1,6 +1,7 @@
 import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
 import Articles, { ListView } from './Articles.jsx'
+import { ArticleHero } from './ArticleDetail.jsx'
 import { ArticleRow, FeatureCard } from './insights-parts.jsx'
 import { loadContent } from '../content/loader.js'
 import { toDbRow, fromDbRow } from '../content/db-map.js'
@@ -223,4 +224,35 @@ test('상세 = 통일 셸(문서 헤더·출처 카드 승격·목록 복귀)', 
     if (prev === undefined) delete globalThis.window
     else globalThis.window = prev
   }
+})
+
+// 히어로 이미지 + 캡션(오너 판정 2026-08-05) — 기고 맨 위에서 그 이미지가 무엇인지 밝힌다.
+// 합성 기사로 검증(콘텐츠 비결합): 이미지·캡션 유무 조합의 렌더 규칙을 고정한다.
+test('상세 히어로 — 이미지 있으면 캡션과 함께 렌더(로고 = contain)', () => {
+  const a = art('hero', { 이미지: '/img/logos/openai.svg', 이미지설명: 'OpenAI 로고 — 가격을 내린 개발사' })
+  const html = flat(<ArticleHero a={a} />)
+  expect(html).toContain('art-hero')
+  expect(html).toContain('/img/logos/openai.svg')
+  expect(html).toContain('art-hero-cap')
+  expect(html).toContain(esc('OpenAI 로고 — 가격을 내린 개발사'))
+  expect(html).toContain('art-hero--fit-contain')
+})
+
+test('상세 히어로 — 이미지설명 없으면 캡션 줄만 생략(도판·사진 = cover)', () => {
+  const html = flat(<ArticleHero a={art('h2', { 이미지: '/img/기사/chart.svg' })} />)
+  expect(html).toContain('art-hero')
+  expect(html).not.toContain('art-hero-cap')
+  expect(html).toContain('art-hero--fit-cover')
+})
+
+test('상세 히어로 — 명시 이미지 없으면 통째로 생략(자동 커버·주제 스톡은 목록 전용)', () => {
+  expect(flat(<ArticleHero a={art('h3', { 주제: '시장·생태계' })} />)).toBe('')
+  expect(flat(<ArticleHero a={art('h4', { title: 'Claude 정리' })} />)).toBe('')
+})
+
+test('목록 카드 alt = 이미지설명(명시 이미지) / 자동 폴백은 빈 alt', () => {
+  const withCap = flat(<ArticleRow a={art('c1', { 이미지: '/img/logos/openai.svg', 이미지설명: '오픈AI 로고 — 발표 주체' })} onOpen={noop} />)
+  expect(withCap).toContain(`alt="${esc('오픈AI 로고 — 발표 주체')}"`)
+  const auto = flat(<ArticleRow a={art('c2', { title: 'Claude 정리' })} onOpen={noop} />)
+  expect(auto).toContain('alt=""')
 })

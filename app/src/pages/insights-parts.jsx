@@ -7,12 +7,13 @@ import { InsightCover } from './insights-cover.jsx'
 
 // 썸네일 프레임 — 전 계층 동일 비율(16:10)·동일 보더. 사진=cover / 로고·도판=contain(+여백).
 // 4계층 해석은 thumb-resolver가 담당. 커버(④)만 SVG 컴포넌트.
+// alt = `이미지설명`(명시 이미지일 때만). 자동 폴백 이미지는 alt='' = 장식 취급(스크린리더가 건너뜀).
 export function Thumb({ a, big = false }) {
   const t = resolveThumb(a)
   const cls = `art-cover${big ? ' art-cover--big' : ''} art-cover--${t.kind} art-cover--fit-${t.fit}`
   return (
     <span className={cls}>
-      {t.src ? <img src={t.src} alt="" loading="lazy" /> : <InsightCover a={a} />}
+      {t.src ? <img src={t.src} alt={t.alt} loading="lazy" /> : <InsightCover a={a} />}
     </span>
   )
 }

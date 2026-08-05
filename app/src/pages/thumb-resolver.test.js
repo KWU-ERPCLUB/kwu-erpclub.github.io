@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 import { readdirSync } from 'node:fs'
-import { resolveThumb, firstBodyImage, brandLogo, stockFile, TOPIC_STOCK, DEFAULT_STOCK, BRAND_RULES, SUBJECT_RULES } from './thumb-resolver.js'
+import { resolveThumb, resolveHero, captionOf, firstBodyImage, brandLogo, stockFile, TOPIC_STOCK, DEFAULT_STOCK, BRAND_RULES, SUBJECT_RULES } from './thumb-resolver.js'
 
 // 썸네일 4계층 폴백(오너 픽 2026-08-05 D) — 우선순위대로 하나씩 내려가는지 고정한다.
 const base = { slug: 's', title: '제목', author: 'A', date: '2026-08-05', body: '', 설명: 'd' }
@@ -61,6 +61,27 @@ test('④ 이미지·본문도판·브랜드·주제 전부 없음 = 자동 타�
 test('빈 입력에도 폴백이 끊기지 않는다', () => {
   expect(resolveThumb(null).kind).toBe('cover')
   expect(resolveThumb({}).kind).toBe('cover')
+})
+
+// ── 히어로·캡션(오너 판정 2026-08-05) ──
+test('captionOf = 이미지설명 트림, 없으면 빈 문자열', () => {
+  expect(captionOf({ 이미지설명: '  로고 — 발표 주체  ' })).toBe('로고 — 발표 주체')
+  expect(captionOf({})).toBe('')
+  expect(captionOf(null)).toBe('')
+})
+
+test('resolveHero = 명시 이미지만 채택(자동 계층 미사용)', () => {
+  const h = resolveHero({ ...base, 이미지: '/img/logos/openai.svg', 이미지설명: '오픈AI 로고 — 개발사' })
+  expect(h).toEqual({ src: '/img/logos/openai.svg', fit: 'contain', caption: '오픈AI 로고 — 개발사' })
+  expect(resolveHero({ ...base, 이미지: '/img/기사/chart.svg' }).fit).toBe('cover')
+  // 본문 도판·브랜드 키워드·주제 스톡이 있어도 히어로는 만들지 않는다(장식 방지).
+  expect(resolveHero({ ...base, title: 'Claude 정리', 주제: '에이전트', body: '![x](/img/기사/a.svg)' })).toBeNull()
+  expect(resolveHero(null)).toBeNull()
+})
+
+test('카드 alt = 명시 이미지일 때만 이미지설명(자동 폴백은 빈 alt)', () => {
+  expect(resolveThumb({ ...base, 이미지: '/img/logos/openai.svg', 이미지설명: '오픈AI 로고' }).alt).toBe('오픈AI 로고')
+  expect(resolveThumb({ ...base, title: 'Claude 정리', 이미지설명: '무시됨' }).alt).toBe('')
 })
 
 // 매핑이 가리키는 파일이 public에 실제로 있어야 한다(404 썸네일 방지).
