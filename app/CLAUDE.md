@@ -30,7 +30,8 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
 - 로더 = `src/content/loader.js`(글롭 로드). 앱·CLI가 같은 스키마를 소비.
 - **시리즈(2026-08-05)** = 정기 연재 묶음. 레지스트리 단일원천 = `src/content/series.js`(id·표시명·설명·주기·고정 커버·슬러그키).
   frontmatter `시리즈`(선택) 또는 **슬러그 자동 인식**(`weekly-trend` → `weekly`)으로 귀속 — 정규화 지점 = loader.js·`fromDbRow` 2곳.
-  화면 = 목록 최상단 밴드 + 아카이브 `?series=<id>`(`pages/insights-series.jsx`·`styles/insights-series.css`), 메인 그리드 제외(검색은 포함).
+  화면 = **필터 칩 1개**(오너 재판정 2026-08-05 — 밴드·전용 아카이브 폐지). 칩 소재 = `insights-logic.js seriesOptions`,
+  조건 = `filterArticles({ series })`(다른 필터와 AND), URL = `?series=<id>`. 시리즈 글도 피처·그리드·카운트에 일반 기사와 동일 포함.
   썸네일·히어로 = 고정 커버가 개별 `이미지`보다 우선(thumb-resolver ⓪). DB 컬럼 = `articles.시리즈`(migration 0005 — 미적용이어도 슬러그 인식으로 동작).
 - **md→DB 동기화(M2)** = `scripts/sync-content-db.mjs`: `content/기사/*.md` → `articles` upsert(키=`슬러그`=파일명 스템, **삭제 없음**).
   매핑 단일원천 = `src/content/db-map.js`(toDbRow/fromDbRow). 파일 읽기 공용 = `scripts/content-files.mjs`(validate와 공유).
