@@ -2,6 +2,7 @@ import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
 import App, { PROJECTS, RecruitBand } from './App.jsx'
 import { COHORT_LABEL, formatWindowShort } from './data/recruit.js'
+import { FAQ } from './data/faq.js'
 import { loadContent } from './content/loader.js'
 
 // 구조 검증(콘텐츠·시점 무관) — v5 풀블리드 스크린 섹션: 100vh 히어로·계보 트리·풀폭 커버·대형 FAQ. (WHY 폐지 2026-07-25)
@@ -82,6 +83,13 @@ test('모집 섹션(확대 2026-08-05) = 국면별 렌더 — 전·중=대형 �
   expect(open).toContain('모집 중')
   // 모집 종료 — 메인에서 미렌더(모집 페이지·나브는 별도 유지)
   expect(renderToString(<RecruitBand today="2026-09-09" />)).toBe('')
+})
+
+// E4 공용화(2026-08-05) 회귀 가드 — 메인 FAQ = data/faq.js 전체 렌더(서브셋 아님·문항 유실 없음)
+test('메인 FAQ = data/faq.js 원천 전량 렌더', () => {
+  const html = renderToString(<App />)
+  expect(FAQ.length).toBe(6)
+  for (const { q } of FAQ) expect(html).toContain(q)
 })
 
 test('FAQ 모집 답 = 확정 기간 반영(비정기 문구 폐지) — 기간은 데이터 파생', () => {
