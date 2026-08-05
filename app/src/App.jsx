@@ -52,29 +52,23 @@ function ChevronDown() {
   )
 }
 
-// 조준점 시그니처 — AIM의 '겨냥' 중의(스터디명 픽 근거). 단일 펄스 1회, reduced-motion = 정적.
-function Reticle() {
-  return (
-    <svg className="hero-reticle" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <circle cx="12" cy="12" r="7.5" stroke="currentColor" strokeWidth="1.6" />
-      <circle cx="12" cy="12" r="1.7" fill="currentColor" />
-      <path d="M12 1.5V5M12 19v3.5M1.5 12H5M19 12h3.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-    </svg>
-  )
-}
-
-// 히어로 100vh — 브랜드 키커 → 뷰포트 타이포(AIM+조준점) → 확장 라인(AI × MIS) → 서브 → 풀폭 마퀴 + 스크롤 유도.
+// 히어로 100vh — 브랜드 키커 → 뷰포트 타이포(AIM) → 확장 라인(AI × MIS, AIM 폭 정렬) → 서브 → 풀폭 마퀴 + 스크롤 유도.
+// 확장 라인 정렬(오너 2026-08-05): AI = 메가 A·I 아래 좌측, MIS = 메가 M 아래 우측 — .hero-brand 인라인블록이 메가 폭을 감싸고 flex 양끝 정렬.
 function Hero() {
   return (
     <section className="hs hs-hero page" id="top">
       <div className="hs-in hs-hero-in">
         <span className="hero-kicker rv">KWANGWOON UNIV. · SCHOOL OF BUSINESS</span>
-        <h1 className="hero-mega">
-          <span className="hero-l rv"><StaggerChars text="AI" accent start={0} /><StaggerChars text="M" start={2} /><Reticle /></span>
-        </h1>
-        <p className="hero-expand rv" aria-label="AI × MIS">
-          <span aria-hidden="true"><StaggerChars text="AI × MIS" start={4} /></span>
-        </p>
+        <div className="hero-brand">
+          <h1 className="hero-mega">
+            <span className="hero-l rv"><StaggerChars text="AI" accent start={0} /><StaggerChars text="M" start={2} /></span>
+          </h1>
+          <p className="hero-expand rv" aria-label="AI × MIS">
+            <span aria-hidden="true"><StaggerChars text="AI" start={4} /></span>
+            <span aria-hidden="true"><StaggerChars text="×" start={6} /></span>
+            <span aria-hidden="true"><StaggerChars text="MIS" start={7} /></span>
+          </p>
+        </div>
         <p className="hero-sub rv" style={{ transitionDelay: '320ms' }}>
           광운대학교 ERP연구회 산하 MIS·AI 스터디
         </p>
@@ -96,22 +90,27 @@ function Hero() {
   )
 }
 
-// 모집 밴드(IA 3차 2026-07-27) — 히어로 직하 공고. 기간 밖 = 예정/다음 기수 안내로 전환(SPEC §4).
-// .page 미부여 = 섹션 스파이(감쇠) 제외. 카피 = 사실 서술만.
+// 모집 섹션(확대 개편 2026-08-05 오너) — 히어로 직하 한 축. 기간 종료(after) = 메인 미표시(모집 페이지·나브는 유지).
+// .page 미부여 = 섹션 스파이(감쇠) 제외. 카피 = 사실 서술만. export = 국면별(전·중·후) 렌더 테스트용.
 const RECRUIT_COPY = {
-  before: ['prep', '모집 예정', `${COHORT_LABEL} — ${RECRUIT.window.start} 모집 시작`],
-  open: ['live', '모집 중', `${COHORT_LABEL} — ${RECRUIT.window.end} 마감`],
-  after: ['planned', '안내', `${COHORT_LABEL} 모집 종료 — 다음 기수는 모집 페이지 참조`],
+  before: ['prep', '모집 예정', `${RECRUIT.window.start} 모집 시작`],
+  open: ['live', '모집 중', `${RECRUIT.window.end} 마감`],
 }
 
-function RecruitBand() {
-  const [badge, badgeLabel, text] = RECRUIT_COPY[recruitPhase(localYmd())]
+export function RecruitBand({ today = localYmd() }) {
+  const phase = recruitPhase(today)
+  if (phase === 'after') return null
+  const [badge, badgeLabel, note] = RECRUIT_COPY[phase]
   return (
     <section className="recruit-band" id="recruit" aria-label="AIM 모집 안내">
       <div className="rb-in">
-        <span className={`status ${badge}`}>{badgeLabel}</span>
-        <p className="rb-text">{text}</p>
-        <a className="proof-link" href="/recruit/">모집 안내 <Arrow /></a>
+        <div className="rb-head">
+          <span className={`status ${badge}`}>{badgeLabel}</span>
+          <span className="rb-note">{note}</span>
+        </div>
+        <h2 className="rb-title">{COHORT_LABEL} 모집</h2>
+        <p className="rb-text">모집 {formatWindowShort()} · 활동 {RECRUIT.활동기간}</p>
+        <a className="proof-link rb-cta" href="/recruit/">모집 안내 <Arrow /></a>
       </div>
     </section>
   )

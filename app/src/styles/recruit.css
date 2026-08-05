@@ -2,18 +2,24 @@
    규격 = 디자인규칙 v2: 토큰 고정 · 버건디 화이트리스트(눈썹④·em①·점⑦·콜아웃 보더⑩·prep 배지⑤) · 빈도 상한 · 라이트 단일.
    + 메인(/) 모집 밴드(.recruit-band) — 히어로 직하 슬림 공고(섹션 스파이 .page 제외). */
 
-/* ══ 메인 모집 밴드 ══ */
+/* ══ 메인 모집 섹션(확대 개편 2026-08-05 — 한 축. 모집 종료 시 메인 미렌더) ══ */
 .recruit-band { width: 100%; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--surface); }
 .rb-in {
-  max-width: var(--maxw); margin: 0 auto; padding: 0.9rem 1.5rem;
-  display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem;
+  max-width: var(--maxw); margin: 0 auto; padding: clamp(2.5rem, 7vh, 4.25rem) 1.5rem;
+  display: flex; flex-direction: column; align-items: flex-start; gap: 0.9rem;
 }
-.rb-in .status { margin: 0; }
-.rb-text { margin: 0; font-size: 0.95rem; font-weight: 600; word-break: keep-all; }
-.rb-in .proof-link { margin-left: auto; }
+.rb-head { display: flex; align-items: center; gap: 0.9rem; }
+.rb-head .status { margin: 0; }
+.rb-note { font-size: 0.95rem; font-weight: 600; color: var(--text-sub); }
+.rb-title {
+  font-family: var(--font-display); font-weight: 900;
+  font-size: clamp(1.9rem, 4.5vw, 3.4rem); letter-spacing: -0.02em;
+  margin: 0; line-height: 1.08;
+}
+.rb-text { margin: 0; font-size: clamp(0.95rem, 1.5vw, 1.1rem); font-weight: 600; word-break: keep-all; }
+.rb-cta { margin-top: 0.35rem; }
 @media (max-width: 700px) {
-  .rb-in { padding: 0.85rem 1.25rem; gap: 0.7rem; }
-  .rb-in .proof-link { margin-left: 0; }
+  .rb-in { padding: 2rem 1.25rem; gap: 0.75rem; }
 }
 
 /* ══ /recruit 페이지 셸 ══ */

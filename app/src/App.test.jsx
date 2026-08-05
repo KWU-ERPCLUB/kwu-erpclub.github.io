@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
-import App, { PROJECTS } from './App.jsx'
+import App, { PROJECTS, RecruitBand } from './App.jsx'
 import { COHORT_LABEL, formatWindowShort } from './data/recruit.js'
 import { loadContent } from './content/loader.js'
 
@@ -16,10 +16,11 @@ test('메인 = 풀블리드 3섹션 + 100vh 히어로(뷰포트 타이포·소�
   expect(/class="sc"|class="sc /.test(html)).toBe(true)
   // 소개 2줄(브랜드 개편 2026-08-05): 주체 = AIM, 서브 = 산하 계보 한 줄
   expect(html).toContain('광운대학교 ERP연구회 산하 MIS·AI 스터디')
-  // 히어로 보강(2026-08-05 저녁): 확장 라인(AI × MIS) + 조준점 시그니처
+  // 히어로 보강(2026-08-05 저녁): 확장 라인(AI × MIS) — AIM 폭 양끝 정렬(.hero-brand 묶음)
+  expect(html).toContain('hero-brand')
   expect(html).toContain('hero-expand')
   expect(html).toContain('aria-label="AI × MIS"')
-  expect(html).toContain('hero-reticle')
+  expect(html).not.toContain('hero-reticle')
   expect(html).toContain('hero-desc')
   // 히어로 하단: 풀폭 마퀴 띠 + 스크롤 유도
   expect(html).toContain('marquee-track')
@@ -67,13 +68,24 @@ test('WHY 섹션 부재(2026-07-25 폐지) — 수치 스트립·섹션 앵커 �
   expect(html).not.toContain('data-note')
 })
 
-test('모집 밴드(IA 3차) = 히어로 직하 공고 + /recruit/ 링크 + 상태 배지 · 섹션 스파이 제외(.page 미부여)', () => {
+test('모집 섹션(확대 2026-08-05) = 국면별 렌더 — 전·중=대형 공고, 종료=메인 미표시', () => {
+  // 모집 전(창 시작 전) — 대형 섹션 + 기수·기간·CTA
+  const before = renderToString(<RecruitBand today="2026-08-20" />)
+  expect(before).toContain('recruit-band')
+  expect(before).toContain('rb-title')
+  expect(before).toContain(COHORT_LABEL) // 기수 표기 = 모집 데이터에서 파생
+  expect(before).toContain(formatWindowShort())
+  expect(before).toContain('href="/recruit/"')
+  expect(/class="recruit-band[^"]*page/.test(before)).toBe(false) // 섹션 스파이 제외
+  // 모집 중 — 마감 안내
+  const open = renderToString(<RecruitBand today="2026-09-01" />)
+  expect(open).toContain('모집 중')
+  // 모집 종료 — 메인에서 미렌더(모집 페이지·나브는 별도 유지)
+  expect(renderToString(<RecruitBand today="2026-09-09" />)).toBe('')
+})
+
+test('FAQ 모집 답 = 확정 기간 반영(비정기 문구 폐지) — 기간은 데이터 파생', () => {
   const html = renderToString(<App />)
-  expect(html).toContain('recruit-band')
-  expect(html).toContain('href="/recruit/"')
-  expect(html).toContain(COHORT_LABEL) // 기수 표기 = 모집 데이터에서 파생
-  expect(/class="recruit-band[^"]*page/.test(html)).toBe(false)
-  // FAQ 모집 답 = 확정 기간 반영(비정기 문구 폐지) — 기간도 데이터 파생
   expect(html).toContain(formatWindowShort())
   expect(html).not.toContain('모집은 비정기')
 })

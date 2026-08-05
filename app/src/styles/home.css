@@ -84,34 +84,23 @@
 }
 .hero-l { display: block; }
 
-/* 확장 라인 — AIM 풀네임(AI × MIS). 자간 넓은 디스플레이 소형, 색=서브(버건디 화이트리스트 불변) */
+/* 브랜드 묶음 — 인라인블록이 메가(AIM) 폭을 감싸 확장 라인의 양끝 정렬 기준이 된다 */
+.hero-brand { display: inline-block; }
+
+/* 확장 라인 — AIM 풀네임(AI × MIS). flex 양끝 정렬: AI=메가 A·I 아래, MIS=메가 M 아래. 색=서브(버건디 화이트리스트 불변) */
 .hero-expand {
-  margin: clamp(0.7rem, 1.6vh, 1.1rem) 0 0;
+  margin: clamp(0.5rem, 1.2vh, 0.9rem) 0 0;
   font-family: var(--font-display);
   font-weight: 800;
   font-size: clamp(0.95rem, 1.6vw, 1.35rem);
-  letter-spacing: 0.42em;
+  letter-spacing: 0.14em;
   color: var(--text-sub);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
 }
-
-/* 조준점 시그니처 — 'AIM=겨냥' 중의. 단일 펄스 1회(transform·opacity만), 이후 정지 */
-.hero-reticle {
-  display: inline-block;
-  width: clamp(1.05rem, 2.1vw, 1.7rem);
-  height: auto;
-  margin-left: 0.16em;
-  vertical-align: super;
-  color: var(--text-sub);
-  animation: reticle-pulse 1.4s ease-out 950ms 1 both;
-}
-@keyframes reticle-pulse {
-  0% { opacity: 0; transform: scale(0.55); }
-  60% { opacity: 1; transform: scale(1.14); }
-  100% { opacity: 1; transform: scale(1); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hero-reticle { animation: none; }
-}
+/* 마지막 글자의 자간 잔여폭 보정 — MIS 우측 끝을 메가 M 우측에 맞춘다 */
+.hero-expand > span:last-child { margin-right: -0.14em; }
 
 .hero-sub {
   margin: clamp(1.5rem, 3vh, 2.25rem) 0 0;
