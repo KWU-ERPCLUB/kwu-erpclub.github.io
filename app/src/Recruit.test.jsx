@@ -3,7 +3,7 @@ import { renderToString } from 'react-dom/server'
 import Recruit from './Recruit.jsx'
 import {
   RECRUIT, PHASES, ACADEMIC_RULE, COHORT_LABEL, RECRUIT_DO, RECRUIT_STEPS,
-  RECRUIT_SHOWCASE, SHOWCASE_LEAD, formatWindow, shortDate,
+  RECRUIT_SHOWCASE, SHOWCASE_LEAD, PRIVACY_NOTE, formatWindow, shortDate,
 } from './data/recruit.js'
 import { FAQ, RECRUIT_FAQ } from './data/faq.js'
 
@@ -169,6 +169,30 @@ test('E4 FAQ 서브셋 = data/faq.js 단일원천(모집 문항만·아코디언
   expect(html).not.toContain('스터디가 왜 필요한가요') // 비모집 문항은 메인만
   expect(html).toContain('rc-faq-item')
   expect(html).toContain('<details')
+})
+
+// FAQ 증보(2026-08-05 2차) — 근거 있는 값만. 미확정(선발 기준·정원·결석 정책) 문항은 만들지 않는다.
+test('FAQ 증보 4문항 = 모집 서브셋 노출(시간·학점·개인정보·전공) + 기존 값 재사용', () => {
+  const html = flat(<Recruit />)
+  const added = ['주당 시간이 얼마나 드나요?', '학점·졸업요건과 관계가 있나요?', '제출한 개인정보는 어떻게 쓰이나요?', '전공 제한이 있나요?']
+  for (const q of added) {
+    expect(RECRUIT_FAQ.some((f) => f.q === q), `모집 서브셋 누락: ${q}`).toBe(true)
+    expect(html, `모집 페이지 미노출: ${q}`).toContain(q)
+  }
+  const byQ = (needle) => FAQ.find((f) => f.q.includes(needle)).a
+  expect(byQ('주당 시간')).toContain('매주 대면 60분')   // 요강 값과 동일
+  expect(byQ('주당 시간')).toContain('주 1건 기고')      // WHAT WE DO 값과 동일
+  expect(byQ('주당 시간')).toContain(ACADEMIC_RULE)      // 시험 전 활동 중지 = 공용 상수
+  expect(byQ('개인정보')).toBe(PRIVACY_NOTE)             // 신청 폼 하단과 같은 상수
+  expect(byQ('전공 제한')).toContain('경영학부 중심')
+  expect(byQ('학점')).toContain('자율 스터디')
+})
+
+test('FAQ 증보 = 미확정 항목 문항·값 없음(선발 기준·정원·결석)', () => {
+  const all = FAQ.map((f) => `${f.q} ${f.a}`).join(' ')
+  for (const banned of ['선발 기준', '정원', '결석', '[미정]']) {
+    expect(all, `미확정 항목 게재: ${banned}`).not.toContain(banned)
+  }
 })
 
 test('E6 CTA = 헤더 신청하기 앵커 → 하단 폼 섹션 id 연결 + 대형 CTA(유지)', () => {

@@ -1,6 +1,6 @@
 // FAQ 단일원천(E4, 2026-08-05 오너 픽) — 메인(/) = 전체, /recruit = recruit:true 서브셋(코딩·비용·관계·모집 시기).
 // 원천 1곳: 문항 추가·수정 = 이 파일만. 답변 = 개조식(디자인규칙 §0-1). 질문 = 문답 UI라 구어 유지(예외 승인 범위).
-import { RECRUIT, formatWindowShort, KAKAO_PENDING, hasKakaoChat } from './recruit.js'
+import { RECRUIT, ACADEMIC_RULE, PRIVACY_NOTE, formatWindowShort, KAKAO_PENDING, hasKakaoChat } from './recruit.js'
 
 // 문의 채널 1줄 — 단톡방 URL 미제공이면 "링크 = 모집 시작 전 공개"까지 명시(존재하지 않는 경로 안내 금지).
 const 문의채널 = hasKakaoChat()
@@ -29,6 +29,29 @@ export const FAQ = [
   {
     q: 'ERP연구회와는 어떤 관계인가요?',
     a: 'ERP연구회 산하 스터디. 연구회 안에 SAP 실습·공모전 심화 트랙.',
+    recruit: true,
+  },
+  // 증보 4문항(2026-08-05 2차) — 답변 값은 전부 기존 지면에 이미 있는 것만 재사용:
+  // 시간 = RECRUIT_FACTS 모임·RECRUIT_DO 기고·ACADEMIC_RULE / 학점 = 헌장상 자율 스터디 / 개인정보 = RecruitForm 하단 문구
+  // / 전공 = RECRUIT_FIT 경영학부 중심. 미확정(선발 기준·정원·결석 정책)은 문항 자체를 만들지 않는다.
+  {
+    q: '주당 시간이 얼마나 드나요?',
+    a: `모임 = 매주 대면 60분 · 개인 산출물 진척 + 주 1건 기고(인사이트 게재)가 주 단위 활동. ${ACADEMIC_RULE}.`,
+    recruit: true,
+  },
+  {
+    q: '학점·졸업요건과 관계가 있나요?',
+    a: '무관. 교내 학회(ERP연구회) 산하 자율 스터디 — 학점·이수 요건 아님.',
+    recruit: true,
+  },
+  {
+    q: '제출한 개인정보는 어떻게 쓰이나요?',
+    a: PRIVACY_NOTE,
+    recruit: true,
+  },
+  {
+    q: '전공 제한이 있나요?',
+    a: '없음. 경영학부 중심 — 전공 무관, 지원 제한 없음.',
     recruit: true,
   },
   {
