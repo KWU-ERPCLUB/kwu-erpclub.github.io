@@ -110,7 +110,7 @@ button.proof-link {
 .sem-next-kicker {
   display: inline-flex; align-items: center; gap: 0.55rem;
   font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; color: rgba(255, 255, 255, 0.85); }
-.sem-next-sq { width: 8px; height: 8px; background: #d18f9a; flex: none; } /* B4 — 다크 위 파생 강조, 버건디 = 마이크로 후퇴 */
+.sem-next-sq { width: 8px; height: 8px; background: var(--accent-on-dark); flex: none; } /* B4 — 다크 위 파생 강조, 버건디 = 마이크로 후퇴 */
 .sem-next-band .sem-soon-badge { margin-top: 0; color: #fff; border-color: rgba(255, 255, 255, 0.55); }
 /* 흰 대형 숫자 행 — 상하 헤어라인 + 세로 헤어라인 분할(십자 헤어라인 변형, B1 허용) */
 .sem-next-figures {
@@ -130,7 +130,7 @@ button.proof-link {
 .sem-tl-item.is-next .hub-chip { background: transparent; border-color: rgba(255, 255, 255, 0.5); color: #fff; }
 .sem-tl-item.is-next .sem-tl-title { color: #fff; margin-top: 0.5rem; font-size: clamp(1.7rem, 3.6vw, 2.4rem); line-height: 1.12; } /* v3.2 다운 */
 .sem-tl-item.is-next .sem-tl-title:focus-visible { outline-color: var(--focus-on-dark); }
-.sem-tl-item.is-next .sem-tl-underbar { background: #d18f9a; }
+.sem-tl-item.is-next .sem-tl-underbar { background: var(--accent-on-dark); }
 .sem-tl-item.is-next .sem-tl-points li { color: #fff; }
 .sem-tl-item.is-next .sem-tl-points li::marker { color: rgba(255, 255, 255, 0.7); }
 .sem-tl-item.is-next .sem-tl-excerpt { color: rgba(255, 255, 255, 0.85); }
@@ -190,7 +190,7 @@ button.proof-link {
 }
 .sem-ed-back:hover { color: #fff; }
 .sem-ed-eyebrow { /* 다크 위 파생 강조 #D18F9A */
-  display: block; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.09em; color: #d18f9a; margin-bottom: 1rem;
+  display: block; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.09em; color: var(--accent-on-dark); margin-bottom: 1rem;
 }
 .sem-ed-title { /* Hero급 — 흰 타이포 clamp ~3.2rem */
   font-family: var(--font-display); font-weight: 900; font-size: clamp(2.1rem, 5.2vw, 3.2rem);
@@ -205,10 +205,10 @@ button.proof-link {
 .sem-ed-band .btn-2nd { background: transparent; color: #fff; border-color: rgba(255, 255, 255, 0.4); }
 .sem-ed-band .btn-2nd:hover { border-color: #fff; }
 .sem-ed-origin { /* Tertiary on dark — 흰 텍스트 + #D18F9A 밑줄 */
-  font-size: 0.88rem; font-weight: 700; color: #fff; text-decoration: none; border-bottom: 2px solid #d18f9a;
+  font-size: 0.88rem; font-weight: 700; color: #fff; text-decoration: none; border-bottom: 2px solid var(--accent-on-dark);
   display: inline-flex; align-items: center; gap: 0.4rem;
 }
-.sem-ed-origin:hover { color: #d18f9a; }
+.sem-ed-origin:hover { color: var(--accent-on-dark); }
 
 /* ── 상세 본문 = 흰 에디토리얼(밴드 아래, 다른 다크 면 없음) ── */
 .sem-ed-body { max-width: var(--maxw); margin: 0 auto; padding: clamp(2.5rem, 5vh, 3.5rem) 1.5rem clamp(3rem, 6vh, 4rem); }

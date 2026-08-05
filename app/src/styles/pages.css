@@ -1,5 +1,7 @@
-/* 세미나·실습 목록/상세 공용 — 구 hub.css에서 두 페이지가 쓰던 최소 스타일만 이관(2026-07-23).
-   Articles는 별도(articles.css). 토큰은 global.css만 · light-only · 디자인규칙 v2 준수. */
+/* 세미나·프로젝트 공용 셸 — 구 hub.css에서 두 페이지가 쓰던 최소 스타일만 이관(2026-07-23).
+   Articles는 별도(articles.css). 토큰은 global.css만 · light-only · 디자인규칙 v2 준수.
+   3차 위생(2026-08-05) 삭제: .hub-head/.hub-idx(페이지 머리) · .hub-list/.hub-card/.hub-meta/.hub-detail
+   — JSX 전수 grep 0건(헤드 = 공용 PageHead, 목록·상세는 각 페이지 전용 CSS로 이미 이관). */
 
 /* ── 페이지 셸 (내부형 밀도 §3) ───────────────── */
 .hub-page {
@@ -10,37 +12,6 @@
 @media (max-width: 700px) { .hub-page { padding: 2rem 1.25rem 3.5rem; } }
 /* 상세 전용 폭 해제(2026-07-28 도판 브레이크아웃) — 목록 셸은 920 유지, 폭 책임 = .hub-md 그리드(hub-md.css) */
 .hub-page--wide { max-width: none; }
-
-/* ── 페이지 머리 — 브랜드 타이포 승계(Paperlogy display + 버건디 em) ── */
-.hub-head {
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid var(--line);
-  margin-bottom: 2rem;
-}
-.hub-head h1 {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(1.9rem, 4vw, 2.6rem);
-  line-height: 1.18;
-  letter-spacing: -0.02em;
-  margin: 0 0 0.6rem;
-}
-.hub-head h1 em { font-style: normal; color: var(--accent); } /* 화이트리스트 ① */
-.hub-head p {
-  margin: 0;
-  max-width: 52ch;
-  font-size: 0.92rem;
-  color: var(--text-sub);
-}
-/* 눈썹 인덱스 — §3-1 page-head 골격 통일(화이트리스트 ④ 섹션 인덱스) */
-.hub-idx {
-  display: block;
-  font-size: 0.82rem;
-  font-weight: 600;
-  letter-spacing: 0.07em;
-  color: var(--accent);
-  margin-bottom: 0.7rem;
-}
 
 /* ── 목록 카드 칩 — 회차·유형(선택 필 아님·정보 칩) ── */
 .hub-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.5rem; }
@@ -54,47 +25,7 @@
   padding: 0.14rem 0.6rem;
 }
 
-/* ── 카드 언어 — surface + 헤어라인 + radius 18px ── */
-.hub-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 0.85rem;
-}
-.hub-card { display: block; }
-.hub-card > button {
-  display: block;
-  width: 100%;
-  text-align: left;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-card);
-  padding: 1.15rem 1.35rem;
-  color: inherit;
-  text-decoration: none;
-  font: inherit;
-  cursor: pointer;
-}
-/* 카드 hover — §5 배경 시프트 + 테두리 차콜(버건디 면·테두리 금지) */
-.hub-card > button:hover { background: #fff; border-color: var(--text); }
-.hub-card > button:active { transform: scale(0.99); }
-.hub-card-title {
-  font-size: 1.05rem; /* 타이포 §2 카드 제목 */
-  font-weight: 700;
-  line-height: 1.35;
-  display: block;
-  margin-bottom: 0.35rem;
-}
-.hub-meta {
-  font-size: 0.82rem; /* 마이크로 타이포 — 내부형 메타 */
-  color: var(--text-sub);
-  display: block;
-  line-height: 1.5;
-}
-
-/* ── 상세 뷰 — 내부형 문서(720px 본문, doc-h1 승계) ── */
-.hub-detail { max-width: 720px; }
+/* ── 상세 뒤로가기 ── */
 .hub-back { /* Tertiary — 텍스트 링크(버건디 밑줄 없이 차콜 hover) */
   background: none;
   border: none;
@@ -106,20 +37,6 @@
   cursor: pointer;
 }
 .hub-back:hover { color: var(--text); }
-.hub-detail > h1 {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1.6rem;
-  line-height: 1.3;
-  letter-spacing: -0.02em;
-  margin: 0 0 0.5rem;
-}
-.hub-detail > .hub-meta { /* 페이지 메타 줄 — 마이크로 0.78rem(§3) */
-  font-size: 0.78rem;
-  padding-bottom: 1.1rem;
-  border-bottom: 1px solid var(--line);
-  margin-bottom: 1.75rem;
-}
 
 /* ── 발원 기사 링크 (상세) ── */
 .sem-origin { font-size: 0.84rem; color: var(--text-sub); margin: 0 0 1.5rem; }
@@ -165,21 +82,17 @@
 }
 
 /* ── §5 인터랙션 4상태 — 150ms ease-out, transform·color·bg만 ── */
-.hub-card > button,
 .hub-back,
 .hub-md a {
   transition: background-color 150ms ease-out, border-color 150ms ease-out,
     color 150ms ease-out, transform 100ms ease-out;
 }
-.hub-card > button:focus-visible,
 .hub-back:focus-visible,
 .hub-md a:focus-visible {
   outline: 3px solid var(--accent);
   outline-offset: 2px;
 }
 @media (prefers-reduced-motion: reduce) {
-  .hub-card > button,
   .hub-back,
   .hub-md a { transition: none; }
-  .hub-card > button:active { transform: none; }
 }

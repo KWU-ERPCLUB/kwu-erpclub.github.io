@@ -107,7 +107,7 @@
    v3 N3 — 페이지 유일 색면: 버건디 틴트 밴드(#7A2030 약 7% over #fff). 면 위 직접 텍스트 없음(카드=흰 면) → 대비 AA 자명. */
 .art-features {
   list-style: none; margin: 0 0 2.25rem; padding: 1.4rem; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;
-  background: #f6edef; border-radius: var(--radius-card);
+  background: var(--tint-accent); border-radius: var(--radius-card);
 }
 .art-feature { list-style: none; }
 

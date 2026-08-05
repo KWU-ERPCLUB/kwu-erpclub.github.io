@@ -197,7 +197,7 @@
 }
 .pj-log-body .hub-md p { margin: 0 0 0.6rem; }
 .pj-log-body .hub-md p:last-child { margin-bottom: 0; }
-.pj-log-body .hub-md a { color: #fff; border-bottom-color: var(--accent-derived, #d18f9a); }
+.pj-log-body .hub-md a { color: #fff; border-bottom-color: var(--accent-on-dark); }
 
 /* ── §5 인터랙션 4상태 — 150ms ease-out, transform·opacity·color만 ── */
 .pj-card-open, .pj-card-info, .pj-ov-link {
