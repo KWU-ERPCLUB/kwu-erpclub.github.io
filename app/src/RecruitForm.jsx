@@ -1,7 +1,12 @@
 // /recruit 신청 폼(온사이트 접수 — 오너 보류 해제 2026-08-05). 데이터 출처 = pages/apply-source.js 어댑터만.
+// 모집 창 밖 = 폼 미표시 + 국면 안내(before = 접수 시작일 / after = 다음 기수 공지) — 상시 접수 금지.
 // env 미설정 = 폼 미표시 + 제출 불가 안내(목 폴백으로 성공하는 척 금지 — 오너 확정).
 import { useState } from 'react'
-import { EMPTY_APPLICATION, isApplyOpen, validateApplication, submitApplication } from './pages/apply-source.js'
+import {
+  EMPTY_APPLICATION, APPLY_NOTE, applyPhase, isBackendReady,
+  validateApplication, submitApplication,
+} from './pages/apply-source.js'
+import { localYmd } from './home-logic.js'
 
 // [키, 라벨, 보조 설명] — 필수 4 + 자유 서술 2(선택)
 const REQUIRED_FIELDS = [
@@ -15,13 +20,19 @@ const FREE_FIELDS = [
   ['관심주제', '관심 있는 주제', '스터디에서 다루고 싶은 것 자유 서술(선택)'],
 ]
 
-export default function RecruitForm({ configured, repos }) {
-  const open = configured === undefined ? isApplyOpen() : configured
+// 렌더 3분기(2026-08-05) = 모집 창 국면(before·open·after) → 창 안이면 백엔드 연결 여부.
+// today·configured = 테스트 주입구(기본 = 실제 오늘·env 판정).
+export default function RecruitForm({ configured, repos, today = localYmd() }) {
+  const window국면 = applyPhase(today)
+  const open = configured === undefined ? isBackendReady() : configured
   const [form, setForm] = useState(EMPTY_APPLICATION)
   const [errors, setErrors] = useState({})
   const [phase, setPhase] = useState('idle')      // idle | busy | done
   const [failure, setFailure] = useState('')
 
+  if (window국면 !== 'open') {
+    return <p className="rc-callout">{APPLY_NOTE[window국면]}</p>
+  }
   if (!open) {
     return (
       <p className="rc-callout">

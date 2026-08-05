@@ -108,7 +108,7 @@ test('RECORD 스터디 셀 = 시험일 경계로 진행 중 → 완주 전환', 
   expect(after).not.toContain('진행 중 스터디')
 })
 
-test('모집 섹션(확대 2026-08-05) = 국면별 렌더 — 전·중=대형 공고, 종료=메인 미표시', () => {
+test('모집 섹션(확대 2026-08-05) = 국면별 렌더 — 전·중=대형 공고, 종료=다음 기수 안내', () => {
   // 모집 전(창 시작 전) — 대형 섹션 + 기수·기간·CTA
   const before = renderToString(<RecruitBand today="2026-08-20" />)
   expect(before).toContain('recruit-band')
@@ -120,8 +120,13 @@ test('모집 섹션(확대 2026-08-05) = 국면별 렌더 — 전·중=대형 �
   // 모집 중 — 마감 안내
   const open = renderToString(<RecruitBand today="2026-09-01" />)
   expect(open).toContain('모집 중')
-  // 모집 종료 — 메인에서 미렌더(모집 페이지·나브는 별도 유지)
-  expect(renderToString(<RecruitBand today="2026-09-09" />)).toBe('')
+  // 모집 종료 — 밴드 자리를 비우지 않고 "다음 기수 안내"로 교체(SPEC §4)
+  const after = renderToString(<RecruitBand today="2026-09-09" />)
+  expect(after).toContain('recruit-band')
+  expect(after).toContain('다음 기수 안내')
+  expect(after).toContain('모집 마감')
+  expect(after).toContain('href="/recruit/"')
+  expect(after).not.toContain('모집 중')
 })
 
 // E4 공용화(2026-08-05) 회귀 가드 — 메인 FAQ = data/faq.js 전체 렌더(서브셋 아님·문항 유실 없음)

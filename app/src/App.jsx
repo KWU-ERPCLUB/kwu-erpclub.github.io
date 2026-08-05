@@ -114,18 +114,24 @@ function Hero() {
   )
 }
 
-// 모집 섹션 — 히어로 직하 한 축. 기간 종료(after) = 메인 미표시(모집 페이지·나브는 유지).
+// 모집 섹션 — 히어로 직하 한 축. 3국면 전부 렌더(2026-08-05 수정 — 구현은 after에서 null이었으나
+// SPEC §4 "모집 기간 아님 → 다음 기수 안내" 요구 → 밴드 자리를 비우지 않고 안내로 교체).
 // v3.1 B4: 버건디 면 철회 — recruit.css 기본(라이트 surface 밴드)로 렌더. 마크업 불변.
 // .page 미부여 = 섹션 스파이(감쇠) 제외. 카피 = 사실 서술만. export = 국면별(전·중·후) 렌더 테스트용.
+// [배지, 배지문구, 노트, 제목, 본문] — 값은 전부 data/recruit.js 파생(표시 문자열 중복 0).
 const RECRUIT_COPY = {
-  before: ['prep', '모집 예정', `${RECRUIT.window.start} 모집 시작`],
-  open: ['live', '모집 중', `${RECRUIT.window.end} 마감`],
+  before: ['prep', '모집 예정', `${RECRUIT.window.start} 모집 시작`, `${COHORT_LABEL} 모집`,
+    `모집 ${formatWindowShort()} · 활동 ${RECRUIT.활동기간}`],
+  open: ['live', '모집 중', `${RECRUIT.window.end} 마감`, `${COHORT_LABEL} 모집`,
+    `모집 ${formatWindowShort()} · 활동 ${RECRUIT.활동기간}`],
+  after: ['planned', '모집 마감', `${COHORT_LABEL} 접수 종료`, '다음 기수 안내',
+    `${COHORT_LABEL} 활동 ${RECRUIT.활동기간} · 다음 기수 모집 = 확정 시 이 자리·모집 페이지 공지`],
 }
 
 export function RecruitBand({ today = localYmd() }) {
   const phase = recruitPhase(today)
-  if (phase === 'after') return null
-  const [badge, badgeLabel, note] = RECRUIT_COPY[phase]
+  const [badge, badgeLabel, note, title, text] = RECRUIT_COPY[phase]
+  const ctaLabel = phase === 'after' ? '모집 페이지' : '모집 안내'
   return (
     <section className="recruit-band" id="recruit" aria-label="AIM 모집 안내">
       <div className="rb-in">
@@ -133,9 +139,9 @@ export function RecruitBand({ today = localYmd() }) {
           <span className={`status ${badge}`}>{badgeLabel}</span>
           <span className="rb-note">{note}</span>
         </div>
-        <h2 className="rb-title">{COHORT_LABEL} 모집</h2>
-        <p className="rb-text">모집 {formatWindowShort()} · 활동 {RECRUIT.활동기간}</p>
-        <a className="proof-link rb-cta" href="/recruit/">모집 안내 <Arrow /></a>
+        <h2 className="rb-title">{title}</h2>
+        <p className="rb-text">{text}</p>
+        <a className="proof-link rb-cta" href="/recruit/">{ctaLabel} <Arrow /></a>
       </div>
     </section>
   )

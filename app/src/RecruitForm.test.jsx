@@ -3,14 +3,16 @@
 import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
 import RecruitForm from './RecruitForm.jsx'
-import { validateApplication, submitApplication, EMPTY_APPLICATION } from './pages/apply-source.js'
+import { validateApplication, submitApplication, EMPTY_APPLICATION, applyPhase } from './pages/apply-source.js'
 
 const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
 
 const VALID = { 이름: '가나다', 학번: '2024000004', 전공: '경영학부', 전화번호: '010-1234-5678', 써본ai: ' ChatGPT ', 관심주제: '' }
 
-test('백엔드 연결 시 = 필수 4필드 + 자유 서술 2필드 + 개인정보 문구 렌더', () => {
-  const html = flat(<RecruitForm configured={true} />)
+const OPEN_DAY = '2026-09-01' // 모집 창 안(RECRUIT.window 2026-08-25 ~ 09-08)
+
+test('모집 창 안 + 백엔드 연결 시 = 필수 4필드 + 자유 서술 2필드 + 개인정보 문구 렌더', () => {
+  const html = flat(<RecruitForm configured={true} today={OPEN_DAY} />)
   for (const label of ['이름', '학번', '학부/전공', '전화번호', '지금까지 써본 AI', '관심 있는 주제']) {
     expect(html).toContain(label)
   }
@@ -19,10 +21,35 @@ test('백엔드 연결 시 = 필수 4필드 + 자유 서술 2필드 + 개인정�
 })
 
 test('백엔드 미연결 시 = 폼 대신 제출 불가 안내(조용한 목 폴백 금지)', () => {
-  const html = flat(<RecruitForm configured={false} />)
+  const html = flat(<RecruitForm configured={false} today={OPEN_DAY} />)
   expect(html).toContain('제출 불가')
   expect(html).not.toContain('신청 제출')
   expect(html).not.toContain('<input')
+})
+
+// 모집 창 연동(2026-08-05) — 창 밖 상시 접수는 "기간 내 접수분만 유효" 카피와 모순이었다.
+test('접수 국면 3분기 — 창 전=접수 시작일 안내 / 창 안=폼 / 창 후=다음 기수 안내', () => {
+  expect(applyPhase('2026-08-24', {})).toBe('before')
+  expect(applyPhase('2026-08-25', {})).toBe('open')   // 경계일 포함
+  expect(applyPhase('2026-09-08', {})).toBe('open')
+  expect(applyPhase('2026-09-09', {})).toBe('after')
+
+  const before = flat(<RecruitForm configured={true} today="2026-08-01" />)
+  expect(before).toContain('접수 시작 2026-08-25')
+  expect(before).not.toContain('<input')
+
+  const open = flat(<RecruitForm configured={true} today={OPEN_DAY} />)
+  expect(open).toContain('<input')
+
+  const after = flat(<RecruitForm configured={true} today="2026-09-20" />)
+  expect(after).toContain('모집 마감')
+  expect(after).toContain('다음 기수')
+  expect(after).not.toContain('<input')
+})
+
+// 로컬 폼 점검용 탈출구 — 프로덕션엔 미설정(창 밖에서도 열리는 유일한 경로)
+test('개발 오버라이드 VITE_APPLY_FORCE_OPEN=1 = 창 무관 open', () => {
+  expect(applyPhase('2026-01-01', { VITE_APPLY_FORCE_OPEN: '1' })).toBe('open')
 })
 
 test('필수 검증 — 빈 폼은 4필드 전부 오류, 유효 폼은 통과', () => {

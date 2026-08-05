@@ -3,11 +3,33 @@
 //   env 2종 설정됨 → applications 테이블 insert(RLS = 익명 insert만).
 //   env 미설정     → 제출 경로 자체가 없다 — 폼 대신 "제출 불가" 안내(목 폴백으로 성공하는 척 금지).
 import { getRepositories, isBackendConfigured, isHakbeon } from '../data/index.js'
+import { RECRUIT } from '../data/recruit.js'
+import { localYmd, recruitPhase } from '../home-logic.js'
 
 export const EMPTY_APPLICATION = { 이름: '', 학번: '', 전공: '', 전화번호: '', 써본ai: '', 관심주제: '' }
 
-// 접수 가능 여부 = 백엔드 연결 여부 그대로(모집 창 국면과 무관 — 창 표시는 data/recruit.js 소관).
-export function isApplyOpen(env) {
+// 접수 국면 = 모집 창 3분기(2026-08-05 수정 — 구 구현은 창과 무관하게 상시 접수라
+// "기간 내 접수분만 유효"(data/recruit.js RECRUIT_TIMELINE) 카피와 모순).
+// 창의 유일 원천 = data/recruit.js RECRUIT.window(home-logic.recruitPhase 재사용).
+// 개발용 오버라이드 = VITE_APPLY_FORCE_OPEN=1(로컬 폼 점검 — 프로덕션 미설정).
+export function applyPhase(today = localYmd(), env = import.meta.env) {
+  if (env && String(env.VITE_APPLY_FORCE_OPEN) === '1') return 'open'
+  return recruitPhase(today)
+}
+
+// 국면별 안내 문구(개조식) — 창 밖에서는 폼 대신 이 문구만 렌더(깨진 접수 경로 금지).
+export const APPLY_NOTE = {
+  before: `접수 시작 ${RECRUIT.window.start} — 모집 시작일에 이 자리에서 폼 개방.`,
+  after: '모집 마감 — 다음 기수는 메인·모집 페이지에 공지.',
+}
+
+// 접수 가능 = 모집 창 open ∧ 백엔드 연결. 둘은 별개 축이라 안내 문구도 각각 다르다(RecruitForm 분기).
+export function isApplyOpen(env, today = localYmd()) {
+  return applyPhase(today, env) === 'open' && isBackendConfigured(env)
+}
+
+// 백엔드 연결 여부만 — 화면(RecruitForm)이 data/index.js를 직접 import 하지 않도록 어댑터가 재수출(경계 P4).
+export function isBackendReady(env) {
   return isBackendConfigured(env)
 }
 
