@@ -2,6 +2,8 @@
 // 탭·라벨=영문 정책(owner 2026-07-11): 현업에서 영어로 더 자주 쓰는 용어는 영문, 본문은 한글
 // 모집 = /recruit/ 페이지(IA 3차 2026-07-27 — 사실 서술만·마케팅 어투 금지). 폼 기능 없음(문의 = 단톡방·GitHub).
 import { useState } from 'react'
+// 로그인 상태 동적 표시(M3 ④) — localStorage 동기 확인 1회. 네트워크 호출 없음 = 공개 페이지 성능·정적성 유지.
+import { hasWorkspaceSession } from './data/session-flag.js'
 
 export const REPO_URL = 'https://github.com/KWU-ERPCLUB/kwu-erpclub.github.io'
 export const CONTRIBUTING_URL = `${REPO_URL}/blob/main/CONTRIBUTING.md`
@@ -25,8 +27,14 @@ export function Arrow() {
   )
 }
 
-export function SiteNav() {
+// 세션이 있을 때만 붙는 탭 — 비로그인 방문자에게는 워크스페이스 존재 자체를 노출하지 않는다.
+const WORKSPACE_LINK = ['WORKSPACE', '/workspace/']
+
+export function SiteNav({ signedIn }) {
   const [open, setOpen] = useState(false)
+  // 최초 렌더 1회 판정(리렌더마다 저장소를 읽지 않는다). 테스트·SSR에서는 storage 없음 = false.
+  const [hasSession] = useState(() => (signedIn === undefined ? hasWorkspaceSession() : signedIn))
+  const links = hasSession ? [...NAV_LINKS, WORKSPACE_LINK] : NAV_LINKS
   // 현재 페이지의 탭 강조 (MPA — pathname 정규화 비교: /projects·/projects/index.html도 매칭)
   const isOn = (href) => {
     if (typeof window === 'undefined') return false
@@ -38,7 +46,7 @@ export function SiteNav() {
       <div className="nav-inner">
         <a className="brand" href="/">KWU <em>ERP</em>연구회</a>
         <nav className="nav-links" aria-label="사이트 섹션">
-          {NAV_LINKS.map(([label, href]) => (
+          {links.map(([label, href]) => (
             <a key={href} href={href} className={isOn(href) ? 'on' : undefined}>{label}</a>
           ))}
         </nav>
@@ -61,7 +69,7 @@ export function SiteNav() {
       </div>
       {open && (
         <nav id="nav-mobile" className="nav-mobile" aria-label="사이트 섹션(모바일)">
-          {NAV_LINKS.map(([label, href]) => (
+          {links.map(([label, href]) => (
             <a key={href} href={href} onClick={() => setOpen(false)}>{label}</a>
           ))}
         </nav>

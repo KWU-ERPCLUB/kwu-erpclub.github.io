@@ -36,15 +36,22 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
 - **권한 구조(2026-07-25 하드 격리)**: GitHub 룰셋(id 19734261) — main 직접 push = repo 관리자만(오너·오너 자격 Claude). 멤버 = 브랜치→PR 필수. `app/content`만 고친 PR = 체크(build) 통과 시 셀프 머지(승인 0) / 공용 영역 터치 = CODEOWNERS(오너) 승인 필수. 룰셋 관리 = repo Settings > Rules.
 - **주간 트렌드 자동화**: 클라우드 루틴 `trig_0118sfWk88m1uYZMfcYUTik4`(매주 월 09:00 KST, sonnet-5, 멱등 스킵 규칙 내장) — 관리 = claude.ai/code/routines. 수동 실행 = 로컬 스킬 `weekly-trend`.
 
-## Workspace & data layer (SPEC 2026-08-05 워크스페이스-백엔드, M1·M2 완료)
+## Workspace & data layer (SPEC 2026-08-05 워크스페이스-백엔드, M1·M2·M3 완료)
 - `/workspace/` = 로그인 영역. entry = `workspace/index.html` + `src/workspace-entry.jsx` + `src/workspace/`, CSS = `styles/workspace.css`
-  (공개 6페이지 코드·CSS와 공유 금지. 공개 nav에 링크 없음 — M3에서 판단).
-  탭 = 컬렉션(`Collections.jsx`)·기고(`Contribute.jsx`+운영진 `Review.jsx`) 탑재 / 세션·과제·공지 = M3.
+  (공개 6페이지 코드·CSS와 공유 금지).
+- **탭(M3) = 내정보·세션·과제·공지·기고 + 운영(운영진만)**. 원천 = `Workspace.jsx`의 `WS_TABS`·`visibleTabs()`.
+  내정보(`MyPage.jsx`) = 프로필 수정(자기소개·관심사만) + 활동내역(내 기고·내 제출) + `Collections.jsx`(북마크·스크랩) 통합 — 컬렉션 단독 탭 폐지.
+  운영(`Admin.jsx`) = 승인대기(`Review.jsx`, M2에서 기고 탭에서 이관)·멤버(`AdminMembers.jsx`)·콘텐츠(`AdminContent.jsx`+`AdminForm.jsx`).
+- **운영 영역 이중 차단**: ①RLS(`*_write_staff`) ②화면 — 비운영진 탭 미노출 + 직접 진입(`?tab=운영`)은 `Denied` 안내.
+  초대(계정 생성)는 앱에서 불가(service key 필요) → 화면엔 절차 안내만(`supabase/README.md` 3·3-1단계).
+- **공개 헤더의 워크스페이스 링크 = 세션 있을 때만**(`shared.jsx` ← `data/session-flag.js`). 판정 = localStorage 키 1회 읽기(네트워크·JSON 파싱 금지 — boundary 테스트가 고정). 키 상수 원천 = `data/session-key.js`.
+- 세션 자료·과제 제출 = **링크 기반**. 파일 업로드(Storage 버킷) = M4.
 - **로그인 ID = 학번**(§0-4 개정). 매핑 = `src/data/login-id.js`(학번 → `s<학번>@member.erpclub`, `@` 포함 = 이메일 폴백).
 - **공개 인사이트 = DB 서빙**(M2): 데이터 출처 = `src/pages/insights-source.js`(`useArticles`·`useInteractions`).
   env 미설정이면 md 글롭 폴백. 공개면에서 `data/index.js`를 import 해도 되는 파일은 이 어댑터 1곳뿐(boundary 테스트가 고정).
 - **Supabase 접근 = `src/data/` 경유만**(P1). 컴포넌트가 `data/supabase.js`·`repositories.js`를 직접 import 하면
   `src/data/boundary.test.js`가 FAIL — 우회 금지. 화면은 `data/index.js`의 `getRepositories()`만 쓴다.
+  공개면이 쓸 수 있는 data 모듈 = 화이트리스트 2쌍(`insights-source.js→index`, `shared.jsx→session-flag`) + 정적 상수(recruit·log).
 - 행 삭제는 `db.remove` + `DELETABLE` 화이트리스트(article_likes·article_bookmarks·collections)에서만. 콘텐츠·멤버 테이블은 삭제 경로 없음.
 - env 2종(`VITE_SUPABASE_URL`·`VITE_SUPABASE_ANON_KEY`) 미설정 = 정상 상태 → 목 저장소 폴백 + 대기 화면.
   키 이름 문서 = `.env.example`, 프로비저닝 = `../supabase/README.md`, 스키마·RLS = `../supabase/migrations/`.
