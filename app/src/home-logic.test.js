@@ -1,16 +1,25 @@
 import { expect, test } from 'vitest'
-import { MARQUEE_KEYWORDS, marqueeTrack, parseStat, easeOutCubic, countupFrame, localYmd, recruitPhase, RECRUIT_WINDOW } from './home-logic.js'
+import { MARQUEE_KEYWORDS, marqueeTrack, parseStat, easeOutCubic, countupFrame, localYmd, recruitPhase } from './home-logic.js'
+import { RECRUIT } from './data/recruit.js'
 
 // ── 모집 국면(경계일 포함·기간 밖 전환 — SPEC §4) ──
+// 날짜는 하드코딩하지 않고 데이터(RECRUIT.window)에서 파생 — 기수 전환 시 테스트 수정 불필요.
+const shiftDay = (ymd, days) => {
+  const d = new Date(`${ymd}T00:00:00Z`)
+  d.setUTCDate(d.getUTCDate() + days)
+  return d.toISOString().slice(0, 10)
+}
+
 test('recruitPhase — before/open/after 경계(시작·마감일 = open 포함)', () => {
-  expect(recruitPhase('2026-08-24')).toBe('before')
-  expect(recruitPhase('2026-08-25')).toBe('open')
-  expect(recruitPhase('2026-09-01')).toBe('open')
-  expect(recruitPhase('2026-09-08')).toBe('open')
-  expect(recruitPhase('2026-09-09')).toBe('after')
+  const { start, end } = RECRUIT.window
+  expect(recruitPhase(shiftDay(start, -1))).toBe('before')
+  expect(recruitPhase(start)).toBe('open')
+  expect(recruitPhase(shiftDay(start, 1))).toBe('open')
+  expect(recruitPhase(end)).toBe('open')
+  expect(recruitPhase(shiftDay(end, 1))).toBe('after')
 })
-test('recruitPhase — 창 주입 가능(운영틀 캘린더가 유일 원천)', () => {
-  expect(RECRUIT_WINDOW.start < RECRUIT_WINDOW.end).toBe(true)
+test('recruitPhase — 창 주입 가능(모집 데이터가 유일 원천)', () => {
+  expect(RECRUIT.window.start < RECRUIT.window.end).toBe(true)
   expect(recruitPhase('2099-01-05', { start: '2099-01-01', end: '2099-01-10' })).toBe('open')
 })
 test('localYmd — YYYY-MM-DD 0패딩', () => {

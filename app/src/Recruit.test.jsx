@@ -1,6 +1,7 @@
 import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
 import Recruit from './Recruit.jsx'
+import { RECRUIT, formatWindow, shortDate } from './data/recruit.js'
 
 // 구조·계약 검증 — IA 3차(2026-07-27): 모집 페이지 = 요강·활동 구성·참여 방법. 사실 서술만.
 const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
@@ -15,7 +16,8 @@ test('page-head(§3-1) = 눈썹 RECRUIT + 헤드라인 + 서브 + 메타 줄', (
 
 test('요강 = 확정값만 게재(운영틀 §2·§3·§7) — 기간·인원·대상·모임·비용', () => {
   const html = flat(<Recruit />)
-  expect(html).toContain('2026-08-25 ~ 2026-09-08')
+  expect(html).toContain(formatWindow()) // 모집 기간 = 데이터 파생(하드코딩 아님)
+  expect(html).toContain(RECRUIT.활동기간)
   expect(html).toContain('6~10명')
   expect(html).toContain('전공 무관')
   expect(html).toContain('매주 대면 60분')
@@ -28,6 +30,7 @@ test('활동 구성 = 2페이즈 스텝(전반 5회 목록·시험 휴지·후�
   expect(html).toContain('킥오프')
   expect(html).toContain('중간 쇼케이스')
   expect(html).toContain('중간고사 기간 휴식')
+  expect(html).toContain(`${shortDate(RECRUIT.일정.휴지.start)} ~ ${shortDate(RECRUIT.일정.휴지.end)}`) // 시험 휴지 = 데이터 파생
   expect(html).toContain('팀 프로젝트')
   expect(html).toContain('rc-callout')
 })

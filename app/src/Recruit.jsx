@@ -2,34 +2,35 @@
 // 카피 = 개조식·사실 서술만(SPEC §4 개정 — 마케팅 어투 금지). [미정] 값 게재 금지(운영틀 §8):
 // 확정값(운영틀 2026-07-27 오너 인터뷰)만 싣고, 요일·시간은 "참가자 조율로 확정" 과정 서술로만.
 import { SiteNav, SiteFooter, REPO_URL, Arrow } from './shared.jsx'
-import { RECRUIT_WINDOW } from './home-logic.js'
+import { RECRUIT, formatWindow, shortDate } from './data/recruit.js'
 
-// 요강 — 값 원천 = erp-club docs/specs/2026-07-27-aim-운영틀.md(§2·§3·§7 확정 레코드)
+// 요강 — 기수·기간·일정 값의 원천 = data/recruit.js(그 원천 = erp-club docs/specs/2026-07-27-aim-운영틀.md §2·§3·§7)
 const FACTS = [
-  ['스터디', 'AIM — ERP연구회 산하 MIS·AI 스터디'],
+  ['스터디', `${RECRUIT.study} — ERP연구회 산하 MIS·AI 스터디`],
   ['대상', '광운대 재학생 — 전공 무관'],
   ['인원', '6~10명'],
-  ['모집 기간', `${RECRUIT_WINDOW.start} ~ ${RECRUIT_WINDOW.end}`],
-  ['활동 기간', '2026-09 ~ 12 (2학기)'],
+  ['모집 기간', formatWindow()],
+  ['활동 기간', RECRUIT.활동기간],
   ['모임', '매주 대면 60분 — 요일·시간 = 참가자 시간표 조율로 확정'],
   ['비용', '참가비 없음 — 무료 도구 기준(유료 도구 = 개인 선택)'],
 ]
 
-// 활동 구성 — 2페이즈(전반 개인 산출물 → 후반 팀 프로젝트) + 시험 휴지.
+// 활동 구성 — 2페이즈(전반 개인 산출물 → 후반 팀 프로젝트) + 시험 휴지. 기간 문자열 = 데이터에서 파생.
+const { 전반, 휴지, 후반 } = RECRUIT.일정
 const STEPS = [
   {
-    era: '전반부 · 9월 ~ 10월 초 · 5회',
+    era: `전반부 · ${전반.기간} · ${전반.회차}회`,
     title: '각자 반복 작업 하나를 AI로 자동화',
     desc: '본인이 매주 반복하는 작업(수업·과제·시험공부)에서 소재 선정 — 만든 것을 계속 쓰는 구조.',
     list: ['킥오프 — 소재 선정', 'AI 도구 개괄·체험', '공통 미니과제', '개인 산출물 제작·첨삭', '중간 쇼케이스 — 발표·사이트 게재'],
   },
   {
-    era: '시험 휴지 · 10월 중순',
+    era: `시험 휴지 · ${휴지.라벨}`,
     title: '중간고사 기간 휴식',
-    desc: '10-06 ~ 10-26 세션 없음.',
+    desc: `${shortDate(휴지.start)} ~ ${shortDate(휴지.end)} 세션 없음.`,
   },
   {
-    era: '후반부 · 10월 말 ~ 12월',
+    era: `후반부 · ${후반.기간}`,
     title: '팀 프로젝트 — 경영·업무 맥락',
     desc: '제시된 주제 풀에서 팀별 선택 → 매주 체크인 → 최종 발표·사이트 게재.',
   },
@@ -43,8 +44,8 @@ export default function Recruit() {
         <header className="rc-head">
           <div className="rc-head-in">
             <span className="rc-eyebrow">RECRUIT</span>
-            <h1 className="rc-h1">AIM <em>1기</em> 모집</h1>
-            <p className="rc-lead">ERP연구회 산하 MIS·AI 스터디 — 2026 2학기 첫 기수.</p>
+            <h1 className="rc-h1">{RECRUIT.study} <em>{RECRUIT.cohort}</em> 모집</h1>
+            <p className="rc-lead">ERP연구회 산하 MIS·AI 스터디 — 2026 {RECRUIT.term} 첫 기수.</p>
             <p className="rc-meta">게재 2026-07-27 · 담당 운영진</p>
           </div>
         </header>

@@ -1,5 +1,6 @@
 // 메인(/) 순수 로직 — 마퀴 트랙·스탯 파싱·카운트업 프레임. 부수효과 0(테스트 대상).
 // UI(App.jsx)가 IntersectionObserver·rAF로 이 순수 함수를 구동. reduced-motion = 즉시 최종값.
+import { RECRUIT } from './data/recruit.js'
 
 // 히어로 하단 키워드 마퀴 띠 — 다루는 주제(현업 용어=영문 정책 승계, 한글 주제 병기).
 export const MARQUEE_KEYWORDS = [
@@ -21,9 +22,6 @@ export function parseStat(s) {
   return { prefix: m[1] || '', value: parseFloat(m[2]), decimals: m[3] ? m[3].length : 0, suffix: m[4] || '' }
 }
 
-// ── AIM 1기 모집 창(운영틀 §2 확정 캘린더) — 메인 모집 밴드가 소비 ──
-export const RECRUIT_WINDOW = { start: '2026-08-25', end: '2026-09-08' }
-
 // 로컬 기준 오늘을 YYYY-MM-DD로 — 문자열 비교로 시간대 함정 회피.
 export function localYmd(d = new Date()) {
   const p = (n) => String(n).padStart(2, '0')
@@ -31,7 +29,8 @@ export function localYmd(d = new Date()) {
 }
 
 // 모집 국면 — before(예정) / open(모집 중, 경계일 포함) / after(다음 기수 안내. SPEC §4 전환 규칙).
-export function recruitPhase(ymd, win = RECRUIT_WINDOW) {
+// 창의 유일 원천 = data/recruit.js RECRUIT.window(주입 가능).
+export function recruitPhase(ymd, win = RECRUIT.window) {
   if (ymd < win.start) return 'before'
   if (ymd > win.end) return 'after'
   return 'open'

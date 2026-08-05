@@ -1,6 +1,7 @@
 import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
 import App from './App.jsx'
+import { COHORT_LABEL, formatWindowShort } from './data/recruit.js'
 
 // 구조 검증(콘텐츠·시점 무관) — v5 풀블리드 스크린 섹션: 100vh 히어로·계보 트리·풀폭 커버·대형 FAQ. (WHY 폐지 2026-07-25)
 test('메인 = 풀블리드 3섹션 + 100vh 히어로(뷰포트 타이포·소개 2줄·마퀴·스크롤 유도)', () => {
@@ -54,10 +55,10 @@ test('모집 밴드(IA 3차) = 히어로 직하 공고 + /recruit/ 링크 + 상�
   const html = renderToString(<App />)
   expect(html).toContain('recruit-band')
   expect(html).toContain('href="/recruit/"')
-  expect(html).toContain('AIM 1기')
+  expect(html).toContain(COHORT_LABEL) // 기수 표기 = 모집 데이터에서 파생
   expect(/class="recruit-band[^"]*page/.test(html)).toBe(false)
-  // FAQ 모집 답 = 확정 기간 반영(비정기 문구 폐지)
-  expect(html).toContain('2026-08-25 ~ 09-08')
+  // FAQ 모집 답 = 확정 기간 반영(비정기 문구 폐지) — 기간도 데이터 파생
+  expect(html).toContain(formatWindowShort())
   expect(html).not.toContain('모집은 비정기')
 })
 
