@@ -35,6 +35,22 @@ test('v3.1 강조 — 최신(featured) 항목만 버건디 언더바(sem-tl-unde
   expect((html.match(/sem-tl-underbar/g) || []).length).toBe(1) // featured 1개만
 })
 
+// §6-2 v3 N3 — 버건디 면 승격은 featured ∧ 예정일 때만(is-next), 페이지당 최대 1개
+test('v3 N3 — featured+예정이면 is-next(버건디 면), 과거 featured·비featured 예정은 아님', () => {
+  // featured + 미래 date = is-next
+  const items = [base({ slug: 'a', date: '2026-08-07' }), base({ slug: 'b', date: '2026-08-06' })]
+  const html = flat(<SeminarTimeline items={items} today={TODAY} onOpen={noop} />)
+  expect((html.match(/is-next/g) || []).length).toBe(1) // 둘 다 예정이어도 featured(첫 항목)만 1개
+  // featured지만 과거 date = is-next 아님(면 없음)
+  const past = flat(<SeminarTimeline items={[base({ slug: 'c', date: '2026-06-01' })]} today={TODAY} onOpen={noop} />)
+  expect(past).not.toContain('is-next')
+})
+
+test('v3 N3 — 일정미정 featured도 예정 취급 = is-next', () => {
+  const html = flat(<SeminarTimelineItem s={base({ 일정미정: true })} today={TODAY} featured onOpen={noop} />)
+  expect(html).toContain('is-next')
+})
+
 // ── SeminarTimelineItem (항목 단위 — 픽스처 주입) ──
 test('겹침 카드 — 썸네일 2장이면 is-stack + 뒷장(back) 렌더 + 슬라이드 링크', () => {
   const s = base({ 썸네일: ['/slides/s1/thumb-1.png', '/slides/s1/thumb-2.png'], 슬라이드: 'https://slides/s1/' })

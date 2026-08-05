@@ -1,6 +1,8 @@
 /* 기사(INSIGHTS) 전용 — 목록 = 피처 행 + 성격 탭·필터 바 + 썸네일 카드 그리드 + 더보기(2026-08-05 오너 픽),
    상세 = 통일 셸(문서헤더·출처카드·720px 본문·하단 내비 — 이번 개편 대상 아님).
    토큰=global.css만 · light-only. 디자인규칙 v2: 버건디=화이트리스트(④눈썹·⑥링크밑줄·⑨focus·⑩좌보더)만·버건디 면 금지.
+   v3(§6-2 NEXTERS 강조 문법, 2026-08-05): N1 카운트 숫자=대형+스탯 언더바(③) / N2 페이지 h1·피처 제목 스케일 상향(본문 크기 불변)
+   / N3 색면 = 피처 행 배경 버건디 틴트 1곳뿐(페이지당 ≤1 — 틴트 면 위 직접 텍스트 없음, 카드=흰 면이라 대비 AA 자명). 신규 모션 0.
    반응형 3계층(2026-08-05 규범): 폰 <760 1열 리스트 / 태블릿 760~1199 2열 / 데스크톱 ≥1200 피처+3열+필터 상시 레일. */
 
 .art-page { margin: 0 auto; padding: 3rem 1.5rem 5rem; }
@@ -20,7 +22,8 @@
 .art-idx { display: block; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.07em; color: var(--accent); margin-bottom: 0.7rem; }
 /* 헤드라인 1단어 강조(화이트리스트 ①) */
 .art-head h1 em { font-style: normal; color: var(--accent); }
-.art-head h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.9rem, 4vw, 2.6rem); line-height: 1.18; letter-spacing: -0.02em; margin: 0 0 0.6rem; }
+/* v3 N2 — 페이지 h1 한 단계 상향(구 clamp(1.9rem,4vw,2.6rem) — Hero h1(3.5rem)보다는 아래) */
+.art-head h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp(2.2rem, 5vw, 3.2rem); line-height: 1.14; letter-spacing: -0.022em; margin: 0 0 0.6rem; }
 .art-head p { margin: 0; max-width: 52ch; font-size: 0.92rem; color: var(--text-sub); }
 
 /* ── 성격 탭(5개 상한 — 전체+4). 선택 = 언더라인(색면 아님, 성격색은 카드 라벨이 담당) ── */
@@ -44,10 +47,15 @@
   .ins-controls-sub .art-search { flex: 0 0 260px; margin: 0; }
   .ins-controls-sub .art-filter { margin: 0; }
 }
-/* N건 표시 중 / 전체 M건 — 카운트 라인(§3-1 메타 톤) */
-.ins-count { font-size: 0.85rem; color: var(--text-sub); margin: 0 0 1.25rem; padding: 0 0.15rem; }
-.ins-count strong { font-family: var(--font-display); font-weight: 800; color: var(--text); }
+/* N건 표시 중 / 전체 M건 — v3 N1: 숫자=대형 디스플레이 + 스탯 언더바(§1 화이트리스트 ③), 라벨=소형 유지 */
+.ins-count { font-size: 0.85rem; color: var(--text-sub); margin: 0 0 1.5rem; padding: 0 0.15rem; }
+.ins-count strong {
+  font-family: var(--font-display); font-weight: 800; color: var(--text);
+  font-size: 1.75rem; line-height: 1; letter-spacing: -0.02em; margin-right: 0.12rem;
+}
 .ins-count span { color: var(--text-sub); }
+/* 스탯 언더바 28×3 — 숫자 아래 마감(stat-rows 문법의 공용 승격, v3 N1) */
+.ins-count::after { content: ''; display: block; width: 28px; height: 3px; background: var(--accent); margin-top: 0.45rem; }
 
 /* ── 검색 박스 (제목·설명·태그·본문 클라이언트 부분일치) ── */
 .art-search { margin-bottom: 0.4rem; }
@@ -99,8 +107,12 @@
 /* 피처용 큰 썸네일 — 같은 문법·더 넓은 비율(시각량 집중) */
 .art-cover--big { aspect-ratio: 16 / 9; }
 
-/* ── 피처 행 — 고정 기사 + 최신 2건(큰 썸네일). 기본 뷰(필터 없음)에서만 ── */
-.art-features { list-style: none; margin: 0 0 2.25rem; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+/* ── 피처 행 — 고정 기사 + 최신 2건(큰 썸네일). 기본 뷰(필터 없음)에서만.
+   v3 N3 — 페이지 유일 색면: 버건디 틴트 밴드(#7A2030 약 7% over #fff). 면 위 직접 텍스트 없음(카드=흰 면) → 대비 AA 자명. */
+.art-features {
+  list-style: none; margin: 0 0 2.25rem; padding: 1.4rem; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;
+  background: #f6edef; border-radius: var(--radius-card);
+}
 .art-feature { list-style: none; }
 
 /* ── 썸네일 카드 그리드 — 배경 통일(흰 면), 성격 = 컬러 라벨 ── */
@@ -131,7 +143,8 @@
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
   font-size: 1.02rem; font-weight: 700; line-height: 1.4; letter-spacing: -0.01em; color: var(--text); margin-bottom: 0.4rem;
 }
-.art-feature .art-card-title { font-family: var(--font-display); font-size: 1.3rem; font-weight: 800; line-height: 1.32; -webkit-line-clamp: 3; }
+/* v3 N2 — 피처 제목 한 단계 상향(구 1.3rem) */
+.art-feature .art-card-title { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; line-height: 1.28; -webkit-line-clamp: 3; }
 
 /* 설명 = frontmatter 1문장(clamp 2줄) */
 .art-card-excerpt {
@@ -155,7 +168,7 @@
 
 /* ── 폰(<760) = 1열 리스트: 썸네일 소형 좌측 + 헤어라인 구분(카드 면 없음) ── */
 @media (max-width: 759px) {
-  .art-features { grid-template-columns: 1fr; gap: 1.1rem; margin-bottom: 1.5rem; }
+  .art-features { grid-template-columns: 1fr; gap: 1.1rem; margin-bottom: 1.5rem; padding: 0.9rem; }
   .art-grid { grid-template-columns: 1fr; gap: 0; }
   .art-card > button {
     flex-direction: row; align-items: flex-start; gap: 0.9rem; /* 썸네일 소형 좌측(DOM 순서 그대로) */

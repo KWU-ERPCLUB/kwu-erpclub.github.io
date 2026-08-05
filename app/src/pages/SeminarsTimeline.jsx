@@ -20,13 +20,15 @@ function SlideThumb({ thumbs, slide, title }) {
 }
 
 // 타임라인 한 항목 = 날짜 레일 + [메타 칩·예정 배지 → 제목(→상세) → 썸네일 카드 → 요점/발췌].
-// featured(첫 항목=최신) = 제목 타이포 크게(Linear 변형). export = 콘텐츠 무관 단위 테스트용.
+// featured(첫 항목=최신) = 제목 타이포 크게(Linear 변형).
+// v3(§6-2 N3): featured ∧ 예정(upcoming) = is-next → 버건디 면 승격(페이지당 최대 1개 — featured가 유일).
+// 구조·마크업 동일, 클래스만 추가(강조 상향). export = 콘텐츠 무관 단위 테스트용.
 export function SeminarTimelineItem({ s, today, featured = false, onOpen = () => {} }) {
   const upcoming = isUpcoming(s, today)
   const thumbs = Array.isArray(s['썸네일']) ? s['썸네일'].filter(Boolean) : []
   const points = Array.isArray(s['요점']) ? s['요점'] : null
   return (
-    <li className={`sem-tl-item${featured ? ' is-featured' : ''}`}>
+    <li className={`sem-tl-item${featured ? ' is-featured' : ''}${featured && upcoming ? ' is-next' : ''}`}>
       <div className="sem-tl-date">
         {s['일정미정'] === true
           ? <span className="sem-tl-day">일정 미정</span>

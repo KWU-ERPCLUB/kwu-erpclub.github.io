@@ -7,7 +7,7 @@
 // 확정값(운영틀 2026-07-27 오너 인터뷰)만 싣고, 요일·시간은 "참가자 조율로 확정" 과정 서술로만.
 import { useMemo } from 'react'
 import { SiteNav, SiteFooter, REPO_URL, Arrow } from './shared.jsx'
-import { RECRUIT, COHORT_LABEL, formatWindow, shortDate } from './data/recruit.js'
+import { RECRUIT, PHASES, ACADEMIC_RULE, COHORT_LABEL, formatWindow, shortDate } from './data/recruit.js'
 import { RECRUIT_FAQ } from './data/faq.js'
 import { loadContent } from './content/loader.js'
 import { CountUp } from './home-motion.jsx'
@@ -49,39 +49,40 @@ const TIMELINE = [
   {
     era: `활동 시작 · ${시작월}`,
     title: `${COHORT_LABEL} 활동 개시`,
-    desc: `활동 기간 ${RECRUIT.활동기간} — 첫 회차 = 킥오프(소재 선정).`,
+    desc: `첫 회차 = ${PHASES.p1.라벨} 킥오프(${shortDate(PHASES.p1.킥오프주간)} 주간, 소재 선정) — 활동 기간 ${RECRUIT.활동기간}.`,
   },
 ]
 
-// 활동 구성 — 2페이즈(전반 개인 산출물 → 후반 팀 프로젝트) + 시험 휴지. 기간 문자열 = 데이터에서 파생.
-const { 전반, 휴지, 후반 } = RECRUIT.일정
+// 활동 구성 — 1차 프로젝트(개인 산출물) → 시험 휴지 → 2차 프로젝트(팀). 명명 = 운영틀 개정 이력(2026-08-05).
+// 날짜 = data/recruit.js PHASES 파생(운영틀 §2 확정값만 — 최종 발표 주간 [미정] 게재 금지).
 const STEPS = [
   {
-    era: `전반부 · ${전반.기간} · ${전반.회차}회`,
-    title: '각자 반복 작업 하나를 AI로 자동화',
-    desc: '본인이 매주 반복하는 작업(수업·과제·시험공부)에서 소재 선정 — 만든 것을 계속 쓰는 구조.',
+    era: `${PHASES.p1.라벨} · ${shortDate(PHASES.p1.킥오프주간)} 주간 ~ ${shortDate(PHASES.p1.쇼케이스주간)} 주간 · ${PHASES.p1.회차}회`,
+    title: `${PHASES.p1.형태} — 각자 반복 작업 하나를 AI로 자동화`,
+    desc: '본인이 매주 반복하는 작업(수업·과제·시험공부)에서 소재 선정 — 만든 것을 계속 쓰는 구조. 마지막 회 = 중간 쇼케이스.',
     list: ['킥오프 — 소재 선정', 'AI 도구 개괄·체험', '공통 미니과제', '개인 산출물 제작·첨삭', '중간 쇼케이스 — 발표·사이트 게재'],
   },
   {
-    era: `시험 휴지 · ${휴지.라벨}`,
-    title: '중간고사 기간 휴식',
-    desc: `${shortDate(휴지.start)} ~ ${shortDate(휴지.end)} 세션 없음.`,
+    era: `시험 휴지 · ${shortDate(PHASES.휴지.start)} ~ ${shortDate(PHASES.휴지.end)}`,
+    title: '중간고사 기간 활동 중지',
+    desc: `중간고사 ${shortDate(PHASES.휴지.중간고사.start)} ~ ${shortDate(PHASES.휴지.중간고사.end)} — 시험 2주 전부터 세션 없음.`,
   },
   {
-    era: `후반부 · ${후반.기간}`,
-    title: '팀 프로젝트 — 경영·업무 맥락',
-    desc: '제시된 주제 풀에서 팀별 선택 → 매주 체크인 → 최종 발표·사이트 게재.',
+    era: `${PHASES.p2.라벨} · ${shortDate(PHASES.p2.개시주간)} 주간 ~ ${shortDate(PHASES.p2.상한주간)} 주간`,
+    title: `${PHASES.p2.형태} 프로젝트 — 경영·업무 맥락`,
+    desc: `제시된 주제 풀에서 팀별 선택 → 매주 체크인 → 최종 발표·사이트 게재. 활동 = 기말고사(${shortDate(PHASES.p2.기말고사.start)}~) 2주 전까지, 발표 주간 = 추후 확정.`,
   },
 ]
 
-// 키비주얼(E5) — AI×MIS 교차(×)·겹침(두 원) 모티프. 라인·그레이만(버건디 예산 0 — §1 빈도 상한 보호).
+// 키비주얼(E5) — AI×MIS 교차(×)·겹침(두 원) 모티프, v3 강도 상향(2026-08-05 §6-2):
+// 헤더 = N3 버건디 색 면 → 라인 = 화이트 알파(면 위 장식 — §1 버건디 터치 예산과 별개).
 // 조준점(원+십자 관통) 도형 재사용 금지 — 오너가 히어로에서 반려(2026-08-05). ×는 원을 관통하지 않고 겹침 렌즈 안에만.
 function CrossVisual() {
   return (
     <svg className="rc-visual" viewBox="0 0 320 240" fill="none" aria-hidden="true" focusable="false">
-      <circle cx="122" cy="120" r="92" stroke="var(--line)" strokeWidth="2" />
-      <circle cx="198" cy="120" r="92" stroke="#D9D9D6" strokeWidth="2" />
-      <path d="M142 102 L178 138 M178 102 L142 138" stroke="#C9C9C5" strokeWidth="2.5" strokeLinecap="round" />
+      <circle cx="122" cy="120" r="92" stroke="rgba(255,255,255,0.42)" strokeWidth="2.5" />
+      <circle cx="198" cy="120" r="92" stroke="rgba(255,255,255,0.28)" strokeWidth="2.5" />
+      <path d="M142 102 L178 138 M178 102 L142 138" stroke="rgba(255,255,255,0.6)" strokeWidth="3" strokeLinecap="round" />
     </svg>
   )
 }
@@ -191,7 +192,8 @@ export default function Recruit() {
         <section className="rc-secs" aria-labelledby="rc-steps-h">
           <div className="rc-band-in">
             <span className="rc-kicker">활동 구성</span>
-            <h2 className="rc-h2" id="rc-steps-h">2단계 — 개인 산출물, 팀 프로젝트</h2>
+            <h2 className="rc-h2" id="rc-steps-h">1차 프로젝트 — 개인 · 2차 프로젝트 — 팀</h2>
+            <p className="rc-sched-rule">{ACADEMIC_RULE}</p>
             <ol className="rc-steps">
               {STEPS.map((s) => (
                 <li className="rc-step" key={s.title}>

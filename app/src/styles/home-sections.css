@@ -1,6 +1,7 @@
 /* 메인(/) v5 섹션 본문 — ROADMAP·PROJECTS·FAQ. 골격·히어로·모션 = home.css(300줄 규격 분할).
    (WHY 섹션 폐지 2026-07-25 · .stat-rows 계열 = recruit.css로 이동 2026-08-05 — about 폐지, 증빙은 /recruit 하단.)
-   규격=디자인규칙 v2: 색·폰트 토큰 고정 · 버건디 화이트리스트/빈도 상한 · transform·opacity만 · reduced-motion 존중. */
+   규격=디자인규칙 v3(§6-2, 2026-08-05): N4 쇼케이스 카드 강조(hp-title 상향·스크림 심화) — 구조·모션 문법 불변.
+   색·폰트 토큰 고정 · 버건디 화이트리스트/빈도 상한 · transform·opacity만 · reduced-motion 존중. */
 
 /* ══ ROADMAP — 계보 트리(2026-07-25): 세로 본류선 → 분기 들여쓰기 + 가지선. 전 뷰포트 세로 ══ */
 .rmap, .rm-sub { list-style: none; padding-left: 0; }
@@ -78,7 +79,7 @@
   justify-content: flex-end;
   gap: 0.6rem;
   padding: clamp(1.25rem, 3.5vw, 2.75rem);
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 32%, rgba(0, 0, 0, 0.74) 100%);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 26%, rgba(0, 0, 0, 0.8) 100%); /* v3 N4: 제목 상향분 스크림 심화(구 32%/0.74) */
 }
 .hp-tag {
   font-size: 0.74rem;
@@ -92,7 +93,7 @@
 .hp-title {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(1.55rem, 3.4vw, 2.6rem);
+  font-size: clamp(1.9rem, 4.4vw, 3.2rem); /* v3 N4: 커버 위 제목 상향(구 1.55/3.4vw/2.6) */
   line-height: 1.12;
   letter-spacing: -0.015em;
   word-break: keep-all;

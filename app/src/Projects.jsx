@@ -159,7 +159,7 @@ export default function Projects() {
     <>
       <SiteNav />
       <main className="hub-page">
-        <header className="hub-head">
+        <header className="hub-head pj-head">
           <span className="hub-idx">PROJECTS</span>
           <h1><em>프로젝트</em></h1>
           <p>스터디가 만들고 운영한 것 — 배포물과 활동 기록.</p>

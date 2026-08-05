@@ -1,7 +1,7 @@
 import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
 import Recruit, { RecruitProof } from './Recruit.jsx'
-import { RECRUIT, COHORT_LABEL, formatWindow, shortDate } from './data/recruit.js'
+import { RECRUIT, PHASES, ACADEMIC_RULE, COHORT_LABEL, formatWindow, shortDate } from './data/recruit.js'
 import { FAQ, RECRUIT_FAQ } from './data/faq.js'
 import { loadContent } from './content/loader.js'
 
@@ -28,15 +28,31 @@ test('요강 = 확정값만 게재(오너 개정 2026-08-05) — 기간·인원 
   expect(html).toContain('참가비 없음')
 })
 
-test('활동 구성 = 2페이즈 스텝(전반 5회 목록·시험 휴지·후반 팀) + 콜아웃', () => {
+test('활동 구성 = 1차 프로젝트(개인 5회)·시험 휴지·2차 프로젝트(팀) — 명명 개정 2026-08-05 + 콜아웃', () => {
   const html = flat(<Recruit />)
   expect(html).toContain('rc-steps')
+  expect(html).toContain('1차 프로젝트')
+  expect(html).toContain('2차 프로젝트')
+  expect(html).not.toContain('전반부') // 구 명명 = 대외 표기에서 제거(운영틀 개정 이력 2026-08-05)
+  expect(html).not.toContain('후반부')
   expect(html).toContain('킥오프')
   expect(html).toContain('중간 쇼케이스')
-  expect(html).toContain('중간고사 기간 휴식')
-  expect(html).toContain(`${shortDate(RECRUIT.일정.휴지.start)} ~ ${shortDate(RECRUIT.일정.휴지.end)}`) // 시험 휴지 = 데이터 파생
+  expect(html).toContain('중간고사 기간 활동 중지')
+  // 날짜 = data/recruit.js PHASES 파생(운영틀 §2 — 하드코딩 아님)
+  expect(html).toContain(`${shortDate(PHASES.p1.킥오프주간)} 주간 ~ ${shortDate(PHASES.p1.쇼케이스주간)} 주간`)
+  expect(html).toContain(`${shortDate(PHASES.휴지.start)} ~ ${shortDate(PHASES.휴지.end)}`)
+  expect(html).toContain(`${shortDate(PHASES.p2.개시주간)} 주간 ~ ${shortDate(PHASES.p2.상한주간)} 주간`)
   expect(html).toContain('팀 프로젝트')
+  expect(html).toContain(ACADEMIC_RULE) // 학사일정 연동 원칙 1줄 명기
   expect(html).toContain('rc-callout')
+})
+
+test('[미정] 게재 금지(운영틀 §8) — 최종 발표 주간·요일·인원·선발 방식 값 없음', () => {
+  const html = flat(<Recruit />)
+  expect(html).toContain('발표 주간 = 추후 확정') // 최종 발표 = 과정 서술만, 날짜 없음
+  expect(html).not.toContain('최종 발표 주간 · ')
+  expect(html).not.toContain('12-01') // 기말 전 주간을 발표 주간으로 날조 금지
+  expect(html).not.toContain('11-30')
 })
 
 test('마케팅 어투 금지(SPEC §4 개정 목록) + 신청 폼 섹션 + 문의 링크', () => {

@@ -1,6 +1,8 @@
 /* 세미나 v3 (2026-07-25) — 목록 = 세로 날짜 타임라인 아카이브(Linear changelog 변형): 소개 헤드 +
    필터 바(주제 탭·정렬 토글) + 좌 날짜 레일·점 × 항목(제목→상세 / 슬라이드 겹침 카드 / 메타 칩 / 요점·발췌).
-   상세(.sem-ed-*)는 v3 변경 없음(컬러 다크 헤더 밴드 유지). 마크다운 본문 = pages.css(.hub-md). 토큰=global.css. */
+   상세(.sem-ed-*)는 v3 변경 없음(컬러 다크 헤더 밴드 유지). 마크다운 본문 = pages.css(.hub-md). 토큰=global.css.
+   §6-2 v3(2026-08-05 NEXTERS 문법): N2 타이포 상향(헤드 h1·항목 제목 — 본문 크기 불변) +
+   N1 featured 날짜 숫자 대형화(디스플레이 폰트) + N3 예정 featured(.is-next) = 버건디 면 승격(페이지당 1개·AA). */
 
 /* ── 버튼 리셋 (위계 클래스를 button에 적용) ── */
 button.cta { border: none; font-family: inherit; cursor: pointer; }
@@ -20,9 +22,9 @@ button.proof-link {
   display: block; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.07em;
   color: var(--accent); margin-bottom: 0.7rem;
 }
-.sem-head-title {
-  font-family: var(--font-display); font-weight: 800; font-size: clamp(1.9rem, 4vw, 2.6rem);
-  line-height: 1.18; letter-spacing: -0.02em; margin: 0 0 0.6rem;
+.sem-head-title { /* §6-2 N2 — 페이지 헤드 한 단계 상향(구 1.9~2.6rem) */
+  font-family: var(--font-display); font-weight: 800; font-size: clamp(2.2rem, 5vw, 3.2rem);
+  line-height: 1.14; letter-spacing: -0.02em; margin: 0 0 0.6rem;
 }
 .sem-head-sub { margin: 0; max-width: 56ch; font-size: 0.92rem; color: var(--text-sub); word-break: keep-all; }
 
@@ -69,19 +71,44 @@ button.proof-link {
 /* 최신(featured) 제목 아래 버건디 언더바(스탯 언더바 문법 28×3px, 화이트리스트 ③) */
 .sem-tl-underbar { display: block; width: 28px; height: 3px; background: var(--accent); margin: 0 0 0.9rem; }
 .sem-tl-chips { margin: 0 0 0.55rem; }
-.sem-tl-title { /* 제목 → 상세. hover 밑줄. 최신(is-featured) = 크게(Linear 변형) */
-  font-family: var(--font-display); font-weight: 800; font-size: clamp(1.1rem, 1.9vw, 1.4rem);
+.sem-tl-title { /* 제목 → 상세. hover 밑줄. 최신(is-featured) = 크게(Linear 변형). §6-2 N2 상향(구 1.1~1.4rem) */
+  font-family: var(--font-display); font-weight: 800; font-size: clamp(1.2rem, 2.1vw, 1.55rem);
   line-height: 1.25; letter-spacing: -0.02em; word-break: keep-all; color: var(--text);
   background: none; border: none; padding: 0; text-align: left; cursor: pointer; display: block; margin: 0 0 0.7rem;
   transition: color 150ms ease-out;
 }
-.sem-tl-item.is-featured .sem-tl-title { font-size: clamp(1.5rem, 3.2vw, 2.1rem); line-height: 1.18; }
+/* §6-2 N2 — featured 제목 상향(구 1.5~2.1rem) */
+.sem-tl-item.is-featured .sem-tl-title { font-size: clamp(1.75rem, 3.8vw, 2.5rem); line-height: 1.16; }
+/* §6-2 N1 — featured 날짜 숫자 = 디스플레이 폰트 대형(레일의 스탯 문법. 구 0.8rem 공통) */
+.sem-tl-item.is-featured .sem-tl-day {
+  font-family: var(--font-display); font-weight: 800; font-size: clamp(1rem, 1.7vw, 1.25rem);
+  letter-spacing: -0.01em; line-height: 1.2;
+}
 .sem-tl-title:hover { text-decoration: underline; text-underline-offset: 3px; }
 .sem-tl-title:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .sem-tl-points { margin: 0.2rem 0 0; padding-left: 1.2rem; }
 .sem-tl-points li { margin-bottom: 0.35rem; line-height: 1.55; font-size: 0.92rem; }
 .sem-tl-points li::marker { color: var(--accent); } /* v3.1 요점 마커 = 버건디(세미나 한정 예외) */
 .sem-tl-excerpt { font-size: 0.92rem; line-height: 1.6; color: var(--text-sub); margin: 0.2rem 0 0; max-width: 60ch; word-break: keep-all; }
+
+/* ════ §6-2 N3 — 예정 featured(.is-next) = 버건디 대면적 면 승격(페이지당 최대 1개 = featured 유일) ════
+   버건디 #7a2030 × #fff 대비 ≈ 10.2:1(AA+), rgba(255,255,255,.85)도 ≥7:1. 구조·마크업 불변 — 색 면만. */
+.sem-tl-item.is-next .sem-tl-body {
+  background: var(--accent); color: #fff; border-left-color: transparent; border-radius: 16px;
+  padding: clamp(1.5rem, 3vh, 2rem) clamp(1.4rem, 3vw, 2.2rem);
+  margin-bottom: clamp(2rem, 4.5vh, 3.2rem);
+}
+.sem-tl-item.is-next .sem-tl-dot { display: none; } /* 면 위 점 생략 — 레일 선도 면 뒤로 숨김 */
+.sem-tl-item.is-next .sem-tl-title { color: #fff; }
+.sem-tl-item.is-next .sem-tl-title:focus-visible { outline-color: #fff; }
+.sem-tl-item.is-next .sem-tl-underbar { background: #fff; }
+.sem-tl-item.is-next .hub-chip { background: transparent; border-color: rgba(255, 255, 255, 0.5); color: #fff; }
+.sem-tl-item.is-next .sem-tl-points li { color: #fff; }
+.sem-tl-item.is-next .sem-tl-points li::marker { color: rgba(255, 255, 255, 0.7); }
+.sem-tl-item.is-next .sem-tl-excerpt { color: rgba(255, 255, 255, 0.85); }
+.sem-tl-item.is-next .sem-thumb-img { border-color: rgba(255, 255, 255, 0.35); }
+.sem-tl-item.is-next .sem-thumb-link:not(.is-static):hover .sem-thumb-img { border-color: #fff; }
+.sem-tl-item.is-next .sem-thumb-link:focus-visible { outline-color: #fff; }
 
 /* ── 슬라이드 썸네일 겹침 카드 (클릭=발표자료 새 탭 · hover 리프트 transform·opacity만) ── */
 .sem-thumb-link { display: inline-block; margin: 0.35rem 0 0.9rem; text-decoration: none; }

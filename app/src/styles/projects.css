@@ -1,13 +1,40 @@
 /* 프로젝트(/projects/) DPM 문법 — 2026-07-24. 대형 커버 그리드 + 호버 오버레이 + 상세 배너·프롬프트 로그.
-   셸(hub-page·hub-head·hub-idx·hub-empty·hub-back·hub-md)=pages.css · 토큰=global.css · 디자인규칙 v2 준수. */
+   셸(hub-page·hub-head·hub-idx·hub-empty·hub-back·hub-md)=pages.css · 토큰=global.css.
+   v3(2026-08-05, 디자인규칙 §6-2 NEXTERS): N2 타이포 상향(pj-head h1·카드/상세 제목 — 본문 불변) +
+   N4 쇼케이스 카드(커버 하단 스크림·호버 리프트+그림자·오버레이 확대). N3 색 면 = 이 페이지 미배치(자연 후보 없음).
+   신규 모션 없음 — 기존 호버 리프트(translateY)·150ms 문법 재사용, transform/opacity만. */
+
+/* ── v3 N2 — page-head 타이포 한 단계 상향(projects 한정 스코프, pages.css 불변) ── */
+.pj-head h1 {
+  font-weight: 900;
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  line-height: 1.14;
+  letter-spacing: -0.025em;
+}
 
 /* ── 그리드 — 데스크톱 2열·모바일 1열 ── */
 .pj-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2.25rem 1.75rem; }
 @media (max-width: 700px) { .pj-grid { grid-template-columns: 1fr; gap: 1.9rem; } }
 
-/* ── 카드 커버 (16:10, object-fit cover, radius 18px) ── */
+/* ── 카드 커버 (16:10, object-fit cover, radius 18px) — v3 N4 쇼케이스 확대 ── */
 .pj-card-coverwrap { position: relative; }
-.pj-card-open { display: block; width: 100%; padding: 0; border: none; background: none; cursor: pointer; }
+.pj-card-open { display: block; position: relative; width: 100%; padding: 0; border: none; background: none; cursor: pointer; }
+/* 커버 하단 상시 스크림 — NEXTERS 커버 깊이감(장식 없는 톤 오버레이, 인사이트 썸네일 문법과 동형) */
+.pj-card-open::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-card);
+  background: linear-gradient(180deg, rgba(22, 22, 22, 0) 62%, rgba(22, 22, 22, 0.28) 100%);
+  pointer-events: none;
+}
+/* 호버 리프트 — 기존 문법 재사용(home-sections .hp-card와 동값: translateY(-4px)+그림자) */
+.pj-card { transition: transform 150ms ease-out; }
+.pj-card-coverwrap { transition: box-shadow 150ms ease-out; border-radius: var(--radius-card); }
+@media (hover: hover) {
+  .pj-card:hover { transform: translateY(-4px); }
+  .pj-card:hover .pj-card-coverwrap { box-shadow: 0 16px 42px rgba(0, 0, 0, 0.16); }
+}
 .pj-card-cover {
   display: block;
   width: 100%;
@@ -36,7 +63,7 @@
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-card);
-  background: rgba(22, 22, 22, 0.55);
+  background: rgba(22, 22, 22, 0.62); /* v3 N4 — 오버레이 확대(구 0.55) */
   opacity: 0;
   pointer-events: none;
   transition: opacity 150ms ease-out;
@@ -48,11 +75,11 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1.2rem;
   background: #fff;
   color: var(--text);
   border-radius: var(--radius-pill);
-  font-size: 0.82rem;
+  font-size: 0.9rem; /* v3 N4 — 오버레이 링크 확대(구 0.82/0.5×1) */
   font-weight: 600;
   text-decoration: none;
 }
@@ -76,9 +103,9 @@
 .pj-card-title {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: 1.25rem;
-  line-height: 1.25;
-  letter-spacing: -0.01em;
+  font-size: 1.45rem; /* v3 N2 — 카드 제목 한 단계 상향(구 1.25) */
+  line-height: 1.22;
+  letter-spacing: -0.015em;
   word-break: keep-all;
 }
 .pj-card-desc { font-size: 0.9rem; color: var(--text-sub); line-height: 1.5; word-break: keep-all; }
@@ -102,10 +129,10 @@
 }
 .pj-detail-title {
   font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(1.9rem, 4vw, 2.6rem);
-  line-height: 1.18;
-  letter-spacing: -0.02em;
+  font-weight: 900;
+  font-size: clamp(2.2rem, 4.6vw, 3rem); /* v3 N2 — 상세 제목 상향(구 1.9~2.6/800) */
+  line-height: 1.14;
+  letter-spacing: -0.025em;
   word-break: keep-all;
   margin: 0 0 0.5rem;
 }
@@ -123,7 +150,7 @@
 
 /* ── 프롬프트 로그 — 코드블록 스타일(다크 앵커 = 브랜드 시그니처·화면당 1면) ── */
 .pj-log-block { margin-top: 2rem; }
-.pj-log-title { font-family: var(--font-display); font-weight: 800; font-size: 1.2rem; margin: 0 0 0.75rem; }
+.pj-log-title { font-family: var(--font-display); font-weight: 800; font-size: 1.35rem; margin: 0 0 0.75rem; } /* v3 N2(구 1.2) */
 .pj-log-body { background: var(--dark); border-radius: 12px; padding: 1.05rem 1.25rem; }
 .pj-log-body .hub-md {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -148,6 +175,6 @@
   outline-offset: 2px;
 }
 @media (prefers-reduced-motion: reduce) {
-  .pj-card-open, .pj-card-info, .pj-ov-link, .pj-card-overlay { transition: none; }
-  .pj-card-open:active, .pj-ov-link:active { transform: none; }
+  .pj-card, .pj-card-coverwrap, .pj-card-open, .pj-card-info, .pj-ov-link, .pj-card-overlay { transition: none; }
+  .pj-card-open:active, .pj-ov-link:active, .pj-card:hover { transform: none; }
 }

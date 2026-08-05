@@ -1,6 +1,8 @@
 /* 메인(/) v5 — 구조 개혁(2026-07-24 2차): .lattice/.cell 격자 폐지 → 풀블리드 스크린 섹션.
    골격·히어로·모션 = 이 파일 / 섹션 본문(WHY·ROADMAP·PROJECTS·FAQ) = home-sections.css(300줄 규격 분할).
-   규격=디자인규칙 v2: 색·폰트 토큰 고정 · 버건디 화이트리스트/빈도 상한 · transform·opacity만 · reduced-motion 존중. */
+   규격=디자인규칙 v3(§6-2 NEXTERS 이식, 2026-08-05): N2 타이포 스케일 상향(히어로·섹션 h2, 본문 불변) ·
+   N3 버건디 대면적 면 = 모집 밴드 1개(파일 말미 .home 스코프 재정의 — recruit.css 기본값은 서브 페이지용 유지) ·
+   모션 = 기존 문법만(신규 무한루프 0) · 색·폰트 토큰 고정 · transform·opacity만 · reduced-motion 존중. */
 
 /* ── 풀블리드 섹션 골격 ── */
 .home { width: 100%; }
@@ -49,7 +51,7 @@
 .hs-title {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(1.9rem, 4.5vw, 3rem);
+  font-size: clamp(2.2rem, 5.4vw, 3.6rem); /* v3 N2: 한 단계 상향(구 1.9/4.5vw/3) */
   line-height: 1.16;
   letter-spacing: -0.02em;
   margin: 0.2rem 0 0;
@@ -69,14 +71,14 @@
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: var(--text-sub);
+  color: var(--text); /* v3 N2: 대비 상향(구 --text-sub) */
   display: block;
   margin-bottom: clamp(1.25rem, 3vh, 2rem);
 }
 .hero-mega {
   font-family: var(--font-display);
   font-weight: 900;
-  font-size: clamp(2.5rem, 8.5vw, 7rem);
+  font-size: clamp(2.9rem, 9.6vw, 8rem); /* v3 N2: 한 단계 상향(구 2.5/8.5vw/7) */
   line-height: 1.02;
   letter-spacing: -0.03em;
   margin: 0;
@@ -92,7 +94,7 @@
   margin: clamp(0.5rem, 1.2vh, 0.9rem) 0 0;
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(0.95rem, 1.6vw, 1.35rem);
+  font-size: clamp(1.08rem, 1.8vw, 1.55rem); /* v3 N2: 메가 상향과 비례(구 0.95/1.6vw/1.35) */
   letter-spacing: 0.14em;
   color: var(--text-sub);
   display: flex;
@@ -194,3 +196,29 @@
   .marquee-track { animation: none; }
   .scroll-cue svg { animation: none; }
 }
+
+/* ══ v3 N3 — 모집 밴드 = 버건디 색 면(페이지당 대면적 면 최대 1개, §6-2 명시 개정) ══
+   recruit.css의 기본(.recruit-band = --surface)은 서브 페이지 셸용으로 유지하고,
+   메인 한정 .home 스코프(0,2,0)로 승격 재정의 — 다른 파일 수정 없이 여기서 지역 정의.
+   면 위 텍스트 = 흰색(대비 #7A2030 대비 약 10.1:1, AA 이상). hover 강조 = #D18F9A(§1 다크 면 위 파생). */
+.home .recruit-band {
+  background: var(--accent);
+  border-top: 0;
+  border-bottom: 0;
+  color: #fff;
+}
+.home .recruit-band .rb-title,
+.home .recruit-band .rb-text { color: #fff; }
+.home .recruit-band .rb-note { color: rgba(255, 255, 255, 0.85); }
+.home .recruit-band .status.prep,
+.home .recruit-band .status.live {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  color: #fff;
+}
+.home .recruit-band .rb-cta {
+  color: #fff;
+  border-bottom-color: #fff; /* 버건디 밑줄은 면과 동색 → 흰색 대체 */
+}
+.home .recruit-band .rb-cta:hover { color: #d18f9a; border-bottom-color: #d18f9a; }
+.home .recruit-band :focus-visible { outline-color: #fff; } /* 버건디 아웃라인은 면과 동색 → 가시성 보정 */

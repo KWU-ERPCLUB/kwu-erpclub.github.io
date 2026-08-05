@@ -1,5 +1,7 @@
 /* /recruit (IA 3차 2026-07-27) — AIM 기수 안내. log.css 문법 승계(page-head·밴드·리스트).
-   규격 = 디자인규칙 v2: 토큰 고정 · 버건디 화이트리스트(눈썹④·em①·점⑦·콜아웃 보더⑩·prep 배지⑤) · 빈도 상한 · 라이트 단일.
+   규격 = 디자인규칙 v2 + §6-2 v3(NEXTERS 강조 문법, 2026-08-05):
+   N1 대형 숫자 확대(stat-rows) · N2 타이포 상향(h1·h2·요강 값 — 본문 크기 불변) ·
+   N3 버건디 색 면 = 페이지당 1개(헤더 밴드 채택 — 면 위 텍스트 대비 AA 이상) · 신규 모션 0.
    + 메인(/) 모집 밴드(.recruit-band) — 히어로 직하 슬림 공고(섹션 스파이 .page 제외). */
 
 /* ══ 메인 모집 섹션(확대 개편 2026-08-05 — 한 축. 모집 종료 시 메인 미렌더) ══ */
@@ -27,10 +29,20 @@
 .rc-band-in { max-width: var(--maxw); margin: 0 auto; padding: clamp(2.5rem, 6vh, 4rem) 1.5rem; }
 @media (max-width: 700px) { .rc-band-in { padding: 2.25rem 1.25rem; } }
 
-/* page-head (§3-1 골격: 눈썹 → h1 → 서브 → 메타 → CTA → 헤어라인) + E5 키비주얼 + E6 앵커 CTA */
-.rc-head { width: 100%; border-bottom: 1px solid var(--line); }
+/* page-head (§3-1 골격: 눈썹 → h1 → 서브 → 메타 → CTA) + E5 키비주얼 + E6 앵커 CTA
+   = N3 색 면(§6-2 v3 — 페이지당 1개, 여기 하나뿐). 면 위 텍스트 = 흰색 계열(대비 AA 이상):
+   #fff/버건디 ≈ 9.7:1 · em #D18F9A = 대형 h1 한정(AA Large 3:1 충족). */
+.rc-head { width: 100%; background: var(--accent); color: #fff; }
+.rc-head .rc-eyebrow { color: rgba(255, 255, 255, 0.85); }
+.rc-head .rc-h1 { color: #fff; }
+.rc-head .rc-h1 em { color: #D18F9A; } /* 다크 면 위 강조 파생색(§1) — 대형 텍스트 한정 */
+.rc-head .rc-lead { color: rgba(255, 255, 255, 0.88); }
+.rc-head .rc-meta { color: rgba(255, 255, 255, 0.75); }
+.rc-head .btn-2nd { color: #fff; border-color: rgba(255, 255, 255, 0.55); }
+.rc-head .btn-2nd:hover { border-color: #fff; }
+.rc-head :focus-visible { outline-color: #fff; } /* 버건디 아웃라인은 면 위에서 비가시 */
 .rc-head-in { position: relative; max-width: var(--maxw); margin: 0 auto; padding: clamp(2.75rem, 7vh, 4.5rem) 1.5rem clamp(2rem, 4vh, 2.75rem); }
-/* E5 — 교차(×)·겹침(두 원) 장식. 라인·그레이만(버건디 예산 0), 텍스트 뒤 배경 요소. 조준점(원+십자) 금지(오너 반려 2026-08-05) */
+/* E5 — 교차(×)·겹침(두 원) 장식(v3 강도 상향 — 색 면 위 화이트 알파 라인). 텍스트 뒤 배경 요소. 조준점(원+십자) 금지(오너 반려 2026-08-05) */
 .rc-visual {
   position: absolute; right: 1.5rem; top: 50%; transform: translateY(-50%);
   width: clamp(200px, 26vw, 320px); height: auto; pointer-events: none; z-index: 0;
@@ -47,9 +59,9 @@
   display: block; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.09em;
   color: var(--accent); margin-bottom: clamp(1rem, 2.5vh, 1.5rem);
 }
-.rc-h1 {
-  font-family: var(--font-display); font-weight: 900; font-size: clamp(2rem, 5vw, 3.4rem);
-  line-height: 1.12; letter-spacing: -0.03em; word-break: keep-all; max-width: 20ch; margin: 0 0 1rem;
+.rc-h1 { /* N2 상향 — 구 clamp(2rem, 5vw, 3.4rem) */
+  font-family: var(--font-display); font-weight: 900; font-size: clamp(2.3rem, 5.6vw, 3.9rem);
+  line-height: 1.1; letter-spacing: -0.03em; word-break: keep-all; max-width: 20ch; margin: 0 0 1rem;
 }
 .rc-h1 em { font-style: normal; color: var(--accent); } /* 화이트리스트 ① */
 .rc-lead { font-size: clamp(1rem, 1.6vw, 1.15rem); line-height: 1.6; color: var(--text-sub); max-width: 52ch; margin: 0 0 1.1rem; }
@@ -60,10 +72,12 @@
   display: block; font-family: var(--font-display); font-weight: 800; font-size: 0.78rem;
   letter-spacing: 0.1em; color: var(--text-sub); margin-bottom: 0.75rem;
 }
-.rc-h2 {
-  font-family: var(--font-display); font-weight: 800; font-size: clamp(1.5rem, 3vw, 2.1rem);
-  line-height: 1.18; letter-spacing: -0.02em; margin: 0;
+.rc-h2 { /* N2 상향 — 구 clamp(1.5rem, 3vw, 2.1rem) → §2 섹션 헤드라인 스케일 */
+  font-family: var(--font-display); font-weight: 800; font-size: clamp(1.7rem, 3.8vw, 2.6rem);
+  line-height: 1.18; letter-spacing: -0.02em; margin: 0; word-break: keep-all;
 }
+/* 학사일정 연동 원칙 1줄(운영틀 개정 2026-08-05) — 활동 구성 섹션 헤드 직하 */
+.rc-sched-rule { margin: 0.9rem 0 0; font-size: 0.88rem; font-weight: 600; color: var(--text-sub); word-break: keep-all; }
 
 /* ══ 요강 표 — 라벨·값 2열 행 ══ */
 .rc-facts { list-style: none; margin: clamp(1.5rem, 3.5vh, 2.5rem) 0 0; padding: 0; border-top: 1px solid var(--line); }
@@ -72,7 +86,9 @@
   gap: clamp(1rem, 3vw, 2rem); padding: clamp(0.85rem, 2vh, 1.15rem) 0; border-bottom: 1px solid var(--line);
 }
 .rc-fact dt { font-size: 0.85rem; font-weight: 700; color: var(--text-sub); letter-spacing: 0.02em; }
-.rc-fact dd { margin: 0; font-size: clamp(0.96rem, 1.4vw, 1.05rem); line-height: 1.55; word-break: keep-all; }
+.rc-fact dd { /* N2 요강 값 상향 — 구 clamp(0.96rem, 1.4vw, 1.05rem) 400 */
+  margin: 0; font-size: clamp(1.02rem, 1.5vw, 1.18rem); font-weight: 650; line-height: 1.55; word-break: keep-all;
+}
 @media (max-width: 700px) { .rc-fact { grid-template-columns: 5rem 1fr; } }
 
 /* ══ 활동 구성 — 페이즈 스텝(세로 라인·점 문법) ══ */
@@ -168,9 +184,9 @@
   padding: clamp(1.6rem, 3.5vh, 2.6rem) 0;
   border-bottom: 1px solid var(--line);
 }
-.stat-row .stat-num {
+.stat-row .stat-num { /* N1 대형 숫자 확대(§6-2 v3) — 구 clamp(3rem, 8.5vw, 6.5rem) */
   margin: 0;
-  font-size: clamp(3rem, 8.5vw, 6.5rem);
+  font-size: clamp(3.4rem, 9.5vw, 7.5rem);
   line-height: 0.95;
 }
 .stat-row .stat-num::after { margin-top: 1rem; } /* 버건디 언더바 28×3(화이트리스트 ③) */
