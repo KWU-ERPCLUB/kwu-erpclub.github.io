@@ -1,20 +1,15 @@
-/* 기사(INSIGHTS) 전용 — 목록=컨트롤 바+2열 색면 카드 그리드(2026-07-24 2차), 상세=통일 셸(문서헤더·출처카드·720px 본문·하단 내비).
-   토큰=global.css만 · light-only. 디자인규칙 v2: 버건디=화이트리스트(④눈썹·⑥링크밑줄·⑨focus·⑩좌보더)만·버건디 면 금지. */
+/* 기사(INSIGHTS) 전용 — 목록 = 피처 행 + 성격 탭·필터 바 + 썸네일 카드 그리드 + 더보기(2026-08-05 오너 픽),
+   상세 = 통일 셸(문서헤더·출처카드·720px 본문·하단 내비 — 이번 개편 대상 아님).
+   토큰=global.css만 · light-only. 디자인규칙 v2: 버건디=화이트리스트(④눈썹·⑥링크밑줄·⑨focus·⑩좌보더)만·버건디 면 금지.
+   반응형 3계층(2026-08-05 규범): 폰 <760 1열 리스트 / 태블릿 760~1199 2열 / 데스크톱 ≥1200 피처+3열+필터 상시 레일. */
 
 .art-page { margin: 0 auto; padding: 3rem 1.5rem 5rem; }
-/* 상세 셸 폭 상한 해제(2026-07-28 도판 브레이크아웃) — 폭 책임 = .hub-md 그리드 트랙.
-   본문 텍스트 720px 유지, 비본문 요소(헤더·출처카드·하단내비)는 720 중앙 정렬로 승계. */
+/* 상세 셸 폭 상한 해제(2026-07-28 도판 브레이크아웃) — 폭 책임 = .hub-md 그리드 트랙. */
 .art-page--doc { max-width: none; }
-.art-page--list { max-width: var(--maxw); } /* 목록 = 상단 컨트롤 바 + 2열 색면 카드 그리드(AI in Use 구조) */
+.art-page--list { max-width: var(--maxw); }
+/* 데스크톱 = 중앙 몰림 해소(콘텐츠 폭 1280 활용) */
+@media (min-width: 1200px) { .art-page--list { max-width: 1280px; } }
 @media (max-width: 700px) { .art-page { padding: 2rem 1.25rem 3.5rem; } }
-
-/* ── 상단 컨트롤 바 — 검색 + 성격 칩 + 주제 칩 + 지금써먹기 토글을 한 영역에 정리 ── */
-.ins-controls { margin-bottom: 0.75rem; }
-.ins-controls .art-search { margin-bottom: 0.9rem; }
-/* N건 표시 중 / 전체 M건 — 카운트 라인(§3-1 메타 톤) */
-.ins-count { font-size: 0.85rem; color: var(--text-sub); margin: 0 0 1.25rem; padding: 0 0.15rem; }
-.ins-count strong { font-family: var(--font-display); font-weight: 800; color: var(--text); }
-.ins-count span { color: var(--text-sub); }
 
 /* ── 접근성 유틸 ── */
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
@@ -28,23 +23,46 @@
 .art-head h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.9rem, 4vw, 2.6rem); line-height: 1.18; letter-spacing: -0.02em; margin: 0 0 0.6rem; }
 .art-head p { margin: 0; max-width: 52ch; font-size: 0.92rem; color: var(--text-sub); }
 
-/* ── 검색 박스 (제목·본문 클라이언트 부분일치) ── */
-.art-search { margin-bottom: 1rem; }
+/* ── 성격 탭(5개 상한 — 전체+4). 선택 = 언더라인(색면 아님, 성격색은 카드 라벨이 담당) ── */
+.ins-tabs { display: flex; flex-wrap: wrap; gap: 0.2rem; border-bottom: 1px solid var(--line); margin-bottom: 0.9rem; }
+.ins-tab {
+  background: none; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px;
+  padding: 0.55rem 0.85rem; font: inherit; font-size: 0.9rem; font-weight: 600; color: var(--text-sub);
+  cursor: pointer; transition: color 150ms ease-out, border-color 150ms ease-out;
+}
+.ins-tab:hover { color: var(--text); }
+.ins-tab:active { transform: translateY(1px); }
+.ins-tab.on { color: var(--text); border-bottom-color: var(--dark); }
+.ins-tab.on[class*="chip-"] { color: var(--nfg); border-bottom-color: var(--nfg); }
+.ins-tab:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* ── 필터 바 — 검색 + 주제 칩 + 기간. 데스크톱(≥1200) = 접힘 없이 한 줄 레일 ── */
+.ins-controls { margin-bottom: 0.75rem; }
+.ins-controls-sub { display: flex; flex-direction: column; gap: 0.4rem; }
+@media (min-width: 1200px) {
+  .ins-controls-sub { flex-direction: row; align-items: center; flex-wrap: wrap; gap: 0.6rem 1.4rem; }
+  .ins-controls-sub .art-search { flex: 0 0 260px; margin: 0; }
+  .ins-controls-sub .art-filter { margin: 0; }
+}
+/* N건 표시 중 / 전체 M건 — 카운트 라인(§3-1 메타 톤) */
+.ins-count { font-size: 0.85rem; color: var(--text-sub); margin: 0 0 1.25rem; padding: 0 0.15rem; }
+.ins-count strong { font-family: var(--font-display); font-weight: 800; color: var(--text); }
+.ins-count span { color: var(--text-sub); }
+
+/* ── 검색 박스 (제목·설명·태그·본문 클라이언트 부분일치) ── */
+.art-search { margin-bottom: 0.4rem; }
 .art-search input {
-  width: 100%; height: 42px; padding: 0 1rem; font: inherit; font-size: 0.92rem; color: var(--text);
+  width: 100%; height: 40px; padding: 0 1rem; font: inherit; font-size: 0.92rem; color: var(--text);
   background: #fff; border: 1px solid var(--line); border-radius: var(--radius-pill); transition: border-color 150ms ease-out;
 }
 .art-search input::placeholder { color: var(--text-sub); }
 .art-search input:hover { border-color: var(--text); }
 .art-search input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-color: var(--text); }
 
-/* ── 태그 칩 필터 (성격=주열·영역=보조열·지금써먹기=토글) — 선택=차콜 필 ── */
-.art-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+/* ── 주제 칩·기간 셀렉트 (보조 필터) — 선택=차콜 필 ── */
+.art-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; margin-bottom: 0.4rem; }
 .art-filter-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.04em; color: var(--text-sub); margin-right: 0.15rem; }
-.art-filter-sub { margin-bottom: 0.5rem; } /* 영역(보조) — 소형 칩 */
 .art-filter-sub button { height: 30px; font-size: 0.78rem; padding: 0 0.8rem; }
-.art-filter-toggle { margin-bottom: 1.25rem; } /* 지금 써먹기 토글 1개 */
-/* 기간(월) 필터 — 칩과 동일 필 문법의 네이티브 select(2개월 이상 쌓이면 노출) */
 .art-month {
   height: 30px; font-size: 0.78rem; font-weight: 600; padding: 0 0.8rem; border: 1px solid var(--line);
   border-radius: var(--radius-pill); background: #fff; color: var(--text-sub); cursor: pointer;
@@ -52,7 +70,7 @@
 .art-month:hover { border-color: var(--text); color: var(--text); }
 .art-month:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .art-filter button {
-  font-size: 0.84rem; font-weight: 600; height: 36px; padding: 0 1rem; border: 1px solid var(--line);
+  font-size: 0.84rem; font-weight: 600; height: 32px; padding: 0 0.9rem; border: 1px solid var(--line);
   border-radius: var(--radius-pill); background: #fff; color: var(--text-sub); cursor: pointer;
   transition: background-color 150ms ease-out, border-color 150ms ease-out, color 150ms ease-out, transform 100ms ease-out;
 }
@@ -61,84 +79,92 @@
 .art-filter button.on { background: var(--dark); color: #fff; border-color: var(--dark); }
 .art-filter button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
-/* ── 2열 대형 색면 카드 그리드(AI in Use 구조 — 데스크톱 2열·모바일 1열) ── */
+/* ── 썸네일 프레임 — 4계층(이미지·본문도판·로고·스톡·커버) 공통 16:10 크롭 + 통일 보더·오버레이 ── */
+.art-cover {
+  display: block; position: relative; width: 100%; aspect-ratio: 16 / 10; overflow: hidden;
+  background: var(--surface); border-bottom: 1px solid var(--line);
+}
+.art-cover img, .art-cover-svg { display: block; width: 100%; height: 100%; }
+.art-cover--fit-cover img { object-fit: cover; }
+/* 로고·자체 도판 = 여백 두고 축소(사진과 같은 프레임 안에서 이질감 제거) */
+.art-cover--fit-contain img { object-fit: contain; padding: 11%; background: #fff; }
+/* 통일 처리 — 내부 헤어라인 + 사진 하단 미세 톤(전 계층 같은 마감) */
+.art-cover::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+.art-cover--stock::after { background: linear-gradient(180deg, rgba(22, 22, 22, 0) 58%, rgba(22, 22, 22, 0.13)); }
+/* 피처용 큰 썸네일 — 같은 문법·더 넓은 비율(시각량 집중) */
+.art-cover--big { aspect-ratio: 16 / 9; }
+
+/* ── 피처 행 — 고정 기사 + 최신 2건(큰 썸네일). 기본 뷰(필터 없음)에서만 ── */
+.art-features { list-style: none; margin: 0 0 2.25rem; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+.art-feature { list-style: none; }
+
+/* ── 썸네일 카드 그리드 — 배경 통일(흰 면), 성격 = 컬러 라벨 ── */
 .art-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.4rem; }
-@media (max-width: 760px) { .art-grid { grid-template-columns: 1fr; gap: 1rem; } }
-
-/* ── 색 면 카드(AI in Use 이식) — 배경=성격별 저채도 4색, 진한 보더(--dark 1.5px)+옅은 그림자. 카드 확대(패딩·제목 상향) ── */
+@media (min-width: 1200px) { .art-grid { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; } }
 .art-card { list-style: none; }
-.art-card > button {
-  display: flex; align-items: flex-start; gap: 1.2rem; width: 100%; height: 100%; text-align: left;
-  border: 1.5px solid var(--dark); border-radius: var(--radius-card); /* 또렷한 카드 윤곽 */
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06); padding: 1.7rem 1.8rem; color: var(--text); font: inherit; cursor: pointer;
-  transition: box-shadow 150ms ease-out, transform 100ms ease-out;
+
+.art-card > button, .art-feature > button {
+  display: flex; flex-direction: column; width: 100%; height: 100%; text-align: left; padding: 0; overflow: hidden;
+  background: #fff; border: 1px solid var(--line); border-radius: var(--radius-card);
+  color: var(--text); font: inherit; cursor: pointer;
+  transition: box-shadow 150ms ease-out, border-color 150ms ease-out, transform 100ms ease-out;
 }
-/* 성격별 저채도 색 면(§1 파생 4색) — 배경은 톤, 본문 텍스트는 --text 유지 가독 확보.
-   --card-fg = 대응 진한 색(성격 태그 진한 필·메타 강조에 사용). 버건디 아님 → §1 "버건디 면 금지"와 무관. */
-/* 성격 4색 — 파스텔 상향(2026-07-25 오너 "칙칙함" 지적 → 밝은 톤 교체, 쨍한 채도는 회피) */
-.art-card--news     { --card-fg: #38618c; } /* 트렌드(구 뉴스·동향) = 파스텔블루 */
-.art-card--analysis { --card-fg: #8c6a38; } /* 심층 분석 = 웜앰버 */
-.art-card--howto    { --card-fg: #39734a; } /* 활용법·튜토리얼 = 파스텔그린 */
-.art-card--tools    { --card-fg: #63549e; } /* 도구·프롬프트 = 파스텔퍼플 */
-.art-card--news > button     { background: #e5f0fb; }
-.art-card--analysis > button { background: #faf0e1; }
-.art-card--howto > button    { background: #e4f3e8; }
-.art-card--tools > button    { background: #eee9fa; }
-.art-card > button:hover { box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1); transform: translateY(-2px); }
-.art-card > button:active { transform: translateY(0) scale(0.998); }
-.art-card > button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-.art-card-body { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.art-card > button:hover, .art-feature > button:hover { border-color: var(--text-sub); box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08); transform: translateY(-2px); }
+.art-card > button:active, .art-feature > button:active { transform: translateY(0) scale(0.998); }
+.art-card > button:focus-visible, .art-feature > button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
-/* 상단 메타 줄 — [아바타·저자] 좌 / 날짜 우상단(한 곳으로 정리, 과밀 금지) */
-.art-card-meta { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: var(--card-fg); margin-bottom: 0.55rem; }
-.art-avatar {
-  flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--card-fg); color: #fff;
-  display: inline-flex; align-items: center; justify-content: center;
-  font-family: var(--font-display); font-weight: 700; font-size: 0.78rem; line-height: 1;
+.art-card-body { display: flex; flex-direction: column; flex: 1; min-width: 0; padding: 0.95rem 1.1rem 1.15rem; }
+.art-feature .art-card-body { padding: 1.15rem 1.35rem 1.35rem; }
+
+/* 라벨 줄 — [핀] + 성격 컬러 라벨 1개(색면 강등분) */
+.art-card-labels { display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.5rem; }
+.art-label { font-size: 0.72rem; font-weight: 700; border-radius: var(--radius-pill); padding: 0.14rem 0.62rem; color: var(--nfg); background: var(--nbg); }
+/* 핀 배지(고정) — 무채색(버건디·성격색 면 금지) */
+.art-pin { display: inline-flex; align-items: center; color: var(--text-sub); }
+
+.art-card-title {
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  font-size: 1.02rem; font-weight: 700; line-height: 1.4; letter-spacing: -0.01em; color: var(--text); margin-bottom: 0.4rem;
 }
-.art-card-author { font-weight: 700; color: var(--card-fg); }
-.art-card-date { margin-left: auto; font-variant-numeric: tabular-nums; } /* 우상단 날짜 */
+.art-feature .art-card-title { font-family: var(--font-display); font-size: 1.3rem; font-weight: 800; line-height: 1.32; -webkit-line-clamp: 3; }
 
-/* 제목 — 볼드·크게(카드 확대: 상향) */
-.art-card-title { display: block; font-size: 1.32rem; font-weight: 800; line-height: 1.32; letter-spacing: -0.015em; color: var(--text); margin-bottom: 0.6rem; }
-
-/* 주제 칩 — 흰 필(색 면 위 또렷) */
-.art-card-tagline { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.6rem; } /* 제목 아래 태그 줄(성격·주제·지금써먹기) */
-.art-tag.art-tag-fill { color: #fff; background: var(--card-fg); border-color: var(--card-fg); } /* 카드 위 성격 칩 = 진한 필 */
-.art-card-topic {
-  align-self: flex-start; font-size: 0.72rem; font-weight: 700; color: var(--card-fg);
-  background: #fff; border: 1px solid rgba(0, 0, 0, 0.08); border-radius: var(--radius-pill);
-  padding: 0.16rem 0.66rem; margin-bottom: 0.6rem;
-}
-
-/* 설명 = frontmatter 핵심 1~2줄(본문 발췌 폐지 2026-07-27 — clamp 2줄 안전망) */
+/* 설명 = frontmatter 1문장(clamp 2줄) */
 .art-card-excerpt {
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-  font-size: 0.9rem; line-height: 1.55; color: var(--text); margin-bottom: 0.55rem;
+  font-size: 0.86rem; line-height: 1.52; color: var(--text-sub); margin-bottom: 0.7rem;
 }
-/* 해시태그 줄 — 표시 전용(필터 없음)·성격 진한색 텍스트, 칩 아님(§1 화이트리스트 밖 면 추가 금지) */
-.art-card-hashtags { display: block; font-size: 0.8rem; font-weight: 600; color: var(--card-fg); margin-bottom: 0.85rem; }
+.art-feature .art-card-excerpt { font-size: 0.92rem; }
+.art-card-date { margin-top: auto; font-size: 0.76rem; color: var(--text-sub); font-variant-numeric: tabular-nums; }
 
-/* 핀 배지(고정) — 성격 진한색 아이콘(버건디 미사용) */
-.art-pin { display: inline-flex; vertical-align: middle; color: var(--card-fg); margin-right: 0.3rem; }
-
-/* 하단 줄 — [성격 태그·지금써먹기] 좌 / "자세히 →" 우 */
-.art-card-foot { display: flex; align-items: center; gap: 0.75rem; margin-top: auto; }
-.art-row-tags { display: inline-flex; flex-wrap: wrap; gap: 0.35rem; }
-.art-tag { font-size: 0.72rem; font-weight: 600; color: var(--text-sub); background: #fff; border: 1px solid var(--line); border-radius: var(--radius-pill); padding: 0.14rem 0.6rem; }
-/* 성격 태그 = 진한 필(대응 진한 색 채움·흰 텍스트) */
-.art-tag-nature { color: #fff; background: var(--card-fg); border-color: var(--card-fg); }
-/* 지금 써먹기 배지 — prep 배지 문법(테두리+텍스트, §1 화이트리스트 ⑤) · 버건디 면 금지 */
-.art-tag-now { color: var(--accent); border-color: var(--accent); background: #fff; }
-/* "자세히 →" — Tertiary(밑줄 없이 성격색 텍스트, 카드 전체가 버튼이라 밑줄 생략) */
-.art-card-more { flex: none; margin-left: auto; display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.82rem; font-weight: 700; color: var(--card-fg); }
-
-/* ── 썸네일 = 이미지(로고 = /img/logos/) 있을 때만 · 정사각형 76×76·radius 10px ── */
-.art-thumb {
-  flex: none; width: 76px; height: 76px; border-radius: 10px; overflow: hidden;
-  display: inline-flex; align-items: center; justify-content: center; border: 1px solid rgba(0, 0, 0, 0.1); background: #fff;
+/* ── 더보기(무한스크롤 금지 — 오너 픽) ── */
+.art-more-wrap { display: flex; justify-content: center; margin-top: 2rem; }
+.art-more {
+  border: 1px solid var(--dark); border-radius: var(--radius-pill); background: #fff; color: var(--text);
+  font: inherit; font-size: 0.9rem; font-weight: 600; padding: 0.6rem 1.7rem; cursor: pointer;
+  transition: background 150ms ease-out, transform 100ms ease-out;
 }
-.art-thumb img { width: 100%; height: 100%; object-fit: contain; padding: 11px; display: block; }
+.art-more span { color: var(--text-sub); font-weight: 500; }
+.art-more:hover { background: var(--surface); }
+.art-more:active { transform: scale(0.98); }
+.art-more:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* ── 폰(<760) = 1열 리스트: 썸네일 소형 좌측 + 헤어라인 구분(카드 면 없음) ── */
+@media (max-width: 759px) {
+  .art-features { grid-template-columns: 1fr; gap: 1.1rem; margin-bottom: 1.5rem; }
+  .art-grid { grid-template-columns: 1fr; gap: 0; }
+  .art-card > button {
+    flex-direction: row; align-items: flex-start; gap: 0.9rem; /* 썸네일 소형 좌측(DOM 순서 그대로) */
+    border: 0; border-bottom: 1px solid var(--line); border-radius: 0; padding: 1rem 0.15rem;
+  }
+  .art-card > button:hover { box-shadow: none; transform: none; }
+  .art-card .art-cover { flex: none; width: 104px; border: 1px solid var(--line); border-radius: 10px; }
+  .art-card-body { padding: 0; }
+  .art-card-title { font-size: 0.98rem; margin-bottom: 0.3rem; }
+  .art-card-excerpt { -webkit-line-clamp: 1; margin-bottom: 0.4rem; }
+}
 
 /* ── 디자인된 빈 상태 (§3-1: 무엇이 쌓이는지 + 기고 방법) ── */
 .art-empty {
@@ -149,7 +175,7 @@
 /* ── DB 페치 상태(M2) — 로딩 골격·재시도 버튼. 팔레트 = surface/line만(버건디 면 금지) ── */
 .art-grid--loading { margin-top: 1.25rem; }
 .art-card--skeleton {
-  min-height: 190px; border: 1.5px solid var(--line); border-radius: var(--radius-card);
+  min-height: 240px; border: 1px solid var(--line); border-radius: var(--radius-card);
   background: linear-gradient(100deg, var(--surface) 30%, #f2f2f0 45%, var(--surface) 60%);
   background-size: 300% 100%; animation: art-skel 1.4s ease-in-out infinite;
 }
@@ -233,17 +259,24 @@
 .art-detail .hub-md h2 { counter-increment: mdsec; padding-top: 1.6rem; border-top: 1px solid var(--line); margin-top: 2.4rem; }
 .art-detail .hub-md h2::before { content: counter(mdsec, decimal-leading-zero); display: block; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 0.4rem; } /* 섹션 인덱스(④) */
 
-/* 성격색 칩 — 필터·상세 태그 공용(카드 배경 4색과 동일 계열, 2026-07-25 오너 지시) */
+/* 상세 태그 칩 — 성격색(§1 파생 4색) */
+.art-row-tags { display: inline-flex; flex-wrap: wrap; gap: 0.35rem; }
+.art-tag { font-size: 0.72rem; font-weight: 600; color: var(--text-sub); background: #fff; border: 1px solid var(--line); border-radius: var(--radius-pill); padding: 0.14rem 0.6rem; }
+.art-tag-nature { color: #fff; background: var(--dark); border-color: var(--dark); }
+/* 지금 써먹기 배지 — prep 배지 문법(테두리+텍스트, §1 화이트리스트 ⑤) · 버건디 면 금지 */
+.art-tag-now { color: var(--accent); border-color: var(--accent); background: #fff; }
+
+/* 성격색 토큰 — 탭(선택)·카드 라벨·상세 태그 공용(§1 파생 4색) */
 .chip-news     { --nbg: #e5f0fb; --nfg: #38618c; }
 .chip-analysis { --nbg: #faf0e1; --nfg: #8c6a38; }
 .chip-howto    { --nbg: #e4f3e8; --nfg: #39734a; }
 .chip-tools    { --nbg: #eee9fa; --nfg: #63549e; }
-.art-filter button[class*="chip-"] { background: var(--nbg); color: var(--nfg); border-color: var(--nbg); }
-.art-filter button[class*="chip-"]:hover { border-color: var(--nfg); }
-.art-filter button[class*="chip-"].on { background: var(--nfg); color: #fff; border-color: var(--nfg); }
 .art-tag.art-tag-nature[class*="chip-"] { background: var(--nbg); color: var(--nfg); border-color: var(--nbg); }
 
 @media (prefers-reduced-motion: reduce) {
-  .art-filter button, .art-card > button, .art-back, .art-search input, .hub-md a, .art-source, .art-nav-link { transition: none; }
-  .art-filter button:active, .art-card > button:hover, .art-card > button:active { transform: none; }
+  .art-filter button, .ins-tab, .art-card > button, .art-feature > button, .art-more,
+  .art-back, .art-search input, .hub-md a, .art-source, .art-nav-link { transition: none; }
+  .art-filter button:active, .ins-tab:active, .art-more:active,
+  .art-card > button:hover, .art-card > button:active,
+  .art-feature > button:hover, .art-feature > button:active { transform: none; }
 }
