@@ -55,6 +55,11 @@ jobs:
         working-directory: app
       - run: npm run build
         working-directory: app
+        # 워크스페이스 백엔드 주입(SPEC §1) — 미설정이면 빈 값 → /workspace/ 는 "백엔드 연결 대기" 화면.
+        # 등록 = repo Settings > Secrets and variables > Actions. anon key만 등록(service 키 금지·판정 P2).
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: app/dist

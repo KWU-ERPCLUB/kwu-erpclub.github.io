@@ -3,3 +3,8 @@ dist/
 .DS_Store
 Thumbs.db
 *.local
+
+# 환경변수 실값 — 절대 커밋 금지(키 이름 문서 = app/.env.example)
+.env
+.env.*
+!.env.example
