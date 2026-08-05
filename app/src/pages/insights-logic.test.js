@@ -2,7 +2,34 @@ import { expect, test } from 'vitest'
 import {
   excerpt, filterArticles, pinnedFirst, neighbors, extractMonths,
   stateFromSearch, searchFromState, natureKey, authorInitial, HUB_TAB,
+  splitFeature, pageSlice, FEATURE_COUNT,
 } from './insights-logic.js'
+import { wrapTitle } from './insights-cover.jsx'
+
+// ── 목록 리디자인(2026-08-05) — 피처 분리·더보기 페이징·커버 줄바꿈 ──
+test('splitFeature — 앞 N건이 피처, 총량이 N 이하면 피처 없음', () => {
+  const list = [1, 2, 3, 4, 5].map((n) => ({ slug: `s${n}` }))
+  const { feature, list: rest } = splitFeature(list, 2)
+  expect(feature.map((a) => a.slug)).toEqual(['s1', 's2'])
+  expect(rest).toHaveLength(3)
+  expect(splitFeature(list.slice(0, FEATURE_COUNT)).feature).toHaveLength(0)
+  expect(splitFeature([]).list).toEqual([])
+})
+
+test('pageSlice — 노출 개수 절단 + 남은 건수', () => {
+  const list = Array.from({ length: 12 }, (_, i) => i)
+  expect(pageSlice(list, 9)).toEqual({ visible: list.slice(0, 9), remaining: 3 })
+  expect(pageSlice(list, 20).remaining).toBe(0)
+  expect(pageSlice([], 9)).toEqual({ visible: [], remaining: 0 })
+})
+
+test('wrapTitle — 최대 2줄, 넘치면 말줄임', () => {
+  expect(wrapTitle('짧은 제목')).toEqual(['짧은 제목'])
+  const two = wrapTitle('국내 SI 빅3의 무게중심 이동 — 2분기 실적에 찍힌 AI 인프라 전환')
+  expect(two).toHaveLength(2)
+  expect(two[1].endsWith('…')).toBe(true)
+  expect(wrapTitle('')).toEqual([''])
+})
 
 // ── 월 필터(2026-07-27 오너 지시 — 쌓인 월만 옵션·최신 먼저) ──
 test('extractMonths — 등장 월만 중복 없이 최신순', () => {

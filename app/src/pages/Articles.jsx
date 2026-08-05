@@ -1,39 +1,55 @@
-// 인사이트(INSIGHTS) — 구조 개혁(2026-07-24 2차): 좌측 탭·허브 4섹션·월별 그룹 폐지 → AI in Use 구조.
-// [page-head] → 상단 컨트롤 바(성격 칩+주제 칩+지금써먹기 토글+검색) → N건 카운트 → 2열 대형 색면 카드 그리드(고정 핀 최상단).
-// URL: ?tab=<key>=성격 칩 선택 · ?p=<slug>=상세(문서 셸 변경 없음). 0건=디자인된 빈 상태.
+// 인사이트(INSIGHTS) — 목록 리디자인(2026-08-05 오너 픽, 레퍼런스 = 당근 careers 블로그 계열).
+// [page-head] → 피처 행(고정+최신 2건·큰 썸네일, 기본 뷰만) → 필터 바(성격 탭 5 + 검색 + 주제 칩 + 기간)
+//   → 썸네일 카드 그리드(배경 통일·성격=컬러 라벨) → 더보기(무한스크롤 금지).
+// 3계층 반응형 = articles.css(폰 <760 1열 리스트 / 태블릿 760~1199 2열 / 데스크톱 ≥1200 피처+3열+필터 상시 레일).
+// URL: ?tab=<key>=성격 선택 · ?p=<slug>=상세(문서 셸 변경 없음). 0건=디자인된 빈 상태.
 import { useEffect, useState, useCallback } from 'react'
 import { SiteNav, SiteFooter, CONTRIBUTING_URL } from '../shared.jsx'
 import { useArticles, useInteractions } from './insights-source.js'
 import { TOPICS } from '../content/schema.js'
 import {
-  HUB_TAB, TABS, NATURE_KEY, stateFromSearch, searchFromState, filterArticles, pinnedFirst, extractMonths,
+  HUB_TAB, TABS, NATURE_KEY, PAGE_SIZE, stateFromSearch, searchFromState,
+  filterArticles, pinnedFirst, extractMonths, splitFeature, pageSlice,
 } from './insights-logic.js'
-import { ArticleRow } from './insights-parts.jsx'
+import { ArticleRow, FeatureCard } from './insights-parts.jsx'
 import ArticleDetail from './ArticleDetail.jsx'
 
-// 칩 열 — 선택 = 차콜 필(4상태·global .art-filter 문법). 성격=주열(전체+4), 주제=보조열(전체+5).
-function ChipRow({ label, options, value, onSelect, sub = false }) {
+// 성격 탭 — 5개 상한(전체+4). 선택 = 언더라인 탭(칩 색면 아님 — 성격색은 카드 라벨이 담당).
+function NatureTabs({ value, onSelect }) {
   return (
-    <div className={`art-filter${sub ? ' art-filter-sub' : ''}`} role="group" aria-label={`${label} 필터`}>
-      <span className="art-filter-label">{label}</span>
-      {options.map((opt) => {
-        const on = value === opt.val
-        const cls = [opt.cls, on ? 'on' : ''].filter(Boolean).join(' ')
-        return (
-          <button key={opt.key} type="button" className={cls} aria-pressed={on} onClick={() => onSelect(opt.val)}>
-            {opt.label}
-          </button>
-        )
-      })}
+    <div className="ins-tabs" role="tablist" aria-label="성격 탭">
+      {TABS.map((t) => (
+        <button
+          key={t} type="button" role="tab" aria-selected={value === t}
+          className={`ins-tab${value === t ? ' on' : ''}${NATURE_KEY[t] ? ` chip-${NATURE_KEY[t]}` : ''}`}
+          onClick={() => onSelect(t)}
+        >{t}</button>
+      ))}
     </div>
   )
 }
 
-// 로딩 골격 — DB 페치 대기(카드 그리드와 같은 자리·같은 크기, 색면 없이 회색 면만).
+// 주제 칩 열 — 보조 필터(전체 + TOPICS).
+function TopicChips({ value, onSelect }) {
+  const opts = [{ val: null, label: '전체' }, ...TOPICS.map((v) => ({ val: v, label: v }))]
+  return (
+    <div className="art-filter art-filter-sub" role="group" aria-label="주제 필터">
+      <span className="art-filter-label">주제</span>
+      {opts.map((o) => (
+        <button
+          key={o.label} type="button" aria-pressed={value === o.val}
+          className={value === o.val ? 'on' : ''} onClick={() => onSelect(o.val)}
+        >{o.label}</button>
+      ))}
+    </div>
+  )
+}
+
+// 로딩 골격 — DB 페치 대기(카드 그리드와 같은 자리·같은 크기).
 function LoadingGrid() {
   return (
     <ul className="art-grid art-grid--loading" role="status" aria-label="인사이트 불러오는 중">
-      {[0, 1, 2, 3].map((i) => <li key={i} className="art-card art-card--skeleton" aria-hidden="true" />)}
+      {[0, 1, 2, 3, 4, 5].map((i) => <li key={i} className="art-card art-card--skeleton" aria-hidden="true" />)}
     </ul>
   )
 }
@@ -49,41 +65,56 @@ function LoadError({ onRetry }) {
   )
 }
 
-// 목록 뷰 — 상단 컨트롤 바 + 카운트 라인 + 2열 색면 카드 그리드(고정 핀 최상단). export = 픽스처 주입 테스트용.
-// status/onRetry = DB 페치 상태(기본 'ready' — md 폴백·픽스처 주입 시 기존 동작 그대로).
+// 목록 뷰. export = 픽스처 주입 테스트용. status/onRetry = DB 페치 상태(기본 'ready').
 export function ListView({ all, tab, onTab, topic, setTopic, month, setMonth, q, setQ, onOpen, status = 'ready', onRetry }) {
+  const [shown, setShown] = useState(PAGE_SIZE)
   const nature = tab === HUB_TAB ? null : tab
   const months = extractMonths(all)
   const filtered = filterArticles(all, { nature, topic, month, q })
   const { pinned, rest } = pinnedFirst(filtered)
-  // 성격 칩 = 성격색(카드 배경과 동일 4색 — 2026-07-25 오너 지시), '전체'만 무채색.
-  const natureOpts = TABS.map((t) => ({ key: t, val: t, label: t, cls: NATURE_KEY[t] ? `chip-${NATURE_KEY[t]}` : undefined }))
-  const topicOpts = [{ key: '전체', val: null, label: '전체' }, ...TOPICS.map((v) => ({ key: v, val: v, label: v }))]
+  const ordered = [...pinned, ...rest]
+  const pinnedSlugs = new Set(pinned.map((a) => a.slug))
+  // 피처 행 = 필터·검색이 하나도 없는 기본 뷰에서만(필터 뷰 = 위계 없이 전량 그리드).
+  const isDefault = !nature && !topic && !month && !q.trim()
+  const { feature, list } = isDefault ? splitFeature(ordered) : { feature: [], list: ordered }
+  const { visible, remaining } = pageSlice(list, shown)
+
+  // 필터 변경 = 노출 개수 초기화(더보기 상태가 조건을 넘어 남지 않게).
+  useEffect(() => { setShown(PAGE_SIZE) }, [tab, topic, month, q])
+
   return (
     <>
-      {/* 상단 컨트롤 바 — 검색 + 성격 칩 + 주제 칩 + 지금써먹기 토글 */}
+      {/* 피처 행 — 고정 기사 + 최신, 큰 썸네일(2건) */}
+      {status === 'ready' && feature.length > 0 && (
+        <ul className="art-features">
+          {feature.map((a) => <FeatureCard key={a.slug} a={a} onOpen={onOpen} pinned={pinnedSlugs.has(a.slug)} />)}
+        </ul>
+      )}
+
+      {/* 필터 바 — 데스크톱(≥1200) 상시 노출 레일, 그 이하는 세로 스택 */}
       <div className="ins-controls">
-        <div className="art-search">
-          <input
-            type="search" value={q} onChange={(e) => setQ(e.target.value)}
-            placeholder="제목·요약 검색" aria-label="인사이트 검색"
-          />
-        </div>
-        <ChipRow label="성격" options={natureOpts} value={tab} onSelect={onTab} />
-        <ChipRow label="주제" options={topicOpts} value={topic} onSelect={setTopic} sub />
-        {/* 기간(월) 필터 — 쌓인 월만 옵션으로, 기사 있으면 상시 노출(2026-07-27 오너 지시) */}
-        {months.length > 0 && (
-          <div className="art-filter art-filter-sub">
-            <span className="art-filter-label">기간</span>
-            <select
-              className="art-month" value={month || ''} aria-label="월 필터"
-              onChange={(e) => setMonth(e.target.value || null)}
-            >
-              <option value="">전체</option>
-              {months.map((m) => <option key={m} value={m}>{m.replace('-', '.')}</option>)}
-            </select>
+        <NatureTabs value={tab} onSelect={onTab} />
+        <div className="ins-controls-sub">
+          <div className="art-search">
+            <input
+              type="search" value={q} onChange={(e) => setQ(e.target.value)}
+              placeholder="제목·요약 검색" aria-label="인사이트 검색"
+            />
           </div>
-        )}
+          <TopicChips value={topic} onSelect={setTopic} />
+          {months.length > 0 && (
+            <div className="art-filter art-filter-sub">
+              <span className="art-filter-label">기간</span>
+              <select
+                className="art-month" value={month || ''} aria-label="월 필터"
+                onChange={(e) => setMonth(e.target.value || null)}
+              >
+                <option value="">전체</option>
+                {months.map((m) => <option key={m} value={m}>{m.replace('-', '.')}</option>)}
+              </select>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* 카운트 라인 — N건 표시 중 / 전체 M건 (로딩 중에는 숫자 대신 골격) */}
@@ -97,10 +128,18 @@ export function ListView({ all, tab, onTab, topic, setTopic, month, setMonth, q,
           <p>필터·검색 해제 = 전체. 첫 기고 = <a href={CONTRIBUTING_URL} target="_blank" rel="noreferrer">기고 가이드</a> 참고 → 템플릿 <code>content/기사/_template.md</code> 복사 → 규칙 채움 → 자동 게재.</p>
         </div>
       ) : (
-        <ul className="art-grid">
-          {pinned.map((a) => <ArticleRow key={a.slug} a={a} onOpen={onOpen} pinned />)}
-          {rest.map((a) => <ArticleRow key={a.slug} a={a} onOpen={onOpen} />)}
-        </ul>
+        <>
+          <ul className="art-grid">
+            {visible.map((a) => <ArticleRow key={a.slug} a={a} onOpen={onOpen} pinned={pinnedSlugs.has(a.slug)} />)}
+          </ul>
+          {remaining > 0 && (
+            <div className="art-more-wrap">
+              <button type="button" className="art-more" onClick={() => setShown((n) => n + PAGE_SIZE)}>
+                더 보기 <span>({remaining}건 남음)</span>
+              </button>
+            </div>
+          )}
+        </>
       )}
     </>
   )

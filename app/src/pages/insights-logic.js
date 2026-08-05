@@ -81,6 +81,25 @@ export function pinnedFirst(list) {
   }
 }
 
+// ── 목록 리디자인(2026-08-05 오너 픽 A) — 상단 피처 행 + 더보기 페이징 ──
+export const FEATURE_COUNT = 2 // 피처 행 = 고정 기사 + 최신, 최대 2건(큰 썸네일)
+export const PAGE_SIZE = 9     // 그리드 1회 노출(3열 × 3행). 더보기 = +PAGE_SIZE
+
+// 정렬된 목록 → { feature, list }. 앞 n건이 피처, 나머지가 그리드.
+// 호출측이 필터 없는 기본 뷰에서만 쓴다(필터 뷰 = 전량 그리드).
+export function splitFeature(ordered, n = FEATURE_COUNT) {
+  const src = ordered || []
+  if (src.length <= n) return { feature: [], list: src } // 총량이 적으면 위계 없이 그리드만
+  return { feature: src.slice(0, n), list: src.slice(n) }
+}
+
+// 더보기 페이징 — 무한스크롤 금지(오너 픽). shown = 현재 노출 개수.
+export function pageSlice(list, shown) {
+  const src = list || []
+  const n = Math.max(0, shown || 0)
+  return { visible: src.slice(0, n), remaining: Math.max(0, src.length - n) }
+}
+
 // 상세 하단 이웃(역시간순: prev=과거, next=최근).
 export function neighbors(all, slug) {
   const i = all.findIndex((a) => a.slug === slug)

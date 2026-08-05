@@ -1,12 +1,18 @@
-// 인사이트 공용 UI 조각 — 색 면 카드(AI in Use 문법 이식)·태그 칩·핀 배지·썸네일. Articles/Hub 공유.
-import { Arrow } from '../shared.jsx'
-import { natureKey, authorInitial } from './insights-logic.js'
+// 인사이트 공용 UI 조각 — 썸네일 카드(오너 픽 2026-08-05 B·C). 색면 카드 폐지: 카드 배경 = 흰/중립 통일,
+// 성격 = 컬러 라벨로 강등. 그리드 카드 요소 상한 = [썸네일 · 성격 라벨 · 제목 · 설명 1문장 · 날짜].
+// 해시태그·아바타 = 카드에서 제거(데이터는 유지 — 상세에서만 표시).
+import { natureKey } from './insights-logic.js'
+import { resolveThumb } from './thumb-resolver.js'
+import { InsightCover } from './insights-cover.jsx'
 
-// 썸네일 타일 — 이미지(로고 = /img/logos/) 있을 때만 렌더. fallback 아이콘 타일 폐지(카드 색이 성격을 말함).
-export function Thumb({ a }) {
+// 썸네일 프레임 — 전 계층 동일 비율(16:10)·동일 보더. 사진=cover / 로고·도판=contain(+여백).
+// 4계층 해석은 thumb-resolver가 담당. 커버(④)만 SVG 컴포넌트.
+export function Thumb({ a, big = false }) {
+  const t = resolveThumb(a)
+  const cls = `art-cover${big ? ' art-cover--big' : ''} art-cover--${t.kind} art-cover--fit-${t.fit}`
   return (
-    <span className="art-thumb">
-      <img src={a['이미지']} alt="" loading="lazy" />
+    <span className={cls}>
+      {t.src ? <img src={t.src} alt="" loading="lazy" /> : <InsightCover a={a} />}
     </span>
   )
 }
@@ -29,7 +35,7 @@ export function dateTimeOf(a) {
   return a['시각'] ? `${d} ${a['시각']}` : d
 }
 
-// 태그 칩 줄 — 성격(성격색 칩)·주제·지금써먹기 한 줄 노출(카드·상세 공용, 2026-07-25 오너 지시).
+// 태그 칩 줄 — 성격(성격색 칩)·주제·지금써먹기. 상세 전용(카드에서는 제거, 2026-08-05).
 export function TagChips({ a }) {
   const nk = natureKey(a['성격'])
   return (
@@ -41,38 +47,47 @@ export function TagChips({ a }) {
   )
 }
 
-// 색 면 카드(AI in Use 이식) — 배경=성격별 저채도 4색, 진한 보더(--dark 1.5px)+옅은 그림자.
-// 구조: [상단 메타: 아바타·저자 / 우상단 날짜·시각] → 제목(볼드) → 태그 줄(성격·주제·지금써먹기)
-//   → 설명 1~2줄(frontmatter 설명 — 본문 발췌 폐지, 2026-07-27 오너 지시) → #해시태그(표시 전용)
-//   → [하단: "자세히 →"]. 썸네일=이미지 있을 때만.
+// 성격 컬러 라벨 — 색면 강등분(면=카드 배경 아님, 작은 라벨 1개).
+export function NatureLabel({ a }) {
+  if (!a['성격']) return null
+  return <span className={`art-label chip-${natureKey(a['성격'])}`}>{a['성격']}</span>
+}
+
+// 그리드 카드 — 썸네일 + 성격 라벨 + 제목 + 설명(clamp) + 날짜. 배경 통일(흰 면).
 export function ArticleRow({ a, onOpen, pinned = false }) {
-  const nk = natureKey(a['성격'])
-  const tags = Array.isArray(a['태그']) ? a['태그'] : []
   return (
-    <li className={`art-card art-card--${nk}`}>
+    <li className="art-card">
       <button type="button" onClick={() => onOpen(a.slug)}>
+        <Thumb a={a} />
         <span className="art-card-body">
-          <span className="art-card-meta">
-            <span className="art-avatar" aria-hidden="true">{authorInitial(a.author)}</span>
-            <span className="art-card-author">{a.author}</span>
-            <span className="art-card-date">{dateTimeOf(a)}</span>
-          </span>
-          <span className="art-card-title">
+          <span className="art-card-labels">
             {pinned && <PinBadge />}
-            {a.title}
+            <NatureLabel a={a} />
           </span>
-          <span className="art-card-tagline">
-            {a['성격'] && <span className="art-tag art-tag-fill">{a['성격']}</span>}
-            {a['주제'] && <span className="art-tag">{a['주제']}</span>}
-            {a['지금써먹기'] && <span className="art-tag art-tag-now">지금 써먹기</span>}
-          </span>
+          <span className="art-card-title">{a.title}</span>
           {a['설명'] && <span className="art-card-excerpt">{a['설명']}</span>}
-          {tags.length > 0 && <span className="art-card-hashtags">{tags.map((t) => `#${t}`).join(' ')}</span>}
-          <span className="art-card-foot">
-            <span className="art-card-more">자세히 <Arrow /></span>
-          </span>
+          <span className="art-card-date">{dateTimeOf(a)}</span>
         </span>
-        {a['이미지'] && <Thumb a={a} />}
+      </button>
+    </li>
+  )
+}
+
+// 피처 카드 — 상단 피처 행 전용(큰 썸네일 + 같은 요소 집합, 제목·설명만 크게).
+export function FeatureCard({ a, onOpen, pinned = false }) {
+  return (
+    <li className="art-feature">
+      <button type="button" onClick={() => onOpen(a.slug)}>
+        <Thumb a={a} big />
+        <span className="art-card-body">
+          <span className="art-card-labels">
+            {pinned && <PinBadge />}
+            <NatureLabel a={a} />
+          </span>
+          <span className="art-card-title">{a.title}</span>
+          {a['설명'] && <span className="art-card-excerpt">{a['설명']}</span>}
+          <span className="art-card-date">{dateTimeOf(a)}</span>
+        </span>
       </button>
     </li>
   )
