@@ -16,6 +16,8 @@ const SEED = {
   submissions: [{ id: 'mock-sub1', assignment_id: 'mock-h1', member_id: 'mock-member', url: 'https://example.com/sample', 메모: '' }],
   notices: [{ id: 'mock-n1', 제목: '샘플 공지', 본문: '목 데이터', 내부여부: true }],
   collections: [{ id: 'mock-c1', member_id: 'mock-member', url: 'https://example.com/scrap', 메모: '샘플 스크랩' }],
+  article_likes: [{ member_id: 'mock-member', article_id: 'mock-a1' }],
+  article_bookmarks: [{ member_id: 'mock-member', article_id: 'mock-a1' }],
   seminars: [{ id: 'mock-sem1', 회차: 1, 날짜: '2026-09-20', 제목: '샘플 세미나', 유형: '인지', 공개여부: true }],
 }
 
@@ -29,6 +31,16 @@ export function createMockRepositories({ user = null, data = {} } = {}) {
   let currentId = user
 
   const memberOf = (id) => store.members.find((m) => m.id === id) || null
+
+  // 상호작용 토글 — 메모리 배열에서 본인 행만 넣고 뺀다(DB 삭제 아님).
+  function toggle(table, articleId, on) {
+    if (!currentId) throw new Error('로그인 필요')
+    const rows = store[table]
+    const at = rows.findIndex((r) => r.member_id === currentId && r.article_id === articleId)
+    if (on && at < 0) rows.push({ member_id: currentId, article_id: articleId })
+    if (!on && at >= 0) rows.splice(at, 1)
+    return on
+  }
 
   return {
     auth: {
@@ -62,6 +74,35 @@ export function createMockRepositories({ user = null, data = {} } = {}) {
       async listMine() {
         return clone(store.articles.filter((a) => a.작성자 === currentId))
       },
+    },
+    interactions: {
+      // 총계 = 게재 기사에 한정(뷰 article_interaction_counts와 같은 모양)
+      async counts() {
+        return store.articles.filter((a) => a.상태 === '게재').map((a) => ({
+          article_id: a.id,
+          슬러그: a.슬러그,
+          좋아요수: store.article_likes.filter((r) => r.article_id === a.id).length,
+          북마크수: store.article_bookmarks.filter((r) => r.article_id === a.id).length,
+        }))
+      },
+      async mine() {
+        if (!currentId) return { likes: [], bookmarks: [] }
+        return {
+          likes: store.article_likes.filter((r) => r.member_id === currentId).map((r) => r.article_id),
+          bookmarks: store.article_bookmarks.filter((r) => r.member_id === currentId).map((r) => r.article_id),
+        }
+      },
+      async listBookmarked() {
+        if (!currentId) return []
+        return store.article_bookmarks
+          .filter((r) => r.member_id === currentId)
+          .map((r) => {
+            const a = store.articles.find((x) => x.id === r.article_id)
+            return { article_id: r.article_id, articles: a ? { 슬러그: a.슬러그, 제목: a.제목, 게재일: a.게재일, 성격: a.성격 } : null }
+          })
+      },
+      async toggleLike(articleId, on) { return toggle('article_likes', articleId, on) },
+      async toggleBookmark(articleId, on) { return toggle('article_bookmarks', articleId, on) },
     },
     sessions: { async list() { return clone(store.sessions) } },
     assignments: { async list() { return clone(store.assignments) } },

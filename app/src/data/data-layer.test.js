@@ -89,6 +89,57 @@ test('목 저장소 — 컬렉션 추가는 로그인 필요·본인 소유로 �
   expect(await mine.collections.listMine()).toHaveLength(2)
 })
 
+// ── 상호작용(D3): 열람=공개, 토글=로그인 멤버 ──
+test('목 저장소 — 총계는 비로그인도 조회, 토글은 로그인 필요', async () => {
+  const anon = createMockRepositories()
+  const counts = await anon.interactions.counts()
+  expect(counts.length).toBeGreaterThan(0)
+  expect(counts[0]).toHaveProperty('좋아요수')
+  expect(await anon.interactions.mine()).toEqual({ likes: [], bookmarks: [] })
+  expect(await anon.interactions.listBookmarked()).toEqual([])
+  await expect(anon.interactions.toggleLike('mock-a1', true)).rejects.toThrow('로그인 필요')
+})
+
+test('목 저장소 — 좋아요 토글 = 켜기/끄기 대칭, 총계 반영', async () => {
+  const me = createMockRepositories({ user: 'mock-staff' })
+  const before = (await me.interactions.counts()).find((c) => c.article_id === 'mock-a1')['좋아요수']
+  await me.interactions.toggleLike('mock-a1', true)
+  const on = (await me.interactions.counts()).find((c) => c.article_id === 'mock-a1')['좋아요수']
+  expect(on).toBe(before + 1)
+  expect((await me.interactions.mine()).likes).toContain('mock-a1')
+  await me.interactions.toggleLike('mock-a1', false)
+  const off = (await me.interactions.counts()).find((c) => c.article_id === 'mock-a1')['좋아요수']
+  expect(off).toBe(before)
+  expect((await me.interactions.mine()).likes).not.toContain('mock-a1')
+})
+
+test('supabase 저장소 — 총계는 뷰 조회, 좋아요 해제는 본인 행 DELETE', async () => {
+  const calls = []
+  const fakeFetch = async (url, options) => {
+    calls.push({ url, method: options.method || 'GET' })
+    return { ok: true, text: async () => '[]' }
+  }
+  const backend = createBackend({ url: 'https://x.supabase.co', key: 'anon' }, { fetch: fakeFetch, storage: null })
+  backend.auth.getSession = () => ({ user: { id: 'u1' } })
+  const repos = createSupabaseRepositories(backend)
+
+  await repos.interactions.counts()
+  expect(calls[0].url).toContain('/rest/v1/article_interaction_counts')
+
+  await repos.interactions.toggleLike('a1', false)
+  expect(calls[1].method).toBe('DELETE')
+  expect(calls[1].url).toContain('/rest/v1/article_likes')
+  expect(calls[1].url).toContain('member_id=eq.u1')
+})
+
+test('supabase 저장소 — 삭제 화이트리스트 밖 테이블은 요청 자체가 만들어지지 않음', async () => {
+  let called = false
+  const fakeFetch = async () => { called = true; return { ok: true, text: async () => '[]' } }
+  const backend = createBackend({ url: 'https://x.supabase.co', key: 'anon' }, { fetch: fakeFetch, storage: null })
+  expect(() => backend.db.remove('articles', { id: 'x' })).toThrow('삭제 불가 테이블')
+  expect(called).toBe(false)
+})
+
 // ── supabase 저장소 = 주입 fetch로 호출 형태만 검증(실네트워크 없음) ──
 test('supabase 저장소 — 로그인은 GoTrue password grant, 세션 토큰이 이후 요청에 실림', async () => {
   const calls = []

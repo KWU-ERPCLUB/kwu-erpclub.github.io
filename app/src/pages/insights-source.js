@@ -43,3 +43,62 @@ export function useArticles({ repos, configured } = {}) {
   const retry = useCallback(() => setAttempt((n) => n + 1), [])
   return { ...state, retry, source: ready ? 'db' : 'md' }
 }
+
+// 북마크·좋아요(D3: 열람=공개, 상호작용=로그인 멤버).
+// 비로그인 = 총계만 보이고 클릭하면 워크스페이스 안내. md 폴백(백엔드 미설정) = 기능 자체 미노출.
+export function useInteractions({ repos, configured } = {}) {
+  const ready = configured === undefined ? isBackendConfigured() : configured
+  const [store] = useState(() => repos || (ready ? getRepositories() : null))
+  const [counts, setCounts] = useState({})     // article_id → { 좋아요수, 북마크수 }
+  const [mine, setMine] = useState({ likes: [], bookmarks: [] })
+  const [notice, setNotice] = useState('')
+  const loggedIn = Boolean(ready && store && store.auth.currentUser())
+
+  useEffect(() => {
+    if (!ready || !store) return undefined
+    let alive = true
+    store.interactions.counts()
+      .then((rows) => {
+        if (!alive) return
+        setCounts(Object.fromEntries((rows || []).map((r) => [r.article_id, r])))
+      })
+      .catch(() => { /* 카운트 실패는 조용히 0 표기 — 본문 열람을 막지 않는다 */ })
+    if (loggedIn) store.interactions.mine().then((m) => { if (alive) setMine(m) }).catch(() => {})
+    return () => { alive = false }
+  }, [ready, store, loggedIn])
+
+  // kind = 'like' | 'bookmark'. 낙관적 갱신 후 실패하면 되돌린다.
+  const toggle = useCallback(async (kind, articleId) => {
+    if (!loggedIn) {
+      setNotice('북마크·좋아요 = 워크스페이스 로그인 후 이용(/workspace/)')
+      return
+    }
+    const key = kind === 'like' ? 'likes' : 'bookmarks'
+    const field = kind === 'like' ? '좋아요수' : '북마크수'
+    const on = !mine[key].includes(articleId)
+    const before = { mine, counts }
+    setMine((m) => ({ ...m, [key]: on ? [...m[key], articleId] : m[key].filter((x) => x !== articleId) }))
+    setCounts((c) => {
+      const row = c[articleId] || { article_id: articleId, 좋아요수: 0, 북마크수: 0 }
+      return { ...c, [articleId]: { ...row, [field]: Math.max(0, (row[field] || 0) + (on ? 1 : -1)) } }
+    })
+    try {
+      if (kind === 'like') await store.interactions.toggleLike(articleId, on)
+      else await store.interactions.toggleBookmark(articleId, on)
+    } catch (e) {
+      setMine(before.mine)
+      setCounts(before.counts)
+      setNotice(e?.message || '처리 실패')
+    }
+  }, [loggedIn, mine, counts, store])
+
+  return {
+    enabled: Boolean(ready && store),
+    loggedIn,
+    notice,
+    countsOf: (articleId) => counts[articleId] || { 좋아요수: 0, 북마크수: 0 },
+    liked: (articleId) => mine.likes.includes(articleId),
+    bookmarked: (articleId) => mine.bookmarks.includes(articleId),
+    toggle,
+  }
+}

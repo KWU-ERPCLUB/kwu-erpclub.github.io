@@ -3,8 +3,10 @@ import { Arrow } from '../shared.jsx'
 import { neighbors } from './insights-logic.js'
 import { TagChips, dateTimeOf } from './insights-parts.jsx'
 import Markdown from './Markdown.jsx'
+import ArticleActions from './ArticleActions.jsx'
 
-export default function ArticleDetail({ cur, all, onOpen, onBack }) {
+// interactions = useInteractions() 반환값(선택). 미전달·미설정이면 상호작용 줄 자체가 렌더되지 않는다.
+export default function ArticleDetail({ cur, all, onOpen, onBack, interactions }) {
   const { prev, next } = neighbors(all, cur.slug)
   const hasTags = Boolean(cur['성격'] || cur['주제'] || cur['지금써먹기'])
   return (
@@ -15,6 +17,7 @@ export default function ArticleDetail({ cur, all, onOpen, onBack }) {
         <h1>{cur.title}</h1>
         <p className="art-detail-meta">{dateTimeOf(cur)} · {cur.author}</p>
         {hasTags && <div className="art-detail-tags"><TagChips a={cur} /></div>}
+        <ArticleActions articleId={cur.id} api={interactions} />
       </header>
 
       {/* ② 출처 카드 — source_name·source_url 시각 블록 승격 */}

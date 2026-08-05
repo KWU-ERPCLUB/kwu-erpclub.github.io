@@ -3,7 +3,7 @@
 // URL: ?tab=<key>=성격 칩 선택 · ?p=<slug>=상세(문서 셸 변경 없음). 0건=디자인된 빈 상태.
 import { useEffect, useState, useCallback } from 'react'
 import { SiteNav, SiteFooter, CONTRIBUTING_URL } from '../shared.jsx'
-import { useArticles } from './insights-source.js'
+import { useArticles, useInteractions } from './insights-source.js'
 import { TOPICS } from '../content/schema.js'
 import {
   HUB_TAB, TABS, NATURE_KEY, stateFromSearch, searchFromState, filterArticles, pinnedFirst, extractMonths,
@@ -109,6 +109,7 @@ export function ListView({ all, tab, onTab, topic, setTopic, month, setMonth, q,
 // repos·configured = 테스트 주입구(P4). 미지정 = env 판정(설정됨 → DB, 미설정 → md 글롭).
 export default function Articles({ repos, configured }) {
   const { items: all, status, retry } = useArticles({ repos, configured })
+  const interactions = useInteractions({ repos, configured })
   const initial = typeof window === 'undefined' ? { tab: HUB_TAB, slug: null } : stateFromSearch(window.location.search)
   const [tab, setTab] = useState(initial.tab)
   const [sel, setSel] = useState(initial.slug)
@@ -141,7 +142,10 @@ export default function Articles({ repos, configured }) {
       <>
         <SiteNav />
         <main className="art-page art-page--doc">
-          <ArticleDetail cur={cur} all={all} onOpen={openArticle} onBack={() => nav({ slug: null })} />
+          <ArticleDetail
+            cur={cur} all={all} onOpen={openArticle}
+            onBack={() => nav({ slug: null })} interactions={interactions}
+          />
         </main>
         <SiteFooter />
       </>
