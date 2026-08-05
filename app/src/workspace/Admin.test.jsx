@@ -4,15 +4,31 @@ import { renderToString } from 'react-dom/server'
 import Admin, { Denied } from './Admin.jsx'
 import AdminMembers from './AdminMembers.jsx'
 import AdminContent from './AdminContent.jsx'
+import AdminApplicants from './AdminApplicants.jsx'
 import { createMockRepositories } from '../data/mock.js'
 
 const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
 const staffStore = () => createMockRepositories({ user: 'mock-staff' })
 
-test('운영 영역 = 승인대기·멤버·콘텐츠 3구획', () => {
+test('운영 영역 = 승인대기·지원자·멤버·콘텐츠 4구획', () => {
   const html = flat(<Admin store={staffStore()} member={{ id: 'mock-staff', role: '운영진' }} />)
-  for (const s of ['승인대기', '멤버', '콘텐츠']) expect(html).toContain(s)
+  for (const s of ['승인대기', '지원자', '멤버', '콘텐츠']) expect(html).toContain(s)
   expect(html).toContain('승인 대기')      // 기본 구획 = 승인대기함(M2 화면 이관)
+})
+
+test('지원자 열람 = 표 7열 + 읽기 전용 명시(삭제·수정 UI 없음)', () => {
+  const html = flat(<AdminApplicants store={staffStore()} />)
+  for (const col of ['이름', '학번', '전공', '전화번호', '써본 AI', '관심 주제', '제출일']) expect(html).toContain(col)
+  expect(html).toContain('읽기 전용')
+  expect(html).not.toContain('삭제</button>')
+  expect(html).not.toContain('<select')      // 지원자 행에는 어떤 수정 컨트롤도 없음
+})
+
+test('지원자 목록 저장소 = 운영진만 행이 오고 비운영진은 0행(RLS 동형)', async () => {
+  const staff = staffStore()
+  expect((await staff.applications.list()).length).toBeGreaterThan(0)
+  const mem = createMockRepositories({ user: 'mock-member' })
+  expect(await mem.applications.list()).toEqual([])
 })
 
 test('권한 없음 안내 = 운영진 전용 명시, 관리 폼 미노출', () => {
