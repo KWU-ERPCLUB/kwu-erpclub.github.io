@@ -1,6 +1,11 @@
 // FAQ 단일원천(E4, 2026-08-05 오너 픽) — 메인(/) = 전체, /recruit = recruit:true 서브셋(코딩·비용·관계·모집 시기).
 // 원천 1곳: 문항 추가·수정 = 이 파일만. 답변 = 개조식(디자인규칙 §0-1). 질문 = 문답 UI라 구어 유지(예외 승인 범위).
-import { RECRUIT, formatWindowShort } from './recruit.js'
+import { RECRUIT, formatWindowShort, KAKAO_PENDING, hasKakaoChat } from './recruit.js'
+
+// 문의 채널 1줄 — 단톡방 URL 미제공이면 "링크 = 모집 시작 전 공개"까지 명시(존재하지 않는 경로 안내 금지).
+const 문의채널 = hasKakaoChat()
+  ? '문의 = 스터디 단톡방 또는 GitHub 저장소.'
+  : `문의 = GitHub 저장소(${KAKAO_PENDING}).`
 
 export const FAQ = [
   {
@@ -28,7 +33,7 @@ export const FAQ = [
   },
   {
     q: '언제 모집하나요?',
-    a: `${RECRUIT.cohort} 모집 = ${formatWindowShort()}(${RECRUIT.term} 운영). 요강·일정 = 모집(RECRUIT) 페이지. 문의 = 스터디 단톡방 또는 GitHub 저장소.`,
+    a: `${RECRUIT.cohort} 모집 = ${formatWindowShort()}(${RECRUIT.term} 운영). 요강·일정 = 모집(RECRUIT) 페이지. ${문의채널}`,
     recruit: true,
   },
 ]

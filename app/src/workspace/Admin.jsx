@@ -6,6 +6,7 @@ import Review from './Review.jsx'
 import AdminMembers from './AdminMembers.jsx'
 import AdminContent from './AdminContent.jsx'
 import AdminApplicants from './AdminApplicants.jsx'
+import { CONTACT, KAKAO_PENDING, hasKakaoChat } from '../data/recruit.js'
 
 const SECTIONS = ['승인대기', '지원자', '멤버', '콘텐츠']
 
@@ -14,7 +15,11 @@ export function Denied() {
     <section className="ws-block">
       <h2 className="ws-h2">운영 영역</h2>
       <p className="ws-note">운영진 전용 — 현재 계정 권한 없음. 서버 정책(RLS)도 동일하게 거부.</p>
-      <p className="ws-note">권한 문의 = 운영진 단톡방.</p>
+      {/* 단톡방 = data/recruit.js CONTACT 일원화(2026-08-05) — URL 없으면 링크 대신 안내 문구 */}
+      <p className="ws-note">
+        권한 문의 = 운영진 단톡방
+        {hasKakaoChat() ? <> — <a href={CONTACT.kakaoOpenChatUrl}>열기</a></> : ` (${KAKAO_PENDING})`}.
+      </p>
     </section>
   )
 }

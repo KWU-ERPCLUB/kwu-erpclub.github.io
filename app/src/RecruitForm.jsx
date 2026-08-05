@@ -7,6 +7,7 @@ import {
   validateApplication, submitApplication,
 } from './pages/apply-source.js'
 import { localYmd } from './home-logic.js'
+import { CONTACT, KAKAO_PENDING, hasKakaoChat } from './data/recruit.js'
 
 // [키, 라벨, 보조 설명] — 필수 4 + 자유 서술 2(선택)
 const REQUIRED_FIELDS = [
@@ -37,7 +38,10 @@ export default function RecruitForm({ configured, repos, today = localYmd() }) {
     return (
       <p className="rc-callout">
         온라인 접수 = 현재 서버 미연결 — 이 페이지에서 제출 불가.
-        참여 문의 = 스터디 단톡방(<a href="/#faq">자주 묻는 질문</a> 참조).
+        참여 문의 = {hasKakaoChat()
+          ? <a href={CONTACT.kakaoOpenChatUrl}>스터디 단톡방</a>
+          : `스터디 단톡방(${KAKAO_PENDING})`}
+        {' '}· <a href="/#faq">자주 묻는 질문</a>.
       </p>
     )
   }

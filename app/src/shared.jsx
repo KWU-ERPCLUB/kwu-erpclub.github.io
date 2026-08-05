@@ -4,8 +4,10 @@
 import { useState } from 'react'
 // 로그인 상태 동적 표시(M3 ④) — localStorage 동기 확인 1회. 네트워크 호출 없음 = 공개 페이지 성능·정적성 유지.
 import { hasWorkspaceSession } from './data/session-flag.js'
+// 연락 채널 단일원천(2026-08-05) — REPO_URL도 여기서 파생(주소 중복 0)
+import { CONTACT } from './data/recruit.js'
 
-export const REPO_URL = 'https://github.com/KWU-ERPCLUB/kwu-erpclub.github.io'
+export const REPO_URL = CONTACT.githubUrl
 export const CONTRIBUTING_URL = `${REPO_URL}/blob/main/CONTRIBUTING.md`
 
 // 탭=페이지 이동만(owner 2026-07-11 — 메인 섹션 앵커 퀵바 폐지).

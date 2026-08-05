@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { SiteNav, SiteFooter } from '../shared.jsx'
 import { getRepositories, isBackendConfigured } from '../data/index.js'
+import { CONTACT, KAKAO_PENDING, hasKakaoChat } from '../data/recruit.js'
 import Contribute from './Contribute.jsx'
 import MyPage from './MyPage.jsx'
 import Sessions from './Sessions.jsx'
@@ -89,7 +90,10 @@ export function LoginForm({ onSubmit, error, busy }) {
         {(local || error) && <p className="ws-error" role="alert">{local || error}</p>}
         <button type="submit" className="ws-submit" disabled={busy}>{busy ? '확인 중' : '로그인'}</button>
       </form>
-      <p className="ws-note">계정 발급 = 운영진 초대 생성(자가입 없음). 문의 = 단톡방.</p>
+      <p className="ws-note">
+        계정 발급 = 운영진 초대 생성(자가입 없음). 문의 = 단톡방
+        {hasKakaoChat() ? <> — <a href={CONTACT.kakaoOpenChatUrl}>열기</a></> : ` (${KAKAO_PENDING})`}.
+      </p>
     </section>
   )
 }
