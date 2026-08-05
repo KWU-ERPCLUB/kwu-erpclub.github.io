@@ -1,9 +1,8 @@
-/* /recruit — AIM 기수 안내. 규격 = 디자인규칙 v2 + §6-2a v3.1(NEXTERS 실측 문법, 2026-08-05 2차):
-   B1 블랙 통계 밴드(.rc-black — 검정 대면적 + 뷰포트급 흰 숫자 2×2 십자 헤어라인, 페이지당 1개) ·
-   B2 좌 고정 라벨 컬럼(.rc-grid/.rc-label — 버건디 ■ + 영문 라벨, 폰 = 상하 적층) ·
-   B3 스크롤 연동 워드 스택(.rc-words — 활성만 선명, opacity 전환만) ·
-   B4 헤더 = 버건디 대면적 철회 → 라이트 + 뷰포트급 h1 + 대형 CTA(.rc-cta-xl). 흑백 대비가 핵.
-   모션 = 신규 무한루프 0 · transform/opacity만 · reduced-motion 존중. 본문 크기 불변.
+/* /recruit — AIM 기수 안내. 규격 = 디자인규칙 v2 + §6-2a 골격, v3.2 조정(2026-08-05 오너 피드백):
+   유지 = B2 좌 고정 라벨 컬럼(.rc-grid/.rc-label — 버건디 ■ + 영문 라벨, 폰 = 상하 적층) · B4 라이트 헤더 + 대형 CTA(.rc-cta-xl).
+   제거 = B1 블랙 통계 밴드(운영 증빙 폐지 → WHAT WE DO 카드) · B3 워드 스택(로드맵 rc-rounds로 대체) · 키비주얼(rc-visual).
+   타이포 = 한 단계 다운(h1 상한 3.8rem·h2·요강 값 — v3 1차와 v3.1 사이). 본문 크기 불변.
+   모션 = 신규 무한루프 0 · transform/opacity만 · reduced-motion 존중.
    + 메인(/) 모집 밴드(.recruit-band) — 히어로 직하 슬림 공고(섹션 스파이 .page 제외). */
 
 /* ══ 메인 모집 섹션(확대 개편 2026-08-05 — 한 축. 모집 종료 시 메인 미렌더) ══ */
@@ -68,24 +67,14 @@
   margin-bottom: clamp(1.5rem, 3.5vh, 2.25rem);
 }
 .rc-eyebrow::before { content: ''; width: 8px; height: 8px; background: var(--accent); flex: none; }
-.rc-h1 { /* v3.1 뷰포트급 상향 — 구 clamp(2.3rem, 5.6vw, 3.9rem) */
-  font-family: var(--font-display); font-weight: 900; font-size: clamp(2.9rem, 9vw, 6.4rem);
-  line-height: 1.02; letter-spacing: -0.035em; word-break: keep-all; max-width: 14ch; margin: 0 0 1.25rem;
+.rc-h1 { /* v3.2 한 단계 다운(오너 "부담 제거") — v3 1차 clamp(2.3rem, 5.6vw, 3.9rem)와 v3.1 6.4rem 사이 → 3rem대 상한 */
+  font-family: var(--font-display); font-weight: 900; font-size: clamp(2.4rem, 6vw, 3.8rem);
+  line-height: 1.06; letter-spacing: -0.03em; word-break: keep-all; max-width: 16ch; margin: 0 0 1.25rem;
 }
 .rc-h1 em { font-style: normal; color: var(--accent); } /* 화이트리스트 ① */
 .rc-lead { font-size: clamp(1rem, 1.6vw, 1.15rem); line-height: 1.6; color: var(--text-sub); max-width: 52ch; margin: 0 0 1.1rem; }
 .rc-meta { font-size: 0.78rem; color: var(--text-sub); margin: 0; }
-/* E5 — 교차(×)·겹침(두 원) 장식: 라이트 재채색(원 = 헤어라인 / × = 차콜 — 흑백 대비 핵).
-   조준점(원+십자 관통) 금지(오너 반려 2026-08-05). 텍스트 뒤 배경 요소. */
-.rc-visual {
-  position: absolute; right: 1.5rem; top: 50%; transform: translateY(-50%);
-  width: clamp(240px, 32vw, 430px); height: auto; pointer-events: none; z-index: 0;
-}
-.rc-visual circle { stroke: var(--line); }
-.rc-visual circle:first-of-type { stroke: #DAD6D1; }
-.rc-visual path { stroke: var(--dark); }
-.rc-head-in > :not(.rc-visual) { position: relative; z-index: 1; }
-@media (max-width: 900px) { .rc-visual { display: none; } }
+/* (키비주얼 rc-visual = v3.2 완전 삭제 — 오너 지시 2026-08-05) */
 
 /* 대형 CTA(E6 상향) — Primary 문법(차콜 필 + 버건디 원형 화살표 ②)의 확대판. 4상태(§5) */
 .rc-head-cta { display: flex; align-items: center; flex-wrap: wrap; gap: 1.1rem; margin-top: clamp(1.75rem, 4vh, 2.5rem); }
@@ -108,9 +97,9 @@
 .rc-cta-note { font-size: 0.88rem; font-weight: 600; color: var(--text-sub); }
 
 /* ══ 섹션 소제목(우 콘텐츠 컬럼 상단) ══ */
-.rc-h2 {
-  font-family: var(--font-display); font-weight: 800; font-size: clamp(1.7rem, 3.8vw, 2.6rem);
-  line-height: 1.18; letter-spacing: -0.02em; margin: 0; word-break: keep-all;
+.rc-h2 { /* v3.2 한 단계 다운 — 구 clamp(1.7rem, 3.8vw, 2.6rem) */
+  font-family: var(--font-display); font-weight: 800; font-size: clamp(1.45rem, 3vw, 2.1rem);
+  line-height: 1.2; letter-spacing: -0.02em; margin: 0; word-break: keep-all;
 }
 /* 학사일정 연동 원칙 1줄(운영틀 개정 2026-08-05) — 활동 구성 섹션 헤드 직하 */
 .rc-sched-rule { margin: 0.9rem 0 0; font-size: 0.88rem; font-weight: 600; color: var(--text-sub); word-break: keep-all; }
@@ -122,35 +111,14 @@
   gap: clamp(1rem, 3vw, 2rem); padding: clamp(0.85rem, 2vh, 1.15rem) 0; border-bottom: 1px solid var(--line);
 }
 .rc-fact dt { font-size: 0.85rem; font-weight: 700; color: var(--text-sub); letter-spacing: 0.02em; }
-.rc-fact dd {
-  margin: 0; font-size: clamp(1.02rem, 1.5vw, 1.18rem); font-weight: 650; line-height: 1.55; word-break: keep-all;
+.rc-fact dd { /* v3.2 한 단계 다운 — 구 clamp(1.02rem, 1.5vw, 1.18rem) */
+  margin: 0; font-size: clamp(0.96rem, 1.3vw, 1.06rem); font-weight: 650; line-height: 1.55; word-break: keep-all;
 }
 @media (max-width: 700px) { .rc-fact { grid-template-columns: 5rem 1fr; } }
 
-/* ══ B1 — 블랙 통계 밴드(운영 증빙): 검정 대면적 + 뷰포트급 흰 숫자 + 2×2 십자 헤어라인.
-   §1 다크 앵커 = 이 밴드 1개 + 푸터. CountUp(stat-num) 재사용 — 언더바만 다크 위 파생색(#D18F9A). ══ */
-.rc-black { background: var(--dark); color: #fff; border-top: 0; }
-.rc-black .rc-label { color: rgba(255, 255, 255, 0.7); }
-.rc-black .rc-h2 { color: #fff; }
-.rc-black .stat-rows { display: grid; grid-template-columns: 1fr 1fr; margin-top: clamp(1.75rem, 4vh, 3rem); }
-.rc-black .stat-row { padding: clamp(1.9rem, 4.5vh, 3.25rem) clamp(1.5rem, 3.5vw, 3rem); }
-.rc-black .stat-row:nth-child(odd) { padding-left: 0; border-right: 1px solid rgba(255, 255, 255, 0.18); }
-.rc-black .stat-row:nth-child(-n+2) { border-bottom: 1px solid rgba(255, 255, 255, 0.18); }
-.rc-black .stat-num { /* 뷰포트급(§6-2a B1) — 구 clamp(3.4rem, 9.5vw, 7.5rem) 라이트 행 */
-  font-weight: 900; font-size: clamp(3.6rem, 11vw, 8.75rem);
-  line-height: 0.95; letter-spacing: -0.04em; color: #fff; margin-bottom: 0.4rem;
-}
-.rc-black .stat-num::after { background: #D18F9A; margin-top: 1.1rem; } /* 다크 위 강조 파생색(§1) */
-.rc-black .stat-row-label { display: block; font-size: clamp(1rem, 1.7vw, 1.2rem); font-weight: 600; color: #fff; line-height: 1.4; }
-.rc-black .stat-row-src { display: block; margin-top: 0.5rem; font-size: 0.8rem; color: rgba(255, 255, 255, 0.55); }
-@media (max-width: 760px) {
-  .rc-black .stat-rows { grid-template-columns: 1fr; }
-  .rc-black .stat-row { padding: 1.6rem 0; border-right: none !important; border-bottom: 1px solid rgba(255, 255, 255, 0.18); }
-  .rc-black .stat-row:last-child { border-bottom: none; }
-}
-.rc-black :focus-visible { outline-color: #fff; } /* 버건디 아웃라인은 다크 면 위 비가시 */
+/* (B1 블랙 통계 밴드 = v3.2 제거 — 운영 증빙 폐지, 자리 = WHAT WE DO 카드(.rc-do — rc-fit 문법 승계)) */
 
-/* ══ 모집 일정(E1)·활동 구성 — 페이즈 스텝(세로 라인·점 문법) ══ */
+/* ══ 모집 일정(E1)·활동 구성 로드맵 — 페이즈 스텝(세로 라인·점 문법) ══ */
 .rc-steps { list-style: none; margin: clamp(1.75rem, 4vh, 2.75rem) 0 0; padding: 0; }
 .rc-step { position: relative; padding: 0 0 clamp(1.6rem, 4vh, 2.4rem) clamp(1.5rem, 3vw, 2rem); border-left: 2px solid var(--line); }
 .rc-step:last-child { border-left-color: transparent; padding-bottom: 0; }
@@ -165,28 +133,28 @@
 }
 .rc-step p { margin: 0; font-size: 0.94rem; line-height: 1.65; color: var(--text-sub); max-width: 62ch; word-break: keep-all; }
 
-/* ══ B3 — 워드 스택(1차 프로젝트 5회 흐름): 대형 워드 + 스크롤 연동 하이라이트.
-   JS가 .live 부여 후 활성(.on)만 선명 — SSR·no-JS·reduced-motion = 전부 선명(opacity 전환만). ══ */
-.rc-words { list-style: none; counter-reset: rcw; margin: clamp(1.5rem, 3.5vh, 2.25rem) 0 0; padding: 0; }
-.rc-word {
-  counter-increment: rcw;
-  display: flex; align-items: baseline; gap: clamp(0.7rem, 1.8vw, 1.2rem);
-  padding: clamp(0.4rem, 1.2vh, 0.7rem) 0;
-  font-family: var(--font-display); font-weight: 800;
-  font-size: clamp(1.45rem, 4vw, 2.8rem); line-height: 1.22; letter-spacing: -0.02em;
+/* 회차별 주제 한 줄(v3.2 로드맵 — 구 B3 워드 스택 대체): 번호 카운터 승계, 크기는 본문급 */
+.rc-rounds { list-style: none; counter-reset: rcr; margin: 0.9rem 0 0; padding: 0; }
+.rc-rounds li {
+  counter-increment: rcr;
+  display: flex; align-items: baseline; gap: 0.7rem;
+  padding: 0.3rem 0;
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(0.98rem, 1.5vw, 1.12rem); line-height: 1.45; letter-spacing: -0.01em;
   color: var(--text); word-break: keep-all;
-  transition: opacity 300ms ease-out;
 }
-.rc-word::before {
-  content: counter(rcw, decimal-leading-zero);
-  font-size: clamp(0.8rem, 1.3vw, 0.95rem); font-weight: 700; letter-spacing: 0.08em;
+.rc-rounds li::before {
+  content: counter(rcr, decimal-leading-zero);
+  font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em;
   color: var(--text-sub); flex: none;
 }
-.rc-words.live .rc-word { opacity: 0.22; }
-.rc-words.live .rc-word.on { opacity: 1; }
-@media (prefers-reduced-motion: reduce) { .rc-words .rc-word { opacity: 1 !important; transition: none; } }
 
-/* ══ 이런 사람(E2) — 사실 서술 카드 그리드(라인 보더·버건디 0) ══ */
+/* 2차 팀 프로젝트 구간 = 버건디 포인트(v3.2 — 예상 시기 구간 강조) */
+.rc-step-hl { border-left-color: var(--accent); }
+.rc-step-hl:last-child { border-left-color: var(--accent); }
+.rc-step-hl .rc-step-era { color: var(--accent); font-weight: 700; }
+
+/* ══ 이런 사람(E2)·WHAT WE DO(v3.2) — 사실 서술 카드 그리드(라인 보더·버건디 0) ══ */
 .rc-fit {
   list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem; margin: clamp(1.5rem, 3.5vh, 2.5rem) 0 0; padding: 0;

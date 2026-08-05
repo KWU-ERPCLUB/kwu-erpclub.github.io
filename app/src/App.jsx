@@ -138,7 +138,7 @@ export function RecruitBand({ today = localYmd() }) {
 }
 
 // B1 블랙 통계 밴드 — 잉크 대면적 + 뷰포트급 흰 숫자 2×2(십자 헤어라인·CountUp 재사용).
-// 수치 = 실측만(recruit 증빙 RecruitProof와 동일 원천: content/ 집계 + 확인된 사실 2건). 출처 = 셀별 소형 표기.
+// 수치 = 실측만(content/ 집계 + 확인된 사실 2건 — 구 recruit 증빙은 v3.2에서 제거, 밴드는 메인만). 출처 = 셀별 소형 표기.
 // .page 미부여 = 감쇠 제외(블랙 면 감쇠는 지면 파손). export = 수치·출처 단언 테스트용.
 export function StatsBand() {
   const 기사수 = loadContent('기사').length

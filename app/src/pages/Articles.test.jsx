@@ -133,22 +133,19 @@ test('피처 행 = 기본 뷰 상단 2건 · 필터 뷰에서는 미표시', () 
   expect(few).not.toContain('art-features')
 })
 
-// v3.1(§6-2a NEXTERS 실측 문법) — B2 좌 라벨 컬럼 골격 + B1 블랙 통계 밴드(집계 수치·출처 각주).
-test('v3.1 골격 — 좌 라벨(INSIGHTS·FEATURED·LATEST + ■) + 블랙 통계 밴드(집계·출처)', () => {
+// v3.1(§6-2a NEXTERS 실측 문법) — B2 좌 라벨 컬럼 골격.
+// v3.2(오너 피드백 2026-08-05): B1 블랙 통계 밴드 완전 제거 — 부재를 단언(재도입 = 오너 재승인).
+test('v3.1 골격 — 좌 라벨(INSIGHTS·FEATURED·LATEST + ■) · 블랙 통계 밴드 부재(v3.2 확정)', () => {
   const all = Array.from({ length: 6 }, (_, i) => art(`v${i}`))
   const page = renderToString(<Articles configured={false} />)
   expect(page).toContain('ins-sec-label')          // B2 좌 라벨 컬럼
   expect(page).toContain('ins-sq')                 // 버건디 ■ 마이크로 불릿
   expect(page).toContain('INSIGHTS')               // 헤드 좌 라벨
+  expect(page).not.toContain('ins-band')           // v3.2 — 블랙 통계 밴드 제거 확정
   const html = renderToString(<ListView all={all} {...listProps} />)
   expect(html).toContain('FEATURED')               // 피처 구간 라벨
   expect(html).toContain('LATEST')                 // 그리드 구간 라벨
-  expect(html).toContain('ins-band')               // B1 블랙 통계 밴드
-  expect(html).toContain('ins-band-num">6<')       // 숫자 = 게재 데이터 집계(합성 6건)
-  expect(html).toContain('출처')                   // 수치 출처 각주(§6 스탯 문법)
-  // 밴드 = 데이터 확정 후에만(로딩·0건 = 미표시)
-  expect(renderToString(<ListView all={[]} {...listProps} status="loading" />)).not.toContain('ins-band')
-  expect(renderToString(<ListView all={[]} {...listProps} />)).not.toContain('ins-band')
+  expect(html).not.toContain('ins-band')           // 목록 뷰에서도 밴드 부재
 })
 
 // 더보기(무한스크롤 금지) — PAGE_SIZE 초과분은 접히고 남은 건수를 버튼에 표기.

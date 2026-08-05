@@ -25,7 +25,7 @@
   display: block;
   font-family: var(--font-display);
   font-weight: 900;
-  font-size: clamp(1.9rem, 4.8vw, 3.6rem); /* 대형 워드 — 섹션 h2급 이상 */
+  font-size: clamp(1.6rem, 3.6vw, 2.6rem); /* v3.2: 대형 워드 3.6 → 2.6rem대 축소(오너 "부담 제거") */
   line-height: 1.08;
   letter-spacing: -0.025em;
   word-break: keep-all;

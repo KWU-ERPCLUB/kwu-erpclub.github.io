@@ -232,30 +232,7 @@
 @media (min-width: 1200px) { .ins-sec { grid-template-columns: 184px minmax(0, 1fr); } }
 .ins-sec-body { min-width: 0; }
 
-/* ── v3.1 B1 — 블랙 통계 밴드(페이지당 블랙 대면적 1 · 흑백 대비가 핵) ──
-   흰 대형 숫자 2×2 + 십자 헤어라인(NEXTERS 실측 문법). 수치 = 게재 데이터 집계 + 출처 각주. */
-.ins-band { background: var(--dark); border-radius: var(--radius-card); color: #fff; padding: 1.8rem 2rem 2rem; margin: 0 0 2.5rem; }
-.ins-band-cap {
-  display: flex; align-items: baseline; gap: 0.7rem; flex-wrap: wrap; margin: 0 0 1.5rem;
-  font-size: 0.74rem; font-weight: 700; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.58);
-}
-.ins-band-cap span { font-weight: 500; letter-spacing: 0.02em; color: rgba(255, 255, 255, 0.38); } /* 출처 각주(§6 스탯 문법) */
-.ins-band-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; }
-.ins-band-cell { padding: 1.05rem 1.5rem; }
-/* 십자 헤어라인 — 2×2 경계에만(외곽 없음) */
-.ins-band-cell:nth-child(even) { border-left: 1px solid rgba(255, 255, 255, 0.16); }
-.ins-band-cell:nth-child(n+3) { border-top: 1px solid rgba(255, 255, 255, 0.16); }
-.ins-band-num {
-  display: block; font-family: var(--font-display); font-weight: 900; color: #fff;
-  font-size: clamp(2.5rem, 6.5vw, 4.6rem); line-height: 1; letter-spacing: -0.03em;
-  font-variant-numeric: tabular-nums;
-}
-.ins-band-label { display: block; margin-top: 0.55rem; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; color: rgba(255, 255, 255, 0.62); }
-.ins-band-label em { font-style: normal; font-weight: 500; letter-spacing: 0; color: rgba(255, 255, 255, 0.44); margin-left: 0.35rem; }
-@media (max-width: 759px) {
-  .ins-band { padding: 1.3rem 1.15rem 1.4rem; margin-bottom: 1.75rem; }
-  .ins-band-cell { padding: 0.85rem 1rem; }
-}
+/* v3.2(오너 피드백 2026-08-05): B1 블랙 통계 밴드(.ins-band) 완전 제거 — 인사이트 디자인 확정. */
 
 /* 성격색 토큰 — 탭(선택)·카드 라벨·상세 태그 공용(§1 파생 4색. 상세 소비처 = insights-detail.css) */
 .chip-news     { --nbg: #e5f0fb; --nfg: #38618c; }

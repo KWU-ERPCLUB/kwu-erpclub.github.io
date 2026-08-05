@@ -75,7 +75,7 @@
 .hs-title {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(2.2rem, 5.4vw, 3.6rem); /* v3 N2: 한 단계 상향(구 1.9/4.5vw/3) */
+  font-size: clamp(2rem, 4.8vw, 3rem); /* v3.2: 한 단계 축소(3.6 → 3rem대 — v3 1차와 v3.1 사이) */
   line-height: 1.16;
   letter-spacing: -0.02em;
   margin: 0.2rem 0 0;
@@ -102,7 +102,7 @@
 .hero-mega {
   font-family: var(--font-display);
   font-weight: 900;
-  font-size: clamp(2.9rem, 9.6vw, 8rem); /* v3 N2: 한 단계 상향(구 2.5/8.5vw/7) */
+  font-size: clamp(2.5rem, 8.5vw, 7rem); /* v3.2: v3 1차 값 복귀(8rem 상한 → 7rem — 오너 "부담 제거") */
   line-height: 1.02;
   letter-spacing: -0.03em;
   margin: 0;
@@ -118,7 +118,7 @@
   margin: clamp(0.5rem, 1.2vh, 0.9rem) 0 0;
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(1.08rem, 1.8vw, 1.55rem); /* v3 N2: 메가 상향과 비례(구 0.95/1.6vw/1.35) */
+  font-size: clamp(0.95rem, 1.6vw, 1.35rem); /* v3.2: 메가 복귀와 비례(v3 1차 값) */
   letter-spacing: 0.14em;
   color: var(--text-sub);
   display: flex;
@@ -247,7 +247,7 @@
 .sb-cell:nth-child(n + 3) { border-top: 1px solid rgba(255, 255, 255, 0.22); }
 .sb-cell .stat-num {
   font-weight: 900;
-  font-size: clamp(3.6rem, 11vw, 8.5rem); /* 뷰포트급 — NEXTERS 실측 문법 */
+  font-size: clamp(2.8rem, 7.5vw, 5.5rem); /* v3.2: 뷰포트급(8.5) → 5.5rem대 축소(오너 "부담 제거") */
   letter-spacing: -0.04em;
   line-height: 1;
   color: #fff;

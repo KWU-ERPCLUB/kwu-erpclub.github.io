@@ -29,7 +29,7 @@
 .pj-head h1 {
   font-family: var(--font-display);
   font-weight: 900;
-  font-size: clamp(2.6rem, 6.5vw, 4.2rem);
+  font-size: clamp(2.2rem, 5vw, 3.2rem); /* v3.2: 4.2 → 3.2rem대 축소(오너 "부담 제거") */
   line-height: 1.08;
   letter-spacing: -0.03em;
   word-break: keep-all;
@@ -52,7 +52,7 @@
   display: block;
   font-family: var(--font-display);
   font-weight: 900;
-  font-size: clamp(3rem, 7.5vw, 5.5rem);
+  font-size: clamp(2.6rem, 6.5vw, 4.5rem); /* v3.2: 밴드 숫자 5.5 → 4.5rem대 */
   line-height: 1;
   letter-spacing: -0.03em;
   color: #fff;
@@ -169,7 +169,7 @@
 .pj-card-title {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(1.55rem, 3.2vw, 2.2rem); /* v3.1 쇼케이스 — 대형 제목(구 1.45 고정) */
+  font-size: clamp(1.45rem, 2.9vw, 2rem); /* v3.2: 카드 제목 소폭 다운(2.2 → 2rem) */
   line-height: 1.18;
   letter-spacing: -0.02em;
   word-break: keep-all;

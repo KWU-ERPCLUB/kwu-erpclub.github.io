@@ -1,11 +1,10 @@
 import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
-import Recruit, { RecruitProof } from './Recruit.jsx'
-import { RECRUIT, PHASES, ACADEMIC_RULE, COHORT_LABEL, formatWindow, shortDate } from './data/recruit.js'
+import Recruit from './Recruit.jsx'
+import { RECRUIT, PHASES, ACADEMIC_RULE, COHORT_LABEL, RECRUIT_DO, RECRUIT_STEPS, formatWindow, shortDate } from './data/recruit.js'
 import { FAQ, RECRUIT_FAQ } from './data/faq.js'
-import { loadContent } from './content/loader.js'
 
-// 구조·계약 검증 — IA 3차(2026-07-27): 모집 페이지 = 요강·활동 구성·참여 방법. 사실 서술만.
+// 구조·계약 검증 — IA 3차(2026-07-27) + v3.2 조정(2026-08-05 오너 피드백). 사실 서술만.
 const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
 
 test('page-head(§3-1) = 눈썹 RECRUIT + 헤드라인 + 서브 + 메타 줄', () => {
@@ -28,15 +27,35 @@ test('요강 = 확정값만 게재(오너 개정 2026-08-05) — 기간·인원 
   expect(html).toContain('참가비 없음')
 })
 
-test('활동 구성 = 1차 프로젝트(개인 5회)·시험 휴지·2차 프로젝트(팀) — 명명 개정 2026-08-05 + 콜아웃', () => {
+// v3.2 ① — 운영 증빙 블랙 밴드 제거(신생 스터디 = 증빙 무의미), 자리 = WHAT WE DO.
+test('v3.2 운영 증빙·블랙 밴드·키비주얼 부재 — rc-black·stat-rows·rc-visual 0', () => {
+  const html = flat(<Recruit />)
+  expect(html).not.toContain('운영 증빙')
+  expect(html).not.toContain('rc-black')
+  expect(html).not.toContain('stat-rows')
+  expect(html).not.toContain('rc-visual') // ④ 과녁/원 키비주얼(두 원+×) 완전 삭제
+})
+
+test('v3.2 WHAT WE DO = 이 스터디가 하는 일 — 활동 4카드(기고·세미나·효율화 산출물·팀 프로젝트)', () => {
+  const html = flat(<Recruit />)
+  expect(html).toContain('>WHAT WE DO<') // 좌 라벨(골격 유지)
+  expect(html).toContain('rc-do-h')
+  expect(html).toContain('이 스터디가 하는 일')
+  expect(RECRUIT_DO.length).toBe(4)
+  for (const [t] of RECRUIT_DO) expect(html, `활동 카드 부재: ${t}`).toContain(t)
+  expect(html).toContain('주 1건 기고')
+  expect(html).toContain('세미나')
+})
+
+// v3.2 ② — 활동 구성 = 로드맵 단순화: 회차 수 + 회차별 주제 한 줄. 세로 레일 문법 재사용.
+test('활동 구성 로드맵 = 1차(개인 5회)·시험 휴지·2차(팀) — 날짜 = PHASES 파생', () => {
   const html = flat(<Recruit />)
   expect(html).toContain('rc-steps')
   expect(html).toContain('1차 프로젝트')
   expect(html).toContain('2차 프로젝트')
   expect(html).not.toContain('전반부') // 구 명명 = 대외 표기에서 제거(운영틀 개정 이력 2026-08-05)
   expect(html).not.toContain('후반부')
-  expect(html).toContain('킥오프')
-  expect(html).toContain('중간 쇼케이스')
+  expect(html).toContain(`${PHASES.p1.형태} — ${PHASES.p1.회차}회`) // 회차 수 명기
   expect(html).toContain('중간고사 기간 활동 중지')
   // 날짜 = data/recruit.js PHASES 파생(운영틀 §2 — 하드코딩 아님)
   expect(html).toContain(`${shortDate(PHASES.p1.킥오프주간)} 주간 ~ ${shortDate(PHASES.p1.쇼케이스주간)} 주간`)
@@ -45,6 +64,24 @@ test('활동 구성 = 1차 프로젝트(개인 5회)·시험 휴지·2차 프로
   expect(html).toContain('팀 프로젝트')
   expect(html).toContain(ACADEMIC_RULE) // 학사일정 연동 원칙 1줄 명기
   expect(html).toContain('rc-callout')
+})
+
+test('로드맵 회차 한 줄 = 1차 5회 주제(rc-rounds — 구 워드 스택 폐지)', () => {
+  const html = flat(<Recruit />)
+  expect(html).toContain('rc-rounds')
+  expect(html).not.toContain('rc-words') // B3 워드 스택 = v3.2 폐지
+  expect(RECRUIT_STEPS[0].rounds.length).toBe(5)
+  for (const r of ['킥오프 — 소재 선정', 'AI 도구 개괄·체험', '공통 미니과제', '본인 소재 제작', '중간 쇼케이스']) {
+    expect(html, `회차 주제 부재: ${r}`).toContain(r)
+  }
+})
+
+test('2차 팀 프로젝트 구간 = 버건디 포인트(rc-step-hl) + 예상 시기 표기', () => {
+  const html = flat(<Recruit />)
+  expect((html.match(/rc-step-hl/g) || []).length).toBe(1) // 강조 = 2차 구간 1곳만
+  expect(html).toContain('예상 시기')
+  const p2Start = html.indexOf('rc-step-hl')
+  expect(html.indexOf('2차 프로젝트', p2Start)).toBeGreaterThan(-1) // 강조 대상 = 2차 구간
 })
 
 test('[미정] 게재 금지(운영틀 §8) — 최종 발표 주간·요일·인원·선발 방식 값 없음', () => {
@@ -66,21 +103,7 @@ test('마케팅 어투 금지(SPEC §4 개정 목록) + 신청 폼 섹션 + 문�
   expect(html).toContain('href="/#faq"') // 메인 FAQ 연결
 })
 
-// 운영 증빙(IA 4차 2026-08-05 — about 폐지 이관): 실측 정량 3종 + 출처, 콘텐츠 건수 = content/ 집계 파생.
-test('운영 증빙 = stat-rows 3행(스터디·실물·게재 건수) + 출처 표기 + content 집계 일치', () => {
-  const html = flat(<RecruitProof />)
-  expect(html).toContain('stat-rows')
-  expect(html).toContain('진행 중 스터디')
-  expect(html).toContain('라이브 실물')
-  expect(html).toContain('게재된 기사·세미나')
-  expect(html).toContain('stat-row-src') // 수치엔 출처 각주 의무(디자인규칙 §6)
-  const total = loadContent('기사').length + loadContent('세미나').length
-  expect(html).toContain(`>${total}<`) // 하드코딩 아님 — 콘텐츠 글롭에서 파생
-  // 전체 페이지에도 섹션이 붙는다
-  expect(flat(<Recruit />)).toContain('운영 증빙')
-})
-
-// ── 레퍼런스 픽 E1~E6(오너 확정 2026-08-05, 원천 = docs/2026-08-05-리쿠르트-레퍼런스-후보.md §2) ──
+// ── 레퍼런스 픽 E1~E6(오너 확정 2026-08-05 — E5 키비주얼은 v3.2에서 삭제) ──
 
 test('E1 모집 일정 타임라인 = 확정 3단계만(접수→개별 안내→활동 시작) — 선발 단계 날조 없음', () => {
   const html = flat(<Recruit />)
@@ -102,9 +125,9 @@ test('E2 이런 사람 = 사실 서술 카드 4장(경영학부·코딩 불필�
   }
 })
 
-test('E3 순서 = 운영 증빙이 요강 직후(활동 구성보다 앞) — 전체 섹션 순서 고정', () => {
+test('E3 순서 = WHAT WE DO가 요강 직후(구 운영 증빙 자리) — 전체 섹션 순서 고정', () => {
   const html = flat(<Recruit />)
-  const order = ['id="rc-facts"', 'rc-proof-h', 'rc-fit-h', 'rc-timeline-h', 'rc-steps-h', 'rc-faq-h', 'rc-apply-h', 'rc-join-h']
+  const order = ['id="rc-facts"', 'rc-do-h', 'rc-fit-h', 'rc-timeline-h', 'rc-steps-h', 'rc-faq-h', 'rc-apply-h', 'rc-join-h']
   const idx = order.map((k) => html.indexOf(k))
   idx.forEach((v, i) => expect(v, `${order[i]} 부재`).toBeGreaterThan(-1))
   expect([...idx].sort((a, b) => a - b)).toEqual(idx)
@@ -120,14 +143,7 @@ test('E4 FAQ 서브셋 = data/faq.js 단일원천(모집 문항만·아코디언
   expect(html).toContain('<details')
 })
 
-test('E5 키비주얼 = 교차·겹침 장식 존재, 조준점(reticle) 부재(오너 반려 2026-08-05)', () => {
-  const html = flat(<Recruit />)
-  expect(html).toContain('rc-visual')
-  expect(html).toContain('aria-hidden="true"')
-  expect(html).not.toContain('reticle')
-})
-
-test('E6 CTA = 헤더 신청하기 앵커 → 하단 폼 섹션 id 연결 + 대형 CTA(v3.1 상향)', () => {
+test('E6 CTA = 헤더 신청하기 앵커 → 하단 폼 섹션 id 연결 + 대형 CTA(유지)', () => {
   const html = flat(<Recruit />)
   expect(html).toContain('신청하기')
   expect(html).toContain('href="#apply"')
@@ -135,27 +151,13 @@ test('E6 CTA = 헤더 신청하기 앵커 → 하단 폼 섹션 id 연결 + 대�
   expect(html).toContain('rc-cta-xl') // 대형 CTA(차콜 필 + 버건디 원형 화살표 — Primary 확대판)
 })
 
-// ── v3.1 개조(디자인규칙 §6-2a — NEXTERS 실측 문법, 2026-08-05 2차) ──
+// ── v3.1 골격 유지분(B2 좌 라벨 2단) — v3.2에서도 불변 ──
 
-test('v3.1 B1 블랙 밴드 = 운영 증빙 1개(rc-black) + 스탯 4셀(2×2) — 수치·출처 유지', () => {
-  const html = flat(<Recruit />)
-  expect((html.match(/rc-black/g) || []).length, '페이지당 블랙 대면적 = 1').toBe(1)
-  expect((html.match(/class="stat-row"/g) || []).length, '2×2 십자 그리드 = 4셀').toBe(4)
-  expect(html).toContain('참가비 (원)') // 추가 스탯도 실측·확정값만(운영틀 — 참가비 0원)
-})
-
-test('v3.1 B2 좌 라벨 컬럼 = 전 섹션 8개(버건디 ■ + 영문 라벨)', () => {
+test('B2 좌 라벨 컬럼 = 전 섹션 8개(버건디 ■ + 영문 라벨) — RECORD → WHAT WE DO 교체', () => {
   const html = flat(<Recruit />)
   expect((html.match(/class="rc-label"/g) || []).length).toBe(8)
-  for (const en of ['OVERVIEW', 'RECORD', 'TARGET', 'SCHEDULE', 'PROGRAM', 'FAQ', 'APPLY', 'CONTACT']) {
+  for (const en of ['OVERVIEW', 'WHAT WE DO', 'TARGET', 'SCHEDULE', 'PROGRAM', 'FAQ', 'APPLY', 'CONTACT']) {
     expect(html, `좌 라벨 부재: ${en}`).toContain(`>${en}<`)
   }
-})
-
-test('v3.1 B3 워드 스택 = 1차 프로젝트 5회 흐름(대형 워드·스크롤 하이라이트는 CSS/JS)', () => {
-  const html = flat(<Recruit />)
-  expect(html).toContain('rc-words')
-  expect((html.match(/class="rc-word"/g) || []).length).toBe(5)
-  expect(html).toContain('킥오프 — 소재 선정')
-  expect(html).toContain('중간 쇼케이스 — 발표·사이트 게재')
+  expect(html).not.toContain('>RECORD<')
 })

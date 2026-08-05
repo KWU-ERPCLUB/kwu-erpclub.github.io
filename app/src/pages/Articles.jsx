@@ -1,6 +1,7 @@
 // 인사이트(INSIGHTS) — 목록 리디자인(2026-08-05 오너 픽, 레퍼런스 = 당근 careers 블로그 계열)
-//   + v3.1 NEXTERS 실측 문법(§6-2a, 같은 날 2차): B2 좌 라벨 컬럼 골격(INSIGHTS/FEATURED/LATEST ■) + B1 블랙 통계 밴드.
-// [page-head(B2)] → 블랙 통계 밴드(B1·집계 수치) → FEATURED(피처 행 2건, 기본 뷰만) → LATEST(필터 바 + 그리드 + 더보기).
+//   + v3.1 NEXTERS 실측 문법(§6-2a, 같은 날 2차): B2 좌 라벨 컬럼 골격(INSIGHTS/FEATURED/LATEST ■).
+//   v3.2(오너 피드백 2026-08-05): 블랙 통계 밴드(B1) 완전 제거 — 인사이트 디자인은 이것으로 확정, 이외 변경 금지.
+// [page-head(B2)] → FEATURED(피처 행 2건, 기본 뷰만) → LATEST(필터 바 + 그리드 + 더보기).
 // 3계층 반응형 = articles.css(폰 <760 1열 리스트 / 태블릿 760~1199 2열 / 데스크톱 ≥1200 피처+3열+필터 상시 레일).
 // 시리즈(2026-08-05 오너 재판정) = **필터 칩 1개**뿐. 밴드·전용 아카이브 폐지 — 시리즈 글도 일반 흐름(피처·그리드·카운트 포함).
 // URL: ?tab=<key>=성격 선택 · ?series=<id>=시리즈 필터 · ?p=<slug>=상세(문서 셸 변경 없음). 0건=디자인된 빈 상태.
@@ -12,7 +13,7 @@ import {
   HUB_TAB, TABS, NATURE_KEY, PAGE_SIZE, stateFromSearch, searchFromState,
   filterArticles, pinnedFirst, extractMonths, splitFeature, pageSlice, seriesOptions,
 } from './insights-logic.js'
-import { ArticleRow, FeatureCard, SectionLabel, StatBand } from './insights-parts.jsx'
+import { ArticleRow, FeatureCard, SectionLabel } from './insights-parts.jsx'
 import ArticleDetail from './ArticleDetail.jsx'
 // v3.1 골격 분할 CSS(상세 셸 이관분 — articles.css 315줄 부채 분할). 이 JSX가 상세도 그리므로 여기서 로드.
 import '../styles/insights-detail.css'
@@ -110,9 +111,6 @@ export function ListView({ all, tab, onTab, topic, setTopic, series = null, setS
 
   return (
     <>
-      {/* v3.1 B1 — 블랙 통계 밴드(헤드 임팩트). 수치 = 게재 데이터 집계 → 확정(ready) 후에만. */}
-      {status === 'ready' && all.length > 0 && <StatBand all={all} />}
-
       {/* v3.1 B2 — FEATURED: 좌 라벨 / 우 피처 카드(고정+최신 2건, 기본 뷰만) */}
       {status === 'ready' && feature.length > 0 && (
         <section className="ins-sec">
