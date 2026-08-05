@@ -2,6 +2,8 @@
 // md 커밋 경유 없음. 게재되면 공개 인사이트가 다음 페치에서 바로 집어간다(클라이언트 페치).
 import { useCallback, useEffect, useState } from 'react'
 import { NATURES, TOPICS } from '../content/schema.js'
+import { buildPromptKit } from './contrib-format.js'
+import { parseContribution } from './contrib-parser.js'
 // 승인 대기함(Review)은 M3에서 운영 탭으로 이관 — 기고 화면은 작성자 관점만 담는다.
 
 const EMPTY = {
@@ -17,6 +19,62 @@ function required(draft) {
   if (!/^https?:\/\/\S+$/.test(draft.source_url.trim())) miss.push('출처 링크')
   if (!draft.source_name.trim()) miss.push('출처 이름')
   return miss
+}
+
+// 1트랙 = 프롬프트 키트 기고(spec 2026-08-05-기고-투트랙 §1) — 프롬프트 복사 → 본인 AI → 출력 붙여넣기 → 필드 분배.
+// 수기 입력 흐름은 무변경 — 이 패널은 폼을 채워 줄 뿐, 검토·수정·제출은 기존 폼이 담당한다.
+function KitPanel({ onApply }) {
+  const [pasted, setPasted] = useState('')
+  const [notices, setNotices] = useState([])
+  const [note, setNote] = useState('')
+
+  async function copyKit() {
+    try {
+      await navigator.clipboard.writeText(buildPromptKit())
+      setNote('프롬프트 복사 완료 — 본인 AI(ChatGPT·Claude 등)에 붙여넣고 소재 URL 제공')
+    } catch {
+      setNote('클립보드 복사 실패 — 아래 「프롬프트 전문」을 펼쳐 직접 선택·복사')
+    }
+  }
+
+  function apply() {
+    const r = parseContribution(pasted)
+    setNotices(r.notices)
+    const n = Object.keys(r.values).length
+    if (n > 0) {
+      onApply(r.values)
+      setNote(`${n}개 필드 반영 — 아래 폼에서 검토·수정 후 제출`)
+    } else {
+      setNote('')
+    }
+  }
+
+  return (
+    <section className="ws-block">
+      <h2 className="ws-h2">AI 초안으로 시작</h2>
+      <p className="ws-note">절차: ① 프롬프트 복사 → ② 본인 AI에 붙여넣기 + 소재 URL 제공 → ③ AI 출력 전체를 아래 칸에 붙여넣기 → ④ 폼에 반영 → ⑤ 검토·수정 후 제출</p>
+      <div className="ws-form-acts">
+        <button type="button" className="ws-signout" onClick={copyKit}>프롬프트 복사</button>
+      </div>
+      <details className="ws-kit">
+        <summary>프롬프트 전문</summary>
+        <pre className="ws-kit-pre">{buildPromptKit()}</pre>
+      </details>
+      <label className="ws-field">
+        <span>AI 초안 붙여넣기</span>
+        <textarea className="ws-textarea" rows={6} value={pasted} onChange={(e) => setPasted(e.target.value)} />
+      </label>
+      <div className="ws-form-acts">
+        <button type="button" className="ws-signout" disabled={!pasted.trim()} onClick={apply}>폼에 반영</button>
+      </div>
+      {note && <p className="ws-ok" role="status">{note}</p>}
+      {notices.length > 0 && (
+        <ul className="ws-kit-notices" role="status">
+          {notices.map((n) => <li key={n}>{n}</li>)}
+        </ul>
+      )}
+    </section>
+  )
 }
 
 // 내 초안 목록 — 상태 칩 + 이어쓰기.
@@ -71,6 +129,8 @@ export default function Contribute({ store }) {
 
   return (
     <div className="ws-contribute">
+      <KitPanel onApply={(values) => setDraft((d) => ({ ...d, ...values }))} />
+
       <section className="ws-block">
         <h2 className="ws-h2">{draft.id ? '초안 수정' : '새 기고'}</h2>
         <form className="ws-form ws-form-wide" onSubmit={(e) => { e.preventDefault(); submit('승인대기') }}>

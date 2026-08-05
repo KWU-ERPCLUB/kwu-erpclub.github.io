@@ -195,6 +195,16 @@
   color: #fff; background: var(--dark); border-radius: var(--radius-pill); padding: 0.05rem 0.5rem; vertical-align: 2px;
 }
 .ws-preview { flex-basis: 100%; border-top: 1px solid var(--line); margin-top: 0.6rem; padding-top: 0.7rem; }
+/* 기고 1트랙 — 프롬프트 키트 패널(전문 접기 + 파서 안내) */
+.ws-kit { margin: 0.9rem 0; }
+.ws-kit summary { font-size: 0.85rem; font-weight: 600; color: var(--text-sub); cursor: pointer; }
+.ws-kit-pre {
+  margin: 0.6rem 0 0; padding: 0.8rem 0.9rem; font-size: 0.8rem; line-height: 1.6;
+  color: var(--text); background: #fff; border: 1px solid var(--line); border-radius: 10px;
+  white-space: pre-wrap; word-break: break-word;
+}
+.ws-kit-notices { margin: 0.6rem 0 0; padding-left: 1.1rem; }
+.ws-kit-notices li { font-size: 0.84rem; color: var(--accent); font-weight: 600; line-height: 1.7; }
 .ws-preview-desc { margin: 0 0 0.5rem; font-size: 0.85rem; color: var(--text-sub); }
 .ws-review { border-top: 1px solid var(--line); padding-top: 1.4rem; }
 

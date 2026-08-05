@@ -20,6 +20,14 @@ test('기고 폼 = 제목·성격·주제·설명·출처·본문 + 초안 저�
   expect(html).toContain('ws-textarea')
 })
 
+// 1트랙(spec 2026-08-05-기고-투트랙 §1): 프롬프트 키트 패널 — 수기 폼과 공존(수기 경로 존치).
+test('기고 탭 = 프롬프트 복사 + AI 초안 붙여넣기 패널 존재', () => {
+  const html = flat(<Contribute store={createMockRepositories({ user: 'mock-member' })} />)
+  expect(html).toContain('프롬프트 복사')
+  expect(html).toContain('AI 초안 붙여넣기')
+  expect(html).toContain('폼에 반영')
+})
+
 // M3: 승인 대기함은 기고 탭에서 빠지고 운영 탭으로 이관됐다(운영진 전용 영역 통합).
 test('기고 탭에는 승인 대기함 없음 — 운영진이 봐도 동일', () => {
   expect(flat(<Contribute store={createMockRepositories({ user: 'mock-member' })} />)).not.toContain('승인 대기')
