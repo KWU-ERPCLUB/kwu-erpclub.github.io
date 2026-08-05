@@ -129,14 +129,14 @@ button.proof-link {
 }
 .sem-tl-item.is-next .hub-chip { background: transparent; border-color: rgba(255, 255, 255, 0.5); color: #fff; }
 .sem-tl-item.is-next .sem-tl-title { color: #fff; margin-top: 0.5rem; font-size: clamp(1.7rem, 3.6vw, 2.4rem); line-height: 1.12; } /* v3.2 다운 */
-.sem-tl-item.is-next .sem-tl-title:focus-visible { outline-color: #fff; }
+.sem-tl-item.is-next .sem-tl-title:focus-visible { outline-color: var(--focus-on-dark); }
 .sem-tl-item.is-next .sem-tl-underbar { background: #d18f9a; }
 .sem-tl-item.is-next .sem-tl-points li { color: #fff; }
 .sem-tl-item.is-next .sem-tl-points li::marker { color: rgba(255, 255, 255, 0.7); }
 .sem-tl-item.is-next .sem-tl-excerpt { color: rgba(255, 255, 255, 0.85); }
 .sem-tl-item.is-next .sem-thumb-img { border-color: rgba(255, 255, 255, 0.35); }
 .sem-tl-item.is-next .sem-thumb-link:not(.is-static):hover .sem-thumb-img { border-color: #fff; }
-.sem-tl-item.is-next .sem-thumb-link:focus-visible { outline-color: #fff; }
+.sem-tl-item.is-next .sem-thumb-link:focus-visible { outline-color: var(--focus-on-dark); }
 
 /* ── 슬라이드 썸네일 겹침 카드 (클릭=발표자료 새 탭 · hover 리프트 transform·opacity만) ── */
 .sem-thumb-link { display: inline-block; margin: 0.35rem 0 0.9rem; text-decoration: none; }

@@ -230,7 +230,7 @@ export default function Articles({ repos, configured }) {
     return (
       <>
         <SiteNav />
-        <main className="art-page art-page--doc">
+        <main id="main" className="art-page art-page--doc">
           <ArticleDetail
             cur={cur} all={all} onOpen={openArticle}
             onBack={() => nav({ slug: null })} interactions={interactions}
@@ -244,7 +244,7 @@ export default function Articles({ repos, configured }) {
   return (
     <>
       <SiteNav />
-      <main className="art-page art-page--list">
+      <main id="main" className="art-page art-page--list">
         {/* 페이지 헤드 = 공용 PageHead(3차 통일) — 좌 라벨 INSIGHTS가 눈썹 역할 승계 */}
         <PageHead
           label="INSIGHTS"

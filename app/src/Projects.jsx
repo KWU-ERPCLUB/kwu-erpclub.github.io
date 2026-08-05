@@ -178,7 +178,7 @@ export default function Projects() {
     return (
       <>
         <SiteNav />
-        <main className="hub-page hub-page--wide">
+        <main id="main" className="hub-page hub-page--wide">
           <ProjectDetail p={cur} onBack={back} />
         </main>
         <SiteFooter />
@@ -190,7 +190,7 @@ export default function Projects() {
   return (
     <>
       <SiteNav />
-      <main className="hub-page pj-page">
+      <main id="main" className="hub-page pj-page">
         <PageHead
           label="PROJECTS"
           title={<em>프로젝트</em>}

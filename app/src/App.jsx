@@ -261,7 +261,7 @@ export default function App() {
   return (
     <>
       <SiteNav />
-      <main className="home">
+      <main id="main" className="home">
         <Hero />
         <RecruitBand />
         <StatsBand />

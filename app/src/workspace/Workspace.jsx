@@ -189,7 +189,7 @@ export default function Workspace({ repos, configured }) {
   return (
     <>
       <SiteNav />
-      <main className="ws-main">
+      <main id="main" className="ws-main">
         <PageHead sub={sub} />
         {!ready && <NotConfigured />}
         {ready && !user && <LoginForm onSubmit={signIn} error={error} busy={busy} />}

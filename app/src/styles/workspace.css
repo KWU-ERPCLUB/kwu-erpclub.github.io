@@ -90,7 +90,7 @@
   cursor: pointer;
 }
 .ws-submit:hover { background: #000; }
-.ws-submit:disabled { opacity: 0.55; cursor: default; }
+.ws-submit:disabled { opacity: 0.4; cursor: default; } /* 규칙 §5 disabled = opacity 0.4(구 0.55 정합 수정) */
 .ws-error { margin: 0; font-size: 0.85rem; color: var(--accent); font-weight: 600; }
 
 /* ③ 로그인 후 셸 */

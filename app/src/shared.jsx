@@ -43,7 +43,10 @@ export function SiteNav({ signedIn }) {
     return (p.endsWith('/') ? p : `${p}/`) === href
   }
   return (
-    <header className="nav">
+    <>
+      {/* 스킵 링크 — 문서 첫 포커스 대상. 평소 화면 밖, 포커스 시에만 노출(표준 패턴). 대상 = 각 페이지 <main id="main"> */}
+      <a className="skip-link" href="#main">본문 바로가기</a>
+      <header className="nav">
       <div className="nav-inner">
         <a className="brand" href="/"><em>AI</em>M</a>
         <nav className="nav-links" aria-label="사이트 섹션">
@@ -75,7 +78,8 @@ export function SiteNav({ signedIn }) {
           ))}
         </nav>
       )}
-    </header>
+      </header>
+    </>
   )
 }
 

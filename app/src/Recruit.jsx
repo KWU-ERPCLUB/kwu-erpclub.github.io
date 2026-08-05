@@ -95,7 +95,7 @@ export default function Recruit() {
   return (
     <>
       <SiteNav />
-      <main className="rc-main">
+      <main id="main" className="rc-main">
         {/* B4 — 라이트 헤더(키비주얼 없음 — v3.2 삭제). 골격 = 공용 PageHead(3차 통일), 대형 CTA(E6) = children */}
         <div className="rc-head">
           <div className="rc-head-in">

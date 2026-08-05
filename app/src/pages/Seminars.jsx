@@ -150,7 +150,7 @@ export default function Seminars() {
     return (
       <>
         <SiteNav />
-        <main className="sem-main">
+        <main id="main" className="sem-main">
           <SeminarDetail s={cur} onBack={back} />
         </main>
         <SiteFooter />
@@ -161,7 +161,7 @@ export default function Seminars() {
   return (
     <>
       <SiteNav />
-      <main className="sem-main">
+      <main id="main" className="sem-main">
         <div className="sem-list">
           <SeminarsTimeline all={all} today={today} onOpen={openSeminar} />
         </div>

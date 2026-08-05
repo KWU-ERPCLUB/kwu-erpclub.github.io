@@ -18,6 +18,13 @@ test('비로그인 헤더 = 워크스페이스 링크 없음(공개 탭만)', ()
   }
 })
 
+test('스킵 링크 = 문서 첫 요소·#main 대상(접근성 3차)', () => {
+  const html = flat(<SiteNav signedIn={false} />)
+  expect(html.indexOf('skip-link')).toBeLessThan(html.indexOf('class="nav"'))
+  expect(html).toContain('href="#main"')
+  expect(html).toContain('본문 바로가기')
+})
+
 test('로그인 세션 있으면 헤더 끝에 워크스페이스 링크', () => {
   const html = flat(<SiteNav signedIn />)
   expect(html).toContain('href="/workspace/"')
