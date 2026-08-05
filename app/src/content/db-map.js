@@ -4,6 +4,8 @@
 //   fromDbRow : articles 행 → 화면이 쓰는 기사 객체 (pages/insights-source.js)
 // 화면 객체의 키는 md 로더(content/loader.js) 출력과 같아야 한다 — 카드·상세 컴포넌트를 그대로 쓰기 위함.
 
+import { seriesIdOf } from './series.js'
+
 // slug = 파일명 스템 = articles.슬러그 = 공개 URL ?p= 값.
 export function toDbRow({ slug, data, body }) {
   return {
@@ -24,6 +26,8 @@ export function toDbRow({ slug, data, body }) {
     고정: data['고정'] === true,
     이미지: data['이미지'] || null,
     이미지설명: data['이미지설명'] || null,
+    // 시리즈 = frontmatter 명시 우선 + 슬러그 자동 인식(예: weekly-trend). 소속 없으면 null.
+    시리즈: seriesIdOf({ ...data, slug }) || null,
   }
 }
 
@@ -44,6 +48,8 @@ export function fromDbRow(row) {
     '고정': row['고정'] === true,
     '이미지': row['이미지'] || undefined,
     '이미지설명': row['이미지설명'] || undefined,
+    // 0005 미적용(컬럼 없음)이어도 슬러그 인식이 받아준다 — 화면은 항상 a['시리즈']만 읽는다.
+    '시리즈': seriesIdOf({ '시리즈': row['시리즈'], slug: row['슬러그'] }) || undefined,
     source_url: row.source_url || '',
     source_name: row.source_name || '',
   }

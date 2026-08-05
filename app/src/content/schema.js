@@ -1,5 +1,8 @@
 // SPEC §5 데이터 계약 v2 — 이 파일이 검증 규칙의 유일 원천(검증기 CLI·앱 로더 공용).
+// 시리즈 enum은 레지스트리(content/series.js)가 원천 — 여기서는 그 값만 참조한다.
 // 기사 분류(2026-07-23 개편): 성격(단일·필수) × 주제(단일·필수) + 지금써먹기(boolean·선택·기본 false). 구 영역(경영기능) 축 폐지.
+import { SERIES_IDS } from './series.js'
+
 export const NATURES = ['트렌드', '심층 분석', '활용법·튜토리얼', '도구·프롬프트'] // 성격(글 종류·단일) — 구 '뉴스·동향' = '트렌드'로 개명(2026-07-25 오너, 주간 트렌드 브리핑 신설)
 export const TOPICS = ['에이전트', '모델·플랫폼', '워크플로·자동화', '거버넌스·리스크', '시장·생태계', '크리에이티브·미디어'] // 주제(AI 주제·단일) — 크리에이티브·미디어 = 영상·이미지·음성 등 생성 미디어(2026-07-30 오너 추가)
 export const SEMINAR_TYPES = ['인지', '실습']
@@ -50,6 +53,10 @@ export function validateEntry(kind, filename, data, body = '') {
     if ('이미지' in data && (typeof data['이미지'] !== 'string' || data['이미지'].trim() === '')) errs.push('이미지는 비어있지 않은 문자열(경로·URL)만 허용')
     // 이미지설명 = 선택 1줄(그 이미지가 무엇이고 기사와 무슨 관계인지 — 상세 히어로 캡션·카드 alt, 2026-08-05 오너 지시)
     if ('이미지설명' in data && (typeof data['이미지설명'] !== 'string' || data['이미지설명'].trim() === '')) errs.push('이미지설명은 비어있지 않은 문자열 1줄만 허용')
+    // 시리즈 = 선택(정기 연재 귀속) — 있으면 레지스트리 id(content/series.js)만 허용.
+    // 생략해도 슬러그 자동 인식(예: `weekly-trend` 포함)으로 귀속된다 — 이 검사는 오타 차단용.
+    if ('시리즈' in data && (typeof data['시리즈'] !== 'string' || !SERIES_IDS.includes(data['시리즈'])))
+      errs.push(`시리즈 enum 밖: ${data['시리즈']} (허용: ${SERIES_IDS.join(', ')})`)
     // 고정 = 선택(허브 뷰 상단 핀) — 있으면 boolean만 허용
     if ('고정' in data && typeof data['고정'] !== 'boolean') errs.push('고정은 boolean(true/false)만 허용')
     // 설명 = 필수 1줄(카드 표시용 핵심 설명 — 본문 발췌 대체, 2026-07-27 오너 지시)
