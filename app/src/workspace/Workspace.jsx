@@ -3,18 +3,32 @@
 import { useEffect, useState } from 'react'
 import { SiteNav, SiteFooter } from '../shared.jsx'
 import { getRepositories, isBackendConfigured } from '../data/index.js'
-import Collections from './Collections.jsx'
 import Contribute from './Contribute.jsx'
+import MyPage from './MyPage.jsx'
+import Sessions from './Sessions.jsx'
+import Assignments from './Assignments.jsx'
+import Notices from './Notices.jsx'
+import Admin, { Denied } from './Admin.jsx'
 
-// 기능 탭 — [이름, 한 줄 설명, 상태]. 상태 'ready' = M2에서 탑재됨, 'prep' = M3 범위.
+// 기능 탭 — [이름, 한 줄 설명, 접근]. 접근 'staff' = 운영진에게만 노출(M3 ④).
+// 컬렉션(북마크·스크랩)은 별도 탭이 아니라 내정보 안으로 통합 — "한 화면에서 확인"(M3 ①).
 export const WS_TABS = [
-  ['컬렉션', '개인 스크랩·북마크', 'ready'],
-  ['기고', '초안 작성·승인 요청', 'ready'],
-  ['세션', '회차·자료 열람', 'prep'],
-  ['과제', '링크 제출·내 제출 확인', 'prep'],
-  ['공지', '내부 공지·운영 로그', 'prep'],
+  ['내정보', '프로필·활동내역·북마크·스크랩'],
+  ['세션', '회차·자료 링크'],
+  ['과제', '마감·링크 제출'],
+  ['공지', '내부 공지'],
+  ['기고', '초안 작성·승인 요청'],
+  ['운영', '멤버·승인대기·공지·세션·과제', 'staff'],
 ]
-export const WS_PREP_TABS = WS_TABS.filter(([, , s]) => s === 'prep')
+
+export const isStaffRole = (member) => member?.role === '운영진'
+export const visibleTabs = (member) => WS_TABS.filter(([, , only]) => only !== 'staff' || isStaffRole(member))
+
+// 직접 진입(/workspace/?tab=운영) 지원 — 권한 없는 탭이면 셸이 안내 화면을 그린다(이중 차단의 화면 쪽).
+export function initialTab(search) {
+  const q = new URLSearchParams(search || '').get('tab')
+  return WS_TABS.some(([name]) => name === q) ? q : WS_TABS[0][0]
+}
 
 function PageHead({ sub }) {
   return (
@@ -78,8 +92,9 @@ export function LoginForm({ onSubmit, error, busy }) {
 }
 
 // ③ 로그인 후 셸 — 멤버 이름·역할 + 기능 탭. 활성 탭만 패널을 그린다.
-export function Shell({ member, onSignOut, store }) {
-  const [tab, setTab] = useState(WS_TABS[0][0])
+export function Shell({ member, onSignOut, store, onMemberChanged, search }) {
+  const [tab, setTab] = useState(() => initialTab(search ?? (typeof window !== 'undefined' ? window.location.search : '')))
+  const staff = isStaffRole(member)
   return (
     <section className="ws-panel">
       <div className="ws-me">
@@ -91,10 +106,10 @@ export function Shell({ member, onSignOut, store }) {
       </div>
 
       <nav className="ws-tabbar" aria-label="워크스페이스 기능">
-        {WS_TABS.map(([name, , state]) => (
+        {visibleTabs(member).map(([name, desc]) => (
           <button
-            key={name} type="button" aria-pressed={tab === name}
-            className={`ws-tabbtn${tab === name ? ' on' : ''}${state === 'prep' ? ' dim' : ''}`}
+            key={name} type="button" aria-pressed={tab === name} title={desc}
+            className={`ws-tabbtn${tab === name ? ' on' : ''}`}
             onClick={() => setTab(name)}
           >
             {name}
@@ -102,20 +117,13 @@ export function Shell({ member, onSignOut, store }) {
         ))}
       </nav>
 
-      {tab === '컬렉션' && store && <Collections store={store} />}
-      {tab === '기고' && store && <Contribute store={store} staff={member?.role === '운영진'} />}
-      {WS_PREP_TABS.some(([name]) => name === tab) && (
-        <ul className="ws-tabs">
-          {WS_PREP_TABS.map(([name, desc]) => (
-            <li key={name} className="ws-tab">
-              <p className="ws-tab-name">{name}</p>
-              <p className="ws-tab-desc">{desc}</p>
-              <span className="status prep">준비 중</span>
-            </li>
-          ))}
-        </ul>
-      )}
-      {WS_PREP_TABS.some(([name]) => name === tab) && <p className="ws-note">세션·과제·공지 탑재 = M3 범위.</p>}
+      {store && tab === '내정보' && <MyPage store={store} member={member} onProfileSaved={onMemberChanged} />}
+      {store && tab === '세션' && <Sessions store={store} />}
+      {store && tab === '과제' && <Assignments store={store} />}
+      {store && tab === '공지' && <Notices store={store} />}
+      {store && tab === '기고' && <Contribute store={store} />}
+      {/* 운영 탭 = 화면 차단(권한 없으면 안내만) + 서버 RLS 이중 방어 */}
+      {store && tab === '운영' && (staff ? <Admin store={store} member={member} /> : <Denied />)}
     </section>
   )
 }
@@ -169,7 +177,9 @@ export default function Workspace({ repos, configured }) {
         <PageHead sub={sub} />
         {!ready && <NotConfigured />}
         {ready && !user && <LoginForm onSubmit={signIn} error={error} busy={busy} />}
-        {ready && user && <Shell member={member} onSignOut={signOut} store={store} />}
+        {ready && user && (
+        <Shell member={member} onSignOut={signOut} store={store} onMemberChanged={setMember} />
+      )}
       </main>
       <SiteFooter />
     </>

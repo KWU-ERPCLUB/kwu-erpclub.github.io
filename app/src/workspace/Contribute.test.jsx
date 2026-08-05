@@ -20,11 +20,10 @@ test('기고 폼 = 제목·성격·주제·설명·출처·본문 + 초안 저�
   expect(html).toContain('ws-textarea')
 })
 
-test('스터디원 화면에는 승인 대기함 없음(운영진 전용)', () => {
-  const html = flat(<Contribute store={createMockRepositories({ user: 'mock-member' })} />)
-  expect(html).not.toContain('승인 대기')
-  const staffHtml = flat(<Contribute store={createMockRepositories({ user: 'mock-staff' })} staff />)
-  expect(staffHtml).toContain('승인 대기')
+// M3: 승인 대기함은 기고 탭에서 빠지고 운영 탭으로 이관됐다(운영진 전용 영역 통합).
+test('기고 탭에는 승인 대기함 없음 — 운영진이 봐도 동일', () => {
+  expect(flat(<Contribute store={createMockRepositories({ user: 'mock-member' })} />)).not.toContain('승인 대기')
+  expect(flat(<Contribute store={createMockRepositories({ user: 'mock-staff' })} />)).not.toContain('승인 대기')
 })
 
 // SSR은 effect 전 상태(대기 0건)만 그린다 — 행 단위 동작은 아래 저장소 계약 테스트가 검증한다.

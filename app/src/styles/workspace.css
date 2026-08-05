@@ -198,6 +198,48 @@
 .ws-preview-desc { margin: 0 0 0.5rem; font-size: 0.85rem; color: var(--text-sub); }
 .ws-review { border-top: 1px solid var(--line); padding-top: 1.4rem; }
 
+/* ⑦ M3 — 내정보·세션·과제·운영 공통 요소(내부형 밀도 유지) */
+.ws-h3 {
+  margin: 1.4rem 0 0.5rem;
+  font-family: var(--font-display);
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+.ws-h3:first-child { margin-top: 0; }
+
+/* 프로필 신원 3칸 — 읽기 전용 */
+.ws-facts { display: flex; flex-wrap: wrap; gap: 0.4rem 1.6rem; margin: 0 0 1.1rem; }
+.ws-facts div { display: flex; gap: 0.5rem; align-items: baseline; }
+.ws-facts dt { font-size: 0.78rem; color: var(--text-sub); }
+.ws-facts dd { margin: 0; font-size: 0.9rem; font-weight: 600; }
+
+/* 세션 자료 목록 */
+.ws-sublist { flex-basis: 100%; list-style: none; margin: 0.45rem 0 0; padding: 0 0 0 0.1rem; }
+.ws-sublist li { font-size: 0.84rem; color: var(--text-sub); line-height: 1.7; }
+.ws-sublist a { color: var(--text); }
+
+/* 멤버 표 — 내부형(가로 스크롤 허용, 페이지 본문은 넘치지 않게) */
+.ws-tablewrap { overflow-x: auto; }
+.ws-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.ws-table th, .ws-table td {
+  border-bottom: 1px solid var(--line);
+  padding: 0.5rem 0.6rem;
+  text-align: left;
+  white-space: nowrap;
+}
+.ws-table th { font-size: 0.76rem; color: var(--text-sub); font-weight: 600; }
+.ws-table select {
+  height: 28px; font-family: inherit; font-size: 0.8rem; color: var(--text);
+  background: #fff; border: 1px solid var(--line); border-radius: var(--radius-pill); padding: 0 0.5rem;
+}
+
+/* 운영 하위 탭바 + 체크박스 필드 */
+.ws-subbar { margin-top: 0.9rem; }
+.ws-check { display: flex; align-items: center; gap: 0.45rem; font-size: 0.85rem; font-weight: 600; }
+.ws-admin-content .ws-block { border-top: 1px solid var(--line); padding-top: 1.2rem; }
+.ws-admin-content .ws-block:first-child { border-top: 0; padding-top: 0; }
+.ws-mypage .ws-block + .ws-block { border-top: 1px solid var(--line); padding-top: 1.3rem; }
+
 @media (max-width: 700px) {
   .ws-main { padding: 1.8rem 1.1rem 2.6rem; }
   .ws-panel { padding: 1.5rem 1.2rem; }

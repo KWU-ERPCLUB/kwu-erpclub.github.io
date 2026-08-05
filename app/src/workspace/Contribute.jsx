@@ -2,7 +2,7 @@
 // md 커밋 경유 없음. 게재되면 공개 인사이트가 다음 페치에서 바로 집어간다(클라이언트 페치).
 import { useCallback, useEffect, useState } from 'react'
 import { NATURES, TOPICS } from '../content/schema.js'
-import Review from './Review.jsx'
+// 승인 대기함(Review)은 M3에서 운영 탭으로 이관 — 기고 화면은 작성자 관점만 담는다.
 
 const EMPTY = {
   제목: '', 성격: NATURES[0], 주제: TOPICS[0], 설명: '', 본문: '',
@@ -37,7 +37,7 @@ function MyDrafts({ rows, onEdit }) {
   )
 }
 
-export default function Contribute({ store, staff }) {
+export default function Contribute({ store }) {
   const [draft, setDraft] = useState(EMPTY)
   const [mine, setMine] = useState([])
   const [msg, setMsg] = useState('')
@@ -123,8 +123,6 @@ export default function Contribute({ store, staff }) {
         <h2 className="ws-h2">내 글</h2>
         <MyDrafts rows={mine} onEdit={(a) => setDraft({ ...EMPTY, ...a })} />
       </section>
-
-      {staff && <Review store={store} onChanged={load} />}
     </div>
   )
 }

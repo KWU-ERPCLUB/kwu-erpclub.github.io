@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
-import Workspace, { NotConfigured, LoginForm, Shell, WS_TABS, WS_PREP_TABS } from './Workspace.jsx'
+import Workspace, { NotConfigured, LoginForm, Shell, WS_TABS, visibleTabs, initialTab } from './Workspace.jsx'
 import { createMockRepositories } from '../data/mock.js'
 
 const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
@@ -41,28 +41,63 @@ test('LoginForm — 오류 메시지는 role=alert, 처리 중이면 버튼 비�
 })
 
 // ── ③ 로그인 후 셸 ──
-test('Shell = 멤버 이름·역할 + 탭바(활성 탭 = 컬렉션) + 로그아웃', () => {
-  const html = flat(<Shell member={{ 이름: '홍길동', role: '운영진' }} store={createMockRepositories({ user: 'mock-staff' })} />)
+test('Shell = 멤버 이름·역할 + 탭바(기본 탭 = 내정보) + 로그아웃', () => {
+  const html = flat(<Shell member={{ 이름: '홍길동', role: '운영진' }} store={createMockRepositories({ user: 'mock-staff' })} search="" />)
   expect(html).toContain('홍길동')
   expect(html).toContain('운영진')
   for (const [name] of WS_TABS) expect(html).toContain(name)
   expect(html).toContain('ws-tabbar')
-  expect(html).toContain('ws-collections')      // 기본 탭 = 컬렉션(M2 탑재분)
-  expect(html).not.toContain('status prep')     // 활성 탭에는 준비 중 칩 없음
+  expect(html).toContain('ws-mypage')        // 기본 탭 = 내정보(M3 ①)
+  expect(html).toContain('프로필')
+  expect(html).toContain('활동내역')
+  expect(html).toContain('내 북마크')          // 컬렉션 통합 — 한 화면에서 확인
+  expect(html).toContain('링크 스크랩')
   expect(html).toContain('로그아웃')
 })
 
-test('Shell = 미탑재 탭(M3)만 준비 중 칩 — 개수 일치', () => {
-  const html = flat(<Shell member={{ 이름: 'ㄱ', role: '스터디원' }} store={createMockRepositories({ user: 'mock-member' })} tab="세션" />)
-  // 기본 탭은 컬렉션이므로 준비 중 칩은 렌더되지 않는다 — 목록 자체는 WS_PREP_TABS로 고정.
-  expect(WS_PREP_TABS.length).toBe(WS_TABS.filter(([, , s]) => s === 'prep').length)
-  expect(WS_TABS.filter(([, , s]) => s === 'ready').map(([n]) => n)).toEqual(['컬렉션', '기고'])
-  expect(html).toContain('ws-tabbtn')
+// ── M3 ④ 역할별 탭 노출 ──
+test('운영 탭 = 운영진에게만 노출(스터디원 탭바에 없음)', () => {
+  expect(visibleTabs({ role: '운영진' }).map(([n]) => n)).toContain('운영')
+  expect(visibleTabs({ role: '스터디원' }).map(([n]) => n)).not.toContain('운영')
+  expect(visibleTabs(null).map(([n]) => n)).not.toContain('운영')
+
+  const html = flat(<Shell member={{ 이름: 'ㄱ', role: '스터디원' }} store={createMockRepositories({ user: 'mock-member' })} search="" />)
+  expect(html).not.toContain('>운영<')
 })
 
-test('Shell = 학번·전공 미표시(P5 — 셸 표면에 사적 정보 없음)', () => {
-  const html = flat(<Shell member={{ 이름: '홍길동', role: '스터디원', 학번: '2021000000', 전공: '경영학부' }} store={createMockRepositories({ user: 'mock-member' })} />)
-  expect(html).not.toContain('2021000000')
+test('직접 진입(?tab=운영) — 스터디원은 안내만, 운영진은 운영 화면', () => {
+  expect(initialTab('?tab=운영')).toBe('운영')
+  expect(initialTab('?tab=없는탭')).toBe('내정보')
+
+  const store = createMockRepositories({ user: 'mock-member' })
+  const denied = flat(<Shell member={{ 이름: 'ㄱ', role: '스터디원' }} store={store} search="?tab=운영" />)
+  expect(denied).toContain('운영진 전용')
+  expect(denied).not.toContain('ws-admin"')
+
+  const staff = flat(<Shell member={{ 이름: 'ㄴ', role: '운영진' }} store={createMockRepositories({ user: 'mock-staff' })} search="?tab=운영" />)
+  expect(staff).toContain('승인대기')
+  expect(staff).toContain('멤버')
+})
+
+test('세션·과제·공지 탭 = 준비 중 문구 없이 실제 화면', () => {
+  const store = createMockRepositories({ user: 'mock-member' })
+  const member = { 이름: 'ㄱ', role: '스터디원' }
+  const 세션 = flat(<Shell member={member} store={store} search="?tab=세션" />)
+  expect(세션).toContain('불러오는 중')
+  expect(세션).not.toContain('준비 중')
+  const 과제 = flat(<Shell member={member} store={store} search="?tab=과제" />)
+  expect(과제).toContain('과제')
+  expect(과제).not.toContain('준비 중')
+  const 공지 = flat(<Shell member={member} store={store} search="?tab=공지" />)
+  expect(공지).toContain('공지')
+  expect(공지).not.toContain('준비 중')
+})
+
+// P5 재해석(§0-5 개정): 학번 = 로그인 ID → 본인 화면 표시 허용. 사적 필드는 전공뿐 — 셸이 그리지 않는다.
+test('Shell = 본인 학번 표시·전공 미표시(P5)', () => {
+  const member = { 이름: '홍길동', role: '스터디원', 학번: '2021000000', 전공: '경영학부' }
+  const html = flat(<Shell member={member} store={createMockRepositories({ user: 'mock-member' })} search="" />)
+  expect(html).toContain('2021000000')
   expect(html).not.toContain('경영학부')
 })
 
@@ -85,7 +120,7 @@ test('공개 내비에 워크스페이스 링크 없음(M3에서 판단)', () =>
 test('카피 = 개조식(경어체 종결 0건)', () => {
   const html = flat(<Workspace repos={createMockRepositories()} configured />)
     + flat(<NotConfigured />)
-    + flat(<Shell member={{ 이름: 'ㄱ', role: '스터디원' }} store={createMockRepositories({ user: 'mock-member' })} />)
+    + flat(<Shell member={{ 이름: 'ㄱ', role: '스터디원' }} store={createMockRepositories({ user: 'mock-member' })} search="" />)
   const text = html.replace(/<[^>]+>/g, ' ')
   for (const bad of ['합니다', '입니다', '됩니다', '하세요', '주세요']) expect(text).not.toContain(bad)
 })
