@@ -16,13 +16,18 @@ concurrency:
   group: pages
   cancel-in-progress: true
 
+env:
+  # 운영진 GitHub 계정 목록(JSON 배열) — 이들만 공용 영역을 직접 변경할 수 있다(SPEC §6).
+  # 오너 교체·운영진 추가 = 이 한 줄만 수정(예: '["bapzzi","newowner"]').
+  MAINTAINERS: '["bapzzi"]'
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: guard-shared-paths
-        if: github.actor != 'bapzzi'
+        if: "${{ !contains(fromJSON(env.MAINTAINERS), github.actor) }}"
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             BASE="${{ github.event.pull_request.base.sha }}"
