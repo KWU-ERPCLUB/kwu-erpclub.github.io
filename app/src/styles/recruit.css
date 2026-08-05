@@ -36,17 +36,17 @@
 
 /* ══ B2 — 좌 고정 라벨 컬럼 / 우 콘텐츠 2단 골격(전 섹션 공통) ══ */
 .rc-secs { width: 100%; border-top: 1px solid var(--line); }
-.rc-grid {
-  display: grid; grid-template-columns: clamp(150px, 18vw, 220px) minmax(0, 1fr);
-  gap: 1.25rem 3rem; align-items: start;
+.rc-grid { /* 레일 폭 = 토큰 1값(--rail-w, 3차 통일) — 구 clamp(150px,18vw,220px) 폐지 */
+  display: grid; grid-template-columns: var(--rail-w) minmax(0, 1fr);
+  gap: 1.25rem var(--rail-gap); align-items: start;
 }
-.rc-label { /* 버건디 ■ 마이크로 불릿(§6-2a — v3.1 규정 형태) + 영문 라벨(§5 라벨 영문 정책) */
+.rc-label { /* 버건디 ■ 9px 마이크로 불릿 + 영문 라벨 — 눈썹 1값 통일 = .pg-label(색 --text) */
   position: sticky; top: 5.5rem;
-  display: flex; align-items: center; gap: 0.6rem;
-  font-family: var(--font-display); font-weight: 800; font-size: 0.8rem;
-  letter-spacing: 0.14em; color: var(--text-sub);
+  display: flex; align-items: center; gap: 0.55rem;
+  font-size: 0.8rem; font-weight: 700;
+  letter-spacing: 0.14em; color: var(--text);
 }
-.rc-label::before { content: ''; width: 8px; height: 8px; background: var(--accent); flex: none; }
+.rc-label::before { content: ''; width: 9px; height: 9px; background: var(--accent); flex: none; }
 .rc-body { min-width: 0; }
 @media (max-width: 760px) {
   .rc-grid { grid-template-columns: 1fr; gap: 1rem; }
@@ -60,20 +60,9 @@
   padding: clamp(3.25rem, 10vh, 6rem) 1.5rem clamp(2.5rem, 6vh, 4rem);
 }
 @media (max-width: 700px) { .rc-head-in { padding: 2.75rem 1.25rem 2rem; } }
-.rc-eyebrow { /* 좌 라벨과 같은 문법 — ■ + 영문(화이트리스트 내 마이크로 버건디) */
-  display: flex; align-items: center; gap: 0.6rem;
-  font-family: var(--font-display); font-weight: 800; font-size: 0.8rem;
-  letter-spacing: 0.14em; color: var(--text-sub);
-  margin-bottom: clamp(1.5rem, 3.5vh, 2.25rem);
-}
-.rc-eyebrow::before { content: ''; width: 8px; height: 8px; background: var(--accent); flex: none; }
-.rc-h1 { /* v3.2 한 단계 다운(오너 "부담 제거") — v3 1차 clamp(2.3rem, 5.6vw, 3.9rem)와 v3.1 6.4rem 사이 → 3rem대 상한 */
-  font-family: var(--font-display); font-weight: 900; font-size: clamp(2.4rem, 6vw, 3.8rem);
-  line-height: 1.06; letter-spacing: -0.03em; word-break: keep-all; max-width: 16ch; margin: 0 0 1.25rem;
-}
-.rc-h1 em { font-style: normal; color: var(--accent); } /* 화이트리스트 ① */
-.rc-lead { font-size: clamp(1rem, 1.6vw, 1.15rem); line-height: 1.6; color: var(--text-sub); max-width: 52ch; margin: 0 0 1.1rem; }
-.rc-meta { font-size: 0.78rem; color: var(--text-sub); margin: 0; }
+/* 눈썹·h1·리드·메타 = 공용 PageHead(global.css .pg-head) — 구 .rc-eyebrow/.rc-h1/.rc-lead/.rc-meta 제거(3차 통일).
+   헤더 안에서는 헤어라인 마감을 쓰지 않는다(섹션 경계 = .rc-secs border-top). */
+.rc-head .pg-head { border-bottom: 0; padding-bottom: 0; margin-bottom: 0; }
 /* (키비주얼 rc-visual = v3.2 완전 삭제 — 오너 지시 2026-08-05) */
 
 /* 대형 CTA(E6 상향) — Primary 문법(차콜 필 + 버건디 원형 화살표 ②)의 확대판. 4상태(§5) */
@@ -241,18 +230,20 @@
    게이트 클래스는 Recruit.jsx 훅이 런타임에만 부여 → no-JS·reduced-motion = 정적 상태 = 전부 선명·정지.
    transform·opacity만 · 신규 무한루프 0(.rc-in = IO 1회 발화). 수치 = home.css .rv 문법 복제. ══ */
 
-/* 섹션 진입 스태거 리빌 — 헤더·각 섹션(좌 라벨 + 우 콘텐츠 직계 자식), nth-child 지연 스태거 */
-.rc-js .rc-head .rc-head-in > *,
+/* 섹션 진입 스태거 리빌 — 헤더(PageHead 좌 라벨 + 우 본문 직계 자식)·각 섹션, nth-child 지연 스태거 */
+.rc-js .rc-head .pg-label,
+.rc-js .rc-head .pg-head-body > *,
 .rc-js .rc-secs .rc-label,
 .rc-js .rc-secs .rc-body > * {
   opacity: 0; transform: translateY(26px);
   transition: opacity 560ms ease-out, transform 620ms cubic-bezier(0.16, 1, 0.3, 1);
 }
-.rc-js .rc-head .rc-head-in > :nth-child(2), .rc-js .rc-secs .rc-body > :nth-child(2) { transition-delay: 90ms; }
-.rc-js .rc-head .rc-head-in > :nth-child(3), .rc-js .rc-secs .rc-body > :nth-child(3) { transition-delay: 180ms; }
-.rc-js .rc-head .rc-head-in > :nth-child(4), .rc-js .rc-secs .rc-body > :nth-child(4) { transition-delay: 270ms; }
-.rc-js .rc-head .rc-head-in > :nth-child(n + 5), .rc-js .rc-secs .rc-body > :nth-child(n + 5) { transition-delay: 360ms; }
-.rc-js .rc-head.rc-in .rc-head-in > *,
+.rc-js .rc-head .pg-head-body > :nth-child(2), .rc-js .rc-secs .rc-body > :nth-child(2) { transition-delay: 90ms; }
+.rc-js .rc-head .pg-head-body > :nth-child(3), .rc-js .rc-secs .rc-body > :nth-child(3) { transition-delay: 180ms; }
+.rc-js .rc-head .pg-head-body > :nth-child(4), .rc-js .rc-secs .rc-body > :nth-child(4) { transition-delay: 270ms; }
+.rc-js .rc-head .pg-head-body > :nth-child(n + 5), .rc-js .rc-secs .rc-body > :nth-child(n + 5) { transition-delay: 360ms; }
+.rc-js .rc-head.rc-in .pg-label,
+.rc-js .rc-head.rc-in .pg-head-body > *,
 .rc-js .rc-secs.rc-in .rc-label,
 .rc-js .rc-secs.rc-in .rc-body > *,
 .rc-js .rc-secs:focus-within .rc-label,
@@ -286,7 +277,7 @@
 
 /* 이중 안전망 — 훅이 게이트 클래스를 안 붙이지만, 세션 중 선호 전환 대비 전부 선명·정지 */
 @media (prefers-reduced-motion: reduce) {
-  .rc-js .rc-head .rc-head-in > *, .rc-js .rc-secs .rc-label, .rc-js .rc-secs .rc-body > *,
+  .rc-js .rc-head .pg-label, .rc-js .rc-head .pg-head-body > *, .rc-js .rc-secs .rc-label, .rc-js .rc-secs .rc-body > *,
   .rc-js .rc-secs .rc-fit li, .rc-do li,
   .rc-spy-js .rc-steps-spy > li, .rc-spy-js .rc-steps-spy .rc-rounds > li,
   .rc-spy-js .rc-steps-spy > li:not(.on), .rc-spy-js .rc-steps-spy > li.on .rc-rounds > li:not(.on),

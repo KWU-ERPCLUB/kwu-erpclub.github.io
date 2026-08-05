@@ -4,6 +4,7 @@
 // 상세(SeminarDetail)는 별도·불변. 필터·정렬 = 세션 상태만(URL 미반영 — SPEC §4 v3 허용). all/today는 상위(Seminars)가 주입.
 import { useMemo, useState } from 'react'
 import { excerpt, splitSeminarBody, sortSeminars, extractTopics, filterByTopic, isUpcoming } from './seminars-logic.js'
+import { PageHead, latestUpdated } from '../shared.jsx'
 
 // 슬라이드 썸네일 카드 — 2장이면 겹침(뒷장 오프셋·앞장 위), 1장이면 단일. 클릭=슬라이드 새 탭(없으면 비링크).
 // 썸네일 0장이면 이 컴포넌트 자체를 렌더하지 않음(호출부에서 가드) — hover 리프트는 CSS(transform·opacity).
@@ -105,7 +106,7 @@ export function SeminarTimeline({ items, today, onOpen = () => {} }) {
   )
 }
 
-// 목록 뷰 컨테이너 — v3.1 B2 골격: [좌 라벨 SEMINARS × 우(헤드+필터 바)] → [좌 라벨 ARCHIVE × 우 타임라인].
+// 목록 뷰 컨테이너 — 골격: [PageHead(좌 라벨 SEMINARS × 우 헤드+필터 바)] → [좌 라벨 ARCHIVE × 우 타임라인].
 // 폰(≤820px)에서는 상하 적층(CSS). 상태(주제·정렬) = 세션만·URL 미반영.
 export default function SeminarsTimeline({ all, today, onOpen }) {
   const [topic, setTopic] = useState(null)
@@ -114,27 +115,25 @@ export default function SeminarsTimeline({ all, today, onOpen }) {
   const items = useMemo(() => sortSeminars(filterByTopic(all, topic), order), [all, topic, order])
   return (
     <>
-      <section className="sem-sec">
-        <span className="sem-col-label"><i className="sem-col-sq" aria-hidden="true" />SEMINARS</span>
-        <div className="sem-sec-body">
-          <header className="sem-head">
-            <h1 className="sem-head-title">세미나</h1>
-            <p className="sem-head-sub">주기 개최 세미나 아카이브 — 발표자료·기록 축적.</p>
-          </header>
-
-          <div className="sem-filter-bar">
-            <div className="sem-filter" role="group" aria-label="주제 필터">
-              <button type="button" className={topic === null ? 'on' : ''} aria-pressed={topic === null} onClick={() => setTopic(null)}>전체</button>
-              {topics.map((t) => (
-                <button key={t} type="button" className={topic === t ? 'on' : ''} aria-pressed={topic === t} onClick={() => setTopic(t)}>{t}</button>
-              ))}
-            </div>
-            <button type="button" className="sem-sort" onClick={() => setOrder(order === 'newest' ? 'oldest' : 'newest')} aria-label="정렬 순서 전환">
-              {order === 'newest' ? '최신순' : '과거순'}
-            </button>
+      {/* 페이지 헤드 = 공용 PageHead(3차 통일) — 좌 라벨 SEMINARS + 고유 부가 요소(필터 바) = children */}
+      <PageHead
+        label="SEMINARS"
+        title="세미나"
+        sub="주기 개최 세미나 아카이브 — 발표자료·기록 축적."
+        meta={latestUpdated(all)}
+      >
+        <div className="sem-filter-bar">
+          <div className="sem-filter" role="group" aria-label="주제 필터">
+            <button type="button" className={topic === null ? 'on' : ''} aria-pressed={topic === null} onClick={() => setTopic(null)}>전체</button>
+            {topics.map((t) => (
+              <button key={t} type="button" className={topic === t ? 'on' : ''} aria-pressed={topic === t} onClick={() => setTopic(t)}>{t}</button>
+            ))}
           </div>
+          <button type="button" className="sem-sort" onClick={() => setOrder(order === 'newest' ? 'oldest' : 'newest')} aria-label="정렬 순서 전환">
+            {order === 'newest' ? '최신순' : '과거순'}
+          </button>
         </div>
-      </section>
+      </PageHead>
 
       <section className="sem-sec sem-sec-archive">
         <span className="sem-col-label"><i className="sem-col-sq" aria-hidden="true" />ARCHIVE</span>

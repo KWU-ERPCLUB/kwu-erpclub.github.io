@@ -16,29 +16,24 @@ button.proof-link {
 @media (max-width: 700px) { .sem-list { padding: 2.25rem 1.25rem 2.5rem; } }
 
 /* ════ B2 — 좌 고정 라벨 컬럼 × 우 콘텐츠 2단 골격 ════ */
-.sem-sec { display: grid; grid-template-columns: clamp(130px, 15vw, 190px) minmax(0, 1fr); gap: 0 clamp(1.5rem, 4vw, 3.5rem); }
+.sem-sec { display: grid; grid-template-columns: var(--rail-w) minmax(0, 1fr); gap: 0 var(--rail-gap); } /* 레일 폭 = 토큰 1값(3차 통일) */
 .sem-sec-archive { border-top: 1px solid var(--line); padding-top: clamp(1.75rem, 4vh, 2.5rem); margin-top: clamp(1.25rem, 3vh, 2rem); }
 .sem-col-label { /* 좌 고정 라벨 — 스크롤 동안 컬럼 상단 고정(sticky) */
   display: inline-flex; align-items: center; gap: 0.55rem; align-self: start;
   position: sticky; top: 5.5rem;
-  font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; color: var(--text);
+  font-size: 0.8rem; font-weight: 700; letter-spacing: 0.14em; color: var(--text); /* 눈썹 1값 통일 = .pg-label */
 }
-.sem-col-sq { width: 8px; height: 8px; background: var(--accent); flex: none; } /* B4 — 버건디 ■ 마이크로 불릿 */
+.sem-col-sq { width: 9px; height: 9px; background: var(--accent); flex: none; } /* B4 — 버건디 ■ 9px 마이크로 불릿 */
 .sem-sec-body { min-width: 0; }
 @media (max-width: 820px) {
   .sem-sec { grid-template-columns: 1fr; }
   .sem-col-label { position: static; margin-bottom: 1rem; }
 }
 
-/* ════ 페이지 헤드(우 컬럼 안 — 눈썹은 B2 좌 라벨이 대체) ════ */
-.sem-head { padding-bottom: 1.5rem; border-bottom: 1px solid var(--line); margin-bottom: 1.5rem; }
-.sem-head-title { /* v3.2: 4.2 → 3.2rem대 축소(오너 "부담 제거") */
-  font-family: var(--font-display); font-weight: 900; font-size: clamp(2.2rem, 5vw, 3.2rem);
-  line-height: 1.08; letter-spacing: -0.03em; margin: 0 0 0.7rem;
-}
-.sem-head-sub { margin: 0; max-width: 56ch; font-size: 0.92rem; color: var(--text-sub); word-break: keep-all; }
+/* ════ 페이지 헤드 = 공용 PageHead(global.css .pg-head) — 구 .sem-head* 규칙 제거(3차 통일 2026-08-05) ════ */
 
-/* ════ 필터 바 = 주제 탭(좌) + 정렬 토글(우) ════ */
+/* ════ 필터 바 = 주제 탭(좌) + 정렬 토글(우) — PageHead children ════ */
+.pg-head .sem-filter-bar { margin-top: 1.25rem; }
 .sem-filter-bar {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
   gap: 0.75rem 1.25rem; margin-bottom: clamp(1.25rem, 3vh, 2rem);

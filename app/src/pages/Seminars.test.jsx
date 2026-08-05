@@ -88,7 +88,7 @@ test('SeminarDetail 구조형 — 발제 블록 + "다루는 내용" 번호 목�
 
 test('페이지 구조 — 목록(타임라인 소개 헤드·필터 바) 상시 렌더(콘텐츠·시점 무관)', () => {
   const html = renderToString(<Seminars />)
-  expect(html).toContain('sem-head') // 소개 page-head 골격
+  expect(html).toContain('pg-head') // 소개 page-head 골격(3차 통일 = 공용 PageHead)
   expect(html).toContain('SEMINARS') // 눈썹
   expect(html).toContain('sem-filter-bar') // 필터 바
 })

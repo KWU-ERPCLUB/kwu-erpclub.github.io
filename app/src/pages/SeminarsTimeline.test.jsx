@@ -144,5 +144,7 @@ test('v3.1 B2 — 좌 라벨 컬럼(SEMINARS·ARCHIVE + ■ 불릿 2개) 골격'
   const html = flat(<SeminarsTimeline all={[base()]} today={TODAY} onOpen={noop} />)
   expect(html).toContain('sem-col-label') // 라벨 컬럼
   expect(html).toContain('ARCHIVE') // 타임라인 구간 라벨
-  expect((html.match(/sem-col-sq/g) || []).length).toBe(2) // 헤드·아카이브 두 구간 ■
+  // 3차 통일 — 헤드 구간 ■ = 공용 PageHead(.pg-sq) / 아카이브 구간 ■ = .sem-col-sq
+  expect((html.match(/pg-sq/g) || []).length).toBe(1)
+  expect((html.match(/sem-col-sq/g) || []).length).toBe(1)
 })

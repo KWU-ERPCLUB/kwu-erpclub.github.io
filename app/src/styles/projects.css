@@ -4,39 +4,10 @@
    셸(hub-page·hub-empty·hub-back·hub-md)=pages.css · 토큰=global.css. 상세(.pj-detail)=v3 유지.
    모션 = 기존 문법 재사용만(호버 리프트·150ms), transform/opacity만 · 무한루프 0 · reduced-motion 존중. */
 
-/* ── B2 — 페이지 셸: 좌 레일 168px + 우 콘텐츠(폰=적층) ── */
+/* ── 페이지 셸 ── (B2 좌 레일·페이지 헤드 = 공용 PageHead(global.css .pg-head)로 통합, 3차 통일 2026-08-05:
+   구 .pj-shell/.pj-rail-label/.pj-rail-dot/.pj-head 규칙 제거 — 레일 폭은 --rail-w 토큰이 담당) */
 .pj-page { max-width: 1200px; }
-.pj-shell { display: grid; grid-template-columns: 168px minmax(0, 1fr); gap: 0 2.75rem; }
-.pj-rail-label {
-  position: sticky;
-  top: 5.25rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  color: var(--text);
-}
-.pj-rail-dot { width: 9px; height: 9px; background: var(--accent); } /* 버건디 ■ 마이크로 불릿 */
-@media (max-width: 979px) {
-  .pj-shell { grid-template-columns: 1fr; }
-  .pj-rail-label { position: static; margin-bottom: 1rem; }
-}
-
-/* ── 페이지 헤드 — 뷰포트급 타이포(본문 크기 불변, 화려함은 골격·숫자 담당) ── */
-.pj-head { margin: 0 0 2.75rem; }
-.pj-head h1 {
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: clamp(2.2rem, 5vw, 3.2rem); /* v3.2: 4.2 → 3.2rem대 축소(오너 "부담 제거") */
-  line-height: 1.08;
-  letter-spacing: -0.03em;
-  word-break: keep-all;
-  margin: 0 0 0.8rem;
-}
-.pj-head h1 em { font-style: normal; color: var(--accent); } /* 화이트리스트 ① */
-.pj-head p { margin: 0; max-width: 52ch; font-size: 0.95rem; color: var(--text-sub); }
+.pg-head + .pj-stats { margin-top: 0.5rem; }
 
 /* ── B1 — 블랙 통계 밴드: 잉크 대면적 1개 + 흰 대형 숫자 + 헤어라인 분할 + 출처 각주 ── */
 .pj-stats {

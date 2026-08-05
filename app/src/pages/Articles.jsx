@@ -6,7 +6,7 @@
 // 시리즈(2026-08-05 오너 재판정) = **필터 칩 1개**뿐. 밴드·전용 아카이브 폐지 — 시리즈 글도 일반 흐름(피처·그리드·카운트 포함).
 // URL: ?tab=<key>=성격 선택 · ?series=<id>=시리즈 필터 · ?p=<slug>=상세(문서 셸 변경 없음). 0건=디자인된 빈 상태.
 import { useEffect, useState, useCallback } from 'react'
-import { SiteNav, SiteFooter, CONTRIBUTING_URL } from '../shared.jsx'
+import { SiteNav, SiteFooter, PageHead, latestUpdated, CONTRIBUTING_URL } from '../shared.jsx'
 import { useArticles, useInteractions } from './insights-source.js'
 import { TOPICS } from '../content/schema.js'
 import {
@@ -245,14 +245,13 @@ export default function Articles({ repos, configured }) {
     <>
       <SiteNav />
       <main className="art-page art-page--list">
-        {/* v3.1 B2 — 페이지 헤드도 좌 라벨 컬럼 골격(눈썹 역할 = 좌 라벨 INSIGHTS가 승계) */}
-        <header className="art-head ins-sec">
-          <SectionLabel>INSIGHTS</SectionLabel>
-          <div className="ins-sec-body">
-            <h1>AI <em>인사이트</em></h1>
-            <p>AI 이슈의 분석·축적 — 스터디원 기고.</p>
-          </div>
-        </header>
+        {/* 페이지 헤드 = 공용 PageHead(3차 통일) — 좌 라벨 INSIGHTS가 눈썹 역할 승계 */}
+        <PageHead
+          label="INSIGHTS"
+          title={<>AI <em>인사이트</em></>}
+          sub="AI 이슈의 분석·축적 — 스터디원 기고."
+          meta={latestUpdated(all)}
+        />
         <ListView
           all={all} tab={tab} onTab={(t) => nav({ tab: t, slug: null })}
           topic={topic} setTopic={setTopic} month={month} setMonth={setMonth}

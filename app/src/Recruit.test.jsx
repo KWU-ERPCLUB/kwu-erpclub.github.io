@@ -10,12 +10,15 @@ import { FAQ, RECRUIT_FAQ } from './data/faq.js'
 // 구조·계약 검증 — IA 3차(2026-07-27) + v3.2 조정(2026-08-05 오너 피드백). 사실 서술만.
 const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
 
+// 3차 통일(2026-08-05) — 페이지 헤드 = 공용 PageHead(.pg-*) 1구현. 구 rc-eyebrow/rc-h1/rc-lead/rc-meta 폐지.
 test('page-head(§3-1) = 눈썹 RECRUIT + 헤드라인 + 서브 + 메타 줄', () => {
   const html = flat(<Recruit />)
-  expect(html).toContain('rc-eyebrow">RECRUIT')
-  expect(html).toContain('rc-h1')
-  expect(html).toContain('rc-lead')
-  expect(html).toContain('rc-meta')
+  expect(html).toContain('pg-label')
+  expect(html).toContain('>RECRUIT<')
+  expect(html).toContain('pg-title')
+  expect(html).toContain('pg-sub')
+  expect(html).toContain('pg-meta')
+  expect(html).not.toContain('rc-eyebrow') // 구 4구현 잔재 금지
 })
 
 test('요강 = 확정값만 게재(오너 개정 2026-08-05) — 기간·인원 미정·대상·모임·비용', () => {

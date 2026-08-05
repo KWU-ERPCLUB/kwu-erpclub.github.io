@@ -13,6 +13,11 @@
   --radius-pill: 999px;
   --maxw: 1040px;
 
+  /* 좌 라벨 레일(§6-2a B2) — 3차 통일 2026-08-05: 구 5종(200/156~184/130~190/168/150~220)을 1값으로.
+     전 페이지 골격이 같은 폭을 소비한다(articles·seminars·projects·recruit + PageHead). */
+  --rail-w: 176px;
+  --rail-gap: 2.75rem;
+
   --font-display: 'Paperlogy', 'Pretendard Variable', Pretendard, sans-serif;
   --font-body: 'Pretendard Variable', Pretendard, -apple-system, sans-serif;
 }
@@ -120,6 +125,52 @@ body {
     border-bottom: 1px solid var(--line);
   }
   .nav-mobile a:last-child { border-bottom: none; }
+}
+
+/* ── 페이지 헤드 골격 (전 페이지 공통 — 디자인규칙 §3-1, 3차 통일 2026-08-05) ──
+   소비 = shared.jsx PageHead 1개(구 art-head·sem-head·pj-head·rc-eyebrow 4구현 대체).
+   눈썹 = 좌 라벨(■ 9px 버건디 + 0.8rem/700/ls 0.14em/--text — 현행 다수파 값). */
+.pg-head {
+  display: grid;
+  grid-template-columns: var(--rail-w) minmax(0, 1fr);
+  gap: 0 var(--rail-gap);
+  align-items: start;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 1.75rem;
+}
+.pg-label {
+  position: sticky;
+  top: 5.25rem;
+  align-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--text);
+  white-space: nowrap;
+}
+.pg-sq { width: 9px; height: 9px; background: var(--accent); flex: none; } /* 화이트리스트 — ■ 마이크로 불릿 */
+.pg-head-body { min-width: 0; }
+.pg-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  word-break: keep-all;
+  margin: 0 0 0.7rem;
+}
+.pg-title em { font-style: normal; color: var(--accent); } /* 화이트리스트 ① */
+.pg-sub { margin: 0; max-width: 56ch; font-size: 0.95rem; color: var(--text-sub); word-break: keep-all; }
+.pg-meta { margin: 0.7rem 0 0; font-size: 0.78rem; color: var(--text-sub); } /* §3-1 갱신일 메타 줄 */
+/* 태블릿 = 레일 축소(모바일 축소 1값) / 820 이하 = 상하 적층 */
+@media (max-width: 1023px) { :root { --rail-w: 132px; --rail-gap: 1.75rem; } }
+@media (max-width: 820px) {
+  .pg-head { grid-template-columns: 1fr; }
+  .pg-label { position: static; margin-bottom: 1rem; }
 }
 
 /* ── 섹션 컨테이너 — 가로 헤어라인만(세로 외곽선은 답답해서 제거, owner 2026-07-10) ── */

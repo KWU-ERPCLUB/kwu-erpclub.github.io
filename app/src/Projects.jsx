@@ -3,7 +3,7 @@
 // + N4 쇼케이스 카드(1열 대형 커버 — 카드 2장 현실에서 캐러셀은 억지라 기각, 대형 커버 우선).
 // 유지 = ?p= 딥링크·상세 진입·호버 오버레이(GitHub·Web)·프롬프트 로그. 데이터 = content/프로젝트/ 로더.
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Arrow, SiteNav, SiteFooter, CONTRIBUTING_URL } from './shared.jsx'
+import { Arrow, SiteNav, SiteFooter, PageHead, latestUpdated, CONTRIBUTING_URL } from './shared.jsx'
 import { loadContent } from './content/loader.js'
 import Markdown from './pages/Markdown.jsx'
 
@@ -186,24 +186,19 @@ export default function Projects() {
     )
   }
 
-  // v3.1 B2 골격 — 좌 고정 라벨 레일(버건디 ■ + PROJECTS, sticky) / 우 = 헤드→밴드→쇼케이스.
+  // 골격 = 공용 PageHead(좌 라벨 레일 PROJECTS × 우 헤드) → 블랙 통계 밴드 → 쇼케이스.
   return (
     <>
       <SiteNav />
       <main className="hub-page pj-page">
-        <div className="pj-shell">
-          <aside className="pj-rail">
-            <span className="pj-rail-label"><span className="pj-rail-dot" aria-hidden="true" />PROJECTS</span>
-          </aside>
-          <div className="pj-body">
-            <header className="pj-head">
-              <h1><em>프로젝트</em></h1>
-              <p>스터디가 만들고 운영한 것 — 배포물과 활동 기록.</p>
-            </header>
-            <ProjectStats projects={all} articleCount={articleCount} seminarCount={seminarCount} />
-            <ProjectGrid list={all} onOpen={open} />
-          </div>
-        </div>
+        <PageHead
+          label="PROJECTS"
+          title={<em>프로젝트</em>}
+          sub="스터디가 만들고 운영한 것 — 배포물과 활동 기록."
+          meta={latestUpdated(all)}
+        />
+        <ProjectStats projects={all} articleCount={articleCount} seminarCount={seminarCount} />
+        <ProjectGrid list={all} onOpen={open} />
       </main>
       <SiteFooter />
     </>

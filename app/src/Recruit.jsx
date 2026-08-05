@@ -14,7 +14,7 @@
 //   근거 = "챗GPT면 충분한데 왜 스터디" 반론에 텍스트 카드만 있고 증거가 0이던 문제. 카드 문법 = rc-fit 승계.
 // 정적 카피(FACTS·DO·SHOWCASE·FIT·TIMELINE·STEPS) = data/recruit.js(300줄 규격) — 카피 규칙 주석도 그쪽.
 import { useEffect } from 'react'
-import { SiteNav, SiteFooter, REPO_URL, Arrow } from './shared.jsx'
+import { SiteNav, SiteFooter, PageHead, REPO_URL, Arrow } from './shared.jsx'
 import {
   RECRUIT, ACADEMIC_RULE, formatWindow, CONTACT, KAKAO_PENDING, hasKakaoChat,
   RECRUIT_FACTS, RECRUIT_DO, RECRUIT_FIT, RECRUIT_TIMELINE, RECRUIT_STEPS,
@@ -96,22 +96,22 @@ export default function Recruit() {
     <>
       <SiteNav />
       <main className="rc-main">
-        {/* B4 — 라이트 헤더(키비주얼 없음 — v3.2 삭제) + h1(3rem대) + 대형 CTA(E6) */}
-        <header className="rc-head">
+        {/* B4 — 라이트 헤더(키비주얼 없음 — v3.2 삭제). 골격 = 공용 PageHead(3차 통일), 대형 CTA(E6) = children */}
+        <div className="rc-head">
           <div className="rc-head-in">
-            <span className="rc-eyebrow">RECRUIT</span>
-            <h1 className="rc-h1">{RECRUIT.study} <em>{RECRUIT.cohort}</em> 모집</h1>
-            <p className="rc-lead">
-              {RECRUIT.study} = ERP연구회 산하 스터디 · 경영학부를 대상으로 AI와 MIS를 함께 공부하기 위해 개설 ·
-              전공 무관 모집 — 2026 {RECRUIT.term} 첫 기수.
-            </p>
-            <p className="rc-meta">게재 2026-07-27 · 개정 2026-08-05 · 담당 운영진</p>
-            <div className="rc-head-cta">
-              <a className="rc-cta-xl" href="#apply">신청하기 <Arrow /></a>
-              <span className="rc-cta-note">접수 {formatWindow()}</span>
-            </div>
+            <PageHead
+              label="RECRUIT"
+              title={<>{RECRUIT.study} <em>{RECRUIT.cohort}</em> 모집</>}
+              sub={`${RECRUIT.study} = ERP연구회 산하 스터디 · 경영학부를 대상으로 AI와 MIS를 함께 공부하기 위해 개설 · 전공 무관 모집 — 2026 ${RECRUIT.term} 첫 기수.`}
+              meta="게재 2026-07-27 · 개정 2026-08-05 · 담당 운영진"
+            >
+              <div className="rc-head-cta">
+                <a className="rc-cta-xl" href="#apply">신청하기 <Arrow /></a>
+                <span className="rc-cta-note">접수 {formatWindow()}</span>
+              </div>
+            </PageHead>
           </div>
-        </header>
+        </div>
 
         <section className="rc-secs" aria-labelledby="rc-facts">
           <div className="rc-band-in rc-grid">

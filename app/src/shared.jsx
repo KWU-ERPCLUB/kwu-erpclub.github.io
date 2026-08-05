@@ -79,6 +79,34 @@ export function SiteNav({ signedIn }) {
   )
 }
 
+// ── 페이지 헤드 골격(3차 통일 2026-08-05, 디자인규칙 §3-1) ────────────────────
+// 구 4구현(art-head·sem-head·pj-head·rc-eyebrow 인라인)을 이 컴포넌트 1개로 통합.
+// 골격 = [좌 라벨 레일(--rail-w·버건디 ■ 눈썹) | h1 → 서브 1줄 → 갱신 메타 → children] + 헤어라인 마감.
+// label = 영문 소형 라벨(§5 라벨 영문 정책, 눈썹 역할 승계) · children = 페이지 고유 부가 요소(필터 탭·CTA 등).
+export function PageHead({ label, title, sub, meta, children }) {
+  return (
+    <header className="pg-head">
+      <span className="pg-label"><i className="pg-sq" aria-hidden="true" />{label}</span>
+      <div className="pg-head-body">
+        <h1 className="pg-title">{title}</h1>
+        {sub && <p className="pg-sub">{sub}</p>}
+        {meta && <p className="pg-meta">{meta}</p>}
+        {children}
+      </div>
+    </header>
+  )
+}
+
+// 갱신일 메타 파생(§3-1 "최종 갱신일" 의무) — 콘텐츠 레지스트리의 최신 게재일.
+// 하드코딩 날짜 금지: 항목이 없거나 date가 없으면 null → 메타 줄 자체를 생략한다.
+export function latestUpdated(list) {
+  const d = (list || []).reduce((m, x) => {
+    const v = (x && x.date ? String(x.date) : '').slice(0, 10)
+    return v > m ? v : m
+  }, '')
+  return d ? `최종 갱신 ${d}` : null
+}
+
 export function SiteFooter() {
   return (
     <footer className="footer">
