@@ -2,6 +2,18 @@ import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
 import Articles, { ListView } from './Articles.jsx'
 import { ArticleRow } from './insights-parts.jsx'
+import { loadContent } from '../content/loader.js'
+
+// 실 콘텐츠 비결합 원칙: 특정 기사(슬러그·제목·본문 문자열)에 단언을 묶지 않는다 —
+// 기사 1건 삭제로 CI 전체가 죽는 사고 방지(2026-07-31 사고 1회). 실 콘텐츠가 필요한 단언은
+// 로더에서 "존재하는 아무 기사나" 동적으로 골라 쓰고, 0건이면 해당 단언을 건너뛴다.
+const ALL = loadContent('기사')
+const pick = (fn) => ALL.find(fn) || null
+// React SSR 이스케이프 + 텍스트 노드 사이 주석 제거 후 비교(문자열 포함 검사용).
+const esc = (s) => String(s)
+  .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  .replace(/"/g, '&quot;').replace(/'/g, '&#x27;')
+const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
 
 // 구조 개혁(2026-07-24 2차): 좌측 탭·허브 4섹션·월별 그룹 폐지 → AI in Use 구조(상단 컨트롤 바 + 2열 색면 카드 그리드).
 test('목록 = 상단 컨트롤 바(성격 칩+주제 칩+토글+검색) + 카운트 라인 + 2열 카드 그리드', () => {
@@ -25,7 +37,7 @@ test('목록 = 상단 컨트롤 바(성격 칩+주제 칩+토글+검색) + 카�
   // 2열 색면 카드 그리드
   expect(html).toContain('art-grid')
   expect(html).toContain('art-card-title')
-  expect(html).toContain('주간 AI 트렌드') // 예시 기고
+  if (ALL.length > 0) expect(html.replace(/<!-- -->/g, '')).toContain(esc(ALL[0].title)) // 실제 기고 1건(동적 선택)
   // 폐지된 구조 마크업 부재
   expect(html).not.toContain('art-tabs')      // 좌측 탭 폐지
   expect(html).not.toContain('art-month-head') // 월별 그룹 폐지
@@ -105,15 +117,18 @@ test('색 면 카드 — 4성격 색 클래스 매핑 + 이미지 시 썸네일 
 })
 
 // 성격 칩 딥링크(?tab=analysis) = 해당 성격만 그리드 + 컨트롤 바·검색 유지(URL 상태 복원).
+// 대조 기사 = 로더에서 동적 선택(심층 분석 1건 포함 / 그 외 성격 1건 제외).
 test('성격 칩 딥링크 — ?tab=analysis 복원 + 해당 성격 카드만', () => {
+  const inTab = pick((a) => a['성격'] === '심층 분석')
+  const outTab = pick((a) => a['성격'] && a['성격'] !== '심층 분석')
   const prev = globalThis.window
   globalThis.window = { location: { search: '?tab=analysis', pathname: '/insights/' } }
   try {
-    const html = renderToString(<Articles />)
+    const html = flat(<Articles />)
     expect(html).toContain('art-grid')
     expect(html).toContain('art-card-title')
-    expect(html).toContain('거버넌스 갭')                    // 심층 분석 기고
-    expect(html).not.toContain('주간 AI 트렌드')             // 트렌드 성격은 필터링됨
+    if (inTab) expect(html).toContain(esc(inTab.title))       // 심층 분석 기고 = 표시
+    if (outTab) expect(html).not.toContain(esc(outTab.title)) // 다른 성격 = 필터링됨
     expect(html).toContain('placeholder="제목·요약 검색"')   // 검색박스 유지
     expect(html).not.toContain('art-month-head')             // 월별 그룹 폐지
   } finally {
@@ -123,14 +138,17 @@ test('성격 칩 딥링크 — ?tab=analysis 복원 + 해당 성격 카드만', 
 })
 
 // 상세 진입(?p=<slug>) = 통일 셸(변경 없음). URL 반영은 stateFromSearch 경유.
+// 대상 기사 = 출처 있는 아무 기사(동적 선택) — 특정 슬러그에 묶지 않는다.
 test('상세 = 통일 셸(문서 헤더·출처 카드 승격·목록 복귀)', () => {
+  const cur = pick((a) => a.source_url)
+  if (!cur) return
   const prev = globalThis.window
-  globalThis.window = { location: { search: '?p=2026-07-25-bapzzi-agent-governance-gap', pathname: '/insights/' } }
+  globalThis.window = { location: { search: `?p=${cur.slug}`, pathname: '/insights/' } }
   try {
-    const html = renderToString(<Articles />)
+    const html = flat(<Articles />)
     expect(html).toContain('AI INSIGHTS')
     expect(html).toContain('art-source')
-    expect(html).toContain('McKinsey · Gartner · PwC')
+    expect(html).toContain(esc(cur.source_name || cur.source_url))
     expect(html).toContain('← 목록')
   } finally {
     if (prev === undefined) delete globalThis.window
