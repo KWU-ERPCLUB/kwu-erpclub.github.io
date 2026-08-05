@@ -11,22 +11,25 @@ import Notices from './Notices.jsx'
 import Admin, { Denied } from './Admin.jsx'
 
 // 기능 탭 — [이름, 한 줄 설명, 접근]. 접근 'staff' = 운영진에게만 노출(M3 ④).
-// 컬렉션(북마크·스크랩)은 별도 탭이 아니라 내정보 안으로 통합 — "한 화면에서 확인"(M3 ①).
+// 접수창구 4탭(spec 2026-08-05-워크스페이스-개편 §1) — 첫 화면 = 제출(로그인 직후 "낼 것"이 보인다).
 export const WS_TABS = [
+  ['제출', '기고·과제 제출과 상태 확인'],
+  ['스터디', '공지·세션 일정·운영 기록 — 읽기 전용'],
   ['내정보', '프로필·활동내역·북마크·스크랩'],
-  ['세션', '회차·자료 링크'],
-  ['과제', '마감·링크 제출'],
-  ['공지', '내부 공지'],
-  ['기고', '초안 작성·승인 요청'],
-  ['운영', '멤버·승인대기·공지·세션·과제', 'staff'],
+  ['운영', '승인대기·멤버·콘텐츠 관리', 'staff'],
 ]
+
+// 구 6탭 딥링크 호환(§1 W3) — 구 탭명 진입 시 새 탭으로 매핑(링크 깨짐 0).
+const LEGACY_TAB_MAP = { 기고: '제출', 과제: '제출', 공지: '스터디', 세션: '스터디' }
 
 export const isStaffRole = (member) => member?.role === '운영진'
 export const visibleTabs = (member) => WS_TABS.filter(([, , only]) => only !== 'staff' || isStaffRole(member))
 
 // 직접 진입(/workspace/?tab=운영) 지원 — 권한 없는 탭이면 셸이 안내 화면을 그린다(이중 차단의 화면 쪽).
+// 알 수 없는 값 = 첫 화면(제출).
 export function initialTab(search) {
-  const q = new URLSearchParams(search || '').get('tab')
+  const raw = new URLSearchParams(search || '').get('tab')
+  const q = LEGACY_TAB_MAP[raw] || raw
   return WS_TABS.some(([name]) => name === q) ? q : WS_TABS[0][0]
 }
 
@@ -117,11 +120,20 @@ export function Shell({ member, onSignOut, store, onMemberChanged, search }) {
         ))}
       </nav>
 
+      {/* 제출 = 기고 + 과제 조립(§1 — 기고 먼저) · 스터디 = 공지(운영 기록 포함) + 세션 조립(읽기 전용) */}
+      {store && tab === '제출' && (
+        <>
+          <Contribute store={store} />
+          <Assignments store={store} />
+        </>
+      )}
+      {store && tab === '스터디' && (
+        <>
+          <Notices store={store} />
+          <Sessions store={store} />
+        </>
+      )}
       {store && tab === '내정보' && <MyPage store={store} member={member} onProfileSaved={onMemberChanged} />}
-      {store && tab === '세션' && <Sessions store={store} />}
-      {store && tab === '과제' && <Assignments store={store} />}
-      {store && tab === '공지' && <Notices store={store} />}
-      {store && tab === '기고' && <Contribute store={store} />}
       {/* 운영 탭 = 화면 차단(권한 없으면 안내만) + 서버 RLS 이중 방어 */}
       {store && tab === '운영' && (staff ? <Admin store={store} member={member} /> : <Denied />)}
     </section>
@@ -167,7 +179,7 @@ export default function Workspace({ repos, configured }) {
   }
 
   const sub = ready
-    ? '세션·과제·공지·컬렉션 — 스터디원 전용. 공개 페이지와 분리.'
+    ? '기고·과제 제출과 스터디 공지 확인 — 스터디원 전용.'
     : '백엔드 연결 전 — 로그인 기능 대기 상태.'
 
   return (

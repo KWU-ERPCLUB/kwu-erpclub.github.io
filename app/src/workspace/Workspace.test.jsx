@@ -40,19 +40,27 @@ test('LoginForm — 오류 메시지는 role=alert, 처리 중이면 버튼 비�
   expect(flat(<LoginForm busy />)).toContain('disabled')
 })
 
-// ── ③ 로그인 후 셸 ──
-test('Shell = 멤버 이름·역할 + 탭바(기본 탭 = 내정보) + 로그아웃', () => {
+// ── ③ 로그인 후 셸 (접수창구 4탭 — spec 2026-08-05-워크스페이스-개편) ──
+test('Shell = 멤버 이름·역할 + 탭바(기본 탭 = 제출: 기고+과제) + 로그아웃', () => {
   const html = flat(<Shell member={{ 이름: '홍길동', role: '운영진' }} store={createMockRepositories({ user: 'mock-staff' })} search="" />)
   expect(html).toContain('홍길동')
   expect(html).toContain('운영진')
   for (const [name] of WS_TABS) expect(html).toContain(name)
   expect(html).toContain('ws-tabbar')
-  expect(html).toContain('ws-mypage')        // 기본 탭 = 내정보(M3 ①)
+  expect(html).toContain('ws-contribute')    // W1: 첫 화면 = 제출(기고 먼저)
+  expect(html).toContain('프롬프트 복사')     // 1트랙 키트 패널 도달 가능
+  expect(html).toContain('승인 요청')
+  expect(html).toContain('과제')              // 과제 섹션이 같은 탭에 조립됨
+  expect(html).toContain('로그아웃')
+})
+
+test('내정보 탭 = 프로필·활동내역·컬렉션 통합 유지(?tab=내정보)', () => {
+  const html = flat(<Shell member={{ 이름: '홍길동', role: '스터디원' }} store={createMockRepositories({ user: 'mock-member' })} search="?tab=내정보" />)
+  expect(html).toContain('ws-mypage')
   expect(html).toContain('프로필')
   expect(html).toContain('활동내역')
   expect(html).toContain('내 북마크')          // 컬렉션 통합 — 한 화면에서 확인
   expect(html).toContain('링크 스크랩')
-  expect(html).toContain('로그아웃')
 })
 
 // ── M3 ④ 역할별 탭 노출 ──
@@ -67,7 +75,7 @@ test('운영 탭 = 운영진에게만 노출(스터디원 탭바에 없음)', ()
 
 test('직접 진입(?tab=운영) — 스터디원은 안내만, 운영진은 운영 화면', () => {
   expect(initialTab('?tab=운영')).toBe('운영')
-  expect(initialTab('?tab=없는탭')).toBe('내정보')
+  expect(initialTab('?tab=없는탭')).toBe('제출')   // 미지 값 = 첫 화면(W1)
 
   const store = createMockRepositories({ user: 'mock-member' })
   const denied = flat(<Shell member={{ 이름: 'ㄱ', role: '스터디원' }} store={store} search="?tab=운영" />)
@@ -79,24 +87,32 @@ test('직접 진입(?tab=운영) — 스터디원은 안내만, 운영진은 운
   expect(staff).toContain('멤버')
 })
 
-test('세션·과제·공지 탭 = 준비 중 문구 없이 실제 화면', () => {
+// W3: 구 6탭 딥링크 = 새 탭으로 매핑(링크 깨짐 0)
+test('구 탭명 딥링크 매핑 — 기고·과제 → 제출 / 공지·세션 → 스터디', () => {
+  expect(initialTab('?tab=기고')).toBe('제출')
+  expect(initialTab('?tab=과제')).toBe('제출')
+  expect(initialTab('?tab=공지')).toBe('스터디')
+  expect(initialTab('?tab=세션')).toBe('스터디')
+})
+
+test('제출·스터디 탭 = 준비 중 문구 없이 실제 화면(구 딥링크 경유 포함)', () => {
   const store = createMockRepositories({ user: 'mock-member' })
   const member = { 이름: 'ㄱ', role: '스터디원' }
-  const 세션 = flat(<Shell member={member} store={store} search="?tab=세션" />)
-  expect(세션).toContain('불러오는 중')
-  expect(세션).not.toContain('준비 중')
-  const 과제 = flat(<Shell member={member} store={store} search="?tab=과제" />)
-  expect(과제).toContain('과제')
-  expect(과제).not.toContain('준비 중')
-  const 공지 = flat(<Shell member={member} store={store} search="?tab=공지" />)
-  expect(공지).toContain('공지')
-  expect(공지).not.toContain('준비 중')
+  const 제출 = flat(<Shell member={member} store={store} search="?tab=과제" />)
+  expect(제출).toContain('과제')
+  expect(제출).toContain('ws-contribute')
+  expect(제출).not.toContain('준비 중')
+  const 스터디 = flat(<Shell member={member} store={store} search="?tab=세션" />)
+  expect(스터디).toContain('공지')                 // 공지 먼저
+  expect(스터디).toContain('세션')
+  expect(스터디).toContain('운영 기록')            // OpsLog 승계(IA 4차)
+  expect(스터디).not.toContain('준비 중')
 })
 
 // P5 재해석(§0-5 개정): 학번 = 로그인 ID → 본인 화면 표시 허용. 사적 필드는 전공뿐 — 셸이 그리지 않는다.
 test('Shell = 본인 학번 표시·전공 미표시(P5)', () => {
   const member = { 이름: '홍길동', role: '스터디원', 학번: '2021000000', 전공: '경영학부' }
-  const html = flat(<Shell member={member} store={createMockRepositories({ user: 'mock-member' })} search="" />)
+  const html = flat(<Shell member={member} store={createMockRepositories({ user: 'mock-member' })} search="?tab=내정보" />)
   expect(html).toContain('2021000000')
   expect(html).not.toContain('경영학부')
 })

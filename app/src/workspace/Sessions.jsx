@@ -1,4 +1,4 @@
-// 세션 탭(M3 ③) — 회차·날짜·자료 링크 열람(스터디원 읽기 전용, RLS sessions_select_member).
+// 세션 섹션(스터디 탭 조립부 — 2026-08-05 4탭 개편) — 회차·날짜·자료 링크 열람(스터디원 읽기 전용, RLS sessions_select_member).
 // 자료 = 링크 기반. 파일 업로드(Storage 버킷)는 M4 범위 — 파일경로 행은 안내 문구로만 표시.
 import { useCallback, useEffect, useState } from 'react'
 
