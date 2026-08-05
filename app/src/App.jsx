@@ -6,7 +6,7 @@
 // 모션: 문자 스태거 리빌 · 키워드 마퀴 · 커버 호버 리프트 · 섹션=페이지 감쇠(home-motion.jsx). 신규 무한루프 0 · transform·opacity만 · reduced-motion 존중.
 import { useEffect } from 'react'
 import { Arrow, SiteNav, SiteFooter } from './shared.jsx'
-import { MARQUEE_KEYWORDS, marqueeTrack, localYmd, recruitPhase } from './home-logic.js'
+import { MARQUEE_KEYWORDS, marqueeTrack, localYmd, recruitPhase, heldSeminars, studyCell } from './home-logic.js'
 import { RECRUIT, COHORT_LABEL, formatWindowShort } from './data/recruit.js'
 import { FAQ } from './data/faq.js'
 import { loadContent } from './content/loader.js'
@@ -143,15 +143,16 @@ export function RecruitBand({ today = localYmd() }) {
 
 // B1 블랙 통계 밴드 — 잉크 대면적 + 뷰포트급 흰 숫자 2×2(십자 헤어라인·CountUp 재사용).
 // 수치 = 실측만(content/ 집계 + 확인된 사실 2건 — 구 recruit 증빙은 v3.2에서 제거, 밴드는 메인만). 출처 = 셀별 소형 표기.
-// .page 미부여 = 감쇠 제외(블랙 면 감쇠는 지면 파손). export = 수치·출처 단언 테스트용.
-export function StatsBand() {
+// 정직성 수정(2026-08-05): 세미나 = **개최 완료만**(예정·일정미정 제외) · 스터디 셀 = 시험일 경계 파생(home-logic).
+// .page 미부여 = 감쇠 제외(블랙 면 감쇠는 지면 파손). export = 수치·출처 단언 테스트용(today 주입).
+export function StatsBand({ today = localYmd() }) {
   const 기사수 = loadContent('기사').length
-  const 세미나수 = loadContent('세미나').length
+  const 개최세미나수 = heldSeminars(loadContent('세미나'), today).length
   const cells = [
     [String(기사수), '게재 기사', 'content/ 집계'],
-    [String(세미나수), '세미나 기록', 'content/ 집계'],
+    [String(개최세미나수), '세미나 기록', 'content/ 집계 — 개최 완료만'],
     ['2', '라이브 실물', 'ADsP 진도 보드 · 이 사이트'],
-    ['1', '진행 중 스터디', 'ADsP 1기 — 진도 보드 운영'],
+    studyCell(today),
   ]
   return (
     <section className="stats-band" aria-label="운영 실측 수치">
