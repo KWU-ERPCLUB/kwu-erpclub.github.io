@@ -83,6 +83,36 @@
   max-width: 15ch;
 }
 .hero-l { display: block; }
+
+/* 확장 라인 — AIM 풀네임(AI × MIS). 자간 넓은 디스플레이 소형, 색=서브(버건디 화이트리스트 불변) */
+.hero-expand {
+  margin: clamp(0.7rem, 1.6vh, 1.1rem) 0 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(0.95rem, 1.6vw, 1.35rem);
+  letter-spacing: 0.42em;
+  color: var(--text-sub);
+}
+
+/* 조준점 시그니처 — 'AIM=겨냥' 중의. 단일 펄스 1회(transform·opacity만), 이후 정지 */
+.hero-reticle {
+  display: inline-block;
+  width: clamp(1.05rem, 2.1vw, 1.7rem);
+  height: auto;
+  margin-left: 0.16em;
+  vertical-align: super;
+  color: var(--text-sub);
+  animation: reticle-pulse 1.4s ease-out 950ms 1 both;
+}
+@keyframes reticle-pulse {
+  0% { opacity: 0; transform: scale(0.55); }
+  60% { opacity: 1; transform: scale(1.14); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-reticle { animation: none; }
+}
+
 .hero-sub {
   margin: clamp(1.5rem, 3vh, 2.25rem) 0 0;
   font-size: clamp(1rem, 1.7vw, 1.2rem);

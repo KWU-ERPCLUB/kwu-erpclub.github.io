@@ -52,15 +52,29 @@ function ChevronDown() {
   )
 }
 
-// 히어로 100vh — 브랜드 키커 → 뷰포트 타이포 3줄 스택(좌정렬) → 서브 → 풀폭 마퀴 + 스크롤 유도.
+// 조준점 시그니처 — AIM의 '겨냥' 중의(스터디명 픽 근거). 단일 펄스 1회, reduced-motion = 정적.
+function Reticle() {
+  return (
+    <svg className="hero-reticle" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="7.5" stroke="currentColor" strokeWidth="1.6" />
+      <circle cx="12" cy="12" r="1.7" fill="currentColor" />
+      <path d="M12 1.5V5M12 19v3.5M1.5 12H5M19 12h3.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+// 히어로 100vh — 브랜드 키커 → 뷰포트 타이포(AIM+조준점) → 확장 라인(AI × MIS) → 서브 → 풀폭 마퀴 + 스크롤 유도.
 function Hero() {
   return (
     <section className="hs hs-hero page" id="top">
       <div className="hs-in hs-hero-in">
         <span className="hero-kicker rv">KWANGWOON UNIV. · SCHOOL OF BUSINESS</span>
         <h1 className="hero-mega">
-          <span className="hero-l rv"><StaggerChars text="AI" accent start={0} /><StaggerChars text="M" start={2} /></span>
+          <span className="hero-l rv"><StaggerChars text="AI" accent start={0} /><StaggerChars text="M" start={2} /><Reticle /></span>
         </h1>
+        <p className="hero-expand rv" aria-label="AI × MIS">
+          <span aria-hidden="true"><StaggerChars text="AI × MIS" start={4} /></span>
+        </p>
         <p className="hero-sub rv" style={{ transitionDelay: '320ms' }}>
           광운대학교 ERP연구회 산하 MIS·AI 스터디
         </p>
