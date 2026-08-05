@@ -9,8 +9,8 @@ source_name: McKinsey · Gartner · PwC
 주제: 거버넌스·리스크
 설명: 에이전트 도입 79% vs 확장 23% — 격차의 1순위 원인인 보안·거버넌스를 사고 사례로 분석.
 태그: [에이전트, 거버넌스, 보안]
-이미지: /img/기사/agent-adoption-gap.svg
-이미지설명: 도입 79% → 확장 23%로 좁아지는 비율 막대 — 이 글이 다루는 격차를 본문 인용 조사 수치(McKinsey·PwC)로 그린 도판
+이미지: /img/covers/mckinsey-state-of-ai.jpg
+이미지설명: 맥킨지 「The State of AI」 리포트 공식 커버 아트 — 이 글의 도입 79% 대 확장 23% 수치가 나온 조사
 ---
 
 ::: 요약

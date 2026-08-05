@@ -9,8 +9,8 @@ source_name: 삼성SDS · LG CNS 실적발표 · ZDNet Korea · 디지털데일�
 주제: 시장·생태계
 설명: 삼성SDS·LG CNS 2분기 실적에서 성장이 나온 칸은 전통 SI가 아니라 AI 인프라였다 — DBO·GPUaaS가 무엇이고 MIS 전공자의 진로 지도가 어떻게 바뀌나
 태그: [삼성SDS, LGCNS, SKAX, 데이터센터, 진로]
-이미지: /img/기사/si-growth-split.svg
-이미지설명: 삼성SDS 2분기 부문별 매출 증가율 막대 — 전통 IT서비스 +5% 대 클라우드 +17%·대외 +75%로, 이 글이 말하는 무게중심 이동을 실적 숫자로 옮긴 도판
+이미지: /img/covers/samsung-sds.jpg
+이미지설명: 삼성SDS 춘천 데이터센터 전경(회사 제공 프레스 사진) — 이 글이 말하는 무게중심 이동의 도착지인 AI 인프라 사업 자산
 ---
 
 ::: 요약

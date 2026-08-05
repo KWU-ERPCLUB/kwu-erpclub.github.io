@@ -9,8 +9,8 @@ source_name: Anthropic · Cognizant
 주제: 시장·생태계
 설명: 35만 명 규모 글로벌 SI Cognizant가 만든 새 직무 두 개 — 엔지니어 말고 '프론티어 비즈니스 오퍼레이터'가 왜 중요한가
 태그: [채용, 직무, 자격증, Cognizant, 클로드]
-이미지: /img/logos/cognizant.svg
-이미지설명: 코그니전트 로고 — 사내 3만 명 Claude 교육 이수와 신설 직무 2종을 발표한 35만 명 규모 글로벌 SI
+이미지: /img/covers/cognizant-anthropic.jpg
+이미지설명: 코그니전트 첸나이 딜리버리 센터 전경 — 사내 3만 명 Claude 교육 이수와 신설 직무 2종을 발표한 35만 명 규모 글로벌 SI
 ---
 
 ::: 요약
