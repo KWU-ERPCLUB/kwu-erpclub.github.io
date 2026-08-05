@@ -7,7 +7,7 @@ import { parseFrontmatter } from '../src/content/frontmatter.js'
 import { isContentFile } from '../src/content/schema.js'
 
 export const SITE_URL = 'https://kwu-erpclub.github.io'
-const FEED_TITLE = '광운대학교 ERP연구회 — AI 인사이트'
+const FEED_TITLE = 'AIM — AI 인사이트'
 const FEED_DESC = '경영·MIS 관점의 AI 이슈 분석·축적 — 스터디원 기고'
 
 export function escapeXml(s) {

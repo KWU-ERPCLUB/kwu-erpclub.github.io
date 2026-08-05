@@ -14,8 +14,8 @@ test('메인 = 풀블리드 3섹션 + 100vh 히어로(뷰포트 타이포·소�
   expect(html).toContain('hs-hero')
   expect(html).toContain('hero-mega')
   expect(/class="sc"|class="sc /.test(html)).toBe(true)
-  // 소개 2줄(2026-07-25): 소속 명시 + AI 집중 허브 사실 기술
-  expect(html).toContain('광운대학교 경영학부 MIS 스터디')
+  // 소개 2줄(브랜드 개편 2026-08-05): 주체 = AIM, 서브 = 산하 계보 한 줄
+  expect(html).toContain('광운대학교 ERP연구회 산하 MIS·AI 스터디')
   expect(html).toContain('hero-desc')
   // 히어로 하단: 풀폭 마퀴 띠 + 스크롤 유도
   expect(html).toContain('marquee-track')

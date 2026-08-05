@@ -59,13 +59,13 @@ function Hero() {
       <div className="hs-in hs-hero-in">
         <span className="hero-kicker rv">KWANGWOON UNIV. · SCHOOL OF BUSINESS</span>
         <h1 className="hero-mega">
-          <span className="hero-l rv"><StaggerChars text="ERP" accent start={0} /><StaggerChars text="연구회" start={3} /></span>
+          <span className="hero-l rv"><StaggerChars text="AI" accent start={0} /><StaggerChars text="M" start={2} /></span>
         </h1>
         <p className="hero-sub rv" style={{ transitionDelay: '320ms' }}>
-          광운대학교 경영학부 MIS 스터디
+          광운대학교 ERP연구회 산하 MIS·AI 스터디
         </p>
         <p className="hero-desc rv" style={{ transitionDelay: '400ms' }}>
-          AI 활용에 집중하는 산하 MIS·AI 스터디의 허브 — AI 인사이트·세미나·프로젝트 기록.
+          AI 활용에 집중하는 스터디의 허브 — AI 인사이트·세미나·프로젝트 기록.
         </p>
       </div>
       <div className="hero-foot">

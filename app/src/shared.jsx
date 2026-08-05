@@ -44,7 +44,7 @@ export function SiteNav({ signedIn }) {
   return (
     <header className="nav">
       <div className="nav-inner">
-        <a className="brand" href="/">KWU <em>ERP</em>연구회</a>
+        <a className="brand" href="/"><em>AI</em>M</a>
         <nav className="nav-links" aria-label="사이트 섹션">
           {links.map(([label, href]) => (
             <a key={href} href={href} className={isOn(href) ? 'on' : undefined}>{label}</a>
@@ -82,7 +82,7 @@ export function SiteFooter() {
   return (
     <footer className="footer">
       <div className="footer-inner">
-        <span className="f-brand">광운대학교 ERP연구회</span>
+        <span className="f-brand">AIM — 광운대학교 ERP연구회 산하 MIS·AI 스터디</span>
         <span style={{ display: 'flex', gap: '1.25rem' }}>
           <a href="/about/">ABOUT</a>
           <a href="/log/">LOG</a>
