@@ -1,0 +1,142 @@
+/* /workspace 전용 — workspace-entry에서만 import(공개 페이지 CSS와 분리, SPEC §1 경계 규칙).
+   토큰·nav·footer·.status는 global.css 재사용. 내부형 밀도(디자인규칙 §3): 섹션 패딩 2.5rem×2rem. */
+
+.ws-main {
+  max-width: 720px;          /* 내부형 본문 폭(디자인규칙 §3) */
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 3.5rem;
+  flex: 1;
+}
+
+/* page-head 골격(§3-1): 눈썹 → 헤드라인(1단어 강조) → 서브 1줄 → 헤어라인 */
+.ws-head { border-bottom: 1px solid var(--line); padding-bottom: 1.4rem; margin-bottom: 1.8rem; }
+.ws-eyebrow {
+  margin: 0 0 0.5rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--accent);      /* 버건디 = 섹션 인덱스 문법(화이트리스트 ④) */
+}
+.ws-h1 {
+  margin: 0 0 0.6rem;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.7rem, 3.8vw, 2.6rem);
+  line-height: 1.22;
+  letter-spacing: -0.02em;
+}
+.ws-h1 em { font-style: normal; color: var(--accent); }  /* 화이트리스트 ① */
+.ws-lead { margin: 0; font-size: 0.92rem; color: var(--text-sub); }
+
+/* 패널 = 카드 1장(밀도 1단계 위) */
+.ws-panel {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  padding: 2rem 1.75rem;
+}
+.ws-note { margin: 1.1rem 0 0; font-size: 0.82rem; color: var(--text-sub); }
+.ws-note code, .ws-steps code {
+  font-size: 0.8rem;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 0.05rem 0.35rem;
+}
+
+/* ① 미설정 */
+.ws-badge {
+  display: inline-block;
+  margin: 0 0 0.9rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.16rem 0.65rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+}
+.ws-steps { margin: 1rem 0 0; padding-left: 1.1rem; font-size: 0.9rem; color: var(--text-sub); }
+.ws-steps li { margin-bottom: 0.45rem; line-height: 1.6; }
+
+/* ② 로그인 폼 */
+.ws-form { display: flex; flex-direction: column; gap: 1rem; max-width: 380px; }
+.ws-field { display: flex; flex-direction: column; gap: 0.35rem; }
+.ws-field span { font-size: 0.82rem; font-weight: 600; }
+.ws-field input {
+  height: 40px;
+  padding: 0 0.8rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: var(--text);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.ws-field input:hover { border-color: var(--text-sub); }
+.ws-field input:focus-visible, .ws-submit:focus-visible, .ws-signout:focus-visible {
+  outline: 3px solid var(--accent);   /* 화이트리스트 ⑨ */
+  outline-offset: 2px;
+}
+.ws-submit {
+  height: 40px;
+  padding: 0 1.4rem;
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--dark);            /* Primary = 차콜 필(디자인규칙 §4) */
+  border: 0;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+}
+.ws-submit:hover { background: #000; }
+.ws-submit:disabled { opacity: 0.55; cursor: default; }
+.ws-error { margin: 0; font-size: 0.85rem; color: var(--accent); font-weight: 600; }
+
+/* ③ 로그인 후 셸 */
+.ws-me {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid var(--line);
+}
+.ws-me-name { margin: 0; font-size: 1.05rem; font-weight: 700; }
+.ws-me-role { margin: 0.15rem 0 0; font-size: 0.82rem; color: var(--text-sub); }
+.ws-signout {
+  height: 32px;                        /* 내부형 조밀(§4) */
+  padding: 0 1rem;
+  font-family: inherit;
+  font-size: 0.82rem;
+  color: var(--text);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+}
+.ws-signout:hover { border-color: var(--text); }
+
+.ws-tabs {
+  list-style: none;
+  margin: 1.4rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.9rem;
+}
+.ws-tab {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  padding: 1rem 1.1rem;
+}
+.ws-tab-name { margin: 0; font-weight: 700; font-size: 0.98rem; }
+.ws-tab-desc { margin: 0.2rem 0 0.7rem; font-size: 0.82rem; color: var(--text-sub); }
+.ws-tab .status { margin-bottom: 0; }
+
+@media (max-width: 700px) {
+  .ws-main { padding: 1.8rem 1.1rem 2.6rem; }
+  .ws-panel { padding: 1.5rem 1.2rem; }
+  .ws-tabs { grid-template-columns: 1fr; }
+}

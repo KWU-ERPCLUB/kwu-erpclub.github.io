@@ -15,6 +15,7 @@ export default defineConfig({
         about: fileURLToPath(new URL('./about/index.html', import.meta.url)),
         log: fileURLToPath(new URL('./log/index.html', import.meta.url)),
         projects: fileURLToPath(new URL('./projects/index.html', import.meta.url)),
+        workspace: fileURLToPath(new URL('./workspace/index.html', import.meta.url)),
       },
     },
   },
