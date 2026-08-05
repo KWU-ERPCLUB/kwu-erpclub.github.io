@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" width="1200" height="750" role="img" aria-label="주간 AI 트렌드 — 매주 월요일 발행하는 시리즈">
+  <title>주간 AI 트렌드</title>
+  <!-- 시리즈 고정 커버(자체 제작 2026-08-05) — 디자인규칙-메인.md §1 토큰 실측값만 사용.
+       흰 면 ≈70% / 차콜 앵커 1개 ≈25% / 버건디 <5%(눈썹 텍스트 + 스탯 언더바 + 월요일 점 — 화이트리스트 ③④⑦).
+       모티프 = 주 7일 점열, 월요일 1개만 채움(발행 리듬). 수치·차트 없음. 규격 1200×750(16:10 — 카드 프레임과 동일). -->
+  <defs>
+    <style>
+      .t { font-family: Paperlogy, Pretendard, "Malgun Gothic", "Apple SD Gothic Neo", sans-serif; }
+    </style>
+  </defs>
+
+  <!-- 바탕 -->
+  <rect width="1200" height="750" fill="#FFFFFF"/>
+  <rect x="0" y="0" width="1200" height="750" fill="none" stroke="#E7E7E5" stroke-width="2"/>
+
+  <!-- 헤어라인 가로 격자(세로선 없음 — §3 공통) -->
+  <g stroke="#E7E7E5" stroke-width="1.5">
+    <line x1="0" y1="150" x2="1200" y2="150"/>
+    <line x1="0" y1="600" x2="1200" y2="600"/>
+  </g>
+
+  <!-- 다크 앵커 1개(화면당 상한 1) — 우측 밴드 -->
+  <rect x="852" y="0" width="348" height="750" fill="#161616"/>
+
+  <!-- 주 7일 점열 — 월요일만 채움(파생 #D18F9A = 다크 위 버건디 대응색) -->
+  <g>
+    <line x1="1026" y1="196" x2="1026" y2="554" stroke="#FFFFFF" stroke-opacity="0.16" stroke-width="2"/>
+    <circle cx="1026" cy="196" r="19" fill="#D18F9A"/>
+    <circle cx="1026" cy="256" r="9" fill="none" stroke="#FFFFFF" stroke-opacity="0.34" stroke-width="2"/>
+    <circle cx="1026" cy="316" r="9" fill="none" stroke="#FFFFFF" stroke-opacity="0.34" stroke-width="2"/>
+    <circle cx="1026" cy="376" r="9" fill="none" stroke="#FFFFFF" stroke-opacity="0.34" stroke-width="2"/>
+    <circle cx="1026" cy="436" r="9" fill="none" stroke="#FFFFFF" stroke-opacity="0.34" stroke-width="2"/>
+    <circle cx="1026" cy="496" r="9" fill="none" stroke="#FFFFFF" stroke-opacity="0.34" stroke-width="2"/>
+    <circle cx="1026" cy="556" r="9" fill="none" stroke="#FFFFFF" stroke-opacity="0.34" stroke-width="2"/>
+  </g>
+  <text class="t" x="1026" y="632" fill="#FFFFFF" fill-opacity="0.62" font-size="26" font-weight="700" letter-spacing="6" text-anchor="middle">MON</text>
+
+  <!-- 타이포 블록 -->
+  <text class="t" x="92" y="252" fill="#7A2030" font-size="30" font-weight="700" letter-spacing="7">WEEKLY AI TREND</text>
+  <text class="t" x="92" y="384" fill="#141414" font-size="112" font-weight="800" letter-spacing="-3">주간 AI 트렌드</text>
+  <rect x="92" y="428" width="84" height="9" fill="#7A2030"/>
+  <text class="t" x="92" y="512" fill="#55606C" font-size="34" font-weight="500">매주 월요일 · 지난 한 주 AI 소식 요약</text>
+  <text class="t" x="92" y="670" fill="#55606C" font-size="24" font-weight="600" letter-spacing="2">KWU ERP연구회 · AI 인사이트</text>
+</svg>

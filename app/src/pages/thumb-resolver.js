@@ -1,4 +1,6 @@
-// 인사이트 카드 썸네일 해석 — 4계층 폴백. 순수 함수(부수효과 0) = 테스트 대상.
+// 인사이트 카드 썸네일 해석 — 시리즈 고정 커버 + 4계층 폴백. 순수 함수(부수효과 0) = 테스트 대상.
+//   ⓪ 시리즈 고정 커버 — 소속 시리즈가 있으면 **개별 `이미지`보다 우선**(오너 확정 2026-08-05).
+//      매주 같은 커버 = 한눈에 그 코너임을 인식시키는 게 목적. 레지스트리 = content/series.js.
 //   ① frontmatter `이미지` — **신규 기고의 정규 경로**(내용과 실제 관련된 이미지 + `이미지설명` 캡션 필수)
 //   ② 본문 md 첫 이미지 — `/img/기사/` 경로만 허용(외부 URL·타 경로 무시)
 //   ③ 브랜드 로고(`/img/logos/`) → 없으면 주제 스톡(`/img/thumbs/`)
@@ -11,6 +13,8 @@
 // 반환 = { kind, src, fit, alt } · kind='cover'면 src 없음(InsightCover가 그림).
 // alt = `이미지설명`(있을 때). 자동 계층에서 나온 이미지는 내용을 대표하지 않으므로 alt를 비운다(장식 이미지 취급).
 // fit: 'contain' = 로고(여백 필요) · 'cover' = 사진(꽉 채움). 전 계층 동일 비율 프레임(CSS .art-cover)이 이질감을 흡수한다.
+
+import { seriesOf, seriesCaption } from '../content/series.js'
 
 const ARTICLE_IMG_PREFIX = '/img/기사/'
 const LOGO_DIR = '/img/logos/'
@@ -108,14 +112,19 @@ export function captionOf(a) {
 // 자동 계층(본문 도판·브랜드 로고·주제 스톡)은 히어로에 쓰지 않는다 — 목록 카드 전용(위 주석 참조).
 // 반환 = { src, fit, caption } 또는 null.
 export function resolveHero(a) {
+  // ⓪ 시리즈 = 고정 커버 + 자동 캡션(개별 `이미지`·`이미지설명` 불필요).
+  const s = seriesOf(a)
+  if (s) return { src: s.커버, fit: 'cover', caption: seriesCaption(s) }
   const field = a && typeof a['이미지'] === 'string' ? a['이미지'].trim() : ''
   if (!field) return null
   return { src: field, fit: field.startsWith(LOGO_DIR) ? 'contain' : 'cover', caption: captionOf(a) }
 }
 
-// 4계층 폴백 해석. 반환 kind = 'field' | 'body' | 'logo' | 'stock' | 'cover'.
+// 시리즈 커버 + 4계층 폴백 해석. 반환 kind = 'series' | 'field' | 'body' | 'logo' | 'stock' | 'cover'.
 export function resolveThumb(a) {
   if (!a) return { kind: 'cover', src: null, fit: 'cover', alt: '' }
+  const series = seriesOf(a)
+  if (series) return { kind: 'series', src: series.커버, fit: 'cover', alt: `${series.표시명} 시리즈 커버` }
   const field = typeof a['이미지'] === 'string' ? a['이미지'].trim() : ''
   if (field) {
     const logo = field.startsWith(LOGO_DIR)
