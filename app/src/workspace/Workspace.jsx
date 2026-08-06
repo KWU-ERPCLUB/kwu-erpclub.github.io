@@ -14,16 +14,19 @@ import Admin, { Denied } from './Admin.jsx'
 // 기능 탭 — [이름, 한 줄 설명, 접근]. 접근 'staff' = 운영진에게만 노출(M3 ④).
 // 좌측 사이드바 5탭(홈 개편 2026-08-06) — 첫 화면 = 홈(캘린더 + 다가오는 업무).
 export const WS_TABS = [
-  ['홈', '일정 캘린더·다가오는 업무·과제·공지'],
-  ['흐름', '스터디 주차별 흐름 — 지난·이번·다음 주'],
-  ['기고', '인사이트 기고 — 서식 트랙·자유 디자인 트랙'],
-  ['북마크', '북마크한 기사·개인 스크랩'],
+  ['홈', '캘린더·할 일·과제 제출·공지'],
+  ['스터디 흐름', '주차별 진행 — 지난·이번·다음 주'],
+  ['인사이트 기고', '기고 작성 — 서식·자유 디자인'],
+  ['북마크', '북마크 기사·링크 스크랩'],
   ['내정보', '프로필·활동내역'],
-  ['운영', '승인대기·멤버·콘텐츠·일정 관리', 'staff'],
+  ['운영', '승인·지원자·멤버·콘텐츠·일정', 'staff'],
 ]
 
 // 구 탭명 딥링크 호환 — 구 탭명 진입 시 새 탭으로 매핑(링크 깨짐 0).
-const LEGACY_TAB_MAP = { 제출: '홈', 스터디: '홈', 과제: '홈', 공지: '홈', 세션: '홈', 컬렉션: '북마크' }
+const LEGACY_TAB_MAP = {
+  제출: '홈', 스터디: '홈', 과제: '홈', 공지: '홈', 세션: '홈',
+  컬렉션: '북마크', 흐름: '스터디 흐름', 기고: '인사이트 기고',
+}
 
 export const isStaffRole = (member) => member?.role === '운영진'
 export const visibleTabs = (member) => WS_TABS.filter(([, , only]) => only !== 'staff' || isStaffRole(member))
@@ -122,7 +125,8 @@ export function Shell({ member, onSignOut, store, onMemberChanged, search }) {
               className={`ws-sidebtn${tab === name ? ' on' : ''}`}
               onClick={() => setTab(name)}
             >
-              {name}
+              <span className="ws-sidebtn-name">{name}</span>
+              <span className="ws-sidebtn-desc">{desc}</span>
             </button>
           ))}
         </nav>
@@ -130,8 +134,8 @@ export function Shell({ member, onSignOut, store, onMemberChanged, search }) {
         <div className="ws-content">
           {/* 홈 = 캘린더 + 다가오는 업무 + 과제·공지·세션 흡수(구 제출·스터디 탭) */}
           {store && tab === '홈' && <Home store={store} member={member} />}
-          {store && tab === '흐름' && <Flow store={store} staff={staff} />}
-          {store && tab === '기고' && <Contribute store={store} />}
+          {store && tab === '스터디 흐름' && <Flow store={store} staff={staff} />}
+          {store && tab === '인사이트 기고' && <Contribute store={store} />}
           {store && tab === '북마크' && <Collections store={store} />}
           {store && tab === '내정보' && <MyPage store={store} member={member} onProfileSaved={onMemberChanged} />}
           {/* 운영 탭 = 화면 차단(권한 없으면 안내만) + 서버 RLS 이중 방어 */}

@@ -66,7 +66,7 @@ test('내정보 탭 = 프로필·활동내역 / 북마크 탭 = 북마크·스�
   expect(my).toContain('ws-mypage')
   expect(my).toContain('프로필')
   expect(my).toContain('활동내역')
-  expect(my).not.toContain('링크 스크랩')      // 분리 — 내정보에서 제거
+  expect(my).not.toContain('ws-collections')   // 분리 — 내정보 콘텐츠에서 컬렉션 제거(사이드바 설명 문구는 무관)
   const marks = flat(<Shell member={{ 이름: '홍길동', role: '스터디원' }} store={createMockRepositories({ user: 'mock-member' })} search="?tab=북마크" />)
   expect(marks).toContain('내 북마크')
   expect(marks).toContain('링크 스크랩')
@@ -97,14 +97,15 @@ test('직접 진입(?tab=운영) — 스터디원은 안내만, 운영진은 운
 })
 
 // 구 탭명 딥링크 = 새 탭으로 매핑(링크 깨짐 0 — 2026-08-06 홈 개편)
-test('구 탭명 딥링크 매핑 — 제출·스터디·과제·공지·세션 → 홈 / 컬렉션 → 북마크 / 기고 = 유지', () => {
+test('구 탭명 딥링크 매핑 — 제출·스터디·과제·공지·세션 → 홈 / 컬렉션 → 북마크 / 흐름·기고 → 새 이름', () => {
   expect(initialTab('?tab=제출')).toBe('홈')
   expect(initialTab('?tab=스터디')).toBe('홈')
   expect(initialTab('?tab=과제')).toBe('홈')
   expect(initialTab('?tab=공지')).toBe('홈')
   expect(initialTab('?tab=세션')).toBe('홈')
   expect(initialTab('?tab=컬렉션')).toBe('북마크')
-  expect(initialTab('?tab=기고')).toBe('기고')
+  expect(initialTab('?tab=흐름')).toBe('스터디 흐름')
+  expect(initialTab('?tab=기고')).toBe('인사이트 기고')
 })
 
 test('홈 = 과제 제출·공지·세션·운영 기록까지 실제 화면(구 딥링크 경유 포함)', () => {

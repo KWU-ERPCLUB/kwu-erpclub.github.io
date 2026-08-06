@@ -3,22 +3,35 @@
 
 /* 셸 폭 확장 — 캘린더 대시보드는 전폭 유동(로그인·대기 화면은 좁은 패널 유지).
    반쪽 고정폭이 전체화면에서 비어 보이던 문제(오너 2026-08-06) → min(1440px, 94vw) 유동. */
-.ws-main:has(.ws-shell) { max-width: min(1440px, 94vw); }
+.ws-main:has(.ws-shell) { max-width: min(1640px, 94vw); }
 
-/* 좌 사이드바 + 우 콘텐츠 2단(데스크톱) */
-.ws-shell { display: grid; grid-template-columns: 160px minmax(0, 1fr); gap: 2rem; margin-top: 1.3rem; }
+/* 좌 사이드바 + 우 콘텐츠 2단(데스크톱). 사이드바 = 이름 + 설명 한 줄(탭 의미 명확화 — 오너 8/6) */
+.ws-shell { display: grid; grid-template-columns: 218px minmax(0, 1fr); gap: 2.2rem; margin-top: 1.3rem; }
 .ws-side { display: flex; flex-direction: column; gap: 0.35rem; align-items: stretch; align-self: start; }
 .ws-sidebtn {
-  text-align: left;
-  height: 38px; padding: 0 0.9rem;
-  font-family: inherit; font-size: 0.9rem; font-weight: 600; color: var(--text);
+  display: flex; flex-direction: column; gap: 0.15rem; text-align: left;
+  padding: 0.6rem 0.95rem;
+  font-family: inherit; color: var(--text);
   background: transparent; border: 0; border-radius: 10px; cursor: pointer;
   transition: background 120ms ease-out, color 120ms ease-out;
 }
+.ws-sidebtn-name { font-size: 0.92rem; font-weight: 700; }
+.ws-sidebtn-desc { font-size: 0.72rem; color: var(--text-sub); line-height: 1.4; }
 .ws-sidebtn:hover { background: #fff; }
 .ws-sidebtn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-.ws-sidebtn.on { background: var(--dark); color: #fff; }
+.ws-sidebtn.on { background: var(--dark); }
+.ws-sidebtn.on .ws-sidebtn-name { color: #fff; }
+.ws-sidebtn.on .ws-sidebtn-desc { color: rgba(255, 255, 255, 0.65); }
 .ws-content { min-width: 0; }
+
+/* 탭 공통 전폭 규칙(오너 원칙 8/6 — 해상도 최대 활용): 모든 탭 = 데스크톱 2열, 좁은 외줄 금지 */
+@media (min-width: 1100px) {
+  .ws-mypage, .ws-collections { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 2.6rem; align-items: start; }
+  .ws-mypage .ws-block + .ws-block { border-top: 0; padding-top: 0; }   /* 세로 구분선 규칙은 1열 전용 */
+  .ws-contribute { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 0 2.6rem; align-items: start; }
+  .ws-contribute .ws-tracks { grid-column: 1 / -1; }
+  .ws-flow-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.7rem; }
+}
 
 /* 홈 상단 — 캘린더(대) + 우측 레일(다가오는 업무·선택일 상세) */
 .ws-home-top { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 2rem; align-items: start; margin-bottom: 1.8rem; }
@@ -137,8 +150,10 @@
 @media (max-width: 760px) {
   .ws-shell { grid-template-columns: 1fr; gap: 1rem; }
   .ws-side { flex-direction: row; overflow-x: auto; padding-bottom: 0.2rem; }
-  .ws-sidebtn { flex: none; height: 34px; font-size: 0.85rem; background: #fff; border: 1px solid var(--line); border-radius: var(--radius-pill); }
-  .ws-sidebtn.on { border-color: var(--dark); }
+  .ws-sidebtn { flex: none; padding: 0.42rem 0.95rem; background: #fff; border: 1px solid var(--line); border-radius: var(--radius-pill); }
+  .ws-sidebtn-name { font-size: 0.85rem; }
+  .ws-sidebtn-desc { display: none; }            /* 폰 = 이름만(필 바) */
+  .ws-sidebtn.on { border-color: var(--dark); background: var(--dark); }
   .ws-home-top { grid-template-columns: 1fr; }
   .ws-cal-cell { min-height: 56px; }
   .ws-cal-chip { display: none; }           /* 폰 = 점만(칩은 좁아서 뭉개짐) */

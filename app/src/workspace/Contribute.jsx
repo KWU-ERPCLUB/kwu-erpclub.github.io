@@ -154,6 +154,8 @@ export default function Contribute({ store }) {
   return (
     <div className="ws-contribute">
       <TrackChooser track={track} onPick={setTrack} />
+      {/* 데스크톱 2열: 좌 = 작성(키트+폼) / 우 = 내 글 — 전폭 활용(오너 원칙 2026-08-06) */}
+      <div className="ws-contrib-main">
       {track === '기본' && <KitPanel onApply={(values) => setDraft((d) => ({ ...d, ...values }))} />}
 
       <section className="ws-block">
@@ -205,7 +207,9 @@ export default function Contribute({ store }) {
         </form>
       </section>
 
-      <section className="ws-block">
+      </div>
+
+      <section className="ws-block ws-contrib-side">
         <h2 className="ws-h2">내 글</h2>
         <MyDrafts rows={mine} onEdit={(a) => setDraft({ ...EMPTY, ...a })} />
       </section>
