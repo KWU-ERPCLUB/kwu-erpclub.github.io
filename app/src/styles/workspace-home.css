@@ -3,8 +3,11 @@
    문서형 골격(히어로 헤드·카드 패널·전폭 계정 밴드)은 로그인 전 화면에만 남는다(workspace.css).
    workspace.css의 분할 파일(300줄 규격) — workspace-entry에서만 import. 토큰은 global.css 재사용. */
 
-/* 앱 상태 본문 — 문서 폭(720px) 해제. 1440px에서 사이드바 빼고 본문 ~1100px+ 확보. */
-.ws-main.ws-app { max-width: 1760px; padding: 1.4rem clamp(1rem, 2.5vw, 2.5rem) 3rem; }
+/* 앱 상태 본문 — 문서 폭(720px) 해제 + 중앙 정렬 상한 폐지(오너 8/6 4차: 창이 넓으면 끝까지 사용).
+   2구간 설계(노트북 100% 기준): 창 최대(≥1200px) = 본문+우레일 / 창 절반(760~1199px) = 레일이 본문 아래로. */
+/* width 100% 필수: #root가 flex column이라 .ws-main의 margin auto가 폭을 내용물 크기로 수축시킴
+   → 탭마다 폭이 달라져 "가운데 몰림·좌우 흔들림"의 근본 원인(2026-08-06 4차 확정). */
+.ws-main.ws-app { max-width: none; width: 100%; margin: 0; padding: 1.2rem clamp(1rem, 2vw, 2.2rem) 3rem; }
 
 /* 탭 간 스크롤바 유무 차이로 레이아웃이 수평 이동하는 것 방지(짧은 탭 ↔ 긴 탭 전환 흔들림) */
 :root:has(.ws-main.ws-app) { scrollbar-gutter: stable; }
@@ -71,14 +74,17 @@
 .ws-fold summary:hover { color: var(--text); }
 .ws-fold[open] > summary { margin-bottom: 0.5rem; }
 
-/* ── 공통 프레임(오너 확정 8/6 3차): 전 탭 = 본문(1fr) + 우측 레일(340px) 단일 그리드 ──
+/* ── 공통 프레임(오너 확정 8/6 3·4차): 전 탭 = 본문(1fr) + 우측 레일(340px) 단일 그리드 ──
    탭이 바뀌어도 열 경계·정렬 앵커가 이동하지 않는다(탭별 개별 분할 문법 전면 폐지).
-   본문 = 주 작업 / 레일 = 보조(목록·요약·폼). */
+   본문 = 주 작업 / 레일 = 보조(목록·요약·폼). 창 절반 구간의 배치는 하단 미디어 블록. */
 .ws-cols { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 2.2rem; align-items: start; }
 .ws-cmain { min-width: 0; }
 .ws-crail { min-width: 0; display: flex; flex-direction: column; gap: 1.6rem; }
 .ws-crail .ws-block { margin-bottom: 0; }
 .ws-cmain > .ws-block + .ws-block { border-top: 1px solid var(--line); padding-top: 1.4rem; }
+
+/* 세로 덜컥 방지 — 짧은 탭도 화면 높이를 유지(내용 길이 차이로 페이지가 확 줄지 않게) */
+.ws-content { min-height: calc(100vh - 200px); }
 
 /* 월 캘린더 */
 .ws-cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.7rem; }
@@ -98,7 +104,7 @@
 .ws-cal-wd { font-size: 0.72rem; font-weight: 700; color: var(--text-sub); text-align: center; padding: 0.35rem 0; background: var(--surface); }
 .ws-cal-wd.sun { color: var(--accent); }
 .ws-cal-cell {
-  min-height: 84px; padding: 0.3rem 0.3rem 0.4rem;   /* 데스크톱 대형화(구 62px — "대형 캘린더" 실체화) */
+  min-height: 92px; padding: 0.3rem 0.3rem 0.4rem;   /* 캘린더 우선(오너 8/6 4차) — 창 최대 기준 대형 셀 */
   display: flex; flex-direction: column; align-items: stretch; gap: 2px;
   font: inherit; text-align: left; color: var(--text); background: #fff; border: 0; cursor: pointer;
 }
@@ -191,11 +197,16 @@
 .ws-cell-miss { font-size: 0.76rem; color: var(--text-sub); }
 .ws-matrix-rate th, .ws-matrix-rate td { border-top: 2px solid var(--dark); border-bottom: 0; font-weight: 700; }
 
-/* 태블릿(<1100) — 사이드바·레일 축소(프레임 골격은 유지) */
-@media (max-width: 1100px) {
+/* 창 절반 구간(760~1199px — 노트북 100% 배율 반쪽 창): 레일을 본문 아래로 내려 캘린더가 본문 전폭.
+   레일 블록은 아래에서 가로 카드 배치(빈 외줄 방지). 전 탭 동일 규칙 — 구간 안에서 열 경계 고정. */
+@media (max-width: 1199px) {
   .ws-shell { grid-template-columns: 200px minmax(0, 1fr); }
-  .ws-cols { grid-template-columns: minmax(0, 1fr) 290px; gap: 1.4rem; }
-  .ws-cal-cell { min-height: 66px; }
+  .ws-cols { grid-template-columns: minmax(0, 1fr); }
+  .ws-crail {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.4rem 2rem; border-top: 1px solid var(--line); padding-top: 1.4rem;
+  }
+  .ws-cal-cell { min-height: 76px; }
 }
 
 /* 폰(<760) — 사이드바 = 가로 스크롤 필 바 + 계정 블록 가로(1차: 데스크탑 우선 원칙, 모바일 전용 개편은 별도 트랙) */

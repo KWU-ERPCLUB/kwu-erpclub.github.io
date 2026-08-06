@@ -157,13 +157,11 @@ export function Shell({ member, onSignOut, store, onMemberChanged, search }) {
       </nav>
 
       <div className="ws-content">
-        {/* 탭 소형 헤더 — 히어로 대체(홈은 자체 요약 헤더가 있어 생략) */}
-        {tab !== '홈' && (
-          <div className="ws-content-head">
-            <h1 className="ws-content-title">{active[0]}</h1>
-            <p className="ws-content-sub">{active[1]}</p>
-          </div>
-        )}
+        {/* 탭 소형 헤더 — 전 탭 동일(홈 포함, 오너 8/6 4차): 시작 높이·헤어라인이 탭마다 같아야 틀이 안 흔들린다 */}
+        <div className="ws-content-head">
+          <h1 className="ws-content-title">{active[0]}</h1>
+          <p className="ws-content-sub">{active[1]}</p>
+        </div>
         {/* 홈 = 캘린더 + 다가오는 업무 + 과제·공지·세션 흡수(구 제출·스터디 탭) */}
         {[...visited].map((name) => (
           <div key={name} hidden={tab !== name} className="ws-tabpane">{paneOf(name)}</div>
