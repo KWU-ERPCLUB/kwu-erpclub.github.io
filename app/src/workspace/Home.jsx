@@ -131,17 +131,27 @@ export default function Home({ store }) {
   return (
     <div className="ws-home">
       {error && <p className="ws-error" role="alert">{error}</p>}
+      {/* 상단 = 캘린더(대) + 우측 레일(다가오는 업무·선택일 상세) — 상세를 세로 흐름에서 빼 페이지 길이 축소 */}
       <div className="ws-home-top">
         <MonthCalendar
           year={ym.y} month={ym.m} items={items} todayKey={todayKey}
           selected={selected} onSelect={setSelected} onMove={move}
         />
-        <UpcomingTasks items={items} todayKey={todayKey} onSelect={setSelected} />
+        <div className="ws-home-rail">
+          <UpcomingTasks items={items} todayKey={todayKey} onSelect={setSelected} />
+          <DayDetail items={items} selected={selected} />
+        </div>
       </div>
-      <DayDetail items={items} selected={selected} />
-      <Assignments store={store} />
-      <Notices store={store} />
-      <Sessions store={store} />
+      {/* 하단 = 데스크톱 2열(과제·세션 | 공지·운영 기록) — 전폭 세로 나열 금지 */}
+      <div className="ws-home-bottom">
+        <div>
+          <Assignments store={store} />
+          <Sessions store={store} />
+        </div>
+        <div>
+          <Notices store={store} />
+        </div>
+      </div>
     </div>
   )
 }
