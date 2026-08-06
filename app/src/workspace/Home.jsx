@@ -146,31 +146,26 @@ export default function Home({ store, member }) {
     })
   }
 
+  // 공통 프레임(ws-cols — 전 탭 동일 열 경계): 본문 = 요약·캘린더·과제·세션 / 레일 = 업무·선택일·공지.
   return (
-    <div className="ws-home">
-      {error && <p className="ws-error" role="alert">{error}</p>}
-      <HomeSummary member={member} items={items} todayKey={todayKey} />
-      {/* 상단 = 캘린더(대) + 우측 레일(다가오는 업무·선택일 상세) — 상세를 세로 흐름에서 빼 페이지 길이 축소 */}
-      <div className="ws-home-top">
-        <MonthCalendar
-          year={ym.y} month={ym.m} items={items} todayKey={todayKey}
-          selected={selected} onSelect={setSelected} onMove={move}
-        />
-        <div className="ws-home-rail">
-          <UpcomingTasks items={items} todayKey={todayKey} onSelect={setSelected} />
-          <DayDetail items={items} selected={selected} />
+    <div className="ws-home ws-cols">
+      <div className="ws-cmain">
+        {error && <p className="ws-error" role="alert">{error}</p>}
+        <HomeSummary member={member} items={items} todayKey={todayKey} />
+        <div className="ws-block">
+          <MonthCalendar
+            year={ym.y} month={ym.m} items={items} todayKey={todayKey}
+            selected={selected} onSelect={setSelected} onMove={move}
+          />
         </div>
+        <Assignments store={store} />
+        <Sessions store={store} />
       </div>
-      {/* 하단 = 데스크톱 2열(과제·세션 | 공지·운영 기록) — 전폭 세로 나열 금지 */}
-      <div className="ws-home-bottom">
-        <div>
-          <Assignments store={store} />
-          <Sessions store={store} />
-        </div>
-        <div>
-          <Notices store={store} />
-        </div>
-      </div>
+      <aside className="ws-crail">
+        <UpcomingTasks items={items} todayKey={todayKey} onSelect={setSelected} />
+        <DayDetail items={items} selected={selected} />
+        <Notices store={store} />
+      </aside>
     </div>
   )
 }

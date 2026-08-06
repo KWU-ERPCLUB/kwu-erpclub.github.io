@@ -84,22 +84,10 @@ export default function Collections({ store }) {
     } catch (err) { setError(err?.message || '삭제 실패') }
   }
 
+  // 공통 프레임(ws-cols): 본문 = 링크 스크랩(CRUD) / 레일 = 내 북마크(읽기 목록).
   return (
-    <div className="ws-collections">
-      <section className="ws-block">
-        <h2 className="ws-h2">내 북마크</h2>
-        {status === 'loading' && <div className="ws-skel" aria-label="불러오는 중"><span /><span /></div>}
-        {status === 'ready' && marks.length === 0 && <p className="ws-note">북마크 0건 — 인사이트 상세에서 추가.</p>}
-        <ul className="ws-list">
-          {marks.map((m) => (
-            <li key={m.article_id} className="ws-mark">
-              <a href={`/insights/?p=${m.articles?.['슬러그'] || ''}`}>{m.articles?.['제목'] || '(삭제된 기사)'}</a>
-              <span className="ws-mark-meta">{m.articles?.['게재일'] || ''}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
-
+    <div className="ws-collections ws-cols">
+      <div className="ws-cmain">
       <section className="ws-block">
         <h2 className="ws-h2">링크 스크랩</h2>
         <form className="ws-scrap-form" onSubmit={add}>
@@ -119,6 +107,23 @@ export default function Collections({ store }) {
           {scraps.map((row) => <ScrapRow key={row.id} row={row} onSave={save} onRemove={remove} />)}
         </ul>
       </section>
+      </div>
+
+      <aside className="ws-crail">
+        <section className="ws-block">
+          <h2 className="ws-h2">내 북마크</h2>
+          {status === 'loading' && <div className="ws-skel" aria-label="불러오는 중"><span /><span /></div>}
+          {status === 'ready' && marks.length === 0 && <p className="ws-note">북마크 0건 — 인사이트 상세에서 추가.</p>}
+          <ul className="ws-list">
+            {marks.map((m) => (
+              <li key={m.article_id} className="ws-mark">
+                <a href={`/insights/?p=${m.articles?.['슬러그'] || ''}`}>{m.articles?.['제목'] || '(삭제된 기사)'}</a>
+                <span className="ws-mark-meta">{m.articles?.['게재일'] || ''}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      </aside>
     </div>
   )
 }

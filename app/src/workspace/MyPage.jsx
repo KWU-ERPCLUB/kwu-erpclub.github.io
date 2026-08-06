@@ -110,12 +110,17 @@ export default function MyPage({ store, member, onProfileSaved }) {
 
   useEffect(() => { load() }, [load])
 
+  // 공통 프레임(ws-cols): 본문 = 프로필 수정 / 레일 = 활동내역(읽기).
   return (
-    <div className="ws-mypage">
-      {error && <p className="ws-error" role="alert">{error}</p>}
-      {/* key = 멤버 로드 완료 시 폼 초기값을 다시 잡기 위함(비동기 도착) */}
-      <Profile key={member?.id || 'pending'} store={store} member={member} onSaved={onProfileSaved} />
-      <Activity articles={articles} submissions={submissions} assignments={assignments} />
+    <div className="ws-mypage ws-cols">
+      <div className="ws-cmain">
+        {error && <p className="ws-error" role="alert">{error}</p>}
+        {/* key = 멤버 로드 완료 시 폼 초기값을 다시 잡기 위함(비동기 도착) */}
+        <Profile key={member?.id || 'pending'} store={store} member={member} onSaved={onProfileSaved} />
+      </div>
+      <aside className="ws-crail">
+        <Activity articles={articles} submissions={submissions} assignments={assignments} />
+      </aside>
     </div>
   )
 }

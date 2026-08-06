@@ -97,19 +97,26 @@ export default function Flow({ store, staff }) {
     }
   }
 
+  // 공통 프레임(ws-cols): 본문 = 주차 카드 목록 / 레일 = 운영진 기록 폼(멤버는 안내).
   return (
-    <div className="ws-flow">
-      <section className="ws-block">
-        <h2 className="ws-h2">스터디 흐름 <span className="ws-count">{rows.length}</span></h2>
-        <p className="ws-note">주 단위 진행 기록 — 지난 주에 한 것·이번 주에 하는 것·다음 주에 할 것.</p>
-        {status === 'loading' && <div className="ws-skel" aria-label="불러오는 중"><span /><span /></div>}
-        {error && <p className="ws-error" role="alert">{error}</p>}
-        {status === 'ready' && rows.length === 0 && <p className="ws-note">기록 0건 — 운영진이 주차 기록을 추가하면 여기 쌓임.</p>}
-        <ul className="ws-list ws-flow-list">
-          {rows.map((r) => <WeekCard key={r.id} row={r} todayKey={todayKey} staff={staff} onRemove={remove} />)}
-        </ul>
-      </section>
-      {staff && <FlowForm store={store} onSaved={load} />}
+    <div className="ws-flow ws-cols">
+      <div className="ws-cmain">
+        <section className="ws-block">
+          <h2 className="ws-h2">스터디 흐름 <span className="ws-count">{rows.length}</span></h2>
+          <p className="ws-note">주 단위 진행 기록 — 지난 주에 한 것·이번 주에 하는 것·다음 주에 할 것.</p>
+          {status === 'loading' && <div className="ws-skel" aria-label="불러오는 중"><span /><span /></div>}
+          {error && <p className="ws-error" role="alert">{error}</p>}
+          {status === 'ready' && rows.length === 0 && <p className="ws-note">기록 0건 — 운영진이 주차 기록을 추가하면 여기 쌓임.</p>}
+          <ul className="ws-list ws-flow-list">
+            {rows.map((r) => <WeekCard key={r.id} row={r} todayKey={todayKey} staff={staff} onRemove={remove} />)}
+          </ul>
+        </section>
+      </div>
+      <aside className="ws-crail">
+        {staff
+          ? <FlowForm store={store} onSaved={load} />
+          : <p className="ws-note">기록 작성 = 운영진 — 열람 전용.</p>}
+      </aside>
     </div>
   )
 }

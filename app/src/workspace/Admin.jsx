@@ -27,26 +27,35 @@ export function Denied() {
 
 export default function Admin({ store, member }) {
   const [section, setSection] = useState(SECTIONS[0])
+  // 공통 프레임(ws-cols): 본문 = 하위 영역 / 레일 = 운영 안내(초대 절차·문의) — 전 탭 동일 열 경계 유지.
   return (
-    <div className="ws-admin">
-      <h2 className="ws-h2">운영</h2>
-      <nav className="ws-tabbar ws-subbar" aria-label="운영 영역">
-        {SECTIONS.map((name) => (
-          <button
-            key={name} type="button" aria-pressed={section === name}
-            className={`ws-tabbtn${section === name ? ' on' : ''}`}
-            onClick={() => setSection(name)}
-          >
-            {name}
-          </button>
-        ))}
-      </nav>
-      {section === '승인대기' && <Review store={store} />}
-      {section === '제출 현황' && <AdminSubmissions store={store} />}
-      {section === '지원자' && <AdminApplicants store={store} />}
-      {section === '멤버' && <AdminMembers store={store} meId={member?.id} />}
-      {section === '콘텐츠' && <AdminContent store={store} />}
-      {section === '일정' && <AdminEvents store={store} />}
+    <div className="ws-admin ws-cols">
+      <div className="ws-cmain">
+        <nav className="ws-tabbar ws-subbar" aria-label="운영 영역">
+          {SECTIONS.map((name) => (
+            <button
+              key={name} type="button" aria-pressed={section === name}
+              className={`ws-tabbtn${section === name ? ' on' : ''}`}
+              onClick={() => setSection(name)}
+            >
+              {name}
+            </button>
+          ))}
+        </nav>
+        {section === '승인대기' && <Review store={store} />}
+        {section === '제출 현황' && <AdminSubmissions store={store} />}
+        {section === '지원자' && <AdminApplicants store={store} />}
+        {section === '멤버' && <AdminMembers store={store} meId={member?.id} />}
+        {section === '콘텐츠' && <AdminContent store={store} />}
+        {section === '일정' && <AdminEvents store={store} />}
+      </div>
+      <aside className="ws-crail">
+        <section className="ws-block">
+          <h2 className="ws-h2">운영 안내</h2>
+          <p className="ws-note">계정 초대 = 앱에서 불가(service key) — 절차 = 저장소 <code>supabase/README.md</code> 3·3-1단계.</p>
+          <p className="ws-note">권한·계정 문의 = <a href={CONTACT_MAILTO}>{CONTACT.email}</a>.</p>
+        </section>
+      </aside>
     </div>
   )
 }

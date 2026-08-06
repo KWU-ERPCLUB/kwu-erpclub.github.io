@@ -6,6 +6,9 @@
 /* 앱 상태 본문 — 문서 폭(720px) 해제. 1440px에서 사이드바 빼고 본문 ~1100px+ 확보. */
 .ws-main.ws-app { max-width: 1760px; padding: 1.4rem clamp(1rem, 2.5vw, 2.5rem) 3rem; }
 
+/* 탭 간 스크롤바 유무 차이로 레이아웃이 수평 이동하는 것 방지(짧은 탭 ↔ 긴 탭 전환 흔들림) */
+:root:has(.ws-main.ws-app) { scrollbar-gutter: stable; }
+
 /* 좌 사이드바 + 우 콘텐츠 — 앱 2단. 사이드바 = sticky(스크롤해도 내비 상주) */
 .ws-shell { display: grid; grid-template-columns: 232px minmax(0, 1fr); gap: clamp(1.6rem, 2.6vw, 3rem); align-items: start; }
 .ws-side {
@@ -68,21 +71,14 @@
 .ws-fold summary:hover { color: var(--text); }
 .ws-fold[open] > summary { margin-bottom: 0.5rem; }
 
-/* 탭 공통 전폭 규칙(오너 원칙 8/6 — 해상도 최대 활용): 모든 탭 = 데스크톱 2열, 좁은 외줄 금지 */
-@media (min-width: 1100px) {
-  .ws-mypage, .ws-collections { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 2.6rem; align-items: start; }
-  .ws-mypage .ws-block + .ws-block { border-top: 0; padding-top: 0; }   /* 세로 구분선 규칙은 1열 전용 */
-  .ws-contribute { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 0 2.6rem; align-items: start; }
-  .ws-contribute .ws-tracks { grid-column: 1 / -1; }
-  .ws-flow-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.7rem; }
-}
-
-/* 홈 상단 — 캘린더(대) + 우측 레일(다가오는 업무·선택일 상세). 레일 340px = 교육 도구 전형(본문:보조 ≈ 3:1) */
-.ws-home-top { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 2.2rem; align-items: start; margin-bottom: 1.8rem; }
-.ws-home-rail { display: flex; flex-direction: column; gap: 1.4rem; min-width: 0; }
-
-/* 홈 하단 — 데스크톱 2열(과제·세션 | 공지·운영 기록): 전폭 세로 나열이 페이지를 늘이던 문제 해소 */
-.ws-home-bottom { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 2.4rem; align-items: start; border-top: 1px solid var(--line); padding-top: 1.5rem; }
+/* ── 공통 프레임(오너 확정 8/6 3차): 전 탭 = 본문(1fr) + 우측 레일(340px) 단일 그리드 ──
+   탭이 바뀌어도 열 경계·정렬 앵커가 이동하지 않는다(탭별 개별 분할 문법 전면 폐지).
+   본문 = 주 작업 / 레일 = 보조(목록·요약·폼). */
+.ws-cols { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 2.2rem; align-items: start; }
+.ws-cmain { min-width: 0; }
+.ws-crail { min-width: 0; display: flex; flex-direction: column; gap: 1.6rem; }
+.ws-crail .ws-block { margin-bottom: 0; }
+.ws-cmain > .ws-block + .ws-block { border-top: 1px solid var(--line); padding-top: 1.4rem; }
 
 /* 월 캘린더 */
 .ws-cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.7rem; }
@@ -168,7 +164,8 @@
 .ws-flow-status.now { border-color: var(--accent); color: var(--accent); }
 .ws-flow-title { margin: 0.45rem 0 0; font-size: 0.95rem; font-weight: 600; }
 .ws-flow-body { margin: 0.35rem 0 0; font-size: 0.85rem; color: var(--text-sub); white-space: pre-line; line-height: 1.65; }
-.ws-flow-form { border-top: 1px solid var(--line); padding-top: 1.3rem; }
+.ws-flow-form { border-top: 0; padding-top: 0; }   /* 레일 소속(공통 프레임) — 본문 h2와 첫 줄 높이 정렬 */
+.ws-flow-form .ws-h3 { margin-top: 0; }
 
 /* 기고 트랙 선택 — 카드 2장(라디오) */
 .ws-tracks { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-bottom: 1.6rem; }
@@ -194,11 +191,10 @@
 .ws-cell-miss { font-size: 0.76rem; color: var(--text-sub); }
 .ws-matrix-rate th, .ws-matrix-rate td { border-top: 2px solid var(--dark); border-bottom: 0; font-weight: 700; }
 
-/* 태블릿(<1100) — 하단 2열 → 1열, 우측 레일 축소 */
+/* 태블릿(<1100) — 사이드바·레일 축소(프레임 골격은 유지) */
 @media (max-width: 1100px) {
   .ws-shell { grid-template-columns: 200px minmax(0, 1fr); }
-  .ws-home-bottom { grid-template-columns: 1fr; }
-  .ws-home-top { grid-template-columns: minmax(0, 1fr) 280px; gap: 1.4rem; }
+  .ws-cols { grid-template-columns: minmax(0, 1fr) 290px; gap: 1.4rem; }
   .ws-cal-cell { min-height: 66px; }
 }
 
@@ -214,7 +210,7 @@
   .ws-sidebtn-desc { display: none; }            /* 폰 = 이름만(필 바) */
   .ws-sidebtn.on { border-color: var(--dark); background: var(--dark); }
   .ws-side-me { margin-top: 0; flex-direction: row; align-items: center; justify-content: space-between; width: 100%; border-top: 0; padding-top: 0; }
-  .ws-home-top { grid-template-columns: 1fr; }
+  .ws-cols { grid-template-columns: 1fr; }   /* 폰 = 본문 아래 레일 적층 */
   .ws-cal-cell { min-height: 56px; }
   .ws-cal-chip { display: none; }           /* 폰 = 점만(칩은 좁아서 뭉개짐) */
   .ws-cal-cell .ws-cal-more { display: none; }
