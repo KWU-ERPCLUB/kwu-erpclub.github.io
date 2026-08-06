@@ -1,4 +1,4 @@
-// 기고 섹션(제출 탭 조립부 — 2026-08-05 4탭 개편, SPEC §0-8) — 내부 초안(DB) → 승인대기 제출 → 운영진 승인 → 게재.
+// 기고 탭(2026-08-06 홈 개편 — 단독 탭 승격, SPEC §0-8) — 내부 초안(DB) → 승인대기 제출 → 운영진 승인 → 게재.
 // md 커밋 경유 없음. 게재되면 공개 인사이트가 다음 페치에서 바로 집어간다(클라이언트 페치).
 import { useCallback, useEffect, useState } from 'react'
 import { NATURES, TOPICS } from '../content/schema.js'

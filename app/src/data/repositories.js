@@ -17,6 +17,7 @@ export const REPO_CONTRACT = {
   articles: ['listPublished', 'listMine', 'listPending', 'save', 'setStatus'],
   interactions: ['counts', 'mine', 'listBookmarked', 'toggleLike', 'toggleBookmark'],
   sessions: ['list', 'save'],
+  events: ['list', 'save', 'remove'],
   materials: ['list', 'save'],
   assignments: ['list', 'save'],
   submissions: ['listMine', 'submit'],
@@ -143,6 +144,16 @@ export function createSupabaseRepositories(backend) {
     sessions: {
       list: () => backend.db.select('sessions', { order: '회차.asc' }),
       save: saveRow('sessions'),
+    },
+    // 운영 일정(0007) — 홈 캘린더 원천. 테이블 미적용(마이그레이션 전) = list가 빈 배열로 강등(홈은 과제·세션만 표시).
+    events: {
+      list: () => backend.db.select('events', { order: '날짜.asc' }).catch(() => []),
+      save: saveRow('events'),
+      // 삭제 = 운영진만(RLS events_write_staff) — 클라이언트 화이트리스트(supabase.js DELETABLE)에도 등재.
+      async remove(rowId) {
+        await backend.db.remove('events', { id: rowId })
+        return rowId
+      },
     },
     // 세션 자료 = 링크 기반(M3). 파일 업로드(Storage)는 M4 — 파일경로 컬럼은 비워둔다.
     materials: {

@@ -1,0 +1,99 @@
+/* 워크스페이스 홈 개편(2026-08-06) — 좌측 사이드바 + 대형 캘린더 + 다가오는 업무.
+   workspace.css의 분할 파일(300줄 규격) — workspace-entry에서만 import. 토큰은 global.css 재사용. */
+
+/* 셸 폭 확장 — 캘린더 대시보드는 내부형 720 본문보다 넓게(로그인·대기 화면은 좁은 패널 유지) */
+.ws-main:has(.ws-shell) { max-width: 1100px; }
+
+/* 좌 사이드바 + 우 콘텐츠 2단(데스크톱) */
+.ws-shell { display: grid; grid-template-columns: 150px 1fr; gap: 1.6rem; margin-top: 1.3rem; }
+.ws-side { display: flex; flex-direction: column; gap: 0.35rem; align-items: stretch; align-self: start; }
+.ws-sidebtn {
+  text-align: left;
+  height: 38px; padding: 0 0.9rem;
+  font-family: inherit; font-size: 0.9rem; font-weight: 600; color: var(--text);
+  background: transparent; border: 0; border-radius: 10px; cursor: pointer;
+  transition: background 120ms ease-out, color 120ms ease-out;
+}
+.ws-sidebtn:hover { background: #fff; }
+.ws-sidebtn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.ws-sidebtn.on { background: var(--dark); color: #fff; }
+.ws-content { min-width: 0; }
+
+/* 홈 상단 — 캘린더(대) + 다가오는 업무(우) */
+.ws-home-top { display: grid; grid-template-columns: 1fr 250px; gap: 1.4rem; margin-bottom: 1.8rem; }
+
+/* 월 캘린더 */
+.ws-cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.7rem; }
+.ws-cal-head .ws-h2 { margin: 0; font-size: 1.15rem; }
+.ws-cal-nav { display: flex; gap: 0.3rem; }
+.ws-cal-nav button {
+  height: 30px; min-width: 30px; padding: 0 0.6rem; font: inherit; font-size: 0.82rem; font-weight: 600;
+  color: var(--text); background: #fff; border: 1px solid var(--line); border-radius: var(--radius-pill); cursor: pointer;
+}
+.ws-cal-nav button:hover { border-color: var(--text); }
+.ws-cal-nav button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.ws-cal-grid {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px;
+  border: 1px solid var(--line); border-radius: 12px; background: var(--line); overflow: hidden; padding: 3px;
+}
+.ws-cal-wd { font-size: 0.72rem; font-weight: 700; color: var(--text-sub); text-align: center; padding: 0.35rem 0; background: var(--surface); }
+.ws-cal-wd.sun { color: var(--accent); }
+.ws-cal-cell {
+  min-height: 84px; padding: 0.3rem 0.3rem 0.4rem;
+  display: flex; flex-direction: column; align-items: stretch; gap: 2px;
+  font: inherit; text-align: left; color: var(--text); background: #fff; border: 0; cursor: pointer;
+}
+.ws-cal-cell:hover { background: var(--surface); }
+.ws-cal-cell:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+.ws-cal-cell.out { color: var(--text-sub); background: var(--surface); opacity: 0.65; }
+.ws-cal-cell.today .ws-cal-day { color: #fff; background: var(--accent); }
+.ws-cal-cell.sel { box-shadow: inset 0 0 0 2px var(--dark); border-radius: 6px; }
+.ws-cal-day {
+  width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center;
+  font-size: 0.78rem; font-weight: 600; border-radius: 50%;
+}
+
+/* 일정 칩 — 종류별 색(ev=일정 차콜 / sem=세미나·세션 블루그레이 / rec=모집 버건디 틴트 / due=마감·과제 앰버 틴트) */
+.ws-cal-chip {
+  font-size: 0.68rem; font-weight: 600; line-height: 1.35;
+  padding: 0.05rem 0.3rem; border-radius: 5px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.ws-cal-chip.ev { background: #ececec; color: #333; }
+.ws-cal-chip.sem { background: #e3e9f0; color: #2c4058; }
+.ws-cal-chip.rec { background: var(--tint-accent, #f3e3e7); color: var(--accent); }
+.ws-cal-chip.due { background: #f5ecd9; color: #6b4e0e; }
+.ws-cal-more { font-size: 0.68rem; color: var(--text-sub); }
+
+/* 다가오는 업무 */
+.ws-upcoming .ws-list { gap: 0.35rem; }
+.ws-up-item {
+  width: 100%; display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.5rem 0.6rem; font: inherit; text-align: left; color: var(--text);
+  background: #fff; border: 1px solid var(--line); border-radius: 10px; cursor: pointer;
+}
+.ws-up-item:hover { border-color: var(--text); }
+.ws-up-item:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.ws-cal-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+.ws-cal-dot.ev { background: #555; }
+.ws-cal-dot.sem { background: #2c4058; }
+.ws-cal-dot.rec { background: var(--accent); }
+.ws-cal-dot.due { background: #b9821c; }
+.ws-up-title { font-size: 0.84rem; font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ws-up-when { margin-left: auto; font-size: 0.74rem; color: var(--text-sub); flex: none; }
+
+.ws-daydetail { border-top: 1px solid var(--line); padding-top: 1.2rem; }
+
+/* 폰(<760) — 사이드바 = 가로 스크롤 필 바, 홈 상단 = 세로 적층(반응형 3뷰포트 규범) */
+@media (max-width: 760px) {
+  .ws-shell { grid-template-columns: 1fr; gap: 1rem; }
+  .ws-side { flex-direction: row; overflow-x: auto; padding-bottom: 0.2rem; }
+  .ws-sidebtn { flex: none; height: 34px; font-size: 0.85rem; background: #fff; border: 1px solid var(--line); border-radius: var(--radius-pill); }
+  .ws-sidebtn.on { border-color: var(--dark); }
+  .ws-home-top { grid-template-columns: 1fr; }
+  .ws-cal-cell { min-height: 56px; }
+  .ws-cal-chip { display: none; }           /* 폰 = 점만(칩은 좁아서 뭉개짐) */
+  .ws-cal-cell .ws-cal-more { display: none; }
+  .ws-cal-cell.has-items::after { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); margin: auto auto 0; }
+}

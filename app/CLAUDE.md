@@ -48,9 +48,11 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
 ## Workspace & data layer (SPEC 2026-08-05 워크스페이스-백엔드, M1·M2·M3 완료)
 - `/workspace/` = 로그인 영역. entry = `workspace/index.html` + `src/workspace-entry.jsx` + `src/workspace/`, CSS = `styles/workspace.css`
   (공개 6페이지 코드·CSS와 공유 금지).
-- **탭(M3) = 내정보·세션·과제·공지·기고 + 운영(운영진만)**. 원천 = `Workspace.jsx`의 `WS_TABS`·`visibleTabs()`.
-  내정보(`MyPage.jsx`) = 프로필 수정(자기소개·관심사만) + 활동내역(내 기고·내 제출) + `Collections.jsx`(북마크·스크랩) 통합 — 컬렉션 단독 탭 폐지.
-  운영(`Admin.jsx`) = 승인대기(`Review.jsx`, M2에서 기고 탭에서 이관)·멤버(`AdminMembers.jsx`)·콘텐츠(`AdminContent.jsx`+`AdminForm.jsx`).
+- **탭(홈 개편 2026-08-06) = 좌측 사이드바 5종: 홈·기고·북마크·내정보 + 운영(운영진만)**. 원천 = `Workspace.jsx`의 `WS_TABS`·`visibleTabs()`.
+  홈(`Home.jsx`) = **대형 월 캘린더 + 다가오는 업무**(계산 = `calendar-logic.js` 순수 함수) + 과제 제출·공지·세션 흡수(구 제출·스터디 탭 — 구 탭명 딥링크는 매핑).
+  캘린더 원천 3종 = 운영 일정(`events`, **0007** — 미적용이면 list가 빈 배열 강등) + 과제 마감 자동 + 세션 날짜 자동. 주간 기고 반복 핀 = `WEEKLY_CONTRIB.dueDay`(현재 null=[미정] — 오너 확정 시 값 1개).
+  북마크(`Collections.jsx`) = 단독 탭 승격 / 내정보(`MyPage.jsx`) = 프로필 수정(자기소개·관심사만) + 활동내역만.
+  운영(`Admin.jsx`) = 승인대기(`Review.jsx`)·지원자·멤버(`AdminMembers.jsx`)·콘텐츠(`AdminContent.jsx`+`AdminForm.jsx`)·**일정(`AdminEvents.jsx` — events CRUD, 삭제는 DELETABLE 화이트리스트에 events 등재)**.
 - **운영 영역 이중 차단**: ①RLS(`*_write_staff`) ②화면 — 비운영진 탭 미노출 + 직접 진입(`?tab=운영`)은 `Denied` 안내.
   초대(계정 생성)는 앱에서 불가(service key 필요) → 화면엔 절차 안내만(`supabase/README.md` 3·3-1단계).
 - **공개 헤더의 워크스페이스 링크 = 세션 있을 때만**(`shared.jsx` ← `data/session-flag.js`). 판정 = localStorage 키 1회 읽기(네트워크·JSON 파싱 금지 — boundary 테스트가 고정). 키 상수 원천 = `data/session-key.js`.
@@ -72,8 +74,9 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
   빈도 상한·버튼 3단 위계·인터랙션 4상태·내부형 밀도·§2 타이포 실값 표). UI 작업 전 필독. 위반=재작업.
 - **PageHead 강제(3차)**: 페이지 헤드 = `src/shared.jsx` `PageHead` 1개(좌 라벨 레일 + h1 + 서브 + 갱신 메타 + children).
   페이지별 head CSS 신설 금지. 레일 폭 = 토큰 `--rail-w`/`--rail-gap`(global.css)만 소비.
-- CSS 11개(`src/styles/`): global(269줄 — 토큰·nav·PageHead·푸터·버튼) · home · home-sections · hero-visual ·
-  pages(공용 셸) · hub-md(도판 브레이크아웃) · articles · insights-detail · seminars · projects · recruit · workspace.
+- CSS 12개(`src/styles/`): global(269줄 — 토큰·nav·PageHead·푸터·버튼) · home · home-sections · hero-visual ·
+  pages(공용 셸) · hub-md(도판 브레이크아웃) · articles · insights-detail · seminars · projects · recruit · workspace ·
+  workspace-home(사이드바·캘린더 — 2026-08-06 분할 신설).
   (`doc.css` = 2026-07-25 폐지 — 내부형 doc 셸·DocSide와 함께 제거됨.)
 - 3차 신설 토큰: `--rail-w`/`--rail-gap`(레일) · `--tint-accent` · `--accent-on-dark` · `--focus-on-dark` · `--btn-hover`.
 - Copy tone: AI-ish phrasing forbidden (규칙 §0-1). 3 viewports 375/768/1440, light-only(`color-scheme: light`).

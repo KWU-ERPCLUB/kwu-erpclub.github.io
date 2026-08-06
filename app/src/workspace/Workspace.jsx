@@ -6,28 +6,28 @@ import { getRepositories, isBackendConfigured } from '../data/index.js'
 import { CONTACT, CONTACT_MAILTO } from '../data/recruit.js'
 import Contribute from './Contribute.jsx'
 import MyPage from './MyPage.jsx'
-import Sessions from './Sessions.jsx'
-import Assignments from './Assignments.jsx'
-import Notices from './Notices.jsx'
+import Collections from './Collections.jsx'
+import Home from './Home.jsx'
 import Admin, { Denied } from './Admin.jsx'
 
 // 기능 탭 — [이름, 한 줄 설명, 접근]. 접근 'staff' = 운영진에게만 노출(M3 ④).
-// 접수창구 4탭(spec 2026-08-05-워크스페이스-개편 §1) — 첫 화면 = 제출(로그인 직후 "낼 것"이 보인다).
+// 좌측 사이드바 5탭(홈 개편 2026-08-06) — 첫 화면 = 홈(캘린더 + 다가오는 업무).
 export const WS_TABS = [
-  ['제출', '기고·과제 제출과 상태 확인'],
-  ['스터디', '공지·세션 일정·운영 기록 — 읽기 전용'],
-  ['내정보', '프로필·활동내역·북마크·스크랩'],
-  ['운영', '승인대기·멤버·콘텐츠 관리', 'staff'],
+  ['홈', '일정 캘린더·다가오는 업무·과제·공지'],
+  ['기고', '인사이트 기고 작성·상태 확인'],
+  ['북마크', '북마크한 기사·개인 스크랩'],
+  ['내정보', '프로필·활동내역'],
+  ['운영', '승인대기·멤버·콘텐츠·일정 관리', 'staff'],
 ]
 
-// 구 6탭 딥링크 호환(§1 W3) — 구 탭명 진입 시 새 탭으로 매핑(링크 깨짐 0).
-const LEGACY_TAB_MAP = { 기고: '제출', 과제: '제출', 공지: '스터디', 세션: '스터디' }
+// 구 탭명 딥링크 호환 — 구 탭명 진입 시 새 탭으로 매핑(링크 깨짐 0).
+const LEGACY_TAB_MAP = { 제출: '홈', 스터디: '홈', 과제: '홈', 공지: '홈', 세션: '홈', 컬렉션: '북마크' }
 
 export const isStaffRole = (member) => member?.role === '운영진'
 export const visibleTabs = (member) => WS_TABS.filter(([, , only]) => only !== 'staff' || isStaffRole(member))
 
 // 직접 진입(/workspace/?tab=운영) 지원 — 권한 없는 탭이면 셸이 안내 화면을 그린다(이중 차단의 화면 쪽).
-// 알 수 없는 값 = 첫 화면(제출).
+// 알 수 없는 값 = 첫 화면(홈).
 export function initialTab(search) {
   const raw = new URLSearchParams(search || '').get('tab')
   const q = LEGACY_TAB_MAP[raw] || raw
@@ -111,34 +111,30 @@ export function Shell({ member, onSignOut, store, onMemberChanged, search }) {
         <button type="button" className="ws-signout" onClick={onSignOut}>로그아웃</button>
       </div>
 
-      <nav className="ws-tabbar" aria-label="워크스페이스 기능">
-        {visibleTabs(member).map(([name, desc]) => (
-          <button
-            key={name} type="button" aria-pressed={tab === name} title={desc}
-            className={`ws-tabbtn${tab === name ? ' on' : ''}`}
-            onClick={() => setTab(name)}
-          >
-            {name}
-          </button>
-        ))}
-      </nav>
+      {/* 좌측 사이드바(데스크톱) / 가로 필 바(폰) — 홈 개편 2026-08-06 */}
+      <div className="ws-shell">
+        <nav className="ws-side" aria-label="워크스페이스 기능">
+          {visibleTabs(member).map(([name, desc]) => (
+            <button
+              key={name} type="button" aria-pressed={tab === name} title={desc}
+              className={`ws-sidebtn${tab === name ? ' on' : ''}`}
+              onClick={() => setTab(name)}
+            >
+              {name}
+            </button>
+          ))}
+        </nav>
 
-      {/* 제출 = 기고 + 과제 조립(§1 — 기고 먼저) · 스터디 = 공지(운영 기록 포함) + 세션 조립(읽기 전용) */}
-      {store && tab === '제출' && (
-        <>
-          <Contribute store={store} />
-          <Assignments store={store} />
-        </>
-      )}
-      {store && tab === '스터디' && (
-        <>
-          <Notices store={store} />
-          <Sessions store={store} />
-        </>
-      )}
-      {store && tab === '내정보' && <MyPage store={store} member={member} onProfileSaved={onMemberChanged} />}
-      {/* 운영 탭 = 화면 차단(권한 없으면 안내만) + 서버 RLS 이중 방어 */}
-      {store && tab === '운영' && (staff ? <Admin store={store} member={member} /> : <Denied />)}
+        <div className="ws-content">
+          {/* 홈 = 캘린더 + 다가오는 업무 + 과제·공지·세션 흡수(구 제출·스터디 탭) */}
+          {store && tab === '홈' && <Home store={store} />}
+          {store && tab === '기고' && <Contribute store={store} />}
+          {store && tab === '북마크' && <Collections store={store} />}
+          {store && tab === '내정보' && <MyPage store={store} member={member} onProfileSaved={onMemberChanged} />}
+          {/* 운영 탭 = 화면 차단(권한 없으면 안내만) + 서버 RLS 이중 방어 */}
+          {store && tab === '운영' && (staff ? <Admin store={store} member={member} /> : <Denied />)}
+        </div>
+      </div>
     </section>
   )
 }
@@ -182,7 +178,7 @@ export default function Workspace({ repos, configured }) {
   }
 
   const sub = ready
-    ? '기고·과제 제출과 스터디 공지 확인 — 스터디원 전용.'
+    ? '스터디 일정·업무 한눈에 + 기고 제출 — 스터디원 전용.'
     : '백엔드 연결 전 — 로그인 기능 대기 상태.'
 
   return (

@@ -16,6 +16,7 @@ const SEED = {
     { member_id: 'mock-member', 전공: '샘플학부' },
   ],
   sessions: [{ id: 'mock-s1', 회차: 1, 날짜: '2026-09-08', 제목: '샘플 세션', 설명: '목 데이터' }],
+  events: [{ id: 'mock-e1', 제목: '샘플 모임', 날짜: '2026-09-12', 시간: '19:00', 설명: '목 데이터', 종류: '일정' }],
   session_materials: [{ id: 'mock-m1', session_id: 'mock-s1', 제목: '샘플 자료', url: 'https://example.com/deck' }],
   assignments: [{ id: 'mock-h1', session_id: 'mock-s1', 제목: '샘플 과제', 마감: null }],
   submissions: [{ id: 'mock-sub1', assignment_id: 'mock-h1', member_id: 'mock-member', url: 'https://example.com/sample', 메모: '' }],
@@ -180,6 +181,17 @@ export function createMockRepositories({ user = null, data = {} } = {}) {
     sessions: {
       async list() { return clone(store.sessions) },
       save: saveRow('sessions', 'mock-s'),
+    },
+    events: {
+      async list() { return clone(store.events) },
+      save: saveRow('events', 'mock-e'),
+      async remove(rowId) {
+        if (!isStaff()) throw new Error('권한 없음')
+        const at = store.events.findIndex((e) => e.id === rowId)
+        if (at < 0) throw new Error('대상 없음')
+        store.events.splice(at, 1)
+        return rowId
+      },
     },
     materials: {
       async list() { return clone(store.session_materials) },

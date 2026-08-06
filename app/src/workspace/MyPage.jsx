@@ -1,7 +1,6 @@
-// 내정보 탭(M3 ①) — 프로필·활동내역·북마크·스크랩을 한 화면에서 확인한다.
+// 내정보 탭(M3 ① → 홈 개편 2026-08-06) — 프로필·활동내역. 북마크·스크랩은 북마크 탭으로 분리.
 // 수정 가능 범위 = 자기소개·관심사(이름·학번·role은 운영진이 관리 — RLS members_update_self가 role 변경을 거부).
 import { useCallback, useEffect, useState } from 'react'
-import Collections from './Collections.jsx'
 
 const toText = (list) => (Array.isArray(list) ? list.join(', ') : String(list || ''))
 const toList = (text) => String(text || '').split(',').map((v) => v.trim()).filter(Boolean).slice(0, 8)
@@ -75,7 +74,7 @@ function Activity({ articles, submissions, assignments }) {
       </ul>
 
       <h3 className="ws-h3">내 과제 제출 <span className="ws-count">{submissions.length}</span></h3>
-      {submissions.length === 0 && <p className="ws-note">제출 0건 — 과제 탭에서 링크 제출.</p>}
+      {submissions.length === 0 && <p className="ws-note">제출 0건 — 홈의 과제 섹션에서 링크 제출.</p>}
       <ul className="ws-list">
         {submissions.map((s) => (
           <li key={s.id} className="ws-scrap">
@@ -113,7 +112,6 @@ export default function MyPage({ store, member, onProfileSaved }) {
       {/* key = 멤버 로드 완료 시 폼 초기값을 다시 잡기 위함(비동기 도착) */}
       <Profile key={member?.id || 'pending'} store={store} member={member} onSaved={onProfileSaved} />
       <Activity articles={articles} submissions={submissions} assignments={assignments} />
-      <Collections store={store} />
     </div>
   )
 }
