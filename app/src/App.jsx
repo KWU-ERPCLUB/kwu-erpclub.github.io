@@ -8,7 +8,7 @@ import { localYmd, recruitPhase, studyCell } from './home-logic.js'
 import { RECRUIT, COHORT_LABEL, formatWindowShort } from './data/recruit.js'
 import { FAQ } from './data/faq.js'
 import { loadContent } from './content/loader.js'
-import { useSectionSpy, useParallax, StaggerChars, CountUp } from './home-motion.jsx'
+import { useSectionSpy, useParallax, useItemReveal, useHeroPointer, StaggerChars, CountUp } from './home-motion.jsx'
 import { SectionHead, HomeInsights } from './home-parts.jsx'
 
 // PROJECTS — 2열 커버 카드(피드백: "양쪽으로·한눈에", 최대 3개). 클릭 = /projects/ 상세 딥링크.
@@ -33,14 +33,20 @@ const LINEAGE = [
 
 // 히어로 — 정중앙 대형 AIM + 문장형 정체 설명. 배경 = 추상 모션 그래픽(블롭 3개, CSS만 — 이미지 파일 0).
 // 정체성 아이콘은 스터디 구상 확정 후로 미룸(피드백 합의) — 그때 이 블롭 레이어만 교체한다.
+// 인터랙티브(피드백 2026-08-06 "AIM 뒤에 인터랙티브한 디자인") = 포인터 추적:
+// 버건디 글로우(.hero-glow)가 커서를 따라오고 블롭 레이어(.hero-bg)가 반대 방향으로 미세 드리프트.
+// hover 디바이스 한정·transform만·reduced-motion 미적용(useHeroPointer).
 function Hero() {
+  useHeroPointer()
   return (
     <section className="hs hs-hero page" id="top">
-      <div className="hero-bg" aria-hidden="true">
+      <div className="hero-bg" aria-hidden="true" data-hero-drift>
         <span className="hb hb-1" />
         <span className="hb hb-2" />
         <span className="hb hb-3" />
       </div>
+      <span className="hero-glow" aria-hidden="true" data-hero-glow />
+
       <div className="hs-in hs-hero-in">
         <span className="hero-kicker rv">KWANGWOON UNIV. · SCHOOL OF BUSINESS</span>
         <div className="hero-brand">
@@ -57,7 +63,7 @@ function Hero() {
           광운대학교 ERP연구회 산하 MIS·AI 스터디
         </p>
         <p className="hero-desc rv" style={{ transitionDelay: '400ms' }}>
-          경영·MIS의 업무와 학업에 AI를 붙이는 법을 연구합니다 — 기록은 인사이트·세미나·프로젝트에 쌓입니다.
+          경영·MIS의 업무와 학업에 AI를 붙이는 법을 연구합니다.
         </p>
       </div>
     </section>
@@ -126,22 +132,27 @@ export function StatsBand({ today = localYmd() }) {
 
 
 // ROADMAP — 지그재그 타임라인: 중앙 세로 스파인 + 좌우 교대 카드(면 배경, 헤어라인 가로줄 없음).
+// 모션(피드백 2026-08-06) = 항목별 스크롤 리빌(useItemReveal — 좌 카드는 왼쪽에서·우 카드는 오른쪽에서).
+// 상태 칩은 설명 문장과 겹쳐 애매하다는 피드백 → 별도 행(.rm-status)으로 분리.
 function Roadmap() {
+  useItemReveal('.rm-item')
   return (
     <section className="hs hs-roadmap page" id="roadmap">
       <div className="hs-in">
         <SectionHead label="ROADMAP" title={<>스터디 <em>로드맵</em></>} />
-        <ol className="rm rv" style={{ transitionDelay: '180ms' }}>
+        <ol className="rm">
           {LINEAGE.map((n, i) => (
             <li className={`rm-item${i % 2 === 1 ? ' rm-right' : ''}${n.slot ? ' rm-slot' : ''}`} key={n.title}>
               <span className="rm-dot" aria-hidden="true" />
               <div className="rm-card">
                 <span className="rm-era">{n.era}</span>
                 <span className="rm-word">{n.title}</span>
-                <span className="rm-desc">
-                  {n.desc}
-                  {n.status && <span className={`status ${n.status[0]}`}>{n.status[1]}</span>}
-                </span>
+                <span className="rm-desc">{n.desc}</span>
+                {n.status && (
+                  <span className="rm-status">
+                    <span className={`status ${n.status[0]}`}>{n.status[1]}</span>
+                  </span>
+                )}
               </div>
             </li>
           ))}

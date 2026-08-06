@@ -86,6 +86,23 @@
   from { transform: translate3d(0, 0, 0) scale(1); }
   to { transform: translate3d(4vw, 5vh, 0) scale(1.12); }
 }
+/* 포인터 인터랙션(useHeroPointer) — 드리프트는 컨테이너, 글로우는 커서 추적(둘 다 transform만) */
+.hero-bg { transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1); }
+.hero-glow {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: clamp(280px, 34vw, 460px);
+  height: clamp(280px, 34vw, 460px);
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(122, 32, 48, 0.16), rgba(122, 32, 48, 0) 65%);
+  filter: blur(30px);
+  opacity: 0;
+  transition: transform 450ms cubic-bezier(0.16, 1, 0.3, 1), opacity 350ms ease-out;
+  will-change: transform;
+}
+@media (hover: none) { .hero-glow { display: none; } }
 
 .hero-kicker {
   font-size: 0.78rem;
@@ -152,6 +169,8 @@
 @media (prefers-reduced-motion: reduce) {
   .sc, .home-js .sc { transition: none; opacity: 1; transform: none; }
   .hb { animation: none; }
+  .hero-bg, .hero-glow { transition: none; }
+  .hero-glow { display: none; }
 }
 
 /* ══ B1 블랙 통계 밴드 — 4차: 전 요소 중앙 정렬 + 언더바 폐지(피드백) ══ */
@@ -211,6 +230,16 @@
   margin: 0 0 0.7rem;
 }
 .home .rb-text { margin: 0 0 1.8rem; font-size: 0.98rem; color: var(--text-sub); }
+/* 모집안내 CTA — 확대판(피드백 2026-08-06 "가로 3배·세로 1.5배"): 기본 .rc-cta-xl 대비
+   좌우 패딩 ~3배·상하 ~1.5배 + 타이포 한 단계 상향. 폰에서는 화면 폭에 맞춰 축소. */
+.home .rb-cta {
+  padding: 1.45rem 4.9rem 1.45rem 5.6rem;
+  font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+  gap: 1.1rem;
+  max-width: 100%;
+}
+.home .rb-cta svg { width: 38px; height: 38px; padding: 10px; }
+@media (max-width: 700px) { .home .rb-cta { padding: 1.25rem 2.5rem 1.25rem 3rem; } }
 .home .rb-cta { transition: transform 150ms ease-out, background-color 150ms ease-out; }
 .home .rb-cta:hover { transform: translateY(-2px); }
 @media (prefers-reduced-motion: reduce) { .home .rb-cta, .home .rb-cta:hover { transition: none; transform: none; } }

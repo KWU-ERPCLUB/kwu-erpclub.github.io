@@ -62,14 +62,24 @@
 .rm-slot .rm-word { color: var(--text-sub); }
 .rm-slot .rm-card { border-style: dashed; background: transparent; }
 .rm-desc { display: block; margin-top: 0.45rem; font-size: 0.85rem; color: var(--text-sub); }
-.rm-desc .status { margin: 0 0 0 0.5rem; vertical-align: 1px; }
-.rm-item:not(.rm-right) .rm-desc .status { margin: 0 0.5rem 0 0; }
+.rm-status { display: block; margin-top: 0.6rem; } /* 상태 칩 = 별도 행(피드백 "설명과 겹쳐 애매") */
+
+/* 항목별 스크롤 리빌(useItemReveal) — 좌 카드는 왼쪽·우 카드는 오른쪽에서 진입(transform·opacity만) */
+.home-js .rm-item {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: opacity 560ms ease-out, transform 640ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.home-js .rm-item.rm-right { transform: translateX(40px); }
+.home-js .rm-item.in { opacity: 1; transform: none; }
+
 @media (max-width: 700px) { /* 폰 = 좌측 스파인 단일 열 */
   .rm::before { left: 6px; margin-left: 0; }
   .rm-item, .rm-item.rm-right { width: 100%; margin-left: 0; padding: 0 0 1.5rem 1.9rem; }
   .rm-dot, .rm-item.rm-right .rm-dot { left: 2px; right: auto; }
   .rm-item:not(.rm-right) .rm-card { text-align: left; }
-  .rm-item:not(.rm-right) .rm-desc .status { margin: 0 0 0 0.5rem; }
+  .home-js .rm-item, .home-js .rm-item.rm-right { transform: translateY(28px); } /* 폰 단일 열 = 위로 리빌 */
+  .home-js .rm-item.in { transform: none; }
 }
 
 /* ══ PROJECTS — 2열 커버 카드(피드백 "양쪽으로·한눈에") ══ */

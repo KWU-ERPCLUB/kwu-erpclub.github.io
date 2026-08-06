@@ -1,6 +1,7 @@
 /* 세미나 v4 (2026-08-06 외부 피드백 개편) — 구 세로 날짜 타임라인·좌 라벨 레일·가로 헤어라인 폐지.
-   목록 = [중앙 헤드+필터] → [피처 밴드(예정=블랙 / 과거=라이트) 상단 반] → [과거 3열 카드 그리드].
-   상세 = 다크 헤더 밴드 중앙 정렬 + 출처 축소. 토큰=global.css. 신규 무한루프 0 · reduced-motion 존중. */
+   목록 = [중앙 헤드+필터] → [피처 밴드(예정=연한 차콜 워시 / 과거=라이트) 상단 반] → [과거 3열 카드 그리드].
+   상세 = 연한 차콜 헤더 밴드 중앙 정렬(블랙 폐지 — 피드백 2026-08-06) + 출처 축소.
+   토큰=global.css. 신규 무한루프 0 · reduced-motion 존중. */
 
 /* ── 버튼 리셋 ── */
 button.cta { border: none; font-family: inherit; cursor: pointer; }
@@ -32,12 +33,13 @@ button.proof-link {
 .sem-filter button:focus-visible, .sem-sort:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .sem-sort { color: var(--text); font-weight: 700; }
 
-/* ── 피처 밴드 — 첫 항목(최신·다음). 기본 = 라이트 면 / is-next = 블랙 면(같은 골격) ── */
+/* ── 피처 밴드 — 첫 항목(최신·다음). 기본 = 라이트 면 / is-next = 연한 차콜 워시
+   (피드백 2026-08-06 "검은 배경 별로 → 투명도·연하게" — 블랙 면 폐지, 텍스트 = 기본 색 복귀) ── */
 .sem-feat {
   border-radius: 20px; background: var(--surface); border: 1px solid var(--line);
   margin-bottom: clamp(2rem, 5vh, 3rem);
 }
-.sem-feat.is-next { background: var(--dark); border-color: var(--dark); color: #fff; }
+.sem-feat.is-next { background: rgba(22, 22, 22, 0.05); border-color: rgba(22, 22, 22, 0.18); }
 .sem-feat-in {
   display: flex; align-items: center; gap: clamp(1.5rem, 4vw, 3rem);
   padding: clamp(1.5rem, 3.5vh, 2.5rem) clamp(1.4rem, 3.5vw, 2.75rem);
@@ -45,12 +47,11 @@ button.proof-link {
 .sem-feat-txt { flex: 1 1 auto; min-width: 0; }
 .sem-next-top { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem; }
 .sem-next-kicker { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; color: var(--text-sub); }
-.sem-feat.is-next .sem-next-kicker { color: rgba(255, 255, 255, 0.85); }
+.sem-feat.is-next .sem-next-kicker { color: var(--text); }
 .sem-soon-badge { /* 화이트리스트 ⑤ 배지 테두리+텍스트(버건디) */
   display: inline-block; font-size: 0.7rem; font-weight: 700; color: var(--accent);
   border: 1px solid var(--accent); border-radius: var(--radius-pill); padding: 0.1rem 0.55rem;
 }
-.sem-feat.is-next .sem-soon-badge { color: #fff; border-color: rgba(255, 255, 255, 0.55); }
 /* 회차·날짜 행 — 4차: 헤어라인 분할 폐지(피드백 "가로줄"), 크기 한 단계 다운 */
 .sem-next-figures { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.4rem 1.25rem; margin-bottom: 1rem; }
 .sem-next-ep {
@@ -62,9 +63,7 @@ button.proof-link {
   font-family: var(--font-display); font-weight: 800; font-size: clamp(1.1rem, 2.6vw, 1.7rem);
   line-height: 1.1; letter-spacing: -0.01em; color: var(--text-sub);
 }
-.sem-feat.is-next .sem-next-when { color: rgba(255, 255, 255, 0.92); }
 .sem-tl-chips { margin: 0 0 0.55rem; display: inline-flex; }
-.sem-feat.is-next .hub-chip { background: transparent; border-color: rgba(255, 255, 255, 0.5); color: #fff; }
 .sem-tl-title { /* 제목 → 상세 */
   font-family: var(--font-display); font-weight: 800; font-size: clamp(1.3rem, 2.6vw, 1.8rem);
   line-height: 1.2; letter-spacing: -0.02em; word-break: keep-all; color: inherit;
@@ -73,26 +72,24 @@ button.proof-link {
 }
 .sem-tl-title:hover { text-decoration: underline; text-underline-offset: 3px; }
 .sem-tl-title:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-.sem-feat.is-next .sem-tl-title:focus-visible { outline-color: var(--focus-on-dark); }
 .sem-tl-points { margin: 0.2rem 0 0; padding-left: 1.2rem; }
 .sem-tl-points li { margin-bottom: 0.35rem; line-height: 1.55; font-size: 0.92rem; }
-.sem-feat.is-next .sem-tl-points li::marker { color: rgba(255, 255, 255, 0.7); }
 .sem-tl-excerpt { font-size: 0.92rem; line-height: 1.6; color: var(--text-sub); margin: 0.2rem 0 0; max-width: 60ch; word-break: keep-all; }
-.sem-feat.is-next .sem-tl-excerpt { color: rgba(255, 255, 255, 0.85); }
 /* CTA 행 — 문장 버튼(피드백 "PDF 다운로드 문장이 낫다") */
 .sem-feat-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.25rem; }
-.sem-feat.is-next .btn-2nd { background: transparent; color: #fff; border-color: rgba(255, 255, 255, 0.45); }
-.sem-feat.is-next .btn-2nd:hover { border-color: #fff; }
-.sem-feat.is-next a:focus-visible, .sem-feat.is-next button:focus-visible { outline-color: var(--focus-on-dark); }
-/* 피처 썸네일 — 우측 1장(겹침 스택 폐지) */
-.sem-feat-thumb { flex: 0 0 clamp(180px, 26%, 300px); display: block; text-decoration: none; }
+/* 피처 썸네일 — 우측 1장. 4차 후속(피드백 "PDF 이미지가 너무 작다") = 폭 상향 + 클릭 동작 안내 캡션 */
+.sem-feat-thumb { flex: 0 0 clamp(260px, 40%, 480px); display: block; text-decoration: none; }
 .sem-feat-thumb img {
   display: block; width: 100%; height: auto; border-radius: 12px;
-  border: 1px solid var(--line); background: var(--surface);
+  border: 1px solid var(--line); background: #fff;
 }
-.sem-feat.is-next .sem-feat-thumb img { border-color: rgba(255, 255, 255, 0.35); }
 .sem-feat-thumb:hover img { border-color: var(--accent); }
 .sem-feat-thumb:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 12px; }
+.sem-feat-thumb-note {
+  display: block; margin-top: 0.55rem; text-align: center;
+  font-size: 0.78rem; font-weight: 600; color: var(--text-sub);
+}
+.sem-feat-thumb:hover .sem-feat-thumb-note { color: var(--accent); }
 
 /* ── 과거 세미나 3열 카드 그리드 ── */
 .sem-grid {
@@ -138,8 +135,8 @@ button.proof-link {
   font-size: 0.95rem; background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
 }
 
-/* ════ 상세 = 다크 헤더 밴드 — 4차: 중앙 정렬(피드백 "들어가서도 다 중앙으로") ════ */
-.sem-ed-band { width: 100%; background: var(--dark); color: #fff; }
+/* ════ 상세 헤더 밴드 — 4차: 중앙 정렬. 4차 후속(피드백 "검은 배경 별로"): 블랙 → 연한 차콜 워시 ════ */
+.sem-ed-band { width: 100%; background: rgba(22, 22, 22, 0.05); border-bottom: 1px solid var(--line); }
 .sem-ed-band-in {
   max-width: var(--maxw); margin: 0 auto; text-align: center;
   padding: clamp(2rem, 4.5vh, 3.25rem) 1.5rem clamp(2.25rem, 5vh, 3.25rem);
@@ -147,29 +144,27 @@ button.proof-link {
 @media (max-width: 700px) { .sem-ed-band-in { padding: 1.75rem 1.25rem 2rem; } }
 .sem-ed-back {
   display: block; margin: 0 auto 1.5rem; background: none; border: none; padding: 0;
-  font-size: 0.84rem; font-weight: 600; color: rgba(255, 255, 255, 0.72); cursor: pointer;
+  font-size: 0.84rem; font-weight: 600; color: var(--text-sub); cursor: pointer;
 }
-.sem-ed-back:hover { color: #fff; }
+.sem-ed-back:hover { color: var(--text); }
 .sem-ed-eyebrow {
-  display: block; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.09em; color: var(--accent-on-dark); margin-bottom: 1rem;
+  display: block; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.09em; color: var(--accent); margin-bottom: 1rem;
 }
 .sem-ed-title {
   font-family: var(--font-display); font-weight: 900; font-size: clamp(1.9rem, 4.6vw, 2.8rem);
-  line-height: 1.12; letter-spacing: -0.03em; word-break: keep-all; max-width: 22ch; color: #fff; margin: 0 auto 1.1rem;
+  line-height: 1.12; letter-spacing: -0.03em; word-break: keep-all; max-width: 22ch; margin: 0 auto 1.1rem;
 }
 .sem-ed-lead {
-  font-size: clamp(1rem, 1.6vw, 1.12rem); line-height: 1.6; color: rgba(255, 255, 255, 0.86);
+  font-size: clamp(1rem, 1.6vw, 1.12rem); line-height: 1.6; color: var(--text-sub);
   max-width: 56ch; word-break: keep-all; margin: 0 auto 1.25rem;
 }
-.sem-ed-meta { font-size: 0.8rem; color: rgba(255, 255, 255, 0.6); margin: 0 0 1.25rem; }
+.sem-ed-meta { font-size: 0.8rem; color: var(--text-sub); margin: 0 0 1.25rem; }
 .sem-ed-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 1.25rem; }
-.sem-ed-band .btn-2nd { background: transparent; color: #fff; border-color: rgba(255, 255, 255, 0.4); }
-.sem-ed-band .btn-2nd:hover { border-color: #fff; }
 .sem-ed-origin {
-  font-size: 0.88rem; font-weight: 700; color: #fff; text-decoration: none; border-bottom: 2px solid var(--accent-on-dark);
+  font-size: 0.88rem; font-weight: 700; color: var(--text); text-decoration: none; border-bottom: 2px solid var(--accent);
   display: inline-flex; align-items: center; gap: 0.4rem;
 }
-.sem-ed-origin:hover { color: var(--accent-on-dark); }
+.sem-ed-origin:hover { color: var(--accent); }
 
 /* ── 상세 본문 = 흰 에디토리얼(가독 우선 — 본문 텍스트는 좌측 흐름 유지) ── */
 .sem-ed-body { max-width: var(--maxw); margin: 0 auto; padding: clamp(2rem, 4.5vh, 3rem) 1.5rem clamp(2.5rem, 5vh, 3.5rem); }

@@ -75,6 +75,58 @@ export function useParallax() {
   }, [])
 }
 
+// 항목별 스크롤 리빌 — selector 항목이 뷰포트에 들어올 때 .in 부여(once·IO). 섹션 단위 .rv와 달리
+// 항목 하나하나가 스크롤에 맞춰 순차 등장한다(로드맵 지그재그용). reduced-motion·no-JS = CSS 게이트가 즉시 표시.
+export function useItemReveal(selector) {
+  useEffect(() => {
+    if (prefersReduced()) return
+    const nodes = Array.from(document.querySelectorAll(selector))
+    if (nodes.length === 0) return
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target) } })
+    }, { threshold: 0.25, rootMargin: '0px 0px -8% 0px' })
+    nodes.forEach((n) => io.observe(n))
+    return () => io.disconnect()
+  }, [selector])
+}
+
+// 히어로 포인터 인터랙션 — 커서 추적 글로우([data-hero-glow] translate) + 블롭 레이어 역방향 드리프트
+// ([data-hero-drift] — 블롭 개별에는 무한 float 애니메이션이 있어 컨테이너에만 transform, 충돌 0).
+// hover 디바이스 한정(터치 무시)·rAF 스로틀·transform만·reduced-motion 미적용.
+export function useHeroPointer() {
+  useEffect(() => {
+    if (prefersReduced()) return
+    if (typeof window.matchMedia === 'function' && !window.matchMedia('(hover: hover)').matches) return
+    const hero = document.querySelector('.hs-hero')
+    const glow = document.querySelector('[data-hero-glow]')
+    const drift = document.querySelector('[data-hero-drift]')
+    if (!hero || !glow) return
+    let raf = 0
+    let x = 0
+    let y = 0
+    const apply = () => {
+      raf = 0
+      const r = hero.getBoundingClientRect()
+      glow.style.transform = `translate3d(${(x - r.left).toFixed(0)}px, ${(y - r.top).toFixed(0)}px, 0) translate(-50%, -50%)`
+      glow.style.opacity = '1'
+      if (drift) { // 중심 기준 -0.03 배 역방향 — 커서와 배경이 서로 밀리는 깊이감
+        const dx = (x - r.left - r.width / 2) * -0.03
+        const dy = (y - r.top - r.height / 2) * -0.03
+        drift.style.transform = `translate3d(${dx.toFixed(1)}px, ${dy.toFixed(1)}px, 0)`
+      }
+    }
+    const onMove = (e) => { x = e.clientX; y = e.clientY; if (!raf) raf = requestAnimationFrame(apply) }
+    const onLeave = () => { glow.style.opacity = '0' }
+    hero.addEventListener('pointermove', onMove, { passive: true })
+    hero.addEventListener('pointerleave', onLeave, { passive: true })
+    return () => {
+      hero.removeEventListener('pointermove', onMove)
+      hero.removeEventListener('pointerleave', onLeave)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
+}
+
 // 문자 단위 스태거 리빌 — 각 글자를 span으로 감싸 순차 등장(transform·opacity만).
 // SSR·no-JS·reduced-motion = 그대로 최종 표시(CSS가 즉시 노출). accent=버건디 강조(화이트리스트 ①).
 export function StaggerChars({ text, accent = false, start = 0 }) {

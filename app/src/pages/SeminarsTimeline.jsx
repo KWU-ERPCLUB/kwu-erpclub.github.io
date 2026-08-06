@@ -61,6 +61,7 @@ export function SeminarFeature({ s, today, onOpen = () => {} }) {
             aria-label="발표자료 열기"
           >
             <img src={thumbs[0]} alt={`${s.title} 발표자료 미리보기`} loading="lazy" />
+            {s['슬라이드'] && <span className="sem-feat-thumb-note">클릭하면 발표자료 PDF가 새 탭에서 열립니다</span>}
           </a>
         )}
       </div>

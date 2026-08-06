@@ -26,7 +26,7 @@
   pointer-events: none;
 }
 /* 호버 리프트 — 기존 문법 재사용(home-sections .hp-card와 동값: translateY(-4px)+그림자) */
-.pj-card { transition: transform 150ms ease-out; }
+.pj-card { min-width: 0; transition: transform 150ms ease-out; } /* min-width:0 = 한 줄 설명(nowrap)이 그리드 열을 밀어내지 않게 */
 .pj-card-coverwrap { transition: box-shadow 150ms ease-out; border-radius: var(--radius-card); }
 @media (hover: hover) {
   .pj-card:hover { transform: translateY(-4px); }
@@ -112,7 +112,10 @@
   letter-spacing: -0.02em;
   word-break: keep-all;
 }
-.pj-card-desc { font-size: 0.9rem; color: var(--text-sub); line-height: 1.5; word-break: keep-all; }
+.pj-card-desc { /* 피드백 2026-08-06: 제목 아래 딱 한 줄 — 줄바꿈 없이 말줄임 */
+  font-size: 0.9rem; color: var(--text-sub); line-height: 1.5;
+  max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
 .pj-card-info .status { margin-top: 0.15rem; }
 .pj-card-info:hover .pj-card-title { text-decoration: underline; text-underline-offset: 3px; }
 
