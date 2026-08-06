@@ -8,7 +8,7 @@ import { localYmd, recruitPhase, studyCell } from './home-logic.js'
 import { RECRUIT, COHORT_LABEL, formatWindowShort } from './data/recruit.js'
 import { FAQ } from './data/faq.js'
 import { loadContent } from './content/loader.js'
-import { useSectionSpy, useParallax, useItemReveal, useHeroPointer, StaggerChars, CountUp } from './home-motion.jsx'
+import { useSectionSpy, useParallax, useItemReveal, StaggerChars, CountUp } from './home-motion.jsx'
 import { SectionHead, HomeInsights } from './home-parts.jsx'
 
 // PROJECTS — 2열 커버 카드(피드백: "양쪽으로·한눈에", 최대 3개). 클릭 = /projects/ 상세 딥링크.
@@ -33,19 +33,22 @@ const LINEAGE = [
 
 // 히어로 — 정중앙 대형 AIM + 문장형 정체 설명. 배경 = 추상 모션 그래픽(블롭 3개, CSS만 — 이미지 파일 0).
 // 정체성 아이콘은 스터디 구상 확정 후로 미룸(피드백 합의) — 그때 이 블롭 레이어만 교체한다.
-// 인터랙티브(피드백 2026-08-06 "AIM 뒤에 인터랙티브한 디자인") = 포인터 추적:
-// 버건디 글로우(.hero-glow)가 커서를 따라오고 블롭 레이어(.hero-bg)가 반대 방향으로 미세 드리프트.
-// hover 디바이스 한정·transform만·reduced-motion 미적용(useHeroPointer).
+// AIM 뒤 움직이는 배경(피드백 2026-08-06 2차 — 포인터 추적 글로우는 "강조 하지마"로 제거):
+// 자율 모션만 = 느린 궤도 점 2개(.ho — 40s·64s 역방향) + 중앙 소프트 펄스(.ho-pulse 12s).
+// 전부 CSS 애니메이션·transform만·reduced-motion 정지 — "정신사납지 않게" = 저채도·저속.
 function Hero() {
-  useHeroPointer()
   return (
     <section className="hs hs-hero page" id="top">
-      <div className="hero-bg" aria-hidden="true" data-hero-drift>
+      <div className="hero-bg" aria-hidden="true">
         <span className="hb hb-1" />
         <span className="hb hb-2" />
         <span className="hb hb-3" />
       </div>
-      <span className="hero-glow" aria-hidden="true" data-hero-glow />
+      <div className="hero-orbit" aria-hidden="true">
+        <span className="ho ho-1" />
+        <span className="ho ho-2" />
+        <span className="ho-pulse" />
+      </div>
 
       <div className="hs-in hs-hero-in">
         <span className="hero-kicker rv">KWANGWOON UNIV. · SCHOOL OF BUSINESS</span>
@@ -59,10 +62,10 @@ function Hero() {
             <span aria-hidden="true"><StaggerChars text="MIS" start={7} /></span>
           </p>
         </div>
-        <p className="hero-sub rv" style={{ transitionDelay: '320ms' }}>
+        <p className="hero-sub rv" style={{ transitionDelay: '640ms' }}>
           광운대학교 ERP연구회 산하 MIS·AI 스터디
         </p>
-        <p className="hero-desc rv" style={{ transitionDelay: '400ms' }}>
+        <p className="hero-desc rv" style={{ transitionDelay: '800ms' }}>
           경영·MIS의 업무와 학업에 AI를 붙이는 법을 연구합니다.
         </p>
       </div>
@@ -131,32 +134,48 @@ export function StatsBand({ today = localYmd() }) {
 }
 
 
-// ROADMAP — 지그재그 타임라인: 중앙 세로 스파인 + 좌우 교대 카드(면 배경, 헤어라인 가로줄 없음).
-// 모션(피드백 2026-08-06) = 항목별 스크롤 리빌(useItemReveal — 좌 카드는 왼쪽에서·우 카드는 오른쪽에서).
-// 상태 칩은 설명 문장과 겹쳐 애매하다는 피드백 → 별도 행(.rm-status)으로 분리.
+// ROADMAP — 대각선 지그재그(피드백 2026-08-06 2차: 세로 스파인 → 대각선 연결선).
+// 구조 = 등고 행 그리드(좌우 교대 카드) + 꼭짓점 좌표(43%/57%, 행 중앙)를 SVG 폴리라인이 대각선으로 잇고
+// 같은 좌표에 HTML 점(.rm-vdot — SVG 왜곡 회피). 카드 = 테두리 폐지 → 흰 면+소프트 그림자.
+// 모션 = 항목별 스크롤 리빌(useItemReveal). 상태 칩 = 별도 행(.rm-status).
+const vertexX = (i) => (i % 2 === 1 ? 57 : 43)
 function Roadmap() {
   useItemReveal('.rm-item')
+  const vertexY = (i) => ((i + 0.5) / LINEAGE.length) * 100
   return (
     <section className="hs hs-roadmap page" id="roadmap">
       <div className="hs-in">
         <SectionHead label="ROADMAP" title={<>스터디 <em>로드맵</em></>} />
-        <ol className="rm">
+        <div className="rm-wrap">
+          <svg className="rm-zig" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            <polyline
+              points={LINEAGE.map((_, i) => `${vertexX(i)},${vertexY(i).toFixed(2)}`).join(' ')}
+              vectorEffect="non-scaling-stroke"
+            />
+          </svg>
           {LINEAGE.map((n, i) => (
-            <li className={`rm-item${i % 2 === 1 ? ' rm-right' : ''}${n.slot ? ' rm-slot' : ''}`} key={n.title}>
-              <span className="rm-dot" aria-hidden="true" />
-              <div className="rm-card">
-                <span className="rm-era">{n.era}</span>
-                <span className="rm-word">{n.title}</span>
-                <span className="rm-desc">{n.desc}</span>
-                {n.status && (
-                  <span className="rm-status">
-                    <span className={`status ${n.status[0]}`}>{n.status[1]}</span>
-                  </span>
-                )}
-              </div>
-            </li>
+            <span
+              className="rm-vdot" key={n.title} aria-hidden="true"
+              style={{ left: `${vertexX(i)}%`, top: `${vertexY(i)}%` }}
+            />
           ))}
-        </ol>
+          <ol className="rm">
+            {LINEAGE.map((n, i) => (
+              <li className={`rm-item${i % 2 === 1 ? ' rm-right' : ''}${n.slot ? ' rm-slot' : ''}`} key={n.title}>
+                <div className="rm-card">
+                  <span className="rm-era">{n.era}</span>
+                  <span className="rm-word">{n.title}</span>
+                  <span className="rm-desc">{n.desc}</span>
+                  {n.status && (
+                    <span className="rm-status">
+                      <span className={`status ${n.status[0]}`}>{n.status[1]}</span>
+                    </span>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
       </div>
     </section>
   )

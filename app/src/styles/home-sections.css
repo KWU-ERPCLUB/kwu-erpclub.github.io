@@ -3,43 +3,30 @@
    구 워드 스택(.wl)·스크롤 워드 스파이·텍스트 리스트 INSIGHTS(.hi-list) 폐지.
    색·폰트 토큰 고정 · 버건디 화이트리스트 · transform·opacity만 · reduced-motion 존중. */
 
-/* ══ ROADMAP — 지그재그 타임라인: 중앙 세로 스파인 + 좌우 교대 카드(흰 면·헤어라인 가로줄 0) ══ */
-.rm {
-  list-style: none;
-  position: relative;
-  margin: clamp(2rem, 5vh, 3rem) auto 0;
-  padding: 0.5rem 0;
-  max-width: 880px;
-}
-.rm::before { /* 중앙 스파인(세로) — 타임라인 구조선 */
-  content: '';
+/* ══ ROADMAP — 대각선 지그재그(2차 2026-08-06): 등고 행 그리드 + SVG 대각선 폴리라인 + 꼭짓점 점.
+   카드 = 테두리 폐지(피드백 "테두리 선 빼줘") → 흰 면 + 소프트 그림자 ══ */
+.rm-wrap { position: relative; max-width: 880px; margin: clamp(2rem, 5vh, 3rem) auto 0; }
+.rm-zig { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.rm-zig polyline { fill: none; stroke: var(--line); stroke-width: 2px; }
+.rm-vdot { /* 꼭짓점 버건디 점(화이트리스트 ⑦ 타임라인 점) — SVG 밖 HTML(preserveAspectRatio 왜곡 회피) */
   position: absolute;
-  left: 50%;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  margin-left: -1px;
-  background: var(--line);
-}
-.rm-item { position: relative; width: 50%; padding: 0 2.25rem 1.9rem 0; }
-.rm-item.rm-right { margin-left: 50%; padding: 0 0 1.9rem 2.25rem; }
-.rm-item:last-child { padding-bottom: 0.25rem; }
-.rm-dot { /* 스파인 위 버건디 점(화이트리스트 ⑦ 타임라인 점) */
-  position: absolute;
-  top: 1.35rem;
-  right: -5px;
   width: 10px;
   height: 10px;
   border-radius: 50%;
   background: var(--accent);
+  transform: translate(-50%, -50%);
+  z-index: 1;
 }
-.rm-item.rm-right .rm-dot { right: auto; left: -5px; }
+.rm { list-style: none; margin: 0; padding: 0; display: grid; grid-auto-rows: 1fr; }
+.rm-item { display: flex; align-items: center; min-height: 9.5rem; padding: 0.6rem 0; }
+.rm-item.rm-right { justify-content: flex-end; }
 .rm-card {
-  background: var(--bg);
-  border: 1px solid var(--line);
+  width: 40%;
+  background: #fff;
   border-radius: var(--radius-card);
-  padding: 1.1rem 1.35rem 1.2rem;
+  padding: 1.15rem 1.4rem 1.25rem;
   text-align: left;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
 }
 .rm-item:not(.rm-right) .rm-card { text-align: right; }
 .rm-era {
@@ -60,23 +47,29 @@
   word-break: keep-all;
 }
 .rm-slot .rm-word { color: var(--text-sub); }
-.rm-slot .rm-card { border-style: dashed; background: transparent; }
+.rm-slot .rm-card { background: transparent; box-shadow: none; } /* 빈 슬롯 = 면 없이 텍스트만 */
 .rm-desc { display: block; margin-top: 0.45rem; font-size: 0.85rem; color: var(--text-sub); }
 .rm-status { display: block; margin-top: 0.6rem; } /* 상태 칩 = 별도 행(피드백 "설명과 겹쳐 애매") */
 
-/* 항목별 스크롤 리빌(useItemReveal) — 좌 카드는 왼쪽·우 카드는 오른쪽에서 진입(transform·opacity만) */
+/* 항목별 스크롤 리빌(useItemReveal) — 좌 카드는 왼쪽·우 카드는 오른쪽에서 진입(2차: 2배 감속) */
 .home-js .rm-item {
   opacity: 0;
   transform: translateX(-40px);
-  transition: opacity 560ms ease-out, transform 640ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 1120ms ease-out, transform 1280ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .home-js .rm-item.rm-right { transform: translateX(40px); }
 .home-js .rm-item.in { opacity: 1; transform: none; }
 
-@media (max-width: 700px) { /* 폰 = 좌측 스파인 단일 열 */
-  .rm::before { left: 6px; margin-left: 0; }
-  .rm-item, .rm-item.rm-right { width: 100%; margin-left: 0; padding: 0 0 1.5rem 1.9rem; }
-  .rm-dot, .rm-item.rm-right .rm-dot { left: 2px; right: auto; }
+@media (max-width: 700px) { /* 폰 = 좌측 세로선 단일 열(대각선·꼭짓점 점 미표시) */
+  .rm-zig, .rm-vdot { display: none; }
+  .rm-wrap::before { content: ''; position: absolute; left: 5px; top: 0; bottom: 0; width: 2px; background: var(--line); }
+  .rm { grid-auto-rows: auto; }
+  .rm-item, .rm-item.rm-right { justify-content: flex-start; min-height: 0; position: relative; padding: 0 0 1.5rem 1.9rem; }
+  .rm-item::before {
+    content: ''; position: absolute; left: 0; top: 1.7rem;
+    width: 10px; height: 10px; border-radius: 50%; background: var(--accent);
+  }
+  .rm-card { width: 100%; }
   .rm-item:not(.rm-right) .rm-card { text-align: left; }
   .home-js .rm-item, .home-js .rm-item.rm-right { transform: translateY(28px); } /* 폰 단일 열 = 위로 리빌 */
   .home-js .rm-item.in { transform: none; }

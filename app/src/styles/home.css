@@ -16,17 +16,17 @@
 /* 섹션 배경 교대 — 선 대신 면으로 구분(피드백 "배경색을 바꿔가면서") */
 .hs-roadmap, .hs-faq { background: var(--surface); }
 
-/* ── 섹션=페이지 감쇠·리빌(승계) — JS 게이트 = html.home-js. 4차: min-height 86vh 폐지(세로 축소) ── */
+/* ── 섹션=페이지 감쇠·리빌(승계) — JS 게이트 = html.home-js. 2차(2026-08-06): 리빌 2배 감속 ── */
 .page {
   scroll-margin-top: 60px;
-  transition: opacity 350ms ease-out;
+  transition: opacity 700ms ease-out;
 }
 .home-js .page { opacity: 0.55; }
 .home-js .page.active { opacity: 1; }
 .home-js .page .rv {
   opacity: 0;
   transform: translateY(30px);
-  transition: opacity 560ms ease-out, transform 620ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 1120ms ease-out, transform 1240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .home-js .page.active .rv, .home-js .page.seen .rv { opacity: 1; transform: none; }
 .home-js .page:focus-within { opacity: 1; }
@@ -86,23 +86,43 @@
   from { transform: translate3d(0, 0, 0) scale(1); }
   to { transform: translate3d(4vw, 5vh, 0) scale(1.12); }
 }
-/* 포인터 인터랙션(useHeroPointer) — 드리프트는 컨테이너, 글로우는 커서 추적(둘 다 transform만) */
-.hero-bg { transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1); }
-.hero-glow {
+/* AIM 뒤 자율 모션(2차 — 커서 추적 글로우 폐지) = 궤도 점 2개 + 중앙 소프트 펄스. 저채도·저속·transform만 */
+.hero-orbit {
   position: absolute;
-  left: 0;
-  top: 0;
-  width: clamp(280px, 34vw, 460px);
-  height: clamp(280px, 34vw, 460px);
-  border-radius: 50%;
+  left: 50%;
+  top: 50%;
+  width: min(600px, 62vw);
+  height: min(600px, 62vw);
+  transform: translate(-50%, -50%);
   pointer-events: none;
-  background: radial-gradient(circle, rgba(122, 32, 48, 0.16), rgba(122, 32, 48, 0) 65%);
-  filter: blur(30px);
-  opacity: 0;
-  transition: transform 450ms cubic-bezier(0.16, 1, 0.3, 1), opacity 350ms ease-out;
-  will-change: transform;
 }
-@media (hover: none) { .hero-glow { display: none; } }
+.ho { position: absolute; inset: 0; animation: ho-spin 44s linear infinite; }
+.ho::before { /* 반투명은 opacity 대신 rgba — 리빌 감쇠 게이트(reveal-gate)와 무관함을 색으로 표현 */
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(122, 32, 48, 0.45);
+  filter: blur(1px);
+  transform: translate(-50%, -50%);
+}
+.ho-2 { inset: 13%; animation-duration: 64s; animation-direction: reverse; }
+.ho-2::before { width: 8px; height: 8px; background: rgba(22, 22, 22, 0.28); }
+.ho-pulse {
+  position: absolute;
+  inset: 16%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(122, 32, 48, 0.09), rgba(122, 32, 48, 0) 62%);
+  animation: ho-pulse 12s ease-in-out infinite alternate;
+}
+@keyframes ho-spin { to { transform: rotate(360deg); } }
+@keyframes ho-pulse {
+  from { transform: scale(0.94); opacity: 0.7; }
+  to { transform: scale(1.06); opacity: 1; }
+}
 
 .hero-kicker {
   font-size: 0.78rem;
@@ -158,7 +178,7 @@
 /* ── 문자 단위 스태거 리빌(글자별 순차 등장·transform·opacity만) ── */
 .sc {
   display: inline-block;
-  transition: opacity 480ms ease-out, transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 960ms ease-out, transform 1200ms cubic-bezier(0.16, 1, 0.3, 1); /* 2차: 2배 감속 */
   transition-delay: inherit;
   white-space: pre;
 }
@@ -168,9 +188,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .sc, .home-js .sc { transition: none; opacity: 1; transform: none; }
-  .hb { animation: none; }
-  .hero-bg, .hero-glow { transition: none; }
-  .hero-glow { display: none; }
+  .hb, .ho, .ho-pulse { animation: none; }
+  .ho, .ho-2 { display: none; }
 }
 
 /* ══ B1 블랙 통계 밴드 — 4차: 전 요소 중앙 정렬 + 언더바 폐지(피드백) ══ */
