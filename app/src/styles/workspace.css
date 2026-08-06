@@ -93,15 +93,8 @@
 .ws-submit:disabled { opacity: 0.4; cursor: default; } /* 규칙 §5 disabled = opacity 0.4(구 0.55 정합 수정) */
 .ws-error { margin: 0; font-size: 0.85rem; color: var(--accent); font-weight: 600; }
 
-/* ③ 로그인 후 셸 */
-.ws-me {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding-bottom: 1.2rem;
-  border-bottom: 1px solid var(--line);
-}
+/* ③ 로그인 후 계정 표기 — 앱 셸 사이드바 하단 블록(.ws-side-me, workspace-home.css)이 배치를 맡는다.
+   구 전폭 밴드(.ws-me)는 2026-08-06 앱형 재구성에서 폐지. */
 .ws-me-name { margin: 0; font-size: 1.05rem; font-weight: 700; }
 .ws-me-role { margin: 0.15rem 0 0; font-size: 0.82rem; color: var(--text-sub); }
 .ws-signout {
@@ -117,25 +110,8 @@
 }
 .ws-signout:hover { border-color: var(--text); }
 
-.ws-tabs {
-  list-style: none;
-  margin: 1.4rem 0 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.9rem;
-}
-.ws-tab {
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: #fff;
-  padding: 1rem 1.1rem;
-}
-.ws-tab-name { margin: 0; font-weight: 700; font-size: 0.98rem; }
-.ws-tab-desc { margin: 0.2rem 0 0.7rem; font-size: 0.82rem; color: var(--text-sub); }
-.ws-tab .status { margin-bottom: 0; }
-
-/* ④ 탭바(M2) — 내부형 조밀 필. 선택 = 차콜 반전, 준비 중 = 흐림 */
+/* ④ 탭바 — 운영 하위 영역 전환(내부형 조밀 필). 선택 = 차콜 반전.
+   (구 M1 기능 카드 격자 .ws-tabs/.ws-tab = 2026-08-06 미사용 확인 후 삭제) */
 .ws-tabbar { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 1.3rem 0 1.2rem; }
 .ws-tabbtn {
   height: 32px; padding: 0 0.95rem; font-family: inherit; font-size: 0.85rem; font-weight: 600;
@@ -194,7 +170,8 @@
   display: inline-block; min-width: 20px; text-align: center; font-size: 0.75rem; font-weight: 700;
   color: #fff; background: var(--dark); border-radius: var(--radius-pill); padding: 0.05rem 0.5rem; vertical-align: 2px;
 }
-.ws-preview { flex-basis: 100%; border-top: 1px solid var(--line); margin-top: 0.6rem; padding-top: 0.7rem; }
+/* 읽기물(공지 본문·md 미리보기)만 독서 폭 제한 — 리스트·표는 전폭(리서치: 읽기 콘텐츠 680~760px) */
+.ws-preview { flex-basis: 100%; max-width: 46rem; border-top: 1px solid var(--line); margin-top: 0.6rem; padding-top: 0.7rem; }
 /* 기고 1트랙 — 프롬프트 키트 패널(전문 접기 + 파서 안내) */
 .ws-kit { margin: 0.9rem 0; }
 .ws-kit summary { font-size: 0.85rem; font-weight: 600; color: var(--text-sub); cursor: pointer; }
@@ -261,6 +238,5 @@
 @media (max-width: 700px) {
   .ws-main { padding: 1.8rem 1.1rem 2.6rem; }
   .ws-panel { padding: 1.5rem 1.2rem; }
-  .ws-tabs { grid-template-columns: 1fr; }
   .ws-scrap-form { flex-direction: column; align-items: stretch; }
 }

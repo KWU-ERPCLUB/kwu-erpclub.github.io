@@ -21,7 +21,7 @@ export const REPO_CONTRACT = {
   flow: ['list', 'save', 'remove'],
   materials: ['list', 'save'],
   assignments: ['list', 'save'],
-  submissions: ['listMine', 'submit'],
+  submissions: ['listMine', 'listAll', 'submit'],
   notices: ['listInternal', 'save'],
   collections: ['listMine', 'add', 'update', 'remove'],
   seminars: ['list'],
@@ -180,6 +180,8 @@ export function createSupabaseRepositories(backend) {
         if (!id) return []
         return backend.db.select('submissions', { filters: { member_id: id }, order: '제출일시.desc' })
       },
+      // 운영진 제출 현황 매트릭스용 — RLS(submissions_select_own_or_staff)가 거른다: 스터디원이 부르면 본인 행만.
+      listAll: () => backend.db.select('submissions', { order: '제출일시.desc' }),
       // 과제×멤버 1건(unique) — 기존 제출이 있으면 id를 넘겨 수정한다(본인 행만).
       async submit({ id, assignment_id, url, 메모 = '' }) {
         const me = uid()

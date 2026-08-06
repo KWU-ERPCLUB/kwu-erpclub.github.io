@@ -48,13 +48,16 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
 ## Workspace & data layer (SPEC 2026-08-05 워크스페이스-백엔드, M1·M2·M3 완료)
 - `/workspace/` = 로그인 영역. entry = `workspace/index.html` + `src/workspace-entry.jsx` + `src/workspace/`, CSS = `styles/workspace.css`
   (공개 6페이지 코드·CSS와 공유 금지).
+- **앱형 셸(2026-08-06 재구성)**: 로그인 후 = 문서형(히어로 헤드·ws-panel·푸터) 제거 → 전폭 앱 레이아웃(`.ws-main.ws-app`,
+  max 1760px). 사이드바 232px sticky + 하단 계정 블록(`.ws-side-me`), 홈 외 탭 = 소형 헤더(`.ws-content-head`).
+  로그인 전 화면만 문서형(PageHead+패널) 유지. 근거 리서치(Notion·Slack·Classroom·Canvas 문법) = roadmap 2026-08-06 항.
 - **탭(홈 개편 2026-08-06) = 좌측 사이드바 6종: 홈·흐름·기고·북마크·내정보 + 운영(운영진만)**. 원천 = `Workspace.jsx`의 `WS_TABS`·`visibleTabs()`.
   홈(`Home.jsx`) = 요약 헤더(이름+7일 내 일정·마감 — Classroom '할 일' 문법) + **대형 월 캘린더 + 다가오는 업무**(계산 = `calendar-logic.js` 순수 함수) + 과제 제출·공지·세션 흡수(구 탭명 딥링크는 매핑).
   캘린더 원천 3종 = 운영 일정(`events`, **0007 적용됨**) + 과제 마감 자동 + 세션 날짜 자동. 주간 기고 반복 핀 = `WEEKLY_CONTRIB.dueDay`(현재 null=[미정] — 오너 확정 시 값 1개).
   흐름(`Flow.jsx`) = 주차별 스터디 흐름(지난·이번 주·예정 — `weekStatus` 순수), 원천 = `flow_weeks`(**0008**), 운영진 인라인 CRUD.
   기고(`Contribute.jsx`) = **투트랙**: 기본(키트+폼, `형식='md'`) / 자유(단일 HTML 붙여넣기, `형식='html'`(0008) — 공개 상세가 `sandbox=""` iframe(srcdoc)으로 렌더, 스크립트 차단. 분기 = `ArticleDetail.jsx`).
   북마크(`Collections.jsx`) = 단독 탭 / 내정보(`MyPage.jsx`) = 프로필 수정 + 활동내역만.
-  운영(`Admin.jsx`) = 승인대기(`Review.jsx`)·지원자·멤버(`AdminMembers.jsx`)·콘텐츠(`AdminContent.jsx`+`AdminForm.jsx`)·**일정(`AdminEvents.jsx` — events CRUD)**. 삭제 화이트리스트(DELETABLE) = +events·flow_weeks.
+  운영(`Admin.jsx`) = 승인대기(`Review.jsx`)·**제출 현황(`AdminSubmissions.jsx` — 멤버×과제 배지 매트릭스, `submissions.listAll`)**·지원자·멤버(`AdminMembers.jsx`)·콘텐츠(`AdminContent.jsx`+`AdminForm.jsx`)·**일정(`AdminEvents.jsx` — events CRUD)**. 삭제 화이트리스트(DELETABLE) = +events·flow_weeks.
 - **운영 영역 이중 차단**: ①RLS(`*_write_staff`) ②화면 — 비운영진 탭 미노출 + 직접 진입(`?tab=운영`)은 `Denied` 안내.
   초대(계정 생성)는 앱에서 불가(service key 필요) → 화면엔 절차 안내만(`supabase/README.md` 3·3-1단계).
 - **공개 헤더의 워크스페이스 링크 = 세션 있을 때만**(`shared.jsx` ← `data/session-flag.js`). 판정 = localStorage 키 1회 읽기(네트워크·JSON 파싱 금지 — boundary 테스트가 고정). 키 상수 원천 = `data/session-key.js`.

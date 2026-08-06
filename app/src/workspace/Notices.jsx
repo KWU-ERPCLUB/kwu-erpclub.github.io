@@ -18,7 +18,10 @@ export function OpsLog() {
   return (
     <section className="ws-block ws-oplog">
       <h2 className="ws-h2">운영 기록</h2>
-      <p className="ws-note">구 /log 페이지 내부화(2026-08-05) — 읽기 전용. 기록 추가 = src/data/log.js.</p>
+      <p className="ws-note">구 /log 페이지 내부화(2026-08-05) — 읽기 전용 아카이브. 기록 추가 = src/data/log.js.</p>
+      {/* 아카이브 = 접힘 기본(2026-08-06 재구성 — 일상 업무 화면에서 홈 길이만 늘이던 문제) */}
+      <details className="ws-fold">
+      <summary>전체 기록 펼치기</summary>
 
       <h3 className="ws-h3">로드맵</h3>
       <ol className="ws-oplog-list">
@@ -54,6 +57,7 @@ export function OpsLog() {
         ))}
       </ul>
       <p className="ws-note">{STATS_BASIS}</p>
+      </details>
     </section>
   )
 }

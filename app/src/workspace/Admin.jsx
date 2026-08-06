@@ -7,9 +7,10 @@ import AdminMembers from './AdminMembers.jsx'
 import AdminContent from './AdminContent.jsx'
 import AdminApplicants from './AdminApplicants.jsx'
 import AdminEvents from './AdminEvents.jsx'
+import AdminSubmissions from './AdminSubmissions.jsx'
 import { CONTACT, CONTACT_MAILTO } from '../data/recruit.js'
 
-const SECTIONS = ['승인대기', '지원자', '멤버', '콘텐츠', '일정']
+const SECTIONS = ['승인대기', '제출 현황', '지원자', '멤버', '콘텐츠', '일정']
 
 export function Denied() {
   return (
@@ -41,6 +42,7 @@ export default function Admin({ store, member }) {
         ))}
       </nav>
       {section === '승인대기' && <Review store={store} />}
+      {section === '제출 현황' && <AdminSubmissions store={store} />}
       {section === '지원자' && <AdminApplicants store={store} />}
       {section === '멤버' && <AdminMembers store={store} meId={member?.id} />}
       {section === '콘텐츠' && <AdminContent store={store} />}

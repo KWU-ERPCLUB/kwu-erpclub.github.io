@@ -220,6 +220,11 @@ export function createMockRepositories({ user = null, data = {} } = {}) {
       async listMine() {
         return clone(store.submissions.filter((s) => s.member_id === currentId))
       },
+      // RLS submissions_select_own_or_staff 동형 — 운영진 = 전원, 스터디원 = 본인 행만.
+      async listAll() {
+        if (isStaff()) return clone(store.submissions)
+        return clone(store.submissions.filter((s) => s.member_id === currentId))
+      },
       async submit({ id, assignment_id, url, 메모 = '' }) {
         if (!currentId) throw new Error('로그인 필요')
         if (id) {

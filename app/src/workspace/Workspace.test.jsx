@@ -128,6 +128,21 @@ test('Shell = 본인 학번 표시·전공 미표시(P5)', () => {
   expect(html).not.toContain('경영학부')
 })
 
+// ── 앱형 셸(2026-08-06 재구성) — 로그인 후 = 히어로·패널 없음 + 사이드바 계정 블록 + 탭 소형 헤더 ──
+test('로그인 후 = 앱 셸(히어로 헤드·문서 패널 없음, 사이드바 하단 계정 블록)', () => {
+  const html = flat(<Shell member={{ 이름: '홍길동', role: '스터디원' }} store={createMockRepositories({ user: 'mock-member' })} search="?tab=북마크" />)
+  expect(html).not.toContain('ws-head')          // 히어로 헤드 = 로그인 전 전용
+  expect(html).not.toContain('ws-panel')         // 문서 패널 래핑 폐지
+  expect(html).toContain('ws-side-me')           // 계정 블록 = 사이드바 하단
+  expect(html).toContain('ws-content-head')      // 홈 외 탭 = 소형 헤더
+  expect(html).toContain('북마크')
+})
+
+test('운영 탭에 제출 현황 매트릭스 포함(운영진)', () => {
+  const html = flat(<Shell member={{ 이름: 'ㄴ', role: '운영진' }} store={createMockRepositories({ user: 'mock-staff' })} search="?tab=운영" />)
+  expect(html).toContain('제출 현황')
+})
+
 // ── 공통 골격(디자인규칙 §3-1) ──
 test('page-head 골격 = 눈썹 WORKSPACE + h1 + 서브 1줄, nav·footer 공용', () => {
   const html = flat(<Workspace repos={createMockRepositories()} configured={false} />)

@@ -4,11 +4,13 @@ import { useCallback, useEffect, useState } from 'react'
 const isUrl = (v) => /^https?:\/\/\S+$/.test(String(v || '').trim())
 
 // 마감 상태 — 지난 마감이면 '마감됨'. 서버가 제출을 막지는 않는다(지각 제출 허용, 표시만).
+// 표시는 로컬(KST) 시각 — 구 toISOString은 UTC라 마감시간이 9시간 어긋나 보였다(2026-08-06 수정).
 export function dueLabel(due, now = new Date()) {
   if (!due) return '마감 없음'
   const at = new Date(due)
   if (Number.isNaN(at.getTime())) return '마감 없음'
-  const text = at.toISOString().slice(0, 16).replace('T', ' ')
+  const p = (n) => String(n).padStart(2, '0')
+  const text = `${at.getFullYear()}-${p(at.getMonth() + 1)}-${p(at.getDate())} ${p(at.getHours())}:${p(at.getMinutes())}`
   return at < now ? `마감됨 ${text}` : `마감 ${text}`
 }
 
@@ -38,20 +40,24 @@ function Row({ row, mine, onSubmit }) {
       <span className="ws-mark-meta">{dueLabel(row['마감'])}</span>
       {row['설명'] && <p className="ws-scrap-memo">{row['설명']}</p>}
       <span className={`status ${mine ? 'done' : 'prep'}`}>{mine ? '제출함' : '미제출'}</span>
-      <form className="ws-scrap-form" onSubmit={send}>
-        <input
-          className="ws-inline" value={url} placeholder="https://..." aria-label={`${row['제목']} 제출 링크`}
-          onChange={(e) => setUrl(e.target.value)}
-        />
-        <input
-          className="ws-inline" value={memo} placeholder="메모(선택)" aria-label={`${row['제목']} 제출 메모`}
-          onChange={(e) => setMemo(e.target.value)}
-        />
-        <button type="submit" className="ws-submit ws-submit-inline" disabled={busy}>
-          {mine ? '제출 수정' : '제출'}
-        </button>
-      </form>
-      {error && <p className="ws-error" role="alert">{error}</p>}
+      {/* 제출 폼 = 접힘(리스트+배지 스캔 우선, Classroom 문법 — 2026-08-06 재구성). 미제출은 펼침이 기본. */}
+      <details className="ws-fold" open={!mine}>
+        <summary>{mine ? '제출 링크 수정' : '링크 제출'}</summary>
+        <form className="ws-scrap-form" onSubmit={send}>
+          <input
+            className="ws-inline" value={url} placeholder="https://..." aria-label={`${row['제목']} 제출 링크`}
+            onChange={(e) => setUrl(e.target.value)}
+          />
+          <input
+            className="ws-inline" value={memo} placeholder="메모(선택)" aria-label={`${row['제목']} 제출 메모`}
+            onChange={(e) => setMemo(e.target.value)}
+          />
+          <button type="submit" className="ws-submit ws-submit-inline" disabled={busy}>
+            {mine ? '제출 수정' : '제출'}
+          </button>
+        </form>
+        {error && <p className="ws-error" role="alert">{error}</p>}
+      </details>
     </li>
   )
 }

@@ -102,23 +102,17 @@ export function LoginForm({ onSubmit, error, busy }) {
   )
 }
 
-// ③ 로그인 후 셸 — 멤버 이름·역할 + 기능 탭. 활성 탭만 패널을 그린다.
+// ③ 로그인 후 셸(2026-08-06 앱형 재구성) — 문서형(히어로+패널) 폐지, 앱 문법(리서치: Notion·Slack·Classroom):
+// 좌 사이드바(고정 232px·sticky) = 라벨 + 탭 + 하단 계정 블록 / 우 콘텐츠 = 남는 폭 전부.
 export function Shell({ member, onSignOut, store, onMemberChanged, search }) {
   const [tab, setTab] = useState(() => initialTab(search ?? (typeof window !== 'undefined' ? window.location.search : '')))
   const staff = isStaffRole(member)
+  const active = WS_TABS.find(([name]) => name === tab) || WS_TABS[0]
   return (
-    <section className="ws-panel">
-      <div className="ws-me">
-        <div>
-          <p className="ws-me-name">{member?.이름 || '이름 미등록'}</p>
-          <p className="ws-me-role">{member?.role || '스터디원'}</p>
-        </div>
-        <button type="button" className="ws-signout" onClick={onSignOut}>로그아웃</button>
-      </div>
-
-      {/* 좌측 사이드바(데스크톱) / 가로 필 바(폰) — 홈 개편 2026-08-06 */}
-      <div className="ws-shell">
-        <nav className="ws-side" aria-label="워크스페이스 기능">
+    <div className="ws-shell">
+      <nav className="ws-side" aria-label="워크스페이스 기능">
+        <p className="ws-side-label">WORKSPACE</p>
+        <div className="ws-side-tabs">
           {visibleTabs(member).map(([name, desc]) => (
             <button
               key={name} type="button" aria-pressed={tab === name} title={desc}
@@ -129,20 +123,35 @@ export function Shell({ member, onSignOut, store, onMemberChanged, search }) {
               <span className="ws-sidebtn-desc">{desc}</span>
             </button>
           ))}
-        </nav>
-
-        <div className="ws-content">
-          {/* 홈 = 캘린더 + 다가오는 업무 + 과제·공지·세션 흡수(구 제출·스터디 탭) */}
-          {store && tab === '홈' && <Home store={store} member={member} />}
-          {store && tab === '스터디 흐름' && <Flow store={store} staff={staff} />}
-          {store && tab === '인사이트 기고' && <Contribute store={store} />}
-          {store && tab === '북마크' && <Collections store={store} />}
-          {store && tab === '내정보' && <MyPage store={store} member={member} onProfileSaved={onMemberChanged} />}
-          {/* 운영 탭 = 화면 차단(권한 없으면 안내만) + 서버 RLS 이중 방어 */}
-          {store && tab === '운영' && (staff ? <Admin store={store} member={member} /> : <Denied />)}
         </div>
+        {/* 계정 블록 = 사이드바 하단(앱 표준 위치 — 구 전폭 밴드 폐지) */}
+        <div className="ws-side-me">
+          <div>
+            <p className="ws-me-name">{member?.이름 || '이름 미등록'}</p>
+            <p className="ws-me-role">{member?.role || '스터디원'}</p>
+          </div>
+          <button type="button" className="ws-signout" onClick={onSignOut}>로그아웃</button>
+        </div>
+      </nav>
+
+      <div className="ws-content">
+        {/* 탭 소형 헤더 — 히어로 대체(홈은 자체 요약 헤더가 있어 생략) */}
+        {tab !== '홈' && (
+          <div className="ws-content-head">
+            <h1 className="ws-content-title">{active[0]}</h1>
+            <p className="ws-content-sub">{active[1]}</p>
+          </div>
+        )}
+        {/* 홈 = 캘린더 + 다가오는 업무 + 과제·공지·세션 흡수(구 제출·스터디 탭) */}
+        {store && tab === '홈' && <Home store={store} member={member} />}
+        {store && tab === '스터디 흐름' && <Flow store={store} staff={staff} />}
+        {store && tab === '인사이트 기고' && <Contribute store={store} />}
+        {store && tab === '북마크' && <Collections store={store} />}
+        {store && tab === '내정보' && <MyPage store={store} member={member} onProfileSaved={onMemberChanged} />}
+        {/* 운영 탭 = 화면 차단(권한 없으면 안내만) + 서버 RLS 이중 방어 */}
+        {store && tab === '운영' && (staff ? <Admin store={store} member={member} /> : <Denied />)}
       </div>
-    </section>
+    </div>
   )
 }
 
@@ -187,19 +196,21 @@ export default function Workspace({ repos, configured }) {
   const sub = ready
     ? '스터디 일정·업무 한눈에 + 기고 제출 — 스터디원 전용.'
     : '백엔드 연결 전 — 로그인 기능 대기 상태.'
+  const app = ready && Boolean(user)
 
+  // 로그인 전 = 문서형(히어로 헤드 + 좁은 패널) 유지 / 로그인 후 = 앱형 전폭(히어로·패널·푸터 제거).
   return (
     <>
       <SiteNav />
-      <main id="main" className="ws-main">
-        <PageHead sub={sub} />
+      <main id="main" className={`ws-main${app ? ' ws-app' : ''}`}>
+        {!app && <PageHead sub={sub} />}
         {!ready && <NotConfigured />}
         {ready && !user && <LoginForm onSubmit={signIn} error={error} busy={busy} />}
-        {ready && user && (
+        {app && (
         <Shell member={member} onSignOut={signOut} store={store} onMemberChanged={setMember} />
       )}
       </main>
-      <SiteFooter />
+      {!app && <SiteFooter />}
     </>
   )
 }
