@@ -94,7 +94,25 @@ export function DayDetail({ items, selected }) {
   )
 }
 
-export default function Home({ store }) {
+// 상단 요약(Classroom '할 일' 문법) — 로그인 직후 "오늘 나는 뭘 해야 하나"에 한 줄로 답한다.
+export function HomeSummary({ member, items, todayKey }) {
+  const week = new Date(`${todayKey}T12:00:00`)
+  week.setDate(week.getDate() + 7)
+  const weekKey = toKey(week)
+  const soon = items.filter((i) => i.date >= todayKey && i.date <= weekKey)
+  const due = soon.filter((i) => i['종류'] === '과제' || i['종류'] === '마감').length
+  return (
+    <div className="ws-summary">
+      <p className="ws-summary-hi">{member?.['이름'] || '스터디원'} —</p>
+      <p className="ws-summary-line">
+        7일 내 일정 <strong>{soon.length}건</strong>{due > 0 && <> · 마감 <strong className="due">{due}건</strong></>}
+        {soon.length === 0 && ' — 예정된 일정 없음'}
+      </p>
+    </div>
+  )
+}
+
+export default function Home({ store, member }) {
   const todayKey = useMemo(() => toKey(new Date()), [])
   const [ym, setYm] = useState(() => ({ y: Number(todayKey.slice(0, 4)), m: Number(todayKey.slice(5, 7)) }))
   const [selected, setSelected] = useState(todayKey)
@@ -131,6 +149,7 @@ export default function Home({ store }) {
   return (
     <div className="ws-home">
       {error && <p className="ws-error" role="alert">{error}</p>}
+      <HomeSummary member={member} items={items} todayKey={todayKey} />
       {/* 상단 = 캘린더(대) + 우측 레일(다가오는 업무·선택일 상세) — 상세를 세로 흐름에서 빼 페이지 길이 축소 */}
       <div className="ws-home-top">
         <MonthCalendar

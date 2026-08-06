@@ -17,6 +17,10 @@ const SEED = {
   ],
   sessions: [{ id: 'mock-s1', 회차: 1, 날짜: '2026-09-08', 제목: '샘플 세션', 설명: '목 데이터' }],
   events: [{ id: 'mock-e1', 제목: '샘플 모임', 날짜: '2026-09-12', 시간: '19:00', 설명: '목 데이터', 종류: '일정' }],
+  flow_weeks: [
+    { id: 'mock-f1', 주차: '9월 1주', 시작일: '2026-09-07', 제목: '샘플 킥오프', 내용: '목 데이터' },
+    { id: 'mock-f2', 주차: '9월 2주', 시작일: '2026-09-14', 제목: '샘플 다음 주', 내용: '' },
+  ],
   session_materials: [{ id: 'mock-m1', session_id: 'mock-s1', 제목: '샘플 자료', url: 'https://example.com/deck' }],
   assignments: [{ id: 'mock-h1', session_id: 'mock-s1', 제목: '샘플 과제', 마감: null }],
   submissions: [{ id: 'mock-sub1', assignment_id: 'mock-h1', member_id: 'mock-member', url: 'https://example.com/sample', 메모: '' }],
@@ -181,6 +185,17 @@ export function createMockRepositories({ user = null, data = {} } = {}) {
     sessions: {
       async list() { return clone(store.sessions) },
       save: saveRow('sessions', 'mock-s'),
+    },
+    flow: {
+      async list() { return clone(store.flow_weeks) },
+      save: saveRow('flow_weeks', 'mock-f'),
+      async remove(rowId) {
+        if (!isStaff()) throw new Error('권한 없음')
+        const at = store.flow_weeks.findIndex((e) => e.id === rowId)
+        if (at < 0) throw new Error('대상 없음')
+        store.flow_weeks.splice(at, 1)
+        return rowId
+      },
     },
     events: {
       async list() { return clone(store.events) },

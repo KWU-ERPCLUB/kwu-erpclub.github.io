@@ -52,6 +52,8 @@ export function fromDbRow(row) {
     '시리즈': seriesIdOf({ '시리즈': row['시리즈'], slug: row['슬러그'] }) || undefined,
     source_url: row.source_url || '',
     source_name: row.source_name || '',
+    // 기고 2트랙(0008) — 'html'이면 상세가 샌드박스 iframe으로 렌더. 컬럼 미적용이어도 'md' 폴백.
+    '형식': row['형식'] === 'html' ? 'html' : 'md',
   }
 }
 

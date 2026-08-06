@@ -92,6 +92,9 @@
 .art-tag-now { color: var(--accent); border-color: var(--accent); background: #fff; }
 .art-tag.art-tag-nature[class*="chip-"] { background: var(--nbg); color: var(--nfg); border-color: var(--nbg); }
 
+/* 자유 디자인 트랙(0008) — 단일 HTML 샌드박스 프레임. 스크립트 차단(sandbox="") 상태라 자동 높이 불가 → 넉넉한 고정 + 내부 스크롤 */
+.art-htmlframe { width: 100%; min-height: 78vh; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+
 @media (prefers-reduced-motion: reduce) {
   .art-back, .hub-md a, .art-source, .art-nav-link { transition: none; }
 }

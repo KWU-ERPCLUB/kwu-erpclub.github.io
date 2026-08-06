@@ -1,7 +1,7 @@
 import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
 import Articles, { ListView } from './Articles.jsx'
-import { ArticleHero } from './ArticleDetail.jsx'
+import ArticleDetail, { ArticleHero } from './ArticleDetail.jsx'
 import { ArticleRow, FeatureCard } from './insights-parts.jsx'
 import { loadContent } from '../content/loader.js'
 import { toDbRow, fromDbRow } from '../content/db-map.js'
@@ -270,4 +270,16 @@ test('목록 카드 alt = 이미지설명(명시 이미지) / 자동 폴백은 �
   expect(withCap).toContain(`alt="${esc('오픈AI 로고 — 발표 주체')}"`)
   const auto = flat(<ArticleRow a={art('c2', { title: 'Claude 정리' })} onOpen={noop} />)
   expect(auto).toContain('alt=""')
+})
+
+// 자유 디자인 트랙(0008) — 형식 html = 샌드박스 iframe(스크립트 차단), md = 사이트 서식 렌더.
+test('상세 본문 — 형식 html이면 sandbox iframe(srcdoc), md면 Markdown', () => {
+  const htmlArt = art('free1', { 형식: 'html', body: '<div class="my">자유 디자인</div>' })
+  const rendered = flat(<ArticleDetail cur={htmlArt} all={[htmlArt]} onOpen={noop} onBack={noop} />)
+  expect(rendered).toContain('art-htmlframe')
+  expect(rendered).toContain('sandbox=""')
+  expect(rendered).not.toContain('hub-md')          // 사이트 서식 렌더러 미사용
+  const mdArt = art('md1', { body: '## 제목' })
+  const md = flat(<ArticleDetail cur={mdArt} all={[mdArt]} onOpen={noop} onBack={noop} />)
+  expect(md).not.toContain('art-htmlframe')
 })

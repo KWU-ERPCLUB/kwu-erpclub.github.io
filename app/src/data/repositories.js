@@ -18,6 +18,7 @@ export const REPO_CONTRACT = {
   interactions: ['counts', 'mine', 'listBookmarked', 'toggleLike', 'toggleBookmark'],
   sessions: ['list', 'save'],
   events: ['list', 'save', 'remove'],
+  flow: ['list', 'save', 'remove'],
   materials: ['list', 'save'],
   assignments: ['list', 'save'],
   submissions: ['listMine', 'submit'],
@@ -144,6 +145,15 @@ export function createSupabaseRepositories(backend) {
     sessions: {
       list: () => backend.db.select('sessions', { order: '회차.asc' }),
       save: saveRow('sessions'),
+    },
+    // 스터디 흐름(0008) — 주차 기록. 테이블 미적용 = 빈 배열 강등(흐름 탭은 안내만).
+    flow: {
+      list: () => backend.db.select('flow_weeks', { order: '시작일.asc' }).catch(() => []),
+      save: saveRow('flow_weeks'),
+      async remove(rowId) {
+        await backend.db.remove('flow_weeks', { id: rowId })
+        return rowId
+      },
     },
     // 운영 일정(0007) — 홈 캘린더 원천. 테이블 미적용(마이그레이션 전) = list가 빈 배열로 강등(홈은 과제·세션만 표시).
     events: {

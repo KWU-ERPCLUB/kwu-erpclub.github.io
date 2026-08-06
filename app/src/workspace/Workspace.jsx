@@ -8,13 +8,15 @@ import Contribute from './Contribute.jsx'
 import MyPage from './MyPage.jsx'
 import Collections from './Collections.jsx'
 import Home from './Home.jsx'
+import Flow from './Flow.jsx'
 import Admin, { Denied } from './Admin.jsx'
 
 // 기능 탭 — [이름, 한 줄 설명, 접근]. 접근 'staff' = 운영진에게만 노출(M3 ④).
 // 좌측 사이드바 5탭(홈 개편 2026-08-06) — 첫 화면 = 홈(캘린더 + 다가오는 업무).
 export const WS_TABS = [
   ['홈', '일정 캘린더·다가오는 업무·과제·공지'],
-  ['기고', '인사이트 기고 작성·상태 확인'],
+  ['흐름', '스터디 주차별 흐름 — 지난·이번·다음 주'],
+  ['기고', '인사이트 기고 — 서식 트랙·자유 디자인 트랙'],
   ['북마크', '북마크한 기사·개인 스크랩'],
   ['내정보', '프로필·활동내역'],
   ['운영', '승인대기·멤버·콘텐츠·일정 관리', 'staff'],
@@ -127,7 +129,8 @@ export function Shell({ member, onSignOut, store, onMemberChanged, search }) {
 
         <div className="ws-content">
           {/* 홈 = 캘린더 + 다가오는 업무 + 과제·공지·세션 흡수(구 제출·스터디 탭) */}
-          {store && tab === '홈' && <Home store={store} />}
+          {store && tab === '홈' && <Home store={store} member={member} />}
+          {store && tab === '흐름' && <Flow store={store} staff={staff} />}
           {store && tab === '기고' && <Contribute store={store} />}
           {store && tab === '북마크' && <Collections store={store} />}
           {store && tab === '내정보' && <MyPage store={store} member={member} onProfileSaved={onMemberChanged} />}

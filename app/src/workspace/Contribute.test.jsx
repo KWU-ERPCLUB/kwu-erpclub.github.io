@@ -28,6 +28,14 @@ test('기고 탭 = 프롬프트 복사 + AI 초안 붙여넣기 패널 존재', 
   expect(html).toContain('폼에 반영')
 })
 
+// 투트랙 선택(오너 확정 2026-08-06) — 기본(사이트 서식) / 자유(본인 디자인 HTML) 라디오 카드.
+test('기고 탭 = 트랙 선택 2종(기본 활성) — 자유 트랙 설명 포함', () => {
+  const html = flat(<Contribute store={createMockRepositories({ user: 'mock-member' })} />)
+  expect(html).toContain('사이트 서식으로 게재')
+  expect(html).toContain('본인이 디자인까지')
+  expect(html).toContain('aria-checked="true"')
+})
+
 // M3: 승인 대기함은 기고 탭에서 빠지고 운영 탭으로 이관됐다(운영진 전용 영역 통합).
 test('기고 탭에는 승인 대기함 없음 — 운영진이 봐도 동일', () => {
   expect(flat(<Contribute store={createMockRepositories({ user: 'mock-member' })} />)).not.toContain('승인 대기')

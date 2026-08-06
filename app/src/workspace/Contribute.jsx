@@ -11,6 +11,28 @@ const EMPTY = {
   source_url: '', source_name: '',
 }
 
+// 기고 투트랙(오너 확정 2026-08-06) — 트랙 선택이 첫 화면. 형식은 저장 시 draft.형식으로 실림(0008).
+export const TRACKS = [
+  ['기본', '사이트 서식으로 게재', 'AI 초안 키트 + 폼 — 디자인은 사이트가 맡음. 글만 쓰면 됨'],
+  ['자유', '본인이 디자인까지', '단일 HTML 한 벌을 직접 만들어 붙여넣기 — 게재 시 그 모습 그대로(스크립트 제외)'],
+]
+
+function TrackChooser({ track, onPick }) {
+  return (
+    <div className="ws-tracks" role="radiogroup" aria-label="기고 방식">
+      {TRACKS.map(([key, name, desc]) => (
+        <button
+          key={key} type="button" role="radio" aria-checked={track === key}
+          className={`ws-track${track === key ? ' on' : ''}`} onClick={() => onPick(key)}
+        >
+          <span className="ws-track-name">{name}</span>
+          <span className="ws-track-desc">{desc}</span>
+        </button>
+      ))}
+    </div>
+  )
+}
+
 function required(draft) {
   const miss = []
   if (!draft['제목'].trim()) miss.push('제목')
@@ -96,6 +118,7 @@ function MyDrafts({ rows, onEdit }) {
 }
 
 export default function Contribute({ store }) {
+  const [track, setTrack] = useState('기본')
   const [draft, setDraft] = useState(EMPTY)
   const [mine, setMine] = useState([])
   const [msg, setMsg] = useState('')
@@ -116,7 +139,8 @@ export default function Contribute({ store }) {
     setError('')
     setBusy(true)
     try {
-      await store.articles.save({ ...draft, 상태 })
+      // 형식(0008) — 자유 트랙 = 'html'(상세가 샌드박스 렌더). 컬럼 미적용 DB면 서버가 거부 → 오류 그대로 노출.
+      await store.articles.save({ ...draft, 상태, 형식: track === '자유' ? 'html' : 'md' })
       setMsg(상태 === '승인대기' ? '제출 완료 — 운영진 승인 대기' : '초안 저장 완료')
       setDraft(EMPTY)
       await load()
@@ -129,7 +153,8 @@ export default function Contribute({ store }) {
 
   return (
     <div className="ws-contribute">
-      <KitPanel onApply={(values) => setDraft((d) => ({ ...d, ...values }))} />
+      <TrackChooser track={track} onPick={setTrack} />
+      {track === '기본' && <KitPanel onApply={(values) => setDraft((d) => ({ ...d, ...values }))} />}
 
       <section className="ws-block">
         <h2 className="ws-h2">{draft.id ? '초안 수정' : '새 기고'}</h2>
@@ -167,8 +192,9 @@ export default function Contribute({ store }) {
             </label>
           </div>
           <label className="ws-field">
-            <span>본문(마크다운)</span>
-            <textarea className="ws-textarea" rows={12} value={draft['본문']} onChange={set('본문')} />
+            <span>{track === '자유' ? '단일 HTML 전체 붙여넣기(디자인 포함 — 스크립트는 게재 시 실행되지 않음)' : '본문(마크다운)'}</span>
+            <textarea className="ws-textarea" rows={12} value={draft['본문']} onChange={set('본문')}
+              placeholder={track === '자유' ? '<!doctype html> 또는 <div>… 한 벌 전체' : undefined} />
           </label>
           {error && <p className="ws-error" role="alert">{error}</p>}
           {msg && <p className="ws-ok" role="status">{msg}</p>}

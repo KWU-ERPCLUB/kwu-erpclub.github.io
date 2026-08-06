@@ -50,8 +50,11 @@ export default function ArticleDetail({ cur, all, onOpen, onBack, interactions }
         </a>
       )}
 
-      {/* ④ 본문 컨테이너 720px — 기고자 자유(텍스트·이미지·링크·임베드) */}
-      <Markdown body={cur.body} />
+      {/* ④ 본문 — md=사이트 서식 렌더 / html=자유 디자인 트랙(0008): 샌드박스 iframe 원형 그대로.
+          sandbox 빈 값 = 스크립트·폼·same-origin 전부 차단(제출물의 CSS·마크업만 살림). */}
+      {cur['형식'] === 'html'
+        ? <iframe className="art-htmlframe" title={cur.title} sandbox="" srcDoc={cur.body} />
+        : <Markdown body={cur.body} />}
 
       {/* ⑤ 하단 — 목록 복귀 + 이전/다음 인사이트 */}
       <nav className="art-foot" aria-label="인사이트 이동">
