@@ -194,7 +194,7 @@ export default function Projects() {
         <PageHead
           label="PROJECTS"
           title={<em>프로젝트</em>}
-          sub="스터디가 만들고 운영한 것 — 배포물과 활동 기록."
+          sub="필요한 도구를 AI로 만들어 활동에 활용한 기록 — 배포물과 운영 기록."
           meta={latestUpdated(all)}
         />
         <ProjectStats projects={all} articleCount={articleCount} seminarCount={seminarCount} />

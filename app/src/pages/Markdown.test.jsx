@@ -80,17 +80,17 @@ describe('Markdown 서식 확장', () => {
   })
 
   it('::: 로드맵 ⭐ 접두 = 대형 분기점 마커 클래스 + 별 제거된 제목', () => {
-    const html = renderToString(<Markdown body={'::: 로드맵\n06-26 | 스터디 시작\n07-01 | ⭐교재 단일원천 전환 | 전량 폐기\n:::'} />)
+    const html = renderToString(<Markdown body={'::: 로드맵\n06-26 | 스터디 시작\n07-01 | ⭐콘텐츠 원천 재구축 | 전량 폐기\n:::'} />)
     expect(html).toContain('md-rm-major')
-    expect(html).toContain('교재 단일원천 전환')
-    expect(html).not.toContain('⭐교재')
+    expect(html).toContain('콘텐츠 원천 재구축')
+    expect(html).not.toContain('⭐콘텐츠')
   })
 
   it('::: 분기점 블록 = 5행 고정 라벨 카드, 누락 행 미표시 + 이스케이프', () => {
-    const html = renderToString(<Markdown body={'::: 분기점\n문제 | 강의 자료가 교재와 어긋남\n따진 대안 | 부분 수정 유지\n결정 | 전량 폐기·교재 단일원천\n버린 것 | 1·2과목 정리본 전부\n결과 | 919문항 전부 역참조\n:::'} />)
+    const html = renderToString(<Markdown body={'::: 분기점\n문제 | 강의 자료가 정리 내용과 어긋남\n따진 대안 | 부분 수정 유지\n결정 | 전량 폐기·원천 재구축\n버린 것 | 1·2과목 정리본 전부\n결과 | 919문항 전부 출처 표기\n:::'} />)
     expect(html).toContain('md-branch')
-    expect(html).toContain('전량 폐기·교재 단일원천')
-    expect(html).toContain('919문항 전부 역참조')
+    expect(html).toContain('전량 폐기·원천 재구축')
+    expect(html).toContain('919문항 전부 출처 표기')
     const partial = renderToString(<Markdown body={'::: 분기점\n문제 | <b>x\n결정 | y\n:::'} />)
     expect(partial).toContain('&lt;b&gt;x')
     expect(partial).not.toContain('버린 것')
