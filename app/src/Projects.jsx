@@ -3,7 +3,7 @@
 // + N4 쇼케이스 카드(1열 대형 커버 — 카드 2장 현실에서 캐러셀은 억지라 기각, 대형 커버 우선).
 // 유지 = ?p= 딥링크·상세 진입·호버 오버레이(GitHub·Web)·프롬프트 로그. 데이터 = content/프로젝트/ 로더.
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Arrow, SiteNav, SiteFooter, PageHead, latestUpdated, CONTRIBUTING_URL } from './shared.jsx'
+import { Arrow, SiteNav, SiteFooter, PageHead, CONTRIBUTING_URL } from './shared.jsx'
 import { loadContent } from './content/loader.js'
 import Markdown from './pages/Markdown.jsx'
 
@@ -52,31 +52,8 @@ function ProjectLinks({ p, variant }) {
   )
 }
 
-// v3.1 B1 — 블랙 통계 밴드. 수치 = 사이트 게재분 실측만(빌드 시점 콘텐츠 수), 0건 지표 미표기.
-// 유효 지표 2개 미만 = 밴드 자체 생략(빈 밴드 금지). export = 단위 테스트용.
-export function ProjectStats({ projects, articleCount = 0, seminarCount = 0 }) {
-  const live = projects.filter((p) => p['상태'] === '운영 중').length
-  const items = [
-    { n: projects.length, label: '프로젝트' },
-    { n: live, label: '운영 중' },
-    { n: articleCount, label: '게재 기사' },
-    { n: seminarCount, label: '세미나 기록' },
-  ].filter((s) => s.n > 0)
-  if (items.length < 2) return null
-  return (
-    <section className="pj-stats" aria-label="게재 실측 지표">
-      <div className="pj-stats-grid">
-        {items.map((s) => (
-          <div className="pj-stat" key={s.label}>
-            <span className="pj-stat-num">{s.n}</span>
-            <span className="pj-stat-label">{s.label}</span>
-          </div>
-        ))}
-      </div>
-      <p className="pj-stats-src">사이트 게재분 실측 — 빌드 시점 콘텐츠 파일 수 기준</p>
-    </section>
-  )
-}
+// (구 ProjectStats 블랙 통계 밴드 = 4차 개편 2026-08-06 삭제 — 피드백 "홈 내용이라 없어도 될 것 같다".
+//  홈 블랙 밴드(StatsBand)가 실측 수치를 담당한다. 재도입 = 오너 재승인.)
 
 // 쇼케이스 카드 — 대형 커버 + 호버 오버레이(링크) + 번호·제목·설명·상태. export = 단위 테스트용.
 export function ProjectCard({ p, idx, onOpen }) {
@@ -152,9 +129,6 @@ export function ProjectDetail({ p, onBack }) {
 
 export default function Projects() {
   const all = useMemo(() => loadContent('프로젝트'), [])
-  // B1 밴드 수치 — 같은 정적 로더에서 실측(파일 수). 표시 여부·0건 제외는 ProjectStats가 판정.
-  const articleCount = useMemo(() => loadContent('기사').length, [])
-  const seminarCount = useMemo(() => loadContent('세미나').length, [])
 
   const paramP = () => (typeof window === 'undefined' ? null : new URLSearchParams(window.location.search).get('p'))
   const [sel, setSel] = useState(paramP)
@@ -186,7 +160,7 @@ export default function Projects() {
     )
   }
 
-  // 골격 = 공용 PageHead(좌 라벨 레일 PROJECTS × 우 헤드) → 블랙 통계 밴드 → 쇼케이스.
+  // 골격(4차 2026-08-06) = 공용 PageHead(중앙) → 쇼케이스 2열 그리드(스탯 밴드 삭제).
   return (
     <>
       <SiteNav />
@@ -194,10 +168,8 @@ export default function Projects() {
         <PageHead
           label="PROJECTS"
           title={<em>프로젝트</em>}
-          sub="필요한 도구를 AI로 만들어 활동에 활용한 기록 — 배포물과 운영 기록."
-          meta={latestUpdated(all)}
+          sub="필요한 도구를 AI로 만들어 활동에 쓴 기록입니다 — 배포물과 운영 기록을 모읍니다."
         />
-        <ProjectStats projects={all} articleCount={articleCount} seminarCount={seminarCount} />
         <ProjectGrid list={all} onOpen={open} />
       </main>
       <SiteFooter />

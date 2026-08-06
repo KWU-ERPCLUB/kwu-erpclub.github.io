@@ -10,10 +10,10 @@ import { SiteNav, SiteFooter, PageHead, latestUpdated, CONTRIBUTING_URL } from '
 import { useArticles, useInteractions } from './insights-source.js'
 import { TOPICS } from '../content/schema.js'
 import {
-  HUB_TAB, TABS, NATURE_KEY, PAGE_SIZE, stateFromSearch, searchFromState,
-  filterArticles, pinnedFirst, extractMonths, splitFeature, pageSlice, seriesOptions,
+  HUB_TAB, TABS, NATURE_KEY, PAGE_SIZE, SORTS, stateFromSearch, searchFromState,
+  filterArticles, pinnedFirst, extractMonths, splitFeature, pageSlice, seriesOptions, sortArticles,
 } from './insights-logic.js'
-import { ArticleRow, FeatureCard, SectionLabel } from './insights-parts.jsx'
+import { ArticleRow, FeatureCard } from './insights-parts.jsx'
 import ArticleDetail from './ArticleDetail.jsx'
 // v3.1 골격 분할 CSS(상세 셸 이관분 — articles.css 315줄 부채 분할). 이 JSX가 상세도 그리므로 여기서 로드.
 import '../styles/insights-detail.css'
@@ -93,70 +93,78 @@ function LoadError({ onRetry }) {
 // 목록 뷰. export = 픽스처 주입 테스트용. status/onRetry = DB 페치 상태(기본 'ready').
 export function ListView({ all, tab, onTab, topic, setTopic, series = null, setSeries = () => {}, month, setMonth, q, setQ, onOpen, status = 'ready', onRetry }) {
   const [shown, setShown] = useState(PAGE_SIZE)
+  const [sort, setSort] = useState('new') // 4차: 정렬(최신·오래된순) — 피드백 "오래된 순도"
   const nature = tab === HUB_TAB ? null : tab
   const months = extractMonths(all)
   const serieses = seriesOptions(all)
   // 시리즈 = 다른 필터와 같은 문법(AND 결합). 시리즈 글은 그리드·피처·카운트에 일반 기사와 동일하게 포함된다.
-  const filtered = filterArticles(all, { nature, topic, series, month, q })
+  const filtered = sortArticles(filterArticles(all, { nature, topic, series, month, q }), sort)
   const { pinned, rest } = pinnedFirst(filtered)
   const ordered = [...pinned, ...rest]
   const pinnedSlugs = new Set(pinned.map((a) => a.slug))
-  // 피처 행 = 필터·검색이 하나도 없는 기본 뷰에서만(필터 뷰 = 위계 없이 전량 그리드).
-  const isDefault = !nature && !topic && !series && !month && !q.trim()
+  // 피처 행 = 필터·검색이 하나도 없는 기본 뷰(최신순)에서만(필터 뷰 = 위계 없이 전량 그리드).
+  const isDefault = !nature && !topic && !series && !month && !q.trim() && sort === 'new'
   const { feature, list } = isDefault ? splitFeature(ordered) : { feature: [], list: ordered }
   const { visible, remaining } = pageSlice(list, shown)
 
   // 필터 변경 = 노출 개수 초기화(더보기 상태가 조건을 넘어 남지 않게).
-  useEffect(() => { setShown(PAGE_SIZE) }, [tab, topic, series, month, q])
+  useEffect(() => { setShown(PAGE_SIZE) }, [tab, topic, series, month, q, sort])
 
   return (
     <>
-      {/* v3.1 B2 — FEATURED: 좌 라벨 / 우 피처 카드(고정+최신 2건, 기본 뷰만) */}
+      {/* 최신 기고 — 고정+최신 2건(4차: 좌 라벨 레일 폐지 → 중앙 구간 제목 + 콤팩트 카드, 피드백 "반만 하게·정체 명시") */}
       {status === 'ready' && feature.length > 0 && (
         <section className="ins-sec">
-          <SectionLabel>FEATURED</SectionLabel>
-          <div className="ins-sec-body">
-            <ul className="art-features">
-              {feature.map((a) => <FeatureCard key={a.slug} a={a} onOpen={onOpen} pinned={pinnedSlugs.has(a.slug)} />)}
-            </ul>
-          </div>
+          <h2 className="ins-h">최신 기고</h2>
+          <ul className="art-features">
+            {feature.map((a) => <FeatureCard key={a.slug} a={a} onOpen={onOpen} pinned={pinnedSlugs.has(a.slug)} />)}
+          </ul>
         </section>
       )}
 
-      {/* v3.1 B2 — LATEST: 좌 라벨 / 우 필터·카운트·그리드·더보기(기능 계약 불변) */}
+      {/* 전체 기고 — 필터·카운트·그리드·더보기(기능 계약 불변) */}
       <section className="ins-sec">
-      <SectionLabel>LATEST</SectionLabel>
-      <div className="ins-sec-body">
-      {/* 필터 바 — 데스크톱(≥1200) 상시 노출 레일, 그 이하는 세로 스택 */}
+      <h2 className="ins-h">전체 기고</h2>
+      {/* 필터 바 — 4차 체계화: ①성격 탭 ②검색+정렬·기간(우측) ③주제·시리즈 칩(여백 확대) */}
       <div className="ins-controls">
         <NatureTabs value={tab} onSelect={onTab} />
-        <div className="ins-controls-sub">
+        <div className="ins-controls-row">
           <div className="art-search">
             <input
               type="search" value={q} onChange={(e) => setQ(e.target.value)}
               placeholder="제목·요약 검색" aria-label="인사이트 검색"
             />
           </div>
-          <TopicChips value={topic} onSelect={setTopic} />
-          <SeriesChips options={serieses} value={series} onSelect={setSeries} />
-          {months.length > 0 && (
-            <div className="art-filter art-filter-sub">
-              <span className="art-filter-label">기간</span>
+          <div className="ins-controls-right">
+            {months.length > 0 && (
               <select
                 className="art-month" value={month || ''} aria-label="월 필터"
                 onChange={(e) => setMonth(e.target.value || null)}
               >
-                <option value="">전체</option>
+                <option value="">기간 전체</option>
                 {months.map((m) => <option key={m} value={m}>{m.replace('-', '.')}</option>)}
               </select>
-            </div>
-          )}
+            )}
+            <select
+              className="art-sort" value={sort} aria-label="정렬"
+              onChange={(e) => setSort(e.target.value)}
+            >
+              {SORTS.map(([v, label]) => <option key={v} value={v}>{label}</option>)}
+            </select>
+          </div>
+        </div>
+        <div className="ins-controls-sub">
+          <TopicChips value={topic} onSelect={setTopic} />
+          <SeriesChips options={serieses} value={series} onSelect={setSeries} />
         </div>
       </div>
 
-      {/* 카운트 라인 — N건 표시 중 / 전체 M건 (로딩 중에는 숫자 대신 골격) */}
+      {/* 카운트 라인 — 4차 단순화(피드백 "전체 몇 건 이렇게만"): 기본 = 전체 N건 / 필터 중 = 일치 건수 병기 */}
       {status === 'ready' && (
-        <p className="ins-count"><strong>{filtered.length}</strong>건 표시 중 <span>· 전체 {all.length}건</span></p>
+        <p className="ins-count">
+          전체 <strong>{all.length}</strong>건
+          {filtered.length !== all.length && <span> · 조건 일치 {filtered.length}건</span>}
+        </p>
       )}
 
       {status === 'loading' ? <LoadingGrid /> : status === 'error' ? <LoadError onRetry={onRetry} /> : filtered.length === 0 ? (
@@ -178,7 +186,6 @@ export function ListView({ all, tab, onTab, topic, setTopic, series = null, setS
           )}
         </>
       )}
-      </div>
       </section>
     </>
   )
@@ -245,11 +252,11 @@ export default function Articles({ repos, configured }) {
     <>
       <SiteNav />
       <main id="main" className="art-page art-page--list">
-        {/* 페이지 헤드 = 공용 PageHead(3차 통일) — 좌 라벨 INSIGHTS가 눈썹 역할 승계 */}
+        {/* 페이지 헤드 = 공용 PageHead(4차 중앙 정렬) — 설명 = 문장형 한 줄(피드백 "문장으로 좀 썼으면") */}
         <PageHead
           label="INSIGHTS"
           title={<>AI <em>인사이트</em></>}
-          sub="AI 이슈의 분석·축적 — 스터디원 기고."
+          sub="AI 이슈를 분석하고 축적하는 공간입니다 — 스터디원이 매주 기고합니다."
           meta={latestUpdated(all)}
         />
         <ListView

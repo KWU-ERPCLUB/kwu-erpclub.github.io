@@ -63,14 +63,14 @@ body {
 }
 .skip-link:focus { transform: none; outline: 3px solid var(--focus-on-dark); outline-offset: -6px; }
 
-/* ── 네비게이션 ─────────────────────────── */
+/* ── 네비게이션 (4차 2026-08-06 피드백: 하단 선 삭제·반투명 강화·로고 확대·우측 신청 CTA) ── */
 .nav {
   position: sticky;
   top: 0;
   z-index: 10;
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 .nav-inner {
   max-width: var(--maxw);
@@ -80,13 +80,13 @@ body {
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+  justify-content: flex-start;
+  gap: 0.9rem;
 }
 .brand {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: 1rem;
+  font-size: 1.35rem;
   color: var(--text);
   text-decoration: none;
 }
@@ -109,6 +109,23 @@ body {
 }
 .nav-links a:hover { color: var(--text); }
 .nav-links a.on { color: var(--text); font-weight: 800; }
+/* 상단바 우측 모집 CTA — 검정 pill(피드백: "상단바 맨 오른쪽에 잘 보이게") */
+.nav-cta {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  height: 34px;
+  padding: 0 1.05rem;
+  border-radius: var(--radius-pill);
+  background: var(--dark);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.nav-cta:hover { background: var(--btn-hover); }
+.nav-cta:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 /* 모바일 햄버거 (2026-07-10 owner 결정) — 820px 이하에서만 노출 */
 .nav-toggle {
   display: none; background: none; border: 0; padding: 0.45rem;
@@ -135,33 +152,25 @@ body {
   .nav-mobile a:last-child { border-bottom: none; }
 }
 
-/* ── 페이지 헤드 골격 (전 페이지 공통 — 디자인규칙 §3-1, 3차 통일 2026-08-05) ──
-   소비 = shared.jsx PageHead 1개(구 art-head·sem-head·pj-head·rc-eyebrow 4구현 대체).
-   눈썹 = 좌 라벨(■ 9px 버건디 + 0.8rem/700/ls 0.14em/--text — 현행 다수파 값). */
+/* ── 페이지 헤드 골격 (전 페이지 공통 — §3-1, 4차 개편 2026-08-06 외부 피드백) ──
+   좌 라벨 레일(■+2열 그리드) 폐지 → 중앙 정렬 1열: 키커 → h1 → 문장형 설명 → 메타.
+   하단 헤어라인 마감도 삭제(피드백 "의미 없는 가로줄 삭제"). */
 .pg-head {
-  display: grid;
-  grid-template-columns: var(--rail-w) minmax(0, 1fr);
-  gap: 0 var(--rail-gap);
-  align-items: start;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid var(--line);
-  margin-bottom: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: clamp(1rem, 3vh, 2rem) 0 1.75rem;
+  margin-bottom: 1.5rem;
 }
 .pg-label {
-  position: sticky;
-  top: 5.25rem;
-  align-self: start;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 700;
-  letter-spacing: 0.14em;
-  color: var(--text);
-  white-space: nowrap;
+  letter-spacing: 0.16em;
+  color: var(--text-sub);
+  text-transform: uppercase;
+  margin-bottom: 0.9rem;
 }
-.pg-sq { width: 9px; height: 9px; background: var(--accent); flex: none; } /* 화이트리스트 — ■ 마이크로 불릿 */
-.pg-head-body { min-width: 0; }
 .pg-title {
   font-family: var(--font-display);
   font-weight: 900;
@@ -169,26 +178,16 @@ body {
   line-height: 1.1;
   letter-spacing: -0.03em;
   word-break: keep-all;
-  margin: 0 0 0.7rem;
+  margin: 0 0 0.9rem;
 }
 .pg-title em { font-style: normal; color: var(--accent); } /* 화이트리스트 ① */
-.pg-sub { margin: 0; max-width: 56ch; font-size: 0.95rem; color: var(--text-sub); word-break: keep-all; }
-.pg-meta { margin: 0.7rem 0 0; font-size: 0.78rem; color: var(--text-sub); } /* §3-1 갱신일 메타 줄 */
-/* 태블릿 = 레일 축소(모바일 축소 1값) / 820 이하 = 상하 적층 */
-@media (max-width: 1023px) { :root { --rail-w: 132px; --rail-gap: 1.75rem; } }
-@media (max-width: 820px) {
-  .pg-head { grid-template-columns: 1fr; }
-  .pg-label { position: static; margin-bottom: 1rem; }
-}
+.pg-sub { margin: 0 auto; max-width: 56ch; font-size: 1rem; color: var(--text-sub); word-break: keep-all; }
+.pg-meta { margin: 0.8rem 0 0; font-size: 0.78rem; color: var(--text-sub); } /* 갱신일 — 인사이트만 전달 */
 
-/* ── 스탯 숫자 + 버건디 언더바 28×3(화이트리스트 ③) — 소비 = home-motion CountUp·블랙 밴드 ── */
+/* ── 스탯 숫자 — 소비 = home-motion CountUp·블랙 밴드(4차: 버건디 언더바 폐지 — 피드백 "작대기 삭제") ── */
 .stat-num {
   font-family: var(--font-display); font-weight: 800; font-size: 2.6rem;
   letter-spacing: -0.03em; line-height: 1.05; display: block; margin-bottom: 0.6rem;
-}
-.stat-num::after {
-  content: ''; display: block; width: 28px; height: 3px;
-  background: var(--accent); border-radius: 2px; margin-top: 0.7rem;
 }
 
 /* ── 상태 배지 (진행중·모집 준비·예정) ── */
@@ -226,12 +225,13 @@ body {
   max-width: var(--maxw);
   margin: 0 auto;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  flex-wrap: wrap;
+  text-align: center;
+  gap: 0.55rem;
 }
 .footer .f-brand { font-family: var(--font-display); font-weight: 800; color: #fff; }
+.footer .f-links { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; justify-content: center; }
 .footer a { color: rgba(255, 255, 255, 0.65); text-decoration: none; }
 .footer a:hover { color: #fff; }
 /* 다크 면 위 포커스 링 = --focus-on-dark 일괄(푸터·블랙 밴드·다크 상세 밴드) */
@@ -243,8 +243,17 @@ body {
   outline-offset: 2px;
 }
 
+/* ── 검정 pill(Primary 계열 — 4차 신설, 피드백 "둥근 검정 네모 적극 사용") ── */
+.btn-dark {
+  display: inline-flex; align-items: center; gap: 0.5rem; height: 42px; padding: 0 1.5rem;
+  border: 0; border-radius: var(--radius-pill); background: var(--dark);
+  color: #fff; font-size: 0.92rem; font-weight: 700; text-decoration: none; cursor: pointer;
+}
+.btn-dark:hover { background: var(--btn-hover); }
+.btn-dark:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
 /* ── §5 인터랙션 4상태 — 150ms ease-out, transform·color·bg만 전환 ── */
-.btn-2nd, .proof-link, .nav-links a, .footer a, .nav-toggle {
+.btn-2nd, .btn-dark, .nav-cta, .proof-link, .nav-links a, .footer a, .nav-toggle {
   transition: background-color 150ms ease-out, border-color 150ms ease-out,
     color 150ms ease-out, transform 100ms ease-out;
 }

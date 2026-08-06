@@ -23,10 +23,7 @@ import {
 import { RECRUIT_FAQ } from './data/faq.js'
 import RecruitForm from './RecruitForm.jsx'
 
-// B2 좌 라벨 — 버건디 ■(CSS ::before) + 영문 라벨(§5 라벨 영문 정책). aria-hidden = 우측 h2가 접근성 제목.
-function SecLabel({ en }) {
-  return <div className="rc-label" aria-hidden="true">{en}</div>
-}
+// (구 SecLabel 좌 라벨 레일 = 4차 개편 2026-08-06 폐지 — 피드백 "왼쪽 네모들 다 삭제". 섹션 구분 = 배경 면 교대.)
 
 // ── v3.3 스크롤 인터랙션(지역 구현 — App.jsx·home-motion.jsx 수정 금지 규칙에 따라 문법만 복제) ──
 const prefersReduced = () =>
@@ -102,8 +99,7 @@ export default function Recruit() {
             <PageHead
               label="RECRUIT"
               title={<>{RECRUIT.study} <em>{RECRUIT.cohort}</em> 모집</>}
-              sub={`${RECRUIT.study} = ERP연구회 산하 스터디 · 경영학부를 대상으로 AI와 MIS를 함께 공부하기 위해 개설 · 전공 무관 모집 — 2026 ${RECRUIT.term} 첫 기수.`}
-              meta="게재 2026-07-27 · 개정 2026-08-05 · 담당 운영진"
+              sub={`${RECRUIT.study}은 ERP연구회 산하 MIS·AI 스터디입니다 — 경영학부 중심·전공 무관, 2026 ${RECRUIT.term} 첫 기수를 모집합니다.`}
             >
               <div className="rc-head-cta">
                 <a className="rc-cta-xl" href="#apply">신청하기 <Arrow /></a>
@@ -114,8 +110,7 @@ export default function Recruit() {
         </div>
 
         <section className="rc-secs" aria-labelledby="rc-facts">
-          <div className="rc-band-in rc-grid">
-            <SecLabel en="OVERVIEW" />
+          <div className="rc-band-in">
             <div className="rc-body">
               <h2 className="rc-h2" id="rc-facts">모집 요강</h2>
               <dl className="rc-facts">
@@ -135,8 +130,7 @@ export default function Recruit() {
 
         {/* WHAT WE DO(v3.2) — 구 운영 증빙 블랙 밴드 자리. 활동 사실 서술 4카드(rc-fit 카드 문법 승계) */}
         <section className="rc-secs" aria-labelledby="rc-do-h">
-          <div className="rc-band-in rc-grid">
-            <SecLabel en="WHAT WE DO" />
+          <div className="rc-band-in">
             <div className="rc-body">
               <h2 className="rc-h2" id="rc-do-h">이 스터디가 하는 일</h2>
               <ul className="rc-fit rc-do">
@@ -154,8 +148,7 @@ export default function Recruit() {
         {/* SHOWCASE(2026-08-05 2차) — WHAT WE DO 직후 실물 증거 3건. 카드 문법 = rc-fit 승계(+썸네일 rc-show).
             카피·링크·이미지 = data/recruit.js RECRUIT_SHOWCASE(사실 서술만). 외부 링크 1건 = 새 창 없이 동일 탭. */}
         <section className="rc-secs" aria-labelledby="rc-show-h">
-          <div className="rc-band-in rc-grid">
-            <SecLabel en="SHOWCASE" />
+          <div className="rc-band-in">
             <div className="rc-body">
               <h2 className="rc-h2" id="rc-show-h">실물</h2>
               <p className="rc-sched-rule">{SHOWCASE_LEAD}</p>
@@ -177,8 +170,7 @@ export default function Recruit() {
         </section>
 
         <section className="rc-secs" aria-labelledby="rc-fit-h">
-          <div className="rc-band-in rc-grid">
-            <SecLabel en="TARGET" />
+          <div className="rc-band-in">
             <div className="rc-body">
               <h2 className="rc-h2" id="rc-fit-h">이런 사람</h2>
               <ul className="rc-fit">
@@ -194,8 +186,7 @@ export default function Recruit() {
         </section>
 
         <section className="rc-secs" aria-labelledby="rc-timeline-h">
-          <div className="rc-band-in rc-grid">
-            <SecLabel en="SCHEDULE" />
+          <div className="rc-band-in">
             <div className="rc-body">
               <h2 className="rc-h2" id="rc-timeline-h">접수부터 활동 시작까지</h2>
               <ol className="rc-steps">
@@ -213,8 +204,7 @@ export default function Recruit() {
 
         {/* 활동 구성 = 로드맵(v3.2 단순화) — 세로 레일 재사용, 회차별 주제 한 줄(rc-rounds), 2차 = 버건디 포인트 */}
         <section className="rc-secs" aria-labelledby="rc-steps-h">
-          <div className="rc-band-in rc-grid">
-            <SecLabel en="PROGRAM" />
+          <div className="rc-band-in">
             <div className="rc-body">
               <h2 className="rc-h2" id="rc-steps-h">1차 프로젝트 — 개인 · 2차 프로젝트 — 팀</h2>
               <p className="rc-sched-rule">{ACADEMIC_RULE}</p>
@@ -238,8 +228,7 @@ export default function Recruit() {
 
         {/* FAQ = NEXTERS 문법 그대로 — 좌 라벨 / 우 아코디언 */}
         <section className="rc-secs" aria-labelledby="rc-faq-h">
-          <div className="rc-band-in rc-grid">
-            <SecLabel en="FAQ" />
+          <div className="rc-band-in">
             <div className="rc-body">
               <h2 className="rc-h2" id="rc-faq-h">자주 묻는 질문 — 모집 관련</h2>
               <div className="rc-faq">
@@ -258,8 +247,7 @@ export default function Recruit() {
         </section>
 
         <section className="rc-secs" id="apply" aria-labelledby="rc-apply-h">
-          <div className="rc-band-in rc-grid">
-            <SecLabel en="APPLY" />
+          <div className="rc-band-in">
             <div className="rc-body">
               <h2 className="rc-h2" id="rc-apply-h">신청 폼 — 이 페이지에서 제출</h2>
               <RecruitForm />
@@ -268,8 +256,7 @@ export default function Recruit() {
         </section>
 
         <section className="rc-secs" aria-labelledby="rc-join-h">
-          <div className="rc-band-in rc-grid">
-            <SecLabel en="CONTACT" />
+          <div className="rc-band-in">
             <div className="rc-body">
               <h2 className="rc-h2" id="rc-join-h">문의 — 이메일</h2>
               {/* 문의 채널 = CONTACT 상수 파생(이메일 확정 2026-08-05) */}

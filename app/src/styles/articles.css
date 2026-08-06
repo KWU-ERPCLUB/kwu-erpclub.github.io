@@ -22,36 +22,28 @@
 /* 버건디 눈썹 인덱스(화이트리스트 ④) — 상세 문서헤더(insights-detail.css) 전용으로 잔류 */
 .art-idx { display: block; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.07em; color: var(--accent); margin-bottom: 0.7rem; }
 
-/* ── 성격 탭(5개 상한 — 전체+4). 선택 = 언더라인(색면 아님, 성격색은 카드 라벨이 담당) ── */
-.ins-tabs { display: flex; flex-wrap: wrap; gap: 0.2rem; border-bottom: 1px solid var(--line); margin-bottom: 0.9rem; }
+/* ── 성격 탭(5개 상한 — 전체+4). 4차: 중앙 정렬 + 하단 헤어라인 삭제(피드백 "가로줄 삭제") ── */
+.ins-tabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.35rem; margin-bottom: 1.2rem; }
 .ins-tab {
-  background: none; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px;
-  padding: 0.55rem 0.85rem; font: inherit; font-size: 0.9rem; font-weight: 600; color: var(--text-sub);
-  cursor: pointer; transition: color 150ms ease-out, border-color 150ms ease-out;
+  background: #fff; border: 1px solid var(--line); border-radius: var(--radius-pill);
+  padding: 0.45rem 1rem; font: inherit; font-size: 0.9rem; font-weight: 600; color: var(--text-sub);
+  cursor: pointer; transition: color 150ms ease-out, border-color 150ms ease-out, background-color 150ms ease-out;
 }
-.ins-tab:hover { color: var(--text); }
+.ins-tab:hover { color: var(--text); border-color: var(--text); }
 .ins-tab:active { transform: translateY(1px); }
-.ins-tab.on { color: var(--text); border-bottom-color: var(--dark); }
-.ins-tab.on[class*="chip-"] { color: var(--nfg); border-bottom-color: var(--nfg); }
+.ins-tab.on { color: #fff; background: var(--dark); border-color: var(--dark); } /* 선택 = 검정 pill(4차) */
 .ins-tab:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
-/* ── 필터 바 — 검색 + 주제 칩 + 기간. 데스크톱(≥1200) = 접힘 없이 한 줄 레일 ── */
-.ins-controls { margin-bottom: 0.75rem; }
-.ins-controls-sub { display: flex; flex-direction: column; gap: 0.4rem; }
-@media (min-width: 1200px) {
-  .ins-controls-sub { flex-direction: row; align-items: center; flex-wrap: wrap; gap: 0.6rem 1.4rem; }
-  .ins-controls-sub .art-search { flex: 0 0 260px; margin: 0; }
-  .ins-controls-sub .art-filter { margin: 0; }
-}
-/* N건 표시 중 / 전체 M건 — v3 N1: 숫자=대형 디스플레이 + 스탯 언더바(§1 화이트리스트 ③), 라벨=소형 유지 */
-.ins-count { font-size: 0.85rem; color: var(--text-sub); margin: 0 0 1.5rem; padding: 0 0.15rem; }
-.ins-count strong {
-  font-family: var(--font-display); font-weight: 800; color: var(--text);
-  font-size: 1.75rem; line-height: 1; letter-spacing: -0.02em; margin-right: 0.12rem;
-}
+/* ── 필터 바 — 4차 체계화: 탭 줄 → 검색+우측(기간·정렬) 한 줄 → 칩 줄. 여백 확대(피드백 "너무 촘촘") ── */
+.ins-controls { margin-bottom: 1.1rem; display: flex; flex-direction: column; gap: 0.9rem; }
+.ins-controls-row { display: flex; align-items: center; gap: 0.9rem; flex-wrap: wrap; }
+.ins-controls-row .art-search { flex: 1 1 240px; margin: 0; }
+.ins-controls-right { display: flex; align-items: center; gap: 0.5rem; margin-left: auto; }
+.ins-controls-sub { display: flex; flex-direction: column; gap: 0.7rem; }
+/* 카운트 라인 — 4차 단순화(피드백): "전체 N건"만, 스탯 언더바 폐지 */
+.ins-count { font-size: 0.88rem; color: var(--text-sub); margin: 0 0 1.5rem; padding: 0 0.15rem; }
+.ins-count strong { font-weight: 800; color: var(--text); margin: 0 0.1rem; }
 .ins-count span { color: var(--text-sub); }
-/* 스탯 언더바 28×3 — 숫자 아래 마감(stat-rows 문법의 공용 승격, v3 N1) */
-.ins-count::after { content: ''; display: block; width: 28px; height: 3px; background: var(--accent); margin-top: 0.45rem; }
 
 /* ── 검색 박스 (제목·설명·태그·본문 클라이언트 부분일치) ── */
 .art-search { margin-bottom: 0.4rem; }
@@ -69,12 +61,12 @@
 .art-filter-sub button { height: 30px; font-size: 0.78rem; padding: 0 0.8rem; }
 .art-filter-n { margin-left: 0.3rem; font-size: 0.7rem; font-weight: 700; color: var(--text-sub); } /* 시리즈 칩 회차 수 */
 .art-filter button.on .art-filter-n { color: rgba(255, 255, 255, 0.72); }
-.art-month {
-  height: 30px; font-size: 0.78rem; font-weight: 600; padding: 0 0.8rem; border: 1px solid var(--line);
+.art-month, .art-sort {
+  height: 34px; font-size: 0.82rem; font-weight: 600; padding: 0 0.9rem; border: 1px solid var(--line);
   border-radius: var(--radius-pill); background: #fff; color: var(--text-sub); cursor: pointer;
 }
-.art-month:hover { border-color: var(--text); color: var(--text); }
-.art-month:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.art-month:hover, .art-sort:hover { border-color: var(--text); color: var(--text); }
+.art-month:focus-visible, .art-sort:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .art-filter button {
   font-size: 0.84rem; font-weight: 600; height: 32px; padding: 0 0.9rem; border: 1px solid var(--line);
   border-radius: var(--radius-pill); background: #fff; color: var(--text-sub); cursor: pointer;
@@ -103,13 +95,14 @@
 /* 피처용 큰 썸네일 — 같은 문법·더 넓은 비율(시각량 집중) */
 .art-cover--big { aspect-ratio: 16 / 9; }
 
-/* ── 피처 행 — 고정 기사 + 최신 2건(큰 썸네일). 기본 뷰(필터 없음)에서만.
-   v3 N3 — 페이지 유일 색면: 버건디 틴트 밴드(#7A2030 약 7% over #fff). 면 위 직접 텍스트 없음(카드=흰 면) → 대비 AA 자명. */
+/* ── 최신 기고 행 — 고정+최신 2건. 4차: 콤팩트 가로형(썸네일 좌측·높이 반 — 피드백 "사이즈 줄여서") ── */
 .art-features {
-  list-style: none; margin: 0 0 2.25rem; padding: 1.4rem; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;
-  background: var(--tint-accent); border-radius: var(--radius-card);
+  list-style: none; margin: 0 0 3rem; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem;
 }
 .art-feature { list-style: none; }
+/* 특이도 주의 — 기본 `.art-feature > button`(column)이 아래에 선언되므로 부모 포함 셀렉터로 이긴다 */
+.art-features .art-feature > button { flex-direction: row; align-items: stretch; }
+.art-features .art-feature .art-cover { flex: 0 0 42%; width: 42%; aspect-ratio: auto; min-height: 128px; border-bottom: 0; border-right: 1px solid var(--line); }
 
 /* ── 썸네일 카드 그리드 — 배경 통일(흰 면), 성격 = 컬러 라벨 ── */
 .art-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.4rem; }
@@ -127,7 +120,7 @@
 .art-card > button:focus-visible, .art-feature > button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
 .art-card-body { display: flex; flex-direction: column; flex: 1; min-width: 0; padding: 0.95rem 1.1rem 1.15rem; }
-.art-feature .art-card-body { padding: 1.15rem 1.35rem 1.35rem; }
+.art-feature .art-card-body { padding: 0.95rem 1.1rem 1.05rem; }
 
 /* 라벨 줄 — [핀] + 성격 컬러 라벨 1개(색면 강등분) */
 .art-card-labels { display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.5rem; }
@@ -139,8 +132,8 @@
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
   font-size: 1.02rem; font-weight: 700; line-height: 1.4; letter-spacing: -0.01em; color: var(--text); margin-bottom: 0.4rem;
 }
-/* v3 N2 — 피처 제목 한 단계 상향(구 1.3rem) */
-.art-feature .art-card-title { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; line-height: 1.28; -webkit-line-clamp: 3; }
+/* 4차 — 피처 제목 축소(콤팩트 카드 비례) */
+.art-feature .art-card-title { font-family: var(--font-display); font-size: 1.12rem; font-weight: 800; line-height: 1.32; -webkit-line-clamp: 2; }
 
 /* 설명 = frontmatter 1문장(clamp 2줄) */
 .art-card-excerpt {
@@ -164,7 +157,7 @@
 
 /* ── 폰(<760) = 1열 리스트: 썸네일 소형 좌측 + 헤어라인 구분(카드 면 없음) ── */
 @media (max-width: 759px) {
-  .art-features { grid-template-columns: 1fr; gap: 1.1rem; margin-bottom: 1.5rem; padding: 0.9rem; }
+  .art-features { grid-template-columns: 1fr; gap: 1rem; margin-bottom: 2rem; }
   .art-grid { grid-template-columns: 1fr; gap: 0; }
   .art-card > button {
     flex-direction: row; align-items: flex-start; gap: 0.9rem; /* 썸네일 소형 좌측(DOM 순서 그대로) */
@@ -210,21 +203,17 @@
 
 /* ── 상세 셸 = styles/insights-detail.css로 이관(2026-08-05 v3.1 — 315줄 부채 분할, 값 무변경) ── */
 
-/* ── v3.1(§6-2a) B2 — 좌 고정 라벨 컬럼 + 우 콘텐츠 2단 골격(헤드·FEATURED·LATEST 공통) ── */
+/* ── 4차(2026-08-06 외부 피드백) — 좌 라벨 레일(■+2단 그리드) 폐지 → 중앙 구간 헤딩 1개 ── */
 .ins-sec { display: block; }
-.ins-sec-label {
-  display: flex; align-items: center; gap: 0.55rem; margin-bottom: 0.9rem; padding-top: 0.35rem;
-  font-size: 0.8rem; font-weight: 700; letter-spacing: 0.14em; color: var(--text); /* 눈썹 1값 통일 = .pg-label */
+.ins-sec + .ins-sec { margin-top: 0.5rem; }
+.ins-h {
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+  margin: 0 0 1.4rem;
 }
-/* 버건디 ■ 마이크로 불릿 — v3.1 B2 규범이 정의(B4: 버건디 = 마이크로 액센트로 후퇴) */
-.ins-sq { display: inline-block; width: 9px; height: 9px; background: var(--accent); }
-@media (min-width: 760px) {
-  /* 레일 폭 = 토큰 1값(--rail-w, 3차 통일) — 구 156/184px 2단 값 폐지 */
-  .ins-sec { display: grid; grid-template-columns: var(--rail-w) minmax(0, 1fr); column-gap: var(--rail-gap); align-items: start; }
-  /* 라벨 = 스크롤 따라 좌측 고정(NEXTERS 실측 — 위치 고정, 모션 없음) */
-  .ins-sec-label { position: sticky; top: 5.2rem; align-self: start; margin-bottom: 0; }
-}
-.ins-sec-body { min-width: 0; }
 
 /* v3.2(오너 피드백 2026-08-05): B1 블랙 통계 밴드(.ins-band) 완전 제거 — 인사이트 디자인 확정. */
 

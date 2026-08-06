@@ -23,14 +23,7 @@ export function Thumb({ a, big = false }) {
   )
 }
 
-// v3.1 B2 — 좌 고정 라벨(버건디 ■ 마이크로 불릿 + 영문 소형 라벨). 섹션 골격 = .ins-sec 2단 그리드(articles.css).
-export function SectionLabel({ children }) {
-  return (
-    <span className="ins-sec-label">
-      <i className="ins-sq" aria-hidden="true" />{children}
-    </span>
-  )
-}
+// (구 SectionLabel — 좌 고정 ■ 라벨 = 4차 개편 2026-08-06에서 폐지. 구간 제목 = .ins-h 중앙 헤딩.)
 
 // 핀 배지 — 고정 항목 표시(작은 핀 아이콘 + 스크린리더 텍스트).
 export function PinBadge() {
@@ -88,12 +81,12 @@ export function ArticleRow({ a, onOpen, pinned = false }) {
   )
 }
 
-// 피처 카드 — 상단 피처 행 전용(큰 썸네일 + 같은 요소 집합, 제목·설명만 크게).
+// 피처 카드 — 최신 기고 2건 전용. 4차: 콤팩트(썸네일 좌측·크기 반 — 피드백 "사이즈 줄여서 두 개만").
 export function FeatureCard({ a, onOpen, pinned = false }) {
   return (
     <li className="art-feature">
       <button type="button" onClick={() => onOpen(a.slug)}>
-        <Thumb a={a} big />
+        <Thumb a={a} />
         <span className="art-card-body">
           <span className="art-card-labels">
             {pinned && <PinBadge />}

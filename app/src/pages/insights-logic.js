@@ -98,6 +98,14 @@ export function splitFeature(ordered, n = FEATURE_COUNT) {
   return { feature: src.slice(0, n), list: src.slice(n) }
 }
 
+// 정렬(4차 2026-08-06 외부 피드백 — "오래된 순도") — 'new'=역시간순(입력 순서 유지, 기본) / 'old'=날짜 오름차순.
+// 입력 all = 역시간순 정렬 가정(로더 계약). 원본 불변(사본 반환).
+export const SORTS = [['new', '최신순'], ['old', '오래된순']]
+export function sortArticles(list, sort = 'new') {
+  const src = [...(list || [])]
+  return sort === 'old' ? src.reverse() : src
+}
+
 // 더보기 페이징 — 무한스크롤 금지(오너 픽). shown = 현재 노출 개수.
 export function pageSlice(list, shown) {
   const src = list || []

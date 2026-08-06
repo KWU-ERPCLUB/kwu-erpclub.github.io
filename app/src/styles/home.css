@@ -1,32 +1,23 @@
-/* 메인(/) v6 — §6-2a v3.1(NEXTERS 실측 문법, 2026-08-05 2차): 골격·히어로·B1·B2 = 이 파일 /
-   섹션 본문(ROADMAP 워드 스택·PROJECTS·FAQ) = home-sections.css(300줄 규격 분할).
-   B1 블랙 통계 밴드(.stats-band — 페이지 블랙 대면적 1개·흰 숫자 1×3·세로 헤어라인) ·
-   B2 좌 라벨 컬럼 골격(.hs-cols — 버건디 ■ 불릿 라벨/우 콘텐츠, 820px 이하 적층) ·
-   B4 버건디 모집 면 철회(구 .home .recruit-band 승격 재정의 삭제 — 블랙 밴드와 대면적 경합·과밀,
-   §6-2a "구 N3 버건디 대면적 면은 블랙 밴드와 경합 시 철회 허용" 적용 → recruit.css 기본 라이트 밴드 복귀).
-   모션 = 기존 문법만(신규 무한루프 0) · 색·폰트 토큰 고정 · transform·opacity만 · reduced-motion 존중. */
+/* 메인(/) v7 — 외부 피드백 개편(2026-08-06): 골격·히어로(정중앙+블롭 배경)·B1 블랙 밴드(중앙) = 이 파일 /
+   섹션 본문(ROADMAP 지그재그·PROJECTS 2열·FAQ·INSIGHTS 썸네일) = home-sections.css(300줄 규격 분할).
+   폐지: 우측 격자 키비주얼·마퀴 띠·스크롤 유도·좌 라벨 컬럼(B2)·스탯 언더바.
+   모션 = 기존 리빌 문법 + 히어로 블롭 플로트(CSS 1건) · 색·폰트 토큰 고정 · reduced-motion 존중. */
 
-/* ── 풀블리드 섹션 골격 ── */
+/* ── 풀블리드 섹션 골격 — 4차: 섹션 경계 헤어라인 삭제(피드백 "의미 없는 가로줄"), 길이 축소 ── */
 .home { width: 100%; }
-.hs { border-bottom: 1px solid var(--line); }
 .hs-in {
   max-width: var(--maxw);
   width: 100%;
   margin: 0 auto;
-  padding: clamp(3.5rem, 8vh, 6rem) 1.5rem;
+  padding: clamp(3rem, 7vh, 5rem) 1.5rem;
 }
-@media (max-width: 700px) { .hs-in { padding: 3rem 1.25rem; } }
+@media (max-width: 700px) { .hs-in { padding: 2.5rem 1.25rem; } }
 
-/* ── 섹션=페이지 감쇠·리빌(넥스터즈 문법 승계·강화) — 중앙 밴드 섹션만 활성 ──
-   결함 수정(2026-08-05): 라이브에서 섹션이 반투명(0.35)에 걸린 채 정체 → 4가지 동시 적용.
-   ① 감쇠 하한 0.35 → 0.55(비활성도 읽히는 수준) ② seen 트리거 = 뷰포트 진입 전(margin 25vh, home-motion.jsx)
-   ③ once — seen은 JS가 제거하지 않음(한 번 나타난 섹션 재은닉 없음) ④ JS 게이트 = html.home-js.
-   게이트가 없으면(no-JS·스크립트 오류·reduced-motion) 감쇠·리빌 규칙 자체가 적용되지 않아 opacity 1 = 전부 선명. */
+/* 섹션 배경 교대 — 선 대신 면으로 구분(피드백 "배경색을 바꿔가면서") */
+.hs-roadmap, .hs-faq { background: var(--surface); }
+
+/* ── 섹션=페이지 감쇠·리빌(승계) — JS 게이트 = html.home-js. 4차: min-height 86vh 폐지(세로 축소) ── */
 .page {
-  min-height: 86vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   scroll-margin-top: 60px;
   transition: opacity 350ms ease-out;
 }
@@ -45,169 +36,107 @@
   .home-js .page, .home-js .page .rv { transition: none; opacity: 1; transform: none; }
 }
 
-/* ══ v3.1 B2 — 좌 라벨 컬럼 골격: 좌 sticky 라벨(버건디 ■ 마이크로 불릿 + 소형 영문) / 우 콘텐츠 ══ */
-.hs-cols {
-  display: grid;
-  grid-template-columns: 200px minmax(0, 1fr);
-  gap: clamp(1.5rem, 4vw, 4.5rem);
-  align-items: start;
-}
-.hs-side { position: sticky; top: 92px; }
+/* ── 중앙 섹션 헤드(구 B2 좌 라벨 컬럼 대체) ── */
+.hs-head { text-align: center; }
 .hs-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
+  display: block;
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: 0.82rem;
-  letter-spacing: 0.14em;
-  color: var(--text);
-  white-space: nowrap;
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  color: var(--text-sub);
 }
-.hs-label::before { /* 버건디 ■ — §6-2a B2 규범(마이크로 액센트) */
-  content: '';
-  width: 9px;
-  height: 9px;
-  background: var(--accent);
-  flex: none;
-}
-@media (max-width: 820px) {
-  .hs-cols { grid-template-columns: 1fr; gap: 0; }
-  .hs-side { position: static; margin-bottom: 1rem; }
-}
-
-/* ── 섹션 머리 ── */
 .hs-title {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(2rem, 4.8vw, 3rem); /* v3.2: 한 단계 축소(3.6 → 3rem대 — v3 1차와 v3.1 사이) */
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
   line-height: 1.16;
   letter-spacing: -0.02em;
-  margin: 0.2rem 0 0;
+  margin: 0.55rem 0 0;
 }
 .hs-title em { font-style: normal; color: var(--accent); } /* 화이트리스트 ① */
+.hs-more { display: flex; justify-content: center; margin: 2.25rem 0 0; }
 
-/* ══ 히어로 — 스티키 nav(60px) 제외 한 화면에 타이포+마퀴 동시 노출, 하단 풀폭 마퀴 띠 ══ */
+/* ══ 히어로 — 정중앙 대형 타이포 + 추상 모션 그래픽 배경(블롭 3개, 이미지 파일 0) ══ */
 .hs-hero {
+  position: relative;
   min-height: calc(100vh - 60px);
-  padding: 0;
-  justify-content: flex-start;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
-/* 타이포 블록: 고정 상단 오프셋(중앙 정렬 대비 ~75px 상향) + 푸트는 하단 고정 */
-/* position: relative = 키비주얼(.hero-kv) 절대배치 기준 — 규칙은 styles/hero-visual.css(300줄 규격 분리) */
-.hs-hero-in { margin-top: clamp(3rem, 11vh, 7rem); padding-bottom: clamp(1.5rem, 4vh, 3rem); position: relative; }
+.hs-hero-in { position: relative; text-align: center; padding-top: 0; padding-bottom: 0; }
+.hero-bg { position: absolute; inset: 0; pointer-events: none; }
+.hb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.55;
+  will-change: transform;
+  animation: hb-float 16s ease-in-out infinite alternate;
+}
+.hb-1 { width: 46vw; height: 46vw; max-width: 620px; max-height: 620px; left: -10vw; top: -12vh;
+  background: radial-gradient(circle, rgba(122, 32, 48, 0.2), rgba(122, 32, 48, 0) 68%); }
+.hb-2 { width: 40vw; height: 40vw; max-width: 540px; max-height: 540px; right: -8vw; bottom: -10vh;
+  background: radial-gradient(circle, rgba(22, 22, 22, 0.16), rgba(22, 22, 22, 0) 68%); animation-delay: -6s; }
+.hb-3 { width: 26vw; height: 26vw; max-width: 360px; max-height: 360px; right: 12vw; top: 8vh;
+  background: radial-gradient(circle, rgba(122, 32, 48, 0.12), rgba(122, 32, 48, 0) 70%); animation-delay: -11s; }
+@keyframes hb-float {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(4vw, 5vh, 0) scale(1.12); }
+}
+
 .hero-kicker {
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: var(--text); /* v3 N2: 대비 상향(구 --text-sub) */
+  color: var(--text);
   display: block;
   margin-bottom: clamp(1.25rem, 3vh, 2rem);
 }
 .hero-mega {
   font-family: var(--font-display);
   font-weight: 900;
-  font-size: clamp(2.5rem, 8.5vw, 7rem); /* v3.2: v3 1차 값 복귀(8rem 상한 → 7rem — 오너 "부담 제거") */
-  line-height: 1.02;
+  font-size: clamp(4rem, 14vw, 11rem); /* 4차: 대형 상향(피드백 "로고 훨씬 크게 가운데로") */
+  line-height: 1;
   letter-spacing: -0.03em;
   margin: 0;
-  max-width: 15ch;
 }
 .hero-l { display: block; }
 
 /* 브랜드 묶음 — 인라인블록이 메가(AIM) 폭을 감싸 확장 라인의 양끝 정렬 기준이 된다 */
 .hero-brand { display: inline-block; }
 
-/* 확장 라인 — AIM 풀네임(AI × MIS). flex 양끝 정렬: AI=메가 A·I 아래, MIS=메가 M 아래. 색=서브(버건디 화이트리스트 불변) */
+/* 확장 라인 — AIM 풀네임(AI × MIS). flex 양끝 정렬: AI=메가 A·I 아래, MIS=메가 M 아래 */
 .hero-expand {
   margin: clamp(0.5rem, 1.2vh, 0.9rem) 0 0;
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(0.95rem, 1.6vw, 1.35rem); /* v3.2: 메가 복귀와 비례(v3 1차 값) */
+  font-size: clamp(1rem, 2.2vw, 1.7rem);
   letter-spacing: 0.14em;
   color: var(--text-sub);
   display: flex;
   justify-content: space-between;
   align-items: baseline;
 }
-/* 마지막 글자의 자간 잔여폭 보정 — MIS 우측 끝을 메가 M 우측에 맞춘다 */
 .hero-expand > span:last-child { margin-right: -0.14em; }
 
 .hero-sub {
-  margin: clamp(1.5rem, 3vh, 2.25rem) 0 0;
+  margin: clamp(1.5rem, 3vh, 2.25rem) auto 0;
   font-size: clamp(1rem, 1.7vw, 1.2rem);
   color: var(--text);
   font-weight: 700;
   max-width: 44ch;
 }
 .hero-desc {
-  margin: 0.65rem 0 0;
+  margin: 0.65rem auto 0;
   font-size: clamp(0.92rem, 1.4vw, 1.05rem);
   color: var(--text-sub);
-  line-height: 1.55; /* 폭 상한 없음 — 데스크톱 1줄 유지(모바일은 자연 줄바꿈) */
+  line-height: 1.6;
+  max-width: 46ch;
 }
-
-/* 히어로 하단 = 풀폭 마퀴(위) + 스크롤 유도(아래) — 마퀴 = hs-in 밖 = 뷰포트 폭 */
-.hero-foot { margin-top: auto; padding-bottom: clamp(1.25rem, 3vh, 2rem); }
-.scroll-cue {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  max-width: var(--maxw);
-  margin: clamp(1.25rem, 3vh, 2rem) auto 0;
-  padding: 0 1.5rem;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  color: var(--text-sub);
-}
-.scroll-cue svg { animation: cue-bounce 1.8s ease-in-out infinite; }
-@keyframes cue-bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(4px); }
-}
-
-/* ── 키워드 마퀴 띠(흐르는 텍스트·reduced-motion 시 정지) ── */
-.marquee {
-  overflow: hidden;
-  width: 100%;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  padding: 0.8rem 0;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-}
-.marquee-track {
-  display: inline-flex;
-  align-items: center;
-  white-space: nowrap;
-  animation: marquee-scroll 44s linear infinite; /* 키워드 14개 트랙 기준 체감 속도 유지 */
-  will-change: transform;
-}
-.marquee-item {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(0.82rem, 1.1vw, 1rem);
-  letter-spacing: 0.01em;
-  color: var(--text-sub);
-  padding: 0 1rem;
-  display: inline-flex;
-  align-items: center;
-}
-.marquee-item::after {
-  content: '';
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--line);
-  margin-left: 2rem;
-}
-@keyframes marquee-scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-.marquee:hover .marquee-track { animation-play-state: paused; }
 
 /* ── 문자 단위 스태거 리빌(글자별 순차 등장·transform·opacity만) ── */
 .sc {
@@ -216,25 +145,22 @@
   transition-delay: inherit;
   white-space: pre;
 }
-/* 초기 은닉도 JS 게이트 안에서만 — no-JS = 글자 그대로 노출(히어로 통째 실종 방지) */
 .home-js .sc { opacity: 0; transform: translateY(0.6em); }
 .home-js .page.active .sc, .home-js .page.seen .sc, .home-js .page:focus-within .sc { opacity: 1; transform: none; }
 .sc-accent { color: var(--accent); } /* 화이트리스트 ① */
 
 @media (prefers-reduced-motion: reduce) {
   .sc, .home-js .sc { transition: none; opacity: 1; transform: none; }
-  .marquee-track { animation: none; }
-  .scroll-cue svg { animation: none; }
+  .hb { animation: none; }
 }
 
-/* ══ v3.1 B1 — 블랙 통계 밴드(페이지 블랙 대면적 1개·흑백 대비가 핵) ══
-   잉크 면 = var(--dark) 풀블리드 · 흰 숫자 = 뷰포트급(2×2 십자 헤어라인) · CountUp 재사용.
-   버건디는 후퇴: 숫자 언더바만 #D18F9A(§1 다크 면 위 파생 — 원색은 다크 위 대비 부족). */
+/* ══ B1 블랙 통계 밴드 — 4차: 전 요소 중앙 정렬 + 언더바 폐지(피드백) ══ */
 .stats-band { background: var(--dark); color: #fff; }
 .sb-in {
   max-width: var(--maxw);
   margin: 0 auto;
-  padding: clamp(3.5rem, 9vh, 6.5rem) 1.5rem;
+  padding: clamp(3rem, 7vh, 5rem) 1.5rem;
+  text-align: center;
 }
 .sb-kicker {
   display: block;
@@ -243,26 +169,48 @@
   font-size: 0.8rem;
   letter-spacing: 0.16em;
   color: rgba(255, 255, 255, 0.6);
-  margin-bottom: clamp(1.5rem, 4vh, 2.75rem);
+  margin-bottom: clamp(1.5rem, 4vh, 2.5rem);
 }
 .sb-grid { display: grid; grid-template-columns: repeat(3, 1fr); }
-/* 세로 헤어라인 — 1×3 셀 경계에만 흰 알파 선(외곽 무선). 세미나 셀 제거로 2×2 → 1×3(2026-08-05) */
-.sb-cell { padding: clamp(1.6rem, 4.5vh, 2.9rem) clamp(1.25rem, 3vw, 2.75rem); }
-.sb-cell:first-child { padding-left: 0; }
+.sb-cell { padding: clamp(1rem, 3vh, 1.8rem) clamp(1.25rem, 3vw, 2.75rem); }
 .sb-cell + .sb-cell { border-left: 1px solid rgba(255, 255, 255, 0.22); }
 .sb-cell .stat-num {
   font-weight: 900;
-  font-size: clamp(2.8rem, 7.5vw, 5.5rem); /* v3.2: 뷰포트급(8.5) → 5.5rem대 축소(오너 "부담 제거") */
+  font-size: clamp(2.6rem, 7vw, 5rem);
   letter-spacing: -0.04em;
   line-height: 1;
   color: #fff;
-  margin-bottom: 0.9rem;
+  margin-bottom: 0.8rem;
 }
-.sb-cell .stat-num::after { background: var(--accent-on-dark); width: 34px; margin-top: 1.1rem; }
 .sb-label { display: block; font-weight: 700; font-size: clamp(0.95rem, 1.5vw, 1.1rem); }
 .sb-src { display: block; margin-top: 0.45rem; font-size: 0.76rem; color: rgba(255, 255, 255, 0.55); }
 @media (max-width: 700px) {
   .sb-grid { grid-template-columns: 1fr; }
-  .sb-cell { padding-left: 0; padding-right: 0; }
   .sb-cell + .sb-cell { border-left: 0; border-top: 1px solid rgba(255, 255, 255, 0.22); }
 }
+
+/* ══ 모집 밴드(홈) — 블랙 밴드 직하 강조 면: 중앙 정렬 + 틴트 면(피드백 "1기 모집 강조·누르고 싶게") ══ */
+.home .recruit-band { background: var(--tint-accent); }
+.home .rb-in {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: clamp(3rem, 7vh, 5rem) 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.home .rb-head { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem; }
+.home .rb-head .status { margin-bottom: 0; }
+.home .rb-note { font-size: 0.85rem; font-weight: 700; color: var(--accent); }
+.home .rb-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.9rem, 4.5vw, 2.9rem);
+  letter-spacing: -0.025em;
+  margin: 0 0 0.7rem;
+}
+.home .rb-text { margin: 0 0 1.8rem; font-size: 0.98rem; color: var(--text-sub); }
+.home .rb-cta { transition: transform 150ms ease-out, background-color 150ms ease-out; }
+.home .rb-cta:hover { transform: translateY(-2px); }
+@media (prefers-reduced-motion: reduce) { .home .rb-cta, .home .rb-cta:hover { transition: none; transform: none; } }

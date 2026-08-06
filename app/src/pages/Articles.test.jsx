@@ -44,9 +44,10 @@ test('목록 = 성격 탭(전체+4) + 검색 + 주제 칩 + 카운트 라인 + �
   // 검색 인풋 + 지금써먹기 필터 폐지(2026-07-25 오너 지시)
   expect(html).toContain('placeholder="제목·요약 검색"')
   expect(html).not.toContain('지금 써먹기 필터')
-  // N건 표시 중 / 전체 M건 카운트 라인
+  // 카운트 라인 — 4차 단순화: "전체 N건"만(피드백 "전체 몇 건 이렇게만")
   expect(html).toContain('ins-count')
-  expect(html).toContain('표시 중')
+  expect(html).toContain('전체 ')
+  expect(html).not.toContain('표시 중')
   // 썸네일 카드 그리드 + 통일 썸네일 프레임
   expect(html).toContain('art-grid')
   expect(html).toContain('art-card-title')
@@ -120,12 +121,12 @@ test('성격 4종 → 라벨 색 토큰(chip-*) 매핑', () => {
   }
 })
 
-// 피처 행(오너 픽 A) — 기본 뷰에서 상단 2건이 큰 썸네일 카드. 필터가 걸리면 사라진다.
-test('피처 행 = 기본 뷰 상단 2건 · 필터 뷰에서는 미표시', () => {
+// 피처 행 — 기본 뷰에서 상단 2건(4차: 콤팩트 카드 — art-cover--big 폐지). 필터가 걸리면 사라진다.
+test('피처 행 = 기본 뷰 상단 2건(콤팩트) · 필터 뷰에서는 미표시', () => {
   const all = Array.from({ length: 6 }, (_, i) => art(`a${i}`))
   const base = renderToString(<ListView all={all} {...listProps} />)
   expect(base).toContain('art-features')
-  expect(base).toContain('art-cover--big')
+  expect(base).not.toContain('art-cover--big')     // 4차: 대형 썸네일 폐지(피드백 "사이즈 반으로")
   const filtered = renderToString(<ListView all={all} {...listProps} tab="트렌드" />)
   expect(filtered).not.toContain('art-features')
   // 기사 총량이 피처 수 이하이면 위계 없이 그리드만
@@ -133,19 +134,20 @@ test('피처 행 = 기본 뷰 상단 2건 · 필터 뷰에서는 미표시', () 
   expect(few).not.toContain('art-features')
 })
 
-// v3.1(§6-2a NEXTERS 실측 문법) — B2 좌 라벨 컬럼 골격.
-// v3.2(오너 피드백 2026-08-05): B1 블랙 통계 밴드 완전 제거 — 부재를 단언(재도입 = 오너 재승인).
-test('v3.1 골격 — 좌 라벨(INSIGHTS·FEATURED·LATEST + ■) · 블랙 통계 밴드 부재(v3.2 확정)', () => {
+// 4차 골격(2026-08-06 외부 피드백) — 좌 라벨 레일(■) 폐지 → 중앙 구간 헤딩(최신 기고·전체 기고).
+// B1 블랙 통계 밴드 부재 유지(v3.2 확정 — 재도입 = 오너 재승인).
+test('4차 골격 — 좌 라벨 레일 폐지 · 중앙 구간 헤딩 · 정렬 select · 블랙 밴드 부재', () => {
   const all = Array.from({ length: 6 }, (_, i) => art(`v${i}`))
   const page = renderToString(<Articles configured={false} />)
-  expect(page).toContain('ins-sec-label')          // B2 좌 라벨 컬럼
-  expect(page).toContain('ins-sq')                 // 버건디 ■ 마이크로 불릿
-  expect(page).toContain('INSIGHTS')               // 헤드 좌 라벨
-  expect(page).not.toContain('ins-band')           // v3.2 — 블랙 통계 밴드 제거 확정
+  expect(page).not.toContain('ins-sec-label')      // 구 B2 좌 라벨 폐지
+  expect(page).not.toContain('ins-sq')             // 구 ■ 마이크로 불릿 폐지
+  expect(page).toContain('INSIGHTS')               // 헤드 키커(중앙)
+  expect(page).not.toContain('ins-band')           // 블랙 통계 밴드 제거 확정 유지
   const html = renderToString(<ListView all={all} {...listProps} />)
-  expect(html).toContain('FEATURED')               // 피처 구간 라벨
-  expect(html).toContain('LATEST')                 // 그리드 구간 라벨
-  expect(html).not.toContain('ins-band')           // 목록 뷰에서도 밴드 부재
+  expect(html).toContain('최신 기고')              // 피처 구간 헤딩(정체 명시 — 피드백)
+  expect(html).toContain('전체 기고')              // 그리드 구간 헤딩
+  expect(html).toContain('aria-label="정렬"')     // 정렬 select(최신·오래된순)
+  expect(html).toContain('오래된순')
 })
 
 // 더보기(무한스크롤 금지) — PAGE_SIZE 초과분은 접히고 남은 건수를 버튼에 표기.

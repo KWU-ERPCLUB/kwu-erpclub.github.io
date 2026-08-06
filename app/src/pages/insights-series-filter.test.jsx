@@ -55,7 +55,7 @@ test('시리즈 글도 피처·그리드·카운트에 일반 기사와 동일�
   expect(html).toContain('art-features')     // 최신 2건이 피처 = 시리즈 글도 후보
   expect(html).toContain('제목 w2')
   expect(html).toContain('제목 w1')
-  expect(html).toContain('<strong>7</strong>건 표시 중') // 카운트에 시리즈 포함
+  expect(html).toContain('전체 <strong>7</strong>건') // 카운트에 시리즈 포함(4차: "전체 N건")
 })
 
 test('시리즈 필터 칩 = 필터 행에 노출(레지스트리 기반)', () => {
@@ -73,7 +73,7 @@ test('시리즈 선택 = 해당 시리즈만 그리드 · 피처 행 없음(필�
   expect(html).not.toContain('art-features')
   expect(html).toContain('제목 w1')
   expect(html).not.toContain('제목 a0')
-  expect(html).toContain('<strong>2</strong>건 표시 중')
+  expect(html).toContain('조건 일치 2건') // 필터 뷰 = 일치 건수 병기(4차)
 })
 
 test('?series=weekly 딥링크 = 필터 걸린 목록(아카이브 셸 아님)', () => {

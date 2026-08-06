@@ -7,45 +7,12 @@
 /* ── 페이지 셸 ── (B2 좌 레일·페이지 헤드 = 공용 PageHead(global.css .pg-head)로 통합, 3차 통일 2026-08-05:
    구 .pj-shell/.pj-rail-label/.pj-rail-dot/.pj-head 규칙 제거 — 레일 폭은 --rail-w 토큰이 담당) */
 .pj-page { max-width: 1200px; }
-.pg-head + .pj-stats { margin-top: 0.5rem; }
 
-/* ── B1 — 블랙 통계 밴드: 잉크 대면적 1개 + 흰 대형 숫자 + 헤어라인 분할 + 출처 각주 ── */
-.pj-stats {
-  background: var(--dark);
-  border-radius: var(--radius-card);
-  padding: 2.5rem 2.25rem 1.8rem;
-  margin: 0 0 3.25rem;
-}
-.pj-stats-grid { display: flex; flex-wrap: wrap; }
-.pj-stat { flex: 1 1 140px; padding: 0.25rem 1.6rem; border-left: 1px solid rgba(255, 255, 255, 0.16); }
-.pj-stat:first-child { border-left: none; padding-left: 0; }
-.pj-stat-num {
-  display: block;
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: clamp(2.6rem, 6.5vw, 4.5rem); /* v3.2: 밴드 숫자 5.5 → 4.5rem대 */
-  line-height: 1;
-  letter-spacing: -0.03em;
-  color: #fff;
-}
-.pj-stat-label {
-  display: block;
-  margin-top: 0.5rem;
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.66);
-}
-.pj-stats-src { margin: 1.6rem 0 0; font-size: 0.72rem; color: rgba(255, 255, 255, 0.42); }
-@media (max-width: 700px) {
-  .pj-stats { padding: 1.9rem 1.4rem 1.4rem; }
-  .pj-stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.4rem 1rem; }
-  .pj-stat { padding: 0; border-left: none; }
-}
+/* (구 B1 블랙 통계 밴드(.pj-stats) = 4차 개편 2026-08-06 삭제 — 피드백 "홈 내용". 홈 StatsBand가 담당.) */
 
-/* ── N4 — 쇼케이스 그리드: 1열 대형 커버(16:9) 스택 ── */
-.pj-grid { display: grid; grid-template-columns: 1fr; gap: 3.5rem; }
-@media (max-width: 700px) { .pj-grid { gap: 2.5rem; } }
+/* ── 쇼케이스 그리드 — 4차: 2열(피드백 "두 개씩·한눈에", 세로 축소) ── */
+.pj-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem 1.75rem; }
+@media (max-width: 700px) { .pj-grid { grid-template-columns: 1fr; gap: 2rem; } }
 
 .pj-card-coverwrap { position: relative; }
 .pj-card-open { display: block; position: relative; width: 100%; padding: 0; border: none; background: none; cursor: pointer; }
@@ -140,8 +107,8 @@
 .pj-card-title {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(1.45rem, 2.9vw, 2rem); /* v3.2: 카드 제목 소폭 다운(2.2 → 2rem) */
-  line-height: 1.18;
+  font-size: clamp(1.2rem, 2.2vw, 1.55rem); /* 4차: 2열 밀도에 맞춰 축소 */
+  line-height: 1.2;
   letter-spacing: -0.02em;
   word-break: keep-all;
 }
@@ -164,24 +131,26 @@
   border: 1px solid var(--line);
   border-radius: var(--radius-card);
 }
+/* 상세 헤드 = 중앙 정렬(4차 — 피드백 "다 중앙으로") · 본문은 좌측 흐름 유지 */
 .pj-detail-title {
   font-family: var(--font-display);
   font-weight: 900;
-  font-size: clamp(2.2rem, 4.6vw, 3rem);
+  font-size: clamp(2rem, 4.2vw, 2.8rem);
   line-height: 1.14;
   letter-spacing: -0.025em;
   word-break: keep-all;
   margin: 0 0 0.5rem;
+  text-align: center;
 }
-.pj-detail-desc { font-size: 1.05rem; color: var(--text-sub); line-height: 1.5; max-width: 52ch; word-break: keep-all; margin: 0 0 1.1rem; }
+.pj-detail-desc { font-size: 1.05rem; color: var(--text-sub); line-height: 1.5; max-width: 52ch; word-break: keep-all; margin: 0 auto 1.1rem; text-align: center; }
 .pj-detail-bar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   gap: 1rem;
   padding-bottom: 1.5rem;
   margin-bottom: 1.75rem;
-  border-bottom: 1px solid var(--line);
 }
 .pj-detail-links { display: flex; flex-wrap: wrap; gap: 0.75rem; }
 

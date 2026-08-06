@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
-import SeminarsTimeline, { SeminarTimeline, SeminarTimelineItem } from './SeminarsTimeline.jsx'
+import SeminarsTimeline, { SeminarTimeline, SeminarFeature, SeminarCard } from './SeminarsTimeline.jsx'
 
 const noop = () => {}
 const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
@@ -10,141 +10,121 @@ const base = (over = {}) => ({
   slug: 's', title: '세미나 제목', author: '홍', date: '2026-07-10', 회차: '1', 유형: '인지', body: '서문 문장.', ...over,
 })
 
-// ── SeminarTimeline (프리젠테이션 리스트) ──
+// ── SeminarTimeline (프리젠테이션 리스트 — 4차: 피처 밴드 + 3열 그리드) ──
 test('빈 상태 = 디자인된 1줄 "세미나 기록 아직 없음"', () => {
   const html = renderToString(<SeminarTimeline items={[]} today={TODAY} />)
   expect(html).toContain('sem-tl-empty')
   expect(html).toContain('세미나 기록 아직 없음')
 })
 
-test('타임라인 렌더 — 주어진 순서대로 항목 + 첫 항목만 is-featured(최신 크게)', () => {
+test('구조 = 첫 항목 피처 밴드(sem-feat) + 나머지 그리드 카드(sem-card)', () => {
   const items = [base({ slug: 'a', title: '최신글', date: '2026-08-01' }), base({ slug: 'b', title: '이전글', date: '2026-06-01' })]
   const html = flat(<SeminarTimeline items={items} today={TODAY} onOpen={noop} />)
-  expect(html).toContain('sem-tl') // 타임라인 ol
+  expect((html.match(/class="sem-feat[" ]/g) || []).length).toBe(1) // 피처 밴드 = 1개
   expect(html).toContain('최신글')
+  expect(html).toContain('sem-grid') // 3열 그리드
+  expect(html).toContain('sem-card')
   expect(html).toContain('이전글')
-  // 첫 항목만 featured — is-featured 1회
-  expect((html.match(/is-featured/g) || []).length).toBe(1)
-  expect(html.indexOf('최신글')).toBeLessThan(html.indexOf('이전글')) // 주어진 순서 유지
+  expect(html.indexOf('최신글')).toBeLessThan(html.indexOf('이전글')) // 피처 먼저
+  // 1건뿐이면 그리드 없음
+  const one = flat(<SeminarTimeline items={[base()]} today={TODAY} onOpen={noop} />)
+  expect(one).not.toContain('sem-grid')
 })
 
-test('v3.1 강조 — 최신(featured) 항목만 버건디 언더바(sem-tl-underbar) 1개', () => {
-  const items = [base({ slug: 'a', date: '2026-08-01' }), base({ slug: 'b', date: '2026-06-01' })]
-  const html = flat(<SeminarTimeline items={items} today={TODAY} onOpen={noop} />)
-  expect(html).toContain('sem-tl-underbar')
-  expect((html.match(/sem-tl-underbar/g) || []).length).toBe(1) // featured 1개만
-})
-
-// §6-2 v3 N3 — 버건디 면 승격은 featured ∧ 예정일 때만(is-next), 페이지당 최대 1개
-test('v3 N3 — featured+예정이면 is-next(버건디 면), 과거 featured·비featured 예정은 아님', () => {
-  // featured + 미래 date = is-next
-  const items = [base({ slug: 'a', date: '2026-08-07' }), base({ slug: 'b', date: '2026-08-06' })]
-  const html = flat(<SeminarTimeline items={items} today={TODAY} onOpen={noop} />)
-  expect((html.match(/is-next/g) || []).length).toBe(1) // 둘 다 예정이어도 featured(첫 항목)만 1개
-  // featured지만 과거 date = is-next 아님(면 없음)
-  const past = flat(<SeminarTimeline items={[base({ slug: 'c', date: '2026-06-01' })]} today={TODAY} onOpen={noop} />)
+// 피처 밴드 — 예정이면 블랙 밴드(is-next·NEXT SEMINAR), 과거면 라이트 밴드(LATEST SEMINAR).
+test('피처 = 예정이면 is-next + NEXT SEMINAR, 과거면 LATEST SEMINAR(밴드 골격 동일)', () => {
+  const next = flat(<SeminarFeature s={base({ date: '2026-08-07', 회차: '2' })} today={TODAY} onOpen={noop} />)
+  expect(next).toContain('is-next')
+  expect(next).toContain('NEXT SEMINAR')
+  expect(next).toContain('sem-next-ep') // 회차 숫자
+  expect(next).toContain('2026.08.07')
+  expect(next).toContain('sem-soon-badge') // 예정 배지
+  const past = flat(<SeminarFeature s={base({ date: '2026-06-01' })} today={TODAY} onOpen={noop} />)
   expect(past).not.toContain('is-next')
+  expect(past).toContain('LATEST SEMINAR')
+  expect(past).not.toContain('sem-soon-badge')
 })
 
-test('v3 N3 — 일정미정 featured도 예정 취급 = is-next', () => {
-  const html = flat(<SeminarTimelineItem s={base({ 일정미정: true })} today={TODAY} featured onOpen={noop} />)
+test('피처 — 일정미정 = 예정 취급(is-next) + 날짜 대신 "일정 미정"', () => {
+  const html = flat(<SeminarFeature s={base({ date: '2026-06-01', 일정미정: true })} today={TODAY} onOpen={noop} />)
   expect(html).toContain('is-next')
-})
-
-// §6-2a v3.1 B1 — 예정 featured = 블랙 대면적 밴드(구 버건디 면 철회). 과거 featured = 일반 레일(밴드 0)
-test('v3.1 B1 — 예정 featured = 블랙 밴드(sem-next-band·NEXT 키커·대형 회차/날짜), 과거 featured는 밴드 없음', () => {
-  const html = flat(<SeminarTimelineItem s={base({ date: '2026-08-07', 회차: '2' })} today={TODAY} featured onOpen={noop} />)
-  expect(html).toContain('sem-next-band') // 블랙 밴드
-  expect(html).toContain('NEXT SEMINAR') // 키커
-  expect(html).toContain('sem-next-ep') // 대형 회차 숫자
-  expect(html).toContain('sem-next-when') // 대형 날짜
-  expect(html).toContain('2026.08.07')
-  const past = flat(<SeminarTimelineItem s={base({ date: '2026-06-01' })} today={TODAY} featured onOpen={noop} />)
-  expect(past).not.toContain('sem-next-band') // 예정 없으면 밴드 0
-  expect(past).toContain('sem-tl-underbar') // 과거 featured = 일반 레일 + 언더바 유지
-})
-
-test('v3.1 B1 — 일정미정 featured 밴드 = 날짜 대신 "일정 미정"', () => {
-  const html = flat(<SeminarTimelineItem s={base({ date: '2026-06-01', 일정미정: true })} today={TODAY} featured onOpen={noop} />)
-  expect(html).toContain('sem-next-band')
   expect(html).toContain('일정 미정')
   expect(html).not.toContain('2026.06.01')
 })
 
-// ── SeminarTimelineItem (항목 단위 — 픽스처 주입) ──
-test('겹침 카드 — 썸네일 2장이면 is-stack + 뒷장(back) 렌더 + 슬라이드 링크', () => {
+// CTA 명확화(피드백 "눌러야 될 것 같이 안 생겼다") — 문장 버튼 2종.
+test('피처 CTA — "세미나 내용 보기" 상시 + 슬라이드 있으면 "발표자료 PDF 열기"', () => {
+  const withSlide = flat(<SeminarFeature s={base({ 슬라이드: 'https://slides/s1/' })} today={TODAY} onOpen={noop} />)
+  expect(withSlide).toContain('세미나 내용 보기')
+  expect(withSlide).toContain('발표자료 PDF 열기')
+  expect(withSlide).toContain('https://slides/s1/')
+  const noSlide = flat(<SeminarFeature s={base()} today={TODAY} onOpen={noop} />)
+  expect(noSlide).toContain('세미나 내용 보기')
+  expect(noSlide).not.toContain('발표자료 PDF 열기')
+})
+
+test('피처 썸네일 — 첫 장 1장만(겹침 스택 폐지), 없으면 비표시', () => {
   const s = base({ 썸네일: ['/slides/s1/thumb-1.png', '/slides/s1/thumb-2.png'], 슬라이드: 'https://slides/s1/' })
-  const html = flat(<SeminarTimelineItem s={s} today={TODAY} onOpen={noop} />)
-  expect(html).toContain('is-stack') // 겹침 모드
-  expect(html).toContain('sem-thumb-back') // 뒷장
-  expect(html).toContain('/slides/s1/thumb-2.png')
-  expect(html).toContain('https://slides/s1/') // 클릭 = 발표자료 링크
+  const html = flat(<SeminarFeature s={s} today={TODAY} onOpen={noop} />)
+  expect(html).toContain('sem-feat-thumb')
+  expect(html).toContain('/slides/s1/thumb-1.png')
+  expect(html).not.toContain('/slides/s1/thumb-2.png') // 뒷장 폐지
+  expect(html).not.toContain('is-stack')
+  expect(flat(<SeminarFeature s={base()} today={TODAY} onOpen={noop} />)).not.toContain('sem-feat-thumb')
 })
 
-test('겹침 카드 fallback — 썸네일 1장이면 단일(no is-stack·back 없음)', () => {
-  const s = base({ 썸네일: ['/slides/s1/thumb-1.png'], 슬라이드: 'https://slides/s1/' })
-  const html = flat(<SeminarTimelineItem s={s} today={TODAY} onOpen={noop} />)
-  expect(html).toContain('sem-thumb') // 카드 존재
-  expect(html).not.toContain('is-stack') // 단일
-  expect(html).not.toContain('sem-thumb-back') // 뒷장 없음
-})
-
-test('겹침 카드 fallback — 썸네일 없으면 카드 자체 비표시', () => {
-  const html = flat(<SeminarTimelineItem s={base()} today={TODAY} onOpen={noop} />)
-  expect(html).not.toContain('sem-thumb') // 카드 없음
-})
-
-test('예정 배지 — date>today면 "예정", 과거면 없음', () => {
-  const future = flat(<SeminarTimelineItem s={base({ date: '2026-08-07' })} today={TODAY} onOpen={noop} />)
-  expect(future).toContain('sem-soon-badge')
-  expect(future).toContain('예정')
-  const past = flat(<SeminarTimelineItem s={base({ date: '2026-06-01' })} today={TODAY} onOpen={noop} />)
-  expect(past).not.toContain('sem-soon-badge')
-})
-
-test('일정미정 — 과거 date여도 "일정 미정" 표기 + 예정 배지(날짜 비표시)', () => {
-  const html = flat(<SeminarTimelineItem s={base({ date: '2026-06-01', 일정미정: true })} today={TODAY} onOpen={noop} />)
-  expect(html).toContain('일정 미정')
-  expect(html).toContain('sem-soon-badge')
-  expect(html).not.toContain('2026.06.01') // 날짜 대신 미정 표기
-})
-
-test('간략 설명 — 요점 배열이면 불릿, 없으면 본문 발췌', () => {
-  const withPts = flat(<SeminarTimelineItem s={base({ 요점: ['첫 요점', '둘째 요점'] })} today={TODAY} onOpen={noop} />)
+test('피처 설명 — 요점 배열이면 불릿, 없으면 본문 발췌', () => {
+  const withPts = flat(<SeminarFeature s={base({ 요점: ['첫 요점', '둘째 요점'] })} today={TODAY} onOpen={noop} />)
   expect(withPts).toContain('sem-tl-points')
   expect(withPts).toContain('첫 요점')
-  expect(withPts).toContain('둘째 요점')
-  const noPts = flat(<SeminarTimelineItem s={base({ body: '이 세미나는 에이전트 개론을 다룸.' })} today={TODAY} onOpen={noop} />)
+  const noPts = flat(<SeminarFeature s={base({ body: '이 세미나는 에이전트 개론을 다룸.' })} today={TODAY} onOpen={noop} />)
   expect(noPts).toContain('sem-tl-excerpt')
   expect(noPts).toContain('에이전트 개론')
 })
 
-test('메타 칩 — 회차·유형·주제(있을 때)', () => {
-  const html = flat(<SeminarTimelineItem s={base({ 회차: '2', 유형: '실습', 주제: '에이전트' })} today={TODAY} onOpen={noop} />)
+// ── SeminarCard (그리드 항목) ──
+test('그리드 카드 = 날짜·칩(회차·유형·주제)·제목 + 슬라이드 있으면 PDF 링크', () => {
+  const s = base({ slug: 'c', 회차: '2', 유형: '실습', 주제: '에이전트', 슬라이드: 'https://slides/s2/', 썸네일: ['/t.png'] })
+  const html = flat(<SeminarCard s={s} today={TODAY} onOpen={noop} />)
+  expect(html).toContain('sem-card-date')
+  expect(html).toContain('2026.07.10')
   expect(html).toContain('2회')
   expect(html).toContain('실습')
   expect(html).toContain('에이전트')
+  expect(html).toContain('sem-card-title')
+  expect(html).toContain('sem-card-thumb')
+  expect(html).toContain('발표자료 PDF 열기')
+  const noSlide = flat(<SeminarCard s={base()} today={TODAY} onOpen={noop} />)
+  expect(noSlide).not.toContain('발표자료 PDF 열기')
+  expect(noSlide).not.toContain('sem-card-thumb') // 썸네일 없으면 프레임 없음
 })
 
-// ── SeminarsTimeline (컨테이너 — 소개·필터 바) ──
-test('필터 바 — 주제 탭(전체 + 등장 주제만) + 정렬 토글 기본 최신순', () => {
+test('그리드 카드 — 예정 배지: date>today면 "예정", 과거면 없음', () => {
+  const future = flat(<SeminarCard s={base({ date: '2026-08-07' })} today={TODAY} onOpen={noop} />)
+  expect(future).toContain('sem-soon-badge')
+  const past = flat(<SeminarCard s={base({ date: '2026-06-01' })} today={TODAY} onOpen={noop} />)
+  expect(past).not.toContain('sem-soon-badge')
+})
+
+// ── SeminarsTimeline (컨테이너 — 헤드·필터 바) ──
+test('필터 바 — 주제 탭(전체 + 등장 주제만) + 정렬 토글 기본 최신순 + 중앙 헤드', () => {
   const all = [base({ slug: 'a', 주제: '에이전트' }), base({ slug: 'b', 주제: '거버넌스·리스크' })]
   const html = flat(<SeminarsTimeline all={all} today={TODAY} onOpen={noop} />)
-  expect(html).toContain('sem-filter') // 필터 바
-  expect(html).toContain('전체') // 전체 탭
-  expect(html).toContain('에이전트') // 등장 주제
+  expect(html).toContain('sem-filter')
+  expect(html).toContain('전체')
+  expect(html).toContain('에이전트')
   expect(html).toContain('거버넌스·리스크')
   expect(html).not.toContain('모델·플랫폼') // 미등장 주제는 탭 없음
-  expect(html).toContain('최신순') // 정렬 토글 기본 라벨
-  expect(html).toContain('SEMINARS') // 좌 라벨 컬럼 텍스트
+  expect(html).toContain('최신순')
+  expect(html).toContain('SEMINARS') // 헤드 키커
+  expect(html).toContain('공간입니다') // 문장형 설명(4차)
 })
 
-// §6-2a v3.1 B2 — 좌 고정 라벨 컬럼 골격(버건디 ■ + SEMINARS/ARCHIVE 2구간)
-test('v3.1 B2 — 좌 라벨 컬럼(SEMINARS·ARCHIVE + ■ 불릿 2개) 골격', () => {
+// 4차 개편 — 좌 라벨 레일(ARCHIVE·■)·세로 타임라인 폐지.
+test('4차 — 구 골격(sem-col-label·sem-tl-item·pg-sq) 부재', () => {
   const html = flat(<SeminarsTimeline all={[base()]} today={TODAY} onOpen={noop} />)
-  expect(html).toContain('sem-col-label') // 라벨 컬럼
-  expect(html).toContain('ARCHIVE') // 타임라인 구간 라벨
-  // 3차 통일 — 헤드 구간 ■ = 공용 PageHead(.pg-sq) / 아카이브 구간 ■ = .sem-col-sq
-  expect((html.match(/pg-sq/g) || []).length).toBe(1)
-  expect((html.match(/sem-col-sq/g) || []).length).toBe(1)
+  expect(html).not.toContain('sem-col-label')
+  expect(html).not.toContain('sem-col-sq')
+  expect(html).not.toContain('sem-tl-item')
+  expect(html).not.toContain('pg-sq')
 })

@@ -41,15 +41,13 @@ test('감쇠·초기 은닉 = JS 게이트 뒤에만 — no-JS = 전부 선명',
   expect(home).toContain('.home-js .sc { opacity: 0;')
   const scBlock = home.match(/\n\.sc \{[\s\S]*?\}/)[0]
   expect(hasOpacityDecl(scBlock)).toBe(false)
-  // 워드 스택 감쇠도 게이트 뒤
-  expect(sections).toContain('.home-spy-js .wl-item { opacity:')
-  const wlBlock = sections.match(/\n\.wl-item \{[\s\S]*?\}/)[0]
-  expect(hasOpacityDecl(wlBlock)).toBe(false)
+  // 구 워드 스택(스크롤 워드 스파이) = 4차 개편에서 폐지 — 감쇠 규칙·훅 잔재 부재
+  expect(sections).not.toContain('wl-item')
+  expect(app).not.toContain('home-spy-js')
 })
 
 test('훅이 게이트 클래스를 부여 + seen은 once(제거 코드 없음) + 진입 전 트리거', () => {
   expect(motion).toContain("classList.add('home-js')")
-  expect(app).toContain("classList.add('home-spy-js')")
   expect(motion).toContain("classList.add('seen')")
   expect(motion).not.toContain("classList.remove('seen')")
   expect(motion).not.toMatch(/toggle\('seen'/)
@@ -60,5 +58,4 @@ test('훅이 게이트 클래스를 부여 + seen은 once(제거 코드 없음) 
 test('reduced-motion = 감쇠·전환 전부 해제(게이트 포함)', () => {
   expect(home).toContain('.home-js .page, .home-js .page .rv { transition: none; opacity: 1; transform: none; }')
   expect(home).toContain('.sc, .home-js .sc { transition: none; opacity: 1; transform: none; }')
-  expect(sections).toContain('.wl-item, .home-spy-js .wl-item { transition: none; opacity: 1; }')
 })

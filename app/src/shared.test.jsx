@@ -31,15 +31,15 @@ test('로그인 세션 있으면 헤더 끝에 워크스페이스 링크', () =>
   expect(html).toContain('WORKSPACE')
 })
 
-// 페이지 헤드 골격 통일(3차 2026-08-05) — 4페이지가 이 한 구현을 소비한다.
-test('PageHead = 좌 라벨(■)+h1+서브+메타+children 골격', () => {
+// 페이지 헤드 골격(4차 2026-08-06 외부 피드백) — 중앙 정렬 1열: 키커+h1+문장형 설명+메타+children.
+test('PageHead = 중앙 키커+h1+설명+메타+children 골격(좌 레일 ■ 폐지)', () => {
   const html = flat(
     <PageHead label="INSIGHTS" title={<>AI <em>인사이트</em></>} sub="서브 문구" meta="최종 갱신 2026-08-05">
       <div className="extra-filter" />
     </PageHead>,
   )
   expect(html).toContain('pg-head')
-  expect(html).toContain('pg-sq') // 버건디 ■ 눈썹 불릿
+  expect(html).not.toContain('pg-sq') // 좌 라벨 레일 ■ 폐지(4차)
   expect(html).toContain('>INSIGHTS<')
   expect(html).toContain('<em>인사이트</em>')
   expect(html).toContain('서브 문구')

@@ -10,14 +10,15 @@ import { FAQ, RECRUIT_FAQ } from './data/faq.js'
 // 구조·계약 검증 — IA 3차(2026-07-27) + v3.2 조정(2026-08-05 오너 피드백). 사실 서술만.
 const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
 
-// 3차 통일(2026-08-05) — 페이지 헤드 = 공용 PageHead(.pg-*) 1구현. 구 rc-eyebrow/rc-h1/rc-lead/rc-meta 폐지.
-test('page-head(§3-1) = 눈썹 RECRUIT + 헤드라인 + 서브 + 메타 줄', () => {
+// 4차(2026-08-06) — 페이지 헤드 = 공용 PageHead 중앙 정렬. 갱신 메타 = 인사이트만 유지 → 여기선 부재.
+test('page-head = 키커 RECRUIT + 헤드라인 + 문장형 서브(메타 줄 없음)', () => {
   const html = flat(<Recruit />)
   expect(html).toContain('pg-label')
   expect(html).toContain('>RECRUIT<')
   expect(html).toContain('pg-title')
   expect(html).toContain('pg-sub')
-  expect(html).toContain('pg-meta')
+  expect(html).toContain('스터디입니다') // 문장형 설명(피드백)
+  expect(html).not.toContain('pg-meta') // 갱신 메타 = 인사이트 전용(피드백 "다른 건 굳이")
   expect(html).not.toContain('rc-eyebrow') // 구 4구현 잔재 금지
 })
 
@@ -44,7 +45,6 @@ test('v3.2 운영 증빙·블랙 밴드·키비주얼 부재 — rc-black·stat-
 
 test('v3.2 WHAT WE DO = 이 스터디가 하는 일 — 활동 4카드(기고·세미나·효율화 산출물·팀 프로젝트)', () => {
   const html = flat(<Recruit />)
-  expect(html).toContain('>WHAT WE DO<') // 좌 라벨(골격 유지)
   expect(html).toContain('rc-do-h')
   expect(html).toContain('이 스터디가 하는 일')
   expect(RECRUIT_DO.length).toBe(4)
@@ -57,7 +57,6 @@ test('v3.2 WHAT WE DO = 이 스터디가 하는 일 — 활동 4카드(기고·�
 test('SHOWCASE = 실물 3건(보드·허브·세미나 자료) — 이름·사실 1줄·링크·썸네일', () => {
   const html = flat(<Recruit />)
   expect(html).toContain('rc-show-h')
-  expect(html).toContain('>SHOWCASE<')
   expect(RECRUIT_SHOWCASE.length).toBe(3)
   for (const { name, fact, href, img } of RECRUIT_SHOWCASE) {
     expect(html, `실물 이름 부재: ${name}`).toContain(name)
@@ -221,11 +220,10 @@ test('v3.3 인터랙션 = 런타임 클래스 게이트 — 정적 렌더에 rc-
   expect(html).not.toContain('rc-step on')
 })
 
-test('B2 좌 라벨 컬럼 = 전 섹션 9개(버건디 ■ + 영문 라벨) — RECORD → WHAT WE DO 교체 + SHOWCASE 신설', () => {
+// 4차(2026-08-06) — 좌 라벨 레일(rc-label·rc-grid) 전면 폐지(피드백 "왼쪽 네모들 다 삭제").
+test('4차 — 좌 라벨 레일 부재 + 섹션 9개 구조 유지', () => {
   const html = flat(<Recruit />)
-  expect((html.match(/class="rc-label"/g) || []).length).toBe(9)
-  for (const en of ['OVERVIEW', 'WHAT WE DO', 'SHOWCASE', 'TARGET', 'SCHEDULE', 'PROGRAM', 'FAQ', 'APPLY', 'CONTACT']) {
-    expect(html, `좌 라벨 부재: ${en}`).toContain(`>${en}<`)
-  }
-  expect(html).not.toContain('>RECORD<')
+  expect(html).not.toContain('rc-label')
+  expect(html).not.toContain('rc-grid')
+  expect((html.match(/class="rc-secs"/g) || []).length).toBe(9) // 요강~문의 9섹션(헤더 별도)
 })

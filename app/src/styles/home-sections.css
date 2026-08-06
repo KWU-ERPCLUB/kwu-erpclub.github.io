@@ -1,43 +1,84 @@
-/* 메인(/) v6 섹션 본문 — ROADMAP 워드 스택·PROJECTS·FAQ. 골격·히어로·B1·B2 = home.css(300줄 규격 분할).
-   규격 = §6-2a v3.1(2026-08-05 2차): B3 스크롤 연동 워드 리스트(구 계보 트리 폐지 — 대형 워드 스택,
-   활성 항목만 진하게·opacity 전환만) · N4 쇼케이스 카드 강조 유지.
+/* 메인(/) v7 섹션 본문 — ROADMAP 지그재그 타임라인·PROJECTS 2열·FAQ·INSIGHTS 썸네일 줄.
+   골격·히어로·B1·모집 밴드 = home.css(300줄 규격 분할). 4차 개편(2026-08-06 외부 피드백):
+   구 워드 스택(.wl)·스크롤 워드 스파이·텍스트 리스트 INSIGHTS(.hi-list) 폐지.
    색·폰트 토큰 고정 · 버건디 화이트리스트 · transform·opacity만 · reduced-motion 존중. */
 
-/* ══ ROADMAP — B3 대형 워드 스택(뷰포트 중앙 최근접 항목만 활성 = .on, 나머지 흐림) ══ */
-.wl { list-style: none; margin: clamp(2rem, 5vh, 3rem) 0 0; padding: 0; }
-.wl-item {
-  padding: clamp(1.1rem, 2.8vh, 1.7rem) 0;
-  border-bottom: 1px solid var(--line);
-  transition: opacity 300ms ease-out;
+/* ══ ROADMAP — 지그재그 타임라인: 중앙 세로 스파인 + 좌우 교대 카드(흰 면·헤어라인 가로줄 0) ══ */
+.rm {
+  list-style: none;
+  position: relative;
+  margin: clamp(2rem, 5vh, 3rem) auto 0;
+  padding: 0.5rem 0;
+  max-width: 880px;
 }
-/* 감쇠 = JS 게이트(html.home-spy-js) 안에서만 — no-JS = 전부 선명. 하한 0.26 → 0.55(2026-08-05 스톨 수정 일괄) */
-.home-spy-js .wl-item { opacity: 0.55; }
-.wl-item:first-child { border-top: 1px solid var(--line); }
-.home-spy-js .wl-item.on { opacity: 1; }
-.wl-era {
+.rm::before { /* 중앙 스파인(세로) — 타임라인 구조선 */
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--line);
+}
+.rm-item { position: relative; width: 50%; padding: 0 2.25rem 1.9rem 0; }
+.rm-item.rm-right { margin-left: 50%; padding: 0 0 1.9rem 2.25rem; }
+.rm-item:last-child { padding-bottom: 0.25rem; }
+.rm-dot { /* 스파인 위 버건디 점(화이트리스트 ⑦ 타임라인 점) */
+  position: absolute;
+  top: 1.35rem;
+  right: -5px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.rm-item.rm-right .rm-dot { right: auto; left: -5px; }
+.rm-card {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 1.1rem 1.35rem 1.2rem;
+  text-align: left;
+}
+.rm-item:not(.rm-right) .rm-card { text-align: right; }
+.rm-era {
   display: block;
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.08em;
-  color: var(--text-sub);
-  margin-bottom: 0.4rem;
+  color: var(--accent);
+  margin-bottom: 0.35rem;
 }
-.wl-word {
+.rm-word {
   display: block;
   font-family: var(--font-display);
-  font-weight: 900;
-  font-size: clamp(1.6rem, 3.6vw, 2.6rem); /* v3.2: 대형 워드 3.6 → 2.6rem대 축소(오너 "부담 제거") */
-  line-height: 1.08;
-  letter-spacing: -0.025em;
+  font-weight: 800;
+  font-size: clamp(1.05rem, 1.9vw, 1.35rem); /* 4차: 대형 워드 폐지(피드백 "글씨 너무 크다") */
+  line-height: 1.2;
+  letter-spacing: -0.015em;
   word-break: keep-all;
 }
-.wl-slot .wl-word { color: var(--text-sub); font-weight: 800; } /* 빈 슬롯 = 톤 다운(점선 슬롯 문법 승계) */
-.wl-desc { display: block; margin-top: 0.55rem; font-size: 0.88rem; color: var(--text-sub); max-width: 58ch; }
-.wl-desc .status { margin: 0 0 0 0.55rem; vertical-align: 1px; }
-@media (prefers-reduced-motion: reduce) { .wl-item, .home-spy-js .wl-item { transition: none; opacity: 1; } }
+.rm-slot .rm-word { color: var(--text-sub); }
+.rm-slot .rm-card { border-style: dashed; background: transparent; }
+.rm-desc { display: block; margin-top: 0.45rem; font-size: 0.85rem; color: var(--text-sub); }
+.rm-desc .status { margin: 0 0 0 0.5rem; vertical-align: 1px; }
+.rm-item:not(.rm-right) .rm-desc .status { margin: 0 0.5rem 0 0; }
+@media (max-width: 700px) { /* 폰 = 좌측 스파인 단일 열 */
+  .rm::before { left: 6px; margin-left: 0; }
+  .rm-item, .rm-item.rm-right { width: 100%; margin-left: 0; padding: 0 0 1.5rem 1.9rem; }
+  .rm-dot, .rm-item.rm-right .rm-dot { left: 2px; right: auto; }
+  .rm-item:not(.rm-right) .rm-card { text-align: left; }
+  .rm-item:not(.rm-right) .rm-desc .status { margin: 0 0 0 0.5rem; }
+}
 
-/* ══ PROJECTS — 풀폭 대형 커버 카드(커버 위 대형 제목 오버레이·호버 리프트) ══ */
-.hp-list { display: grid; grid-template-columns: 1fr; gap: 1.75rem; margin-top: clamp(2.5rem, 6vh, 3.5rem); }
+/* ══ PROJECTS — 2열 커버 카드(피드백 "양쪽으로·한눈에") ══ */
+.hp-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-top: clamp(2rem, 5vh, 3rem);
+}
 .hp-card {
   position: relative;
   display: block;
@@ -48,7 +89,7 @@
   color: #fff;
   transition: transform 150ms ease-out, box-shadow 150ms ease-out;
 }
-.hp-coverwrap { display: block; position: relative; aspect-ratio: 2.1 / 1; overflow: hidden; background: var(--surface); }
+.hp-coverwrap { display: block; position: relative; aspect-ratio: 16 / 10; overflow: hidden; background: var(--surface); }
 .hp-cover { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 320ms ease-out; }
 .hp-overlay { /* 이미지 가독 스크림(장식 다크 아님) */
   position: absolute;
@@ -57,91 +98,101 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-end;
-  gap: 0.6rem;
-  padding: clamp(1.25rem, 3.5vw, 2.75rem);
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 26%, rgba(0, 0, 0, 0.8) 100%); /* v3 N4: 제목 상향분 스크림 심화(구 32%/0.74) */
+  gap: 0.5rem;
+  padding: clamp(1.1rem, 2.5vw, 1.75rem);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 32%, rgba(0, 0, 0, 0.78) 100%);
 }
 .hp-tag {
-  font-size: 0.74rem;
+  font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.55);
   border-radius: var(--radius-pill);
-  padding: 0.16rem 0.72rem;
+  padding: 0.14rem 0.68rem;
 }
 .hp-title {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(1.9rem, 4.4vw, 3.2rem); /* v3 N4: 커버 위 제목 상향(구 1.55/3.4vw/2.6) */
-  line-height: 1.12;
+  font-size: clamp(1.25rem, 2.4vw, 1.8rem); /* 4차: 축소(2열 밀도) */
+  line-height: 1.16;
   letter-spacing: -0.015em;
   word-break: keep-all;
 }
-.hp-more { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.86rem; font-weight: 700; opacity: 0.92; }
+.hp-more { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.82rem; font-weight: 700; opacity: 0.92; }
 .hp-card:hover { transform: translateY(-4px); box-shadow: 0 16px 42px rgba(0, 0, 0, 0.16); }
 @media (hover: hover) { .hp-card:hover .hp-cover { transform: scale(1.04); } }
 .hp-card:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
-@media (max-width: 700px) { .hp-coverwrap { aspect-ratio: 16 / 10; } }
-.hp-more-links { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-top: 1.75rem; }
+@media (max-width: 700px) { .hp-list { grid-template-columns: 1fr; } }
 
-/* ══ FAQ — 대형 아코디언(질문 타이포 1.4rem급·풀폭 헤어라인) ══ */
-.faq-xl { margin-top: clamp(2.5rem, 6vh, 3.5rem); border-top: 1px solid var(--line); }
-.fx-item { border-bottom: 1px solid var(--line); }
+/* ══ FAQ — 아코디언(4차: 질문 타이포 축소·답변 경어체). 구분 = 흰 카드 면(가로줄 폐지) ══ */
+.faq-xl { margin-top: clamp(2rem, 5vh, 3rem); display: grid; gap: 0.7rem; max-width: 800px; margin-left: auto; margin-right: auto; }
+.fx-item { background: var(--bg); border: 1px solid var(--line); border-radius: 14px; padding: 0 1.25rem; }
 .fx-item summary {
   list-style: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1.5rem;
-  padding: clamp(1.1rem, 2.5vh, 1.6rem) 0;
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(1.1rem, 1.9vw, 1.4rem);
-  line-height: 1.3;
+  gap: 1.25rem;
+  padding: 0.95rem 0;
+  font-weight: 700;
+  font-size: 0.98rem; /* 4차: 1.4rem급 → 본문급(피드백 "글씨가 너무 크고") */
+  line-height: 1.4;
   transition: color 150ms ease-out;
 }
 .fx-item summary::-webkit-details-marker { display: none; }
-.fx-item summary::after { /* 중립 마커(버건디 화이트리스트 밖 → 회색) */
+.fx-item summary::after {
   content: '+';
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   color: var(--text-sub);
   flex: none;
 }
 .fx-item[open] summary::after { content: '\2212'; }
 .fx-item summary:hover { color: var(--text-sub); }
 .fx-item summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-.fx-item p { margin: 0 0 1.35rem; font-size: 0.96rem; color: var(--text-sub); max-width: 68ch; }
-.hs-about { margin: 2rem 0 0; font-size: 0.92rem; color: var(--text-sub); }
+.fx-item p { margin: 0 0 1.1rem; font-size: 0.92rem; color: var(--text-sub); max-width: 68ch; }
 
-/* ══ INSIGHTS — 메인 하단 최근 기사 3건(헤어라인 리스트 = .wl·.fx-item 문법 승계, 새 시각 언어 0) ══ */
-.hi-list { list-style: none; margin: clamp(2.5rem, 6vh, 3.5rem) 0 0; padding: 0; border-top: 1px solid var(--line); }
-.hi-item { border-bottom: 1px solid var(--line); }
-.hi-link {
-  display: block; padding: clamp(1.1rem, 2.5vh, 1.6rem) 0;
-  text-decoration: none; color: var(--text);
-  transition: opacity 150ms ease-out;
+/* ══ INSIGHTS — 썸네일 카드 한 줄(3건·피드백 "썸네일형으로 짧게") ══ */
+.hi-grid {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin: clamp(2rem, 5vh, 3rem) 0 0;
+  padding: 0;
 }
-.hi-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.45rem; }
-.hi-nature { /* 성격 라벨 — 헤어라인 pill(중립. 버건디 예산 절약) */
-  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.02em;
-  border: 1px solid var(--line); border-radius: var(--radius-pill); padding: 0.12rem 0.6rem;
+.hi-card { display: block; text-decoration: none; color: var(--text); }
+.hi-card .art-cover {
+  display: block;
+  aspect-ratio: 16 / 10;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--surface);
+  margin-bottom: 0.7rem;
 }
-.hi-date { font-size: 0.78rem; font-weight: 600; color: var(--text-sub); }
+.hi-card .art-cover img, .hi-card .art-cover svg { width: 100%; height: 100%; display: block; }
+.hi-card .art-cover img { object-fit: cover; }
+.hi-card .art-cover--fit-contain img { object-fit: contain; padding: 12%; box-sizing: border-box; }
 .hi-title {
-  display: block; font-family: var(--font-display); font-weight: 800;
-  font-size: clamp(1.05rem, 1.8vw, 1.35rem); line-height: 1.3; letter-spacing: -0.015em; word-break: keep-all;
+  display: block;
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  word-break: keep-all;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
-.hi-desc {
-  display: block; margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-sub);
-  max-width: 68ch; line-height: 1.55; word-break: keep-all;
-}
-.hi-link:hover .hi-title { color: var(--accent); } /* 화이트리스트 ⑤ 링크 호버 */
-.hi-link:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
-@media (prefers-reduced-motion: reduce) { .hi-link { transition: none; } }
+.hi-date { display: block; margin-top: 0.35rem; font-size: 0.76rem; color: var(--text-sub); }
+.hi-card:hover .hi-title { color: var(--accent); } /* 화이트리스트 ⑤ 링크 호버 */
+.hi-card:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+@media (max-width: 700px) { .hi-grid { grid-template-columns: 1fr; gap: 1.1rem; } }
 
 @media (prefers-reduced-motion: reduce) {
   .hp-card, .hp-cover, .fx-item summary { transition: none; }

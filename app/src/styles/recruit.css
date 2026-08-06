@@ -5,8 +5,8 @@
    모션 = 신규 무한루프 0 · transform/opacity만 · reduced-motion 존중.
    + 메인(/) 모집 밴드(.recruit-band) — 히어로 직하 슬림 공고(섹션 스파이 .page 제외). */
 
-/* ══ 메인 모집 섹션(확대 개편 2026-08-05 — 한 축. 모집 종료 시 메인 미렌더) ══ */
-.recruit-band { width: 100%; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--surface); }
+/* ══ 메인 모집 섹션 — 4차: 기본 마크업만(중앙 정렬·틴트 면·CTA 강조 = home.css .home 스코프가 담당) ══ */
+.recruit-band { width: 100%; background: var(--surface); }
 .rb-in {
   max-width: var(--maxw); margin: 0 auto; padding: clamp(2.5rem, 7vh, 4.25rem) 1.5rem;
   display: flex; flex-direction: column; align-items: flex-start; gap: 0.9rem;
@@ -20,38 +20,24 @@
   margin: 0; line-height: 1.08;
 }
 .rb-text { margin: 0; font-size: clamp(0.95rem, 1.5vw, 1.1rem); font-weight: 600; word-break: keep-all; }
-.rb-cta { margin-top: 0.6rem; } /* Primary 승격(2026-08-05) — .rc-cta-xl 사용, 밴드 하단 여백만 조정 */
+.rb-cta { margin-top: 0.6rem; }
 @media (max-width: 700px) {
   .rb-in { padding: 2rem 1.25rem; gap: 0.75rem; }
 }
 
 /* ══ /recruit 페이지 셸 ══ */
 .rc-main { width: 100%; }
-.rc-band-in { max-width: var(--maxw); margin: 0 auto; padding: clamp(2.75rem, 7vh, 4.75rem) 1.5rem; }
+.rc-band-in { max-width: var(--maxw); margin: 0 auto; padding: clamp(2.25rem, 5.5vh, 3.5rem) 1.5rem; } /* 4차: 길이 축소 */
 @media (max-width: 700px) { .rc-band-in { padding: 2.25rem 1.25rem; } }
 /* 페이지 내 앵커 스크롤(E6) — 모션 선호 시에만 부드럽게 */
 @media (prefers-reduced-motion: no-preference) {
   html:has(.rc-main) { scroll-behavior: smooth; }
 }
 
-/* ══ B2 — 좌 고정 라벨 컬럼 / 우 콘텐츠 2단 골격(전 섹션 공통) ══ */
-.rc-secs { width: 100%; border-top: 1px solid var(--line); }
-.rc-grid { /* 레일 폭 = 토큰 1값(--rail-w, 3차 통일) — 구 clamp(150px,18vw,220px) 폐지 */
-  display: grid; grid-template-columns: var(--rail-w) minmax(0, 1fr);
-  gap: 1.25rem var(--rail-gap); align-items: start;
-}
-.rc-label { /* 버건디 ■ 9px 마이크로 불릿 + 영문 라벨 — 눈썹 1값 통일 = .pg-label(색 --text) */
-  position: sticky; top: 5.5rem;
-  display: flex; align-items: center; gap: 0.55rem;
-  font-size: 0.8rem; font-weight: 700;
-  letter-spacing: 0.14em; color: var(--text);
-}
-.rc-label::before { content: ''; width: 9px; height: 9px; background: var(--accent); flex: none; }
-.rc-body { min-width: 0; }
-@media (max-width: 760px) {
-  .rc-grid { grid-template-columns: 1fr; gap: 1rem; }
-  .rc-label { position: static; }
-}
+/* ══ 4차(2026-08-06 외부 피드백) — 좌 라벨 레일·헤어라인 경계 폐지 → 섹션 구분 = 배경 면 교대 ══ */
+.rc-secs { width: 100%; }
+.rc-secs:nth-of-type(even) { background: var(--surface); }
+.rc-body { min-width: 0; max-width: 880px; margin: 0 auto; }
 
 /* ══ B4 — 헤더: 라이트 + 뷰포트급 타이포(버건디 대면적 철회 — 블랙 밴드가 페이지의 무게) ══ */
 .rc-head { width: 100%; background: var(--bg); }
@@ -66,7 +52,7 @@
 /* (키비주얼 rc-visual = v3.2 완전 삭제 — 오너 지시 2026-08-05) */
 
 /* 대형 CTA(E6 상향) — Primary 문법(차콜 필 + 버건디 원형 화살표 ②)의 확대판. 4상태(§5) */
-.rc-head-cta { display: flex; align-items: center; flex-wrap: wrap; gap: 1.1rem; margin-top: clamp(1.75rem, 4vh, 2.5rem); }
+.rc-head-cta { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 1.1rem; margin-top: clamp(1.5rem, 3.5vh, 2.25rem); }
 .rc-cta-xl {
   display: inline-flex; align-items: center; gap: 0.8rem;
   background: var(--dark); color: #fff; border: 0; border-radius: 999px;
@@ -85,25 +71,29 @@
 @media (prefers-reduced-motion: reduce) { .rc-cta-xl { transition: none; } .rc-cta-xl:active { transform: none; } }
 .rc-cta-note { font-size: 0.88rem; font-weight: 600; color: var(--text-sub); }
 
-/* ══ 섹션 소제목(우 콘텐츠 컬럼 상단) ══ */
-.rc-h2 { /* v3.2 한 단계 다운 — 구 clamp(1.7rem, 3.8vw, 2.6rem) */
+/* ══ 섹션 소제목 — 4차: 중앙 정렬 ══ */
+.rc-h2 {
   font-family: var(--font-display); font-weight: 800; font-size: clamp(1.45rem, 3vw, 2.1rem);
-  line-height: 1.2; letter-spacing: -0.02em; margin: 0; word-break: keep-all;
+  line-height: 1.2; letter-spacing: -0.02em; margin: 0; word-break: keep-all; text-align: center;
 }
-/* 학사일정 연동 원칙 1줄(운영틀 개정 2026-08-05) — 활동 구성 섹션 헤드 직하 */
-.rc-sched-rule { margin: 0.9rem 0 0; font-size: 0.88rem; font-weight: 600; color: var(--text-sub); word-break: keep-all; }
+/* 학사일정 연동 원칙 1줄 — 섹션 헤드 직하(중앙) */
+.rc-sched-rule { margin: 0.9rem 0 0; font-size: 0.88rem; font-weight: 600; color: var(--text-sub); word-break: keep-all; text-align: center; }
 
-/* ══ 요강 표 — 라벨·값 2열 행 ══ */
-.rc-facts { list-style: none; margin: clamp(1.5rem, 3.5vh, 2.5rem) 0 0; padding: 0; border-top: 1px solid var(--line); }
+/* ══ 요강 — 4차: 가로줄 행 폐지 → 면 카드 행 + 라벨 = 검정 pill(피드백 "둥근 네모로 구분·글씨 통일") ══ */
+.rc-facts { list-style: none; margin: clamp(1.5rem, 3.5vh, 2.25rem) 0 0; padding: 0; display: grid; gap: 0.6rem; }
 .rc-fact {
-  display: grid; grid-template-columns: minmax(5.5rem, 8rem) minmax(0, 1fr);
-  gap: clamp(1rem, 3vw, 2rem); padding: clamp(0.85rem, 2vh, 1.15rem) 0; border-bottom: 1px solid var(--line);
+  display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); align-items: center;
+  gap: clamp(1rem, 3vw, 1.75rem); padding: 0.8rem 1.1rem;
+  background: #fff; border: 1px solid var(--line); border-radius: 14px;
 }
-.rc-fact dt { font-size: 0.85rem; font-weight: 700; color: var(--text-sub); letter-spacing: 0.02em; }
-.rc-fact dd { /* v3.2 한 단계 다운 — 구 clamp(1.02rem, 1.5vw, 1.18rem) */
-  margin: 0; font-size: clamp(0.96rem, 1.3vw, 1.06rem); font-weight: 650; line-height: 1.55; word-break: keep-all;
+.rc-secs:nth-of-type(odd) .rc-fact { background: var(--surface); border-color: transparent; }
+.rc-fact dt { /* 라벨 = 검정 pill(글씨 크기 = 값과 동급) */
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 32px; padding: 0 0.9rem; border-radius: var(--radius-pill);
+  background: var(--dark); color: #fff; font-size: 0.85rem; font-weight: 700; white-space: nowrap;
 }
-@media (max-width: 700px) { .rc-fact { grid-template-columns: 5rem 1fr; } }
+.rc-fact dd { margin: 0; font-size: 0.98rem; font-weight: 650; line-height: 1.55; word-break: keep-all; }
+@media (max-width: 700px) { .rc-fact { grid-template-columns: 1fr; gap: 0.5rem; justify-items: start; } }
 
 /* (B1 블랙 통계 밴드 = v3.2 제거 — 운영 증빙 폐지, 자리 = WHAT WE DO 카드(.rc-do — rc-fit 문법 승계)) */
 
@@ -174,13 +164,14 @@
 .rc-show-link:hover h3 { text-decoration: underline; text-underline-offset: 3px; }
 .rc-show li p { margin: 0; }
 
-/* ══ FAQ 서브셋(E4) — 좌 라벨/우 아코디언(details/summary·4상태) ══ */
-.rc-faq { margin-top: clamp(1.5rem, 3.5vh, 2.5rem); border-top: 1px solid var(--line); }
-.rc-faq-item { border-bottom: 1px solid var(--line); }
+/* ══ FAQ 서브셋(E4) — 4차: 가로줄 폐지 → 카드 면 아코디언(홈 FAQ 동형) ══ */
+.rc-faq { margin-top: clamp(1.5rem, 3.5vh, 2.25rem); display: grid; gap: 0.7rem; }
+.rc-faq-item { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 0 1.15rem; }
+.rc-secs:nth-of-type(odd) .rc-faq-item { background: var(--surface); border-color: transparent; }
 .rc-faq-item summary {
   display: flex; align-items: baseline; justify-content: space-between; gap: 1rem;
-  cursor: pointer; list-style: none; padding: clamp(0.9rem, 2vh, 1.2rem) 0;
-  font-weight: 700; font-size: clamp(0.98rem, 1.6vw, 1.12rem); word-break: keep-all;
+  cursor: pointer; list-style: none; padding: 0.9rem 0;
+  font-weight: 700; font-size: 0.98rem; word-break: keep-all;
   transition: color 150ms ease-out;
 }
 .rc-faq-item summary::-webkit-details-marker { display: none; }
@@ -230,23 +221,18 @@
    게이트 클래스는 Recruit.jsx 훅이 런타임에만 부여 → no-JS·reduced-motion = 정적 상태 = 전부 선명·정지.
    transform·opacity만 · 신규 무한루프 0(.rc-in = IO 1회 발화). 수치 = home.css .rv 문법 복제. ══ */
 
-/* 섹션 진입 스태거 리빌 — 헤더(PageHead 좌 라벨 + 우 본문 직계 자식)·각 섹션, nth-child 지연 스태거 */
-.rc-js .rc-head .pg-label,
-.rc-js .rc-head .pg-head-body > *,
-.rc-js .rc-secs .rc-label,
+/* 섹션 진입 스태거 리빌 — 헤더(PageHead 직계 자식)·각 섹션, nth-child 지연 스태거(4차: 레일 셀렉터 제거) */
+.rc-js .rc-head .pg-head > *,
 .rc-js .rc-secs .rc-body > * {
   opacity: 0; transform: translateY(26px);
   transition: opacity 560ms ease-out, transform 620ms cubic-bezier(0.16, 1, 0.3, 1);
 }
-.rc-js .rc-head .pg-head-body > :nth-child(2), .rc-js .rc-secs .rc-body > :nth-child(2) { transition-delay: 90ms; }
-.rc-js .rc-head .pg-head-body > :nth-child(3), .rc-js .rc-secs .rc-body > :nth-child(3) { transition-delay: 180ms; }
-.rc-js .rc-head .pg-head-body > :nth-child(4), .rc-js .rc-secs .rc-body > :nth-child(4) { transition-delay: 270ms; }
-.rc-js .rc-head .pg-head-body > :nth-child(n + 5), .rc-js .rc-secs .rc-body > :nth-child(n + 5) { transition-delay: 360ms; }
-.rc-js .rc-head.rc-in .pg-label,
-.rc-js .rc-head.rc-in .pg-head-body > *,
-.rc-js .rc-secs.rc-in .rc-label,
+.rc-js .rc-head .pg-head > :nth-child(2), .rc-js .rc-secs .rc-body > :nth-child(2) { transition-delay: 90ms; }
+.rc-js .rc-head .pg-head > :nth-child(3), .rc-js .rc-secs .rc-body > :nth-child(3) { transition-delay: 180ms; }
+.rc-js .rc-head .pg-head > :nth-child(4), .rc-js .rc-secs .rc-body > :nth-child(4) { transition-delay: 270ms; }
+.rc-js .rc-head .pg-head > :nth-child(n + 5), .rc-js .rc-secs .rc-body > :nth-child(n + 5) { transition-delay: 360ms; }
+.rc-js .rc-head.rc-in .pg-head > *,
 .rc-js .rc-secs.rc-in .rc-body > *,
-.rc-js .rc-secs:focus-within .rc-label,
 .rc-js .rc-secs:focus-within .rc-body > * { opacity: 1; transform: none; }
 
 /* WHAT WE DO·TARGET 카드 = 리빌 내부 2차 스태거 */
@@ -277,7 +263,7 @@
 
 /* 이중 안전망 — 훅이 게이트 클래스를 안 붙이지만, 세션 중 선호 전환 대비 전부 선명·정지 */
 @media (prefers-reduced-motion: reduce) {
-  .rc-js .rc-head .pg-label, .rc-js .rc-head .pg-head-body > *, .rc-js .rc-secs .rc-label, .rc-js .rc-secs .rc-body > *,
+  .rc-js .rc-head .pg-head > *, .rc-js .rc-secs .rc-body > *,
   .rc-js .rc-secs .rc-fit li, .rc-do li,
   .rc-spy-js .rc-steps-spy > li, .rc-spy-js .rc-steps-spy .rc-rounds > li,
   .rc-spy-js .rc-steps-spy > li:not(.on), .rc-spy-js .rc-steps-spy > li.on .rc-rounds > li:not(.on),

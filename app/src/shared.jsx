@@ -5,7 +5,7 @@ import { useState } from 'react'
 // 로그인 상태 동적 표시(M3 ④) — localStorage 동기 확인 1회. 네트워크 호출 없음 = 공개 페이지 성능·정적성 유지.
 import { hasWorkspaceSession } from './data/session-flag.js'
 // 연락 채널 단일원천(2026-08-05) — REPO_URL도 여기서 파생(주소 중복 0)
-import { CONTACT } from './data/recruit.js'
+import { CONTACT, CONTACT_MAILTO } from './data/recruit.js'
 
 export const REPO_URL = CONTACT.githubUrl
 export const CONTRIBUTING_URL = `${REPO_URL}/blob/main/CONTRIBUTING.md`
@@ -54,6 +54,8 @@ export function SiteNav({ signedIn }) {
             <a key={href} href={href} className={isOn(href) ? 'on' : undefined}>{label}</a>
           ))}
         </nav>
+        {/* 모집 CTA — 상단바 맨 우측 상시 노출(피드백 2026-08-06: 모집 진입을 상단바에서 바로) */}
+        <a className="nav-cta" href="/recruit/#apply">신청하기</a>
         <button
           type="button"
           className="nav-toggle"
@@ -83,20 +85,18 @@ export function SiteNav({ signedIn }) {
   )
 }
 
-// ── 페이지 헤드 골격(3차 통일 2026-08-05, 디자인규칙 §3-1) ────────────────────
-// 구 4구현(art-head·sem-head·pj-head·rc-eyebrow 인라인)을 이 컴포넌트 1개로 통합.
-// 골격 = [좌 라벨 레일(--rail-w·버건디 ■ 눈썹) | h1 → 서브 1줄 → 갱신 메타 → children] + 헤어라인 마감.
-// label = 영문 소형 라벨(§5 라벨 영문 정책, 눈썹 역할 승계) · children = 페이지 고유 부가 요소(필터 탭·CTA 등).
+// ── 페이지 헤드 골격(4차 개편 2026-08-06 — 외부 피드백 반영, 디자인규칙 §3-1) ──────
+// 구 좌 라벨 레일(■ 눈썹 + --rail-w 2열) 폐지 → 중앙 정렬 1열: 소형 영문 키커 → h1 → 문장형 설명 → 메타.
+// sub = "~입니다" 문장형 한 줄(페이지가 뭐 하는 곳인지 명시 — 피드백 "설명글 한 줄").
+// meta = 갱신일(인사이트만 유지 — 다른 페이지는 전달하지 않으면 생략). children = 필터 탭·CTA 등.
 export function PageHead({ label, title, sub, meta, children }) {
   return (
     <header className="pg-head">
-      <span className="pg-label"><i className="pg-sq" aria-hidden="true" />{label}</span>
-      <div className="pg-head-body">
-        <h1 className="pg-title">{title}</h1>
-        {sub && <p className="pg-sub">{sub}</p>}
-        {meta && <p className="pg-meta">{meta}</p>}
-        {children}
-      </div>
+      <span className="pg-label">{label}</span>
+      <h1 className="pg-title">{title}</h1>
+      {sub && <p className="pg-sub">{sub}</p>}
+      {meta && <p className="pg-meta">{meta}</p>}
+      {children}
     </header>
   )
 }
@@ -111,12 +111,14 @@ export function latestUpdated(list) {
   return d ? `최종 갱신 ${d}` : null
 }
 
+// 푸터 — 전 페이지 공통, 문의 채널(이메일·GitHub) 명시(피드백 2026-08-06 "맨 밑에 이메일·문의 주소").
 export function SiteFooter() {
   return (
     <footer className="footer">
       <div className="footer-inner">
         <span className="f-brand">AIM — 광운대학교 ERP연구회 산하 MIS·AI 스터디</span>
-        <span style={{ display: 'flex', gap: '1.25rem' }}>
+        <span className="f-links">
+          <a href={CONTACT_MAILTO}>{CONTACT.email}</a>
           <a href={REPO_URL}>GITHUB</a>
         </span>
       </div>

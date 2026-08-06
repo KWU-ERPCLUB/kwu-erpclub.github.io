@@ -4,7 +4,6 @@ import App from './App.jsx'
 import './styles/global.css'
 import './styles/home.css'
 import './styles/home-sections.css'
-import './styles/hero-visual.css'
 import './styles/recruit.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(

@@ -1,20 +1,17 @@
-// 메인(/) v6 — §6-2a v3.1 개조(2026-08-05, NEXTERS 실측 문법): 불변 3종(화이트 배경·폰트·버건디)만 유지, 지면 골격 개조.
-// B1 블랙 통계 밴드(모집 직하·페이지 블랙 대면적 1개·CountUp 재사용·실측 수치만) ·
-// B2 좌 라벨 컬럼 골격(ROADMAP·PROJECTS·FAQ = 좌 고정 라벨(버건디 ■)+우 콘텐츠 2단) ·
-// B3 ROADMAP = 계보 트리 폐지 → 대형 워드 스택 + 스크롤 연동(중앙 최근접 항목만 진하게·opacity만) ·
-// B4 버건디 모집 면 철회(블랙 밴드와 경합 → recruit.css 기본 라이트 밴드로 복귀) — 근거 = home.css 주석.
-// 모션: 문자 스태거 리빌 · 키워드 마퀴 · 커버 호버 리프트 · 섹션=페이지 감쇠(home-motion.jsx). 신규 무한루프 0 · transform·opacity만 · reduced-motion 존중.
-import { useEffect } from 'react'
+// 메인(/) v7 — 외부 피드백 개편(2026-08-06): 히어로 정중앙 대형 타이포 + 추상 모션 그래픽 배경,
+// 우측 격자 키비주얼·마퀴·스크롤 유도 폐지, 좌 라벨 컬럼(B2) 폐지 → 중앙 섹션 헤드,
+// 순서 = 히어로 → 블랙 스탯 밴드(중앙) → 모집 밴드(강조) → 로드맵(지그재그 타임라인) → 프로젝트(2열) → FAQ → 인사이트(썸네일 줄).
+// 모션: 문자 스태거 리빌 · 히어로 배경 블롭 플로트(CSS만) · 커버 호버 리프트 · 섹션 리빌(home-motion.jsx).
+// 신규 무한루프 = 배경 블롭 CSS 1건(reduced-motion 정지) · transform·opacity만.
 import { Arrow, SiteNav, SiteFooter } from './shared.jsx'
-import { MARQUEE_KEYWORDS, marqueeTrack, localYmd, recruitPhase, studyCell } from './home-logic.js'
+import { localYmd, recruitPhase, studyCell } from './home-logic.js'
 import { RECRUIT, COHORT_LABEL, formatWindowShort } from './data/recruit.js'
 import { FAQ } from './data/faq.js'
 import { loadContent } from './content/loader.js'
-import { useSectionSpy, useParallax, StaggerChars, CountUp, prefersReduced } from './home-motion.jsx'
-import { Cols, HomeInsights } from './home-parts.jsx'
-import HeroVisual from './hero-visual.jsx'
+import { useSectionSpy, useParallax, StaggerChars, CountUp } from './home-motion.jsx'
+import { SectionHead, HomeInsights } from './home-parts.jsx'
 
-// PROJECTS — 풀폭 커버 카드(커버 캡처 + 대형 제목 오버레이). 클릭 = /projects/ 상세 딥링크.
+// PROJECTS — 2열 커버 카드(피드백: "양쪽으로·한눈에", 최대 3개). 클릭 = /projects/ 상세 딥링크.
 // ?p= 슬러그는 content/프로젝트/<슬러그>.md와 1:1이어야 한다(어긋나면 빈 상세 = 조용한 깨짐).
 // export = 슬러그 존재 여부를 테스트가 콘텐츠 글롭과 대조하기 위함.
 export const PROJECTS = [
@@ -22,8 +19,8 @@ export const PROJECTS = [
   ['KWU ERP Club Site', '/img/projects/erpclub-site.png', '/projects/?p=2026-07-24-bapzzi-erpclub-site', '운영 중'],
 ]
 
-// ROADMAP — B3 워드 스택(2026-08-05 v3.1): 계보를 대형 워드 5노드로 평탄화(ORIGIN→SAP→분기→프로젝트→슬롯).
-// 내용·상태는 구 계보 트리(2026-07-25)와 동일 — 렌더 형태만 개조. DEEP DIVE(미개설)는 제외.
+// ROADMAP — 지그재그 타임라인(피드백 2026-08-06: "진짜 로드맵처럼 지그재그로·연도를 써서").
+// 내용·상태는 구 워드 스택과 동일 — 렌더 형태만 개조. DEEP DIVE(미개설)는 제외.
 const LINEAGE = [
   { era: 'ORIGIN', title: 'ERP연구회', desc: '경영학부 MIS 스터디 — ERP·정보시스템의 뿌리.' },
   { era: 'SAP ERA', title: 'SAP 특강', desc: '실무 컨설턴트가 이끈 MM·ABAP 교육 — 이어져 온 본류.' },
@@ -34,58 +31,17 @@ const LINEAGE = [
 
 // FAQ 원천 = data/faq.js(E4 공용화 2026-08-05) — 메인은 전체 렌더, /recruit는 서브셋.
 
-function ChevronDown() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-      <path d="M3 5L7 9L11 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-// B3 스크롤 연동 — 뷰포트 중앙에 가장 가까운 워드만 활성(opacity만·rAF 스로틀, useSectionSpy 문법 승계).
-// 게이트 = html.home-spy-js(2026-08-05 스톨 수정) — no-JS·reduced-motion이면 클래스가 없어 감쇠 규칙 자체가 꺼짐.
-// 허용 파일 제약으로 home-motion.jsx가 아니라 여기 지역 정의.
-function useWordSpy() {
-  useEffect(() => {
-    const items = Array.from(document.querySelectorAll('.wl-item'))
-    if (items.length === 0) return
-    if (prefersReduced()) return
-    const root = document.documentElement
-    root.classList.add('home-spy-js')
-    let raf = 0
-    const pick = () => {
-      raf = 0
-      const cy = window.innerHeight / 2
-      let best = null
-      let bd = Infinity
-      for (const el of items) {
-        const r = el.getBoundingClientRect()
-        const d = Math.abs((r.top + r.bottom) / 2 - cy)
-        if (d < bd) { bd = d; best = el }
-      }
-      items.forEach((el) => el.classList.toggle('on', el === best))
-    }
-    const onScroll = () => { if (!raf) raf = requestAnimationFrame(pick) }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('resize', onScroll, { passive: true })
-    pick()
-    return () => {
-      window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('resize', onScroll)
-      if (raf) cancelAnimationFrame(raf)
-      root.classList.remove('home-spy-js')
-    }
-  }, [])
-}
-
-// 히어로 100vh — 브랜드 키커 → 뷰포트 타이포(AIM) → 확장 라인(AI × MIS, AIM 폭 정렬) → 서브 → 풀폭 마퀴 + 스크롤 유도.
-// 확장 라인 정렬(오너 2026-08-05): AI = 메가 A·I 아래 좌측, MIS = 메가 M 아래 우측 — .hero-brand 인라인블록이 메가 폭을 감싸고 flex 양끝 정렬.
+// 히어로 — 정중앙 대형 AIM + 문장형 정체 설명. 배경 = 추상 모션 그래픽(블롭 3개, CSS만 — 이미지 파일 0).
+// 정체성 아이콘은 스터디 구상 확정 후로 미룸(피드백 합의) — 그때 이 블롭 레이어만 교체한다.
 function Hero() {
   return (
     <section className="hs hs-hero page" id="top">
+      <div className="hero-bg" aria-hidden="true">
+        <span className="hb hb-1" />
+        <span className="hb hb-2" />
+        <span className="hb hb-3" />
+      </div>
       <div className="hs-in hs-hero-in">
-        {/* 키비주얼(2026-08-05 2차) — 우측 배경 레이어. 타이포가 계속 주인공(텍스트 위 z-index 우선·폰에서 미표시). */}
-        <HeroVisual />
         <span className="hero-kicker rv">KWANGWOON UNIV. · SCHOOL OF BUSINESS</span>
         <div className="hero-brand">
           <h1 className="hero-mega">
@@ -101,26 +57,14 @@ function Hero() {
           광운대학교 ERP연구회 산하 MIS·AI 스터디
         </p>
         <p className="hero-desc rv" style={{ transitionDelay: '400ms' }}>
-          AI 활용에 집중하는 스터디의 허브 — AI 인사이트·세미나·프로젝트 기록.
+          경영·MIS의 업무와 학업에 AI를 붙이는 법을 연구합니다 — 기록은 인사이트·세미나·프로젝트에 쌓입니다.
         </p>
-      </div>
-      <div className="hero-foot">
-        <div className="marquee" data-parallax="-0.03" aria-hidden="true">
-          <div className="marquee-track">
-            {marqueeTrack(MARQUEE_KEYWORDS).map((kw, i) => (
-              <span className="marquee-item" key={`${kw}-${i}`}>{kw}</span>
-            ))}
-          </div>
-        </div>
-        <span className="scroll-cue rv" style={{ transitionDelay: '420ms' }}>SCROLL <ChevronDown /></span>
       </div>
     </section>
   )
 }
 
-// 모집 섹션 — 히어로 직하 한 축. 3국면 전부 렌더(2026-08-05 수정 — 구현은 after에서 null이었으나
-// SPEC §4 "모집 기간 아님 → 다음 기수 안내" 요구 → 밴드 자리를 비우지 않고 안내로 교체).
-// v3.1 B4: 버건디 면 철회 — recruit.css 기본(라이트 surface 밴드)로 렌더. 마크업 불변.
+// 모집 섹션 — 블랙 스탯 밴드 직하(피드백: "집계 밑에 1기 모집을 강조"). 3국면 전부 렌더(SPEC §4).
 // .page 미부여 = 섹션 스파이(감쇠) 제외. 카피 = 사실 서술만. export = 국면별(전·중·후) 렌더 테스트용.
 // [배지, 배지문구, 노트, 제목, 본문] — 값은 전부 data/recruit.js 파생(표시 문자열 중복 0).
 const RECRUIT_COPY = {
@@ -145,18 +89,16 @@ export function RecruitBand({ today = localYmd() }) {
         </div>
         <h2 className="rb-title">{title}</h2>
         <p className="rb-text">{text}</p>
-        {/* Primary CTA(§4 위계) — 메인의 유일한 Primary. 구 proof-link(Tertiary)에서 승격 2026-08-05.
-            형태 = recruit.css .rc-cta-xl 재사용(차콜 필 + 버건디 원형 화살표) — 새 버튼 형태 발명 0. */}
+        {/* Primary CTA(§4 위계) — 메인의 유일한 Primary(차콜 필 + 버건디 원형 화살표). */}
         <a className="rc-cta-xl rb-cta" href="/recruit/">{ctaLabel} <Arrow /></a>
       </div>
     </section>
   )
 }
 
-// B1 블랙 통계 밴드 — 잉크 대면적 + 흰 숫자 1×3(헤어라인·CountUp 재사용).
-// 수치 = 실측만(content/ 집계 + 확인된 사실). 출처 = 셀별 소형 표기.
-// 신생 스터디 원칙(2026-08-05 오너): 0건 지표(세미나 등)는 밴드에 싣지 않는다 — 있는 기록만, 과장·허수 0.
-// .page 미부여 = 감쇠 제외(블랙 면 감쇠는 지면 파손). export = 수치·출처 단언 테스트용(today 주입).
+// B1 블랙 통계 밴드 — 잉크 대면적 + 흰 숫자 1×3. 4차: 중앙 정렬 + 버건디 언더바 폐지(피드백 "작대기 삭제").
+// 수치 = 실측만(content/ 집계 + 확인된 사실). 출처 = 셀별 소형 표기(§6 수치 출처 의무).
+// 0건 지표(세미나 등)는 싣지 않는다 — 있는 기록만, 과장·허수 0.
 export function StatsBand({ today = localYmd() }) {
   const 기사수 = loadContent('기사').length
   const cells = [
@@ -167,7 +109,7 @@ export function StatsBand({ today = localYmd() }) {
   return (
     <section className="stats-band" aria-label="운영 실측 수치">
       <div className="sb-in">
-        <span className="sb-kicker">RECORD — 실측 집계</span>
+        <span className="sb-kicker">RECORD</span>
         <div className="sb-grid">
           {cells.map(([num, label, src]) => (
             <div className="sb-cell" key={label}>
@@ -182,35 +124,39 @@ export function StatsBand({ today = localYmd() }) {
   )
 }
 
-// ROADMAP — B3 대형 워드 스택(스크롤 연동·활성만 진하게). 점선 슬롯 문법은 톤 다운으로 승계.
+
+// ROADMAP — 지그재그 타임라인: 중앙 세로 스파인 + 좌우 교대 카드(면 배경, 헤어라인 가로줄 없음).
 function Roadmap() {
   return (
     <section className="hs hs-roadmap page" id="roadmap">
-      <Cols label="01 — ROADMAP">
-        <h2 className="hs-title rv" style={{ transitionDelay: '90ms' }}>스터디 <em>로드맵</em></h2>
-        <ol className="wl rv" style={{ transitionDelay: '180ms' }}>
-          {LINEAGE.map((n) => (
-            <li className={`wl-item${n.slot ? ' wl-slot' : ''}`} key={n.title}>
-              <span className="wl-era">{n.era}</span>
-              <span className="wl-word">{n.title}</span>
-              <span className="wl-desc">
-                {n.desc}
-                {n.status && <span className={`status ${n.status[0]}`}>{n.status[1]}</span>}
-              </span>
+      <div className="hs-in">
+        <SectionHead label="ROADMAP" title={<>스터디 <em>로드맵</em></>} />
+        <ol className="rm rv" style={{ transitionDelay: '180ms' }}>
+          {LINEAGE.map((n, i) => (
+            <li className={`rm-item${i % 2 === 1 ? ' rm-right' : ''}${n.slot ? ' rm-slot' : ''}`} key={n.title}>
+              <span className="rm-dot" aria-hidden="true" />
+              <div className="rm-card">
+                <span className="rm-era">{n.era}</span>
+                <span className="rm-word">{n.title}</span>
+                <span className="rm-desc">
+                  {n.desc}
+                  {n.status && <span className={`status ${n.status[0]}`}>{n.status[1]}</span>}
+                </span>
+              </div>
             </li>
           ))}
         </ol>
-      </Cols>
+      </div>
     </section>
   )
 }
 
-// PROJECTS — 풀폭 대형 커버 카드(커버 위 대형 제목 오버레이). 클릭 = /projects/ 상세.
+// PROJECTS — 2열 커버 카드(피드백: 세로 나열 폐지 — "양쪽으로·한눈에").
 function Projects() {
   return (
     <section className="hs hs-projects page" id="projects">
-      <Cols label="02 — PROJECTS">
-        <h2 className="hs-title rv" style={{ transitionDelay: '90ms' }}><em>프로젝트</em></h2>
+      <div className="hs-in">
+        <SectionHead label="PROJECTS" title={<><em>프로젝트</em></>} />
         <div className="hp-list rv" style={{ transitionDelay: '180ms' }}>
           {PROJECTS.map(([title, cover, href, tag]) => (
             <a className="hp-card" href={href} key={title}>
@@ -225,20 +171,20 @@ function Projects() {
             </a>
           ))}
         </div>
-        <p className="hp-more-links rv" style={{ transitionDelay: '260ms' }}>
-          <a className="proof-link" href="/projects/">전체 아카이브 <Arrow /></a>
+        <p className="hs-more rv" style={{ transitionDelay: '260ms' }}>
+          <a className="btn-2nd" href="/projects/">전체 아카이브 <Arrow /></a>
         </p>
-      </Cols>
+      </div>
     </section>
   )
 }
 
-// FAQ — 대형 아코디언(질문 타이포 1.4rem급·풀폭 헤어라인).
+// FAQ — 아코디언(4차: 질문 타이포 축소 — 피드백 "글씨가 너무 크다").
 function Faq() {
   return (
     <section className="hs hs-faq page" id="faq">
-      <Cols label="03 — FAQ">
-        <h2 className="hs-title rv" style={{ transitionDelay: '90ms' }}>묻고 <em>답하기</em></h2>
+      <div className="hs-in">
+        <SectionHead label="FAQ" title={<>묻고 <em>답하기</em></>} />
         <div className="faq-xl rv" style={{ transitionDelay: '180ms' }}>
           {FAQ.map(({ q, a }) => (
             <details className="fx-item" key={q}>
@@ -247,7 +193,7 @@ function Faq() {
             </details>
           ))}
         </div>
-      </Cols>
+      </div>
     </section>
   )
 }
@@ -255,14 +201,13 @@ function Faq() {
 export default function App() {
   useSectionSpy()
   useParallax()
-  useWordSpy()
   return (
     <>
       <SiteNav />
       <main id="main" className="home">
         <Hero />
-        <RecruitBand />
         <StatsBand />
+        <RecruitBand />
         <Roadmap />
         <Projects />
         <Faq />
