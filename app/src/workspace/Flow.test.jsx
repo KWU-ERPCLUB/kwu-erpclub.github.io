@@ -19,12 +19,16 @@ test('흐름 탭 골격 = 제목·안내(SSR — 데이터는 클라이언트 �
   expect(html).not.toContain('주차 기록 추가')     // 비운영진 = 등록 폼 없음
 })
 
-test('1기 로드맵 = 흐름 탭 상단 게재(확정값만·미정은 추후 확정 표기)', () => {
+test('1기 로드맵 = 흐름 탭 상단 세로 타임라인(회차별 주제·배울 것·세부, 미정은 추후 확정 표기)', () => {
   const html = flat(<Flow store={createMockRepositories({ user: 'mock-member' })} staff={false} />)
   expect(html).toContain('1기 로드맵')
-  expect(html).toContain('2차 프로젝트(팀)')
-  expect(html).toContain('서로 묻는 질문 3')
+  expect(html).toContain('ws-rm')                  // 타임라인 골격
+  expect(html).toContain('킥오프 — 질문에서 위임으로')
+  expect(html).toContain('다섯 활용 축 체험')
+  expect(html).toContain('중간 쇼케이스')
+  expect(html).toContain('2차 프로젝트 — 팀')
   expect(html).toContain('추후 확정')              // 미정 값을 확정처럼 쓰지 않는다
+  expect(html).not.toContain('서로 묻는 질문')     // 2026-08-06 오너 — 질문 블록 제거
   expect(html.indexOf('1기 로드맵')).toBeLessThan(html.indexOf('스터디 흐름'))  // 상단 배치
   // 마케팅 어투 금지(모집 카피 규칙 준용)
   for (const banned of ['지금 바로', '놓치지', '마지막 기회', '서두르', '얼른']) expect(html).not.toContain(banned)
