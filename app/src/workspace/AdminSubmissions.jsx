@@ -38,7 +38,7 @@ export default function AdminSubmissions({ store }) {
     <section className="ws-block">
       <h2 className="ws-h2">제출 현황 <span className="ws-count">{assignments.length}</span></h2>
       <p className="ws-note">행 = 멤버 · 열 = 과제. 배지 클릭 = 제출물 열기. 하단 = 과제별 제출률.</p>
-      {status === 'loading' && <p className="ws-note">불러오는 중</p>}
+      {status === 'loading' && <div className="ws-skel" aria-label="불러오는 중"><span /><span /></div>}
       {error && <p className="ws-error" role="alert">{error}</p>}
       {status === 'ready' && assignments.length === 0 && <p className="ws-note">등록된 과제 0건 — 콘텐츠 영역에서 과제 등록.</p>}
       {status === 'ready' && assignments.length > 0 && (

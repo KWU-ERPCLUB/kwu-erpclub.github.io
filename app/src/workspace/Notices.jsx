@@ -77,14 +77,16 @@ export default function Notices({ store }) {
     <>
       <section className="ws-block">
         <h2 className="ws-h2">공지 <span className="ws-count">{rows.length}</span></h2>
-        {status === 'loading' && <p className="ws-note">불러오는 중</p>}
+        {status === 'loading' && <div className="ws-skel" aria-label="불러오는 중"><span /><span /></div>}
         {error && <p className="ws-error" role="alert">{error}</p>}
         {status === 'ready' && rows.length === 0 && <p className="ws-note">공지 0건.</p>}
         <ul className="ws-list">
           {rows.map((n) => (
             <li key={n.id} className="ws-scrap">
-              <span className="ws-scrap-url">{n['제목']}</span>
-              <span className="ws-mark-meta">{n['내부여부'] === false ? '공개' : '내부'}</span>
+              <div className="ws-row-top">
+                <span className="ws-row-title">{n['제목']}</span>
+                <span className="ws-mark-meta">{n['내부여부'] === false ? '공개' : '내부'}</span>
+              </div>
               <div className="ws-preview">
                 <Markdown body={n['본문'] || ''} />
               </div>

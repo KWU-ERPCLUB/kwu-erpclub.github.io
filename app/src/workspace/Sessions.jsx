@@ -17,7 +17,7 @@ export default function Sessions({ store }) {
   return (
     <section className="ws-block">
       <h2 className="ws-h2">세션 <span className="ws-count">{rows.length}</span></h2>
-      {status === 'loading' && <p className="ws-note">불러오는 중</p>}
+      {status === 'loading' && <div className="ws-skel" aria-label="불러오는 중"><span /><span /></div>}
       {error && <p className="ws-error" role="alert">{error}</p>}
       {status === 'ready' && rows.length === 0 && <p className="ws-note">등록된 세션 0건.</p>}
       <ul className="ws-list">
@@ -25,8 +25,10 @@ export default function Sessions({ store }) {
           const mine = materials.filter((m) => m.session_id === s.id)
           return (
             <li key={s.id} className="ws-scrap">
-              <span className="ws-scrap-url">{s['회차']}회차 · {s['제목']}</span>
-              <span className="ws-mark-meta">{s['날짜'] || '일정 미정'}</span>
+              <div className="ws-row-top">
+                <span className="ws-row-title">{s['회차']}회차 · {s['제목']}</span>
+                <span className="ws-mark-meta">{s['날짜'] || '일정 미정'}</span>
+              </div>
               {s['설명'] && <p className="ws-scrap-memo">{s['설명']}</p>}
               <ul className="ws-sublist">
                 {mine.length === 0 && <li className="ws-note">자료 0건</li>}

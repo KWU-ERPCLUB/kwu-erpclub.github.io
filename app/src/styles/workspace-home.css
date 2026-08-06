@@ -42,6 +42,26 @@
 .ws-content-title { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 1.35rem; letter-spacing: -0.01em; }
 .ws-content-sub { margin: 0; font-size: 0.86rem; color: var(--text-sub); }
 
+/* 탭 패널 — 방문 탭 keep-alive(hidden 토글). 표시 전환 시 160ms 페이드 1회(급전환 완화) */
+.ws-tabpane { animation: ws-pane-in 160ms ease-out; }
+@keyframes ws-pane-in { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .ws-tabpane { animation: none; } }
+
+/* 스켈레톤 로딩 — 문구 대신 자리 유지 막대 2개(내용 도착 시 높이 급변 완화) */
+.ws-skel { display: flex; flex-direction: column; gap: 0.45rem; margin-top: 0.6rem; }
+.ws-skel span { display: block; height: 40px; border-radius: 8px; background: var(--surface); border: 1px solid var(--line); }
+@media (prefers-reduced-motion: no-preference) {
+  .ws-skel span { animation: ws-skel-pulse 1.1s ease-in-out infinite alternate; }
+  @keyframes ws-skel-pulse { from { opacity: 1; } to { opacity: 0.45; } }
+}
+
+/* 행 1줄 문법 — 제목(좌) + 배지·메타(우) 정렬. 구 flex-wrap 우측 밀림 산만함 해소 */
+.ws-row-top { display: flex; align-items: center; gap: 0.6rem; width: 100%; min-width: 0; }
+.ws-row-title { font-size: 0.9rem; font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ws-row-top .status, .ws-row-top .ws-mark-meta, .ws-row-top .ws-row-acts { margin-left: auto; flex: none; }
+.ws-row-top .status + .ws-mark-meta, .ws-row-top .status + .ws-row-acts,
+.ws-row-top .ws-mark-meta + .ws-row-acts { margin-left: 0; }
+
 /* 접힘 블록(과제 제출 폼·운영 기록 아카이브) — 리스트 스캔 우선, 펼침은 선택 */
 .ws-fold { flex-basis: 100%; }
 .ws-fold summary { font-size: 0.84rem; font-weight: 600; color: var(--text-sub); cursor: pointer; }

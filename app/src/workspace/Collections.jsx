@@ -88,7 +88,7 @@ export default function Collections({ store }) {
     <div className="ws-collections">
       <section className="ws-block">
         <h2 className="ws-h2">내 북마크</h2>
-        {status === 'loading' && <p className="ws-note">불러오는 중</p>}
+        {status === 'loading' && <div className="ws-skel" aria-label="불러오는 중"><span /><span /></div>}
         {status === 'ready' && marks.length === 0 && <p className="ws-note">북마크 0건 — 인사이트 상세에서 추가.</p>}
         <ul className="ws-list">
           {marks.map((m) => (

@@ -106,10 +106,14 @@ function MyDrafts({ rows, onEdit }) {
     <ul className="ws-list">
       {rows.map((a) => (
         <li key={a.id} className="ws-scrap">
-          <span className="ws-scrap-url">{a['제목']}</span>
-          <span className={`status ${a['상태'] === '게재' ? 'done' : 'prep'}`}>{a['상태']}</span>
-          <div className="ws-row-acts">
-            {a['상태'] !== '게재' && <button type="button" onClick={() => onEdit(a)}>이어쓰기</button>}
+          <div className="ws-row-top">
+            <span className="ws-row-title">{a['제목']}</span>
+            <span className={`status ${a['상태'] === '게재' ? 'done' : 'prep'}`}>{a['상태']}</span>
+            {a['상태'] !== '게재' && (
+              <div className="ws-row-acts">
+                <button type="button" onClick={() => onEdit(a)}>이어쓰기</button>
+              </div>
+            )}
           </div>
         </li>
       ))}

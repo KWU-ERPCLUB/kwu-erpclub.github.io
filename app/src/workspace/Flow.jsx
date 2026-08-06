@@ -102,7 +102,7 @@ export default function Flow({ store, staff }) {
       <section className="ws-block">
         <h2 className="ws-h2">스터디 흐름 <span className="ws-count">{rows.length}</span></h2>
         <p className="ws-note">주 단위 진행 기록 — 지난 주에 한 것·이번 주에 하는 것·다음 주에 할 것.</p>
-        {status === 'loading' && <p className="ws-note">불러오는 중</p>}
+        {status === 'loading' && <div className="ws-skel" aria-label="불러오는 중"><span /><span /></div>}
         {error && <p className="ws-error" role="alert">{error}</p>}
         {status === 'ready' && rows.length === 0 && <p className="ws-note">기록 0건 — 운영진이 주차 기록을 추가하면 여기 쌓임.</p>}
         <ul className="ws-list ws-flow-list">

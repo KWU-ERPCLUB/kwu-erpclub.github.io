@@ -36,10 +36,13 @@ function Row({ row, mine, onSubmit }) {
 
   return (
     <li className="ws-scrap">
-      <span className="ws-scrap-url">{row['제목']}</span>
+      {/* 1행 = 제목 + 상태 배지(우) / 2행 = 마감 — 앱 행 문법(2026-08-06 전환 안정화 개편) */}
+      <div className="ws-row-top">
+        <span className="ws-row-title">{row['제목']}</span>
+        <span className={`status ${mine ? 'done' : 'prep'}`}>{mine ? '제출함' : '미제출'}</span>
+      </div>
       <span className="ws-mark-meta">{dueLabel(row['마감'])}</span>
       {row['설명'] && <p className="ws-scrap-memo">{row['설명']}</p>}
-      <span className={`status ${mine ? 'done' : 'prep'}`}>{mine ? '제출함' : '미제출'}</span>
       {/* 제출 폼 = 접힘(리스트+배지 스캔 우선, Classroom 문법 — 2026-08-06 재구성). 미제출은 펼침이 기본. */}
       <details className="ws-fold" open={!mine}>
         <summary>{mine ? '제출 링크 수정' : '링크 제출'}</summary>
@@ -84,7 +87,7 @@ export default function Assignments({ store }) {
   return (
     <section className="ws-block">
       <h2 className="ws-h2">과제 <span className="ws-count">{rows.length}</span></h2>
-      {status === 'loading' && <p className="ws-note">불러오는 중</p>}
+      {status === 'loading' && <div className="ws-skel" aria-label="불러오는 중"><span /><span /></div>}
       {error && <p className="ws-error" role="alert">{error}</p>}
       {msg && <p className="ws-ok" role="status">{msg}</p>}
       {status === 'ready' && rows.length === 0 && <p className="ws-note">등록된 과제 0건.</p>}

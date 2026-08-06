@@ -66,9 +66,11 @@ function Activity({ articles, submissions, assignments }) {
       <ul className="ws-list">
         {articles.map((a) => (
           <li key={a.id} className="ws-scrap">
-            <span className="ws-scrap-url">{a['제목']}</span>
-            <span className={`status ${a['상태'] === '게재' ? 'done' : 'prep'}`}>{a['상태']}</span>
-            <span className="ws-mark-meta">{a['게재일'] || ''}</span>
+            <div className="ws-row-top">
+              <span className="ws-row-title">{a['제목']}</span>
+              <span className={`status ${a['상태'] === '게재' ? 'done' : 'prep'}`}>{a['상태']}</span>
+              <span className="ws-mark-meta">{a['게재일'] || ''}</span>
+            </div>
           </li>
         ))}
       </ul>
@@ -78,8 +80,10 @@ function Activity({ articles, submissions, assignments }) {
       <ul className="ws-list">
         {submissions.map((s) => (
           <li key={s.id} className="ws-scrap">
-            <span className="ws-scrap-url">{titleOf(s.assignment_id)}</span>
-            <a className="ws-mark-meta" href={s.url} target="_blank" rel="noreferrer">제출 링크</a>
+            <div className="ws-row-top">
+              <span className="ws-row-title">{titleOf(s.assignment_id)}</span>
+              <a className="ws-mark-meta" href={s.url} target="_blank" rel="noreferrer">제출 링크</a>
+            </div>
             {s['메모'] && <p className="ws-scrap-memo">{s['메모']}</p>}
           </li>
         ))}

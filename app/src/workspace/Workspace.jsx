@@ -106,8 +106,30 @@ export function LoginForm({ onSubmit, error, busy }) {
 // 좌 사이드바(고정 232px·sticky) = 라벨 + 탭 + 하단 계정 블록 / 우 콘텐츠 = 남는 폭 전부.
 export function Shell({ member, onSignOut, store, onMemberChanged, search }) {
   const [tab, setTab] = useState(() => initialTab(search ?? (typeof window !== 'undefined' ? window.location.search : '')))
+  // 방문 탭 keep-alive(2026-08-06 전환 안정화) — 재방문 시 재마운트·재페치·로딩 깜빡임 0. 폼 입력도 유지.
+  const [visited, setVisited] = useState(() => new Set([tab]))
   const staff = isStaffRole(member)
   const active = WS_TABS.find(([name]) => name === tab) || WS_TABS[0]
+
+  function go(name) {
+    setVisited((prev) => (prev.has(name) ? prev : new Set(prev).add(name)))
+    setTab(name)
+    if (typeof window !== 'undefined') window.scrollTo({ top: 0 })   // 이전 탭 스크롤 위치 이월 금지
+  }
+
+  // 탭 본문 — visited에 든 탭만 마운트, 비활성은 hidden(display:none)으로 상태 보존.
+  function paneOf(name) {
+    if (!store) return null
+    if (name === '홈') return <Home store={store} member={member} />
+    if (name === '스터디 흐름') return <Flow store={store} staff={staff} />
+    if (name === '인사이트 기고') return <Contribute store={store} />
+    if (name === '북마크') return <Collections store={store} />
+    if (name === '내정보') return <MyPage store={store} member={member} onProfileSaved={onMemberChanged} />
+    // 운영 탭 = 화면 차단(권한 없으면 안내만) + 서버 RLS 이중 방어
+    if (name === '운영') return staff ? <Admin store={store} member={member} /> : <Denied />
+    return null
+  }
+
   return (
     <div className="ws-shell">
       <nav className="ws-side" aria-label="워크스페이스 기능">
@@ -117,7 +139,7 @@ export function Shell({ member, onSignOut, store, onMemberChanged, search }) {
             <button
               key={name} type="button" aria-pressed={tab === name} title={desc}
               className={`ws-sidebtn${tab === name ? ' on' : ''}`}
-              onClick={() => setTab(name)}
+              onClick={() => go(name)}
             >
               <span className="ws-sidebtn-name">{name}</span>
               <span className="ws-sidebtn-desc">{desc}</span>
@@ -143,13 +165,9 @@ export function Shell({ member, onSignOut, store, onMemberChanged, search }) {
           </div>
         )}
         {/* 홈 = 캘린더 + 다가오는 업무 + 과제·공지·세션 흡수(구 제출·스터디 탭) */}
-        {store && tab === '홈' && <Home store={store} member={member} />}
-        {store && tab === '스터디 흐름' && <Flow store={store} staff={staff} />}
-        {store && tab === '인사이트 기고' && <Contribute store={store} />}
-        {store && tab === '북마크' && <Collections store={store} />}
-        {store && tab === '내정보' && <MyPage store={store} member={member} onProfileSaved={onMemberChanged} />}
-        {/* 운영 탭 = 화면 차단(권한 없으면 안내만) + 서버 RLS 이중 방어 */}
-        {store && tab === '운영' && (staff ? <Admin store={store} member={member} /> : <Denied />)}
+        {[...visited].map((name) => (
+          <div key={name} hidden={tab !== name} className="ws-tabpane">{paneOf(name)}</div>
+        ))}
       </div>
     </div>
   )
