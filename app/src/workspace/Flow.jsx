@@ -2,6 +2,7 @@
 // 데이터 = flow_weeks(0008, 열람=멤버·쓰기=운영진). 운영진에게만 인라인 등록 폼 노출.
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { toKey } from './calendar-logic.js'
+import RoadmapSection from './Roadmap.jsx'
 
 // 주 판정 — 시작일~+6일 안에 오늘이 있으면 '이번 주', 지났으면 '지난', 아니면 '예정'. 순수 함수(테스트 대상).
 export function weekStatus(startKey, todayKey) {
@@ -101,6 +102,7 @@ export default function Flow({ store, staff }) {
   return (
     <div className="ws-flow ws-cols">
       <div className="ws-cmain">
+        <RoadmapSection />
         <section className="ws-block">
           <h2 className="ws-h2">스터디 흐름 <span className="ws-count">{rows.length}</span></h2>
           <p className="ws-note">주 단위 진행 기록 — 지난 주에 한 것·이번 주에 하는 것·다음 주에 할 것.</p>
