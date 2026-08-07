@@ -53,7 +53,8 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
   로그인 전 화면만 문서형(PageHead+패널) 유지. 근거 리서치(Notion·Slack·Classroom·Canvas 문법) = roadmap 2026-08-06 항.
 - **탭(공고 신설 2026-08-07) = 좌측 사이드바 7종: 홈·흐름·공고·기고·북마크·내정보 + 운영(운영진만)**. 원천 = `Workspace.jsx`의 `WS_TABS`·`visibleTabs()`.
   홈(`Home.jsx`) = 요약 헤더(이름+7일 내 일정·마감 — Classroom '할 일' 문법) + **대형 월 캘린더 + 다가오는 업무**(계산 = `calendar-logic.js` 순수 함수) + 과제 제출·공지·세션 흡수(구 탭명 딥링크는 매핑).
-  캘린더 원천 3종 = 운영 일정(`events`, **0007 적용됨**) + 과제 마감 자동 + 세션 날짜 자동. 주간 기고 반복 핀 = `WEEKLY_CONTRIB.dueDay`(현재 null=[미정] — 오너 확정 시 값 1개).
+  캘린더 원천 = 운영 일정(`events`, **0007 적용됨**) + 과제 마감 자동 + 세션 날짜 자동 + 공고 마감·시험일(0009). 주간 기고 반복 핀 = `WEEKLY_CONTRIB.dueDay`(현재 null=[미정] — 오너 확정 시 값 1개).
+  **다가오는 업무 = ★ 지정만**(오너 2026-08-07 — 전량 노출은 소음): `events.중요`(**0010**)·`postings.고정` 겸용, `upcoming()`이 필터. 캘린더는 전 항목 유지.
   흐름(`Flow.jsx`) = 주차별 스터디 흐름(지난·이번 주·예정 — `weekStatus` 순수), 원천 = `flow_weeks`(**0008**), 운영진 인라인 CRUD.
   공고(`Postings.jsx`, 2026-08-07) = 공모전·채용·자격시험·대외활동 스크랩 보드(개인 스크랩과 별개 — 운영진 등록·전원 열람).
   원천 = `postings`(**0009**), 등록·삭제 = 운영 탭 > 공고(`AdminPostings.jsx`), **코멘트("왜 유효한가" 한 줄) 필수**(DB check+폼).

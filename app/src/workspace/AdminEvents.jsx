@@ -5,8 +5,9 @@ import { useCallback, useEffect, useState } from 'react'
 const KINDS = ['일정', '세미나', '모집', '마감']
 
 export default function AdminEvents({ store }) {
+  const EMPTY = { 제목: '', 날짜: '', 시간: '', 설명: '', 종류: '일정', 중요: false }
   const [rows, setRows] = useState([])
-  const [form, setForm] = useState({ 제목: '', 날짜: '', 시간: '', 설명: '', 종류: '일정' })
+  const [form, setForm] = useState(EMPTY)
   const [error, setError] = useState('')
   const [msg, setMsg] = useState('')
   const [busy, setBusy] = useState(false)
@@ -17,7 +18,7 @@ export default function AdminEvents({ store }) {
 
   useEffect(() => { load() }, [load])
 
-  const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }))
+  const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.type === 'checkbox' ? e.target.checked : e.target.value }))
 
   async function save(e) {
     e.preventDefault()
@@ -27,7 +28,7 @@ export default function AdminEvents({ store }) {
     try {
       await store.events.save(form)
       setMsg('일정 등록됨')
-      setForm({ 제목: '', 날짜: '', 시간: '', 설명: '', 종류: '일정' })
+      setForm(EMPTY)
       await load()
     } catch (err) {
       setError(err?.message || '저장 실패 — 마이그레이션 0007 적용 여부 확인')
@@ -62,6 +63,10 @@ export default function AdminEvents({ store }) {
           </label>
         </div>
         <label className="ws-field"><span>설명(선택)</span><input value={form['설명']} onChange={set('설명')} /></label>
+        {/* ★(0010) — 다가오는 업무는 지정 항목만 노출(전량 노출 = 소음, 오너 2026-08-07) */}
+        <label className="ws-check">
+          <input type="checkbox" checked={form['중요']} onChange={set('중요')} /> ★ 중요 — 다가오는 업무에 표시
+        </label>
         {error && <p className="ws-error" role="alert">{error}</p>}
         {msg && <p className="ws-ok" role="status">{msg}</p>}
         <div className="ws-form-acts">
@@ -71,7 +76,7 @@ export default function AdminEvents({ store }) {
       <ul className="ws-list">
         {rows.map((r) => (
           <li key={r.id} className="ws-scrap">
-            <span className="ws-scrap-url">{r['제목']}</span>
+            <span className="ws-scrap-url">{r['중요'] ? '★ ' : ''}{r['제목']}</span>
             <span className="ws-mark-meta">{r['날짜']}{r['시간'] ? ` ${r['시간']}` : ''} · {r['종류']}</span>
             <div className="ws-row-acts">
               <button type="button" onClick={() => remove(r.id)}>삭제</button>

@@ -25,28 +25,30 @@ const dateKey = (v) => {
 }
 
 // 세 원천(운영 일정·과제 마감·세션)을 캘린더 항목 하나의 배열로 합친다.
+// 중요(★, 2026-08-07 오너) — "다가오는 업무" 노출 플래그: 운영 일정은 events.중요(0010), 과제·세션 자동 항목 = false.
 export function buildAgenda({ events = [], assignments = [], sessions = [] } = {}) {
   const items = []
   for (const e of events) {
     const date = dateKey(e['날짜'])
-    if (date) items.push({ date, 제목: e['제목'], 종류: e['종류'] || '일정', 시간: e['시간'] || '', 설명: e['설명'] || '', source: 'event', id: e.id })
+    if (date) items.push({ date, 제목: e['제목'], 종류: e['종류'] || '일정', 시간: e['시간'] || '', 설명: e['설명'] || '', 중요: Boolean(e['중요']), source: 'event', id: e.id })
   }
   for (const a of assignments) {
     const date = dateKey(a['마감'])
-    if (date) items.push({ date, 제목: `과제 마감 — ${a['제목']}`, 종류: '과제', 시간: '', 설명: a['설명'] || '', source: 'assignment', id: a.id })
+    if (date) items.push({ date, 제목: `과제 마감 — ${a['제목']}`, 종류: '과제', 시간: '', 설명: a['설명'] || '', 중요: false, source: 'assignment', id: a.id })
   }
   for (const s of sessions) {
     const date = dateKey(s['날짜'])
-    if (date) items.push({ date, 제목: `${s['회차']}회차 · ${s['제목']}`, 종류: '세션', 시간: '', 설명: s['설명'] || '', source: 'session', id: s.id })
+    if (date) items.push({ date, 제목: `${s['회차']}회차 · ${s['제목']}`, 종류: '세션', 시간: '', 설명: s['설명'] || '', 중요: false, source: 'session', id: s.id })
   }
   return items.sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0))
 }
 
 export const itemsOn = (items, key) => items.filter((i) => i.date === key)
 
-// 다가오는 업무 — 오늘 포함 이후, 날짜순 상위 n건.
+// 다가오는 업무 — ★ 지정 항목만(2026-08-07 오너: 전량 노출은 소음), 오늘 포함 이후 날짜순 상위 n건.
+// 캘린더(itemsOn)는 전 항목 유지 — 필터는 이 리스트에만 적용된다.
 export function upcoming(items, todayKey, n = 6) {
-  return items.filter((i) => i.date >= todayKey).slice(0, n)
+  return items.filter((i) => i['중요'] && i.date >= todayKey).slice(0, n)
 }
 
 // 주간 기고 과제(상시 주 1건 — 기고 투트랙 spec) — 마감 요일은 오너 확정 대기([미정]).
@@ -62,7 +64,7 @@ export function weeklyContribItems(todayKey, n = 4, dueDay = WEEKLY_CONTRIB.dueD
   return Array.from({ length: n }, (_, i) => {
     const d = new Date(first)
     d.setDate(first.getDate() + i * 7)
-    return { date: toKey(d), 제목: WEEKLY_CONTRIB.label, 종류: '과제', 시간: '', 설명: '', source: 'weekly', id: `weekly-${i}` }
+    return { date: toKey(d), 제목: WEEKLY_CONTRIB.label, 종류: '과제', 시간: '', 설명: '', 중요: false, source: 'weekly', id: `weekly-${i}` }
   })
 }
 

@@ -55,3 +55,11 @@ test('캘린더 합류 — 접수마감·시험일이 종류 "공고" 항목으�
   expect(items[0]).toMatchObject({ date: '2026-09-09', 제목: '접수 마감 — ADsP 51회', 종류: '공고', source: 'posting', 설명: '접수창 5일' })
   expect(items[1]).toMatchObject({ date: '2026-10-11', 제목: '시험일 — ADsP 51회', 종류: '공고' })
 })
+
+test('캘린더 합류 중요(★) = 고정 겸용 — 다가오는 업무 노출 플래그', () => {
+  const items = postingAgendaItems([
+    row({ id: 'p1', 접수마감: '2026-09-09', 고정: true }),
+    row({ id: 'p2', 접수마감: '2026-09-20', 고정: false }),
+  ])
+  expect(items.map((i) => i['중요'])).toEqual([true, false])
+})

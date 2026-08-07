@@ -30,17 +30,18 @@ test('buildAgenda — 세 원천 병합·날짜순 정렬·형식 밖 날짜 제
   expect(items.some((i) => i['제목'].includes('마감 없음'))).toBe(false)
 })
 
-test('itemsOn·upcoming — 그날 항목 필터 + 오늘 이후 상위 n건', () => {
+test('itemsOn·upcoming — 그날 항목 필터 + 다가오는 업무 = ★ 지정만(오너 2026-08-07)', () => {
   const items = buildAgenda({
     events: [
-      { id: 'e1', 제목: '지난 일정', 날짜: '2026-09-01' },
-      { id: 'e2', 제목: '오늘 일정', 날짜: '2026-09-10' },
-      { id: 'e3', 제목: '다음 일정', 날짜: '2026-09-20' },
+      { id: 'e1', 제목: '지난 일정', 날짜: '2026-09-01', 중요: true },
+      { id: 'e2', 제목: '오늘 일정', 날짜: '2026-09-10', 중요: true },
+      { id: 'e3', 제목: '다음 일정', 날짜: '2026-09-20', 중요: true },
+      { id: 'e4', 제목: '미지정 일정', 날짜: '2026-09-15' },
     ],
   })
-  expect(itemsOn(items, '2026-09-10').length).toBe(1)
+  expect(itemsOn(items, '2026-09-15').length).toBe(1)          // 캘린더 = ★ 무관 전 항목
   const up = upcoming(items, '2026-09-10', 6)
-  expect(up.map((i) => i['제목'])).toEqual(['오늘 일정', '다음 일정'])
+  expect(up.map((i) => i['제목'])).toEqual(['오늘 일정', '다음 일정'])   // 리스트 = ★만·과거 제외
 })
 
 test('dday — 오늘/미래/과거 라벨', () => {

@@ -48,7 +48,7 @@ test('공고 저장소 — 운영진만 등록·삭제, 멤버는 열람만(목 
 
 test('운영 폼 골격 = 전 필드 + 코멘트 필수 안내', () => {
   const html = flat(<AdminPostings store={createMockRepositories({ user: 'mock-staff' })} />)
-  for (const label of ['제목', '종류', '주최(선택)', '원문 링크', '접수시작(선택)', '접수마감(선택)', '시험일(선택)', '상단 고정']) {
+  for (const label of ['제목', '종류', '주최(선택)', '원문 링크', '접수시작(선택)', '접수마감(선택)', '시험일(선택)', '다가오는 업무에 표시']) {
     expect(html).toContain(label)
   }
   expect(html).toContain('왜 유효한가')

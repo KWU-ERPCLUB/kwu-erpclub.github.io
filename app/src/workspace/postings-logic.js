@@ -40,13 +40,14 @@ export function groupPostings(rows, todayKey) {
 export const filterPostings = (rows, kind) =>
   !kind || kind === '전체' ? rows : rows.filter((r) => r['종류'] === kind)
 
-// 홈 캘린더 합류 항목 — 접수마감·시험일을 캘린더 계약({ date, 제목, 종류:'공고', source, id })으로 변환.
-// 마감 지난 날짜도 그대로 둔다(캘린더는 과거 달 조회가 정상 동작).
+// 홈 캘린더 합류 항목 — 접수마감·시험일을 캘린더 계약({ date, 제목, 종류:'공고', 중요, source, id })으로 변환.
+// 마감 지난 날짜도 그대로 둔다(캘린더는 과거 달 조회가 정상 동작). 중요(★) = 고정 겸용(다가오는 업무 노출).
 export function postingAgendaItems(rows) {
   const items = []
   for (const r of rows || []) {
-    if (r['접수마감']) items.push({ date: r['접수마감'], 제목: `접수 마감 — ${r['제목']}`, 종류: '공고', 시간: '', 설명: r['코멘트'] || '', source: 'posting', id: `${r.id}-due` })
-    if (r['시험일']) items.push({ date: r['시험일'], 제목: `시험일 — ${r['제목']}`, 종류: '공고', 시간: '', 설명: r['코멘트'] || '', source: 'posting', id: `${r.id}-exam` })
+    const 중요 = Boolean(r['고정'])
+    if (r['접수마감']) items.push({ date: r['접수마감'], 제목: `접수 마감 — ${r['제목']}`, 종류: '공고', 시간: '', 설명: r['코멘트'] || '', 중요, source: 'posting', id: `${r.id}-due` })
+    if (r['시험일']) items.push({ date: r['시험일'], 제목: `시험일 — ${r['제목']}`, 종류: '공고', 시간: '', 설명: r['코멘트'] || '', 중요, source: 'posting', id: `${r.id}-exam` })
   }
   return items
 }

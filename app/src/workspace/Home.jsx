@@ -49,13 +49,13 @@ export function MonthCalendar({ year, month, items, todayKey, selected, onSelect
   )
 }
 
-// 다가오는 업무 — 오늘 이후 마감·일정 순 목록. export = 단위 테스트용.
+// 다가오는 업무 — ★(중요) 지정 항목만(2026-08-07 오너: 전량 노출은 소음). export = 단위 테스트용.
 export function UpcomingTasks({ items, todayKey, onSelect }) {
   const rows = upcoming(items, todayKey, 6)
   return (
     <aside className="ws-upcoming" aria-label="다가오는 업무">
       <h2 className="ws-h2">다가오는 업무</h2>
-      {rows.length === 0 && <p className="ws-note">예정된 업무 0건.</p>}
+      {rows.length === 0 && <p className="ws-note">지정된 업무 0건 — 운영 탭에서 일정에 ★, 공고에 고정을 지정하면 여기 뜬다.</p>}
       <ul className="ws-list">
         {rows.map((it) => (
           <li key={`${it.source}-${it.id}`}>

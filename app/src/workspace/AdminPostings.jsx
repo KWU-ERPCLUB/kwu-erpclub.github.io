@@ -85,7 +85,7 @@ export default function AdminPostings({ store }) {
           <input value={form['코멘트']} placeholder="예: 물류·생산 과목이 전공 수업과 겹쳐 준비 비용이 낮다" onChange={set('코멘트')} />
         </label>
         <label className="ws-check">
-          <input type="checkbox" checked={form['고정']} onChange={set('고정')} /> 상단 고정
+          <input type="checkbox" checked={form['고정']} onChange={set('고정')} /> ★ 고정 — 보드 상단 + 다가오는 업무에 표시
         </label>
         {error && <p className="ws-error" role="alert">{error}</p>}
         {msg && <p className="ws-ok" role="status">{msg}</p>}
