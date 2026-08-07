@@ -9,6 +9,7 @@ import MyPage from './MyPage.jsx'
 import Collections from './Collections.jsx'
 import Home from './Home.jsx'
 import Flow from './Flow.jsx'
+import Postings from './Postings.jsx'
 import Admin, { Denied } from './Admin.jsx'
 
 // 기능 탭 — [이름, 한 줄 설명, 접근]. 접근 'staff' = 운영진에게만 노출(M3 ④).
@@ -16,10 +17,11 @@ import Admin, { Denied } from './Admin.jsx'
 export const WS_TABS = [
   ['홈', '캘린더·할 일·과제 제출·공지'],
   ['스터디 흐름', '주차별 진행 — 지난·이번·다음 주'],
+  ['공고', '공모전·채용·시험 일정 스크랩'],
   ['인사이트 기고', '기고 작성 — 서식·자유 디자인'],
   ['북마크', '북마크 기사·링크 스크랩'],
   ['내정보', '프로필·활동내역'],
-  ['운영', '승인·지원자·멤버·콘텐츠·일정', 'staff'],
+  ['운영', '승인·지원자·멤버·콘텐츠·일정·공고', 'staff'],
 ]
 
 // 구 탭명 딥링크 호환 — 구 탭명 진입 시 새 탭으로 매핑(링크 깨짐 0).
@@ -122,6 +124,7 @@ export function Shell({ member, onSignOut, store, onMemberChanged, search }) {
     if (!store) return null
     if (name === '홈') return <Home store={store} member={member} />
     if (name === '스터디 흐름') return <Flow store={store} staff={staff} />
+    if (name === '공고') return <Postings store={store} />
     if (name === '인사이트 기고') return <Contribute store={store} />
     if (name === '북마크') return <Collections store={store} />
     if (name === '내정보') return <MyPage store={store} member={member} onProfileSaved={onMemberChanged} />

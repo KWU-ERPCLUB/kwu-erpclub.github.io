@@ -1,0 +1,52 @@
+/* 공고 탭(2026-08-07 신설) — 카드형 보드 + 종류 배지 + 파생 상태. workspace.css 분할 파일(300줄 규격),
+   workspace-entry에서만 import. 토큰은 global.css 재사용. 공고 색 계열(#1f5c37)은 캘린더 칩(.post)과 동일. */
+
+.ws-post-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+
+.ws-posting {
+  display: block; background: #fff; border: 1px solid var(--line); border-radius: 14px;
+  padding: 0.95rem 1.1rem;
+}
+.ws-posting.pinned { border-color: var(--dark); }
+.ws-posting.closed { opacity: 0.55; }
+
+.ws-posting .ws-row-top { display: flex; gap: 0.45rem; align-items: center; margin-bottom: 0.45rem; }
+
+/* 종류 배지 — POSTING_KINDS 순서(k-0 공모전 · k-1 채용 · k-2 자격시험 · k-3 대외활동) */
+.ws-post-kind {
+  font-size: 0.72rem; font-weight: 700; border-radius: var(--radius-pill); padding: 0.14rem 0.62rem;
+}
+.ws-post-kind.k-0 { background: #e3e9f0; color: #2c4058; }
+.ws-post-kind.k-1 { background: #f5ecd9; color: #6b4e0e; }
+.ws-post-kind.k-2 { background: #e2efe6; color: #1f5c37; }
+.ws-post-kind.k-3 { background: #ececec; color: #333; }
+
+.ws-post-pin {
+  font-size: 0.72rem; font-weight: 700; border-radius: var(--radius-pill); padding: 0.14rem 0.62rem;
+  background: var(--dark); color: #fff;
+}
+
+.ws-post-status { margin-left: auto; font-size: 0.78rem; font-weight: 600; color: var(--text-sub); }
+.ws-post-status.s-접수중 { color: #1f5c37; }
+.ws-post-status.s-마감 { color: var(--text-sub); }
+
+.ws-post-title {
+  display: block; color: var(--text); font-size: 0.95rem; font-weight: 700; text-decoration: none;
+  margin-bottom: 0.3rem;
+}
+.ws-post-title:hover { text-decoration: underline; }
+
+.ws-post-comment { margin: 0.4rem 0 0; font-size: 0.84rem; color: var(--text-sub); line-height: 1.5; }
+
+/* 카드 본문 메타 — 공용 .ws-mark-meta의 margin-left:auto(행 우측 정렬용)를 해제하고 줄바꿈 허용 */
+.ws-posting > .ws-mark-meta { display: block; margin: 0; line-height: 1.5; overflow-wrap: anywhere; }
+
+/* 운영 폼 — 고정 체크박스 한 줄 */
+.ws-check {
+  display: flex; gap: 0.45rem; align-items: center; font-size: 0.86rem; color: var(--text);
+  margin: 0.2rem 0 0.4rem;
+}
+
+@media (max-width: 900px) {
+  .ws-post-grid { grid-template-columns: 1fr; }
+}

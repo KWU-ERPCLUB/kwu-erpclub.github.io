@@ -140,7 +140,7 @@ test('로그인 후 = 앱 셸(히어로 헤드·문서 패널 없음, 사이드�
 
 // 공통 프레임(오너 확정 8/6 3차) — 전 탭 = 본문+우측 레일 단일 그리드. 탭 전환 시 열 경계 이동 0.
 test('전 탭 = 공통 프레임(ws-cols 본문+레일) — 탭별 개별 분할 금지', () => {
-  for (const tab of ['홈', '스터디 흐름', '인사이트 기고', '북마크', '내정보']) {
+  for (const tab of ['홈', '스터디 흐름', '공고', '인사이트 기고', '북마크', '내정보']) {
     const html = flat(<Shell member={{ 이름: 'ㄱ', role: '스터디원' }} store={createMockRepositories({ user: 'mock-member' })} search={`?tab=${tab}`} />)
     expect(html, tab).toContain('ws-cols')
     expect(html, tab).toContain('ws-cmain')
@@ -166,9 +166,10 @@ test('page-head 골격 = 눈썹 WORKSPACE + h1 + 서브 1줄, nav·footer 공용
   expect(html).toContain('class="footer"')
 })
 
-test('공개 내비에 워크스페이스 링크 없음(M3에서 판단)', () => {
+// 링크 상시 노출(오너 개정 2026-08-07) — 비로그인도 나브에서 로그인 화면에 도달할 수 있어야 한다.
+test('공개 내비에 워크스페이스 링크 상시 노출', () => {
   const html = flat(<Workspace repos={createMockRepositories()} configured={false} />)
-  expect(html).not.toContain('href="/workspace/"')
+  expect(html).toContain('href="/workspace/"')
 })
 
 // ── 경어체 금지(디자인규칙 §0-1 개조식 전면) ──

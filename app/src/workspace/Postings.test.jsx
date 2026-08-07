@@ -1,0 +1,56 @@
+import { expect, test } from 'vitest'
+import { renderToString } from 'react-dom/server'
+import Postings, { PostingCard } from './Postings.jsx'
+import AdminPostings from './AdminPostings.jsx'
+import { createMockRepositories } from '../data/mock.js'
+
+const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
+
+// SSR = 초기(로딩) 상태만 그린다 — 페치 후 목록·정렬은 순수 로직 테스트(postings-logic.test.js)가 담당.
+test('공고 탭 골격 = 종류 필터 + 접수 임박 레일 + 보드 안내', () => {
+  const html = flat(<Postings store={createMockRepositories({ user: 'mock-member' })} />)
+  for (const k of ['전체', '공모전', '채용', '자격시험', '대외활동']) expect(html).toContain(k)
+  expect(html).toContain('접수 임박')
+  expect(html).toContain('왜 유효한가')
+  expect(html).toContain('불러오는 중')
+})
+
+test('카드 = 종류 배지·원문 링크·코멘트·상태(마감=흐림) 렌더', () => {
+  const active = flat(<PostingCard todayKey="2026-09-08" row={{ id: 'p', 제목: 'ADsP 51회 접수', 종류: '자격시험', 주최: 'Kdata', url: 'https://example.com/x', 접수시작: '2026-09-05', 접수마감: '2026-09-09', 시험일: '2026-10-11', 코멘트: '접수창 5일 주의', 고정: true }} />)
+  expect(active).toContain('href="https://example.com/x"')
+  expect(active).toContain('자격시험')
+  expect(active).toContain('접수창 5일 주의')
+  expect(active).toContain('접수중 · D-1')
+  expect(active).toContain('고정')
+  expect(active).toContain('시험일 2026-10-11')
+
+  const closed = flat(<PostingCard todayKey="2026-09-08" row={{ id: 'q', 제목: '지난 공모전', 종류: '공모전', url: 'https://example.com/y', 접수마감: '2026-09-01', 코멘트: 'c' }} />)
+  expect(closed).toContain('closed')
+  expect(closed).toContain('마감')
+
+  const always = flat(<PostingCard todayKey="2026-09-08" row={{ id: 'r', 제목: '상시 채용', 종류: '채용', url: 'https://example.com/z', 접수마감: null, 코멘트: 'c' }} />)
+  expect(always).toContain('상시')
+})
+
+test('공고 저장소 — 운영진만 등록·삭제, 멤버는 열람만(목 저장소)', async () => {
+  const staff = createMockRepositories({ user: 'mock-staff' })
+  const before = await staff.postings.list()
+  const added = await staff.postings.save({ 제목: '새 공고', 종류: '채용', url: 'https://example.com/new', 코멘트: '한 줄' })
+  expect(await staff.postings.list()).toHaveLength(before.length + 1)
+  await staff.postings.remove(added.id)
+  expect(await staff.postings.list()).toHaveLength(before.length)
+
+  const member = createMockRepositories({ user: 'mock-member' })
+  expect((await member.postings.list()).length).toBeGreaterThan(0)   // 열람 가능
+  await expect(member.postings.save({ 제목: 'x', 종류: '채용', url: 'https://e.com', 코멘트: 'c' })).rejects.toThrow('권한 없음')
+  await expect(member.postings.remove('mock-p1')).rejects.toThrow('권한 없음')
+})
+
+test('운영 폼 골격 = 전 필드 + 코멘트 필수 안내', () => {
+  const html = flat(<AdminPostings store={createMockRepositories({ user: 'mock-staff' })} />)
+  for (const label of ['제목', '종류', '주최(선택)', '원문 링크', '접수시작(선택)', '접수마감(선택)', '시험일(선택)', '상단 고정']) {
+    expect(html).toContain(label)
+  }
+  expect(html).toContain('왜 유효한가')
+  expect(html).toContain('캘린더에 자동 합류')
+})

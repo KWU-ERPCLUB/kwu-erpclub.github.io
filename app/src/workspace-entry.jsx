@@ -4,6 +4,7 @@ import Workspace from './workspace/Workspace.jsx'
 import './styles/global.css'
 import './styles/workspace.css'
 import './styles/workspace-home.css'
+import './styles/workspace-postings.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

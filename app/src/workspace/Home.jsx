@@ -2,11 +2,12 @@
 // 데이터 = 운영 일정(events, 0007) + 과제 마감 자동 + 세션 날짜 자동. 계산은 calendar-logic.js(순수)만 쓴다.
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { monthGrid, buildAgenda, itemsOn, upcoming, dday, toKey, WEEKLY_CONTRIB, weeklyContribItems } from './calendar-logic.js'
+import { postingAgendaItems } from './postings-logic.js'
 import Assignments from './Assignments.jsx'
 import Notices from './Notices.jsx'
 import Sessions from './Sessions.jsx'
 
-const KIND_CLASS = { 일정: 'ev', 세미나: 'sem', 모집: 'rec', 마감: 'due', 과제: 'due', 세션: 'sem' }
+const KIND_CLASS = { 일정: 'ev', 세미나: 'sem', 모집: 'rec', 마감: 'due', 과제: 'due', 세션: 'sem', 공고: 'post' }
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토']
 
 // 월 캘린더 — 셀 클릭 = 그날 상세 선택. export = 단위 테스트용.
@@ -116,21 +117,25 @@ export default function Home({ store, member }) {
   const todayKey = useMemo(() => toKey(new Date()), [])
   const [ym, setYm] = useState(() => ({ y: Number(todayKey.slice(0, 4)), m: Number(todayKey.slice(5, 7)) }))
   const [selected, setSelected] = useState(todayKey)
-  const [raw, setRaw] = useState({ events: [], assignments: [], sessions: [] })
+  const [raw, setRaw] = useState({ events: [], assignments: [], sessions: [], postings: [] })
   const [error, setError] = useState('')
 
   const load = useCallback(() => Promise.all([
     store.events.list(),
     store.assignments.list(),
     store.sessions.list(),
-  ]).then(([events, assignments, sessions]) => {
-    setRaw({ events: events || [], assignments: assignments || [], sessions: sessions || [] })
+    store.postings.list(),
+  ]).then(([events, assignments, sessions, postings]) => {
+    setRaw({ events: events || [], assignments: assignments || [], sessions: sessions || [], postings: postings || [] })
   }).catch((e) => setError(e?.message || '불러오기 실패')), [store])
 
   useEffect(() => { load() }, [load])
 
+  // 네 원천(운영 일정·과제·세션 + 공고 마감·시험일) + 주간 기고 반복 — 합친 뒤 날짜 재정렬(upcoming이 정렬 전제).
   const items = useMemo(
-    () => buildAgenda(raw).concat(weeklyContribItems(todayKey)),
+    () => buildAgenda(raw)
+      .concat(postingAgendaItems(raw.postings), weeklyContribItems(todayKey))
+      .sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0)),
     [raw, todayKey],
   )
 

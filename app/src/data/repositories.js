@@ -18,6 +18,7 @@ export const REPO_CONTRACT = {
   interactions: ['counts', 'mine', 'listBookmarked', 'toggleLike', 'toggleBookmark'],
   sessions: ['list', 'save'],
   events: ['list', 'save', 'remove'],
+  postings: ['list', 'save', 'remove'],
   flow: ['list', 'save', 'remove'],
   materials: ['list', 'save'],
   assignments: ['list', 'save'],
@@ -162,6 +163,16 @@ export function createSupabaseRepositories(backend) {
       // 삭제 = 운영진만(RLS events_write_staff) — 클라이언트 화이트리스트(supabase.js DELETABLE)에도 등재.
       async remove(rowId) {
         await backend.db.remove('events', { id: rowId })
+        return rowId
+      },
+    },
+    // 공고(0009) — 공모전·채용·자격시험 스크랩(공고 탭·홈 캘린더 합류). 미적용 = 빈 배열 강등(events와 동일).
+    postings: {
+      list: () => backend.db.select('postings', { order: 'created_at.desc' }).catch(() => []),
+      save: saveRow('postings'),
+      // 삭제 = 운영진만(RLS postings_write_staff) — 클라이언트 화이트리스트(supabase.js DELETABLE)에도 등재.
+      async remove(rowId) {
+        await backend.db.remove('postings', { id: rowId })
         return rowId
       },
     },
