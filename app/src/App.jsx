@@ -19,14 +19,15 @@ export const PROJECTS = [
   ['KWU ERP Club Site', '/img/projects/erpclub-site.png', '/projects/?p=2026-07-24-bapzzi-erpclub-site', '운영 중'],
 ]
 
-// ROADMAP — 지그재그 타임라인(피드백 2026-08-06: "진짜 로드맵처럼 지그재그로·연도를 써서").
-// 내용·상태는 구 워드 스택과 동일 — 렌더 형태만 개조. DEEP DIVE(미개설)는 제외.
+// ROADMAP — 브랜치 계보(오너 2026-08-07: "지그재그보다 브랜치 형태로").
+// 서사 = ERP연구회 본류에 SAP 특강이 이어져 오다가, AI 화두로 AIM을 분기 신설, 그 기반으로 ADsP 스터디 운영.
+// lane: trunk = 본류(차콜 선) / fork = 분기점(곡선으로 갈라짐) / branch = 분기 이후(버건디 선).
 const LINEAGE = [
-  { era: 'ORIGIN', title: 'ERP연구회', desc: '경영학부 MIS 스터디 — ERP·정보시스템의 뿌리.' },
-  { era: 'SAP ERA', title: 'SAP 특강', desc: '실무 컨설턴트가 이끈 MM·ABAP 교육 — 이어져 온 본류.' },
-  { era: '2026 · NEW BRANCH', title: 'MIS·AI 스터디', desc: '본류에서 분기한 갈래 — AI 활용 집중.', status: ['prep', '모집 준비'] },
-  { era: 'PROJECT', title: 'ADsP 스터디 1기', desc: '데이터분석 준전문가 대비 — 진도 보드 운영 중.', status: ['live', '진행중'] },
-  { era: 'NEXT', title: '앞으로 채워갈 공간', desc: '새 트랙·기수가 이어질 자리.', slot: true },
+  { era: 'ORIGIN', title: 'ERP연구회', desc: '경영학부 MIS 스터디 — ERP·정보시스템의 뿌리.', lane: 'trunk' },
+  { era: 'SAP ERA', title: 'SAP 특강', desc: '실무 컨설턴트가 이끈 MM·ABAP 교육 — 이어져 온 본류.', lane: 'trunk' },
+  { era: '2026 · NEW BRANCH', title: 'MIS·AI 스터디', desc: 'AI가 화두로 떠오르며 본류에서 분기 — AIM 신설.', status: ['prep', '모집 준비'], lane: 'fork' },
+  { era: 'FIRST RUN', title: 'ADsP 스터디 1기', desc: 'AIM 기반으로 진행해 본 첫 운영 — 데이터분석 준전문가 대비, 진도 보드 운영.', status: ['live', '진행중'], lane: 'branch' },
+  { era: 'NEXT', title: '앞으로 채워갈 공간', desc: '새 트랙·기수가 이어질 자리.', slot: true, lane: 'branch' },
 ]
 
 // FAQ 원천 = data/faq.js(E4 공용화 2026-08-05) — 메인은 전체 렌더, /recruit는 서브셋.
@@ -134,48 +135,33 @@ export function StatsBand({ today = localYmd() }) {
 }
 
 
-// ROADMAP — 대각선 지그재그(피드백 2026-08-06 2차: 세로 스파인 → 대각선 연결선).
-// 구조 = 등고 행 그리드(좌우 교대 카드) + 꼭짓점 좌표(43%/57%, 행 중앙)를 SVG 폴리라인이 대각선으로 잇고
-// 같은 좌표에 HTML 점(.rm-vdot — SVG 왜곡 회피). 카드 = 테두리 폐지 → 흰 면+소프트 그림자.
-// 모션 = 항목별 스크롤 리빌(useItemReveal). 상태 칩 = 별도 행(.rm-status).
-const vertexX = (i) => (i % 2 === 1 ? 57 : 43)
+// ROADMAP — 브랜치 계보(오너 2026-08-07: 지그재그 → git 그래프형 분기).
+// 행 = [레인 셀 | 카드]. 레인 셀이 선을 그린다: 본류 세로선(차콜, 분기 후엔 옅게 지속 — 연구회 본류는 계속 존재)
+// + 분기 곡선(fork 행, 버건디) + 브랜치 세로선(버건디). 노드 점 = .rm-dot(화이트리스트 ⑦).
+// 모션 = 항목별 스크롤 리빌(useItemReveal) 유지. 상태 칩 = 별도 행(.rm-status).
 function Roadmap() {
   useItemReveal('.rm-item')
-  const vertexY = (i) => ((i + 0.5) / LINEAGE.length) * 100
   return (
     <section className="hs hs-roadmap page" id="roadmap">
       <div className="hs-in">
         <SectionHead label="ROADMAP" title={<>스터디 <em>로드맵</em></>} />
-        <div className="rm-wrap">
-          <svg className="rm-zig" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-            <polyline
-              points={LINEAGE.map((_, i) => `${vertexX(i)},${vertexY(i).toFixed(2)}`).join(' ')}
-              vectorEffect="non-scaling-stroke"
-            />
-          </svg>
-          {LINEAGE.map((n, i) => (
-            <span
-              className="rm-vdot" key={n.title} aria-hidden="true"
-              style={{ left: `${vertexX(i)}%`, top: `${vertexY(i)}%` }}
-            />
+        <ol className="rm">
+          {LINEAGE.map((n) => (
+            <li className={`rm-item rm-${n.lane}${n.slot ? ' rm-slot' : ''}`} key={n.title}>
+              <span className="rm-lane" aria-hidden="true"><i className="rm-dot" /></span>
+              <div className="rm-card">
+                <span className="rm-era">{n.era}</span>
+                <span className="rm-word">{n.title}</span>
+                <span className="rm-desc">{n.desc}</span>
+                {n.status && (
+                  <span className="rm-status">
+                    <span className={`status ${n.status[0]}`}>{n.status[1]}</span>
+                  </span>
+                )}
+              </div>
+            </li>
           ))}
-          <ol className="rm">
-            {LINEAGE.map((n, i) => (
-              <li className={`rm-item${i % 2 === 1 ? ' rm-right' : ''}${n.slot ? ' rm-slot' : ''}`} key={n.title}>
-                <div className="rm-card">
-                  <span className="rm-era">{n.era}</span>
-                  <span className="rm-word">{n.title}</span>
-                  <span className="rm-desc">{n.desc}</span>
-                  {n.status && (
-                    <span className="rm-status">
-                      <span className={`status ${n.status[0]}`}>{n.status[1]}</span>
-                    </span>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ol>
-        </div>
+        </ol>
       </div>
     </section>
   )

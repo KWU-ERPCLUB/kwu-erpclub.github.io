@@ -3,32 +3,60 @@
    구 워드 스택(.wl)·스크롤 워드 스파이·텍스트 리스트 INSIGHTS(.hi-list) 폐지.
    색·폰트 토큰 고정 · 버건디 화이트리스트 · transform·opacity만 · reduced-motion 존중. */
 
-/* ══ ROADMAP — 대각선 지그재그(2차 2026-08-06): 등고 행 그리드 + SVG 대각선 폴리라인 + 꼭짓점 점.
-   카드 = 테두리 폐지(피드백 "테두리 선 빼줘") → 흰 면 + 소프트 그림자 ══ */
-.rm-wrap { position: relative; max-width: 880px; margin: clamp(2rem, 5vh, 3rem) auto 0; }
-.rm-zig { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-.rm-zig polyline { fill: none; stroke: var(--line); stroke-width: 2px; }
-.rm-vdot { /* 꼭짓점 버건디 점(화이트리스트 ⑦ 타임라인 점) — SVG 밖 HTML(preserveAspectRatio 왜곡 회피) */
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
+/* ══ ROADMAP — 브랜치 계보(2026-08-07 오너: "지그재그보다 브랜치 형태로" — git 그래프형).
+   행 = [레인 셀 96px | 카드]. 레인 셀이 선을 그린다:
+   본류 세로선 x=20(차콜 — fork부터는 rgba 옅게 지속 = 연구회 본류는 계속 존재) /
+   분기 곡선(fork 행: x=20에서 내려와 둥글게 꺾여 x=56 노드로) / 브랜치 세로선 x=56(버건디).
+   노드 점 = .rm-dot(화이트리스트 ⑦ 타임라인 점). 카드 = 흰 면 + 소프트 그림자(테두리 없음) 유지. ══ */
+.rm { list-style: none; margin: clamp(2rem, 5vh, 3rem) auto 0; padding: 0; max-width: 620px; }
+/* 행 간격 = 카드 마진(레인 셀은 행 전체 높이를 채워 선이 끊기지 않는다 — 패딩 방식 금지) */
+.rm-item { display: grid; grid-template-columns: 96px 1fr; }
+.rm-card { margin-bottom: 1.4rem; }
+.rm-item:last-child .rm-card { margin-bottom: 0; }
+.rm-lane { position: relative; overflow: hidden; }
+/* 본류 세로선 x=20 — 전 행 관통. 첫 행은 노드부터 시작 */
+.rm-lane::before {
+  content: ''; position: absolute; left: 20px; top: 0; bottom: 0; width: 3px;
+  background: var(--dark);
+}
+.rm-item:first-child .rm-lane::before { top: 1.55rem; }
+/* 분기 이후 본류 = 옅은 차콜로 지속(연구회 본류는 계속 존재. rgba — home 계열 opacity 속성 금지 규칙) */
+.rm-fork .rm-lane::before, .rm-branch .rm-lane::before { background: rgba(22, 22, 22, 0.16); }
+/* 분기 곡선(fork 행) — 본류 x=20에서 내려오다 둥글게 꺾여 노드 높이(1.55rem)에서 x=56에 닿는다 */
+.rm-fork .rm-lane::after {
+  content: ''; position: absolute; left: 20px; top: 0; width: 38px; height: 1.55rem;
+  border-left: 3px solid var(--accent); border-bottom: 3px solid var(--accent);
+  border-bottom-left-radius: 18px;
+  box-sizing: border-box;
+}
+/* 브랜치 세로선 x=56(버건디) — branch 행 관통, 마지막 행은 노드까지만 */
+.rm-branch .rm-lane::after {
+  content: ''; position: absolute; left: 56px; top: 0; bottom: 0; width: 3px;
   background: var(--accent);
-  transform: translate(-50%, -50%);
+}
+.rm-item:last-child .rm-lane::after { bottom: auto; height: 1.55rem; }
+/* 노드 점 — 본류 행 x=20 / 분기·브랜치 행 x=56. 카드 제목 라인(1.55rem)에 정렬. 흰 테 = 선 위에 얹힘 */
+.rm-dot {
+  position: absolute; top: 1.55rem; left: 20px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--accent); border: 3px solid var(--bg);
+  transform: translate(calc(-50% + 1.5px), -50%);
   z-index: 1;
 }
-.rm { list-style: none; margin: 0; padding: 0; display: grid; grid-auto-rows: 1fr; }
-.rm-item { display: flex; align-items: center; min-height: 9.5rem; padding: 0.6rem 0; }
-.rm-item.rm-right { justify-content: flex-end; }
+.rm-fork .rm-dot, .rm-branch .rm-dot { left: 56px; }
+/* fork 행: 노드 아래 → 행 끝까지 버건디 세로선(다음 행 브랜치 선과 연결. 초과분 = 레인 overflow가 자름) */
+.rm-fork .rm-dot::after {
+  content: ''; position: absolute; left: 50%; top: 12px; width: 3px; height: 100vh;
+  transform: translateX(-50%);
+  background: var(--accent);
+}
 .rm-card {
-  width: 40%;
   background: #fff;
   border-radius: var(--radius-card);
   padding: 1.15rem 1.4rem 1.25rem;
   text-align: left;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
 }
-.rm-item:not(.rm-right) .rm-card { text-align: right; }
 .rm-era {
   display: block;
   font-size: 0.72rem;
@@ -51,28 +79,17 @@
 .rm-desc { display: block; margin-top: 0.45rem; font-size: 0.85rem; color: var(--text-sub); }
 .rm-status { display: block; margin-top: 0.6rem; } /* 상태 칩 = 별도 행(피드백 "설명과 겹쳐 애매") */
 
-/* 항목별 스크롤 리빌(useItemReveal) — 좌 카드는 왼쪽·우 카드는 오른쪽에서 진입(2차: 2배 감속) */
+/* 항목별 스크롤 리빌(useItemReveal) — 브랜치형 = 전 카드 아래→위 진입(2차 감속 값 유지) */
 .home-js .rm-item {
   opacity: 0;
-  transform: translateX(-40px);
+  transform: translateY(28px);
   transition: opacity 1120ms ease-out, transform 1280ms cubic-bezier(0.16, 1, 0.3, 1);
 }
-.home-js .rm-item.rm-right { transform: translateX(40px); }
 .home-js .rm-item.in { opacity: 1; transform: none; }
 
-@media (max-width: 700px) { /* 폰 = 좌측 세로선 단일 열(대각선·꼭짓점 점 미표시) */
-  .rm-zig, .rm-vdot { display: none; }
-  .rm-wrap::before { content: ''; position: absolute; left: 5px; top: 0; bottom: 0; width: 2px; background: var(--line); }
-  .rm { grid-auto-rows: auto; }
-  .rm-item, .rm-item.rm-right { justify-content: flex-start; min-height: 0; position: relative; padding: 0 0 1.5rem 1.9rem; }
-  .rm-item::before {
-    content: ''; position: absolute; left: 0; top: 1.7rem;
-    width: 10px; height: 10px; border-radius: 50%; background: var(--accent);
-  }
-  .rm-card { width: 100%; }
-  .rm-item:not(.rm-right) .rm-card { text-align: left; }
-  .home-js .rm-item, .home-js .rm-item.rm-right { transform: translateY(28px); } /* 폰 단일 열 = 위로 리빌 */
-  .home-js .rm-item.in { transform: none; }
+@media (max-width: 700px) { /* 폰 = 같은 브랜치 구조, 레인 폭만 축소(x=20/56 유지 — 76px 안에 들어옴) */
+  .rm-item { grid-template-columns: 76px 1fr; }
+  .rm-card { padding: 1rem 1.1rem 1.1rem; }
 }
 
 /* ══ PROJECTS — 2열 커버 카드(피드백 "양쪽으로·한눈에") ══ */

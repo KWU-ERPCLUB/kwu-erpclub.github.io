@@ -39,10 +39,14 @@ test('섹션 헤드 4종(중앙 정렬) + 각 섹션 구조 마크업', () => {
   expect(html).not.toContain('hs-cols')
   expect((html.match(/hs-head/g) || []).length).toBe(4)
   expect((html.match(/hs-label/g) || []).length).toBe(4)
-  // ROADMAP: 지그재그 타임라인 — 계보 5노드(본류 2 + 분기 + 프로젝트 + 슬롯) + 좌우 교대 + 톤다운 슬롯
+  // ROADMAP: 브랜치 계보(2026-08-07) — 본류 2(ERP연구회→SAP 특강) + 분기점(AIM) + 브랜치 2(ADsP·슬롯)
   expect((html.match(/rm-item/g) || []).length).toBe(5)
-  expect(html).toContain('rm-right')
+  expect((html.match(/rm-trunk/g) || []).length).toBe(2)
+  expect(html).toContain('rm-fork')
+  expect((html.match(/rm-branch/g) || []).length).toBe(2)
   expect(html).toContain('rm-slot')
+  expect(html).not.toContain('rm-right') // 구 지그재그 좌우 교대 폐지
+  expect(html).not.toContain('rm-zig')
   expect(html).not.toContain('wl-item') // 구 워드 스택 폐지(4차)
   for (const w of ['ERP연구회', 'SAP 특강', 'MIS·AI 스터디', 'ADsP 스터디 1기', '앞으로 채워갈 공간']) {
     expect(html).toContain(w)
