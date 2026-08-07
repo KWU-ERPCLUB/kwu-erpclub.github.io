@@ -233,7 +233,7 @@ export default function App() {
   useParallax()
   return (
     <>
-      <SiteNav />
+      <SiteNav cta />
       <main id="main" className="home">
         <Hero />
         <StatsBand />

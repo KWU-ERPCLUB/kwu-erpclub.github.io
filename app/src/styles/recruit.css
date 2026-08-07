@@ -51,25 +51,49 @@
 .rc-head .pg-head { border-bottom: 0; padding-bottom: 0; margin-bottom: 0; }
 /* (키비주얼 rc-visual = v3.2 완전 삭제 — 오너 지시 2026-08-05) */
 
-/* 대형 CTA(E6 상향) — Primary 문법(차콜 필 + 버건디 원형 화살표 ②)의 확대판. 4상태(§5) */
-.rc-head-cta { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 1.1rem; margin-top: clamp(1.5rem, 3.5vh, 2.25rem); }
+/* 대형 CTA(E6 상향) — Primary 문법(차콜 필 + 버건디 원형 화살표 ②)의 확대판. 4상태(§5)
+   2026-08-07 오너: 세로 배치(버튼 정중앙 → 접수기간 아래 줄)·한 단계 더 확대·펄스 링(⑯) 강조 */
+.rc-head-cta { display: flex; flex-direction: column; align-items: center; gap: 0.85rem; margin-top: clamp(1.5rem, 3.5vh, 2.25rem); }
 .rc-cta-xl {
-  display: inline-flex; align-items: center; gap: 0.8rem;
+  display: inline-flex; align-items: center; gap: 0.9rem;
   background: var(--dark); color: #fff; border: 0; border-radius: 999px;
-  padding: 0.95rem 1.15rem 0.95rem 1.9rem; cursor: pointer; text-decoration: none;
-  font-family: var(--font-display); font-weight: 800; font-size: clamp(1.02rem, 1.8vw, 1.22rem);
+  padding: 1.15rem 1.4rem 1.15rem 2.4rem; cursor: pointer; text-decoration: none;
+  font-family: var(--font-display); font-weight: 800; font-size: clamp(1.2rem, 2.4vw, 1.5rem);
   letter-spacing: -0.01em; transition: transform 150ms ease-out, opacity 150ms ease-out;
+  animation: cta-ring 2.6s ease-out infinite; /* 버건디 펄스 링(⑯) — keyframes = global.css */
 }
 .rc-cta-xl svg { /* 버건디 원형 화살표(화이트리스트 ② — 34px 상한 내) */
-  width: 32px; height: 32px; padding: 9px; box-sizing: border-box;
+  width: 34px; height: 34px; padding: 10px; box-sizing: border-box;
   background: var(--accent); border-radius: 50%; color: #fff; flex: none;
 }
 .rc-cta-xl:hover { opacity: 0.9; }
 .rc-cta-xl:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .rc-cta-xl:active { transform: scale(0.98); }
 .rc-cta-xl:disabled { opacity: 0.4; pointer-events: none; }
-@media (prefers-reduced-motion: reduce) { .rc-cta-xl { transition: none; } .rc-cta-xl:active { transform: none; } }
-.rc-cta-note { font-size: 0.88rem; font-weight: 600; color: var(--text-sub); }
+@media (prefers-reduced-motion: reduce) { .rc-cta-xl { transition: none; animation: none; } .rc-cta-xl:active { transform: none; } }
+.rc-cta-note { font-size: 0.92rem; font-weight: 700; color: var(--text-sub); }
+
+/* ══ 플로팅 신청 CTA(2026-08-07 오너) — 우하단 고정·둥둥 부유. 폼 도착 시 숨김(.rc-float-hide = Recruit.jsx IO) ══ */
+.rc-float {
+  position: fixed; right: 22px; bottom: 22px; z-index: 60;
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  background: var(--dark); color: #fff; border-radius: 999px;
+  padding: 0.85rem 1.05rem 0.85rem 1.5rem; text-decoration: none;
+  font-family: var(--font-display); font-weight: 800; font-size: 1rem;
+  box-shadow: 0 10px 28px rgba(22, 22, 22, 0.28);
+  animation: rc-bob 2.8s ease-in-out infinite;
+  transition: opacity 200ms ease-out, transform 200ms ease-out;
+}
+.rc-float svg {
+  width: 28px; height: 28px; padding: 8px; box-sizing: border-box;
+  background: var(--accent); border-radius: 50%; color: #fff; flex: none;
+}
+.rc-float:hover { background: var(--btn-hover); }
+.rc-float:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.rc-float-hide { opacity: 0; pointer-events: none; }
+@keyframes rc-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@media (prefers-reduced-motion: reduce) { .rc-float { animation: none; } }
+@media (max-width: 560px) { .rc-float { right: 14px; bottom: 14px; font-size: 0.9rem; padding: 0.7rem 0.9rem 0.7rem 1.2rem; } }
 
 /* ══ 섹션 소제목 — 4차: 중앙 정렬 ══ */
 .rc-h2 {

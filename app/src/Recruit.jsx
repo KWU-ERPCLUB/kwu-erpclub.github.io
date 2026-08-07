@@ -68,6 +68,21 @@ function useStepSpy() {
   }, [])
 }
 
+// 플로팅 신청 CTA(오너 2026-08-07) — 우하단 고정, 폼(#apply)이 화면에 들어오면 숨김(도착했으니 역할 종료).
+// IO 미지원·no-JS = 항상 표시(정적 폴백).
+function useFloatCta() {
+  useEffect(() => {
+    const btn = document.querySelector('.rc-float')
+    const form = document.getElementById('apply')
+    if (!btn || !form || typeof IntersectionObserver === 'undefined') return
+    const io = new IntersectionObserver(([e]) => {
+      btn.classList.toggle('rc-float-hide', e.isIntersecting)
+    })
+    io.observe(form)
+    return () => io.disconnect()
+  }, [])
+}
+
 // 섹션 진입 스태거 리빌 — IO 1회 발화(.rc-in 부여 후 unobserve — 무한 반복 없음). 스태거 = CSS nth-child 지연.
 // 게이트 = <html>.rc-js — reduced-motion·no-JS면 정적 상태 그대로(전부 선명).
 function useSectionReveal() {
@@ -89,6 +104,7 @@ function useSectionReveal() {
 export default function Recruit() {
   useStepSpy()
   useSectionReveal()
+  useFloatCta()
   return (
     <>
       <SiteNav />
@@ -101,6 +117,7 @@ export default function Recruit() {
               title={<>{RECRUIT.study} <em>{RECRUIT.cohort}</em> 모집</>}
               sub={`${RECRUIT.study}은 ERP연구회 산하 MIS·AI 스터디입니다 — 경영학부 중심·전공 무관, 2026 ${RECRUIT.term} 첫 기수를 모집합니다.`}
             >
+              {/* 오너 2026-08-07: 세로 배치 — 대형 CTA 정중앙, 접수기간은 버튼 아래 줄 */}
               <div className="rc-head-cta">
                 <a className="rc-cta-xl" href="#apply">신청하기 <Arrow /></a>
                 <span className="rc-cta-note">접수 {formatWindow()}</span>
@@ -268,6 +285,8 @@ export default function Recruit() {
             </div>
           </div>
         </section>
+        {/* 플로팅 신청 CTA(오너 2026-08-07) — 우하단 고정·둥둥 부유, 누르면 언제든 폼으로. 폼 도착 시 숨김(useFloatCta) */}
+        <a className="rc-float" href="#apply" aria-label="신청 폼으로 이동">신청하기 <Arrow /></a>
       </main>
       <SiteFooter />
     </>

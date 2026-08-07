@@ -31,7 +31,7 @@ export function Arrow() {
 // 세션이 있을 때만 붙는 탭 — 비로그인 방문자에게는 워크스페이스 존재 자체를 노출하지 않는다.
 const WORKSPACE_LINK = ['WORKSPACE', '/workspace/']
 
-export function SiteNav({ signedIn }) {
+export function SiteNav({ signedIn, cta }) {
   const [open, setOpen] = useState(false)
   // 최초 렌더 1회 판정(리렌더마다 저장소를 읽지 않는다). 테스트·SSR에서는 storage 없음 = false.
   const [hasSession] = useState(() => (signedIn === undefined ? hasWorkspaceSession() : signedIn))
@@ -54,8 +54,8 @@ export function SiteNav({ signedIn }) {
             <a key={href} href={href} className={isOn(href) ? 'on' : undefined}>{label}</a>
           ))}
         </nav>
-        {/* 모집 CTA — 상단바 맨 우측 상시 노출(피드백 2026-08-06: 모집 진입을 상단바에서 바로) */}
-        <a className="nav-cta" href="/recruit/#apply">신청하기</a>
+        {/* 모집 CTA — 홈 한정(오너 2026-08-07: 전 페이지 노출 폐지·라벨 RECRUIT·확대+펄스 강조). cta prop = 홈만 전달 */}
+        {cta && <a className="nav-cta" href="/recruit/#apply">RECRUIT</a>}
         <button
           type="button"
           className="nav-toggle"
