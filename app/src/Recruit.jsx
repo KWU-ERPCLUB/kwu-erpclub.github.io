@@ -17,7 +17,7 @@ import { useEffect } from 'react'
 import { SiteNav, SiteFooter, PageHead, REPO_URL, Arrow } from './shared.jsx'
 import {
   RECRUIT, ACADEMIC_RULE, formatWindow, CONTACT, CONTACT_MAILTO, COHORT_LABEL,
-  RECRUIT_FACTS, RECRUIT_DO, RECRUIT_FIT, RECRUIT_STEPS,
+  RECRUIT_FACTS, RECRUIT_DO, RECRUIT_FIT, AIM_ROADMAP,
   RECRUIT_SHOWCASE, SHOWCASE_LEAD,
 } from './data/recruit.js'
 import { RECRUIT_FAQ } from './data/faq.js'
@@ -31,14 +31,16 @@ const prefersReduced = () =>
   typeof window.matchMedia === 'function' &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-// PROGRAM 로드맵 스파이 — 뷰포트 중앙 최근접 회차/단계만 활성(.on)·나머지 감쇠(useWordSpy rAF 문법 복제).
-// 활성이 회차(rc-rounds li)면 부모 단계도 함께 활성(중첩 opacity 이중 감쇠 방지).
-// 게이트 = <html>.rc-spy-js — reduced-motion·no-JS면 클래스 자체가 없어 전부 선명.
-function useStepSpy() {
+// AIM 1기 로드맵 스파이 + 진행선(오너 2026-08-07 2차 — "인터랙티브·화려하게").
+// ① 스파이: 뷰포트 중앙 최근접 노드만 활성(.on) — 활성 회차 카드는 확대·버건디 링(CSS).
+// ② 진행선: 스크롤이 로드맵을 지나는 비율만큼 레일에 버건디 채움 선(.rc-rm-fill 높이)을 채운다 — "여기까지 왔다".
+// 게이트 = <html>.rc-spy-js — reduced-motion·no-JS면 전부 선명·채움 0(기본 레일만).
+function useRoadmapFlow() {
   useEffect(() => {
-    const list = document.querySelector('.rc-steps-spy')
+    const list = document.querySelector('.rc-rm')
     if (!list || prefersReduced()) return
-    const items = Array.from(list.querySelectorAll(':scope > li, .rc-rounds > li'))
+    const items = Array.from(list.querySelectorAll(':scope > li'))
+    const fill = list.querySelector('.rc-rm-fill')
     if (items.length === 0) return
     document.documentElement.classList.add('rc-spy-js')
     let raf = 0
@@ -52,8 +54,12 @@ function useStepSpy() {
         const d = Math.abs((r.top + r.bottom) / 2 - cy)
         if (d < bd) { bd = d; best = el }
       }
-      const parent = best && best.closest('.rc-steps-spy > li')
-      items.forEach((el) => el.classList.toggle('on', el === best || el === parent))
+      items.forEach((el) => el.classList.toggle('on', el === best))
+      if (fill) {
+        const lr = list.getBoundingClientRect()
+        const p = Math.min(1, Math.max(0, (cy - lr.top) / lr.height))
+        fill.style.height = `${(p * 100).toFixed(2)}%`
+      }
     }
     const onScroll = () => { if (!raf) raf = requestAnimationFrame(pick) }
     window.addEventListener('scroll', onScroll, { passive: true })
@@ -102,7 +108,7 @@ function useSectionReveal() {
 }
 
 export default function Recruit() {
-  useStepSpy()
+  useRoadmapFlow()
   useSectionReveal()
   useFloatCta()
   return (
@@ -192,16 +198,21 @@ export default function Recruit() {
           </div>
         </section>
 
-        {/* WHO SHOULD APPLY(오너 2026-08-07 — 구 '이런 사람': 현업 모집요강 문법 영문 키워드 + 가운데 정렬) */}
+        {/* 이런 분을 찾습니다(오너 2026-08-07 2차 — 영문 반려: 한국 모집공고의 자격 요건 체크리스트 형태) */}
         <section className="rc-secs" aria-labelledby="rc-fit-h">
           <div className="rc-band-in">
             <div className="rc-body">
-              <h2 className="rc-h2" id="rc-fit-h">WHO SHOULD APPLY</h2>
-              <ul className="rc-fit rc-who">
+              <h2 className="rc-h2" id="rc-fit-h">이런 분을 찾습니다</h2>
+              <ul className="rc-who">
                 {RECRUIT_FIT.map(([title, desc]) => (
                   <li key={title}>
-                    <h3>{title}</h3>
-                    <p>{desc}</p>
+                    <span className="rc-who-check" aria-hidden="true">
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <path d="M2 6.5L4.8 9.3L10 3.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </span>
+                    <span className="rc-who-t">{title}</span>
+                    <span className="rc-who-d">{desc}</span>
                   </li>
                 ))}
               </ul>
@@ -209,30 +220,36 @@ export default function Recruit() {
           </div>
         </section>
 
-        {/* (「접수부터 활동 시작까지」 타임라인 = 오너 삭제 2026-08-07) */}
-
-        {/* AIM 1기 로드맵(오너 2026-08-07 개편) — 차시 단위 노드: 주제 강조 + 세부 한 줄, 페이즈 헤더 대형 */}
+        {/* AIM 1기 로드맵(오너 2026-08-07 2차 — "회차 = 한 포인트"): 학사일정 기반 회차 9개 + 페이즈 헤더.
+            원천 = AIM_ROADMAP(운영틀 확정값 — 워크스페이스 로드맵 동일 큐레이션). 인터랙션 = useRoadmapFlow(스파이+진행선) */}
         <section className="rc-secs" aria-labelledby="rc-steps-h">
           <div className="rc-band-in">
             <div className="rc-body">
               <h2 className="rc-h2" id="rc-steps-h">{COHORT_LABEL} 로드맵</h2>
-              <p className="rc-sched-rule">{ACADEMIC_RULE}</p>
-              <ol className="rc-steps rc-steps-spy">
-                {RECRUIT_STEPS.map((s) => (
-                  <li className={s.hl ? 'rc-step rc-step-hl' : 'rc-step'} key={s.title}>
-                    <span className="rc-step-era">{s.era}</span>
-                    <h3 className="rc-phase-t">{s.title}</h3>
-                    {s.desc && <p>{s.desc}</p>}
-                    {s.rounds && (
-                      <ol className="rc-rounds">
-                        {s.rounds.map((r) => (
-                          <li key={r.t}>
-                            <span className="rc-round-t">{r.t}</span>
-                            <span className="rc-round-d">{r.d}</span>
-                          </li>
-                        ))}
-                      </ol>
-                    )}
+              <p className="rc-sched-rule">{ACADEMIC_RULE} — 주 1회, 회차가 곧 진행 단위</p>
+              <ol className="rc-rm">
+                <span className="rc-rm-fill" aria-hidden="true" />
+                {AIM_ROADMAP.map((n) => n.type === 'phase' ? (
+                  <li className={n.hl ? 'rc-rm-phase rc-rm-hl' : 'rc-rm-phase'} key={n.라벨}>
+                    <span className="rc-rm-when">{n.기간}</span>
+                    <h3 className="rc-phase-t">{n.라벨}</h3>
+                    <p className="rc-rm-desc">{n.설명}</p>
+                  </li>
+                ) : (
+                  <li className="rc-rm-s" key={n.no}>
+                    <div className="rc-rm-card">
+                      <div className="rc-rm-top">
+                        <span className="rc-rm-no">{n.no}</span>
+                        <div className="rc-rm-head">
+                          <span className="rc-rm-meta">{n.주}{n.태그 && <em className="rc-rm-tag">{n.태그}</em>}</span>
+                          <span className="rc-rm-topic">{n.주제}</span>
+                        </div>
+                      </div>
+                      <p className="rc-rm-learn">{n.배움}</p>
+                      <ul className="rc-rm-notes">
+                        {n.세부.map((d) => <li key={d}>{d}</li>)}
+                      </ul>
+                    </div>
                   </li>
                 ))}
               </ol>

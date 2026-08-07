@@ -127,48 +127,52 @@
 
 /* (B1 블랙 통계 밴드 = v3.2 제거 — 운영 증빙 폐지, 자리 = WHAT WE DO 카드(.rc-do — rc-fit 문법 승계)) */
 
-/* ══ 모집 일정(E1)·활동 구성 로드맵 — 페이즈 스텝(세로 라인·점 문법) ══ */
-.rc-steps { list-style: none; margin: clamp(1.75rem, 4vh, 2.75rem) 0 0; padding: 0; }
-.rc-step { position: relative; padding: 0 0 clamp(1.6rem, 4vh, 2.4rem) clamp(1.5rem, 3vw, 2rem); border-left: 2px solid var(--line); }
-.rc-step:last-child { border-left-color: transparent; padding-bottom: 0; }
-.rc-step::before { /* 화이트리스트 ⑦ 타임라인 점 */
-  content: ''; position: absolute; left: -6px; top: 0.35rem;
-  width: 10px; height: 10px; border-radius: 50%; background: var(--accent); border: 2px solid var(--bg);
+/* ══ AIM 1기 로드맵(오너 2026-08-07 2차 — 회차 = 한 포인트) — 좌 레일 + 진행 채움선 + 회차 카드 ══ */
+.rc-rm { list-style: none; position: relative; margin: clamp(1.75rem, 4vh, 2.75rem) 0 0; padding: 0 0 0 clamp(1.6rem, 3vw, 2.2rem); }
+.rc-rm::before { content: ''; position: absolute; left: 5px; top: 0.4rem; bottom: 0.4rem; width: 3px; background: var(--line); border-radius: 2px; }
+/* 진행 채움선 — 스크롤 비율만큼 버건디로 차오름(높이 = useRoadmapFlow JS). no-JS = 0 */
+.rc-rm-fill { position: absolute; left: 5px; top: 0.4rem; max-height: calc(100% - 0.8rem); width: 3px; height: 0; background: var(--accent); border-radius: 2px; transition: height 160ms linear; }
+.rc-rm > li { position: relative; padding-bottom: clamp(1.3rem, 3.2vh, 2rem); }
+.rc-rm > li:last-child { padding-bottom: 0; }
+.rc-rm > li::before { /* 노드 점(화이트리스트 ⑦) — 레일 위 */
+  content: ''; position: absolute; left: calc(-1 * clamp(1.6rem, 3vw, 2.2rem) + 1px); top: 0.5rem;
+  width: 11px; height: 11px; border-radius: 50%; background: var(--accent); border: 2px solid var(--bg);
+  transition: transform 300ms ease-out, box-shadow 300ms ease-out;
 }
-.rc-step-era { display: block; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; color: var(--text-sub); margin-bottom: 0.35rem; }
-.rc-step h3 {
-  font-family: var(--font-display); font-weight: 800; font-size: clamp(1.05rem, 1.8vw, 1.3rem);
-  letter-spacing: -0.01em; word-break: keep-all; margin: 0 0 0.4rem;
+/* 페이즈 헤더(1차·2차·휴지·최종 발표) — 대형(차시 주제의 약 1.5배) */
+.rc-rm-when { display: block; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; color: var(--text-sub); margin-bottom: 0.3rem; }
+.rc-phase-t { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.55rem, 2.8vw, 1.95rem); letter-spacing: -0.015em; word-break: keep-all; margin: 0 0 0.35rem; }
+.rc-rm-desc { margin: 0; font-size: 0.92rem; line-height: 1.6; color: var(--text-sub); word-break: keep-all; }
+.rc-rm-hl .rc-rm-when { color: var(--accent); }
+/* 회차 카드 — 번호(대형 버건디) + 주차·태그 + 주제(강조) + 배움 한 줄 + 세부(작게) */
+.rc-rm-card {
+  background: #fff; border-radius: var(--radius-card); padding: 1rem 1.25rem 1.1rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  transition: transform 300ms ease-out, box-shadow 300ms ease-out;
 }
-/* AIM 1기 로드맵 페이즈 헤더(오너 2026-08-07 "1차·2차는 더욱 크게") — 차시 주제 폰트의 약 1.5배 */
-.rc-phase-t { font-size: clamp(1.55rem, 2.8vw, 1.95rem); }
-.rc-step p { margin: 0; font-size: 0.94rem; line-height: 1.65; color: var(--text-sub); max-width: 62ch; word-break: keep-all; }
-
-/* 차시 노드(오너 2026-08-07 개편) — 주제(강조) + 아래 작은 세부 한 줄. 번호 카운터 승계 */
-.rc-rounds { list-style: none; counter-reset: rcr; margin: 1.1rem 0 0; padding: 0; }
-.rc-rounds li {
-  counter-increment: rcr;
-  display: grid; grid-template-columns: 2.1rem 1fr; align-items: baseline; row-gap: 0.12rem;
-  padding: 0.55rem 0;
-  word-break: keep-all;
+.rc-secs:nth-of-type(odd) .rc-rm-card { background: var(--surface); box-shadow: none; }
+.rc-rm-top { display: flex; align-items: center; gap: 0.9rem; }
+.rc-rm-no {
+  font-family: var(--font-display); font-weight: 900; font-size: clamp(1.7rem, 3vw, 2.2rem);
+  line-height: 1; letter-spacing: -0.03em; color: var(--accent); flex: none;
 }
-.rc-rounds li::before {
-  content: counter(rcr, decimal-leading-zero);
-  grid-row: 1;
-  font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em;
-  color: var(--accent);
+.rc-rm-meta { display: block; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.08em; color: var(--text-sub); }
+.rc-rm-tag { font-style: normal; color: var(--accent); margin-left: 0.5rem; }
+.rc-rm-topic { display: block; font-family: var(--font-display); font-weight: 800; font-size: clamp(1.05rem, 1.7vw, 1.3rem); letter-spacing: -0.01em; word-break: keep-all; }
+.rc-rm-learn { margin: 0.55rem 0 0; font-size: 0.9rem; line-height: 1.6; color: var(--text); word-break: keep-all; }
+.rc-rm-notes { list-style: none; margin: 0.45rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.3rem 0.9rem; }
+.rc-rm-notes li { font-size: 0.8rem; font-weight: 500; color: var(--text-sub); word-break: keep-all; }
+.rc-rm-notes li::before { content: '·'; margin-right: 0.35rem; color: var(--text-sub); }
+/* 스파이 활성(useRoadmapFlow .on) — 활성 노드 = 카드 리프트·버건디 링·점 확대, 비활성 회차 = 감쇠 */
+.rc-spy-js .rc-rm > li { transition: opacity 300ms ease-out; }
+.rc-spy-js .rc-rm > li.rc-rm-s:not(.on) { opacity: 0.55; }
+.rc-spy-js .rc-rm > li.on::before { transform: scale(1.5); box-shadow: 0 0 0 6px rgba(122, 32, 48, 0.14); }
+.rc-spy-js .rc-rm > li.on .rc-rm-card { transform: translateX(6px); box-shadow: 0 14px 34px rgba(0, 0, 0, 0.09); }
+@media (prefers-reduced-motion: reduce) {
+  .rc-rm-fill { display: none; }
+  .rc-spy-js .rc-rm > li, .rc-spy-js .rc-rm > li.rc-rm-s:not(.on), .rc-spy-js .rc-rm > li.on .rc-rm-card,
+  .rc-spy-js .rc-rm > li.on::before { transition: none; opacity: 1; transform: none; box-shadow: none; }
 }
-.rc-round-t {
-  font-family: var(--font-display); font-weight: 800;
-  font-size: clamp(1.02rem, 1.6vw, 1.2rem); line-height: 1.4; letter-spacing: -0.01em;
-  color: var(--text);
-}
-.rc-round-d { grid-column: 2; font-size: 0.85rem; font-weight: 500; line-height: 1.55; color: var(--text-sub); }
-
-/* 2차 팀 프로젝트 구간 = 버건디 포인트(v3.2 — 예상 시기 구간 강조) */
-.rc-step-hl { border-left-color: var(--accent); }
-.rc-step-hl:last-child { border-left-color: var(--accent); }
-.rc-step-hl .rc-step-era { color: var(--accent); font-weight: 700; }
 
 /* ══ 이런 사람(E2)·WHAT WE DO(v3.2) — 사실 서술 카드 그리드(라인 보더·버건디 0) ══ */
 .rc-fit {
@@ -183,13 +187,22 @@
 }
 .rc-fit p { margin: 0; font-size: 0.9rem; line-height: 1.6; color: var(--text-sub); word-break: keep-all; }
 
-/* WHO SHOULD APPLY(오너 2026-08-07) — 가운데 정렬 + 영문 키워드 버건디 + 호버 리프트 */
-.rc-who li { text-align: center; transition: transform 220ms ease-out, box-shadow 220ms ease-out, border-color 220ms ease-out; }
-.rc-who h3 {
-  font-size: clamp(0.98rem, 1.5vw, 1.12rem); letter-spacing: 0.06em; text-transform: uppercase;
-  color: var(--accent); margin-bottom: 0.5rem;
+/* 이런 분을 찾습니다(오너 2026-08-07 2차 — 카드 그리드 반려) — 모집공고 자격 요건 문법의 체크리스트:
+   중앙 1열 행 = ✓(버건디 원형) + 키워드(볼드) + 회색 설명. 호버 = 행 하이라이트 */
+.rc-who { list-style: none; max-width: 520px; margin: clamp(1.5rem, 3.5vh, 2.5rem) auto 0; padding: 0; display: grid; gap: 0.55rem; }
+.rc-who li {
+  display: grid; grid-template-columns: 26px 1fr; align-items: baseline;
+  column-gap: 0.8rem; row-gap: 0.15rem; padding: 0.85rem 1.2rem;
+  border-radius: 14px; text-align: left; word-break: keep-all;
+  transition: background 200ms ease-out, transform 200ms ease-out;
 }
-.rc-who li:hover { transform: translateY(-5px); border-color: rgba(122, 32, 48, 0.35); box-shadow: 0 14px 32px rgba(0, 0, 0, 0.08); }
+.rc-who li:hover { background: rgba(122, 32, 48, 0.05); transform: translateX(5px); }
+.rc-who-check {
+  display: inline-flex; align-items: center; justify-content: center; align-self: center;
+  width: 24px; height: 24px; border-radius: 50%; background: var(--accent); color: #fff; flex: none;
+}
+.rc-who-t { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.02rem, 1.6vw, 1.18rem); letter-spacing: -0.01em; }
+.rc-who-d { grid-column: 2; font-size: 0.88rem; font-weight: 500; line-height: 1.6; color: var(--text-sub); }
 @media (prefers-reduced-motion: reduce) { .rc-who li { transition: none; } .rc-who li:hover { transform: none; } }
 
 /* ══ SHOWCASE(2026-08-05 2차) — 실물 3건. .rc-fit 카드 문법 승계(보더·radius·타이포 동일),
@@ -311,23 +324,11 @@
 .rc-do li { transition: transform 200ms ease-out; }
 .rc-do li:hover { transform: translateY(-4px); }
 
-/* PROGRAM 로드맵 스파이 — 뷰포트 중앙 최근접 회차/단계만 활성(.on = 훅 부여), 나머지 opacity 감쇠만(§6-2a B3) */
-.rc-spy-js .rc-steps-spy > li,
-.rc-spy-js .rc-steps-spy .rc-rounds > li { transition: opacity 300ms ease-out; }
-/* 감쇠 하한 = 0.55/0.6(2026-08-05 스톨 수정 일괄 — 구 0.35/0.45는 반투명 정체로 읽힘) */
-.rc-spy-js .rc-steps-spy > li:not(.on) { opacity: 0.55; }
-.rc-spy-js .rc-steps-spy > li.on .rc-rounds > li:not(.on) { opacity: 0.6; }
-/* 2차 팀 구간(버건디 포인트) = 활성 시 더 도드라지게 — 타임라인 점 확대(transform)·제목 버건디(즉시 스왑) */
-.rc-spy-js .rc-steps-spy > li::before { transition: transform 300ms ease-out; }
-.rc-spy-js .rc-steps-spy > li.rc-step-hl.on::before { transform: scale(1.4); }
-.rc-steps-spy > li.rc-step-hl.on h3 { color: var(--accent); }
+/* (구 rc-steps-spy 스파이 CSS = 2026-08-07 2차 폐지 — 로드맵 스파이·감쇠는 위 .rc-rm 블록이 담당) */
 
 /* 이중 안전망 — 훅이 게이트 클래스를 안 붙이지만, 세션 중 선호 전환 대비 전부 선명·정지 */
 @media (prefers-reduced-motion: reduce) {
   .rc-js .rc-head .pg-head > *, .rc-js .rc-secs .rc-body > *,
-  .rc-js .rc-secs .rc-fit li, .rc-do li,
-  .rc-spy-js .rc-steps-spy > li, .rc-spy-js .rc-steps-spy .rc-rounds > li,
-  .rc-spy-js .rc-steps-spy > li:not(.on), .rc-spy-js .rc-steps-spy > li.on .rc-rounds > li:not(.on),
-  .rc-spy-js .rc-steps-spy > li::before { transition: none; opacity: 1; transform: none; }
+  .rc-js .rc-secs .rc-fit li, .rc-do li { transition: none; opacity: 1; transform: none; }
   .rc-do li:hover { transform: none; }
 }

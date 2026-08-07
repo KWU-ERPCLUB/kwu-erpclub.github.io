@@ -2,7 +2,7 @@ import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
 import Recruit from './Recruit.jsx'
 import {
-  RECRUIT, PHASES, ACADEMIC_RULE, COHORT_LABEL, RECRUIT_DO, RECRUIT_STEPS,
+  RECRUIT, PHASES, ACADEMIC_RULE, COHORT_LABEL, RECRUIT_DO, AIM_ROADMAP,
   RECRUIT_SHOWCASE, SHOWCASE_LEAD, formatWindow, shortDate,
 } from './data/recruit.js'
 import { FAQ, RECRUIT_FAQ } from './data/faq.js'
@@ -83,49 +83,51 @@ test('SHOWCASE 카피 = 개조식·과장 없음(경어체·마케팅 어휘 0)'
   }
 })
 
-// v3.2 ② — 활동 구성 = 로드맵 단순화: 회차 수 + 회차별 주제 한 줄. 세로 레일 문법 재사용.
-test('활동 구성 로드맵 = 1차(개인 5회)·시험 휴지·2차(팀) — 날짜 = PHASES 파생', () => {
+// 2026-08-07 2차 — AIM 1기 로드맵: 회차 = 한 포인트(1차 5회 + 2차 4회), 원천 = 운영틀 확정값(워크스페이스 동일 큐레이션).
+test('AIM 1기 로드맵 = 페이즈 4 + 회차 9 — 날짜 = PHASES 파생·진행선·스파이 구조', () => {
   const html = flat(<Recruit />)
-  expect(html).toContain('rc-steps')
+  expect(html).toContain(`${COHORT_LABEL} 로드맵`) // 섹션명
+  expect(html).toContain('rc-rm')
+  expect(html).toContain('rc-rm-fill') // 스크롤 진행 채움선
+  expect(AIM_ROADMAP.filter((n) => n.type === 'phase').length).toBe(4) // 1차·휴지·2차·최종 발표
+  expect(AIM_ROADMAP.filter((n) => n.type === 'session').length).toBe(9) // 회차 = 포인트
   expect(html).toContain('1차 프로젝트')
   expect(html).toContain('2차 프로젝트')
-  expect(html).not.toContain('전반부') // 구 명명 = 대외 표기에서 제거(운영틀 개정 이력 2026-08-05)
+  expect(html).not.toContain('전반부') // 구 명명 = 대외 표기에서 제거
   expect(html).not.toContain('후반부')
-  expect(html).toContain(`${PHASES.p1.라벨} — ${PHASES.p1.형태} · ${PHASES.p1.회차}회`) // 회차 수 명기
-  expect(html).toContain('중간고사 기간 활동 중지')
+  expect(html).toContain('중간고사 2주 전부터 활동 중지')
   // 날짜 = data/recruit.js PHASES 파생(운영틀 §2 — 하드코딩 아님)
-  expect(html).toContain(`${shortDate(PHASES.p1.킥오프주간)} 주간 ~ ${shortDate(PHASES.p1.쇼케이스주간)} 주간`)
+  expect(html).toContain(`${shortDate(PHASES.p1.킥오프주간)} 주 ~ ${shortDate(PHASES.p1.쇼케이스주간)} 주`)
   expect(html).toContain(`${shortDate(PHASES.휴지.start)} ~ ${shortDate(PHASES.휴지.end)}`)
-  expect(html).toContain(`${shortDate(PHASES.p2.개시주간)} 주간 ~ ${shortDate(PHASES.p2.상한주간)} 주간`)
-  expect(html).toContain('팀 프로젝트')
+  expect(html).toContain(`${shortDate(PHASES.p2.개시주간)} 주 ~ ${shortDate(PHASES.p2.상한주간)} 주`)
   expect(html).toContain(ACADEMIC_RULE) // 학사일정 연동 원칙 1줄 명기
   expect(html).not.toContain('산출물 = 본인 소유') // 요강 하단 콜아웃 = 오너 삭제 2026-08-07(폼 안내 rc-callout은 별개)
-  expect(html).toContain(`${COHORT_LABEL} 로드맵`) // 섹션명 = AIM 1기 로드맵(오너 2026-08-07)
-  expect(html).toContain('rc-round-t') // 차시 = 주제(강조) + 세부 한 줄
-  expect(html).toContain('rc-round-d')
 })
 
-test('로드맵 회차 한 줄 = 1차 5회 주제(rc-rounds — 구 워드 스택 폐지)', () => {
+test('로드맵 회차 = 번호·주제·배움·세부 전량 렌더 + OT·발표 태그', () => {
   const html = flat(<Recruit />)
-  expect(html).toContain('rc-rounds')
-  expect(html).not.toContain('rc-words') // B3 워드 스택 = v3.2 폐지
-  expect(RECRUIT_STEPS[0].rounds.length).toBe(5)
-  for (const r of ['킥오프 — 소재 선정', 'AI 도구 개괄·체험', '공통 미니과제', '본인 소재 제작', '중간 쇼케이스']) {
-    expect(html, `회차 주제 부재: ${r}`).toContain(r)
+  for (const s of AIM_ROADMAP.filter((n) => n.type === 'session')) {
+    expect(html, `회차 번호 부재: ${s.no}`).toContain(`>${s.no}<`)
+    expect(html, `회차 주제 부재: ${s.주제}`).toContain(s.주제)
+    expect(html, `배움 부재: ${s.no}`).toContain(s.배움)
+    for (const d of s.세부) expect(html, `세부 부재: ${d}`).toContain(d)
   }
+  expect(html).toContain('>OT<') // 1회 = OT 태그(오너 "맨 처음은 OT")
+  expect(html).toContain('1차 발표')
+  expect(html).toContain('팀 편성')
+  expect(html).not.toContain('rc-rounds') // 구 차시 목록 폐지
+  expect(html).not.toContain('rc-steps-spy')
 })
 
-test('2차 팀 프로젝트 구간 = 버건디 포인트(rc-step-hl) + 예상 시기 표기', () => {
+test('2차·최종 발표 페이즈 = 버건디 포인트(rc-rm-hl) + 예상 시기 표기', () => {
   const html = flat(<Recruit />)
-  expect((html.match(/rc-step-hl/g) || []).length).toBe(1) // 강조 = 2차 구간 1곳만
+  expect((html.match(/rc-rm-hl/g) || []).length).toBe(2) // 2차 프로젝트 + 최종 발표
   expect(html).toContain('예상 시기')
-  const p2Start = html.indexOf('rc-step-hl')
-  expect(html.indexOf('2차 프로젝트', p2Start)).toBeGreaterThan(-1) // 강조 대상 = 2차 구간
 })
 
 test('[미정] 게재 금지(운영틀 §8) — 최종 발표 주간·요일·인원·선발 방식 값 없음', () => {
   const html = flat(<Recruit />)
-  expect(html).toContain('발표 주간 = 추후 확정') // 최종 발표 = 과정 서술만, 날짜 없음
+  expect(html).toContain('추후 확정') // 최종 발표 기간 = 미정 표기만, 날짜 없음
   expect(html).not.toContain('최종 발표 주간 · ')
   expect(html).not.toContain('12-01') // 기말 전 주간을 발표 주간으로 날조 금지
   expect(html).not.toContain('11-30')
@@ -153,12 +155,13 @@ test('타임라인 섹션 삭제(오너 2026-08-07) + 미정 선발 단계 날�
   }
 })
 
-test('E2 WHO SHOULD APPLY = 영문 키워드 카드 4장(오너 2026-08-07 — 구 이런 사람 대체)', () => {
+test('E2 이런 분을 찾습니다 = 자격 요건 체크리스트 4행(오너 2026-08-07 2차 — 영문 키워드 반려)', () => {
   const html = flat(<Recruit />)
-  expect(html).toContain('rc-fit rc-who')
-  expect(html).toContain('WHO SHOULD APPLY')
-  expect(html).not.toContain('이런 사람')
-  for (const t of ['OPEN TO ALL MAJORS', 'NO CODING REQUIRED', 'ONE HOUR A WEEK', 'HANDS-ON BUILDERS']) {
+  expect(html).toContain('rc-who')
+  expect(html).toContain('rc-who-check') // ✓ 버건디 체크 — 모집공고 자격 요건 문법
+  expect(html).toContain('이런 분을 찾습니다')
+  expect(html).not.toContain('WHO SHOULD APPLY')
+  for (const t of ['전공 무관', '코딩 경험 무관', '주 1회 참여 가능', '직접 만들어 볼 의지']) {
     expect(html).toContain(t)
   }
 })
@@ -218,15 +221,14 @@ test('E6 CTA = 헤더 신청하기 앵커 → 하단 폼 섹션 id 연결 + 대�
 
 // ── v3.3 스크롤 인터랙션 복원(2026-08-05) — SSR/no-JS 폴백 가드: 게이트 클래스가 정적 렌더에 없어야 전부 선명 ──
 
-test('v3.3 인터랙션 = 런타임 클래스 게이트 — 정적 렌더에 rc-js·rc-spy-js·rc-in·on 없음 + 스파이 대상 클래스 존재', () => {
+test('인터랙션 = 런타임 클래스 게이트 — 정적 렌더에 rc-js·rc-spy-js·rc-in·on 없음 + 로드맵 구조 존재', () => {
   const html = flat(<Recruit />)
-  expect(html).toContain('rc-steps rc-steps-spy') // PROGRAM 로드맵 = 스파이 대상(SCHEDULE은 비대상)
-  expect((html.match(/rc-steps-spy/g) || []).length).toBe(1)
+  expect((html.match(/class="rc-rm"/g) || []).length).toBe(1) // AIM 1기 로드맵 = 스파이·진행선 대상
   // 감쇠·리빌은 훅이 런타임에만 부여(rc-js/rc-spy-js/rc-in/.on) → no-JS 정적 렌더 = 전부 선명
   expect(html).not.toContain('rc-js')
   expect(html).not.toContain('rc-spy-js')
   expect(html).not.toContain('rc-in"')
-  expect(html).not.toContain('rc-step on')
+  expect(html).not.toContain('rc-rm-s on')
 })
 
 // 4차(2026-08-06) — 좌 라벨 레일(rc-label·rc-grid) 전면 폐지(피드백 "왼쪽 네모들 다 삭제").
