@@ -117,6 +117,12 @@
   background: var(--dark); color: #fff; font-size: 0.85rem; font-weight: 700; white-space: nowrap;
 }
 .rc-fact dd { margin: 0; font-size: 0.98rem; font-weight: 650; line-height: 1.55; word-break: keep-all; }
+/* 오너 2026-08-07: 값 강조 — 핵심(버건디 700) / 부연(회색) + 행 호버 인터랙션 */
+.rc-fact dd strong { color: var(--accent); font-weight: 800; }
+.rc-fact-sub { color: var(--text-sub); font-weight: 550; }
+.rc-fact { transition: transform 200ms ease-out, box-shadow 200ms ease-out, border-color 200ms ease-out; }
+.rc-fact:hover { transform: translateX(6px); border-color: rgba(122, 32, 48, 0.35); box-shadow: 0 8px 22px rgba(0, 0, 0, 0.06); }
+@media (prefers-reduced-motion: reduce) { .rc-fact { transition: none; } .rc-fact:hover { transform: none; } }
 @media (max-width: 700px) { .rc-fact { grid-template-columns: 1fr; gap: 0.5rem; justify-items: start; } }
 
 /* (B1 블랙 통계 밴드 = v3.2 제거 — 운영 증빙 폐지, 자리 = WHAT WE DO 카드(.rc-do — rc-fit 문법 승계)) */
@@ -134,23 +140,30 @@
   font-family: var(--font-display); font-weight: 800; font-size: clamp(1.05rem, 1.8vw, 1.3rem);
   letter-spacing: -0.01em; word-break: keep-all; margin: 0 0 0.4rem;
 }
+/* AIM 1기 로드맵 페이즈 헤더(오너 2026-08-07 "1차·2차는 더욱 크게") — 차시 주제 폰트의 약 1.5배 */
+.rc-phase-t { font-size: clamp(1.55rem, 2.8vw, 1.95rem); }
 .rc-step p { margin: 0; font-size: 0.94rem; line-height: 1.65; color: var(--text-sub); max-width: 62ch; word-break: keep-all; }
 
-/* 회차별 주제 한 줄(v3.2 로드맵 — 구 B3 워드 스택 대체): 번호 카운터 승계, 크기는 본문급 */
-.rc-rounds { list-style: none; counter-reset: rcr; margin: 0.9rem 0 0; padding: 0; }
+/* 차시 노드(오너 2026-08-07 개편) — 주제(강조) + 아래 작은 세부 한 줄. 번호 카운터 승계 */
+.rc-rounds { list-style: none; counter-reset: rcr; margin: 1.1rem 0 0; padding: 0; }
 .rc-rounds li {
   counter-increment: rcr;
-  display: flex; align-items: baseline; gap: 0.7rem;
-  padding: 0.3rem 0;
-  font-family: var(--font-display); font-weight: 700;
-  font-size: clamp(0.98rem, 1.5vw, 1.12rem); line-height: 1.45; letter-spacing: -0.01em;
-  color: var(--text); word-break: keep-all;
+  display: grid; grid-template-columns: 2.1rem 1fr; align-items: baseline; row-gap: 0.12rem;
+  padding: 0.55rem 0;
+  word-break: keep-all;
 }
 .rc-rounds li::before {
   content: counter(rcr, decimal-leading-zero);
+  grid-row: 1;
   font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em;
-  color: var(--text-sub); flex: none;
+  color: var(--accent);
 }
+.rc-round-t {
+  font-family: var(--font-display); font-weight: 800;
+  font-size: clamp(1.02rem, 1.6vw, 1.2rem); line-height: 1.4; letter-spacing: -0.01em;
+  color: var(--text);
+}
+.rc-round-d { grid-column: 2; font-size: 0.85rem; font-weight: 500; line-height: 1.55; color: var(--text-sub); }
 
 /* 2차 팀 프로젝트 구간 = 버건디 포인트(v3.2 — 예상 시기 구간 강조) */
 .rc-step-hl { border-left-color: var(--accent); }
@@ -170,6 +183,15 @@
 }
 .rc-fit p { margin: 0; font-size: 0.9rem; line-height: 1.6; color: var(--text-sub); word-break: keep-all; }
 
+/* WHO SHOULD APPLY(오너 2026-08-07) — 가운데 정렬 + 영문 키워드 버건디 + 호버 리프트 */
+.rc-who li { text-align: center; transition: transform 220ms ease-out, box-shadow 220ms ease-out, border-color 220ms ease-out; }
+.rc-who h3 {
+  font-size: clamp(0.98rem, 1.5vw, 1.12rem); letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 0.5rem;
+}
+.rc-who li:hover { transform: translateY(-5px); border-color: rgba(122, 32, 48, 0.35); box-shadow: 0 14px 32px rgba(0, 0, 0, 0.08); }
+@media (prefers-reduced-motion: reduce) { .rc-who li { transition: none; } .rc-who li:hover { transform: none; } }
+
 /* ══ SHOWCASE(2026-08-05 2차) — 실물 3건. .rc-fit 카드 문법 승계(보더·radius·타이포 동일),
    차이 = 3열 + 상단 썸네일 프레임(16:10 고정 크롭·헤어라인). 새 시각 언어 없음·버건디 0(화살표 = 기존 Arrow). ══ */
 .rc-show { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -183,10 +205,14 @@
   border: 1px solid var(--line); border-radius: 12px; background: var(--surface);
 }
 .rc-show-thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
-.rc-show-link h3 { display: flex; align-items: center; gap: 0.45rem; margin: 0.85rem 0 0.4rem; }
+/* 오너 2026-08-07: 제목 가운데 + 문안 2단(핵심 볼드 / 회색 보조) — 줄바꿈은 어절 유지(keep-all + balance) */
+.rc-show li { text-align: center; }
+.rc-show-link h3 { display: flex; align-items: center; justify-content: center; gap: 0.45rem; margin: 0.85rem 0 0.4rem; }
 .rc-show-link h3 svg { width: 14px; height: 14px; flex: none; color: var(--text-sub); }
 .rc-show-link:hover h3 { text-decoration: underline; text-underline-offset: 3px; }
-.rc-show li p { margin: 0; }
+.rc-show li p { margin: 0; word-break: keep-all; text-wrap: balance; }
+.rc-show-core { font-size: 0.95rem; font-weight: 750; color: var(--text); line-height: 1.5; }
+.rc-show-sub { margin-top: 0.25rem !important; font-size: 0.85rem; font-weight: 500; color: var(--text-sub); }
 
 /* ══ FAQ 서브셋(E4) — 4차: 가로줄 폐지 → 카드 면 아코디언(홈 FAQ 동형) ══ */
 .rc-faq { margin-top: clamp(1.5rem, 3.5vh, 2.25rem); display: grid; gap: 0.7rem; }
@@ -216,6 +242,7 @@
 .rc-callout a { color: var(--text); font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--text-sub); }
 .rc-callout a:hover { border-color: var(--text); }
 .rc-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem; margin-top: clamp(1.5rem, 3vh, 2rem); }
+.rc-actions-center { justify-content: center; } /* 문의 — 가운데 정렬(오너 2026-08-07) */
 
 /* ══ 신청 폼(온사이트 접수) — 제출 = 대형 CTA(.rc-cta-xl) 승계, 라인 문법은 요강 표 승계 ══ */
 .rc-form { margin-top: clamp(1.75rem, 4vh, 2.5rem); max-width: 46rem; }
@@ -269,6 +296,16 @@
 .rc-js .rc-secs .rc-fit li:nth-child(4) { transition-delay: 240ms; }
 .rc-js .rc-secs.rc-in .rc-fit li,
 .rc-js .rc-secs:focus-within .rc-fit li { opacity: 1; transform: none; }
+/* 요강 행 스태거(오너 2026-08-07 인터랙션 보강) — 좌에서 순차 진입 */
+.rc-js .rc-secs .rc-fact { opacity: 0; transform: translateX(-22px); transition: opacity 600ms ease-out, transform 640ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 200ms ease-out, border-color 200ms ease-out; }
+.rc-js .rc-secs .rc-fact:nth-child(2) { transition-delay: 70ms; }
+.rc-js .rc-secs .rc-fact:nth-child(3) { transition-delay: 140ms; }
+.rc-js .rc-secs .rc-fact:nth-child(4) { transition-delay: 210ms; }
+.rc-js .rc-secs .rc-fact:nth-child(5) { transition-delay: 280ms; }
+.rc-js .rc-secs .rc-fact:nth-child(6) { transition-delay: 350ms; }
+.rc-js .rc-secs .rc-fact:nth-child(n + 7) { transition-delay: 420ms; }
+.rc-js .rc-secs.rc-in .rc-fact,
+.rc-js .rc-secs:focus-within .rc-fact { opacity: 1; transform: none; }
 
 /* WHAT WE DO 카드 호버 리프트(기존 카드 호버 문법 수준 — CSS 단독이라 no-JS에서도 동작) */
 .rc-do li { transition: transform 200ms ease-out; }

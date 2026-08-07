@@ -222,6 +222,13 @@
 }
 .sb-label { display: block; font-weight: 700; font-size: clamp(0.95rem, 1.5vw, 1.1rem); }
 .sb-src { display: block; margin-top: 0.45rem; font-size: 0.76rem; color: rgba(255, 255, 255, 0.55); }
+/* RECORD 숫자 상시 부유(오너 2026-08-07 "카운트업 뒤 정적" 해소) — 셀별 주기·위상 어긋난 느린 둥둥 */
+@media (prefers-reduced-motion: no-preference) {
+  .sb-cell .stat-num { display: inline-block; animation: sb-float 5.2s ease-in-out infinite; }
+  .sb-cell:nth-child(2) .stat-num { animation-duration: 6s; animation-delay: -1.9s; }
+  .sb-cell:nth-child(3) .stat-num { animation-duration: 6.8s; animation-delay: -3.4s; }
+}
+@keyframes sb-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
 @media (max-width: 700px) {
   .sb-grid { grid-template-columns: 1fr; }
   .sb-cell + .sb-cell { border-left: 0; border-top: 1px solid rgba(255, 255, 255, 0.22); }

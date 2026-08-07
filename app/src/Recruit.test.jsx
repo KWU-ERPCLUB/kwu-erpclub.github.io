@@ -26,9 +26,12 @@ test('요강 = 확정값만 게재(오너 개정 2026-08-05) — 기간·인원 
   const html = flat(<Recruit />)
   expect(html).toContain(formatWindow()) // 모집 기간 = 데이터 파생(하드코딩 아님)
   expect(html).toContain(RECRUIT.활동기간)
-  expect(html).toContain('미정 — 추후 확정')          // 인원(구 6~10명 — 오너 개정)
+  // 값 = 핵심(strong)+부연(span) 분리 렌더(2026-08-07) — 연속 문자열 대신 두 조각으로 단언
+  expect(html).toContain('<strong>미정</strong>')     // 인원(구 6~10명 — 오너 개정)
+  expect(html).toContain('추후 확정')
   expect(html).not.toContain('6~10명')
-  expect(html).toContain('경영학부 중심 — 전공 무관')
+  expect(html).toContain('<strong>경영학부 중심</strong>')
+  expect(html).toContain('전공 무관')
   expect(html).toContain('매주 대면 60분')
   expect(html).toContain('요일 추후 확정')
   expect(html).toContain('참가비 없음')
@@ -54,22 +57,25 @@ test('v3.2 WHAT WE DO = 이 스터디가 하는 일 — 활동 4카드(기고·�
 })
 
 // SHOWCASE(2026-08-05 2차) — "챗GPT면 충분" 반론에 대한 실물 증거 3건.
-test('SHOWCASE = 실물 3건(보드·허브·세미나 자료) — 이름·사실 1줄·링크·썸네일', () => {
+test('SHOWCASE = 실물 3건(보드·허브·세미나 자료) — 이름·핵심/보조 2단·링크·썸네일', () => {
   const html = flat(<Recruit />)
   expect(html).toContain('rc-show-h')
   expect(RECRUIT_SHOWCASE.length).toBe(3)
-  for (const { name, fact, href, img } of RECRUIT_SHOWCASE) {
+  for (const { name, core, sub, href, img } of RECRUIT_SHOWCASE) {
     expect(html, `실물 이름 부재: ${name}`).toContain(name)
-    expect(html, `사실 서술 부재: ${name}`).toContain(fact)
+    expect(html, `핵심 문장 부재: ${name}`).toContain(core)
+    expect(html, `보조 설명 부재: ${name}`).toContain(sub)
     expect(html, `링크 부재: ${name}`).toContain(`href="${href}"`)
     expect(html, `썸네일 부재: ${name}`).toContain(`src="${img}"`)
   }
   expect(html).toContain(SHOWCASE_LEAD)
   expect(html).toContain('rc-fit rc-show') // 카드 문법 = 기존 rc-fit 승계(새 시각 언어 0)
+  expect(html).toContain('rc-show-core') // 문안 2단(오너 2026-08-07): 핵심 강조 + 회색 보조
+  expect(html).toContain('rc-show-sub')
 })
 
 test('SHOWCASE 카피 = 개조식·과장 없음(경어체·마케팅 어휘 0)', () => {
-  const strs = [SHOWCASE_LEAD, ...RECRUIT_SHOWCASE.flatMap((s) => [s.name, s.fact])]
+  const strs = [SHOWCASE_LEAD, ...RECRUIT_SHOWCASE.flatMap((s) => [s.name, s.core, s.sub])]
   for (const s of strs) {
     for (const banned of ['습니다', '입니다', '됩니다', '하세요', '최고', '완벽', '혁신']) {
       expect(s, `금지 표현 «${banned}» 포함: ${s}`).not.toContain(banned)
@@ -85,7 +91,7 @@ test('활동 구성 로드맵 = 1차(개인 5회)·시험 휴지·2차(팀) — 
   expect(html).toContain('2차 프로젝트')
   expect(html).not.toContain('전반부') // 구 명명 = 대외 표기에서 제거(운영틀 개정 이력 2026-08-05)
   expect(html).not.toContain('후반부')
-  expect(html).toContain(`${PHASES.p1.형태} — ${PHASES.p1.회차}회`) // 회차 수 명기
+  expect(html).toContain(`${PHASES.p1.라벨} — ${PHASES.p1.형태} · ${PHASES.p1.회차}회`) // 회차 수 명기
   expect(html).toContain('중간고사 기간 활동 중지')
   // 날짜 = data/recruit.js PHASES 파생(운영틀 §2 — 하드코딩 아님)
   expect(html).toContain(`${shortDate(PHASES.p1.킥오프주간)} 주간 ~ ${shortDate(PHASES.p1.쇼케이스주간)} 주간`)
@@ -93,7 +99,10 @@ test('활동 구성 로드맵 = 1차(개인 5회)·시험 휴지·2차(팀) — 
   expect(html).toContain(`${shortDate(PHASES.p2.개시주간)} 주간 ~ ${shortDate(PHASES.p2.상한주간)} 주간`)
   expect(html).toContain('팀 프로젝트')
   expect(html).toContain(ACADEMIC_RULE) // 학사일정 연동 원칙 1줄 명기
-  expect(html).toContain('rc-callout')
+  expect(html).not.toContain('산출물 = 본인 소유') // 요강 하단 콜아웃 = 오너 삭제 2026-08-07(폼 안내 rc-callout은 별개)
+  expect(html).toContain(`${COHORT_LABEL} 로드맵`) // 섹션명 = AIM 1기 로드맵(오너 2026-08-07)
+  expect(html).toContain('rc-round-t') // 차시 = 주제(강조) + 세부 한 줄
+  expect(html).toContain('rc-round-d')
 })
 
 test('로드맵 회차 한 줄 = 1차 5회 주제(rc-rounds — 구 워드 스택 폐지)', () => {
@@ -135,29 +144,28 @@ test('마케팅 어투 금지(SPEC §4 개정 목록) + 신청 폼 섹션 + 문�
 
 // ── 레퍼런스 픽 E1~E6(오너 확정 2026-08-05 — E5 키비주얼은 v3.2에서 삭제) ──
 
-test('E1 모집 일정 타임라인 = 확정 3단계만(접수→개별 안내→활동 시작) — 선발 단계 날조 없음', () => {
+test('타임라인 섹션 삭제(오너 2026-08-07) + 미정 선발 단계 날조 없음', () => {
   const html = flat(<Recruit />)
-  expect(html).toContain('rc-timeline-h')
-  expect(html).toContain('신청 폼 제출')
-  expect(html).toContain('개별 안내')
-  expect(html).toContain(`${COHORT_LABEL} 활동 개시`) // 기수·활동 시작 = 데이터 파생
+  expect(html).not.toContain('rc-timeline-h') // 「접수부터 활동 시작까지」 폐지
+  expect(html).not.toContain('접수부터 활동 시작까지')
   for (const invented of ['면접', '서류 심사', '합격']) {
     expect(html, `미정 선발 단계 날조: ${invented}`).not.toContain(invented)
   }
 })
 
-test('E2 이런 사람 = 사실 서술 카드 4장(경영학부·코딩 불필요·대면 60분·직접 실험)', () => {
+test('E2 WHO SHOULD APPLY = 영문 키워드 카드 4장(오너 2026-08-07 — 구 이런 사람 대체)', () => {
   const html = flat(<Recruit />)
-  expect(html).toContain('rc-fit')
-  expect(html).toContain('이런 사람')
-  for (const t of ['경영학부 중심', '코딩 경험 불필요', '매주 대면 60분', 'AI 활용 직접 실험']) {
+  expect(html).toContain('rc-fit rc-who')
+  expect(html).toContain('WHO SHOULD APPLY')
+  expect(html).not.toContain('이런 사람')
+  for (const t of ['OPEN TO ALL MAJORS', 'NO CODING REQUIRED', 'ONE HOUR A WEEK', 'HANDS-ON BUILDERS']) {
     expect(html).toContain(t)
   }
 })
 
 test('E3 순서 = WHAT WE DO가 요강 직후(구 운영 증빙 자리) — 전체 섹션 순서 고정', () => {
   const html = flat(<Recruit />)
-  const order = ['id="rc-facts"', 'rc-do-h', 'rc-show-h', 'rc-fit-h', 'rc-timeline-h', 'rc-steps-h', 'rc-faq-h', 'rc-apply-h', 'rc-join-h']
+  const order = ['id="rc-facts"', 'rc-do-h', 'rc-show-h', 'rc-fit-h', 'rc-steps-h', 'rc-faq-h', 'rc-apply-h', 'rc-join-h']
   const idx = order.map((k) => html.indexOf(k))
   idx.forEach((v, i) => expect(v, `${order[i]} 부재`).toBeGreaterThan(-1))
   expect([...idx].sort((a, b) => a - b)).toEqual(idx)
@@ -226,5 +234,5 @@ test('4차 — 좌 라벨 레일 부재 + 섹션 9개 구조 유지', () => {
   const html = flat(<Recruit />)
   expect(html).not.toContain('rc-label')
   expect(html).not.toContain('rc-grid')
-  expect((html.match(/class="rc-secs"/g) || []).length).toBe(9) // 요강~문의 9섹션(헤더 별도)
+  expect((html.match(/class="rc-secs"/g) || []).length).toBe(8) // 요강~문의 8섹션(타임라인 삭제 2026-08-07, 헤더 별도)
 })

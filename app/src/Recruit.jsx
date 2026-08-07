@@ -16,8 +16,8 @@
 import { useEffect } from 'react'
 import { SiteNav, SiteFooter, PageHead, REPO_URL, Arrow } from './shared.jsx'
 import {
-  RECRUIT, ACADEMIC_RULE, formatWindow, CONTACT, CONTACT_MAILTO,
-  RECRUIT_FACTS, RECRUIT_DO, RECRUIT_FIT, RECRUIT_TIMELINE, RECRUIT_STEPS,
+  RECRUIT, ACADEMIC_RULE, formatWindow, CONTACT, CONTACT_MAILTO, COHORT_LABEL,
+  RECRUIT_FACTS, RECRUIT_DO, RECRUIT_FIT, RECRUIT_STEPS,
   RECRUIT_SHOWCASE, SHOWCASE_LEAD,
 } from './data/recruit.js'
 import { RECRUIT_FAQ } from './data/faq.js'
@@ -130,17 +130,21 @@ export default function Recruit() {
           <div className="rc-band-in">
             <div className="rc-body">
               <h2 className="rc-h2" id="rc-facts">모집 요강</h2>
+              {/* 오너 2026-08-07: 값 = "핵심 — 부연" 구조 분리 렌더 — 핵심(버건디 강조) + 부연(회색). 콜아웃(산출물 소유) 삭제 */}
               <dl className="rc-facts">
-                {RECRUIT_FACTS.map(([label, value]) => (
-                  <div className="rc-fact" key={label}>
-                    <dt>{label}</dt>
-                    <dd>{value}</dd>
-                  </div>
-                ))}
+                {RECRUIT_FACTS.map(([label, value]) => {
+                  const [core, ...rest] = value.split(' — ')
+                  return (
+                    <div className="rc-fact" key={label}>
+                      <dt>{label}</dt>
+                      <dd>
+                        <strong>{core}</strong>
+                        {rest.length > 0 && <span className="rc-fact-sub"> — {rest.join(' — ')}</span>}
+                      </dd>
+                    </div>
+                  )
+                })}
               </dl>
-              <p className="rc-callout">
-                산출물 = 본인 소유, 기록은 <a href="/seminars/">세미나</a>·<a href="/projects/">프로젝트</a> 페이지에 축적.
-              </p>
             </div>
           </div>
         </section>
@@ -169,8 +173,9 @@ export default function Recruit() {
             <div className="rc-body">
               <h2 className="rc-h2" id="rc-show-h">실물</h2>
               <p className="rc-sched-rule">{SHOWCASE_LEAD}</p>
+              {/* 오너 2026-08-07: 제목 가운데 정렬 + 문안 2단(핵심 강조 한 문장 / 회색 보조 한 줄) */}
               <ul className="rc-fit rc-show">
-                {RECRUIT_SHOWCASE.map(({ name, fact, href, img }) => (
+                {RECRUIT_SHOWCASE.map(({ name, core, sub, href, img }) => (
                   <li key={name}>
                     <a className="rc-show-link" href={href}>
                       <span className="rc-show-thumb">
@@ -178,7 +183,8 @@ export default function Recruit() {
                       </span>
                       <h3>{name} <Arrow /></h3>
                     </a>
-                    <p>{fact}</p>
+                    <p className="rc-show-core">{core}</p>
+                    <p className="rc-show-sub">{sub}</p>
                   </li>
                 ))}
               </ul>
@@ -186,11 +192,12 @@ export default function Recruit() {
           </div>
         </section>
 
+        {/* WHO SHOULD APPLY(오너 2026-08-07 — 구 '이런 사람': 현업 모집요강 문법 영문 키워드 + 가운데 정렬) */}
         <section className="rc-secs" aria-labelledby="rc-fit-h">
           <div className="rc-band-in">
             <div className="rc-body">
-              <h2 className="rc-h2" id="rc-fit-h">이런 사람</h2>
-              <ul className="rc-fit">
+              <h2 className="rc-h2" id="rc-fit-h">WHO SHOULD APPLY</h2>
+              <ul className="rc-fit rc-who">
                 {RECRUIT_FIT.map(([title, desc]) => (
                   <li key={title}>
                     <h3>{title}</h3>
@@ -202,38 +209,28 @@ export default function Recruit() {
           </div>
         </section>
 
-        <section className="rc-secs" aria-labelledby="rc-timeline-h">
-          <div className="rc-band-in">
-            <div className="rc-body">
-              <h2 className="rc-h2" id="rc-timeline-h">접수부터 활동 시작까지</h2>
-              <ol className="rc-steps">
-                {RECRUIT_TIMELINE.map((t) => (
-                  <li className="rc-step" key={t.title}>
-                    <span className="rc-step-era">{t.era}</span>
-                    <h3>{t.title}</h3>
-                    <p>{t.desc}</p>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          </div>
-        </section>
+        {/* (「접수부터 활동 시작까지」 타임라인 = 오너 삭제 2026-08-07) */}
 
-        {/* 활동 구성 = 로드맵(v3.2 단순화) — 세로 레일 재사용, 회차별 주제 한 줄(rc-rounds), 2차 = 버건디 포인트 */}
+        {/* AIM 1기 로드맵(오너 2026-08-07 개편) — 차시 단위 노드: 주제 강조 + 세부 한 줄, 페이즈 헤더 대형 */}
         <section className="rc-secs" aria-labelledby="rc-steps-h">
           <div className="rc-band-in">
             <div className="rc-body">
-              <h2 className="rc-h2" id="rc-steps-h">1차 프로젝트 — 개인 · 2차 프로젝트 — 팀</h2>
+              <h2 className="rc-h2" id="rc-steps-h">{COHORT_LABEL} 로드맵</h2>
               <p className="rc-sched-rule">{ACADEMIC_RULE}</p>
               <ol className="rc-steps rc-steps-spy">
                 {RECRUIT_STEPS.map((s) => (
                   <li className={s.hl ? 'rc-step rc-step-hl' : 'rc-step'} key={s.title}>
                     <span className="rc-step-era">{s.era}</span>
-                    <h3>{s.title}</h3>
+                    <h3 className="rc-phase-t">{s.title}</h3>
                     {s.desc && <p>{s.desc}</p>}
                     {s.rounds && (
                       <ol className="rc-rounds">
-                        {s.rounds.map((r) => <li key={r}>{r}</li>)}
+                        {s.rounds.map((r) => (
+                          <li key={r.t}>
+                            <span className="rc-round-t">{r.t}</span>
+                            <span className="rc-round-d">{r.d}</span>
+                          </li>
+                        ))}
                       </ol>
                     )}
                   </li>
@@ -275,12 +272,11 @@ export default function Recruit() {
         <section className="rc-secs" aria-labelledby="rc-join-h">
           <div className="rc-band-in">
             <div className="rc-body">
-              <h2 className="rc-h2" id="rc-join-h">문의 — 이메일</h2>
-              {/* 문의 채널 = CONTACT 상수 파생(이메일 확정 2026-08-05) */}
-              <div className="rc-actions">
+              <h2 className="rc-h2" id="rc-join-h">문의</h2>
+              {/* 문의 채널 = CONTACT 상수 파생. 오너 2026-08-07: FAQ 링크 제거·가운데 정렬 */}
+              <div className="rc-actions rc-actions-center">
                 <a className="btn-2nd" href={CONTACT_MAILTO}>{CONTACT.email}</a>
                 <a className="btn-2nd" href={REPO_URL}>GitHub 저장소</a>
-                <a className="proof-link" href="/#faq">자주 묻는 질문 <Arrow /></a>
               </div>
             </div>
           </div>
