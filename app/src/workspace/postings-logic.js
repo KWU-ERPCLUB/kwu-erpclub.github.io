@@ -4,9 +4,13 @@
 
 export const POSTING_KINDS = ['공모전', '채용', '자격시험', '대외활동']
 
-// 상태 파생 — 접수마감 없음 = 상시 / 접수시작 전 = 접수전 / 마감 지남 = 마감 / 그 외 = 접수중.
+// 상태 파생 — 접수마감 없음: 시험일 있으면 예정/마감(시험일 기준), 없으면 상시.
+// 접수마감 있음: 마감 지남 = 마감 / 접수시작 전 = 접수전 / 그 외 = 접수중.
 export function postingStatus(row, todayKey) {
-  if (!row['접수마감']) return '상시'
+  if (!row['접수마감']) {
+    if (row['시험일']) return row['시험일'] < todayKey ? '마감' : '예정'
+    return '상시'
+  }
   if (row['접수마감'] < todayKey) return '마감'
   if (row['접수시작'] && row['접수시작'] > todayKey) return '접수전'
   return '접수중'
@@ -25,7 +29,8 @@ export function groupPostings(rows, todayKey) {
     else active.push(r)
   }
   const pinFirst = (a, b) => Number(Boolean(b['고정'])) - Number(Boolean(a['고정']))
-  active.sort((a, b) => pinFirst(a, b) || (a['접수마감'] < b['접수마감'] ? -1 : a['접수마감'] > b['접수마감'] ? 1 : 0))
+  const keyOf = (r) => r['접수마감'] || r['시험일'] || ''   // 예정(접수 없는 시험) = 시험일이 임박 기준
+  active.sort((a, b) => pinFirst(a, b) || (keyOf(a) < keyOf(b) ? -1 : keyOf(a) > keyOf(b) ? 1 : 0))
   always.sort(pinFirst)
   closed.sort((a, b) => (a['접수마감'] < b['접수마감'] ? 1 : a['접수마감'] > b['접수마감'] ? -1 : 0))
   return { active, always, closed }

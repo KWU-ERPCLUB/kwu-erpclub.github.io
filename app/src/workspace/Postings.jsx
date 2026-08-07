@@ -15,14 +15,18 @@ export function PostingCard({ row, todayKey }) {
         <span className={`ws-post-kind k-${POSTING_KINDS.indexOf(row['종류'])}`}>{row['종류']}</span>
         {row['고정'] && !closed && <span className="ws-post-pin">고정</span>}
         <span className={`ws-post-status s-${status}`}>
-          {status === '접수중' ? `접수중 · ${dday(todayKey, row['접수마감'])}` : status}
+          {status === '접수중' && `접수중 · ${dday(todayKey, row['접수마감'])}`}
+          {status === '예정' && `시험 ${dday(todayKey, row['시험일'])}`}
+          {status !== '접수중' && status !== '예정' && status}
         </span>
       </div>
       <a className="ws-post-title" href={row.url} target="_blank" rel="noreferrer">{row['제목']}</a>
       <p className="ws-mark-meta">
-        {row['주최'] && <>{row['주최']} · </>}
-        {row['접수마감'] ? `접수 ${row['접수시작'] ? `${row['접수시작']} ~ ` : '~ '}${row['접수마감']}` : '상시'}
-        {row['시험일'] && ` · 시험일 ${row['시험일']}`}
+        {[
+          row['주최'],
+          row['접수마감'] ? `접수 ${row['접수시작'] ? `${row['접수시작']} ~ ` : '~ '}${row['접수마감']}` : (!row['시험일'] && '상시'),
+          row['시험일'] && `시험일 ${row['시험일']}`,
+        ].filter(Boolean).join(' · ')}
       </p>
       <p className="ws-post-comment">{row['코멘트']}</p>
     </li>
@@ -87,12 +91,15 @@ export default function Postings({ store }) {
           <h2 className="ws-h2">접수 임박</h2>
           {active.length === 0 && <p className="ws-note">접수 중 공고 0건.</p>}
           <ul className="ws-list">
-            {active.slice(0, 5).map((r) => (
-              <li key={r.id} className="ws-mark">
-                <a href={r.url} target="_blank" rel="noreferrer">{r['제목']}</a>
-                <span className="ws-mark-meta">{r['접수마감'].slice(5).replace('-', '/')} · {dday(todayKey, r['접수마감'])}</span>
-              </li>
-            ))}
+            {active.slice(0, 5).map((r) => {
+              const due = r['접수마감'] || r['시험일']   // 예정(접수 없는 시험) = 시험일 기준
+              return (
+                <li key={r.id} className="ws-mark">
+                  <a href={r.url} target="_blank" rel="noreferrer">{r['제목']}</a>
+                  <span className="ws-mark-meta">{due.slice(5).replace('-', '/')} · {dday(todayKey, due)}</span>
+                </li>
+              )
+            })}
           </ul>
         </section>
         <section className="ws-block">

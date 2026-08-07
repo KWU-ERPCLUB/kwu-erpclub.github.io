@@ -28,6 +28,7 @@
 
 .ws-post-status { margin-left: auto; font-size: 0.78rem; font-weight: 600; color: var(--text-sub); }
 .ws-post-status.s-접수중 { color: #1f5c37; }
+.ws-post-status.s-예정 { color: #1f5c37; }     /* 접수 없는 시험·행사 — 시험 D-n */
 .ws-post-status.s-마감 { color: var(--text-sub); }
 
 .ws-post-title {

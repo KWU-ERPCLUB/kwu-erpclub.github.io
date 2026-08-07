@@ -12,6 +12,18 @@ test('상태 파생 — 접수마감 없음=상시 / 시작 전=접수전 / 마�
   expect(postingStatus(row({ 접수마감: TODAY }), TODAY)).toBe('접수중')   // 마감 당일 = 아직 접수중
 })
 
+test('접수 없는 시험 공지 — 시험일 전=예정, 지나면=마감 (예: ADsP 회차 시험일만 공지)', () => {
+  expect(postingStatus(row({ 접수마감: null, 시험일: '2026-09-20' }), TODAY)).toBe('예정')
+  expect(postingStatus(row({ 접수마감: null, 시험일: TODAY }), TODAY)).toBe('예정')     // 시험 당일까지 표시
+  expect(postingStatus(row({ 접수마감: null, 시험일: '2026-09-01' }), TODAY)).toBe('마감')
+  // 예정 항목은 활성 묶음에서 시험일 기준으로 임박 정렬
+  const { active } = groupPostings([
+    row({ id: 'a', 접수마감: '2026-09-25' }),
+    row({ id: 'b', 접수마감: null, 시험일: '2026-09-12' }),
+  ], TODAY)
+  expect(active.map((r) => r.id)).toEqual(['b', 'a'])
+})
+
 test('묶음 분리·정렬 — 활성(고정→마감 임박순) / 상시 / 마감(최근 먼저)', () => {
   const rows = [
     row({ id: 'a', 접수마감: '2026-09-25' }),
