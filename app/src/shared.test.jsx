@@ -1,16 +1,14 @@
-// 공개 헤더의 로그인 상태 동적 표시(M3 ④) — 세션 없으면 워크스페이스 존재를 노출하지 않는다.
+// 공개 헤더 — 워크스페이스 링크 상시 노출(오너 개정 2026-08-07: 링크가 없으면 로그인 화면 입구가 없다).
 import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
 import { SiteNav, PageHead, latestUpdated } from './shared.jsx'
-import { hasWorkspaceSession } from './data/session-flag.js'
-import { SESSION_KEY } from './data/session-key.js'
 
 const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
 
-test('비로그인 헤더 = 워크스페이스 링크 없음(공개 탭만)', () => {
-  const html = flat(<SiteNav signedIn={false} />)
-  expect(html).not.toContain('/workspace/')
-  expect(html).not.toContain('WORKSPACE')
+test('헤더 = 공개 4탭 + 워크스페이스 상시 링크(폐지 페이지 링크 0)', () => {
+  const html = flat(<SiteNav />)
+  expect(html).toContain('href="/workspace/"')
+  expect(html).toContain('WORKSPACE')
   expect(html).not.toContain('/about/') // about·log 폐지(IA 4차 2026-08-05)
   expect(html).not.toContain('/log/')
   for (const label of ['INSIGHTS', 'SEMINARS', 'PROJECTS', 'RECRUIT']) {
@@ -19,16 +17,10 @@ test('비로그인 헤더 = 워크스페이스 링크 없음(공개 탭만)', ()
 })
 
 test('스킵 링크 = 문서 첫 요소·#main 대상(접근성 3차)', () => {
-  const html = flat(<SiteNav signedIn={false} />)
+  const html = flat(<SiteNav />)
   expect(html.indexOf('skip-link')).toBeLessThan(html.indexOf('class="nav"'))
   expect(html).toContain('href="#main"')
   expect(html).toContain('본문 바로가기')
-})
-
-test('로그인 세션 있으면 헤더 끝에 워크스페이스 링크', () => {
-  const html = flat(<SiteNav signedIn />)
-  expect(html).toContain('href="/workspace/"')
-  expect(html).toContain('WORKSPACE')
 })
 
 // 페이지 헤드 골격(4차 2026-08-06 외부 피드백) — 중앙 정렬 1열: 키커+h1+문장형 설명+메타+children.
@@ -53,16 +45,4 @@ test('갱신일 메타 = 콘텐츠 최신 게재일 파생(없으면 null = 줄 
   expect(latestUpdated([{ title: '날짜 없음' }])).toBe(null)
   // 메타 없으면 줄 자체가 렌더되지 않는다(하드코딩 날짜 금지)
   expect(flat(<PageHead label="X" title="제목" />)).not.toContain('pg-meta')
-})
-
-test('세션 판정 = 저장소 키 존재 여부만(없는 환경·차단 환경 = 비로그인)', () => {
-  const box = new Map()
-  const storage = { getItem: (k) => box.get(k) ?? null }
-  expect(hasWorkspaceSession(storage)).toBe(false)
-  box.set(SESSION_KEY, '{"access_token":"t"}')
-  expect(hasWorkspaceSession(storage)).toBe(true)
-
-  expect(hasWorkspaceSession(null)).toBe(false)
-  const blocked = { getItem() { throw new Error('차단') } }
-  expect(hasWorkspaceSession(blocked)).toBe(false)
 })

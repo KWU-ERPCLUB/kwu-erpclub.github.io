@@ -2,8 +2,6 @@
 // 탭·라벨=영문 정책(owner 2026-07-11): 현업에서 영어로 더 자주 쓰는 용어는 영문, 본문은 한글
 // 모집 = /recruit/ 페이지(IA 3차 2026-07-27 — 사실 서술만·마케팅 어투 금지). 문의 = 이메일·GitHub(CONTACT 상수).
 import { useState } from 'react'
-// 로그인 상태 동적 표시(M3 ④) — localStorage 동기 확인 1회. 네트워크 호출 없음 = 공개 페이지 성능·정적성 유지.
-import { hasWorkspaceSession } from './data/session-flag.js'
 // 연락 채널 단일원천(2026-08-05) — REPO_URL도 여기서 파생(주소 중복 0)
 import { CONTACT, CONTACT_MAILTO } from './data/recruit.js'
 
@@ -28,14 +26,13 @@ export function Arrow() {
   )
 }
 
-// 세션이 있을 때만 붙는 탭 — 비로그인 방문자에게는 워크스페이스 존재 자체를 노출하지 않는다.
+// 워크스페이스 탭 = 상시 노출(오너 개정 2026-08-07 — 세션 게이트 폐지: 링크가 없으면 로그인 화면에 갈 입구가 없다.
+// 비로그인 클릭 = /workspace/ 로그인 폼이 받는다).
 const WORKSPACE_LINK = ['WORKSPACE', '/workspace/']
 
-export function SiteNav({ signedIn, cta }) {
+export function SiteNav({ cta }) {
   const [open, setOpen] = useState(false)
-  // 최초 렌더 1회 판정(리렌더마다 저장소를 읽지 않는다). 테스트·SSR에서는 storage 없음 = false.
-  const [hasSession] = useState(() => (signedIn === undefined ? hasWorkspaceSession() : signedIn))
-  const links = hasSession ? [...NAV_LINKS, WORKSPACE_LINK] : NAV_LINKS
+  const links = [...NAV_LINKS, WORKSPACE_LINK]
   // 현재 페이지의 탭 강조 (MPA — pathname 정규화 비교: /projects·/projects/index.html도 매칭)
   const isOn = (href) => {
     if (typeof window === 'undefined') return false
