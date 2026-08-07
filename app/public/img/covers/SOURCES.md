@@ -23,6 +23,8 @@
 | mcp-anthropic.jpg | 2026-08-03 주간 AI 트렌드 — 7월 5주 | MCP 개편 발표글의 공식 히어로 아트 | https://claude.com/blog/bringing-mcp-2026-07-28-to-claude | Anthropic / Claude 블로그 |
 | samsung-sds.jpg | 2026-08-05 국내 SI 빅3의 무게중심 이동 | 춘천 데이터센터 항공 실사(회사 제공 프레스 사진) | https://www.koreatimes.co.kr/business/tech-science/20190922/samsung-sds-unveils-new-data-center-in-chuncheon | 삼성SDS 제공 / The Korea Times 게재 |
 | qwen38-max.jpg | 2026-08-05 최상위급 모델이 처음 오픈웨이트로 | Qwen 제품군 공식 키비주얼 | https://www.alizila.com/alibaba-unveils-qwen3-8-max-most-capable-flagship-model-to-date/ | Alizila (알리바바 공식 뉴스룸) |
+| gemini-spark.jpg | 2026-08-07 제미나이 스파크 자동 브라우징 | 해당 발표글(og:image)의 공식 헤더 아트 | https://blog.google/innovation-and-ai/products/gemini-app/gemini-spark-updates-july-2026/ | Google 공식 블로그 |
+| google-ai-shakeup.jpg | 2026-08-07 구글 AI 수뇌부 개편 | 개편 공지글(og:image)의 구글 'G' 공식 아트 | https://blog.google/company-news/inside-google/message-ceo/next-chapter-ai-momentum/ | Google 공식 블로그 |
 
 ## 추가할 때
 

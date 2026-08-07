@@ -5,6 +5,10 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  # 안전망(2026-08-07): 야간 루틴 push의 Actions 이벤트가 유실된 사고(1241fbb — 런 0건 → DB 동기화 누락으로
+  # 신규 기사가 사이트에 미표시) 재발 대비. 매일 06:30 KST(= 야간 루틴 05시 이후) 전체 재실행으로 자가 복구.
+  schedule:
+    - cron: '30 21 * * *'
   workflow_dispatch:
 
 permissions:
@@ -27,7 +31,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: guard-shared-paths
-        if: "${{ !contains(fromJSON(env.MAINTAINERS), github.actor) }}"
+        # schedule·dispatch 이벤트에는 diff 기준 커밋이 없어 스킵(push·PR에서만 판정)
+        if: "${{ (github.event_name == 'push' || github.event_name == 'pull_request') && !contains(fromJSON(env.MAINTAINERS), github.actor) }}"
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             BASE="${{ github.event.pull_request.base.sha }}"
@@ -69,7 +74,7 @@ jobs:
   # 삭제 연산 없음(스크립트가 upsert만 한다). service 키는 secret에서만 온다(P2).
   sync-content:
     needs: build
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
