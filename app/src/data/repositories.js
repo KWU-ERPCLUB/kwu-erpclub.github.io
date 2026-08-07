@@ -12,7 +12,7 @@ export const newSlug = () => `${today()}-ws-${Math.random().toString(36).slice(2
 
 // 저장소 계약(키 = 도메인, 값 = 메서드 이름 목록). mock·supabase 구현 양쪽을 이 표로 검사한다.
 export const REPO_CONTRACT = {
-  auth: ['currentUser', 'signIn', 'signOut'],
+  auth: ['currentUser', 'signIn', 'signOut', 'updatePassword'],
   members: ['me', 'list', 'listPrivate', 'updateMe', 'setRole'],
   articles: ['listPublished', 'listMine', 'listPending', 'save', 'setStatus'],
   interactions: ['counts', 'mine', 'listBookmarked', 'toggleLike', 'toggleBookmark'],
@@ -58,6 +58,8 @@ export function createSupabaseRepositories(backend) {
       // 입력 = 학번(§0-4). '@' 포함이면 이메일 그대로 — 변환 규칙 = login-id.js
       signIn: (loginId, password) => backend.auth.signIn(toLoginEmail(loginId), password),
       signOut: () => backend.auth.signOut(),
+      // 본인 비밀번호 변경(로그인 상태 전제 — 셀프 "찾기"는 비범위, 잊으면 운영진 재설정)
+      updatePassword: (newPassword) => backend.auth.updatePassword(newPassword),
     },
     members: {
       // 로그인 본인 프로필(이름·역할). 학번·전공은 member_private — 여기서 조회하지 않는다(P5).

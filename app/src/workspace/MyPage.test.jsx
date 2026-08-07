@@ -40,3 +40,19 @@ test('활동내역 = 본인 기고·본인 제출만', async () => {
   const other = createMockRepositories({ user: 'mock-staff' })
   expect((await other.submissions.listMine()).some((s) => s.member_id === 'mock-member')).toBe(false)
 })
+
+// ── 비밀번호 변경(2026-08-07 — 초기 공통 비밀번호 → 본인 변경 흐름) ──
+test('내정보 = 비밀번호 변경 폼(새 값 + 확인 2칸)', () => {
+  const html = flat(<MyPage store={createMockRepositories({ user: 'mock-member' })} member={ME} />)
+  expect(html).toContain('비밀번호 변경')
+  expect(html).toContain('새 비밀번호(6자 이상)')
+  expect(html).toContain('새 비밀번호 확인')
+})
+
+test('updatePassword 계약 — 로그인 필요 + 6자 미만 거부(목 = GoTrue 동형)', async () => {
+  const signed = createMockRepositories({ user: 'mock-member' })
+  await expect(signed.auth.updatePassword('abcdef')).resolves.toBe(true)
+  await expect(signed.auth.updatePassword('0000')).rejects.toThrow('6자 이상')
+  const anon = createMockRepositories()
+  await expect(anon.auth.updatePassword('abcdef')).rejects.toThrow('로그인 필요')
+})

@@ -55,6 +55,60 @@ function Profile({ store, member, onSaved }) {
   )
 }
 
+// 비밀번호 변경(2026-08-07) — 로그인 상태에서 본인이 직접(메일 불필요). 초기 비밀번호는 운영진이 공통 임시값으로
+// 발급(supabase/README.md 3-1) → 첫 로그인 후 여기서 변경. 잊으면 운영진 재설정(셀프 "찾기"는 비범위).
+export function PasswordChange({ store }) {
+  const [pw, setPw] = useState('')
+  const [pw2, setPw2] = useState('')
+  const [msg, setMsg] = useState('')
+  const [error, setError] = useState('')
+  const [busy, setBusy] = useState(false)
+
+  async function save(e) {
+    e.preventDefault()
+    setMsg('')
+    if (pw.length < 6) return setError('비밀번호는 6자 이상')
+    if (pw !== pw2) return setError('두 입력이 다름 — 같은 값 입력')
+    setError('')
+    setBusy(true)
+    try {
+      await store.auth.updatePassword(pw)
+      setMsg('비밀번호 변경됨 — 다음 로그인부터 새 값 사용')
+      setPw('')
+      setPw2('')
+    } catch (err) {
+      setError(err?.message || '변경 실패')
+    } finally {
+      setBusy(false)
+    }
+    return undefined
+  }
+
+  return (
+    <section className="ws-block">
+      <h2 className="ws-h2">비밀번호 변경</h2>
+      <p className="ws-note">초기(임시) 비밀번호를 받았다면 여기서 본인 값으로 변경. 잊어버린 경우 = 운영진에게 재설정 요청.</p>
+      <form className="ws-form ws-form-wide" onSubmit={save}>
+        <div className="ws-field-row">
+          <label className="ws-field">
+            <span>새 비밀번호(6자 이상)</span>
+            <input type="password" value={pw} autoComplete="new-password" onChange={(e) => setPw(e.target.value)} />
+          </label>
+          <label className="ws-field">
+            <span>새 비밀번호 확인</span>
+            <input type="password" value={pw2} autoComplete="new-password" onChange={(e) => setPw2(e.target.value)} />
+          </label>
+        </div>
+        {error && <p className="ws-error" role="alert">{error}</p>}
+        {msg && <p className="ws-ok" role="status">{msg}</p>}
+        <div className="ws-form-acts">
+          <button type="submit" className="ws-submit" disabled={busy}>{busy ? '변경 중' : '비밀번호 변경'}</button>
+        </div>
+      </form>
+    </section>
+  )
+}
+
 // 내 기고 + 내 과제 제출 — 상태만 확인하는 읽기 목록(수정은 각 탭에서)
 function Activity({ articles, submissions, assignments }) {
   const titleOf = (id) => assignments.find((a) => a.id === id)?.['제목'] || '(삭제된 과제)'
@@ -117,6 +171,7 @@ export default function MyPage({ store, member, onProfileSaved }) {
         {error && <p className="ws-error" role="alert">{error}</p>}
         {/* key = 멤버 로드 완료 시 폼 초기값을 다시 잡기 위함(비동기 도착) */}
         <Profile key={member?.id || 'pending'} store={store} member={member} onSaved={onProfileSaved} />
+        <PasswordChange store={store} />
       </div>
       <aside className="ws-crail">
         <Activity articles={articles} submissions={submissions} assignments={assignments} />

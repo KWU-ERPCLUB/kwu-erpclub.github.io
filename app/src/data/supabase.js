@@ -110,6 +110,15 @@ export function createBackend(config = readEnv(), deps = {}) {
       saveSession(storage, session)
       return session
     },
+    // 본인 비밀번호 변경(2026-08-07) — 로그인 세션의 bearer로 GoTrue user 갱신. 메일 발송 불필요
+    // (셀프 "찾기"는 여전히 비범위 §7 — 잊으면 운영진 재설정). 초기 비밀번호 관례 = supabase/README.md 3-1.
+    async updatePassword(newPassword) {
+      await request('/auth/v1/user', {
+        method: 'PUT',
+        body: JSON.stringify({ password: newPassword }),
+      })
+      return true
+    },
     async signOut() {
       const had = Boolean(session)
       session = null

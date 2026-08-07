@@ -73,7 +73,7 @@ insert into members (id, 이름, role) values ('<복사한 UID>', '신해원', '
 ### 방법 A — 대시보드(1~2명)
 
 1. Authentication > Users > Add user > Create new user
-   - Email: `s<학번>@member.erpclub` / Password: 임시 비밀번호 / **Auto Confirm User 체크**
+   - Email: `s<학번>@member.erpclub` / Password: **공통 초기 비밀번호 `000000`**(2026-08-07 관례 — Supabase 최소 6자라 `0000` 불가) / **Auto Confirm User 체크**
 2. 생성된 UID 복사 → SQL Editor
 
 ```sql
@@ -102,9 +102,12 @@ curl -X POST "$SUPABASE_URL/auth/v1/admin/users" \
 
 ### 확인
 
-- `/workspace/` 로그인창에 **학번**과 임시 비밀번호 입력 → 이름·역할 표시
+- `/workspace/` 로그인창에 **학번**과 초기 비밀번호(`000000`) 입력 → 이름·역할 표시
 - `members.학번`은 unique — 같은 학번으로 계정 2개를 만들 수 없다
-- 비밀번호 변경은 당분간 운영진이 대시보드에서 재설정(셀프 재설정 = 메일 발송 필요 → 비범위 §7)
+- **본인 변경(2026-08-07 신설)**: 첫 로그인 후 **내정보 탭 > 비밀번호 변경**에서 직접 변경(로그인 상태라 메일 불필요).
+  초대 안내문에 "첫 로그인 후 비밀번호 변경" 한 줄을 꼭 포함한다
+- **잊어버린 경우**: 셀프 "찾기"는 여전히 불가(메일 발송 = 비범위 §7) — 운영진이 대시보드
+  Authentication > Users에서 재설정(다시 `000000`으로 넣고 본인 변경 안내)
 
 ## 4단계 — 키 확인
 

@@ -55,6 +55,12 @@ export function createMockRepositories({ user = null, data = {} } = {}) {
       async signOut() {
         currentId = null
       },
+      // GoTrue 규칙 동형: 로그인 필요 + 최소 6자(Supabase 기본 min length)
+      async updatePassword(newPassword) {
+        if (!currentId) throw new Error('로그인 필요')
+        if (String(newPassword || '').length < 6) throw new Error('비밀번호는 6자 이상')
+        return true
+      },
     },
     members: {
       async me() {
