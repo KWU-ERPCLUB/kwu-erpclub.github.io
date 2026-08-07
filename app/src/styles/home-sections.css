@@ -79,13 +79,60 @@
 .rm-desc { display: block; margin-top: 0.45rem; font-size: 0.85rem; color: var(--text-sub); }
 .rm-status { display: block; margin-top: 0.6rem; } /* 상태 칩 = 별도 행(피드백 "설명과 겹쳐 애매") */
 
-/* 항목별 스크롤 리빌(useItemReveal) — 브랜치형 = 전 카드 아래→위 진입(2차 감속 값 유지) */
+/* ── 흐름 인터랙션(2026-08-07 오너 "흐름이 느껴지게") — 전부 .home-js 게이트(no-JS·reduced-motion = 정적 선명) ──
+   시퀀스(행이 .in 될 때마다): 선이 위→아래로 자람 → 곡선이 그려짐 → 노드 팝+링 1회 → 카드 리빌.
+   행 리빌이 스크롤 순서대로 일어나므로 전체가 위에서 아래로 "흘러내리는" 연출이 된다. */
 .home-js .rm-item {
   opacity: 0;
   transform: translateY(28px);
   transition: opacity 1120ms ease-out, transform 1280ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .home-js .rm-item.in { opacity: 1; transform: none; }
+/* ① 세로선 드로잉 — 본류·브랜치 공통(scaleY, origin top) */
+.home-js .rm-lane::before,
+.home-js .rm-branch .rm-lane::after,
+.home-js .rm-fork .rm-dot::after {
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 900ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.home-js .rm-fork .rm-dot::after { transform: translateX(-50%) scaleY(0); transition-delay: 820ms; }
+.home-js .rm-item.in .rm-lane::before,
+.home-js .rm-item.in.rm-branch .rm-lane::after { transform: scaleY(1); }
+.home-js .rm-item.in.rm-fork .rm-dot::after { transform: translateX(-50%) scaleY(1); }
+/* ② 분기 곡선 드로잉 — 위→아래로 닦아내며 그려짐(clip-path) */
+.home-js .rm-fork .rm-lane::after {
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 720ms ease-out 260ms;
+}
+.home-js .rm-item.in.rm-fork .rm-lane::after { clip-path: inset(0); }
+/* ③ 노드 팝 + 버건디 링 1회(⑯ 계열 — 퍼져 사라지는 링) */
+.home-js .rm-dot {
+  transform: translate(calc(-50% + 1.5px), -50%) scale(0);
+  transition: transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1) 480ms;
+}
+.home-js .rm-item.in .rm-dot { transform: translate(calc(-50% + 1.5px), -50%) scale(1); }
+.rm-dot::before { content: ''; position: absolute; inset: -3px; border-radius: 50%; }
+.home-js .rm-item.in .rm-dot::before { animation: rm-node-ring 1000ms ease-out 620ms 1 both; }
+@keyframes rm-node-ring {
+  0% { box-shadow: 0 0 0 0 rgba(122, 32, 48, 0.4); }
+  100% { box-shadow: 0 0 0 16px rgba(122, 32, 48, 0); }
+}
+/* ④ 브랜치 스트림 — 버건디 선 위를 아래로 흐르는 대시(상시 — AIM 갈래가 "지금 흐르는 줄기"). 본류는 정지 */
+@media (prefers-reduced-motion: no-preference) {
+  .rm-branch .rm-lane::after,
+  .rm-fork .rm-dot::after {
+    background: repeating-linear-gradient(180deg,
+      var(--accent) 0 14px, rgba(122, 32, 48, 0.38) 14px 24px);
+    background-size: 100% 24px;
+    animation: rm-stream 1.15s linear infinite;
+  }
+}
+@keyframes rm-stream { from { background-position: 0 0; } to { background-position: 0 24px; } }
+/* ⑤ 카드 호버 리프트 — 살짝 떠오르며 그림자 심화 */
+.rm-card { transition: transform 240ms ease-out, box-shadow 240ms ease-out; }
+.rm-item:not(.rm-slot) .rm-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.1); }
+@media (prefers-reduced-motion: reduce) { .rm-card { transition: none; } .rm-item:not(.rm-slot) .rm-card:hover { transform: none; } }
 
 @media (max-width: 700px) { /* 폰 = 같은 브랜치 구조, 레인 폭만 축소(x=20/56 유지 — 76px 안에 들어옴) */
   .rm-item { grid-template-columns: 76px 1fr; }

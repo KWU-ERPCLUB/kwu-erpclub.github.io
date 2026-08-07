@@ -3,7 +3,7 @@ import { renderToString } from 'react-dom/server'
 import Recruit from './Recruit.jsx'
 import {
   RECRUIT, PHASES, ACADEMIC_RULE, COHORT_LABEL, RECRUIT_DO, RECRUIT_STEPS,
-  RECRUIT_SHOWCASE, SHOWCASE_LEAD, PRIVACY_NOTE, formatWindow, shortDate,
+  RECRUIT_SHOWCASE, SHOWCASE_LEAD, formatWindow, shortDate,
 } from './data/recruit.js'
 import { FAQ, RECRUIT_FAQ } from './data/faq.js'
 
@@ -173,21 +173,22 @@ test('E4 FAQ 서브셋 = data/faq.js 단일원천(모집 문항만·아코디언
   expect(html).toContain('<details')
 })
 
-// FAQ 증보(2026-08-05 2차) — 근거 있는 값만. 미확정(선발 기준·정원·결석 정책) 문항은 만들지 않는다.
-test('FAQ 증보 4문항 = 모집 서브셋 노출(시간·학점·개인정보·전공) + 기존 값 재사용', () => {
+// FAQ 증보(2026-08-05 2차) → 오너 삭제 3문항 반영(2026-08-07: ERP연구회 관계·학점·개인정보).
+test('FAQ 잔존 증보 문항(시간·전공) 노출 + 삭제 3문항 부재', () => {
   const html = flat(<Recruit />)
-  const added = ['주당 시간이 얼마나 드나요?', '학점·졸업요건과 관계가 있나요?', '제출한 개인정보는 어떻게 쓰이나요?', '전공 제한이 있나요?']
+  const added = ['주당 시간이 얼마나 드나요?', '전공 제한이 있나요?']
   for (const q of added) {
     expect(RECRUIT_FAQ.some((f) => f.q === q), `모집 서브셋 누락: ${q}`).toBe(true)
     expect(html, `모집 페이지 미노출: ${q}`).toContain(q)
+  }
+  for (const gone of ['ERP연구회와는 어떤 관계', '학점·졸업요건', '제출한 개인정보']) {
+    expect(FAQ.some((f) => f.q.includes(gone)), `삭제 문항 잔존: ${gone}`).toBe(false)
   }
   const byQ = (needle) => FAQ.find((f) => f.q.includes(needle)).a
   expect(byQ('주당 시간')).toContain('매주 대면 60분')   // 요강 값과 동일
   expect(byQ('주당 시간')).toContain('주 1건 기고')      // WHAT WE DO 값과 동일
   expect(byQ('주당 시간')).toContain(ACADEMIC_RULE)      // 시험 전 활동 중지 = 공용 상수
-  expect(byQ('개인정보')).toBe(PRIVACY_NOTE)             // 신청 폼 하단과 같은 상수
   expect(byQ('전공 제한')).toContain('경영학부 중심')
-  expect(byQ('학점')).toContain('자율 스터디')
 })
 
 test('FAQ 증보 = 미확정 항목 문항·값 없음(선발 기준·정원·결석)', () => {
