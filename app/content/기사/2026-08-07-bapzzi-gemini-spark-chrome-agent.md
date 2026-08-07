@@ -7,19 +7,19 @@ source_url: https://blog.google/innovation-and-ai/products/gemini-app/gemini-spa
 source_name: Google 공식 블로그 · Engadget · 9to5Google
 성격: 심층 분석
 주제: 에이전트
-설명: 8월 3일 구글 제미나이 스파크가 내 PC의 크롬을 직접 조작하기 시작했다 — 저장된 로그인·비밀번호까지 쓰는 방식이 왜 지금 나왔고 무엇을 조심해야 하나
+설명: 7월 30일 구글 제미나이 스파크가 내 PC의 크롬을 직접 조작하는 기능을 발표했다 — 저장된 로그인·비밀번호까지 쓰는 방식이 왜 지금 나왔고 무엇을 조심해야 하나
 태그: [제미나이, 브라우저에이전트, 프롬프트인젝션, 크롬, 자동화]
 이미지: /img/covers/gemini-spark.jpg
 이미지설명: 제미나이 스파크 크롬 자동 브라우징 발표글의 공식 헤더 아트 — 이 글이 다루는 기능의 런칭 비주얼
 ---
 
 ::: 요약
-- 8월 3일 구글 제미나이 스파크가 미국에서 **내 PC의 크롬을 직접 조작하는** 기능을 열었다. 저장된 로그인 계정과 비밀번호를 그대로 쓴다.
+- 7월 30일(공식 발표일) 구글 제미나이 스파크가 미국 우선으로 **내 PC의 크롬을 직접 조작하는** 기능을 열었다. 저장된 로그인 계정과 비밀번호를 그대로 쓴다.
 - 이전에는 클라우드의 격리된 원격 브라우저를 썼다. 로그인 벽 뒤로는 못 들어가서 할 수 있는 일이 좁았던 것이 이번 변경의 이유다.
 - 편의와 함께 새 위험이 붙는다. *에이전트가 읽는 웹페이지에 숨은 명령을 심는 간접 프롬프트 인젝션*이 이 구조의 핵심 취약점이다.
 :::
 
-## 8월 3일에 열린 것
+## 7월 30일에 열린 것
 
 구글이 개인용 에이전트 제미나이 스파크에 크롬 자동 브라우징(auto browse)을 붙였다. 미국에서 먼저 배포됐고 다른 지역은 추후 확대 예정이다.
 
@@ -33,7 +33,7 @@ source_name: Google 공식 블로그 · Engadget · 9to5Google
 | 로그인 상태 | 비로그인 — 로그인 벽 뒤 접근 불가 | 크롬에 저장된 계정·비밀번호 사용 |
 | 활성화 방식 | — | 사용자가 명시적으로 권한 부여 |
 | 화면 표시 | — | 크롬 상단 바에 자동 브라우징 표시 |
-| 배포 | — | 8월 3일 미국 우선 |
+| 배포 | — | 7월 30일 발표 · 미국 우선(160여 개국 순차 확대) |
 
 공식 설명에 제시된 예시는 생활 업무 쪽이다. 저장해 둔 매물 목록에서 아파트 방문 일정을 잡거나, 항공편을 조사해 예약 절차를 시작하는 식이다.
 
@@ -142,7 +142,7 @@ Google 공식 블로그 — Gemini Spark: new Chrome browsing integration | http
 Engadget — Gemini Spark now has Chrome web-browsing capabilities | https://www.engadget.com/2229209/gemini-spark-now-has-chrome-web-browsing-capabliities/ | 로그인 계정·저장 비밀번호 사용
 9to5Google — Gemini Spark can now use Chrome to auto browse | https://9to5google.com/2026/07/30/gemini-spark-chrome-auto-browse/ | 원격 브라우저에서 데스크톱 크롬으로 전환
 Digital Trends — Gemini Spark can now use your Chrome logins and saved passwords | https://www.digitaltrends.com/computing/gemini-spark-can-now-use-your-chrome-logins-and-saved-passwords-run-errands-on-your-behalf/ | 아파트 방문·항공편 예약 예시
-Dataconomy — Google Adds Chrome Web Browsing To Gemini Spark In US Rollout | https://dataconomy.com/2026/08/04/google-chrome-browsing-gemini-spark-us-rollout/ | 8월 3일 미국 배포·다층 방어 설명
+Dataconomy — Google Adds Chrome Web Browsing To Gemini Spark In US Rollout | https://dataconomy.com/2026/08/04/google-chrome-browsing-gemini-spark-us-rollout/ | 미국 배포 2차 보도(8/4)·다층 방어 설명
 OpenAI Help Center — Evolving Atlas into ChatGPT for browser-based agentic work | https://help.openai.com/en/articles/20001371-evolving-atlas-into-chatgpt-for-browser-based-agentic-work | Atlas 종료·기능 흡수
 TechRadar — OpenAI shuts down its Atlas browser after not even a year | https://www.techradar.com/pro/openai-shuts-down-its-atlas-browser-after-not-even-a-year | 8월 9일 종료 시점
 Imperva — Compromise OpenClaw with Prompt Injections in Message Objects | https://www.imperva.com/blog/compromise-openclaw-with-prompt-injections-in-message-objects/ | 신뢰 경계 침범·공격자 코드 실행 분석

@@ -23,7 +23,9 @@ source_name: European Commission · artificialintelligenceact.eu · 법률신문
 
 2026년 8월 2일은 EU AI법 시행 일정표에서 가장 큰 날로 잡혀 있던 날짜다. 실제로 도착한 내용은 예정과 달랐다.
 
-켜진 쪽부터 보면 세 덩어리다. 생성 AI 투명성 의무(제50조), 범용 AI 모델¹ 제공자에 대한 EU 집행위원회의 집행·제재 권한, 그리고 회원국별 규제 샌드박스² 운영 개시다.
+켜진 쪽부터 보면 두 덩어리다. 생성 AI 투명성 의무(제50조), 그리고 범용 AI 모델¹ 제공자에 대한 EU 집행위원회의 집행·제재 권한이다.
+
+회원국별 규제 샌드박스² 의무는 원래 이날 함께 켜질 예정이었으나, 디지털 옴니버스 개정으로 **2027년 8월 2일로** 1년 미뤄졌다(정정 2026-08-07 — 초판은 개정 전 조문을 근거로 "시행"으로 적었다).
 
 미뤄진 쪽이 원래 이날의 주인공이었다. 채용·교육·신용평가·법집행 등에 쓰이는 독립형 고위험 AI 의무가 **2027년 12월 2일로** 옮겨졌다.
 
@@ -31,7 +33,7 @@ source_name: European Commission · artificialintelligenceact.eu · 법률신문
 |---|---|---|---|
 | 제50조 투명성(챗봇·딥페이크·AI 생성물) | 2026-08-02 | 2026-08-02 | 시행 |
 | 범용 AI 모델 집행·제재 권한 | 2026-08-02 | 2026-08-02 | 시행 |
-| 규제 샌드박스 회원국 운영 | 2026-08-02 | 2026-08-02 | 시행 |
+| 규제 샌드박스 회원국 운영 | 2026-08-02 | 2027-08-02 | 12개월 연기 |
 | 부속서 III 독립형 고위험 | 2026-08-02 | 2027-12-02 | 16개월 연기 |
 | 부속서 I 제품 내장형 고위험 | 2027-08-02 | 2028-08-02 | 12개월 연기 |
 
@@ -169,7 +171,7 @@ AI 생성 텍스트도 무조건은 아니다. 사람이 검토하고 편집 책
 European Commission — Transparency obligations under Article 50 of the AI Act (FAQ) | https://digital-strategy.ec.europa.eu/en/faqs/transparency-obligations-under-article-50-ai-act | 제50조 의무 범위·고지 시점 해석
 EU Artificial Intelligence Act — Article 50 | https://artificialintelligenceact.eu/article/50/ | 50조 1~4항 조문·제공자/배포자 구분
 EU Artificial Intelligence Act — The EU AI Act's Transparency Rules: A Practical Guide to Article 50 | https://artificialintelligenceact.eu/transparency-rules-article-50/ | 네 축 정리·예외(예술·사람 검토)
-EU Artificial Intelligence Act — Article 57: AI Regulatory Sandboxes | https://artificialintelligenceact.eu/article/57/ | 회원국 샌드박스 2026-08-02 운영 개시
+EU Artificial Intelligence Act — Article 57: AI Regulatory Sandboxes | https://artificialintelligenceact.eu/article/57/ | 제57조 조문(⚠개정 전 판본 — 샌드박스 의무의 2027-08-02 연기는 옴니버스 개정, 아래 로펌 해설 참조)
 Greenberg Traurig — Deepfakes, Chatbots, AI-Generated Text: European Commission Details Transparency Obligations | https://www.gtlaw.com/en/insights/2026/6/deepfakes-chatbots-ai-generated-text-european-commission-details-transparency-obligations-under-the-ai-act | 집행위 안내 해설·고지 방식
 Lewis Silkin — The Digital Omnibus on AI enters into force today | https://www.lewissilkin.com/insights/2026/07/27/the-digital-omnibus-on-ai-enters-into-force-today-102nedo | 2026-07-27 발효
 NicFab — Digital Omnibus on AI: Regulation (EU) 2026/1744 Is Published in the Official Journal | https://www.nicfab.eu/en/posts/digital-omnibus-ai-official-journal/ | 관보 게재일 2026-07-24·규정 번호
