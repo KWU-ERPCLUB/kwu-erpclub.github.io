@@ -40,6 +40,3 @@ export const STATS = [
 
 // 집계 기준 문구(성과 섹션 각주).
 export const STATS_BASIS = '집계 기준: KWU-ERPCLUB · adsp-board 저장소 · 헌장 트랙 레지스트리, 2026-07-27'
-
-// 외부 실물 링크.
-export const ADSP_BOARD_URL = 'https://erpstudy.vercel.app'

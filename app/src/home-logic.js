@@ -40,7 +40,7 @@ export function recruitPhase(ymd, win = RECRUIT.window) {
 // 세미나 셀 = 밴드에서 제거(2026-08-05 오너 — 신생 스터디 원칙: 0건 지표 미게재. 개최 시작 후 재도입 검토).
 
 // ADsP 1기 시험일 — 이 날짜 이후 "진행 중"은 허위가 된다(시험 종료 = 기수 완주).
-export const ADSP_EXAM_YMD = '2026-08-08'
+const ADSP_EXAM_YMD = '2026-08-08'
 
 // RECORD 4번째 셀 [수치, 라벨, 출처] — 시험일 경계로 진행 중 → 완주 전환.
 export function studyCell(ymd) {

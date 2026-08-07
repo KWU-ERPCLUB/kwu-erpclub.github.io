@@ -29,11 +29,6 @@
   --radius-pill: 999px;
   --maxw: 1040px;
 
-  /* 좌 라벨 레일(§6-2a B2) — 3차 통일 2026-08-05: 구 5종(200/156~184/130~190/168/150~220)을 1값으로.
-     전 페이지 골격이 같은 폭을 소비한다(articles·seminars·projects·recruit + PageHead). */
-  --rail-w: 176px;
-  --rail-gap: 2.75rem;
-
   --font-display: 'Paperlogy', 'Pretendard Variable', Pretendard, sans-serif;
   --font-body: 'Pretendard Variable', Pretendard, -apple-system, sans-serif;
 }
