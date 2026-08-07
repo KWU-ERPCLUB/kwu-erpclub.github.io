@@ -43,6 +43,31 @@ export function dateTimeOf(a) {
   return a['시각'] ? `${d} ${a['시각']}` : d
 }
 
+// 작성자 배지(2026-08-07 오너) — 시간 옆 이름 3글자, 검은 타원 배경 + 흰 글씨.
+export function AuthorBadge({ a }) {
+  const name = String(a.author || '').trim()
+  if (!name) return null
+  return <span className="art-author" title={name}>{name.slice(0, 3)}</span>
+}
+
+// 미열람 N 배지(2026-08-07 오너) — 카드 우상단 빨간 원. 게재 7일 이내 + 이 기기 미열람만(판정 = seen-store isNew).
+export function NewBadge() {
+  return <span className="art-new" aria-label="안 읽음">N</span>
+}
+
+// 좋아요·북마크 수(2026-08-07 오너) — 카드 우하단. counts 없으면(비연결·0/0) 표시 생략.
+export function CountBadges({ counts }) {
+  const likes = counts?.['좋아요수'] || 0
+  const marks = counts?.['북마크수'] || 0
+  if (!likes && !marks) return null
+  return (
+    <span className="art-counts" aria-label={`좋아요 ${likes} · 북마크 ${marks}`}>
+      <span>♥ {likes}</span>
+      <span>🔖 {marks}</span>
+    </span>
+  )
+}
+
 // 태그 칩 줄 — 성격(성격색 칩)·주제·지금써먹기. 상세 전용(카드에서는 제거, 2026-08-05).
 export function TagChips({ a }) {
   const nk = natureKey(a['성격'])
@@ -61,11 +86,23 @@ export function NatureLabel({ a }) {
   return <span className={`art-label chip-${natureKey(a['성격'])}`}>{a['성격']}</span>
 }
 
-// 그리드 카드 — 썸네일 + 성격 라벨 + 제목 + 설명(clamp) + 날짜. 배경 통일(흰 면).
-export function ArticleRow({ a, onOpen, pinned = false }) {
+// 카드 메타 줄 — 날짜 + 작성자 배지(좌) / 좋아요·북마크 수(우하단 끝, 2026-08-07).
+function CardMeta({ a, counts }) {
+  return (
+    <span className="art-card-meta">
+      <span className="art-card-date">{dateTimeOf(a)}</span>
+      <AuthorBadge a={a} />
+      <CountBadges counts={counts} />
+    </span>
+  )
+}
+
+// 그리드 카드 — 썸네일 + 성격 라벨 + 제목 + 설명(clamp) + 메타(날짜·작성자·수치). 배경 통일(흰 면).
+export function ArticleRow({ a, onOpen, pinned = false, counts = null, fresh = false }) {
   return (
     <li className="art-card">
       <button type="button" onClick={() => onOpen(a.slug)}>
+        {fresh && <NewBadge />}
         <Thumb a={a} />
         <span className="art-card-body">
           <span className="art-card-labels">
@@ -74,7 +111,7 @@ export function ArticleRow({ a, onOpen, pinned = false }) {
           </span>
           <span className="art-card-title">{a.title}</span>
           {a['설명'] && <span className="art-card-excerpt">{a['설명']}</span>}
-          <span className="art-card-date">{dateTimeOf(a)}</span>
+          <CardMeta a={a} counts={counts} />
         </span>
       </button>
     </li>
@@ -82,10 +119,11 @@ export function ArticleRow({ a, onOpen, pinned = false }) {
 }
 
 // 피처 카드 — 최신 기고 2건 전용. 4차: 콤팩트(썸네일 좌측·크기 반 — 피드백 "사이즈 줄여서 두 개만").
-export function FeatureCard({ a, onOpen, pinned = false }) {
+export function FeatureCard({ a, onOpen, pinned = false, counts = null, fresh = false }) {
   return (
     <li className="art-feature">
       <button type="button" onClick={() => onOpen(a.slug)}>
+        {fresh && <NewBadge />}
         <Thumb a={a} />
         <span className="art-card-body">
           <span className="art-card-labels">
@@ -94,7 +132,7 @@ export function FeatureCard({ a, onOpen, pinned = false }) {
           </span>
           <span className="art-card-title">{a.title}</span>
           {a['설명'] && <span className="art-card-excerpt">{a['설명']}</span>}
-          <span className="art-card-date">{dateTimeOf(a)}</span>
+          <CardMeta a={a} counts={counts} />
         </span>
       </button>
     </li>

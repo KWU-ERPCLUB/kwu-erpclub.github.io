@@ -5,9 +5,10 @@
 // 3계층 반응형 = articles.css(폰 <760 1열 리스트 / 태블릿 760~1199 2열 / 데스크톱 ≥1200 피처+3열+필터 상시 레일).
 // 시리즈(2026-08-05 오너 재판정) = **필터 칩 1개**뿐. 밴드·전용 아카이브 폐지 — 시리즈 글도 일반 흐름(피처·그리드·카운트 포함).
 // URL: ?tab=<key>=성격 선택 · ?series=<id>=시리즈 필터 · ?p=<slug>=상세(문서 셸 변경 없음). 0건=디자인된 빈 상태.
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useMemo } from 'react'
 import { SiteNav, SiteFooter, PageHead, latestUpdated, CONTRIBUTING_URL } from '../shared.jsx'
 import { useArticles, useInteractions } from './insights-source.js'
+import { loadSeen, markSeen, isNew } from './seen-store.js'
 import { TOPICS } from '../content/schema.js'
 import {
   HUB_TAB, TABS, NATURE_KEY, PAGE_SIZE, SORTS, stateFromSearch, searchFromState,
@@ -91,7 +92,7 @@ function LoadError({ onRetry }) {
 }
 
 // 목록 뷰. export = 픽스처 주입 테스트용. status/onRetry = DB 페치 상태(기본 'ready').
-export function ListView({ all, tab, onTab, topic, setTopic, series = null, setSeries = () => {}, month, setMonth, q, setQ, onOpen, status = 'ready', onRetry }) {
+export function ListView({ all, tab, onTab, topic, setTopic, series = null, setSeries = () => {}, month, setMonth, q, setQ, onOpen, status = 'ready', onRetry, countsOf = () => null, freshOf = () => false }) {
   const [shown, setShown] = useState(PAGE_SIZE)
   const [sort, setSort] = useState('new') // 4차: 정렬(최신·오래된순) — 피드백 "오래된 순도"
   const nature = tab === HUB_TAB ? null : tab
@@ -117,7 +118,7 @@ export function ListView({ all, tab, onTab, topic, setTopic, series = null, setS
         <section className="ins-sec">
           <h2 className="ins-h">최신 기고</h2>
           <ul className="art-features">
-            {feature.map((a) => <FeatureCard key={a.slug} a={a} onOpen={onOpen} pinned={pinnedSlugs.has(a.slug)} />)}
+            {feature.map((a) => <FeatureCard key={a.slug} a={a} onOpen={onOpen} pinned={pinnedSlugs.has(a.slug)} counts={countsOf(a.id)} fresh={freshOf(a)} />)}
           </ul>
         </section>
       )}
@@ -175,7 +176,7 @@ export function ListView({ all, tab, onTab, topic, setTopic, series = null, setS
       ) : ordered.length === 0 ? null : (
         <>
           <ul className="art-grid">
-            {visible.map((a) => <ArticleRow key={a.slug} a={a} onOpen={onOpen} pinned={pinnedSlugs.has(a.slug)} />)}
+            {visible.map((a) => <ArticleRow key={a.slug} a={a} onOpen={onOpen} pinned={pinnedSlugs.has(a.slug)} counts={countsOf(a.id)} fresh={freshOf(a)} />)}
           </ul>
           {remaining > 0 && (
             <div className="art-more-wrap">
@@ -195,6 +196,9 @@ export function ListView({ all, tab, onTab, topic, setTopic, series = null, setS
 export default function Articles({ repos, configured }) {
   const { items: all, status, retry } = useArticles({ repos, configured })
   const interactions = useInteractions({ repos, configured })
+  // 미열람 N 배지(2026-08-07) — 기기 로컬 열람 기록. 상세를 열면 seen 등록 → 배지 소멸(7일 경과분은 자동 제외).
+  const [seen, setSeen] = useState(() => loadSeen())
+  const todayKey = useMemo(() => new Date().toISOString().slice(0, 10), [])
   const initial = typeof window === 'undefined'
     ? { tab: HUB_TAB, slug: null, series: null }
     : stateFromSearch(window.location.search)
@@ -230,7 +234,10 @@ export default function Articles({ repos, configured }) {
     if (next.series !== undefined) setSeries(next.series)
   }, [tab, sel, series])
 
-  const openArticle = useCallback((slug) => nav({ slug }), [nav])
+  const openArticle = useCallback((slug) => {
+    setSeen(new Set(markSeen(slug)))
+    nav({ slug })
+  }, [nav])
   const cur = all.find((a) => a.slug === sel)
 
   if (cur) {
@@ -265,6 +272,8 @@ export default function Articles({ repos, configured }) {
           series={series} setSeries={(id) => nav({ series: id })}
           q={q} setQ={setQ} onOpen={openArticle}
           status={status} onRetry={retry}
+          countsOf={(id) => interactions.countsOf(id)}
+          freshOf={(a) => isNew(a, seen, todayKey)}
         />
       </main>
       <SiteFooter />

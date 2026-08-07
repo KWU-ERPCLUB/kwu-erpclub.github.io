@@ -10,8 +10,35 @@ import Sessions from './Sessions.jsx'
 const KIND_CLASS = { 일정: 'ev', 세미나: 'sem', 모집: 'rec', 마감: 'due', 과제: 'due', 세션: 'sem', 공고: 'post' }
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토']
 
-// 월 캘린더 — 셀 클릭 = 그날 상세 선택. export = 단위 테스트용.
-export function MonthCalendar({ year, month, items, todayKey, selected, onSelect, onMove }) {
+// 항목 세부 팝업(2026-08-07 오너) — 새 창 대신 작은 둥근 팝업. 캘린더 칩·선택일 목록 어디서든 연다.
+export function ItemPopup({ item, onClose }) {
+  if (!item) return null
+  return (
+    <div className="ws-modal" role="presentation" onClick={onClose}>
+      <div
+        className="ws-modal-card" role="dialog" aria-modal="true" aria-label={item['제목']}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="ws-row-top">
+          <span className={`ws-cal-dot ${KIND_CLASS[item['종류']] || 'ev'}`} aria-hidden="true" />
+          <span className="ws-mark-meta">{item['종류']}</span>
+          <button type="button" className="ws-modal-x" onClick={onClose} aria-label="닫기">×</button>
+        </div>
+        <h3 className="ws-modal-title">{item['제목']}</h3>
+        <p className="ws-mark-meta">{item.date}{item['시간'] ? ` · ${item['시간']}` : ''}</p>
+        {item['주최'] && <p className="ws-mark-meta">{item['주최']}</p>}
+        {item['설명'] && <p className="ws-modal-desc">{item['설명']}</p>}
+        {item.url && (
+          <a className="ws-modal-link" href={item.url} target="_blank" rel="noreferrer">원문 보기 ↗</a>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// 월 캘린더 — 셀 클릭 = 그날 상세 선택 / 칩 클릭 = 항목 팝업(2026-08-07). export = 단위 테스트용.
+// 셀은 div+onClick(칩이 진짜 button이라 중첩 button 회피), 날짜 선택은 선택일 목록·키보드는 칩 포커스로 보완.
+export function MonthCalendar({ year, month, items, todayKey, selected, onSelect, onMove, onOpenItem }) {
   const weeks = monthGrid(year, month)
   return (
     <div className="ws-cal">
@@ -35,13 +62,20 @@ export function MonthCalendar({ year, month, items, todayKey, selected, onSelect
           if (cell.key === todayKey) classes.push('today')
           if (cell.key === selected) classes.push('sel')
           return (
-            <button type="button" key={cell.key} className={classes.join(' ')} onClick={() => onSelect(cell.key)}>
+            <div key={cell.key} className={classes.join(' ')} onClick={() => onSelect(cell.key)}>
               <span className="ws-cal-day">{cell.day}</span>
               {dayItems.slice(0, 3).map((it) => (
-                <span key={`${it.source}-${it.id}`} className={`ws-cal-chip ${KIND_CLASS[it['종류']] || 'ev'}`}>{it['제목']}</span>
+                <button
+                  type="button" key={`${it.source}-${it.id}`}
+                  className={`ws-cal-chip ${KIND_CLASS[it['종류']] || 'ev'}`}
+                  title={it['제목']}
+                  onClick={(e) => { e.stopPropagation(); onSelect(cell.key); onOpenItem?.(it) }}
+                >
+                  {it['제목']}
+                </button>
               ))}
               {dayItems.length > 3 && <span className="ws-cal-more">+{dayItems.length - 3}</span>}
-            </button>
+            </div>
           )
         })}
       </div>
@@ -74,8 +108,8 @@ export function UpcomingTasks({ items, todayKey, onSelect }) {
   )
 }
 
-// 선택일 상세 — 캘린더 아래 그날 항목 풀어 보기.
-export function DayDetail({ items, selected }) {
+// 선택일 상세 — 캘린더 아래 그날 항목 풀어 보기. 항목 클릭 = 세부 팝업(2026-08-07).
+export function DayDetail({ items, selected, onOpenItem }) {
   if (!selected) return null
   const rows = itemsOn(items, selected)
   return (
@@ -84,10 +118,12 @@ export function DayDetail({ items, selected }) {
       {rows.length === 0 && <p className="ws-note">이날 등록된 일정·업무 0건.</p>}
       <ul className="ws-list">
         {rows.map((it) => (
-          <li key={`${it.source}-${it.id}`} className="ws-scrap">
-            <span className="ws-scrap-url">{it['제목']}</span>
-            <span className="ws-mark-meta">{it['종류']}{it['시간'] ? ` · ${it['시간']}` : ''}</span>
-            {it['설명'] && <p className="ws-scrap-memo">{it['설명']}</p>}
+          <li key={`${it.source}-${it.id}`}>
+            <button type="button" className="ws-up-item" onClick={() => onOpenItem?.(it)}>
+              <span className={`ws-cal-dot ${KIND_CLASS[it['종류']] || 'ev'}`} aria-hidden="true" />
+              <span className="ws-up-title">{it['제목']}</span>
+              <span className="ws-up-when">{it['종류']}{it['시간'] ? ` · ${it['시간']}` : ''}</span>
+            </button>
           </li>
         ))}
       </ul>
@@ -117,6 +153,7 @@ export default function Home({ store, member }) {
   const todayKey = useMemo(() => toKey(new Date()), [])
   const [ym, setYm] = useState(() => ({ y: Number(todayKey.slice(0, 4)), m: Number(todayKey.slice(5, 7)) }))
   const [selected, setSelected] = useState(todayKey)
+  const [popup, setPopup] = useState(null)          // 세부 팝업 대상 항목(2026-08-07)
   const [raw, setRaw] = useState({ events: [], assignments: [], sessions: [], postings: [] })
   const [error, setError] = useState('')
 
@@ -160,7 +197,7 @@ export default function Home({ store, member }) {
         <div className="ws-block">
           <MonthCalendar
             year={ym.y} month={ym.m} items={items} todayKey={todayKey}
-            selected={selected} onSelect={setSelected} onMove={move}
+            selected={selected} onSelect={setSelected} onMove={move} onOpenItem={setPopup}
           />
         </div>
         <Assignments store={store} />
@@ -168,9 +205,10 @@ export default function Home({ store, member }) {
       </div>
       <aside className="ws-crail">
         <UpcomingTasks items={items} todayKey={todayKey} onSelect={setSelected} />
-        <DayDetail items={items} selected={selected} />
+        <DayDetail items={items} selected={selected} onOpenItem={setPopup} />
         <Notices store={store} />
       </aside>
+      <ItemPopup item={popup} onClose={() => setPopup(null)} />
     </div>
   )
 }

@@ -60,7 +60,8 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
   원천 = `postings`(**0009**), 등록·삭제 = 운영 탭 > 공고(`AdminPostings.jsx`), **코멘트("왜 유효한가" 한 줄) 필수**(DB check+폼).
   상태(접수중·접수전·상시·마감) = 저장 안 함 — `postings-logic.js` 파생(마감 = 접힘·흐림). 접수마감·시험일 = 홈 캘린더 합류(`postingAgendaItems`).
   기고(`Contribute.jsx`) = **투트랙**: 기본(키트+폼, `형식='md'`) / 자유(단일 HTML 붙여넣기, `형식='html'`(0008) — 공개 상세가 `sandbox=""` iframe(srcdoc)으로 렌더, 스크립트 차단. 분기 = `ArticleDetail.jsx`).
-  북마크(`Collections.jsx`) = 단독 탭 / 내정보(`MyPage.jsx`) = 프로필 수정 + 활동내역만.
+  북마크(`Collections.jsx`) = **북마크한 인사이트 모음만**(링크 스크랩 UI 폐지 2026-08-07 — collections 데이터 계층은 유지) / 내정보(`MyPage.jsx`) = 프로필 수정 + 활동내역 + 비밀번호 변경.
+  홈 캘린더 칩·선택일 목록 클릭 = **세부 팝업**(`ItemPopup` — 둥근 카드, 공고면 원문 링크. 2026-08-07).
   운영(`Admin.jsx`) = 승인대기(`Review.jsx`)·**제출 현황(`AdminSubmissions.jsx` — 멤버×과제 배지 매트릭스, `submissions.listAll`)**·지원자·멤버(`AdminMembers.jsx`)·콘텐츠(`AdminContent.jsx`+`AdminForm.jsx`)·**일정(`AdminEvents.jsx` — events CRUD)**·**공고(`AdminPostings.jsx` — postings CRUD)**. 삭제 화이트리스트(DELETABLE) = +events·flow_weeks·postings.
 - **운영 영역 이중 차단**: ①RLS(`*_write_staff`) ②화면 — 비운영진 탭 미노출 + 직접 진입(`?tab=운영`)은 `Denied` 안내.
   초대(계정 생성)는 앱에서 불가(service key 필요) → 화면엔 절차 안내만(`supabase/README.md` 3·3-1단계).
@@ -68,6 +69,8 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
   링크가 없으면 로그인 화면 입구가 없다). 세션 키 상수 원천 = `data/session-key.js`(소비 = supabase.js만).
 - 세션 자료·과제 제출 = **링크 기반**. 파일 업로드(Storage 버킷) = M4.
 - **로그인 ID = 학번**(§0-4 개정). 매핑 = `src/data/login-id.js`(학번 → `s<학번>@member.erpclub`, `@` 포함 = 이메일 폴백).
+- **인사이트 카드 배지 3종(2026-08-07)**: 작성자(이름 3글자·검은 타원, 원천 = author/작성자표기) · 미열람 **N**(빨간 원 —
+  게재 7일 이내 ∧ 기기 미열람, 원천 = `pages/seen-store.js` localStorage) · 좋아요·북마크 수(우하단, 0/0 = 생략).
 - **공개 인사이트 = DB 서빙**(M2): 데이터 출처 = `src/pages/insights-source.js`(`useArticles`·`useInteractions`).
   env 미설정이면 md 글롭 폴백. 공개면에서 `data/index.js`를 import 해도 되는 파일은 이 어댑터 1곳뿐(boundary 테스트가 고정).
 - **Supabase 접근 = `src/data/` 경유만**(P1). 컴포넌트가 `data/supabase.js`·`repositories.js`를 직접 import 하면

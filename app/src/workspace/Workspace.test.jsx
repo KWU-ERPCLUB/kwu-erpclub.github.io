@@ -61,7 +61,7 @@ test('기고 탭 = 단독 탭 승격(?tab=기고 — 키트·승인 요청 도�
   expect(html).toContain('승인 요청')
 })
 
-test('내정보 탭 = 프로필·활동내역 / 북마크 탭 = 북마크·스크랩 분리', () => {
+test('내정보 탭 = 프로필·활동내역 / 북마크 탭 = 인사이트 모음만(스크랩 UI 폐지 2026-08-07)', () => {
   const my = flat(<Shell member={{ 이름: '홍길동', role: '스터디원' }} store={createMockRepositories({ user: 'mock-member' })} search="?tab=내정보" />)
   expect(my).toContain('ws-mypage')
   expect(my).toContain('프로필')
@@ -69,7 +69,7 @@ test('내정보 탭 = 프로필·활동내역 / 북마크 탭 = 북마크·스�
   expect(my).not.toContain('ws-collections')   // 분리 — 내정보 콘텐츠에서 컬렉션 제거(사이드바 설명 문구는 무관)
   const marks = flat(<Shell member={{ 이름: '홍길동', role: '스터디원' }} store={createMockRepositories({ user: 'mock-member' })} search="?tab=북마크" />)
   expect(marks).toContain('내 북마크')
-  expect(marks).toContain('링크 스크랩')
+  expect(marks).not.toContain('링크 스크랩')
 })
 
 // ── M3 ④ 역할별 탭 노출 ──
@@ -170,6 +170,20 @@ test('page-head 골격 = 눈썹 WORKSPACE + h1 + 서브 1줄, nav·footer 공용
 test('공개 내비에 워크스페이스 링크 상시 노출', () => {
   const html = flat(<Workspace repos={createMockRepositories()} configured={false} />)
   expect(html).toContain('href="/workspace/"')
+})
+
+// ── 캘린더 항목 세부 팝업(2026-08-07 오너 — 새 창 대신 작은 둥근 팝업) ──
+test('ItemPopup = 종류·제목·날짜·설명 + 공고면 원문 링크, item 없으면 미렌더', async () => {
+  const { ItemPopup } = await import('./Home.jsx')
+  const item = { date: '2026-10-02', 제목: '접수 마감 — ADsP 51회', 종류: '공고', 시간: '', 설명: '접수창 5일', 주최: 'Kdata', url: 'https://example.com/x' }
+  const html = flat(<ItemPopup item={item} onClose={() => {}} />)
+  expect(html).toContain('ws-modal-card')
+  expect(html).toContain('접수 마감 — ADsP 51회')
+  expect(html).toContain('2026-10-02')
+  expect(html).toContain('접수창 5일')
+  expect(html).toContain('href="https://example.com/x"')
+  expect(html).toContain('닫기')
+  expect(flat(<ItemPopup item={null} onClose={() => {}} />)).toBe('')
 })
 
 // ── 경어체 금지(디자인규칙 §0-1 개조식 전면) ──

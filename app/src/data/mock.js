@@ -152,7 +152,7 @@ export function createMockRepositories({ user = null, data = {} } = {}) {
           .filter((r) => r.member_id === currentId)
           .map((r) => {
             const a = store.articles.find((x) => x.id === r.article_id)
-            return { article_id: r.article_id, articles: a ? { 슬러그: a.슬러그, 제목: a.제목, 게재일: a.게재일, 성격: a.성격 } : null }
+            return { article_id: r.article_id, articles: a ? { 슬러그: a.슬러그, 제목: a.제목, 게재일: a.게재일, 성격: a.성격, 설명: a.설명 } : null }
           })
       },
       async toggleLike(articleId, on) { return toggle('article_likes', articleId, on) },
