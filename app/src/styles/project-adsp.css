@@ -78,15 +78,27 @@
 .pa-lead strong { color: var(--text); font-weight: 800; }
 .pa-center { text-align: center; max-width: 58ch; margin: 0 auto 2rem; }
 
-/* 시작 챕터 — 중앙 스택(오너 2026-08-12: 좌편향 교정 — 본문·카드 전부 중앙 축) */
-.pa-decision {
-  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-card);
-  padding: 1.4rem 1.6rem;
-}
-.pa-decision-center { max-width: 620px; text-align: center; }
-.pa-dec-label { display: block; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 0.4rem; }
-.pa-decision p { margin: 0; color: var(--text-sub); text-wrap: pretty; }
-.pa-decision strong { color: var(--text); }
+/* 결정 카드 — 문제 → 결정 → 결과 3칸(집중 조명 공통 골격, 중앙 축) */
+.pa-dgrid { display: grid; grid-template-columns: 1fr 1.2fr 1fr; gap: 1rem; max-width: 920px; }
+.pa-dcell { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-card); padding: 1.25rem 1.35rem; text-align: center; }
+.pa-ch:not(.pa-ch-wash) .pa-dcell { background: var(--surface); }
+.pa-dcell.main { border-color: var(--dark); }
+.pa-dcell-label { display: block; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.12em; color: var(--text-sub); margin-bottom: 0.45rem; }
+.pa-dcell.main .pa-dcell-label { color: var(--accent); }
+.pa-dcell p { margin: 0; font-size: 0.92rem; color: var(--text-sub); line-height: 1.7; text-wrap: pretty; }
+.pa-dcell.main p { color: var(--text); font-weight: 600; }
+
+/* before/after 정적 2열(반복 챕터) */
+.pa-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; max-width: 920px; }
+.pa-pair figure { margin: 0; }
+.pa-pair img { width: 100%; border-radius: var(--radius-card); border: 1px solid var(--line); display: block; }
+.pa-pair figcaption { text-align: center; font-size: 0.82rem; color: var(--text-sub); margin-top: 0.55rem; }
+
+/* 압축 스트립 — 집중 조명 외 개선들 */
+.pa-minors { max-width: 720px; margin-top: 3rem; margin-bottom: 3rem; }
+.pa-minors ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.55rem; }
+.pa-minors li { font-size: 0.9rem; color: var(--text-sub); line-height: 1.7; display: flex; gap: 0.8rem; align-items: baseline; }
+.pa-minor-date { flex: 0 0 auto; font-size: 0.76rem; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
 
 /* 운영 피처 그리드(A7) */
 .pa-feat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; margin-bottom: 2.6rem; }
@@ -150,14 +162,6 @@
 .pa-car-pause { border: 1px solid var(--line); background: #fff; border-radius: var(--radius-pill); font-size: 0.62rem; padding: 0.3rem 0.6rem; cursor: pointer; margin-left: 0.4rem; }
 
 /* 마감 챕터 */
-.pa-close-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.1rem; margin-bottom: 2.6rem; }
-.pa-cstat { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-card); padding: 1.3rem 1.2rem; display: flex; flex-direction: column; }
-.pa-cstat-num { font-family: var(--font-display); font-weight: 800; font-size: 1.9rem; letter-spacing: -0.02em; margin-bottom: 0.35rem; }
-.pa-cstat-label { font-size: 0.88rem; font-weight: 700; }
-.pa-cstat-note { font-size: 0.76rem; color: var(--text-sub); margin-top: 0.35rem; }
-.pa-next { max-width: 760px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius-card); padding: 1.6rem 1.8rem; margin-bottom: 3rem; }
-.pa-next ol { margin: 0; padding-left: 1.2rem; color: var(--text-sub); display: grid; gap: 0.5rem; }
-.pa-next-note { margin: 1rem 0 0; font-size: 0.82rem; color: var(--text-sub); }
 .pa-cta-block { text-align: center; padding-top: 1rem; }
 .pa-cta-title { font-family: var(--font-display); font-weight: 900; font-size: clamp(1.5rem, 3.4vw, 2.1rem); margin: 0 0 0.6rem; }
 .pa-cta-title em { font-style: normal; color: var(--accent); }
@@ -173,16 +177,12 @@
 }
 
 /* 반응형 */
-@media (max-width: 900px) {
-  .pa-close-grid { grid-template-columns: repeat(2, 1fr); }
-}
 @media (max-width: 760px) {
-  .pa-feat-grid, .pa-metric-body { grid-template-columns: 1fr; }
+  .pa-feat-grid, .pa-metric-body, .pa-dgrid, .pa-pair { grid-template-columns: 1fr; }
   .pa-metric-val { text-align: left; }
   .pa-nav-title { display: none; }
   .pa-hero-stats { gap: 1.4rem 2rem; }
 }
 @media (max-width: 480px) {
-  .pa-close-grid { grid-template-columns: 1fr; }
   .pa-car-bar { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
 }
