@@ -96,7 +96,7 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
 
 ## Docs map
 - Project docs live OUTSIDE this repo (workspace `erp-club/docs/` — Tier2): 디자인규칙-메인.md(v2 디자인 규격) ·
-  정체성-북극성.md(카피 상위 기준) — 기록·근거 문서는 `erp-club/docs/_archive/`(선행조사=수치 원천·리서치 3종·구 문안 등, 2026-07-25 정리)
+  정체성-북극성.md(카피 상위 기준) — 구 기록·근거 문서(`erp-club/docs/_archive/`)는 2026-08-12 삭제, 침전처 지도 = `erp-club/roadmap.md` §59
 - In-repo: `../README.md`(3칸 표면 — 재개 지점). 결정 여정=workspace `erp-club/roadmap.md`(아카이브·비필독).
 
 ## File rules
