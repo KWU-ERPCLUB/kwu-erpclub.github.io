@@ -116,25 +116,4 @@ export function ToolCarousel() {
   )
 }
 
-// ── before/after 비교 슬라이더(탐색형) — range 입력이 클립 폭을 조절 ─────────
-export function CompareSlider({ before, after, beforeLabel, afterLabel, alt }) {
-  const [pos, setPos] = useState(50)
-  return (
-    <div className="pa-compare">
-      <div className="pa-cmp-stage">
-        <img src={after} alt={`${alt} — 개편 후`} loading="lazy" />
-        <div className="pa-cmp-top" style={{ width: `${pos}%` }}>
-          <img src={before} alt={`${alt} — 개편 전`} loading="lazy" />
-        </div>
-        <div className="pa-cmp-line" style={{ left: `${pos}%` }} aria-hidden="true" />
-        <input type="range" min="0" max="100" value={pos} className="pa-cmp-range"
-          aria-label={`${alt} 개편 전후 비교 — 좌우로 움직여 보세요`}
-          onChange={(e) => setPos(Number(e.target.value))} />
-      </div>
-      <div className="pa-cmp-labels">
-        <span>◀ {beforeLabel}</span>
-        <span>{afterLabel} ▶</span>
-      </div>
-    </div>
-  )
-}
+// (구 CompareSlider before/after 비교 슬라이더 = 오너 2026-08-12 기각 — "뭔 차이인지 모르겠음". 재도입 = 오너 재승인)

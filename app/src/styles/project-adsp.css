@@ -78,24 +78,15 @@
 .pa-lead strong { color: var(--text); font-weight: 800; }
 .pa-center { text-align: center; max-width: 58ch; margin: 0 auto 2rem; }
 
-/* 시작 챕터 2열 */
-.pa-two { display: grid; grid-template-columns: 1.4fr 1fr; gap: 2rem; align-items: center; }
-.pa-decision { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-card); padding: 1.4rem 1.5rem; }
-.pa-ch-wash .pa-decision { background: #fff; }
+/* 시작 챕터 — 중앙 스택(오너 2026-08-12: 좌편향 교정 — 본문·카드 전부 중앙 축) */
+.pa-decision {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-card);
+  padding: 1.4rem 1.6rem;
+}
+.pa-decision-center { max-width: 620px; text-align: center; }
 .pa-dec-label { display: block; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 0.4rem; }
-.pa-decision p { margin: 0; color: var(--text-sub); }
+.pa-decision p { margin: 0; color: var(--text-sub); text-wrap: pretty; }
 .pa-decision strong { color: var(--text); }
-
-/* 전환 챕터 — 버린 것/얻은 것 */
-.pa-pivot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; max-width: 820px; }
-.pa-pivot-card { border-radius: var(--radius-card); padding: 1.5rem 1.6rem; background: #fff; border: 1px solid var(--line); }
-.pa-pivot-card.lose { background: var(--surface); }
-.pa-pivot-card.gain { border-color: var(--accent); }
-.pa-pv-label { display: block; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.12em; color: var(--text-sub); margin-bottom: 0.5rem; }
-.pa-pivot-card.gain .pa-pv-label { color: var(--accent); }
-.pa-pivot-card p { margin: 0; font-size: 1.02rem; color: var(--text-sub); }
-.pa-pivot-card strong { color: var(--text); }
-.pa-pivot-card.lose p { text-decoration: line-through; text-decoration-color: rgba(20, 20, 20, 0.35); }
 
 /* 운영 피처 그리드(A7) */
 .pa-feat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; margin-bottom: 2.6rem; }
@@ -104,24 +95,7 @@
 .pa-feat p { margin: 0; font-size: 0.92rem; color: var(--text-sub); line-height: 1.7; }
 .pa-sub-h { text-align: center; font-size: 1.05rem; font-weight: 800; margin: 0 0 1.2rem; }
 
-/* 비교 슬라이더 */
-.pa-cmp-block { max-width: 880px; }
-.pa-compare { width: 100%; }
-.pa-cmp-stage { position: relative; border-radius: var(--radius-card); overflow: hidden; border: 1px solid var(--line); }
-.pa-cmp-stage > img { display: block; width: 100%; }
-.pa-cmp-top { position: absolute; inset: 0 auto 0 0; overflow: hidden; }
-.pa-cmp-top img { display: block; height: 100%; width: auto; max-width: none; }
-.pa-cmp-line { position: absolute; top: 0; bottom: 0; width: 3px; background: var(--dark); transform: translateX(-1.5px); }
-.pa-cmp-line::after {
-  content: '◀ ▶'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  background: var(--dark); color: #fff; font-size: 0.6rem; letter-spacing: 0.08em;
-  padding: 0.35rem 0.5rem; border-radius: var(--radius-pill); white-space: nowrap;
-}
-.pa-cmp-range {
-  position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: ew-resize; margin: 0;
-}
-.pa-cmp-range:focus-visible + .pa-cmp-labels, .pa-cmp-range:focus-visible { outline: 3px solid var(--accent); }
-.pa-cmp-labels { display: flex; justify-content: space-between; margin-top: 0.6rem; font-size: 0.82rem; color: var(--text-sub); }
+/* (비교 슬라이더 스타일 = 오너 기각으로 컴포넌트와 함께 제거 2026-08-12) */
 
 /* 지표 pill 탭(A4) */
 .pa-metrics { max-width: 760px; margin-bottom: 2.8rem; }
@@ -203,7 +177,7 @@
   .pa-close-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 760px) {
-  .pa-two, .pa-pivot-grid, .pa-feat-grid, .pa-metric-body { grid-template-columns: 1fr; }
+  .pa-feat-grid, .pa-metric-body { grid-template-columns: 1fr; }
   .pa-metric-val { text-align: left; }
   .pa-nav-title { display: none; }
   .pa-hero-stats { gap: 1.4rem 2rem; }

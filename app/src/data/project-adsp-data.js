@@ -2,9 +2,10 @@
 // 원천 = adsp/1기-데이터/(시험 당일 DB 스냅샷) + DB count. 개인 단위 수치 없음(집계만).
 // spec = erp-club/docs/specs/2026-08-12-adsp-인터랙티브-개편.md §7. 성적 대조 = 8/28 후 보강 슬롯.
 
+// ⚠저작권 규칙(오너 2026-08-12): "자체 제작 문항"·문항 총계는 외부 비게재 — 활동 데이터만 쓴다.
 export const HERO_STATS = [
-  { value: '1,010', label: '자체 제작 문항', src: '2026-08-08 DB 실측' },
   { value: '9,118', label: '누적 답안 기록', src: '시험 당일 마감' },
+  { value: '1,268', label: '세트 응시 횟수', src: '정식 8명 합계' },
   { value: '6주', label: '2팀 8명 완주 운영', src: '06-26 ~ 08-08' },
 ]
 
@@ -73,10 +74,10 @@ export const NEXT_ITEMS = [
   '랭킹·진도율의 존폐 또는 산식 공개 (효용보다 압박·불투명으로 읽힘)',
 ]
 
+// (구 '전환' 챕터 = 오너 2026-08-12 폐기 — 초창기 결정을 최대 분기점처럼 조명하는 프레임 오류 + 저작권 노출)
 export const CHAPTERS = [
   { id: 'start', label: '시작', date: '06-26' },
   { id: 'tool', label: '도구', date: '06-28' },
-  { id: 'pivot', label: '전환', date: '07-01' },
   { id: 'ops', label: '운영', date: '07월' },
   { id: 'data', label: '지표', date: '08-08' },
   { id: 'close', label: '마감', date: '08-10' },
