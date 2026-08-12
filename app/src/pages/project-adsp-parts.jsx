@@ -86,7 +86,7 @@ export function ToolCarousel() {
   const timer = useRef(null)
   useEffect(() => {
     if (paused || prefersReduced()) return undefined
-    timer.current = setInterval(() => setCur((c) => (c + 1) % TOOL_SLIDES.length), 4200)
+    timer.current = setInterval(() => setCur((c) => (c + 1) % TOOL_SLIDES.length), 5200) // 애니메이션 슬라이드(3프레임×1.6s) 한 바퀴 보장
     return () => clearInterval(timer.current)
   }, [paused])
   const s = TOOL_SLIDES[cur]

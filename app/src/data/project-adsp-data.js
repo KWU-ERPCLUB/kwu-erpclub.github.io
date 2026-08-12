@@ -43,8 +43,10 @@ export const METRICS = [
   },
 ]
 
-// 마감 캐러셀 — 6주 뒤의 보드(실측 캡처·이름 블러본). 녹화 클립 확보 시 video 슬롯 교체.
+// 마감 캐러셀 — 6주 뒤의 보드. 1번 = 라이브 실측 시퀀스(애니메이션 webp, 2026-08-13 운영자 열람 캡처
+// — 이름 블러·읽기 조작만). 나머지 = 1기 당시 실측 스틸(블러본 — 개인 시점 화면은 아카이브 캡처가 원본).
 export const TOOL_SLIDES = [
+  { img: '/img/projects/adsp/v2-board-home.webp', caption: '메인 — 전원 평균·랭킹·과목별 진척 (실측 화면 자동 전환)' },
   { img: '/img/projects/adsp/shot-d2-progress.png', caption: '진도 — 절 29개·시험주간 안내' },
   { img: '/img/projects/adsp/v1-3-quiz.png', caption: '절 퀴즈 — 한 문제씩, 즉시 해설' },
   { img: '/img/projects/adsp/shot-exam-timer.png', caption: '실전 모드 — 90분 카운트다운·자동 채점' },
