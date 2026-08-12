@@ -10,6 +10,10 @@ import Markdown from './pages/Markdown.jsx'
 // 상태 칩 클래스 매핑(global.css .status 재사용 — 버건디 면 금지 준수).
 const STATUS_CLASS = { '운영 중': 'live', '진행 중': 'prep', '보관': 'planned' }
 
+// 인터랙티브 전용 페이지로 승격된 프로젝트(파일럿 — spec 2026-08-12). 카드·구 ?p= 딥링크 = 새 페이지로.
+// md 원문은 콘텐츠 계약·DB 검증 대상으로 보존(목록 카드 메타의 원천).
+export const INTERACTIVE_PAGES = { '2026-07-24-bapzzi-adsp-board': '/projects/adsp/' }
+
 // 본문을 소개(intro)와 `## <헤딩>` 로그 섹션들로 분할. 순수 함수 — 테스트 대상.
 export function splitProjectBody(body) {
   const t = (body || '').trim()
@@ -141,12 +145,19 @@ export default function Projects() {
   }, [])
 
   const open = useCallback((slug) => {
+    // 인터랙티브 승격 프로젝트 = 전용 페이지로 이동(모달·?p= 상세 대신)
+    if (slug && INTERACTIVE_PAGES[slug]) { window.location.href = INTERACTIVE_PAGES[slug]; return }
     if (typeof window !== 'undefined') window.history.pushState({ slug }, '', slug ? `?p=${slug}` : window.location.pathname)
     setSel(slug)
   }, [])
   const back = useCallback(() => open(null), [open])
 
-  const cur = all.find((p) => p.slug === sel)
+  // 구 ?p= 딥링크(공유·북마크)도 새 페이지로 — URL 유지 처치 = 리다이렉트
+  useEffect(() => {
+    if (sel && INTERACTIVE_PAGES[sel]) window.location.replace(INTERACTIVE_PAGES[sel])
+  }, [sel])
+
+  const cur = all.find((p) => p.slug === sel && !INTERACTIVE_PAGES[p.slug])
 
   if (cur) {
     return (
