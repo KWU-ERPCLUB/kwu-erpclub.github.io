@@ -1,6 +1,13 @@
 // 세션 섹션(홈 탭 조립부 — 2026-08-06 홈 개편) — 회차·날짜·자료 링크 열람(스터디원 읽기 전용, RLS sessions_select_member).
 // 자료 = 링크 기반. 파일 업로드(Storage 버킷)는 M4 범위 — 파일경로 행은 안내 문구로만 표시.
+// 해금(0011): 멤버에겐 공개일 도래 전 행이 RLS에서 걸러짐. 미래 공개일 행이 보인다 = 운영진 화면 → 잠금 표시.
 import { useCallback, useEffect, useState } from 'react'
+
+const localToday = () => {
+  const d = new Date()
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
+export const isLockedMaterial = (m, today = localToday()) => Boolean(m['공개일'] && m['공개일'] > today)
 
 export default function Sessions({ store }) {
   const [rows, setRows] = useState([])
@@ -34,9 +41,11 @@ export default function Sessions({ store }) {
                 {mine.length === 0 && <li className="ws-note">자료 0건</li>}
                 {mine.map((m) => (
                   <li key={m.id}>
-                    {m.url
-                      ? <a href={m.url} target="_blank" rel="noreferrer">{m['제목']}</a>
-                      : <span>{m['제목']} — 파일 자료(내려받기 = M4)</span>}
+                    {isLockedMaterial(m)
+                      ? <span className="ws-note">🔒 {m['제목']} — {m['공개일']} 공개(운영진에게만 보임)</span>
+                      : m.url
+                        ? <a href={m.url} target="_blank" rel="noreferrer">{m['제목']}</a>
+                        : <span>{m['제목']} — 파일 자료(내려받기 = M4)</span>}
                   </li>
                 ))}
               </ul>

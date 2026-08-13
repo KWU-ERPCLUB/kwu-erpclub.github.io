@@ -6,7 +6,7 @@ import AdminForm from './AdminForm.jsx'
 const FIELDS = {
   notices: [['제목', 'text'], ['본문', 'textarea'], ['내부여부', 'check']],
   sessions: [['회차', 'number'], ['날짜', 'date'], ['제목', 'text'], ['설명', 'text']],
-  materials: [['session_id', 'session'], ['제목', 'text'], ['url', 'text']],
+  materials: [['session_id', 'session'], ['제목', 'text'], ['url', 'text'], ['공개일', 'date']],
   assignments: [['session_id', 'session'], ['제목', 'text'], ['설명', 'text'], ['마감', 'datetime']],
 }
 
