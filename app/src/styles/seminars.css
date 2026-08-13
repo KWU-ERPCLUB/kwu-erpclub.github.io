@@ -244,3 +244,22 @@ button.proof-link:focus-visible, .sem-ed-back:focus-visible {
   .sem-filter button:active, .sem-sort:active { transform: none; }
   .sem-card:hover { transform: none; }
 }
+
+/* ── 인쇄판(PDF 산출 — 2026-08-13): 세미나 상세를 A4 문서로. 생성 = scripts/export-seminar-pdf.mjs ── */
+@media print {
+  .skip-link, .nav, .footer, .sem-ed-back, .sem-ed-actions, .sem-ed-toc { display: none !important; }
+  .sem-main { padding: 0; }
+  /* 다크 밴드 → 흰 배경 문서 헤더(잉크·가독) */
+  .sem-ed-band { background: #fff !important; color: #161616 !important; padding: 0 0 1rem; }
+  .sem-ed-band-in { padding: 0; max-width: none; }
+  .sem-ed-title { color: #161616 !important; font-size: 2rem; }
+  .sem-ed-lead, .sem-ed-meta, .sem-ed-eyebrow { color: #55606c !important; }
+  .sem-ed-body { max-width: none; padding: 0; }
+  .sem-ed-block .hub-md { max-width: none; }
+  /* 코드·도판이 페이지를 넘지 않게 */
+  .hub-md pre { white-space: pre-wrap; word-break: break-word; }
+  .hub-md img { max-width: 100%; page-break-inside: avoid; }
+  .sem-ed-block, .hub-md table { page-break-inside: avoid; }
+  h2, h3 { page-break-after: avoid; }
+}
+@page { margin: 16mm 14mm; }

@@ -73,9 +73,10 @@ export function SeminarDetail({ s, onBack }) {
           <h1 className="sem-ed-title">{s.title}</h1>
           {lead && <p className="sem-ed-lead">{lead}</p>}
           <p className="sem-ed-meta">{metaLine(s)}</p>
-          {s.발원기사 && (
+          {(s.발원기사 || s.pdf) && (
             <div className="sem-ed-actions">
-              <a className="sem-ed-origin" href={s.발원기사}>발원 기사 <Arrow /></a>
+              {s.발원기사 && <a className="sem-ed-origin" href={s.발원기사}>발원 기사 <Arrow /></a>}
+              {s.pdf && <a className="sem-ed-origin" href={s.pdf} download>PDF 받기 <Arrow /></a>}
             </div>
           )}
         </div>
