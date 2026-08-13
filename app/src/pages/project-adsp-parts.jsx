@@ -1,59 +1,14 @@
-// ADsP 인터랙티브 상세 — 조각 컴포넌트(차트·캐러셀·지표 표·제작 루프·실물 발췌·프롬프트 카드).
-// 규격: 외부 라이브러리 0 · 인라인 SVG · reduced-motion 정지 · 색 = 차콜 본체 + 버건디 강조(단일 계열,
-// 식별은 축·직접 라벨이 담당 — dataviz 규칙: 범례 없는 단일 시리즈 + 강조 1).
+// ADsP 인터랙티브 상세 — 정적 조각(캐러셀·지표 표·제작 루프·타일·발췌·프롬프트·로그 레일).
+// 스크롤 인터랙션 조각(도트 필드·토글 등) = project-adsp-viz.jsx 분리(300줄 규격).
+// (구 WeeklyChart 막대 차트 = 2026-08-13 고도화에서 DotField로 대체 — 같은 데이터의 상위 표현)
 import { useEffect, useRef, useState } from 'react'
 import { prefersReduced } from '../home-motion.jsx'
 import {
-  WEEKLY_ANSWERS, METRICS, TOOL_SLIDES, BUILD_STEPS, BUILD_STACK, BUILD_PRINCIPLES,
-  SPEC_EXCERPT, COMMIT_LOG, PROMPTS,
+  METRICS, TOOL_SLIDES, BUILD_STEPS, BUILD_STACK, BUILD_TILES, BUILD_PRINCIPLES,
+  CODE_STATS, MINOR_ITEMS, SPEC_EXCERPT, COMMIT_LOG, PROMPTS,
 } from '../data/project-adsp-data.js'
 
-// ── 주별 답안 막대 차트 — hover 툴팁 + 강조 막대 직접 라벨 ─────────────────
-export function WeeklyChart() {
-  const [hov, setHov] = useState(null)
-  const W = 640
-  const H = 300
-  const PAD = { t: 34, r: 12, b: 34, l: 12 }
-  const max = Math.max(...WEEKLY_ANSWERS.map((d) => d.value))
-  const iw = (W - PAD.l - PAD.r) / WEEKLY_ANSWERS.length
-  const bw = Math.min(64, iw - 14)
-  return (
-    <figure className="pa-chart" aria-label="주별 답안 수 막대 차트">
-      <svg viewBox={`0 0 ${W} ${H}`} role="img" onMouseLeave={() => setHov(null)}>
-        {WEEKLY_ANSWERS.map((d, i) => {
-          const h = Math.max(3, ((H - PAD.t - PAD.b) * d.value) / max)
-          const x = PAD.l + iw * i + (iw - bw) / 2
-          const y = H - PAD.b - h
-          const on = hov === i
-          return (
-            <g key={d.week}>
-              {/* 히트 영역 = 막대보다 크게(인터랙션 규칙) */}
-              <rect x={PAD.l + iw * i} y={PAD.t - 20} width={iw} height={H - PAD.t - PAD.b + 20}
-                fill="transparent" onMouseEnter={() => setHov(i)} />
-              <rect className={`pa-bar${d.hot ? ' hot' : ''}${on ? ' on' : ''}`}
-                x={x} y={y} width={bw} height={h} rx="4" />
-              {/* 직접 라벨 = 강조 막대 상시 · 나머지는 hover 시 */}
-              {(d.hot || on) && (
-                <text className={`pa-bar-val${d.hot ? ' hot' : ''}`} x={x + bw / 2} y={y - 8} textAnchor="middle">
-                  {d.value.toLocaleString()}
-                </text>
-              )}
-              <text className="pa-bar-week" x={x + bw / 2} y={H - PAD.b + 20} textAnchor="middle">{d.week}</text>
-            </g>
-          )
-        })}
-        {/* 베이스라인 */}
-        <line x1={PAD.l} x2={W - PAD.r} y1={H - PAD.b} y2={H - PAD.b} className="pa-axis" />
-      </svg>
-      <figcaption>
-        주(월~일)별 답안 수 — 정식 8명 합계 7,976건. <strong>시험 주에 52.7%가 몰렸다.</strong>{' '}
-        실전 세트가 막판에 배포된 공급 요인도 겹쳐 있다.
-      </figcaption>
-    </figure>
-  )
-}
-
-// ── 지표 4종 압축 표 — 탭 확인형은 오너 기각(2026-08-13), 정의·용도만 한눈에 ──
+// ── 지표 4종 압축 표 — E5 색코딩: 톤 칩(차콜 농도 3단 + 실전 = 버건디)으로 지표 식별 고정 ──
 export function MetricTable() {
   return (
     <div className="pa-mtable-wrap">
@@ -64,7 +19,7 @@ export function MetricTable() {
         <tbody>
           {METRICS.map((m) => (
             <tr key={m.key}>
-              <th scope="row">{m.key}</th>
+              <th scope="row"><span className={`pa-tone ${m.tone}`} aria-hidden="true" />{m.key}</th>
               <td><code>{m.formula}</code></td>
               <td>{m.q}</td>
               <td><strong>{m.value}</strong> <span className="pa-mtable-src">{m.valueLabel}</span></td>
@@ -73,6 +28,51 @@ export function MetricTable() {
         </tbody>
       </table>
     </div>
+  )
+}
+
+// ── 도구 타일 그리드(E3 — Comeau 스택 그리드) — 텍스트 타일(외부 로고 자산 0) ──
+export function ToolTiles() {
+  return (
+    <div className="pa-tiles">
+      {BUILD_TILES.map((t) => (
+        <div className="pa-tile" key={t.name}>
+          <span className="pa-tile-name">{t.name}</span>
+          <span className="pa-tile-sub">{t.sub}</span>
+          <p>{t.role}</p>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// ── 투입 규모 스탯 행(P-C) — 전부 git·docs 실측, 시간 추정치 게재 안 함 ──
+export function CodeStats() {
+  return (
+    <div className="pa-cstats">
+      {CODE_STATS.map((s) => (
+        <div className="pa-cstat" key={s.label}>
+          <span className="pa-cstat-num">{s.value}</span>
+          <span className="pa-cstat-label">{s.label}</span>
+          <span className="pa-cstat-src">{s.src}</span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// ── 개선 로그 레일(E1 — Linear 날짜 스파인): 날짜 도트 레일 + 우측 카드 ──
+export function LogRail() {
+  return (
+    <ol className="pa-lograil">
+      {MINOR_ITEMS.map((m) => (
+        <li className="pa-log pa-rv" key={m.text}>
+          <span className="pa-log-rail" aria-hidden="true"><i /></span>
+          <span className="pa-log-date">{m.date}</span>
+          <p>{m.text}</p>
+        </li>
+      ))}
+    </ol>
   )
 }
 
@@ -180,4 +180,4 @@ export function ToolCarousel() {
   )
 }
 
-// (구 CompareSlider = 오너 2026-08-12 기각. 구 MetricTabs 4탭 = 오너 2026-08-13 기각 — 재도입 = 오너 재승인)
+// (구 CompareSlider = 오너 기각 8/12 · 구 MetricTabs = 오너 기각 8/13 · 구 WeeklyChart = DotField로 대체 8/13)

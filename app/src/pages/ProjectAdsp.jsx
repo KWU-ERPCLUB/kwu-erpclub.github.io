@@ -1,14 +1,16 @@
-// ADsP 스터디 1기 — 인터랙티브 상세(파일럿). spec = erp-club/docs/specs/2026-08-12-adsp-인터랙티브-개편.md
-// 피드백 개편(오너 2026-08-13): 히어로 = "ADsP 스터디 1기" 전면 + 제작 축 수치 / 보드 링크 제거 /
-// 제목·본문 = 정보형(서사투 금지) / 제작 챕터 신설 / 지표 4탭 → 결정+명령+표.
-// 텍스트 규칙: 챕터당 문단 ≤2·핵심구만 볼드·keep-all. 수치 = data/project-adsp-data.js 단일원천.
+// ADsP 스터디 1기 — 인터랙티브 상세. spec = erp-club/docs/specs/2026-08-12-adsp-인터랙티브-개편.md
+// 고도화(오너 픽 2026-08-13): 레퍼런스 5종 복합(Linear 로그 레일·Comeau 토글/타일·R2D3 도트 스텝 스크롤·
+// Ciechanowski 색코딩·rauno 실패 카드) + 콘텐츠 갭(실패 챕터·조건부 판정·투입 실측) 반영.
+// 텍스트 규칙: 정보형 제목·챕터당 문단 ≤2·핵심구만 볼드·keep-all. 수치 = data/project-adsp-data.js 단일원천.
 import { useEffect } from 'react'
 import { SiteNav, SiteFooter, Arrow } from '../shared.jsx'
 import { CountUp, useItemReveal, prefersReduced } from '../home-motion.jsx'
 import {
-  WeeklyChart, MetricTable, ToolCarousel, BuildLoop, BuildPrinciples, BuildEvidence, PromptCard,
+  MetricTable, ToolCarousel, BuildLoop, BuildPrinciples, BuildEvidence, PromptCard,
+  ToolTiles, CodeStats, LogRail,
 } from './project-adsp-parts.jsx'
-import { HERO_STATS, MINOR_ITEMS, CHAPTERS } from '../data/project-adsp-data.js'
+import { DotField, ToggleCompare, FailCards, VerdictSplit } from './project-adsp-viz.jsx'
+import { HERO_STATS, CHAPTERS } from '../data/project-adsp-data.js'
 
 // 챕터 스파이 — 뷰포트 중앙이 속한 챕터를 로컬 나브에 반영(recruit useRoadmapFlow 문법).
 function useChapterSpy() {
@@ -112,7 +114,7 @@ export default function ProjectAdsp() {
             result="배포 첫날부터 실사용 — 이후 6주 내내 피드백으로 증보" />
         </section>
 
-        {/* 2 제작 — 도구·역할·위임 원칙(오너 2026-08-13 신설, 같은 날 초점 보강: 결과물보다 과정) */}
+        {/* 2 제작 — 도구·역할·위임 원칙 + 투입 실측(P-C) */}
         <section className="pa-ch" id="build">
           <ChapterHead date="6주 공통" title="만든 방법 — 도구와 위임 원칙" />
           <p className="pa-lead pa-center pa-rv">
@@ -120,7 +122,9 @@ export default function ProjectAdsp() {
             <strong> 기획·검수는 사람</strong>이 맡았다. 요구사항을 spec 문서로 확정하면
             AI가 구현하고, main에 올리면 자동 배포 — 이 루프를 6주간 반복했다.
           </p>
+          <div className="pa-rv"><ToolTiles /></div>
           <div className="pa-rv"><BuildLoop /></div>
+          <div className="pa-rv"><CodeStats /></div>
           <p className="pa-lead pa-center pa-rv">
             도구보다 중요한 건 <strong>일을 시키는 방식</strong>이었다.
             이 프로젝트에서 지킨 원칙 4개 — 각각 아래 실제 사례에 근거가 있다.
@@ -130,27 +134,23 @@ export default function ProjectAdsp() {
           <div className="pa-rv"><BuildEvidence /></div>
         </section>
 
-        {/* 3 반복 — v1.0 → v1.1 */}
+        {/* 3 반복 — v1.0 → v1.1 (E2 토글 비교) */}
         <section className="pa-ch pa-ch-wash" id="iterate">
           <ChapterHead date="06-29" title="배포 다음 날 첫 개선 — 숫자 나열을 시각화로" />
           <p className="pa-lead pa-center pa-rv">
             v1.0의 현황판은 숫자 나열이었다. 배포 다음 날 바로
             <strong> 비교 막대와 과목별 진척 시각화</strong>로 교체 —
-            써 보고, 걸리는 곳을 바로 고치는 개선 주기가 여기서 만들어졌다.
+            써 보고, 걸리는 곳을 바로 고치는 개선 주기가 여기서 만들어졌다. 버튼으로 전후를 비교해 보세요.
           </p>
-          <div className="pa-pair pa-rv">
-            <figure>
-              <img src="/img/projects/adsp/v1-0-dashboard.png" alt="v1.0 대시보드 — 숫자 나열 현황" loading="lazy" />
-              <figcaption>v1.0 — 숫자 나열</figcaption>
-            </figure>
-            <figure>
-              <img src="/img/projects/adsp/v1-1-dashboard.png" alt="v1.1 대시보드 — 비교 막대·과목별 진척" loading="lazy" />
-              <figcaption>v1.1 — 비교·추이 시각화</figcaption>
-            </figure>
+          <div className="pa-rv">
+            <ToggleCompare
+              a={{ img: '/img/projects/adsp/v1-0-dashboard.png', label: 'v1.0 이전', alt: 'v1.0 대시보드 — 숫자 나열 현황' }}
+              b={{ img: '/img/projects/adsp/v1-1-dashboard.png', label: 'v1.1 개선 후', alt: 'v1.1 대시보드 — 비교 막대·과목별 진척' }}
+              caption="같은 데이터, 하루 차이 — 숫자 나열에서 비교·추이 시각화로" />
           </div>
         </section>
 
-        {/* 4 구조 — 절 재정의 + 지표 분리(결정·명령 중심, 4탭 = 오너 기각) */}
+        {/* 4 구조 — 절 재정의 + 지표 분리(E5 색코딩) */}
         <section className="pa-ch" id="structure">
           <ChapterHead date="07-01 ~ 07-02" title="진도 단위 = 교재의 절 29개, 지표는 4종 분리" />
           <p className="pa-lead pa-center pa-rv">
@@ -211,7 +211,7 @@ export default function ProjectAdsp() {
             result="강독 없이 진단 문항 → 오답 범위 복습의 인출 중심 세션" />
         </section>
 
-        {/* 8 실전 — 문항 가독성 개편 + 중요도 배지 */}
+        {/* 8 실전 — 문항 가독성 개편(E2 토글) + 중요도 배지 */}
         <section className="pa-ch" id="exam">
           <ChapterHead date="07-26 ~ 07-30" title="시험 2주 전 — 문항 표기 전수 수리, 중요도 배지" />
           <p className="pa-lead pa-center pa-rv">
@@ -223,6 +223,12 @@ export default function ProjectAdsp() {
             problem="표기를 고쳐야 하는데 기존 응시 기록이 깨지면 안 된다"
             decision="개정판 두 벌 대신 같은 문항을 제자리 수정 — 선택지 순서·정답 불변을 하드룰로, 위반 시 스크립트가 중단"
             result="전 문항 전수 대조로 정답·선택지 변경 0건 — 기록 손실 없이 표기만 교체" />
+          <div className="pa-rv">
+            <ToggleCompare
+              a={{ img: '/img/projects/adsp/shot-question-before.png', label: '수리 전', alt: '문항 화면 — 표 정렬이 무너진 상태' }}
+              b={{ img: '/img/projects/adsp/shot-question-after.png', label: '수리 후', alt: '문항 화면 — 표·코드 정렬 수리 후' }}
+              caption="같은 문항의 제자리 수정 — 정답·선택지 순서는 하드룰로 불변" />
+          </div>
           <div className="pa-rv"><PromptCard idx={2} /></div>
           <p className="pa-lead pa-center pa-rv">
             시험 9일 전에는 반대 방향의 결정 — <strong>버릴 것을 정했다.</strong> 절마다
@@ -231,25 +237,33 @@ export default function ProjectAdsp() {
           </p>
         </section>
 
-        {/* 9 마감 — 잠금 + 결과 + 나머지 개선 스트립 */}
-        <section className="pa-ch pa-ch-wash" id="close">
+        {/* 9 실패 — 안 됐던 것들(P-A, rauno 카드 그리드). 원인 분석 동반 — 열거 금지 */}
+        <section className="pa-ch pa-ch-wash" id="fail">
+          <ChapterHead date="6주 공통" title="안 됐던 것들 — 실패와 한계" />
+          <p className="pa-lead pa-center pa-rv">
+            성공만 남기면 기록이 아니라 광고가 된다. 6주 동안 <strong>실제로 틀렸던 것</strong>과
+            아직 남아 있는 한계 — 각각 원인까지.
+          </p>
+          <FailCards />
+        </section>
+
+        {/* 10 마감 — 도트 필드(E4) + 캐러셀 + 로그 레일(E1) + 판정(P-B) + CTA */}
+        <section className="pa-ch" id="close">
           <ChapterHead date="08-08 ~ 08-10" title="마감 — 데이터 스냅샷 분리, 보드는 읽기전용" />
           <p className="pa-lead pa-center pa-rv">
             시험이 끝나자 기록은 확정됐다. 시험 당일 데이터를 분리 보관한 뒤
             <strong> 보드의 쓰기 경로를 전부 닫아 읽기전용 아카이브</strong>로 남겼다 —
-            1기가 어땠는지는 이제 덮이지 않는다.
+            1기가 어땠는지는 이제 덮이지 않는다. 그 기록 전부를 점으로 보면:
           </p>
-          <div className="pa-rv"><WeeklyChart /></div>
+          <DotField />
           <div className="pa-rv"><ToolCarousel /></div>
 
-          <div className="pa-minors pa-rv">
-            <h3 className="pa-sub-h">그 사이의 개선들</h3>
-            <ul>
-              {MINOR_ITEMS.map((m) => (
-                <li key={m.text}><span className="pa-minor-date">{m.date}</span>{m.text}</li>
-              ))}
-            </ul>
+          <div className="pa-minors">
+            <h3 className="pa-sub-h pa-rv">그 사이의 개선들</h3>
+            <LogRail />
           </div>
+
+          <div className="pa-rv"><VerdictSplit /></div>
 
           <div className="pa-cta-block pa-rv">
             <h3 className="pa-cta-title">이 과정을 <em>당신의 프로젝트</em>로.</h3>

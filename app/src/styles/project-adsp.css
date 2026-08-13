@@ -84,17 +84,10 @@
 .pa-dcell p { margin: 0; font-size: 0.92rem; color: var(--text-sub); line-height: 1.7; text-wrap: pretty; }
 .pa-dcell.main p { color: var(--text); font-weight: 600; }
 
-/* before/after 정적 2열(반복 챕터) */
-.pa-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; max-width: 920px; }
-.pa-pair figure { margin: 0; }
-.pa-pair img { width: 100%; border-radius: var(--radius-card); border: 1px solid var(--line); display: block; }
-.pa-pair figcaption { text-align: center; font-size: 0.82rem; color: var(--text-sub); margin-top: 0.55rem; }
+/* (구 pa-pair 정적 2열 = E2 토글 비교로 대체 2026-08-13 — 스타일 제거) */
 
-/* 압축 스트립 — 집중 조명 외 개선들 */
+/* 개선 로그 컨테이너 — 목록 본체 = 레일(project-adsp-viz.css .pa-lograil) */
 .pa-minors { max-width: 720px; margin-top: 3rem; margin-bottom: 3rem; }
-.pa-minors ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.55rem; }
-.pa-minors li { font-size: 0.9rem; color: var(--text-sub); line-height: 1.7; display: flex; gap: 0.8rem; align-items: baseline; }
-.pa-minor-date { flex: 0 0 auto; font-size: 0.76rem; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
 
 /* 운영 피처 그리드(A7) */
 .pa-feat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; margin-bottom: 2.6rem; }
@@ -169,18 +162,7 @@
 .pa-prompt-ctx { font-size: 0.78rem; font-weight: 700; color: var(--text-sub); }
 .pa-prompt p { margin: 0; font-size: 0.95rem; line-height: 1.8; color: var(--text); text-wrap: pretty; }
 
-/* 주별 차트 — 막대 = 차콜 본체 + 시험주 버건디(데이터 잉크·직접 라벨 동반) */
-.pa-chart { margin: 0 auto; max-width: 760px; }
-.pa-chart svg { width: 100%; height: auto; display: block; }
-.pa-bar { fill: var(--dark); opacity: 0.82; transition: opacity 120ms ease-out; }
-.pa-bar.on { opacity: 1; }
-.pa-bar.hot { fill: var(--accent); opacity: 1; }
-.pa-bar-val { font-size: 13px; font-weight: 800; fill: var(--text); }
-.pa-bar-val.hot { fill: var(--accent); }
-.pa-bar-week { font-size: 11.5px; fill: var(--text-sub); }
-.pa-axis { stroke: var(--line); stroke-width: 1; }
-.pa-chart figcaption { text-align: center; font-size: 0.85rem; color: var(--text-sub); margin-top: 0.8rem; }
-.pa-chart figcaption strong { color: var(--text); }
+/* (구 주별 막대 차트 = DotField 도트 필드로 대체 2026-08-13 — 스타일 제거) */
 
 /* 캐러셀 */
 .pa-carousel { max-width: 880px; }
@@ -212,7 +194,7 @@
 
 /* 반응형 */
 @media (max-width: 760px) {
-  .pa-feat-grid, .pa-dgrid, .pa-pair, .pa-evi { grid-template-columns: 1fr; }
+  .pa-feat-grid, .pa-dgrid, .pa-evi { grid-template-columns: 1fr; }
   .pa-loop-row { grid-template-columns: 1fr; }
   .pa-loop-step:not(:last-child)::after { content: '↓'; right: auto; left: 50%; top: auto; bottom: -1.05rem; transform: translateX(-50%); }
   .pa-nav-title { display: none; }
