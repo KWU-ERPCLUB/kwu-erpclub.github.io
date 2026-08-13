@@ -1,9 +1,12 @@
-// ADsP 인터랙티브 상세 — 조각 컴포넌트(차트·캐러셀·탭·비교 슬라이더).
+// ADsP 인터랙티브 상세 — 조각 컴포넌트(차트·캐러셀·지표 표·제작 루프·실물 발췌·프롬프트 카드).
 // 규격: 외부 라이브러리 0 · 인라인 SVG · reduced-motion 정지 · 색 = 차콜 본체 + 버건디 강조(단일 계열,
 // 식별은 축·직접 라벨이 담당 — dataviz 규칙: 범례 없는 단일 시리즈 + 강조 1).
 import { useEffect, useRef, useState } from 'react'
 import { prefersReduced } from '../home-motion.jsx'
-import { WEEKLY_ANSWERS, METRICS, TOOL_SLIDES } from '../data/project-adsp-data.js'
+import {
+  WEEKLY_ANSWERS, METRICS, TOOL_SLIDES, BUILD_STEPS, BUILD_STACK,
+  SPEC_EXCERPT, COMMIT_LOG, PROMPTS,
+} from '../data/project-adsp-data.js'
 
 // ── 주별 답안 막대 차트 — hover 툴팁 + 강조 막대 직접 라벨 ─────────────────
 export function WeeklyChart() {
@@ -50,30 +53,76 @@ export function WeeklyChart() {
   )
 }
 
-// ── 4지표 pill 탭(A4) — 정의·실측·읽는 법 전환 ────────────────────────────
-export function MetricTabs() {
-  const [cur, setCur] = useState(0)
-  const m = METRICS[cur]
+// ── 지표 4종 압축 표 — 탭 확인형은 오너 기각(2026-08-13), 정의·용도만 한눈에 ──
+export function MetricTable() {
   return (
-    <div className="pa-metrics">
-      <div className="pa-pills" role="tablist" aria-label="지표 4종">
-        {METRICS.map((x, i) => (
-          <button key={x.key} type="button" role="tab" aria-selected={i === cur}
-            className={`pa-pill${i === cur ? ' on' : ''}`} onClick={() => setCur(i)}>
-            {x.key}
-          </button>
+    <div className="pa-mtable-wrap">
+      <table className="pa-mtable">
+        <thead>
+          <tr><th>지표</th><th>계산식</th><th>답하는 질문</th><th>1기 실측</th></tr>
+        </thead>
+        <tbody>
+          {METRICS.map((m) => (
+            <tr key={m.key}>
+              <th scope="row">{m.key}</th>
+              <td><code>{m.formula}</code></td>
+              <td>{m.q}</td>
+              <td><strong>{m.value}</strong> <span className="pa-mtable-src">{m.valueLabel}</span></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+// ── 제작 루프 — 단계 4칸 + 순환 캡션(모바일 = 세로 적층) ───────────────────
+export function BuildLoop() {
+  return (
+    <div className="pa-loop">
+      <ol className="pa-loop-row">
+        {BUILD_STEPS.map((s) => (
+          <li className="pa-loop-step" key={s.k}>
+            <span className="pa-loop-no">{s.no}</span>
+            <span className="pa-loop-k">{s.k}</span>
+            <span className="pa-loop-who">{s.who}</span>
+            <p>{s.desc}</p>
+          </li>
         ))}
+      </ol>
+      <p className="pa-loop-cap">④에서 다시 ①로 — 6주 동안 이 루프를 돌렸다. 스택 = {BUILD_STACK}</p>
+    </div>
+  )
+}
+
+// ── 실물 발췌 2종 — spec 문서 + git 커밋 로그(원문 그대로) ──────────────────
+export function BuildEvidence() {
+  return (
+    <div className="pa-evi">
+      <div className="pa-doc">
+        <div className="pa-evi-head"><span className="pa-evi-tag">실물 발췌 · spec 문서</span><code>{SPEC_EXCERPT.file}</code></div>
+        <pre>{SPEC_EXCERPT.lines.join('\n')}</pre>
+        <p className="pa-evi-note">{SPEC_EXCERPT.note}</p>
       </div>
-      <div className="pa-metric-body" role="tabpanel">
-        <div className="pa-metric-val">
-          <span className="pa-metric-num">{m.value}</span>
-          <span className="pa-metric-vlabel">{m.valueLabel}</span>
-        </div>
-        <div className="pa-metric-txt">
-          <p className="pa-metric-formula"><code>{m.formula}</code></p>
-          <p className="pa-metric-read">{m.reading}</p>
-        </div>
+      <div className="pa-term">
+        <div className="pa-evi-head"><span className="pa-evi-tag">실물 발췌 · git 커밋 로그</span><code>git log --oneline</code></div>
+        <pre>{COMMIT_LOG.join('\n')}</pre>
+        <p className="pa-evi-note">6주간 커밋 248회 — 전 과정이 이력으로 남아 있다.</p>
       </div>
+    </div>
+  )
+}
+
+// ── AI 명령 카드 — 원문 미보존이라 재구성 예시 라벨 필수 ────────────────────
+export function PromptCard({ idx = 0 }) {
+  const p = PROMPTS[idx]
+  return (
+    <div className="pa-prompt">
+      <div className="pa-prompt-head">
+        <span className="pa-evi-tag alt">AI에게 내린 명령 · 재구성 예시</span>
+        <span className="pa-prompt-ctx">{p.ctx}</span>
+      </div>
+      <p>&ldquo;{p.text}&rdquo;</p>
     </div>
   )
 }
@@ -116,4 +165,4 @@ export function ToolCarousel() {
   )
 }
 
-// (구 CompareSlider before/after 비교 슬라이더 = 오너 2026-08-12 기각 — "뭔 차이인지 모르겠음". 재도입 = 오너 재승인)
+// (구 CompareSlider = 오너 2026-08-12 기각. 구 MetricTabs 4탭 = 오너 2026-08-13 기각 — 재도입 = 오너 재승인)

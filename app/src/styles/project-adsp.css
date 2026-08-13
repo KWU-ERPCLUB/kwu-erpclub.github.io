@@ -25,11 +25,7 @@
 }
 .pa-nav-links a:hover { color: var(--text); }
 .pa-nav-links a.on { color: var(--text); font-weight: 800; border-bottom-color: var(--accent); } /* 화이트리스트 ⑥ */
-.pa-nav-cta {
-  display: inline-flex; align-items: center; height: 32px; padding: 0 1rem; border-radius: var(--radius-pill);
-  background: var(--dark); color: #fff; font-size: 0.78rem; font-weight: 700; text-decoration: none; white-space: nowrap;
-}
-.pa-nav-cta:hover { background: var(--btn-hover); }
+/* (나브 보드 CTA = 오너 2026-08-13 제거 — 로그인 불가로 눌러도 확인 불가) */
 
 /* ── 히어로 ── */
 .pa-hero {
@@ -107,33 +103,67 @@
 .pa-feat p { margin: 0; font-size: 0.92rem; color: var(--text-sub); line-height: 1.7; }
 .pa-sub-h { text-align: center; font-size: 1.05rem; font-weight: 800; margin: 0 0 1.2rem; }
 
-/* (비교 슬라이더 스타일 = 오너 기각으로 컴포넌트와 함께 제거 2026-08-12) */
+/* (비교 슬라이더 = 오너 기각 2026-08-12 · 지표 4탭 = 오너 기각 2026-08-13 — 스타일 제거) */
 
-/* 지표 pill 탭(A4) */
-.pa-metrics { max-width: 760px; margin-bottom: 2.8rem; }
-.pa-pills { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.4rem; }
-.pa-pill {
-  height: 38px; padding: 0 1.15rem; border-radius: var(--radius-pill); cursor: pointer;
-  border: 1px solid var(--line); background: #fff; font-size: 0.88rem; font-weight: 700; color: var(--text-sub);
-  transition: background-color 150ms ease-out, color 150ms ease-out, border-color 150ms ease-out;
+/* ⚠중앙정렬 일괄 보정(오너 2026-08-13 "왼쪽 치우침") — 리빌 래퍼(.pa-rv) 안의 조각은
+   .pa-ch > * 중앙 규칙을 못 받으므로 각자 margin-inline auto 필수. */
+.pa-carousel, .pa-mtable-wrap, .pa-loop, .pa-evi, .pa-prompt { margin-left: auto; margin-right: auto; }
+
+/* 지표 4종 압축 표 */
+.pa-mtable-wrap { max-width: 860px; overflow-x: auto; margin-top: 1.6rem; }
+.pa-mtable { width: 100%; border-collapse: collapse; font-size: 0.9rem; background: #fff; border: 1px solid var(--line); border-radius: var(--radius-card); }
+.pa-mtable th, .pa-mtable td { padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
+.pa-mtable thead th { font-size: 0.74rem; letter-spacing: 0.1em; color: var(--text-sub); text-transform: uppercase; }
+.pa-mtable tbody tr:last-child th, .pa-mtable tbody tr:last-child td { border-bottom: 0; }
+.pa-mtable tbody th { font-weight: 800; white-space: nowrap; }
+.pa-mtable td { color: var(--text-sub); }
+.pa-mtable code { font-size: 0.82rem; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 0.15rem 0.45rem; white-space: nowrap; }
+.pa-mtable td strong { color: var(--text); }
+.pa-mtable-src { font-size: 0.76rem; }
+
+/* 제작 루프 — 단계 4칸 + 화살표(모바일 = 세로 적층) */
+.pa-loop { max-width: 920px; margin-bottom: 2rem; }
+.pa-loop-row { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.9rem; counter-reset: none; }
+.pa-loop-step { position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-card); padding: 1.1rem 1.2rem; }
+.pa-ch-wash .pa-loop-step { background: #fff; }
+.pa-loop-step:not(:last-child)::after {
+  content: '→'; position: absolute; right: -0.85rem; top: 50%; transform: translateY(-50%);
+  color: var(--text-sub); font-weight: 800; z-index: 1;
 }
-.pa-pill:hover { border-color: var(--text); color: var(--text); }
-.pa-pill.on { background: var(--dark); border-color: var(--dark); color: #fff; }
-.pa-pill:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-.pa-metric-body {
-  display: grid; grid-template-columns: 220px 1fr; gap: 1.6rem; align-items: center;
-  background: var(--surface); border-radius: var(--radius-card); padding: 1.6rem 1.8rem;
+.pa-loop-no { display: inline-flex; width: 22px; height: 22px; align-items: center; justify-content: center; border-radius: 50%; background: var(--dark); color: #fff; font-size: 0.72rem; font-weight: 800; margin-bottom: 0.5rem; }
+.pa-loop-k { display: block; font-weight: 800; font-size: 0.98rem; }
+.pa-loop-who { display: block; font-size: 0.74rem; font-weight: 700; color: var(--accent); margin: 0.15rem 0 0.4rem; } /* 화이트리스트 — 역할 강조 */
+.pa-loop-step p { margin: 0; font-size: 0.84rem; color: var(--text-sub); line-height: 1.6; }
+.pa-loop-cap { text-align: center; font-size: 0.85rem; color: var(--text-sub); margin: 0.9rem 0 0; }
+
+/* 실물 발췌 2종 — spec 문서 카드 + 커밋 로그 터미널 */
+.pa-evi { max-width: 920px; display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-top: 2rem; }
+.pa-evi-head { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.7rem; }
+.pa-evi-head code { font-size: 0.72rem; color: var(--text-sub); }
+.pa-evi-tag {
+  display: inline-flex; align-items: center; height: 22px; padding: 0 0.6rem; border-radius: var(--radius-pill);
+  background: var(--dark); color: #fff; font-size: 0.68rem; font-weight: 700; white-space: nowrap;
 }
-.pa-ch-wash .pa-metric-body { background: #fff; border: 1px solid var(--line); }
-.pa-metric-val { text-align: center; }
-.pa-metric-num { display: block; font-family: var(--font-display); font-weight: 800; font-size: 2.6rem; letter-spacing: -0.03em; }
-.pa-metric-vlabel { font-size: 0.78rem; color: var(--text-sub); }
-.pa-metric-txt { min-width: 0; }
-.pa-metric-formula { margin: 0 0 0.5rem; }
-.pa-metric-formula code {
-  font-size: 0.85rem; background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 0.25rem 0.6rem;
+.pa-evi-tag.alt { background: var(--accent); } /* 재구성 예시 = 실물과 색으로 구분 */
+.pa-doc, .pa-term { border-radius: var(--radius-card); padding: 1.2rem 1.3rem; min-width: 0; }
+.pa-doc { background: #fff; border: 1px solid var(--line); }
+.pa-ch:not(.pa-ch-wash) .pa-doc { background: var(--surface); }
+.pa-doc pre, .pa-term pre {
+  margin: 0; font-size: 0.78rem; line-height: 1.7; overflow-x: auto;
+  font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
 }
-.pa-metric-read { margin: 0; font-size: 0.95rem; color: var(--text-sub); line-height: 1.75; }
+.pa-term { background: #1c1c1e; }
+.pa-term .pa-evi-head code { color: rgba(255, 255, 255, 0.55); }
+.pa-term pre { color: #e8e8e6; }
+.pa-evi-note { margin: 0.8rem 0 0; font-size: 0.8rem; color: var(--text-sub); }
+.pa-term .pa-evi-note { color: rgba(255, 255, 255, 0.6); }
+
+/* AI 명령 카드 — 재구성 예시 라벨 필수 */
+.pa-prompt { max-width: 760px; background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: var(--radius-card); padding: 1.2rem 1.4rem; margin-top: 1.6rem; }
+.pa-ch-wash .pa-prompt { box-shadow: 0 6px 18px rgba(20, 20, 20, 0.05); }
+.pa-prompt-head { display: flex; align-items: center; gap: 0.7rem; flex-wrap: wrap; margin-bottom: 0.6rem; }
+.pa-prompt-ctx { font-size: 0.78rem; font-weight: 700; color: var(--text-sub); }
+.pa-prompt p { margin: 0; font-size: 0.95rem; line-height: 1.8; color: var(--text); text-wrap: pretty; }
 
 /* 주별 차트 — 막대 = 차콜 본체 + 시험주 버건디(데이터 잉크·직접 라벨 동반) */
 .pa-chart { margin: 0 auto; max-width: 760px; }
@@ -178,8 +208,9 @@
 
 /* 반응형 */
 @media (max-width: 760px) {
-  .pa-feat-grid, .pa-metric-body, .pa-dgrid, .pa-pair { grid-template-columns: 1fr; }
-  .pa-metric-val { text-align: left; }
+  .pa-feat-grid, .pa-dgrid, .pa-pair, .pa-evi { grid-template-columns: 1fr; }
+  .pa-loop-row { grid-template-columns: 1fr; }
+  .pa-loop-step:not(:last-child)::after { content: '↓'; right: auto; left: 50%; top: auto; bottom: -1.05rem; transform: translateX(-50%); }
   .pa-nav-title { display: none; }
   .pa-hero-stats { gap: 1.4rem 2rem; }
 }
