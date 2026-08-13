@@ -15,7 +15,7 @@ import { SectionHead, HomeInsights } from './home-parts.jsx'
 // ?p= 슬러그는 content/프로젝트/<슬러그>.md와 1:1이어야 한다(어긋나면 빈 상세 = 조용한 깨짐).
 // export = 슬러그 존재 여부를 테스트가 콘텐츠 글롭과 대조하기 위함.
 export const PROJECTS = [
-  ['ADsP 스터디 1기', '/img/projects/adsp-board.png', '/projects/?p=2026-07-24-bapzzi-adsp-board', '진행 중'],
+  ['ADsP 스터디 1기', '/img/projects/adsp-board.png', '/projects/?p=2026-07-24-bapzzi-adsp-board', '1기 완주'],
   ['KWU ERP Club Site', '/img/projects/erpclub-site.png', '/projects/?p=2026-07-24-bapzzi-erpclub-site', '운영 중'],
 ]
 
@@ -25,8 +25,9 @@ export const PROJECTS = [
 const LINEAGE = [
   { era: 'ORIGIN', title: 'ERP연구회', desc: '경영학부 MIS 스터디 — ERP·정보시스템의 뿌리.', lane: 'trunk' },
   { era: 'SAP ERA', title: 'SAP 특강', desc: '실무 컨설턴트가 이끈 MM·ABAP 교육 — 이어져 온 본류.', lane: 'trunk' },
-  { era: '2026 · NEW BRANCH', title: 'MIS·AI 스터디', desc: 'AI가 화두로 떠오르며 본류에서 분기 — AIM 신설.', status: ['prep', '모집 준비'], lane: 'fork' },
-  { era: 'FIRST RUN', title: 'ADsP 스터디 1기', desc: 'AIM 기반으로 진행해 본 첫 운영 — 데이터분석 준전문가 대비, 진도 보드 운영.', status: ['live', '진행중'], lane: 'branch' },
+  // 모집 칩 = 하드코딩 금지(검수 2026-08-13 — 8/25 이후 모집 밴드와 모순 예약) → recruitChip = 국면 파생.
+  { era: '2026 · NEW BRANCH', title: 'MIS·AI 스터디', desc: 'AI가 화두로 떠오르며 본류에서 분기 — AIM 신설.', recruitChip: true, lane: 'fork' },
+  { era: 'FIRST RUN', title: 'ADsP 스터디 1기', desc: 'AIM 기반으로 진행해 본 첫 운영 — 데이터분석 준전문가 대비, 진도 보드 운영.', status: ['planned', '1기 완주'], lane: 'branch' },
   { era: 'NEXT', title: '앞으로 채워갈 공간', desc: '새 트랙·기수가 이어질 자리.', slot: true, lane: 'branch' },
 ]
 
@@ -113,7 +114,7 @@ export function StatsBand({ today = localYmd() }) {
   const 기사수 = loadContent('기사').length
   const cells = [
     [String(기사수), '게재 기사', 'content/ 집계'],
-    ['2', '라이브 실물', 'ADsP 진도 보드 · 이 사이트'],
+    ['2', '만든 실물', '진도 보드(1기 아카이브) · 이 사이트'], // '라이브' 표기 = 보드 아카이브 전환으로 폐지(검수 2026-08-13)
     studyCell(today),
   ]
   return (
@@ -139,28 +140,33 @@ export function StatsBand({ today = localYmd() }) {
 // 행 = [레인 셀 | 카드]. 레인 셀이 선을 그린다: 본류 세로선(차콜, 분기 후엔 옅게 지속 — 연구회 본류는 계속 존재)
 // + 분기 곡선(fork 행, 버건디) + 브랜치 세로선(버건디). 노드 점 = .rm-dot(화이트리스트 ⑦).
 // 모션 = 항목별 스크롤 리빌(useItemReveal) 유지. 상태 칩 = 별도 행(.rm-status).
-function Roadmap() {
+export function Roadmap({ today = localYmd() }) {
   useItemReveal('.rm-item')
+  const phase = recruitPhase(today)
   return (
     <section className="hs hs-roadmap page" id="roadmap">
       <div className="hs-in">
         <SectionHead label="ROADMAP" title={<>스터디 <em>로드맵</em></>} />
         <ol className="rm">
-          {LINEAGE.map((n) => (
-            <li className={`rm-item rm-${n.lane}${n.slot ? ' rm-slot' : ''}`} key={n.title}>
-              <span className="rm-lane" aria-hidden="true"><i className="rm-dot" /></span>
-              <div className="rm-card">
-                <span className="rm-era">{n.era}</span>
-                <span className="rm-word">{n.title}</span>
-                <span className="rm-desc">{n.desc}</span>
-                {n.status && (
-                  <span className="rm-status">
-                    <span className={`status ${n.status[0]}`}>{n.status[1]}</span>
-                  </span>
-                )}
-              </div>
-            </li>
-          ))}
+          {LINEAGE.map((n) => {
+            // recruitChip = 모집 밴드와 같은 국면 원천(RECRUIT_COPY) 재사용 — 한 화면 내 표기 모순 0.
+            const status = n.recruitChip ? RECRUIT_COPY[phase] : n.status
+            return (
+              <li className={`rm-item rm-${n.lane}${n.slot ? ' rm-slot' : ''}`} key={n.title}>
+                <span className="rm-lane" aria-hidden="true"><i className="rm-dot" /></span>
+                <div className="rm-card">
+                  <span className="rm-era">{n.era}</span>
+                  <span className="rm-word">{n.title}</span>
+                  <span className="rm-desc">{n.desc}</span>
+                  {status && (
+                    <span className="rm-status">
+                      <span className={`status ${status[0]}`}>{status[1]}</span>
+                    </span>
+                  )}
+                </div>
+              </li>
+            )
+          })}
         </ol>
       </div>
     </section>

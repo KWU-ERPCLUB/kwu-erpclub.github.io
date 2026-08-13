@@ -83,6 +83,18 @@ test('SHOWCASE 카피 = 개조식·과장 없음(경어체·마케팅 어휘 0)'
   }
 })
 
+// 사실 정정 가드(검수 2026-08-13) — ①문항 총계 = 저작권 규칙(외부 비게재) ②보드 아카이브 후
+// '라이브'·'접속 가능' = 사실 불일치 ③보드 링크 = 로그인 벽이라 기록 페이지로.
+test('SHOWCASE 사실 가드 — 문항 총계·라이브·전부 접속 가능 표기 0 + 보드 href = 기록 페이지', () => {
+  const strs = [SHOWCASE_LEAD, ...RECRUIT_SHOWCASE.flatMap((s) => [s.core, s.sub])]
+  for (const s of strs) {
+    expect(s, `문항 총계 노출: ${s}`).not.toMatch(/문항\s*[\d,]+/)
+    expect(s, `'라이브 운영' 표기: ${s}`).not.toContain('라이브 운영')
+    expect(s, `'접속 가능' 과장: ${s}`).not.toContain('접속 가능')
+  }
+  expect(RECRUIT_SHOWCASE[0].href).toBe('/projects/adsp/')
+})
+
 // 2026-08-07 2차 — AIM 1기 로드맵: 회차 = 한 포인트(1차 5회 + 2차 4회), 원천 = 운영틀 확정값(워크스페이스 동일 큐레이션).
 test('AIM 1기 로드맵 = 페이즈 4 + 회차 9 — 날짜 = PHASES 파생·진행선·스파이 구조', () => {
   const html = flat(<Recruit />)

@@ -94,14 +94,16 @@ export const RECRUIT_DO = [
 
 // SHOWCASE(2026-08-05 2차) — 스터디가 실제로 만든 실물 3건. 값 = 이미 사이트에 존재하는 사실만
 // (프로젝트 md 수치·세미나 frontmatter·라이브 URL). 새 사실·미검증 수치 추가 금지.
-export const SHOWCASE_LEAD = '코딩을 배워 만든 것이 아니라 AI에 시켜 만든 결과물 — 전부 접속 가능.'
+// 사실 정정(검수 2026-08-13): '전부 접속 가능' 삭제(보드 = 로그인 벽) · 문항 총계 삭제(저작권 규칙 —
+// 외부 비게재) · 보드 상태 = 1기 종료·읽기전용 아카이브 · 보드 href = 인터랙티브 상세(기록 페이지)로.
+export const SHOWCASE_LEAD = '코딩을 배워 만든 것이 아니라 AI에 시켜 만든 결과물.'
 // 카드 문안 2단(오너 2026-08-07): core = 핵심 한 문장(강조 표기) / sub = 회색 한 줄 보조 설명.
 export const RECRUIT_SHOWCASE = [
   {
     name: 'ADsP 진도 보드',
-    core: '스터디 1기 운영에 실제로 쓰는 진도·성취도 웹앱',
-    sub: '문항 919(07-26 기준) — 라이브 운영 중',
-    href: 'https://erpstudy.vercel.app',
+    core: '스터디 1기 운영에 실제로 쓴 진도·성취도 웹앱',
+    sub: '답안 9,118건 · 8명 6주 — 1기 종료, 읽기전용 아카이브. 만든 과정은 기록 페이지에.',
+    href: '/projects/adsp/',
     img: '/img/projects/adsp-board.png',
   },
   {

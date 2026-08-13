@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
-import App, { PROJECTS, RecruitBand, StatsBand } from './App.jsx'
+import App, { PROJECTS, RecruitBand, StatsBand, Roadmap } from './App.jsx'
 import { COHORT_LABEL, formatWindowShort } from './data/recruit.js'
 import { FAQ } from './data/faq.js'
 import { loadContent } from './content/loader.js'
@@ -86,8 +86,16 @@ test('WHY 섹션 부재 유지 + B1 블랙 통계 밴드 1개(2×2 실측 수치
   expect((band.match(/sb-cell/g) || []).length).toBe(3) // 1×3
   // 수치 = 실측만: 게재 건수 = content/ 글롭 집계와 일치(recruit 증빙과 동일 원천)
   expect(band).toContain(`>${loadContent('기사').length}</span>`)
-  for (const label of ['게재 기사', '라이브 실물']) expect(band).toContain(label)
+  for (const label of ['게재 기사', '만든 실물']) expect(band).toContain(label) // '라이브' 표기 폐지(검수 2026-08-13 — 보드 아카이브)
   expect((band.match(/sb-src/g) || []).length).toBe(3) // 수치엔 출처 각주 의무(디자인규칙 §6)
+})
+
+// 로드맵 모집 칩 = 하드코딩 금지(검수 2026-08-13) — 모집 밴드와 같은 국면 원천 파생, 한 화면 모순 0.
+test('로드맵 AIM 칩 = 모집 국면 파생(전·중·후) + ADsP = 1기 완주', () => {
+  expect(renderToString(<Roadmap today="2026-08-13" />)).toContain('모집 예정')
+  expect(renderToString(<Roadmap today="2026-08-30" />)).toContain('모집 중')
+  expect(renderToString(<Roadmap today="2026-09-20" />)).toContain('모집 마감')
+  expect(renderToString(<Roadmap today="2026-08-13" />)).toContain('1기 완주')
 })
 
 // 신생 스터디 원칙(2026-08-05 오너) — 0건 지표(세미나)는 밴드에 싣지 않는다. 재도입 = 개최 시작 후.
