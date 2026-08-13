@@ -201,6 +201,11 @@
 .ws-flow-status.now { border-color: var(--accent); color: var(--accent); }
 .ws-flow-title { margin: 0.45rem 0 0; font-size: 0.95rem; font-weight: 600; }
 .ws-flow-body { margin: 0.35rem 0 0; font-size: 0.85rem; color: var(--text-sub); white-space: pre-line; line-height: 1.65; }
+/* 차시 진행(2026-08-13) — 카드 머리 전체가 토글 버튼: 버튼 기본값 제거 + 제목이 남는 폭 차지 */
+.ws-flow-toggle { width: 100%; border: 0; background: none; padding: 0; cursor: pointer; text-align: left; font: inherit; color: inherit; }
+.ws-flow-toggle .ws-flow-title { margin: 0; flex: 1; }
+.ws-flow-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+.ws-flow-body .ws-sublist { margin-top: 0.5rem; }
 .ws-flow-form { border-top: 0; padding-top: 0; }   /* 레일 소속(공통 프레임) — 본문 h2와 첫 줄 높이 정렬 */
 .ws-flow-form .ws-h3 { margin-top: 0; }
 

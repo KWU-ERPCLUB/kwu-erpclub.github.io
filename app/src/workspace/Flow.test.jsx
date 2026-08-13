@@ -12,9 +12,11 @@ test('weekStatus — 시작일~+6일 = 이번 주, 이전 = 예정, 이후 = 지
   expect(weekStatus('2026-09-07', '2026-09-06')).toBe('예정')
 })
 
-test('흐름 탭 골격 = 제목·안내(SSR — 데이터는 클라이언트 로드)', () => {
+test('흐름 탭 골격 = 차시 진행 + 주차 기록(SSR — 데이터는 클라이언트 로드)', () => {
   const html = flat(<Flow store={createMockRepositories({ user: 'mock-member' })} staff={false} />)
-  expect(html).toContain('스터디 흐름')
+  expect(html).toContain('차시 진행')              // 2026-08-13 개편 — 차시 선택 → 세션 내용
+  expect(html).toContain('차시를 누르면')
+  expect(html).toContain('주차 기록')
   expect(html).toContain('주 단위 진행 기록')
   expect(html).not.toContain('주차 기록 추가')     // 비운영진 = 등록 폼 없음
 })
@@ -29,7 +31,7 @@ test('1기 로드맵 = 흐름 탭 상단 세로 타임라인(회차별 주제·�
   expect(html).toContain('2차 프로젝트 — 팀')
   expect(html).toContain('추후 확정')              // 미정 값을 확정처럼 쓰지 않는다
   expect(html).not.toContain('서로 묻는 질문')     // 2026-08-06 오너 — 질문 블록 제거
-  expect(html.indexOf('1기 로드맵')).toBeLessThan(html.indexOf('스터디 흐름'))  // 상단 배치
+  expect(html.indexOf('1기 로드맵')).toBeLessThan(html.indexOf('차시 진행'))  // 상단 배치(로드맵 → 차시 진행 → 주차 기록)
   // 마케팅 어투 금지(모집 카피 규칙 준용)
   for (const banned of ['지금 바로', '놓치지', '마지막 기회', '서두르', '얼른']) expect(html).not.toContain(banned)
 })
