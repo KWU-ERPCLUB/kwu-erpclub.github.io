@@ -99,9 +99,13 @@
 /* 운영 피처 그리드(A7) */
 .pa-feat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; margin-bottom: 2.6rem; }
 .pa-feat { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-card); padding: 1.4rem 1.5rem; }
+.pa-ch:not(.pa-ch-wash) .pa-feat { background: var(--surface); }
 .pa-feat h3 { margin: 0 0 0.5rem; font-size: 1.02rem; font-weight: 800; }
 .pa-feat p { margin: 0; font-size: 0.92rem; color: var(--text-sub); line-height: 1.7; }
 .pa-sub-h { text-align: center; font-size: 1.05rem; font-weight: 800; margin: 0 0 1.2rem; }
+/* 위임 원칙 4칸(제작 챕터) — 피처 카드 승계 + 근거 각주 줄 */
+.pa-prin { margin-bottom: 1rem; }
+.pa-feat-src { display: block; margin-top: 0.7rem; font-size: 0.74rem; font-weight: 700; color: var(--accent); } /* 화이트리스트 — 근거 표기 */
 
 /* (비교 슬라이더 = 오너 기각 2026-08-12 · 지표 4탭 = 오너 기각 2026-08-13 — 스타일 제거) */
 

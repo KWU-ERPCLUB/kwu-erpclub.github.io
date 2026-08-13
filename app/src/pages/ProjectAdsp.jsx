@@ -6,7 +6,7 @@ import { useEffect } from 'react'
 import { SiteNav, SiteFooter, Arrow } from '../shared.jsx'
 import { CountUp, useItemReveal, prefersReduced } from '../home-motion.jsx'
 import {
-  WeeklyChart, MetricTable, ToolCarousel, BuildLoop, BuildEvidence, PromptCard,
+  WeeklyChart, MetricTable, ToolCarousel, BuildLoop, BuildPrinciples, BuildEvidence, PromptCard,
 } from './project-adsp-parts.jsx'
 import { HERO_STATS, MINOR_ITEMS, CHAPTERS } from '../data/project-adsp-data.js'
 
@@ -112,15 +112,20 @@ export default function ProjectAdsp() {
             result="배포 첫날부터 실사용 — 이후 6주 내내 피드백으로 증보" />
         </section>
 
-        {/* 2 제작 — 뭐로·어떻게 만들었나(오너 2026-08-13 신설) */}
+        {/* 2 제작 — 도구·역할·위임 원칙(오너 2026-08-13 신설, 같은 날 초점 보강: 결과물보다 과정) */}
         <section className="pa-ch" id="build">
-          <ChapterHead date="6주 공통" title="만든 방법 — 스택과 반복 루프" />
+          <ChapterHead date="6주 공통" title="만든 방법 — 도구와 위임 원칙" />
           <p className="pa-lead pa-center pa-rv">
-            코드는 <strong>AI(Claude Code)가 작성</strong>하고, 무엇을 왜 만들지 정하는
+            코드는 <strong>Claude Code(Opus 5 모델)가 작성</strong>하고, 무엇을 왜 만들지 정하는
             <strong> 기획·검수는 사람</strong>이 맡았다. 요구사항을 spec 문서로 확정하면
             AI가 구현하고, main에 올리면 자동 배포 — 이 루프를 6주간 반복했다.
           </p>
           <div className="pa-rv"><BuildLoop /></div>
+          <p className="pa-lead pa-center pa-rv">
+            도구보다 중요한 건 <strong>일을 시키는 방식</strong>이었다.
+            이 프로젝트에서 지킨 원칙 4개 — 각각 아래 실제 사례에 근거가 있다.
+          </p>
+          <BuildPrinciples />
           <div className="pa-rv"><PromptCard idx={0} /></div>
           <div className="pa-rv"><BuildEvidence /></div>
         </section>

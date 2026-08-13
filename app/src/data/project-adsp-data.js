@@ -20,13 +20,39 @@ export const WEEKLY_ANSWERS = [
 ]
 
 // 제작 루프 — 누가 무엇을 했는지(역할 분담이 이 프로젝트의 핵심 주장).
+// 도구 명시(오너 2026-08-13): Claude Code + Opus 5 모델. 요금제는 비명시(오너 지시).
 export const BUILD_STEPS = [
   { no: '1', k: '기획·설계', who: '사람', desc: '무엇을·왜 만들지 spec 문서로 확정' },
-  { no: '2', k: '구현', who: 'AI · Claude Code', desc: 'spec대로 코드 작성 — 사람은 검수' },
+  { no: '2', k: '구현', who: 'AI · Claude Code(Opus 5)', desc: 'spec대로 코드 작성 — 사람은 검수' },
   { no: '3', k: '배포', who: '자동 · Vercel', desc: 'main push = 즉시 배포, 별도 작업 없음' },
   { no: '4', k: '사용·피드백', who: '스터디원 8명', desc: '걸리는 곳 신고 → 다음 spec의 재료' },
 ]
-export const BUILD_STACK = 'React(Vite) + Supabase + Vercel + Claude Code — 서버 비용 0원'
+export const BUILD_STACK = '도구 = Claude Code(Opus 5 모델) · 스택 = React(Vite) + Supabase + Vercel — 서버 비용 0원'
+
+// 위임 원칙 — 결과물이 아니라 "AI를 어떻게 이끌었나"(오너 2026-08-13 — 학생·현업 독자의 핵심 관심).
+// 각 원칙은 이 페이지에 이미 게재된 실측 사례에 1:1로 근거를 댄다(신조 사례 금지).
+export const BUILD_PRINCIPLES = [
+  {
+    k: '기능이 아니라 문제를 준다',
+    how: '"진도 탭 만들어줘"가 아니라 "어느 절이 약한지 안 보인다"를 줬다 — 절 29개 단위라는 구조는 그 답으로 나왔다.',
+    src: '절 재정의 (07-01)',
+  },
+  {
+    k: '넘으면 안 되는 선은 하드룰로',
+    how: '"선택지 순서·정답 불변"을 규칙으로 걸고 위반하면 스크립트가 스스로 중단되게 시켰다 — 사람이 일일이 지키는 대신 규칙이 지킨다.',
+    src: '문항 제자리 수정 (07-26)',
+  },
+  {
+    k: '검수는 사람이 한다',
+    how: 'AI 산출물은 배포 전 실제 화면·데이터로 대조했다. 6주 커밋 248회는 위임→검수→수정 반복의 횟수에 가깝다.',
+    src: 'git 이력 (06-28 ~ 08-10)',
+  },
+  {
+    k: '피드백은 다음 명령의 재료로',
+    how: '"한눈에 안 들어온다" 같은 사용자 말을 그대로 두지 않고 요구 문서로 번역해 다시 위임했다 — 배포 다음 날 개선이 돈 이유.',
+    src: 'v1.0 → v1.1 (06-29)',
+  },
+]
 
 // 실물 발췌 ① — spec 문서(2026-07-01 절 기반 보드 재설계, board repo docs/specs/ 원문 그대로).
 export const SPEC_EXCERPT = {

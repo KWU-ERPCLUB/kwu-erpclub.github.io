@@ -4,9 +4,9 @@
 import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
 import ProjectAdsp from './ProjectAdsp.jsx'
-import { MetricTable, ToolCarousel, WeeklyChart, BuildLoop, BuildEvidence } from './project-adsp-parts.jsx'
+import { MetricTable, ToolCarousel, WeeklyChart, BuildLoop, BuildEvidence, BuildPrinciples } from './project-adsp-parts.jsx'
 import {
-  HERO_STATS, WEEKLY_ANSWERS, METRICS, CHAPTERS, TOOL_SLIDES, BUILD_STEPS, PROMPTS,
+  HERO_STATS, WEEKLY_ANSWERS, METRICS, CHAPTERS, TOOL_SLIDES, BUILD_STEPS, BUILD_PRINCIPLES, PROMPTS,
 } from '../data/project-adsp-data.js'
 import { INTERACTIVE_PAGES } from '../Projects.jsx'
 
@@ -54,9 +54,16 @@ test('지표 표 — 4종 전부 계산식과 함께 렌더(탭 아님)', () => 
   expect(m).not.toContain('role="tablist"')
 })
 
-test('제작 챕터 — 루프 4단계·실물 발췌 2종·재구성 라벨', () => {
+test('제작 챕터 — 루프 4단계·도구 명시(Opus 5)·위임 원칙 4·실물 발췌 2종·재구성 라벨', () => {
   const l = flat(<BuildLoop />)
   for (const s of BUILD_STEPS) expect(l).toContain(s.k)
+  expect(page).toContain('Opus 5') // 도구 명시(오너 2026-08-13) — 요금제는 비명시
+  const pr = flat(<BuildPrinciples />)
+  expect(BUILD_PRINCIPLES).toHaveLength(4)
+  for (const p of BUILD_PRINCIPLES) {
+    expect(pr).toContain(p.k)
+    expect(pr, `원칙 근거 표기: ${p.k}`).toContain(p.src) // 원칙 = 실측 사례 1:1 근거 의무
+  }
   const e = flat(<BuildEvidence />)
   expect(e).toContain('실물 발췌 · spec 문서')
   expect(e).toContain('실물 발췌 · git 커밋 로그')

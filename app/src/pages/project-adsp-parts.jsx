@@ -4,7 +4,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { prefersReduced } from '../home-motion.jsx'
 import {
-  WEEKLY_ANSWERS, METRICS, TOOL_SLIDES, BUILD_STEPS, BUILD_STACK,
+  WEEKLY_ANSWERS, METRICS, TOOL_SLIDES, BUILD_STEPS, BUILD_STACK, BUILD_PRINCIPLES,
   SPEC_EXCERPT, COMMIT_LOG, PROMPTS,
 } from '../data/project-adsp-data.js'
 
@@ -90,7 +90,22 @@ export function BuildLoop() {
           </li>
         ))}
       </ol>
-      <p className="pa-loop-cap">④에서 다시 ①로 — 6주 동안 이 루프를 돌렸다. 스택 = {BUILD_STACK}</p>
+      <p className="pa-loop-cap">④에서 다시 ①로 — 6주 동안 이 루프를 돌렸다. {BUILD_STACK}</p>
+    </div>
+  )
+}
+
+// ── 위임 원칙 4칸 — "AI를 어떻게 이끌었나"(각 원칙 = 페이지 내 실측 사례 1:1 근거) ──
+export function BuildPrinciples() {
+  return (
+    <div className="pa-feat-grid pa-prin">
+      {BUILD_PRINCIPLES.map((p) => (
+        <div className="pa-feat pa-rv" key={p.k}>
+          <h3>{p.k}</h3>
+          <p>{p.how}</p>
+          <span className="pa-feat-src">근거 — {p.src}</span>
+        </div>
+      ))}
     </div>
   )
 }
