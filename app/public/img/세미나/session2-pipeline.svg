@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 380" font-family="Pretendard, sans-serif" role="img" aria-label="차시 2 산출물 파이프라인 — 따라 치기에서 첫 위임까지">
+  <defs>
+    <marker id="arw4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#141414"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1400" height="380" fill="#ffffff"/>
+
+  <text x="700" y="66" text-anchor="middle" font-size="24" font-weight="700" fill="#55606c">차시 2 산출물 파이프라인</text>
+
+  <!-- 1 따라 치기 -->
+  <rect x="48" y="120" width="224" height="150" rx="16" fill="#fafaf9" stroke="#e7e7e5" stroke-width="2"/>
+  <circle cx="48" cy="120" r="18" fill="#161616"/>
+  <text x="48" y="128" text-anchor="middle" font-size="20" font-weight="700" fill="#ffffff">1</text>
+  <text x="160" y="186" text-anchor="middle" font-size="26" font-weight="800" fill="#141414">따라 치기</text>
+  <text x="160" y="224" text-anchor="middle" font-size="21" fill="#55606c">전원 동일 프롬프트</text>
+  <line x1="280" y1="195" x2="308" y2="195" stroke="#141414" stroke-width="3" marker-end="url(#arw4)"/>
+
+  <!-- 2 기고 제출 -->
+  <rect x="318" y="120" width="224" height="150" rx="16" fill="#fafaf9" stroke="#e7e7e5" stroke-width="2"/>
+  <circle cx="318" cy="120" r="18" fill="#161616"/>
+  <text x="318" y="128" text-anchor="middle" font-size="20" font-weight="700" fill="#ffffff">2</text>
+  <text x="430" y="186" text-anchor="middle" font-size="26" font-weight="800" fill="#141414">기고 제출</text>
+  <text x="430" y="224" text-anchor="middle" font-size="21" fill="#55606c">검수 마친 기고 1건</text>
+  <line x1="550" y1="195" x2="578" y2="195" stroke="#141414" stroke-width="3" marker-end="url(#arw4)"/>
+
+  <!-- 3 소재 카드 -->
+  <rect x="588" y="120" width="224" height="150" rx="16" fill="#fafaf9" stroke="#e7e7e5" stroke-width="2"/>
+  <circle cx="588" cy="120" r="18" fill="#161616"/>
+  <text x="588" y="128" text-anchor="middle" font-size="20" font-weight="700" fill="#ffffff">3</text>
+  <text x="700" y="186" text-anchor="middle" font-size="26" font-weight="800" fill="#141414">소재 카드</text>
+  <text x="700" y="224" text-anchor="middle" font-size="21" fill="#55606c">4문항 셀프 판정</text>
+  <line x1="820" y1="195" x2="848" y2="195" stroke="#141414" stroke-width="3" marker-end="url(#arw4)"/>
+
+  <!-- 4 미니 PRD -->
+  <rect x="858" y="120" width="224" height="150" rx="16" fill="#fafaf9" stroke="#e7e7e5" stroke-width="2"/>
+  <circle cx="858" cy="120" r="18" fill="#161616"/>
+  <text x="858" y="128" text-anchor="middle" font-size="20" font-weight="700" fill="#ffffff">4</text>
+  <text x="970" y="186" text-anchor="middle" font-size="26" font-weight="800" fill="#141414">미니 PRD</text>
+  <text x="970" y="224" text-anchor="middle" font-size="21" fill="#55606c">5칸 반 장</text>
+  <line x1="1090" y1="195" x2="1118" y2="195" stroke="#141414" stroke-width="3" marker-end="url(#arw4)"/>
+
+  <!-- 5 첫 위임 -->
+  <rect x="1128" y="120" width="224" height="150" rx="16" fill="#ffffff" stroke="#7a2030" stroke-width="2.5"/>
+  <circle cx="1128" cy="120" r="18" fill="#161616"/>
+  <text x="1128" y="128" text-anchor="middle" font-size="20" font-weight="700" fill="#ffffff">5</text>
+  <text x="1240" y="186" text-anchor="middle" font-size="26" font-weight="800" fill="#141414">첫 위임</text>
+  <text x="1240" y="224" text-anchor="middle" font-size="21" fill="#55606c">개정 이력 v2 1줄</text>
+</svg>
