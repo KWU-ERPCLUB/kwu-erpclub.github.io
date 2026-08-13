@@ -195,6 +195,10 @@ export function createMockRepositories({ user = null, data = {} } = {}) {
         return rowId
       },
     },
+    notes: {
+      async list() { return clone(store.session_notes) },
+      save: saveRow('session_notes', 'mock-n'),
+    },
     materials: {
       async list() { return clone(store.session_materials) },
       save: saveRow('session_materials', 'mock-m'),

@@ -26,6 +26,7 @@ export const SEED = {
     { id: 'mock-f2', 주차: '9월 2주', 시작일: '2026-09-14', 제목: '샘플 다음 주', 내용: '' },
   ],
   session_materials: [{ id: 'mock-m1', session_id: 'mock-s1', 제목: '샘플 자료', url: 'https://example.com/deck' }],
+  session_notes: [{ id: 'mock-n1', session_id: 'mock-s1', 본문: '## 오늘의 목표\n- 샘플 목표', 공개일: null }],
   assignments: [{ id: 'mock-h1', session_id: 'mock-s1', 제목: '샘플 과제', 마감: null }],
   submissions: [{ id: 'mock-sub1', assignment_id: 'mock-h1', member_id: 'mock-member', url: 'https://example.com/sample', 메모: '' }],
   notices: [{ id: 'mock-n1', 제목: '샘플 공지', 본문: '목 데이터', 내부여부: true }],

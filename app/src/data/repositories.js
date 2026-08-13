@@ -17,6 +17,7 @@ export const REPO_CONTRACT = {
   articles: ['listPublished', 'listMine', 'listPending', 'save', 'setStatus'],
   interactions: ['counts', 'mine', 'listBookmarked', 'toggleLike', 'toggleBookmark'],
   sessions: ['list', 'save'],
+  notes: ['list', 'save'],
   events: ['list', 'save', 'remove'],
   postings: ['list', 'save', 'remove'],
   flow: ['list', 'save', 'remove'],
@@ -148,6 +149,11 @@ export function createSupabaseRepositories(backend) {
     sessions: {
       list: () => backend.db.select('sessions', { order: '회차.asc' }),
       save: saveRow('sessions'),
+    },
+    // 세션 본문(0012) — 차시 상세(목표·진행). 멤버는 공개일 게이트(RLS notes_select_member), 미적용 = 빈 배열 강등.
+    notes: {
+      list: () => backend.db.select('session_notes', { order: 'created_at.asc' }).catch(() => []),
+      save: saveRow('session_notes'),
     },
     // 스터디 흐름(0008) — 주차 기록. 테이블 미적용 = 빈 배열 강등(흐름 탭은 안내만).
     flow: {

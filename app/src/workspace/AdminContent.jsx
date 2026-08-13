@@ -7,20 +7,22 @@ const FIELDS = {
   notices: [['제목', 'text'], ['본문', 'textarea'], ['내부여부', 'check']],
   sessions: [['회차', 'number'], ['날짜', 'date'], ['제목', 'text'], ['설명', 'text']],
   materials: [['session_id', 'session'], ['제목', 'text'], ['url', 'text'], ['공개일', 'date']],
+  notes: [['session_id', 'session'], ['본문', 'textarea'], ['공개일', 'date']],
   assignments: [['session_id', 'session'], ['제목', 'text'], ['설명', 'text'], ['마감', 'datetime']],
 }
 
 export default function AdminContent({ store }) {
-  const [data, setData] = useState({ notices: [], sessions: [], materials: [], assignments: [] })
+  const [data, setData] = useState({ notices: [], sessions: [], materials: [], notes: [], assignments: [] })
   const [error, setError] = useState('')
 
   const load = useCallback(() => Promise.all([
     store.notices.listInternal(),
     store.sessions.list(),
     store.materials.list(),
+    store.notes.list(),
     store.assignments.list(),
-  ]).then(([notices, sessions, materials, assignments]) => setData({
-    notices: notices || [], sessions: sessions || [], materials: materials || [], assignments: assignments || [],
+  ]).then(([notices, sessions, materials, notes, assignments]) => setData({
+    notices: notices || [], sessions: sessions || [], materials: materials || [], notes: notes || [], assignments: assignments || [],
   })).catch((e) => setError(e?.message || '불러오기 실패')), [store])
 
   useEffect(() => { load() }, [load])
@@ -44,6 +46,10 @@ export default function AdminContent({ store }) {
       <AdminForm
         title="세션 자료(링크)" fields={FIELDS.materials} rows={data.materials} sessions={data.sessions}
         onSave={saver('materials')} labelOf={(m) => `${m['제목']} · ${m.url || '파일'}`}
+      />
+      <AdminForm
+        title="세션 본문(차시 상세 — 목표·진행)" fields={FIELDS.notes} rows={data.notes} sessions={data.sessions}
+        onSave={saver('notes')} labelOf={(n) => `${(n['본문'] || '').slice(0, 24)}… · ${n['공개일'] || '즉시 공개'}`}
       />
       <AdminForm
         title="과제" fields={FIELDS.assignments} rows={data.assignments} sessions={data.sessions}
