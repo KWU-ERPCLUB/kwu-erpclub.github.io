@@ -255,6 +255,8 @@
   letter-spacing: -0.025em;
   margin: 0 0 0.7rem;
 }
+/* 학생 후킹 1줄(P1-B 2026-08-13) — 본문보다 한 단계 진하게, 기간 줄 위. */
+.home .rb-hook { margin: 0 0 0.45rem; font-size: 1.04rem; font-weight: 700; color: var(--text); word-break: keep-all; }
 .home .rb-text { margin: 0 0 1.8rem; font-size: 0.98rem; color: var(--text-sub); }
 /* 모집안내 CTA — 확대판(피드백 2026-08-06 "가로 3배·세로 1.5배"): 기본 .rc-cta-xl 대비
    좌우 패딩 ~3배·상하 ~1.5배 + 타이포 한 단계 상향. 폰에서는 화면 폭에 맞춰 축소. */

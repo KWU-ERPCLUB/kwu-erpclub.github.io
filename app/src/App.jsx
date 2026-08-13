@@ -5,7 +5,7 @@
 // 신규 무한루프 = 배경 블롭 CSS 1건(reduced-motion 정지) · transform·opacity만.
 import { Arrow, SiteNav, SiteFooter } from './shared.jsx'
 import { localYmd, recruitPhase, studyCell } from './home-logic.js'
-import { RECRUIT, COHORT_LABEL, formatWindowShort } from './data/recruit.js'
+import { RECRUIT, COHORT_LABEL, SHOWCASE_LEAD, formatWindowShort } from './data/recruit.js'
 import { FAQ } from './data/faq.js'
 import { loadContent } from './content/loader.js'
 import { useSectionSpy, useParallax, useItemReveal, StaggerChars, CountUp } from './home-motion.jsx'
@@ -99,6 +99,8 @@ export function RecruitBand({ today = localYmd() }) {
           <span className="rb-note">{note}</span>
         </div>
         <h2 className="rb-title">{title}</h2>
+        {/* 학생 후킹 1줄(검수 P1-B 오너 픽 2026-08-13) — 문안 = SHOWCASE_LEAD 재사용(신조 0). */}
+        <p className="rb-hook">{SHOWCASE_LEAD}</p>
         <p className="rb-text">{text}</p>
         {/* Primary CTA(§4 위계) — 메인의 유일한 Primary(차콜 필 + 버건디 원형 화살표). */}
         <a className="rc-cta-xl rb-cta" href="/recruit/">{ctaLabel} <Arrow /></a>
@@ -193,6 +195,10 @@ function Projects() {
             </a>
           ))}
         </div>
+        {/* 주인공 다리(검수 P1-C 오너 픽 2026-08-13) — 1기 실물 = 운영자 작 오독 차단. 문안 = 인터랙티브 CTA·FAQ 재사용. */}
+        <p className="hp-note rv" style={{ transitionDelay: '220ms' }}>
+          이 과정을 당신의 프로젝트로 — 다음 기수는 참가자가 만들고, 결과물은 본인 소유.
+        </p>
         <p className="hs-more rv" style={{ transitionDelay: '260ms' }}>
           <a className="btn-2nd" href="/projects/">전체 아카이브 <Arrow /></a>
         </p>

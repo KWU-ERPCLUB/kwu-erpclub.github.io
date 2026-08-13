@@ -191,6 +191,8 @@
 @media (hover: hover) { .hp-card:hover .hp-cover { transform: scale(1.04); } }
 .hp-card:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 @media (max-width: 700px) { .hp-list { grid-template-columns: 1fr; } }
+/* 주인공 다리 1줄(P1-C 2026-08-13) — 카드 아래 중앙, 아카이브 버튼 위. */
+.hp-note { text-align: center; margin: 1.8rem 0 0; font-size: 0.95rem; font-weight: 600; color: var(--text-sub); word-break: keep-all; }
 
 /* ══ FAQ — 아코디언(4차: 질문 타이포 축소·답변 경어체). 구분 = 흰 카드 면(가로줄 폐지) ══ */
 .faq-xl { margin-top: clamp(2rem, 5vh, 3rem); display: grid; gap: 0.7rem; max-width: 800px; margin-left: auto; margin-right: auto; }
