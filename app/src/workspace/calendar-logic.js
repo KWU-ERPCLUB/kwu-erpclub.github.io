@@ -45,6 +45,18 @@ export function buildAgenda({ events = [], assignments = [], sessions = [] } = {
 
 export const itemsOn = (items, key) => items.filter((i) => i.date === key)
 
+// 주 판정(흐름 탭 공용 — 2026-08-13 Flow에서 이동) — 시작일~+6일 안에 오늘이 있으면 '이번 주',
+// 지났으면 '지난', 아니면 '예정'. 순수 함수(테스트 대상).
+export function weekStatus(startKey, todayKey) {
+  const start = new Date(`${startKey}T12:00:00`)
+  const end = new Date(start)
+  end.setDate(start.getDate() + 6)
+  const endKey = toKey(end)
+  if (todayKey < startKey) return '예정'
+  if (todayKey > endKey) return '지난'
+  return '이번 주'
+}
+
 // 다가오는 업무 — ★ 지정 항목만(2026-08-07 오너: 전량 노출은 소음), 오늘 포함 이후 날짜순 상위 n건.
 // 캘린더(itemsOn)는 전 항목 유지 — 필터는 이 리스트에만 적용된다.
 export function upcoming(items, todayKey, n = 6) {
