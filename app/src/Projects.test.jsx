@@ -50,7 +50,7 @@ test('ProjectGrid — 항목이면 그리드, 0건이면 디자인된 빈 상태
   expect(flat(<ProjectGrid list={[P]} onOpen={noop} />)).toContain('pj-grid')
   const empty = flat(<ProjectGrid list={[]} onOpen={noop} />)
   expect(empty).toContain('등재된 프로젝트 아직 없음')
-  expect(empty).toContain('content/프로젝트/') // 기고 방법 안내
+  expect(empty).toContain('인사이트 기고 탭') // 기고 방법 안내(2026-08-14 — 구 content/ 복사 절차 폐지, 워크스페이스 기고 탭)
 })
 
 // ── 4차 개편(2026-08-06) — 블랙 통계 밴드(.pj-stats) 삭제(피드백 "홈 내용") ──

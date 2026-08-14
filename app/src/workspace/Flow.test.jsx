@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
-import Flow, { weekStatus } from './Flow.jsx'
+import Flow, { weekStatus, roadmapNow } from './Flow.jsx'
 import { findByNo, seminarHref } from './Roadmap.jsx'
 import { createMockRepositories } from '../data/mock.js'
 
@@ -46,6 +46,25 @@ test('회차 매칭 — 로드맵 no ↔ DB 세션·세미나 회차, 세미나 
   expect(findByNo([], 1)).toBeNull()
   expect(seminarHref({ slug: '2026-07-25-bapzzi-question-to-delegation' })).toBe('/seminars/?p=2026-07-25-bapzzi-question-to-delegation')
   expect(seminarHref(null)).toBeNull()
+})
+
+// 멤버 레일 「지금 위치」(2026-08-14 검수) — AIM_TIMELINE 정적 계산(이번 주/다음 차시).
+test('roadmapNow — 이번 주 차시·다음 차시 계산(1기=2026)', () => {
+  const kickoff = roadmapNow('2026-09-08')          // 1회차(09-07 주) 진행 중
+  expect(kickoff.current?.no).toBe(1)
+  expect(kickoff.next?.no).toBe(2)
+  const before = roadmapNow('2026-09-01')           // 개강 전 = 다음 차시만
+  expect(before.current).toBeNull()
+  expect(before.next?.no).toBe(1)
+  const after = roadmapNow('2026-12-15')            // 종강 후 = 둘 다 없음
+  expect(after.current).toBeNull()
+  expect(after.next).toBeNull()
+})
+
+test('멤버 레일 = 지금 위치 카드(운영진 폼 대신)', () => {
+  const html = flat(<Flow store={createMockRepositories({ user: 'mock-member' })} staff={false} />)
+  expect(html).toContain('지금 위치')
+  expect(html).not.toContain('주차 기록 추가')
 })
 
 test('운영진 = 인라인 등록 폼 노출', () => {

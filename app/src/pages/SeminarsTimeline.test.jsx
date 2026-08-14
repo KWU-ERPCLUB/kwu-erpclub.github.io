@@ -95,9 +95,10 @@ test('그리드 카드 = 날짜·칩(회차·유형·주제)·제목 + 슬라이
   expect(html).toContain('에이전트')
   expect(html).toContain('sem-card-title')
   expect(html).toContain('sem-card-thumb')
-  expect(html).toContain('발표자료 PDF 열기')
+  expect(html).toContain('슬라이드 열기') // pdf 없이 슬라이드만 = "슬라이드" 표기(PDF 아님)
+  expect(html).not.toContain('발표자료 PDF 열기')
   const noSlide = flat(<SeminarCard s={base()} today={TODAY} onOpen={noop} />)
-  expect(noSlide).not.toContain('발표자료 PDF 열기')
+  expect(noSlide).not.toContain('슬라이드 열기')
   expect(noSlide).not.toContain('sem-card-thumb') // 썸네일 없으면 프레임 없음
 })
 

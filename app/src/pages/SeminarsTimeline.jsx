@@ -56,7 +56,7 @@ export function SeminarFeature({ s, today, onOpen = () => {} }) {
           <Desc s={s} />
           {pdfHref && (
             <div className="sem-feat-actions">
-              <a className="btn-2nd" href={pdfHref} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>발표자료 PDF 열기</a>
+              <a className="btn-2nd" href={pdfHref} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>{s.pdf ? '발표자료 PDF 열기' : '슬라이드 열기'}</a>
             </div>
           )}
         </div>
@@ -66,7 +66,7 @@ export function SeminarFeature({ s, today, onOpen = () => {} }) {
             aria-label="발표자료 열기" onClick={(e) => e.stopPropagation()}
           >
             <img src={thumbs[0]} alt={`${s.title} 발표자료 미리보기`} loading="lazy" />
-            {pdfHref && <span className="sem-feat-thumb-note">클릭하면 발표자료 PDF가 새 탭에서 열립니다</span>}
+            {pdfHref && <span className="sem-feat-thumb-note">{s.pdf ? '클릭 = 발표자료 PDF 새 탭 열기' : '클릭 = 슬라이드 새 탭 열기'}</span>}
           </a>
         )}
       </div>
@@ -95,19 +95,29 @@ export function SeminarCard({ s, today, onOpen = () => {} }) {
         </span>
       </button>
       {(s.pdf || s['슬라이드']) && (
-        <a className="sem-card-pdf" href={s.pdf || s['슬라이드']} target="_blank" rel="noreferrer">발표자료 PDF 열기</a>
+        <a className="sem-card-pdf" href={s.pdf || s['슬라이드']} target="_blank" rel="noreferrer">{s.pdf ? '발표자료 PDF 열기' : '슬라이드 열기'}</a>
       )}
     </li>
   )
 }
 
-// 프리젠테이션 리스트 — items(이미 정렬·필터됨): 첫 항목 = 피처 밴드, 나머지 = 3열 그리드.
+// 피처 선정 — 오늘 이후(date > today) 중 가장 가까운 것 > 일정미정(예정 취급) > 최신(date 최대). 순수 함수.
+export function pickFeature(items, today) {
+  const dated = items.filter((s) => s['일정미정'] !== true && (s.date || '') > (today || ''))
+  if (dated.length > 0) return dated.reduce((a, b) => ((a.date || '') <= (b.date || '') ? a : b))
+  const tbd = items.find((s) => s['일정미정'] === true)
+  if (tbd) return tbd
+  return items.reduce((a, b) => ((a.date || '') >= (b.date || '') ? a : b))
+}
+
+// 프리젠테이션 리스트 — items(이미 정렬·필터됨): 피처 밴드 = pickFeature(다가오는 세미나 우선), 나머지 = 3열 그리드.
 // 0건 = 디자인된 1줄 빈 상태. export = 픽스처 주입 테스트용(순수 렌더).
 export function SeminarTimeline({ items, today, onOpen = () => {} }) {
   if (!items || items.length === 0) {
     return <p className="sem-tl-empty">세미나 기록 아직 없음.</p>
   }
-  const [first, ...rest] = items
+  const first = pickFeature(items, today)
+  const rest = items.filter((s) => s !== first)
   return (
     <div className="sem-arch">
       <SeminarFeature s={first} today={today} onOpen={onOpen} />

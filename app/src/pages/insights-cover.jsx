@@ -6,7 +6,7 @@ import { natureKey } from './insights-logic.js'
 // 성격 4색(§1 파생 — articles.css .chip-* 와 같은 값). SVG는 CSS 변수를 못 받으므로 여기서 상수 보유.
 const NATURE_COLOR = {
   news: ['#e5f0fb', '#38618c'],
-  analysis: ['#faf0e1', '#8c6a38'],
+  analysis: ['#faf0e1', '#6f5227'], /* AA 6.39:1 — articles.css .chip-analysis와 동일 값 */
   howto: ['#e4f3e8', '#39734a'],
   tools: ['#eee9fa', '#63549e'],
 }

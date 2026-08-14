@@ -141,7 +141,7 @@
   display: inline-flex; align-items: center; height: 22px; padding: 0 0.6rem; border-radius: var(--radius-pill);
   background: var(--dark); color: #fff; font-size: 0.68rem; font-weight: 700; white-space: nowrap;
 }
-.pa-evi-tag.alt { background: var(--accent); } /* 재구성 예시 = 실물과 색으로 구분 */
+.pa-evi-tag.alt { background: #fff; border: 1px solid var(--accent); color: var(--accent); } /* 재구성 예시 = 실물과 구분(prep 배지 문법 — 버건디 채움 금지 §1) */
 .pa-doc, .pa-term { border-radius: var(--radius-card); padding: 1.2rem 1.3rem; min-width: 0; }
 .pa-doc { background: #fff; border: 1px solid var(--line); }
 .pa-ch:not(.pa-ch-wash) .pa-doc { background: var(--surface); }
@@ -172,7 +172,8 @@
 .pa-car-bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 0.7rem; }
 .pa-car-cap { margin: 0; font-size: 0.88rem; font-weight: 700; }
 .pa-car-dots { display: flex; align-items: center; gap: 0.45rem; }
-.pa-dot { width: 9px; height: 9px; border-radius: 50%; border: 0; padding: 0; background: var(--line); cursor: pointer; transition: background-color 150ms ease-out, transform 150ms ease-out; }
+/* 도트 = 시각 9px 유지 + 탭 영역 확장(히트 25px: 패딩 8px 사방 + 음수 마진 = 레이아웃 불변, background-clip으로 점만 칠함) */
+.pa-dot { box-sizing: content-box; width: 9px; height: 9px; border-radius: 50%; border: 0; padding: 8px; margin: -8px; background: var(--line); background-clip: content-box; cursor: pointer; transition: background-color 150ms ease-out, transform 150ms ease-out; }
 .pa-dot.on { background: var(--dark); transform: scale(1.25); }
 .pa-dot:focus-visible, .pa-car-pause:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .pa-car-pause { border: 1px solid var(--line); background: #fff; border-radius: var(--radius-pill); font-size: 0.62rem; padding: 0.3rem 0.6rem; cursor: pointer; margin-left: 0.4rem; }

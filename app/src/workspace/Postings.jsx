@@ -50,6 +50,7 @@ export default function Postings({ store }) {
   const [interests, setInterests] = useState([])
   const [status, setStatus] = useState('loading')
   const [error, setError] = useState('')
+  const [starNote, setStarNote] = useState('')   // ★ 저장 실패 한 줄 안내(2026-08-14 검수 — 3초 후 소거)
   const [kind, setKind] = useState('전체')
 
   const load = useCallback(() => Promise.all([store.postings.list(), store.postings.listInterests()])
@@ -58,11 +59,15 @@ export default function Postings({ store }) {
 
   useEffect(() => { load() }, [load])
 
-  // 낙관적 토글 — 실패 시 원복(0013 미적용 환경 포함).
+  // 낙관적 토글 — 실패 시 원복(0013 미적용 환경 포함) + 한 줄 안내(무언 원복은 유령 동작으로 보임).
   const toggleInterest = useCallback((postingId, on) => {
     setInterests((prev) => (on ? [...prev, postingId] : prev.filter((id) => id !== postingId)))
     store.postings.toggleInterest(postingId, on)
-      .catch(() => setInterests((prev) => (on ? prev.filter((id) => id !== postingId) : [...prev, postingId])))
+      .catch(() => {
+        setInterests((prev) => (on ? prev.filter((id) => id !== postingId) : [...prev, postingId]))
+        setStarNote('관심 저장 실패 — 잠시 후 다시')
+        setTimeout(() => setStarNote(''), 3000)
+      })
   }, [store])
 
   const { active, always, closed } = useMemo(
@@ -88,6 +93,7 @@ export default function Postings({ store }) {
           </nav>
           {status === 'loading' && <div className="ws-skel" aria-label="불러오는 중"><span /><span /></div>}
           {error && <p className="ws-error" role="alert">{error}</p>}
+          {starNote && <p className="ws-error" role="status">{starNote}</p>}
           {status === 'ready' && open.length === 0 && (
             <p className="ws-note">진행 중 공고 0건 — 운영진이 등록하면 여기에 뜬다.</p>
           )}

@@ -120,7 +120,7 @@
 /* 오너 2026-08-07: 값 강조 — 핵심(버건디 700) / 부연(회색) + 행 호버 인터랙션 */
 .rc-fact dd strong { color: var(--accent); font-weight: 800; }
 .rc-fact-sub { color: var(--text-sub); font-weight: 550; }
-.rc-fact { transition: transform 200ms ease-out, box-shadow 200ms ease-out, border-color 200ms ease-out; }
+.rc-fact { transition: transform 150ms ease-out, box-shadow 150ms ease-out, border-color 150ms ease-out; }
 .rc-fact:hover { transform: translateX(6px); border-color: rgba(122, 32, 48, 0.35); box-shadow: 0 8px 22px rgba(0, 0, 0, 0.06); }
 @media (prefers-reduced-motion: reduce) { .rc-fact { transition: none; } .rc-fact:hover { transform: none; } }
 @media (max-width: 700px) { .rc-fact { grid-template-columns: 1fr; gap: 0.5rem; justify-items: start; } }
@@ -139,9 +139,15 @@
   width: 11px; height: 11px; border-radius: 50%; background: var(--accent); border: 2px solid var(--bg);
   transition: transform 300ms ease-out, box-shadow 300ms ease-out;
 }
-/* 페이즈 헤더(1차·시험기간·2차) — 대형(차시 주제의 약 1.5배) */
+/* 구간(1차·시험기간·2차) — 4차 문법 이식(workspace-roadmap .ws-rm-phaseband 동형): 스파인 덮는 surface 면 + 검정 pill 라벨 */
+.rc-rm-phase { margin-left: calc(-1 * clamp(1.6rem, 3vw, 2.2rem)); background: var(--surface); border-radius: 14px; padding: 0.95rem 1.15rem; }
+.rc-secs:nth-of-type(odd) .rc-rm-phase { background: #fff; } /* surface 섹션 위 = 면 교대(카드와 동일 규칙) */
+.rc-rm > li.rc-rm-phase::before { display: none; } /* 구간 = 노드 점 없음(밴드가 구간을 표시) */
 .rc-rm-when { display: block; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; color: var(--text-sub); margin-bottom: 0.3rem; }
-.rc-phase-t { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.55rem, 2.8vw, 1.95rem); letter-spacing: -0.015em; word-break: keep-all; margin: 0 0 0.35rem; }
+.rc-phase-t {
+  display: inline-flex; align-items: center; background: var(--dark); color: #fff; border-radius: var(--radius-pill);
+  padding: 0.3rem 0.9rem; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.01em; margin: 0 0 0.35rem;
+}
 .rc-rm-desc { margin: 0; font-size: 0.92rem; line-height: 1.6; color: var(--text-sub); word-break: keep-all; }
 .rc-rm-hl .rc-rm-when { color: var(--accent); }
 /* 회차 카드 — 번호(대형 버건디) + 주차·태그 + 주제(강조) + 배움 한 줄 + 세부(작게) */
@@ -194,7 +200,7 @@
   display: grid; grid-template-columns: 26px 1fr; align-items: baseline;
   column-gap: 0.8rem; row-gap: 0.15rem; padding: 0.85rem 1.2rem;
   border-radius: 14px; text-align: left; word-break: keep-all;
-  transition: background 200ms ease-out, transform 200ms ease-out;
+  transition: background 150ms ease-out, transform 150ms ease-out;
 }
 .rc-who li:hover { background: rgba(122, 32, 48, 0.05); transform: translateX(5px); }
 .rc-who-check {
@@ -270,7 +276,7 @@
   font: inherit; font-size: 0.94rem; color: var(--text);
   padding: 0.6rem 0.8rem; border: 1px solid var(--line); border-radius: 8px; background: #fff;
 }
-.rc-field input:focus-visible, .rc-field textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.rc-field input:focus-visible, .rc-field textarea:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .rc-field input[aria-invalid='true'] { border-color: var(--accent); }
 .rc-field-error { font-size: 0.8rem; color: var(--accent); }
 .rc-form-privacy { margin: 0.5rem 0 1rem; font-size: 0.8rem; color: var(--text-sub); }

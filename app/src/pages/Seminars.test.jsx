@@ -92,7 +92,7 @@ test('SeminarDetail 표지 — 썸네일·pdf 있으면 최상단 표지 링크(
   expect(withCover).toContain('sem-ed-cover')
   expect(withCover).toContain('/img/세미나/cover-s3.png')
   expect(withCover).toContain('/pdf/세미나/b.pdf') // pdf 우선
-  expect(withCover).toContain('클릭하면 발표자료 PDF가 새 탭에서 열립니다')
+  expect(withCover).toContain('클릭 = 발표자료 PDF 새 탭 열기') // 개조식 + pdf 있을 때만 PDF 표기
   const noThumb = flat(<SeminarDetail s={labSem} onBack={() => {}} />)
   expect(noThumb).not.toContain('sem-ed-cover')
 })

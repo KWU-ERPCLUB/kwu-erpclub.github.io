@@ -41,13 +41,14 @@ function Profile({ store, member, onSaved }) {
         <div><dt>역할</dt><dd>{member?.role || '스터디원'}</dd></div>
       </dl>
       <form className="ws-form ws-form-wide" onSubmit={save}>
+        {/* 입력 시작 = 이전 "저장 완료" 소거(2026-08-14 검수 — 낡은 성공 메시지 잔류 방지) */}
         <label className="ws-field">
           <span>자기소개</span>
-          <textarea className="ws-textarea" rows={3} value={intro} onChange={(e) => setIntro(e.target.value)} />
+          <textarea className="ws-textarea" rows={3} value={intro} onChange={(e) => { setMsg(''); setIntro(e.target.value) }} />
         </label>
         <label className="ws-field">
           <span>관심사(쉼표로 구분·최대 8개)</span>
-          <input value={tags} placeholder="자동화, 에이전트" onChange={(e) => setTags(e.target.value)} />
+          <input value={tags} placeholder="자동화, 에이전트" onChange={(e) => { setMsg(''); setTags(e.target.value) }} />
         </label>
         {error && <p className="ws-error" role="alert">{error}</p>}
         {msg && <p className="ws-ok" role="status">{msg}</p>}
@@ -94,13 +95,14 @@ export function PasswordChange({ store }) {
       <p className="ws-note">초기(임시) 비밀번호를 받았다면 여기서 본인 값으로 변경. 잊어버린 경우 = 운영진에게 재설정 요청.</p>
       <form className="ws-form ws-form-wide" onSubmit={save}>
         <div className="ws-field-row">
+          {/* 입력 시작 = 이전 "변경됨" 소거(2026-08-14 검수) */}
           <label className="ws-field">
             <span>새 비밀번호(6자 이상)</span>
-            <input type="password" value={pw} autoComplete="new-password" onChange={(e) => setPw(e.target.value)} />
+            <input type="password" value={pw} autoComplete="new-password" onChange={(e) => { setMsg(''); setPw(e.target.value) }} />
           </label>
           <label className="ws-field">
             <span>새 비밀번호 확인</span>
-            <input type="password" value={pw2} autoComplete="new-password" onChange={(e) => setPw2(e.target.value)} />
+            <input type="password" value={pw2} autoComplete="new-password" onChange={(e) => { setMsg(''); setPw2(e.target.value) }} />
           </label>
         </div>
         {error && <p className="ws-error" role="alert">{error}</p>}
@@ -118,6 +120,7 @@ export function InterestedPostings({ store }) {
   const todayKey = useMemo(() => toKey(new Date()), [])
   const [rows, setRows] = useState([])
   const [ready, setReady] = useState(false)
+  const [failed, setFailed] = useState(false)   // 오류를 0건으로 위장하지 않는다(2026-08-14 검수)
 
   useEffect(() => {
     let alive = true
@@ -135,14 +138,15 @@ export function InterestedPostings({ store }) {
         setRows(mine)
         setReady(true)
       })
-      .catch(() => setReady(true))
+      .catch(() => { if (alive) { setFailed(true); setReady(true) } })
     return () => { alive = false }
   }, [store, todayKey])
 
   return (
     <section className="ws-block ws-interested">
       <h2 className="ws-h2">관심 공고 <span className="ws-count">{rows.length}</span></h2>
-      {ready && rows.length === 0 && <p className="ws-note">관심 공고 0건 — 공고 탭에서 ★를 누르면 여기 모인다.</p>}
+      {failed && <p className="ws-error" role="alert">불러오기 실패 — 새로고침</p>}
+      {ready && !failed && rows.length === 0 && <p className="ws-note">관심 공고 0건 — 공고 탭에서 ★를 누르면 여기 모인다.</p>}
       <ul className="ws-list">
         {rows.map((r) => {
           const due = r['접수마감'] || r['시험일']

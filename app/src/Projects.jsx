@@ -3,7 +3,7 @@
 // + N4 쇼케이스 카드(1열 대형 커버 — 카드 2장 현실에서 캐러셀은 억지라 기각, 대형 커버 우선).
 // 유지 = ?p= 딥링크·상세 진입·호버 오버레이(GitHub·Web)·프롬프트 로그. 데이터 = content/프로젝트/ 로더.
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Arrow, SiteNav, SiteFooter, PageHead, CONTRIBUTING_URL } from './shared.jsx'
+import { Arrow, SiteNav, SiteFooter, PageHead } from './shared.jsx'
 import { loadContent } from './content/loader.js'
 import Markdown from './pages/Markdown.jsx'
 
@@ -91,10 +91,7 @@ export function ProjectGrid({ list, onOpen }) {
       <div className="hub-empty hub-empty-how">
         <p className="hub-empty-title">등재된 프로젝트 아직 없음.</p>
         <p>스터디의 프로젝트·활동 기록이 여기 쌓임 — 배포물이 아니어도 됨. 커버 캡처 + 한 줄 설명 + 상태.</p>
-        <p>
-          기고 = <a href={CONTRIBUTING_URL} target="_blank" rel="noreferrer">기고 가이드</a> 참고 →
-          <code> content/프로젝트/_template.md</code> 복사 → 규칙 채움 → 자동 게재.
-        </p>
+        <p>기고 = 워크스페이스 &gt; 인사이트 기고 탭(스터디원).</p>
       </div>
     )
   }

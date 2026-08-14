@@ -8,7 +8,8 @@
   padding: 0.95rem 1.1rem;
   transition: transform 150ms ease-out, box-shadow 150ms ease-out;
 }
-.ws-posting:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(20, 20, 20, 0.07); }
+@media (hover: hover) { .ws-posting:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(20, 20, 20, 0.07); } }
+@media (prefers-reduced-motion: reduce) { .ws-posting { transition: none; } .ws-posting:hover { transform: none; } }
 .ws-posting.pinned { border-color: var(--dark); }
 .ws-posting.closed { opacity: 0.55; }
 
@@ -30,16 +31,23 @@
 
 .ws-post-status { margin-left: auto; font-size: 0.78rem; font-weight: 600; color: var(--text-sub); }
 
-/* 관심 ★(2026-08-14) — 체크한 공고는 내정보 "관심 공고"에 모인다 */
+/* 관심 ★(2026-08-14) — 체크한 공고는 내정보 "관심 공고"에 모인다.
+   패딩 확장 + 음수 마진 = 터치 타깃 44px·시각 크기 유지(2026-08-14 검수) */
 .ws-post-star {
-  border: 0; background: none; cursor: pointer; padding: 0 0.1rem;
+  border: 0; background: none; cursor: pointer;
+  padding: 0.85rem 0.8rem; margin: -0.85rem -0.7rem -0.85rem -0.7rem;
   font-size: 1.05rem; line-height: 1; color: #d3d2cf;
   transition: color 150ms ease-out, transform 150ms ease-out;
 }
 .ws-post-star:hover { color: var(--accent); transform: scale(1.12); }
 .ws-post-star:active { transform: scale(0.95); }
 .ws-post-star.on { color: var(--accent); }
-.ws-post-star:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.ws-post-star:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+/* 켜질 때 킥 1회(1→1.25→1) — 모션 허용 시만 */
+@media (prefers-reduced-motion: no-preference) {
+  .ws-post-star.on { animation: ws-star-kick 260ms ease-out; }
+  @keyframes ws-star-kick { 0% { transform: scale(1); } 50% { transform: scale(1.25); } 100% { transform: scale(1); } }
+}
 .ws-post-status.s-접수중 { color: #1f5c37; }
 .ws-post-status.s-예정 { color: #1f5c37; }     /* 접수 없는 시험·행사 — 시험 D-n */
 .ws-post-status.s-마감 { color: var(--text-sub); }
@@ -49,6 +57,7 @@
   margin-bottom: 0.3rem;
 }
 .ws-post-title:hover { text-decoration: underline; }
+.ws-post-title:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
 .ws-post-comment { margin: 0.4rem 0 0; font-size: 0.84rem; color: var(--text-sub); line-height: 1.5; }
 

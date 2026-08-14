@@ -1,5 +1,5 @@
 // 워크스페이스 셸(M1) — 로그인 + 기능 자리표시. 데이터는 전부 저장소 계층 경유(SPEC §1, P1).
-// 공개 6페이지와 코드·CSS를 공유하지 않는다(styles/workspace.css 별도). 공개 내비에 링크 없음(URL 직접 진입).
+// 공개 6페이지와 코드·CSS를 공유하지 않는다(styles/workspace.css 별도). 공개 헤더에 링크 상시 노출(오너 개정 2026-08-07).
 import { useEffect, useState } from 'react'
 import { SiteNav, SiteFooter } from '../shared.jsx'
 import { getRepositories, isBackendConfigured } from '../data/index.js'
@@ -102,7 +102,7 @@ export function LoginForm({ onSubmit, error, busy }) {
         <label className="ws-field">
           <span>학번</span>
           <input
-            type="text" value={loginId} autoComplete="username" inputMode="numeric"
+            type="text" value={loginId} autoComplete="username" inputMode="numeric" autoFocus
             placeholder="학번(숫자)" required onChange={(e) => setLoginId(e.target.value)}
           />
         </label>
@@ -132,7 +132,11 @@ export function Shell({ member, onSignOut, store, onMemberChanged, search }) {
   function go(name) {
     setVisited((prev) => (prev.has(name) ? prev : new Set(prev).add(name)))
     setTab(name)
-    if (typeof window !== 'undefined') window.scrollTo({ top: 0 })   // 이전 탭 스크롤 위치 이월 금지
+    if (typeof window !== 'undefined') {
+      // 현재 탭을 URL에 반영(2026-08-14 검수) — 새로고침 시 initialTab이 같은 탭으로 복원
+      window.history.replaceState(null, '', `?tab=${encodeURIComponent(name)}`)
+      window.scrollTo({ top: 0 })   // 이전 탭 스크롤 위치 이월 금지
+    }
   }
 
   // 탭 본문 — visited에 든 탭만 마운트, 비활성은 hidden(display:none)으로 상태 보존.
@@ -155,7 +159,7 @@ export function Shell({ member, onSignOut, store, onMemberChanged, search }) {
         <div className="ws-side-tabs">
           {visibleTabs(member).map(([name]) => (
             <button
-              key={name} type="button" aria-pressed={tab === name}
+              key={name} type="button" aria-current={tab === name ? 'true' : undefined}
               className={`ws-sidebtn${tab === name ? ' on' : ''}`}
               onClick={() => go(name)}
             >

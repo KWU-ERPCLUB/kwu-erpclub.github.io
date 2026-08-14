@@ -86,9 +86,9 @@ export function SeminarDetail({ s, onBack }) {
 
       <div className="sem-ed-body">
         {pdfHref && thumbs.length > 0 && (
-          <a className="sem-ed-cover" href={pdfHref} target="_blank" rel="noreferrer" aria-label="발표자료 PDF 열기">
+          <a className="sem-ed-cover" href={pdfHref} target="_blank" rel="noreferrer" aria-label={s.pdf ? '발표자료 PDF 열기' : '슬라이드 열기'}>
             <img src={thumbs[0]} alt={`${s.title} 발표자료 표지`} />
-            <span className="sem-ed-cover-note">클릭하면 발표자료 PDF가 새 탭에서 열립니다</span>
+            <span className="sem-ed-cover-note">{s.pdf ? '클릭 = 발표자료 PDF 새 탭 열기' : '클릭 = 슬라이드 새 탭 열기'}</span>
           </a>
         )}
 

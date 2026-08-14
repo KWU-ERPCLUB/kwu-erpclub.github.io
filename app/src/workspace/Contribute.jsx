@@ -1,7 +1,8 @@
 // 기고 탭(2026-08-06 홈 개편 — 단독 탭 승격, SPEC §0-8) — 내부 초안(DB) → 승인대기 제출 → 운영진 승인 → 게재.
 // md 커밋 경유 없음. 게재되면 공개 인사이트가 다음 페치에서 바로 집어간다(클라이언트 페치).
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { NATURES, TOPICS } from '../content/schema.js'
+import { WEEKLY_CONTRIB } from './calendar-logic.js'
 import { buildPromptKit } from './contrib-format.js'
 import { parseContribution } from './contrib-parser.js'
 // 승인 대기함(Review)은 M3에서 운영 탭으로 이관 — 기고 화면은 작성자 관점만 담는다.
@@ -17,12 +18,13 @@ export const TRACKS = [
   ['자유', '본인이 디자인까지', '단일 HTML 한 벌을 직접 만들어 붙여넣기 — 게재 시 그 모습 그대로(스크립트 제외)'],
 ]
 
+// 라디오 역할 대신 aria-pressed 토글 버튼(2026-08-14 검수 — 화살표 키 미구현 radiogroup은 거짓 선언).
 function TrackChooser({ track, onPick }) {
   return (
-    <div className="ws-tracks" role="radiogroup" aria-label="기고 방식">
+    <div className="ws-tracks">
       {TRACKS.map(([key, name, desc]) => (
         <button
-          key={key} type="button" role="radio" aria-checked={track === key}
+          key={key} type="button" aria-pressed={track === key}
           className={`ws-track${track === key ? ' on' : ''}`} onClick={() => onPick(key)}
         >
           <span className="ws-track-name">{name}</span>
@@ -32,6 +34,9 @@ function TrackChooser({ track, onPick }) {
     </div>
   )
 }
+
+// 이어쓰기 트랙 복원(2026-08-14 검수 P0) — 자유(html) 초안을 이어쓰면 저장 시 md로 덮이던 버그의 수리 지점.
+export const trackOf = (a) => (a?.['형식'] === 'html' ? '자유' : '기본')
 
 function required(draft) {
   const miss = []
@@ -49,11 +54,14 @@ function KitPanel({ onApply }) {
   const [pasted, setPasted] = useState('')
   const [notices, setNotices] = useState([])
   const [note, setNote] = useState('')
+  const [copied, setCopied] = useState(false)   // 성공 시 버튼 라벨 2초 스왑(2026-08-14 검수)
 
   async function copyKit() {
     try {
       await navigator.clipboard.writeText(buildPromptKit())
       setNote('프롬프트 복사 완료 — 본인 AI(ChatGPT·Claude 등)에 붙여넣고 소재 URL 제공')
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
     } catch {
       setNote('클립보드 복사 실패 — 아래 「프롬프트 전문」을 펼쳐 직접 선택·복사')
     }
@@ -76,7 +84,7 @@ function KitPanel({ onApply }) {
       <h2 className="ws-h2">AI 초안으로 시작</h2>
       <p className="ws-note">절차: ① 프롬프트 복사 → ② 본인 AI에 붙여넣기 + 소재 URL 제공 → ③ AI 출력 전체를 아래 칸에 붙여넣기 → ④ 폼에 반영 → ⑤ 검토·수정 후 제출</p>
       <div className="ws-form-acts">
-        <button type="button" className="ws-signout" onClick={copyKit}>프롬프트 복사</button>
+        <button type="button" className="ws-signout" onClick={copyKit}>{copied ? '복사됨 ✓' : '프롬프트 복사'}</button>
       </div>
       <details className="ws-kit">
         <summary>프롬프트 전문</summary>
@@ -128,6 +136,8 @@ export default function Contribute({ store }) {
   const [msg, setMsg] = useState('')
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
+  const formRef = useRef(null)    // 이어쓰기 시 폼으로 스크롤(2026-08-14 검수)
+  const titleRef = useRef(null)
 
   const load = useCallback(() => store.articles.listMine()
     .then((rows) => setMine(rows || []))
@@ -135,7 +145,16 @@ export default function Contribute({ store }) {
 
   useEffect(() => { load() }, [load])
 
-  const set = (k) => (e) => setDraft((d) => ({ ...d, [k]: e.target.value }))
+  // 입력 시작 = 이전 성공 메시지 소거(2026-08-14 검수 — 낡은 "저장 완료"가 새 입력에 붙어 보이는 혼동 방지)
+  const set = (k) => (e) => { setMsg(''); setDraft((d) => ({ ...d, [k]: e.target.value })) }
+
+  // 이어쓰기 — 트랙 복원(형식 html = 자유) + 폼 스크롤·제목 포커스(2026-08-14 검수)
+  function startEdit(a) {
+    setDraft({ ...EMPTY, ...a })
+    setTrack(trackOf(a))
+    formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    titleRef.current?.focus()
+  }
 
   async function submit(상태) {
     const miss = required(draft)
@@ -162,12 +181,12 @@ export default function Contribute({ store }) {
       <TrackChooser track={track} onPick={setTrack} />
       {track === '기본' && <KitPanel onApply={(values) => setDraft((d) => ({ ...d, ...values }))} />}
 
-      <section className="ws-block">
+      <section className="ws-block" ref={formRef}>
         <h2 className="ws-h2">{draft.id ? '초안 수정' : '새 기고'}</h2>
         <form className="ws-form ws-form-wide" onSubmit={(e) => { e.preventDefault(); submit('승인대기') }}>
           <label className="ws-field">
             <span>제목</span>
-            <input value={draft['제목']} onChange={set('제목')} />
+            <input ref={titleRef} value={draft['제목']} onChange={set('제목')} />
           </label>
           <div className="ws-field-row">
             <label className="ws-field">
@@ -216,7 +235,18 @@ export default function Contribute({ store }) {
       <aside className="ws-crail">
         <section className="ws-block">
           <h2 className="ws-h2">내 글</h2>
-          <MyDrafts rows={mine} onEdit={(a) => setDraft({ ...EMPTY, ...a })} />
+          <MyDrafts rows={mine} onEdit={startEdit} />
+          {/* 첫 방문 레일(2026-08-14 검수) — 0건이면 절차 미니 스테퍼 + 주간 기고 라벨(상태 칩 어휘 동일) */}
+          {mine.length === 0 && (
+            <>
+              <ol className="ws-sublist">
+                <li><span className="status prep">초안</span> 작성 후 저장</li>
+                <li><span className="status prep">승인대기</span> 승인 요청 제출</li>
+                <li><span className="status done">게재</span> 운영진 승인 → 공개 인사이트</li>
+              </ol>
+              <p className="ws-note">{WEEKLY_CONTRIB.label}</p>
+            </>
+          )}
         </section>
       </aside>
     </div>

@@ -140,7 +140,7 @@ export default function ProjectAdsp() {
           <p className="pa-lead pa-center pa-rv">
             v1.0의 현황판은 숫자 나열이었다. 배포 다음 날 바로
             <strong> 비교 막대와 과목별 진척 시각화</strong>로 교체 —
-            써 보고, 걸리는 곳을 바로 고치는 개선 주기가 여기서 만들어졌다. 버튼으로 전후를 비교해 보세요.
+            써 보고, 걸리는 곳을 바로 고치는 개선 주기가 여기서 만들어졌다. 전후 비교 = 버튼 전환.
           </p>
           <div className="pa-rv">
             <ToggleCompare

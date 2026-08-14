@@ -177,7 +177,8 @@ export default function Recruit() {
         <section className="rc-secs" aria-labelledby="rc-show-h">
           <div className="rc-band-in">
             <div className="rc-body">
-              <h2 className="rc-h2" id="rc-show-h">실물</h2>
+              {/* 라벨 "실물" → "만든 것"(검수 2026-08-14 — faq.js 자체 정의 "실물(배포된 웹 결과물)"과 충돌 해소: 세미나 자료 포함 목록. 홈 '실물 2' 수치는 불변) */}
+              <h2 className="rc-h2" id="rc-show-h">만든 것</h2>
               <p className="rc-sched-rule">{SHOWCASE_LEAD}</p>
               {/* 오너 2026-08-07: 제목 가운데 정렬 + 문안 2단(핵심 강조 한 문장 / 회색 보조 한 줄) */}
               <ul className="rc-fit rc-show">

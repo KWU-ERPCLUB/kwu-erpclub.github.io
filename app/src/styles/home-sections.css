@@ -130,7 +130,7 @@
 }
 @keyframes rm-stream { from { background-position: 0 0; } to { background-position: 0 24px; } }
 /* ⑤ 카드 호버 리프트 — 살짝 떠오르며 그림자 심화 */
-.rm-card { transition: transform 240ms ease-out, box-shadow 240ms ease-out; }
+.rm-card { transition: transform 150ms ease-out, box-shadow 150ms ease-out; }
 .rm-item:not(.rm-slot) .rm-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.1); }
 @media (prefers-reduced-motion: reduce) { .rm-card { transition: none; } .rm-item:not(.rm-slot) .rm-card:hover { transform: none; } }
 
@@ -187,8 +187,10 @@
   word-break: keep-all;
 }
 .hp-more { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.82rem; font-weight: 700; opacity: 0.92; }
-.hp-card:hover { transform: translateY(-4px); box-shadow: 0 16px 42px rgba(0, 0, 0, 0.16); }
-@media (hover: hover) { .hp-card:hover .hp-cover { transform: scale(1.04); } }
+@media (hover: hover) { /* sticky hover 방지 — 터치 기기에서 리프트·줌 미발동 */
+  .hp-card:hover { transform: translateY(-4px); box-shadow: 0 16px 42px rgba(0, 0, 0, 0.16); }
+  .hp-card:hover .hp-cover { transform: scale(1.04); }
+}
 .hp-card:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 @media (max-width: 700px) { .hp-list { grid-template-columns: 1fr; } }
 /* 주인공 다리 1줄(P1-C 2026-08-13) — 카드 아래 중앙, 아카이브 버튼 위. */

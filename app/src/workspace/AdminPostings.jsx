@@ -50,6 +50,9 @@ export default function AdminPostings({ store }) {
   }
 
   async function remove(id) {
+    // 삭제 confirm 게이트(2026-08-14 검수)
+    const row = rows.find((r) => r.id === id)
+    if (!window.confirm(`「${row?.['제목'] || '공고'}」 삭제?`)) return
     setError('')
     try {
       await store.postings.remove(id)

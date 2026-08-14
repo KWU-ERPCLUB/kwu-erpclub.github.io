@@ -6,7 +6,7 @@
 // 시리즈(2026-08-05 오너 재판정) = **필터 칩 1개**뿐. 밴드·전용 아카이브 폐지 — 시리즈 글도 일반 흐름(피처·그리드·카운트 포함).
 // URL: ?tab=<key>=성격 선택 · ?series=<id>=시리즈 필터 · ?p=<slug>=상세(문서 셸 변경 없음). 0건=디자인된 빈 상태.
 import { useEffect, useState, useCallback, useMemo } from 'react'
-import { SiteNav, SiteFooter, PageHead, latestUpdated, CONTRIBUTING_URL } from '../shared.jsx'
+import { SiteNav, SiteFooter, PageHead, latestUpdated } from '../shared.jsx'
 import { useArticles, useInteractions } from './insights-source.js'
 import { loadSeen, markSeen, isNew } from './seen-store.js'
 import { TOPICS } from '../content/schema.js'
@@ -171,7 +171,7 @@ export function ListView({ all, tab, onTab, topic, setTopic, series = null, setS
       {status === 'loading' ? <LoadingGrid /> : status === 'error' ? <LoadError onRetry={onRetry} /> : filtered.length === 0 ? (
         <div className="art-empty">
           <p className="art-empty-title">조건에 맞는 기고 없음.</p>
-          <p>필터·검색 해제 = 전체. 첫 기고 = <a href={CONTRIBUTING_URL} target="_blank" rel="noreferrer">기고 가이드</a> 참고 → 템플릿 <code>content/기사/_template.md</code> 복사 → 규칙 채움 → 자동 게재.</p>
+          <p>필터·검색 해제 = 전체. 기고 = 워크스페이스 &gt; 인사이트 기고 탭(스터디원).</p>
         </div>
       ) : ordered.length === 0 ? null : (
         <>

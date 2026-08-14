@@ -102,10 +102,19 @@ export function createBackend(config = readEnv(), deps = {}) {
   const auth = {
     getSession: () => session,
     async signIn(email, password) {
-      const body = await request('/auth/v1/token?grant_type=password', {
-        method: 'POST',
-        body: JSON.stringify({ email, password }),
-      })
+      let body
+      try {
+        body = await request('/auth/v1/token?grant_type=password', {
+          method: 'POST',
+          body: JSON.stringify({ email, password }),
+        })
+      } catch (e) {
+        // 자격 오류만 한국어 안내로 매핑(2026-08-14 검수) — 그 외 오류(네트워크·서버)는 원문 유지.
+        if (/invalid login credentials|invalid_credentials|invalid_grant/i.test(e?.message || '')) {
+          throw new Error('학번 또는 비밀번호가 다름 — 초기 비밀번호는 운영진 안내값')
+        }
+        throw e
+      }
       session = { access_token: body.access_token, refresh_token: body.refresh_token, user: body.user }
       saveSession(storage, session)
       return session

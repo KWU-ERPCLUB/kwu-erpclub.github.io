@@ -213,6 +213,7 @@ body {
   font-size: 0.85rem; font-weight: 700; color: var(--text); text-decoration: none;
   border-bottom: 2px solid var(--accent); padding-bottom: 1px; width: fit-content; margin-top: auto;
 }
+.proof-link:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
 /* ── 다크 푸터 밴드 (Tars 문법) ───────────────
    문서 하단 고정(sticky footer, owner 2026-07-23): #root 세로 flex + margin-top auto —
@@ -242,11 +243,10 @@ body {
 .footer .f-links { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; justify-content: center; }
 .footer a { color: rgba(255, 255, 255, 0.65); text-decoration: none; }
 .footer a:hover { color: #fff; }
-/* 다크 면 위 포커스 링 = --focus-on-dark 일괄(푸터·블랙 밴드·다크 상세 밴드) */
+/* 다크 면 위 포커스 링 = --focus-on-dark 일괄(푸터·홈 블랙 밴드).
+   (.sem-ed-band = 라이트 워시 전환으로 제외 — 일반 버건디 링 복귀 / .pj-stats = 4차 삭제로 셀렉터 제거) */
 .footer a:focus-visible,
-.stats-band a:focus-visible, .stats-band button:focus-visible,
-.sem-ed-band a:focus-visible, .sem-ed-band button:focus-visible,
-.pj-stats a:focus-visible, .pj-stats button:focus-visible {
+.stats-band a:focus-visible, .stats-band button:focus-visible {
   outline: 3px solid var(--focus-on-dark);
   outline-offset: 2px;
 }
@@ -265,7 +265,7 @@ body {
   transition: background-color 150ms ease-out, border-color 150ms ease-out,
     color 150ms ease-out, transform 100ms ease-out;
 }
-.btn-2nd:active { transform: scale(0.98); }
+.btn-2nd:active, .btn-dark:active, .nav-cta:active { transform: scale(0.98); }
 .proof-link:hover { color: var(--accent); }
 [disabled], [aria-disabled='true'], .is-disabled {
   opacity: 0.4;
@@ -273,8 +273,8 @@ body {
   cursor: not-allowed;
 }
 @media (prefers-reduced-motion: reduce) {
-  .btn-2nd, .proof-link, .nav-links a, .footer a, .nav-toggle { transition: none; }
-  .btn-2nd:active { transform: none; }
+  .btn-2nd, .btn-dark, .nav-cta, .proof-link, .nav-links a, .footer a, .nav-toggle { transition: none; }
+  .btn-2nd:active, .btn-dark:active, .nav-cta:active { transform: none; }
 }
 
 /* ── §4 Secondary 버튼(헤어라인 pill) — Primary=.rc-cta-xl(화면당 1개), Tertiary=.proof-link ── */

@@ -1,6 +1,6 @@
 // 홈 탭(2026-08-06 개편) — 첫 화면 = 대형 월 캘린더 + 다가오는 업무. 아래로 과제 제출·공지·세션 흡수(구 제출·스터디 탭).
 // 데이터 = 운영 일정(events, 0007) + 과제 마감 자동 + 세션 날짜 자동. 계산은 calendar-logic.js(순수)만 쓴다.
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { monthGrid, buildAgenda, itemsOn, upcoming, dday, daysBetween, toKey, WEEKLY_CONTRIB, weeklyContribItems } from './calendar-logic.js'
 import { postingAgendaItems } from './postings-logic.js'
 import Assignments from './Assignments.jsx'
@@ -11,7 +11,22 @@ const KIND_CLASS = { 일정: 'ev', 세미나: 'sem', 모집: 'rec', 마감: 'due
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토']
 
 // 항목 세부 팝업(2026-08-07 오너) — 새 창 대신 작은 둥근 팝업. 캘린더 칩·선택일 목록 어디서든 연다.
+// 접근성(2026-08-14 검수): Escape 닫기 + 열릴 때 닫기 버튼 포커스 + 닫힐 때 연 버튼으로 복귀.
 export function ItemPopup({ item, onClose }) {
+  const closeRef = useRef(null)
+  const onCloseRef = useRef(onClose)
+  onCloseRef.current = onClose
+  useEffect(() => {
+    if (!item) return undefined
+    const opener = typeof document !== 'undefined' ? document.activeElement : null
+    closeRef.current?.focus()
+    const onKey = (e) => { if (e.key === 'Escape') onCloseRef.current?.() }
+    window.addEventListener('keydown', onKey)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      if (opener && typeof opener.focus === 'function') opener.focus()
+    }
+  }, [item])
   if (!item) return null
   return (
     <div className="ws-modal" role="presentation" onClick={onClose}>
@@ -22,7 +37,7 @@ export function ItemPopup({ item, onClose }) {
         <div className="ws-row-top">
           <span className={`ws-cal-dot ${KIND_CLASS[item['종류']] || 'ev'}`} aria-hidden="true" />
           <span className="ws-mark-meta">{item['종류']}</span>
-          <button type="button" className="ws-modal-x" onClick={onClose} aria-label="닫기">×</button>
+          <button type="button" ref={closeRef} className="ws-modal-x" onClick={onClose} aria-label="닫기">×</button>
         </div>
         <h3 className="ws-modal-title">{item['제목']}</h3>
         <p className="ws-mark-meta">{item.date}{item['시간'] ? ` · ${item['시간']}` : ''}</p>
@@ -50,7 +65,14 @@ export function MonthCalendar({ year, month, items, todayKey, selected, onSelect
           <button type="button" onClick={() => onMove(1)} aria-label="다음 달">›</button>
         </div>
       </div>
-      <div className="ws-cal-grid" role="grid">
+      {/* 범례(2026-08-14 검수) — 점 색이 곧 종류: 기존 ws-cal-dot 색 재사용 */}
+      <ul className="ws-cal-legend">
+        {[['ev', '일정'], ['sem', '세미나'], ['rec', '모집'], ['due', '마감'], ['post', '공고']].map(([c, label]) => (
+          <li key={c}><span className={`ws-cal-dot ${c}`} aria-hidden="true" />{label}</li>
+        ))}
+      </ul>
+      {/* role=grid 제거(2026-08-14 검수) — grid 키보드 규약 미구현 상태의 거짓 선언 대신 단순 div */}
+      <div className="ws-cal-grid">
         {WEEKDAYS.map((w, i) => (
           <span key={w} className={`ws-cal-wd${i === 0 ? ' sun' : ''}`}>{w}</span>
         ))}
@@ -62,7 +84,13 @@ export function MonthCalendar({ year, month, items, todayKey, selected, onSelect
           if (cell.key === todayKey) classes.push('today')
           if (cell.key === selected) classes.push('sel')
           return (
-            <div key={cell.key} className={classes.join(' ')} onClick={() => onSelect(cell.key)}>
+            <div
+              key={cell.key} className={classes.join(' ')} tabIndex={0}
+              onClick={() => onSelect(cell.key)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect(cell.key) }
+              }}
+            >
               <span className="ws-cal-day">{cell.day}</span>
               {dayItems.slice(0, 3).map((it) => (
                 <button
@@ -84,12 +112,19 @@ export function MonthCalendar({ year, month, items, todayKey, selected, onSelect
 }
 
 // 다가오는 업무 — ★(중요) 지정 항목만(2026-08-07 오너: 전량 노출은 소음). export = 단위 테스트용.
-export function UpcomingTasks({ items, todayKey, onSelect }) {
+export function UpcomingTasks({ items, todayKey, onSelect, staff = false }) {
   const rows = upcoming(items, todayKey, 6)
   return (
     <aside className="ws-upcoming" aria-label="다가오는 업무">
       <h2 className="ws-h2">다가오는 업무</h2>
-      {rows.length === 0 && <p className="ws-note">지정된 업무 0건 — 운영 탭에서 일정에 ★, 공고에 고정을 지정하면 여기 뜬다.</p>}
+      {/* 빈 상태 role 분기(2026-08-14 검수) — 멤버에게 운영 탭 안내는 실행 불가 지시 */}
+      {rows.length === 0 && (
+        <p className="ws-note">
+          {staff
+            ? '지정된 업무 0건 — 운영 탭에서 일정에 ★, 공고에 고정을 지정하면 여기 뜬다.'
+            : '지정된 중요 업무 0건 — 전체 일정은 캘린더에서.'}
+        </p>
+      )}
       <ul className="ws-list">
         {rows.map((it) => (
           <li key={`${it.source}-${it.id}`}>
@@ -146,6 +181,10 @@ export function HomeSummary({ member, items, todayKey }) {
         7일 내 일정 <strong>{soon.length}건</strong>{due > 0 && <> · 마감 <strong className="due">{due}건</strong></>}
         {soon.length === 0 && ' — 예정된 일정 없음'}
       </p>
+      {/* 온보딩 한 줄(2026-08-14 검수) — 일정 0건 첫 화면의 "다음에 뭘 하나" 안내(정적) */}
+      {soon.length === 0 && (
+        <p className="ws-note">처음이면: 내정보에서 비밀번호 변경 → 로드맵에서 커리큘럼 확인</p>
+      )}
     </div>
   )
 }
@@ -205,7 +244,7 @@ export default function Home({ store, member }) {
         <Sessions store={store} />
       </div>
       <aside className="ws-crail">
-        <UpcomingTasks items={items} todayKey={todayKey} onSelect={setSelected} />
+        <UpcomingTasks items={items} todayKey={todayKey} onSelect={setSelected} staff={member?.role === '운영진'} />
         <DayDetail items={items} selected={selected} onOpenItem={setPopup} />
         <Notices store={store} />
       </aside>

@@ -19,14 +19,16 @@
   display: inline-flex; align-items: center; gap: 0.35rem;
   border: 1px solid var(--line); border-radius: var(--radius-pill); background: #fff;
   color: var(--text-sub); font: inherit; font-size: 0.8rem; padding: 0.3rem 0.8rem; cursor: pointer;
-  transition: border-color 120ms ease-out, color 120ms ease-out, background 120ms ease-out;
+  transition: border-color 150ms ease-out, color 150ms ease-out, background 150ms ease-out;
 }
 .art-act b { font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
 .art-act:hover { border-color: var(--text-sub); color: var(--text); }
 .art-act:active { transform: translateY(1px); }
-.art-act:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.art-act:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .art-act.on { background: var(--dark); border-color: var(--dark); color: #fff; }
 .art-act.on b { color: #fff; }
+/* 좋아요(첫 버튼) 켜짐 = 하트 채움(fill: currentColor — CSS만, 마크업 무변경) */
+.art-actions .art-act:first-of-type.on svg { fill: currentColor; }
 .art-act-note { flex-basis: 100%; margin: 0.15rem 0 0; font-size: 0.78rem; color: var(--text-sub); }
 
 /* ② 히어로 — 기고 맨 위 이미지 + 캡션 줄(오너 판정 2026-08-05: 이미지만 봐도 내용을 알게).

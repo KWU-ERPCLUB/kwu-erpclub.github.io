@@ -141,6 +141,17 @@ test('로그인 후 = 앱 셸(히어로 헤드·문서 패널 없음, 사이드�
   expect(html).toContain('ws-content-head')      // 홈 외 탭 = 소형 헤더
   expect(html).toContain('ws-tabicon')           // 탭 = 아이콘(설명 문구 폐지 — 2026-08-14)
   expect(html).not.toContain('ws-sidebtn-desc')
+  expect(html).toContain('aria-current="true"')  // 사이드바 현재 탭 = aria-current(구 aria-pressed — 2026-08-14 검수)
+})
+
+// 빈 상태 role 분기(2026-08-14 검수) — 멤버에게 "운영 탭에서 지정" 안내는 실행 불가 지시.
+test('다가오는 업무 빈 상태 — 멤버 = 캘린더 안내 / 운영진 = 운영 탭 안내', async () => {
+  const { UpcomingTasks } = await import('./Home.jsx')
+  const member = flat(<UpcomingTasks items={[]} todayKey="2026-09-01" onSelect={() => {}} />)
+  expect(member).toContain('지정된 중요 업무 0건')
+  expect(member).not.toContain('운영 탭')
+  const staff = flat(<UpcomingTasks items={[]} todayKey="2026-09-01" onSelect={() => {}} staff />)
+  expect(staff).toContain('운영 탭')
 })
 
 // 공통 프레임(오너 확정 8/6 3차) — 전 탭 = 본문+우측 레일 단일 그리드. 탭 전환 시 열 경계 이동 0.

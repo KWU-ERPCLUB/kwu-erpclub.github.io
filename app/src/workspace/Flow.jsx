@@ -1,10 +1,42 @@
 // 로드맵 탭(구 흐름 탭 — 2026-08-06 오너 확정 · 2026-08-13 로드맵 진입점 개편 · 2026-08-14 개명) — 로드맵의 차시를 고르면 세부·자료·세미나로 이어진다.
 // 구성 = 1기 로드맵(클릭형 — 구 「차시 진행」 흡수, Roadmap.jsx) → 주차 기록(flow_weeks 유지).
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { toKey, weekStatus } from './calendar-logic.js'
+import { toKey, weekStatus, dday } from './calendar-logic.js'
+import { AIM_TIMELINE } from '../data/aim-roadmap.js'
 import RoadmapSection, { STATUS_CLASS } from './Roadmap.jsx'
 
 export { weekStatus }   // 테스트·외부 소비 호환(정의는 calendar-logic.js로 이동 — 2026-08-13)
+
+// 지금 위치(2026-08-14 검수 — 멤버 레일 공백 수리) — AIM_TIMELINE 차시의 주(MM-DD)로 이번 주·다음 차시 계산.
+// 정적 계산만(새 페치 금지). 1기 = 2026년(원천 = aim-roadmap.js). 순수(테스트 대상).
+export function roadmapNow(todayKey, timeline = AIM_TIMELINE, year = 2026) {
+  const sessions = timeline
+    .filter((t) => t.type === 'session')
+    .map((t) => {
+      const m = /(\d{2})-(\d{2})/.exec(t.주 || '')
+      return m ? { ...t, startKey: `${year}-${m[1]}-${m[2]}` } : null
+    })
+    .filter(Boolean)
+  return {
+    current: sessions.find((s) => weekStatus(s.startKey, todayKey) === '이번 주') || null,
+    next: sessions.find((s) => weekStatus(s.startKey, todayKey) === '예정') || null,
+  }
+}
+
+// 멤버 레일 카드 1개 — 이번 주 차시 또는 다음 차시 D-day
+function NowCard({ todayKey }) {
+  const { current, next } = roadmapNow(todayKey)
+  return (
+    <section className="ws-block">
+      <h2 className="ws-h2">지금 위치</h2>
+      {current && <p className="ws-note">이번 주 = {current.회차} · {current.주제}</p>}
+      {!current && next && <p className="ws-note">다음 차시 = {next.회차} · {next.주제} ({dday(todayKey, next.startKey)})</p>}
+      {!current && !next && <p className="ws-note">1기 차시 일정 종료 — 세부는 위 로드맵에서.</p>}
+      {current && next && <p className="ws-note">다음 = {next.회차} · {dday(todayKey, next.startKey)}</p>}
+      <p className="ws-note">기록 작성 = 운영진 — 열람 전용.</p>
+    </section>
+  )
+}
 
 function WeekCard({ row, todayKey, staff, onRemove }) {
   const status = weekStatus(row['시작일'], todayKey)
@@ -79,6 +111,9 @@ export default function Flow({ store, staff }) {
   useEffect(() => { load() }, [load])
 
   async function remove(id) {
+    // 삭제 confirm 게이트(2026-08-14 검수) — 되돌리기 없는 파괴 동작은 한 번 묻는다
+    const row = rows.find((r) => r.id === id)
+    if (!window.confirm(`「${row?.['제목'] || '주차 기록'}」 삭제?`)) return
     try {
       await store.flow.remove(id)
       await load()
@@ -106,7 +141,7 @@ export default function Flow({ store, staff }) {
       <aside className="ws-crail">
         {staff
           ? <FlowForm store={store} onSaved={load} />
-          : <p className="ws-note">기록 작성 = 운영진 — 열람 전용.</p>}
+          : <NowCard todayKey={todayKey} />}
       </aside>
     </div>
   )

@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
-import Contribute from './Contribute.jsx'
+import Contribute, { trackOf } from './Contribute.jsx'
 import Review from './Review.jsx'
 import { createMockRepositories } from '../data/mock.js'
 
@@ -28,12 +28,29 @@ test('기고 탭 = 프롬프트 복사 + AI 초안 붙여넣기 패널 존재', 
   expect(html).toContain('폼에 반영')
 })
 
-// 투트랙 선택(오너 확정 2026-08-06) — 기본(사이트 서식) / 자유(본인 디자인 HTML) 라디오 카드.
+// 투트랙 선택(오너 확정 2026-08-06) — 기본 / 자유 카드. 2026-08-14: radiogroup → aria-pressed 토글(정직한 선언).
 test('기고 탭 = 트랙 선택 2종(기본 활성) — 자유 트랙 설명 포함', () => {
   const html = flat(<Contribute store={createMockRepositories({ user: 'mock-member' })} />)
   expect(html).toContain('사이트 서식으로 게재')
   expect(html).toContain('본인이 디자인까지')
-  expect(html).toContain('aria-checked="true"')
+  expect(html).toContain('aria-pressed="true"')
+  expect(html).not.toContain('role="radiogroup"')
+})
+
+// 이어쓰기 트랙 복원(2026-08-14 검수 P0) — 자유(html) 초안을 이어쓰면 자유 트랙으로 돌아와야 저장 시 md로 안 덮인다.
+test('trackOf — 형식 html = 자유, 그 외 = 기본', () => {
+  expect(trackOf({ 형식: 'html' })).toBe('자유')
+  expect(trackOf({ 형식: 'md' })).toBe('기본')
+  expect(trackOf({})).toBe('기본')
+  expect(trackOf(null)).toBe('기본')
+})
+
+// 첫 방문 레일(2026-08-14 검수) — 내 글 0건(SSR 초기 상태) = 절차 스테퍼 + 주간 기고 라벨.
+test('내 글 0건 = 레일에 절차 스테퍼(초안→승인대기→게재) + 주간 기고 라벨', () => {
+  const html = flat(<Contribute store={createMockRepositories({ user: 'mock-member' })} />)
+  expect(html).toContain('승인 요청 제출')
+  expect(html).toContain('운영진 승인 → 공개 인사이트')
+  expect(html).toContain('주간 기고 — 주 1건 상시 과제')
 })
 
 // M3: 승인 대기함은 기고 탭에서 빠지고 운영 탭으로 이관됐다(운영진 전용 영역 통합).

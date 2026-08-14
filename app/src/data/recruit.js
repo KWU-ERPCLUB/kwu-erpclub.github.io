@@ -94,7 +94,7 @@ export const RECRUIT_SHOWCASE = [
     core: '질문에서 위임으로 — AI 활용 구조 3단',
     sub: '발표자료 45장 — 세미나 페이지 게재',
     href: '/seminars/?p=2026-07-25-bapzzi-question-to-delegation',
-    img: '/slides/s1/thumb-1.png',
+    img: '/img/세미나/cover-s1.png', /* 신 표지 통일(2026-08-14) — 구 /slides/s1/thumb-1.png 폐기 */
   },
 ]
 
