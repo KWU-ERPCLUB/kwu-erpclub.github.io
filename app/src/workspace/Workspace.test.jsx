@@ -61,15 +61,17 @@ test('기고 탭 = 단독 탭 승격(?tab=기고 — 키트·승인 요청 도�
   expect(html).toContain('승인 요청')
 })
 
-test('내정보 탭 = 프로필·활동내역 / 북마크 탭 = 인사이트 모음만(스크랩 UI 폐지 2026-08-07)', () => {
+test('내정보 탭 = 프로필·북마크·활동내역(북마크 단독 탭 폐지 — 2026-08-14 흡수)', () => {
   const my = flat(<Shell member={{ 이름: '홍길동', role: '스터디원' }} store={createMockRepositories({ user: 'mock-member' })} search="?tab=내정보" />)
   expect(my).toContain('ws-mypage')
   expect(my).toContain('프로필')
   expect(my).toContain('활동내역')
-  expect(my).not.toContain('ws-collections')   // 분리 — 내정보 콘텐츠에서 컬렉션 제거(사이드바 설명 문구는 무관)
+  expect(my).toContain('내 북마크')            // 흡수된 북마크 섹션(정사각 그리드)
+  expect(my).toContain('ws-marks')
+  expect(my).not.toContain('링크 스크랩')
+  // 구 북마크 탭 진입 = 내정보로 매핑
   const marks = flat(<Shell member={{ 이름: '홍길동', role: '스터디원' }} store={createMockRepositories({ user: 'mock-member' })} search="?tab=북마크" />)
   expect(marks).toContain('내 북마크')
-  expect(marks).not.toContain('링크 스크랩')
 })
 
 // ── M3 ④ 역할별 탭 노출 ──
@@ -96,15 +98,17 @@ test('직접 진입(?tab=운영) — 스터디원은 안내만, 운영진은 운
   expect(staff).toContain('멤버')
 })
 
-// 구 탭명 딥링크 = 새 탭으로 매핑(링크 깨짐 0 — 2026-08-06 홈 개편)
-test('구 탭명 딥링크 매핑 — 제출·스터디·과제·공지·세션 → 홈 / 컬렉션 → 북마크 / 흐름·기고 → 새 이름', () => {
+// 구 탭명 딥링크 = 새 탭으로 매핑(링크 깨짐 0 — 2026-08-06 홈 개편, 2026-08-14 재편)
+test('구 탭명 딥링크 매핑 — 제출·스터디·과제·공지·세션 → 홈 / 컬렉션·북마크 → 내정보 / 흐름 → 로드맵 / 기고 → 새 이름', () => {
   expect(initialTab('?tab=제출')).toBe('홈')
   expect(initialTab('?tab=스터디')).toBe('홈')
   expect(initialTab('?tab=과제')).toBe('홈')
   expect(initialTab('?tab=공지')).toBe('홈')
   expect(initialTab('?tab=세션')).toBe('홈')
-  expect(initialTab('?tab=컬렉션')).toBe('북마크')
-  expect(initialTab('?tab=흐름')).toBe('스터디 흐름')
+  expect(initialTab('?tab=컬렉션')).toBe('내정보')
+  expect(initialTab('?tab=북마크')).toBe('내정보')
+  expect(initialTab('?tab=흐름')).toBe('로드맵')
+  expect(initialTab('?tab=스터디 흐름')).toBe('로드맵')
   expect(initialTab('?tab=기고')).toBe('인사이트 기고')
 })
 
@@ -129,18 +133,19 @@ test('Shell = 본인 학번 표시·전공 미표시(P5)', () => {
 })
 
 // ── 앱형 셸(2026-08-06 재구성) — 로그인 후 = 히어로·패널 없음 + 사이드바 계정 블록 + 탭 소형 헤더 ──
-test('로그인 후 = 앱 셸(히어로 헤드·문서 패널 없음, 사이드바 하단 계정 블록)', () => {
-  const html = flat(<Shell member={{ 이름: '홍길동', role: '스터디원' }} store={createMockRepositories({ user: 'mock-member' })} search="?tab=북마크" />)
+test('로그인 후 = 앱 셸(히어로 헤드·문서 패널 없음, 사이드바 하단 계정 블록 + 아이콘 탭)', () => {
+  const html = flat(<Shell member={{ 이름: '홍길동', role: '스터디원' }} store={createMockRepositories({ user: 'mock-member' })} search="?tab=내정보" />)
   expect(html).not.toContain('ws-head')          // 히어로 헤드 = 로그인 전 전용
   expect(html).not.toContain('ws-panel')         // 문서 패널 래핑 폐지
   expect(html).toContain('ws-side-me')           // 계정 블록 = 사이드바 하단
   expect(html).toContain('ws-content-head')      // 홈 외 탭 = 소형 헤더
-  expect(html).toContain('북마크')
+  expect(html).toContain('ws-tabicon')           // 탭 = 아이콘(설명 문구 폐지 — 2026-08-14)
+  expect(html).not.toContain('ws-sidebtn-desc')
 })
 
 // 공통 프레임(오너 확정 8/6 3차) — 전 탭 = 본문+우측 레일 단일 그리드. 탭 전환 시 열 경계 이동 0.
 test('전 탭 = 공통 프레임(ws-cols 본문+레일) — 탭별 개별 분할 금지', () => {
-  for (const tab of ['홈', '스터디 흐름', '공고', '인사이트 기고', '북마크', '내정보']) {
+  for (const tab of ['홈', '로드맵', '공고', '인사이트 기고', '내정보']) {
     const html = flat(<Shell member={{ 이름: 'ㄱ', role: '스터디원' }} store={createMockRepositories({ user: 'mock-member' })} search={`?tab=${tab}`} />)
     expect(html, tab).toContain('ws-cols')
     expect(html, tab).toContain('ws-cmain')

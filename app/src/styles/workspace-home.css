@@ -13,42 +13,35 @@
 :root:has(.ws-main.ws-app) { scrollbar-gutter: stable; }
 
 /* 좌 사이드바 + 우 콘텐츠 — 앱 2단. 사이드바 = sticky(스크롤해도 내비 상주).
-   2026-08-14 톤 개편(오너 "무채색·이질적"): 사이드바 = 다크 앵커 면(공개 페이지 블랙 밴드 문법 이식 —
-   다크 앵커 상한 화면 1개를 여기에 쓴다). 선택 탭 = 흰 반전 pill. */
-.ws-shell { display: grid; grid-template-columns: 232px minmax(0, 1fr); gap: clamp(1.6rem, 2.6vw, 3rem); align-items: start; }
+   2026-08-14 2차(오너 "검정 과대·투박"): 다크 면 철회 → 라이트 + 아이콘 탭, 선택만 검정 pill
+   (공개 페이지 문법 = 라이트 기조 + 검정 pill 포인트). 탭 설명 문구 폐지 — 아이콘이 대신한다. */
+.ws-shell { display: grid; grid-template-columns: 216px minmax(0, 1fr); gap: clamp(1.6rem, 2.6vw, 3rem); align-items: start; }
 .ws-side {
   position: sticky; top: 76px;                 /* nav(60px) 아래 여백 16px */
   display: flex; flex-direction: column; gap: 0.9rem;
   height: calc(100vh - 100px); overflow-y: auto;
-  background: var(--dark); border-radius: 18px; padding: 1.15rem 0.8rem 1rem;
 }
-.ws-side-label { margin: 0 0 0 0.5rem; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.09em; color: var(--accent-on-dark); }
-.ws-side-tabs { display: flex; flex-direction: column; gap: 0.3rem; }
+.ws-side-label { margin: 0 0 0 0.85rem; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.09em; color: var(--accent); }
+.ws-side-tabs { display: flex; flex-direction: column; gap: 0.25rem; }
 .ws-sidebtn {
-  display: flex; flex-direction: column; gap: 0.15rem; text-align: left;
-  padding: 0.6rem 0.95rem;
-  font-family: inherit; color: rgba(255, 255, 255, 0.85);
-  background: transparent; border: 0; border-radius: 10px; cursor: pointer;
+  display: flex; align-items: center; gap: 0.6rem; text-align: left;
+  padding: 0.52rem 0.85rem;
+  font-family: inherit; color: var(--text-sub);
+  background: transparent; border: 0; border-radius: var(--radius-pill); cursor: pointer;
   transition: background 150ms ease-out, color 150ms ease-out;
 }
-.ws-sidebtn-name { font-size: 0.92rem; font-weight: 700; }
-.ws-sidebtn-desc { font-size: 0.72rem; color: rgba(255, 255, 255, 0.5); line-height: 1.4; }
-.ws-sidebtn:hover { background: rgba(255, 255, 255, 0.09); }
-.ws-sidebtn:focus-visible { outline: 3px solid var(--focus-on-dark); outline-offset: 2px; }
-.ws-sidebtn.on { background: #fff; }
-.ws-sidebtn.on .ws-sidebtn-name { color: var(--text); }
-.ws-sidebtn.on .ws-sidebtn-desc { color: var(--text-sub); }
+.ws-tabicon { flex: none; }
+.ws-sidebtn-name { font-size: 0.9rem; font-weight: 600; }
+.ws-sidebtn:hover { background: var(--surface); color: var(--text); }
+.ws-sidebtn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.ws-sidebtn.on { background: var(--dark); color: #fff; }
+.ws-sidebtn.on .ws-sidebtn-name { font-weight: 700; }
 
-/* 계정 블록 = 사이드바 하단(앱 표준 위치) — 다크 면 위 */
+/* 계정 블록 = 사이드바 하단(앱 표준 위치) */
 .ws-side-me {
-  margin-top: auto; border-top: 1px solid rgba(255, 255, 255, 0.16); padding: 0.9rem 0.5rem 0;
+  margin-top: auto; border-top: 1px solid var(--line); padding: 0.9rem 0.85rem 0;
   display: flex; flex-direction: column; gap: 0.6rem; align-items: flex-start;
 }
-.ws-side-me .ws-me-name { color: #fff; }
-.ws-side-me .ws-me-role { color: rgba(255, 255, 255, 0.58); }
-.ws-side-me .ws-signout { background: transparent; color: #fff; border-color: rgba(255, 255, 255, 0.4); }
-.ws-side-me .ws-signout:hover { border-color: #fff; }
-.ws-side-me .ws-signout:focus-visible { outline: 3px solid var(--focus-on-dark); outline-offset: 2px; }
 .ws-content { min-width: 0; }
 
 /* 탭 소형 헤더 — 구 히어로(2.6rem h1) 대체: 밀도 우선.
@@ -107,9 +100,10 @@
 .ws-cal-nav button:hover { border-color: var(--text); }
 .ws-cal-nav button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
+/* 격자선 1px(2026-08-14 "선이 굵어 투박" — 구 3px gap 폐지) */
 .ws-cal-grid {
-  display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px;
-  border: 1px solid var(--line); border-radius: 12px; background: var(--line); overflow: hidden; padding: 3px;
+  display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 1px;
+  border: 1px solid var(--line); border-radius: 12px; background: var(--line); overflow: hidden;
 }
 .ws-cal-cell, .ws-cal-wd { min-width: 0; }
 .ws-cal-wd { font-size: 0.72rem; font-weight: 700; color: var(--text-sub); text-align: center; padding: 0.35rem 0; background: var(--surface); }
@@ -124,7 +118,7 @@
 .ws-cal-cell.out { color: var(--text-sub); background: var(--surface); opacity: 0.65; }
 .ws-cal-cell.today { background: var(--tint-accent); }
 .ws-cal-cell.today .ws-cal-day { color: #fff; background: var(--accent); }
-.ws-cal-cell.sel { box-shadow: inset 0 0 0 2px var(--dark); border-radius: 6px; }
+.ws-cal-cell.sel { box-shadow: inset 0 0 0 1.5px var(--dark); border-radius: 6px; }
 .ws-cal-day {
   width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center;
   font-size: 0.78rem; font-weight: 600; border-radius: 50%;
@@ -211,7 +205,7 @@
 /* 흐름 탭 — 주차 카드: 이번 주 = 버건디 좌보더 강조, 지난 = 흐림 */
 .ws-flow-list { gap: 0.7rem; }
 .ws-flow-card {
-  border: 1px solid var(--line); border-left-width: 4px; border-radius: 12px; background: #fff; padding: 0.85rem 1rem;
+  border: 1px solid var(--line); border-left-width: 3px; border-radius: 12px; background: #fff; padding: 0.85rem 1rem;
   transition: box-shadow 150ms ease-out;
 }
 .ws-flow-card:hover { box-shadow: 0 8px 22px rgba(20, 20, 20, 0.07); }
@@ -276,21 +270,15 @@
   .ws-shell { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
   .ws-side { min-width: 0; }
   .ws-side-tabs { min-width: 0; }
-  /* 폰 = 다크 패널 해제(가로 필 바로 복귀) — 라이트 스킴 원복 */
-  .ws-side { position: static; height: auto; overflow: visible; gap: 0.6rem; background: transparent; border-radius: 0; padding: 0; }
+  /* 폰 = 가로 필 바 */
+  .ws-side { position: static; height: auto; overflow: visible; gap: 0.6rem; }
   .ws-side-label { display: none; }
   .ws-side-tabs { flex-direction: row; overflow-x: auto; padding-bottom: 0.2rem; }
-  .ws-sidebtn { flex: none; padding: 0.42rem 0.95rem; color: var(--text); background: #fff; border: 1px solid var(--line); border-radius: var(--radius-pill); }
+  .ws-sidebtn { flex: none; padding: 0.42rem 0.95rem; color: var(--text); background: #fff; border: 1px solid var(--line); }
   .ws-sidebtn-name { font-size: 0.85rem; }
-  .ws-sidebtn-desc { display: none; }            /* 폰 = 이름만(필 바) */
-  .ws-sidebtn.on { border-color: var(--dark); background: var(--dark); }
-  .ws-sidebtn.on .ws-sidebtn-name { color: #fff; }
-  .ws-sidebtn:focus-visible { outline-color: var(--accent); }
+  .ws-sidebtn .ws-tabicon { display: none; }     /* 폰 = 이름만(필 바) */
+  .ws-sidebtn.on { border-color: var(--dark); background: var(--dark); color: #fff; }
   .ws-side-me { margin-top: 0; flex-direction: row; align-items: center; justify-content: space-between; width: 100%; border-top: 0; padding: 0; }
-  .ws-side-me .ws-me-name { color: var(--text); }
-  .ws-side-me .ws-me-role { color: var(--text-sub); }
-  .ws-side-me .ws-signout { color: var(--text); background: #fff; border-color: var(--line); }
-  .ws-side-me .ws-signout:focus-visible { outline-color: var(--accent); }
   .ws-cols { grid-template-columns: 1fr; }   /* 폰 = 본문 아래 레일 적층 */
   .ws-cal-cell { min-height: 56px; }
   .ws-cal-chip { display: none; }           /* 폰 = 점만(칩은 좁아서 뭉개짐) */

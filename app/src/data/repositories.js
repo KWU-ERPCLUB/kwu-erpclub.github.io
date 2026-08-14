@@ -138,7 +138,7 @@ export function createSupabaseRepositories(backend) {
         const id = uid()
         if (!id) return []
         return backend.db.select('article_bookmarks', {
-          columns: 'article_id,created_at,articles(슬러그,제목,게재일,성격,설명)',
+          columns: 'article_id,created_at,articles(슬러그,제목,게재일,성격,설명,이미지)',
           filters: { member_id: id },
           order: 'created_at.desc',
         })

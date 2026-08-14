@@ -1,6 +1,7 @@
-// 내정보 탭(M3 ① → 홈 개편 2026-08-06) — 프로필·활동내역. 북마크·스크랩은 북마크 탭으로 분리.
+// 내정보 탭(M3 ① → 홈 개편 2026-08-06 → 2026-08-14 재편) — 프로필·활동내역 + 북마크 흡수(단독 탭 폐지).
 // 수정 가능 범위 = 자기소개·관심사(이름·학번·role은 운영진이 관리 — RLS members_update_self가 role 변경을 거부).
 import { useCallback, useEffect, useState } from 'react'
+import Collections from './Collections.jsx'
 
 const toText = (list) => (Array.isArray(list) ? list.join(', ') : String(list || ''))
 const toList = (text) => String(text || '').split(',').map((v) => v.trim()).filter(Boolean).slice(0, 8)
@@ -171,6 +172,7 @@ export default function MyPage({ store, member, onProfileSaved }) {
         {error && <p className="ws-error" role="alert">{error}</p>}
         {/* key = 멤버 로드 완료 시 폼 초기값을 다시 잡기 위함(비동기 도착) */}
         <Profile key={member?.id || 'pending'} store={store} member={member} onSaved={onProfileSaved} />
+        <Collections store={store} />
         <PasswordChange store={store} />
       </div>
       <aside className="ws-crail">

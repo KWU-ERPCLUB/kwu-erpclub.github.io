@@ -6,9 +6,9 @@ import { createMockRepositories } from '../data/mock.js'
 const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
 const ME = { id: 'mock-member', 이름: '스터디원 B', role: '스터디원', 학번: '2020000002', 자기소개: '소개', 관심사: ['에이전트'] }
 
-test('내정보 = 프로필·활동내역(북마크·스크랩은 북마크 탭으로 분리 — 홈 개편 2026-08-06)', () => {
+test('내정보 = 프로필·북마크·활동내역(북마크 단독 탭 폐지 — 2026-08-14 흡수)', () => {
   const html = flat(<MyPage store={createMockRepositories({ user: 'mock-member' })} member={ME} />)
-  for (const block of ['프로필', '활동내역', '내 기고', '내 과제 제출']) {
+  for (const block of ['프로필', '내 북마크', '활동내역', '내 기고', '내 과제 제출']) {
     expect(html).toContain(block)
   }
   expect(html).not.toContain('링크 스크랩')
