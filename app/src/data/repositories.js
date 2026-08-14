@@ -19,7 +19,7 @@ export const REPO_CONTRACT = {
   sessions: ['list', 'save'],
   notes: ['list', 'save'],
   events: ['list', 'save', 'remove'],
-  postings: ['list', 'save', 'remove'],
+  postings: ['list', 'save', 'remove', 'listInterests', 'toggleInterest'],
   flow: ['list', 'save', 'remove'],
   materials: ['list', 'save'],
   assignments: ['list', 'save'],
@@ -182,6 +182,22 @@ export function createSupabaseRepositories(backend) {
       async remove(rowId) {
         await backend.db.remove('postings', { id: rowId })
         return rowId
+      },
+      // 관심 공고(0013) — 본인 관심 posting_id 목록. 미적용 = 빈 배열 강등(공고 탭은 ★ 없이도 동작).
+      async listInterests() {
+        const id = uid()
+        if (!id) return []
+        return backend.db.select('posting_interests', { columns: 'posting_id', filters: { member_id: id } })
+          .then((rows) => (rows || []).map((r) => r.posting_id))
+          .catch(() => [])
+      },
+      // 켜기 = insert, 끄기 = 본인 행 remove(DELETABLE 등재). 반환 = 적용된 상태.
+      async toggleInterest(postingId, on) {
+        const id = uid()
+        if (!id) throw new Error('로그인 필요')
+        if (on) await backend.db.insert('posting_interests', { member_id: id, posting_id: postingId })
+        else await backend.db.remove('posting_interests', { member_id: id, posting_id: postingId })
+        return on
       },
     },
     // 세션 자료 = 링크 기반(M3). 파일 업로드(Storage)는 M4 — 파일경로 컬럼은 비워둔다.

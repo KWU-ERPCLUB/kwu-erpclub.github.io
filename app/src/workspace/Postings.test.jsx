@@ -46,6 +46,32 @@ test('공고 저장소 — 운영진만 등록·삭제, 멤버는 열람만(목 
   await expect(member.postings.remove('mock-p1')).rejects.toThrow('권한 없음')
 })
 
+// 관심 ★(2026-08-14) — 카드에 토글 버튼, 체크한 것은 내정보 "관심 공고"에 모인다(0013 posting_interests).
+test('카드 관심 ★ — onToggleInterest 있으면 토글 버튼(aria-pressed), 없으면 미렌더', () => {
+  const row = { id: 'p', 제목: 't', 종류: '채용', url: 'https://e.com', 접수마감: null, 코멘트: 'c' }
+  const withStar = flat(<PostingCard todayKey="2026-09-08" row={row} interested onToggleInterest={() => {}} />)
+  expect(withStar).toContain('ws-post-star')
+  expect(withStar).toContain('aria-pressed="true"')
+  const noStar = flat(<PostingCard todayKey="2026-09-08" row={row} />)
+  expect(noStar).not.toContain('ws-post-star')
+})
+
+test('관심 저장소 — 본인 행만 켜고 끈다(목 = 0013 RLS 동형), 비로그인 = 거부', async () => {
+  const member = createMockRepositories({ user: 'mock-member' })
+  const before = await member.postings.listInterests()
+  expect(before).toContain('mock-p2')                       // 시드 1건
+  await member.postings.toggleInterest('mock-p1', true)
+  expect(await member.postings.listInterests()).toContain('mock-p1')
+  await member.postings.toggleInterest('mock-p1', false)
+  expect(await member.postings.listInterests()).not.toContain('mock-p1')
+
+  const other = createMockRepositories({ user: 'mock-staff' })
+  expect(await other.postings.listInterests()).not.toContain('mock-p2')   // 본인 것만
+  const anon = createMockRepositories()
+  expect(await anon.postings.listInterests()).toEqual([])
+  await expect(anon.postings.toggleInterest('mock-p1', true)).rejects.toThrow('로그인 필요')
+})
+
 test('운영 폼 골격 = 전 필드 + 코멘트 필수 안내', () => {
   const html = flat(<AdminPostings store={createMockRepositories({ user: 'mock-staff' })} />)
   for (const label of ['제목', '종류', '주최(선택)', '원문 링크', '접수시작(선택)', '접수마감(선택)', '시험일(선택)', '다가오는 업무에 표시']) {

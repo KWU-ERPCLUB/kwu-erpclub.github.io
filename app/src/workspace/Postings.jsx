@@ -6,7 +6,8 @@ import { toKey, dday } from './calendar-logic.js'
 import { POSTING_KINDS, postingStatus, groupPostings, filterPostings } from './postings-logic.js'
 
 // 카드 1장 — 종류 배지 + 제목(원문 링크) + 주최 + 접수·시험 일정 + 큐레이션 코멘트(필수 필드).
-export function PostingCard({ row, todayKey }) {
+// 관심 ★(2026-08-14 오너) — 체크한 공고는 내정보 상단 "관심 공고"에 모인다(0013 posting_interests).
+export function PostingCard({ row, todayKey, interested = false, onToggleInterest }) {
   const status = postingStatus(row, todayKey)
   const closed = status === '마감'
   return (
@@ -19,6 +20,16 @@ export function PostingCard({ row, todayKey }) {
           {status === '예정' && `시험 ${dday(todayKey, row['시험일'])}`}
           {status !== '접수중' && status !== '예정' && status}
         </span>
+        {onToggleInterest && (
+          <button
+            type="button" className={`ws-post-star${interested ? ' on' : ''}`}
+            aria-pressed={interested} aria-label={interested ? '관심 해제' : '관심 공고로 체크'}
+            title={interested ? '관심 해제' : '관심 공고로 체크 — 내정보에 모인다'}
+            onClick={() => onToggleInterest(row.id, !interested)}
+          >
+            ★
+          </button>
+        )}
       </div>
       <a className="ws-post-title" href={row.url} target="_blank" rel="noreferrer">{row['제목']}</a>
       <p className="ws-mark-meta">
@@ -36,15 +47,23 @@ export function PostingCard({ row, todayKey }) {
 export default function Postings({ store }) {
   const todayKey = useMemo(() => toKey(new Date()), [])
   const [rows, setRows] = useState([])
+  const [interests, setInterests] = useState([])
   const [status, setStatus] = useState('loading')
   const [error, setError] = useState('')
   const [kind, setKind] = useState('전체')
 
-  const load = useCallback(() => store.postings.list()
-    .then((r) => { setRows(r || []); setStatus('ready') })
+  const load = useCallback(() => Promise.all([store.postings.list(), store.postings.listInterests()])
+    .then(([r, ids]) => { setRows(r || []); setInterests(ids || []); setStatus('ready') })
     .catch((e) => { setError(e?.message || '불러오기 실패'); setStatus('error') }), [store])
 
   useEffect(() => { load() }, [load])
+
+  // 낙관적 토글 — 실패 시 원복(0013 미적용 환경 포함).
+  const toggleInterest = useCallback((postingId, on) => {
+    setInterests((prev) => (on ? [...prev, postingId] : prev.filter((id) => id !== postingId)))
+    store.postings.toggleInterest(postingId, on)
+      .catch(() => setInterests((prev) => (on ? prev.filter((id) => id !== postingId) : [...prev, postingId])))
+  }, [store])
 
   const { active, always, closed } = useMemo(
     () => groupPostings(filterPostings(rows, kind), todayKey),
@@ -73,13 +92,17 @@ export default function Postings({ store }) {
             <p className="ws-note">진행 중 공고 0건 — 운영진이 등록하면 여기에 뜬다.</p>
           )}
           <ul className="ws-list ws-post-grid">
-            {open.map((r) => <PostingCard key={r.id} row={r} todayKey={todayKey} />)}
+            {open.map((r) => (
+              <PostingCard key={r.id} row={r} todayKey={todayKey} interested={interests.includes(r.id)} onToggleInterest={toggleInterest} />
+            ))}
           </ul>
           {closed.length > 0 && (
             <details className="ws-fold">
               <summary>마감된 공고 {closed.length}건</summary>
               <ul className="ws-list ws-post-grid">
-                {closed.map((r) => <PostingCard key={r.id} row={r} todayKey={todayKey} />)}
+                {closed.map((r) => (
+                  <PostingCard key={r.id} row={r} todayKey={todayKey} interested={interests.includes(r.id)} onToggleInterest={toggleInterest} />
+                ))}
               </ul>
             </details>
           )}

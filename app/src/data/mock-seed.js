@@ -31,6 +31,7 @@ export const SEED = {
   submissions: [{ id: 'mock-sub1', assignment_id: 'mock-h1', member_id: 'mock-member', url: 'https://example.com/sample', 메모: '' }],
   notices: [{ id: 'mock-n1', 제목: '샘플 공지', 본문: '목 데이터', 내부여부: true }],
   collections: [{ id: 'mock-c1', member_id: 'mock-member', url: 'https://example.com/scrap', 메모: '샘플 스크랩' }],
+  posting_interests: [{ member_id: 'mock-member', posting_id: 'mock-p2' }],
   article_likes: [{ member_id: 'mock-member', article_id: 'mock-a1' }],
   article_bookmarks: [{ member_id: 'mock-member', article_id: 'mock-a1' }],
   seminars: [{ id: 'mock-sem1', 회차: 1, 날짜: '2026-09-20', 제목: '샘플 세미나', 유형: '인지', 공개여부: true }],

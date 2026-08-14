@@ -194,6 +194,18 @@ export function createMockRepositories({ user = null, data = {} } = {}) {
         store.postings.splice(at, 1)
         return rowId
       },
+      // 관심 공고(0013 동형) — 본인 행만.
+      async listInterests() {
+        if (!currentId) return []
+        return store.posting_interests.filter((r) => r.member_id === currentId).map((r) => r.posting_id)
+      },
+      async toggleInterest(postingId, on) {
+        if (!currentId) throw new Error('로그인 필요')
+        const at = store.posting_interests.findIndex((r) => r.member_id === currentId && r.posting_id === postingId)
+        if (on && at < 0) store.posting_interests.push({ member_id: currentId, posting_id: postingId })
+        if (!on && at >= 0) store.posting_interests.splice(at, 1)
+        return on
+      },
     },
     notes: {
       async list() { return clone(store.session_notes) },

@@ -1,7 +1,10 @@
-// 내정보 탭(M3 ① → 홈 개편 2026-08-06 → 2026-08-14 재편) — 프로필·활동내역 + 북마크 흡수(단독 탭 폐지).
+// 내정보 탭(M3 ① → 홈 개편 2026-08-06 → 2026-08-14 재편) — 상단 = 자주 볼 것(북마크·관심 공고),
+// 하단 = 가끔 볼 것(프로필 수정·비밀번호 변경 = 접힘). 오너 2026-08-14: "자주 안 볼 설정은 숨기고 관심 콘텐츠를 잘 보이게".
 // 수정 가능 범위 = 자기소개·관심사(이름·학번·role은 운영진이 관리 — RLS members_update_self가 role 변경을 거부).
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import Collections from './Collections.jsx'
+import { toKey, dday, daysBetween } from './calendar-logic.js'
+import { postingStatus } from './postings-logic.js'
 
 const toText = (list) => (Array.isArray(list) ? list.join(', ') : String(list || ''))
 const toList = (text) => String(text || '').split(',').map((v) => v.trim()).filter(Boolean).slice(0, 8)
@@ -110,6 +113,58 @@ export function PasswordChange({ store }) {
   )
 }
 
+// 관심 공고(0013) — 공고 탭에서 ★ 체크한 것만 마감 임박순으로. 체크·해제 = 공고 탭에서.
+export function InterestedPostings({ store }) {
+  const todayKey = useMemo(() => toKey(new Date()), [])
+  const [rows, setRows] = useState([])
+  const [ready, setReady] = useState(false)
+
+  useEffect(() => {
+    let alive = true
+    Promise.all([store.postings.list(), store.postings.listInterests()])
+      .then(([all, ids]) => {
+        if (!alive) return
+        const mine = (all || []).filter((r) => (ids || []).includes(r.id))
+        // 마감 임박순(마감·시험일 없는 상시는 뒤로), 마감 지난 것은 맨 뒤
+        const due = (r) => r['접수마감'] || r['시험일'] || '9999-12-31'
+        mine.sort((a, b) => {
+          const ac = postingStatus(a, todayKey) === '마감' ? 1 : 0
+          const bc = postingStatus(b, todayKey) === '마감' ? 1 : 0
+          return ac - bc || due(a).localeCompare(due(b))
+        })
+        setRows(mine)
+        setReady(true)
+      })
+      .catch(() => setReady(true))
+    return () => { alive = false }
+  }, [store, todayKey])
+
+  return (
+    <section className="ws-block ws-interested">
+      <h2 className="ws-h2">관심 공고 <span className="ws-count">{rows.length}</span></h2>
+      {ready && rows.length === 0 && <p className="ws-note">관심 공고 0건 — 공고 탭에서 ★를 누르면 여기 모인다.</p>}
+      <ul className="ws-list">
+        {rows.map((r) => {
+          const due = r['접수마감'] || r['시험일']
+          const closed = postingStatus(r, todayKey) === '마감'
+          return (
+            <li key={r.id}>
+              <a className="ws-up-item" href={r.url} target="_blank" rel="noreferrer" style={closed ? { opacity: 0.55 } : undefined}>
+                <span className="ws-up-title">{r['제목']}</span>
+                {due && <span className="ws-up-when">{due.slice(5).replace('-', '/')}</span>}
+                {due && !closed && (
+                  <span className={`ws-up-dday${daysBetween(todayKey, due) <= 7 ? ' soon' : ''}`}>{dday(todayKey, due)}</span>
+                )}
+                {(!due || closed) && <span className="ws-up-dday">{closed ? '마감' : '상시'}</span>}
+              </a>
+            </li>
+          )
+        })}
+      </ul>
+    </section>
+  )
+}
+
 // 내 기고 + 내 과제 제출 — 상태만 확인하는 읽기 목록(수정은 각 탭에서)
 function Activity({ articles, submissions, assignments }) {
   const titleOf = (id) => assignments.find((a) => a.id === id)?.['제목'] || '(삭제된 과제)'
@@ -165,15 +220,25 @@ export default function MyPage({ store, member, onProfileSaved }) {
 
   useEffect(() => { load() }, [load])
 
-  // 공통 프레임(ws-cols): 본문 = 프로필 수정 / 레일 = 활동내역(읽기).
+  // 공통 프레임(ws-cols): 본문 = 북마크·관심 공고(자주 볼 것) + 접힘 설정(가끔 볼 것) / 레일 = 활동내역(읽기).
   return (
     <div className="ws-mypage ws-cols">
       <div className="ws-cmain">
         {error && <p className="ws-error" role="alert">{error}</p>}
-        {/* key = 멤버 로드 완료 시 폼 초기값을 다시 잡기 위함(비동기 도착) */}
-        <Profile key={member?.id || 'pending'} store={store} member={member} onSaved={onProfileSaved} />
         <Collections store={store} />
-        <PasswordChange store={store} />
+        <InterestedPostings store={store} />
+        {/* 설정 = 접힘(2026-08-14 오너 — 자주 확인 안 할 내용은 숨김) */}
+        <section className="ws-block">
+          <details className="ws-settings">
+            <summary>프로필 수정</summary>
+            {/* key = 멤버 로드 완료 시 폼 초기값을 다시 잡기 위함(비동기 도착) */}
+            <Profile key={member?.id || 'pending'} store={store} member={member} onSaved={onProfileSaved} />
+          </details>
+          <details className="ws-settings">
+            <summary>비밀번호 변경</summary>
+            <PasswordChange store={store} />
+          </details>
+        </section>
       </div>
       <aside className="ws-crail">
         <Activity articles={articles} submissions={submissions} assignments={assignments} />

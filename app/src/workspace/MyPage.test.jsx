@@ -6,11 +6,17 @@ import { createMockRepositories } from '../data/mock.js'
 const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
 const ME = { id: 'mock-member', 이름: '스터디원 B', role: '스터디원', 학번: '2020000002', 자기소개: '소개', 관심사: ['에이전트'] }
 
-test('내정보 = 프로필·북마크·활동내역(북마크 단독 탭 폐지 — 2026-08-14 흡수)', () => {
+test('내정보 = 상단 북마크·관심 공고 + 하단 접힘 설정(프로필·비밀번호) + 활동내역 레일', () => {
   const html = flat(<MyPage store={createMockRepositories({ user: 'mock-member' })} member={ME} />)
-  for (const block of ['프로필', '내 북마크', '활동내역', '내 기고', '내 과제 제출']) {
+  for (const block of ['내 북마크', '관심 공고', '활동내역', '내 기고', '내 과제 제출']) {
     expect(html).toContain(block)
   }
+  // 설정 = 접힘(2026-08-14 오너 — 자주 안 볼 것 숨김)
+  expect(html).toContain('ws-settings')
+  expect(html).toContain('프로필 수정')
+  expect(html).toContain('비밀번호 변경')
+  // 접힘이 북마크·관심 공고보다 뒤(하단 배치)
+  expect(html.indexOf('내 북마크')).toBeLessThan(html.indexOf('ws-settings'))
   expect(html).not.toContain('링크 스크랩')
 })
 
