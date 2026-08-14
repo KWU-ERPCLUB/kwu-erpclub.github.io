@@ -103,7 +103,7 @@ export function UpcomingTasks({ items, todayKey, onSelect }) {
         ))}
       </ul>
       {WEEKLY_CONTRIB.dueDay === null && (
-        <p className="ws-note">{WEEKLY_CONTRIB.label} — 마감 요일 확정 전(기고 탭에서 제출).</p>
+        <p className="ws-note">{WEEKLY_CONTRIB.label} — 마감 요일 확정 전(인사이트 기고 탭에서 제출).</p>
       )}
     </aside>
   )

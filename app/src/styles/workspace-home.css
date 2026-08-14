@@ -202,7 +202,7 @@
 .ws-summary-line strong { color: var(--text); }
 .ws-summary-line strong.due { color: var(--accent); }
 
-/* 흐름 탭 — 주차 카드: 이번 주 = 버건디 좌보더 강조, 지난 = 흐림 */
+/* 로드맵 탭 — 주차 카드: 이번 주 = 버건디 좌보더 강조, 지난 = 흐림 */
 .ws-flow-list { gap: 0.7rem; }
 .ws-flow-card {
   border: 1px solid var(--line); border-left-width: 3px; border-radius: 12px; background: #fff; padding: 0.85rem 1rem;

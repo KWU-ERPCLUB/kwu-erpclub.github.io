@@ -172,7 +172,7 @@ function Activity({ articles, submissions, assignments }) {
     <section className="ws-block">
       <h2 className="ws-h2">활동내역</h2>
       <h3 className="ws-h3">내 기고 <span className="ws-count">{articles.length}</span></h3>
-      {articles.length === 0 && <p className="ws-note">기고 0건 — 기고 탭에서 작성.</p>}
+      {articles.length === 0 && <p className="ws-note">기고 0건 — 인사이트 기고 탭에서 작성.</p>}
       <ul className="ws-list">
         {articles.map((a) => (
           <li key={a.id} className="ws-scrap">

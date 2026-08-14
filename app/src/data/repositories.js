@@ -155,7 +155,7 @@ export function createSupabaseRepositories(backend) {
       list: () => backend.db.select('session_notes', { order: 'created_at.asc' }).catch(() => []),
       save: saveRow('session_notes'),
     },
-    // 스터디 흐름(0008) — 주차 기록. 테이블 미적용 = 빈 배열 강등(흐름 탭은 안내만).
+    // 스터디 흐름(0008) — 주차 기록. 테이블 미적용 = 빈 배열 강등(로드맵 탭은 안내만).
     flow: {
       list: () => backend.db.select('flow_weeks', { order: '시작일.asc' }).catch(() => []),
       save: saveRow('flow_weeks'),

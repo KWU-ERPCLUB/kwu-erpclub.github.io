@@ -45,7 +45,7 @@ export function buildAgenda({ events = [], assignments = [], sessions = [] } = {
 
 export const itemsOn = (items, key) => items.filter((i) => i.date === key)
 
-// 주 판정(흐름 탭 공용 — 2026-08-13 Flow에서 이동) — 시작일~+6일 안에 오늘이 있으면 '이번 주',
+// 주 판정(로드맵 탭 공용 — 2026-08-13 Flow에서 이동) — 시작일~+6일 안에 오늘이 있으면 '이번 주',
 // 지났으면 '지난', 아니면 '예정'. 순수 함수(테스트 대상).
 export function weekStatus(startKey, todayKey) {
   const start = new Date(`${startKey}T12:00:00`)

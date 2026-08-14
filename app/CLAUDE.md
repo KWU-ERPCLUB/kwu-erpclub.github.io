@@ -94,9 +94,11 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
   실측 고정 수치(버건디 화이트리스트·빈도 상한·버튼 3단 위계·인터랙션 4상태·§2 타이포 실값 표). UI 작업 전 필독. 위반=재작업.
 - **PageHead 강제(3차, 4차 개정)**: 페이지 헤드 = `src/shared.jsx` `PageHead` 1개(**중앙 정렬** — 눈썹 + h1 + 서브 + children,
   갱신 메타 = 인사이트만). 페이지별 head CSS 신설 금지. (구 좌 라벨 레일·`--rail-w` 토큰 = 4차 폐지·제거됨.)
-- CSS 13개(`src/styles/`): global(토큰·nav·PageHead·푸터·버튼) · home · home-sections ·
-  pages(공용 셸) · hub-md(도판 브레이크아웃) · articles · insights-detail · seminars · projects · recruit · workspace ·
-  workspace-home(사이드바·캘린더 — 2026-08-06 분할 신설) · workspace-postings(공고 보드 — 2026-08-07 분할 신설).
+- CSS 17개(`src/styles/`): global(토큰·nav·PageHead·푸터·버튼) · home · home-sections ·
+  pages(공용 셸) · hub-md(도판 브레이크아웃) · articles · insights-detail · seminars · projects ·
+  project-adsp + project-adsp-viz(ADsP 인터랙티브 상세) · recruit · workspace ·
+  workspace-home(사이드바·캘린더 — 2026-08-06 분할) · workspace-postings(공고 보드 — 2026-08-07 분할) ·
+  workspace-mypage + workspace-roadmap(내정보·로드맵 탭 — 2026-08-14 분할).
   (`doc.css` = 2026-07-25 폐지 — 내부형 doc 셸·DocSide와 함께 제거됨.)
 - 3차 신설 토큰(현행): `--tint-accent` · `--accent-on-dark` · `--focus-on-dark` · `--btn-hover`.
 - Copy tone: AI-ish phrasing forbidden (규칙 §0-1). 3 viewports 375/768/1440, light-only(`color-scheme: light`).

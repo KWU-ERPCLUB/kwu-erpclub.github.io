@@ -1,4 +1,4 @@
-// 흐름 탭(2026-08-06 오너 확정 · 2026-08-13 로드맵 진입점 개편) — 로드맵의 차시를 고르면 세부·자료·세미나로 이어진다.
+// 로드맵 탭(구 흐름 탭 — 2026-08-06 오너 확정 · 2026-08-13 로드맵 진입점 개편 · 2026-08-14 개명) — 로드맵의 차시를 고르면 세부·자료·세미나로 이어진다.
 // 구성 = 1기 로드맵(클릭형 — 구 「차시 진행」 흡수, Roadmap.jsx) → 주차 기록(flow_weeks 유지).
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { toKey, weekStatus } from './calendar-logic.js'
