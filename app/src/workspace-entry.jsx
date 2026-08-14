@@ -6,6 +6,7 @@ import './styles/workspace.css'
 import './styles/workspace-home.css'
 import './styles/workspace-postings.css'
 import './styles/workspace-mypage.css'
+import './styles/workspace-roadmap.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

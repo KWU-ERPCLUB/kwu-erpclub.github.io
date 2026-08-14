@@ -238,36 +238,7 @@
 .ws-oplog-date { display: block; margin-top: 0.7rem; font-size: 0.78rem; font-weight: 700; color: var(--text-sub); }
 .ws-oplog-desc { color: var(--text-sub); }
 
-/* 1기 로드맵 세로 타임라인(Roadmap.jsx — 흐름 탭 상단). 스파인 = 좌측 라인, 구간 = 다크 도트, 세션 = 버건디 링 카드 */
-.ws-rm { list-style: none; margin: 1rem 0 0; padding: 0 0 0 1.6rem; position: relative; display: flex; flex-direction: column; gap: 0.95rem; }
-.ws-rm::before { content: ''; position: absolute; left: 6px; top: 8px; bottom: 8px; width: 2px; background: var(--line); }
-.ws-rm > li { position: relative; }
-.ws-rm > li::before {
-  content: ''; position: absolute; left: calc(-1.6rem + 2px); top: 5px; width: 11px; height: 11px;
-  border-radius: 50%; background: #fff; border: 2px solid var(--text-sub); box-sizing: border-box;
-}
-.ws-rm > li.ws-rm-phase::before { background: var(--dark); border-color: var(--dark); }
-.ws-rm > li.ws-rm-item::before { border-color: var(--accent); }
-.ws-rm-head { display: flex; gap: 0.6rem; align-items: baseline; flex-wrap: wrap; }
-.ws-rm-label { font-family: var(--font-display); font-weight: 800; font-size: 0.98rem; }
-.ws-rm-when { font-size: 0.76rem; color: var(--text-sub); white-space: nowrap; }
-.ws-rm-desc { margin: 0.15rem 0 0; font-size: 0.82rem; color: var(--text-sub); }
-.ws-rm-card { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 0.75rem 0.95rem; }
-.ws-rm-no { display: inline-block; margin-right: 0.5rem; font-size: 0.72rem; font-weight: 700; color: var(--accent); }
-.ws-rm-topic { font-weight: 800; font-size: 0.9rem; }
-.ws-rm-learn { margin: 0.35rem 0 0; font-size: 0.83rem; line-height: 1.55; }
-.ws-rm-notes { margin: 0.5rem 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 0.35rem; }
-.ws-rm-notes li { font-size: 0.74rem; color: var(--text-sub); border: 1px solid var(--line); background: #fff; border-radius: var(--radius-pill); padding: 0.16rem 0.6rem; }
-
-/* 클릭형 로드맵(2026-08-13) — 차시 카드 = 토글 헤드 + 드롭박스(세부·자료·세미나 진입) */
-.ws-rm-toggle { display: block; width: 100%; }
-.ws-rm-head-row { display: flex; gap: 0.6rem; align-items: baseline; flex-wrap: wrap; }
-.ws-rm-caret { margin-left: auto; font-size: 0.68rem; color: var(--text-sub); }
-.ws-rm-card.open { border-color: var(--dark); }
-.ws-rm-body { margin-top: 0.65rem; border-top: 1px solid var(--line); padding-top: 0.65rem; display: flex; flex-direction: column; gap: 0.55rem; }
-.ws-rm-note { font-size: 0.85rem; }
-.ws-rm-sem { align-self: flex-start; font-size: 0.82rem; font-weight: 700; color: var(--accent); text-decoration: none; }
-.ws-rm-sem:hover, .ws-rm-sem:focus-visible { text-decoration: underline; }
+/* 1기 로드맵 타임라인 = workspace-roadmap.css 분할(2026-08-14 시각 강화 — 300줄 규격) */
 
 @media (max-width: 700px) {
   .ws-main { padding: 1.8rem 1.1rem 2.6rem; }

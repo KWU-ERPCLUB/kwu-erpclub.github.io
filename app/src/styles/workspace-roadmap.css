@@ -1,0 +1,61 @@
+/* 1기 로드맵 타임라인(Roadmap.jsx — 로드맵 탭) — 2026-08-14 시각 강화(오너: "분할된 로드맵이 안 보임").
+   문법: 스파인 + 차시 번호 원 배지(상태색) + 구간 = 면 밴드·검정 pill 라벨 + 등장 리빌·펼침 전환(transform·opacity만).
+   workspace.css 분할 파일(300줄 규격) — workspace-entry에서만 import. */
+
+.ws-rm { list-style: none; margin: 1.1rem 0 0; padding: 0 0 0 2.5rem; position: relative; display: flex; flex-direction: column; gap: 0.9rem; }
+.ws-rm::before { content: ''; position: absolute; left: 15px; top: 12px; bottom: 12px; width: 2px; background: var(--line); }
+.ws-rm > li { position: relative; }
+
+/* 등장 리빌 — 스태거(딜레이 = JSX 인라인), 한 번만 */
+@media (prefers-reduced-motion: no-preference) {
+  .ws-rm > li { opacity: 0; animation: ws-rm-in 360ms ease-out forwards; }
+  @keyframes ws-rm-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+}
+
+/* 차시 번호 원 배지(스파인 위) — 예정 = 차콜 테두리 / 이번 주 = 버건디 채움 / 지난 = 회색 */
+.ws-rm-nno {
+  position: absolute; left: calc(-2.5rem + 3px); top: 0.5rem; width: 27px; height: 27px; border-radius: 999px;
+  display: flex; align-items: center; justify-content: center; box-sizing: border-box; z-index: 1;
+  font-family: var(--font-display); font-weight: 800; font-size: 0.8rem;
+  background: #fff; border: 1.5px solid var(--dark); color: var(--dark);
+}
+.ws-rm-item.is-now .ws-rm-nno { background: var(--accent); border-color: var(--accent); color: #fff; }
+.ws-rm-item.is-past .ws-rm-nno { background: var(--surface); border-color: var(--line); color: var(--text-sub); }
+.ws-rm-item.is-past .ws-rm-card { opacity: 0.72; }
+
+/* 구간 밴드 — 스파인까지 덮는 면(타임라인이 구간 단위로 분할되어 보인다) + 검정 pill 라벨 */
+.ws-rm-phase { margin-left: -2.5rem; }
+.ws-rm-phaseband { background: var(--surface); border-radius: 14px; padding: 0.95rem 1.15rem; }
+.ws-rm-phase .ws-rm-head { display: flex; gap: 0.7rem; align-items: center; flex-wrap: wrap; }
+.ws-rm-plabel {
+  background: var(--dark); color: #fff; border-radius: var(--radius-pill); padding: 0.3rem 0.9rem;
+  font-size: 0.8rem; font-weight: 700; letter-spacing: 0.01em;
+}
+.ws-rm-when { font-size: 0.76rem; font-weight: 600; color: var(--text-sub); white-space: nowrap; }
+.ws-rm-desc { margin: 0.5rem 0 0; font-size: 0.82rem; color: var(--text-sub); }
+
+/* 차시 카드 — 토글 헤드 + 드롭박스(세부·자료·세미나 진입) */
+.ws-rm-card {
+  border: 1px solid var(--line); border-radius: 12px; background: #fff; padding: 0.8rem 1rem;
+  transition: box-shadow 150ms ease-out, border-color 150ms ease-out;
+}
+.ws-rm-card:hover { box-shadow: 0 8px 22px rgba(20, 20, 20, 0.07); }
+.ws-rm-card.open { border-color: var(--dark); box-shadow: 0 10px 26px rgba(20, 20, 20, 0.09); }
+.ws-rm-toggle { display: block; width: 100%; }
+.ws-rm-head-row { display: flex; gap: 0.6rem; align-items: baseline; flex-wrap: wrap; }
+.ws-rm-topic { flex: 1; min-width: 0; font-family: var(--font-display); font-weight: 800; font-size: 0.95rem; }
+.ws-rm-caret { font-size: 0.68rem; color: var(--text-sub); transition: transform 150ms ease-out; }
+.ws-rm-card.open .ws-rm-caret { transform: rotate(180deg); }
+.ws-rm-learn { margin: 0.35rem 0 0; font-size: 0.83rem; line-height: 1.55; color: var(--text-sub); }
+.ws-rm-notes { margin: 0.5rem 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.ws-rm-notes li { font-size: 0.74rem; color: var(--text-sub); border: 1px solid var(--line); background: #fff; border-radius: var(--radius-pill); padding: 0.16rem 0.6rem; }
+
+/* 펼침 본문 — 열릴 때 페이드+슬라이드 1회 */
+.ws-rm-body { margin-top: 0.65rem; border-top: 1px solid var(--line); padding-top: 0.65rem; display: flex; flex-direction: column; gap: 0.55rem; }
+@media (prefers-reduced-motion: no-preference) {
+  .ws-rm-body { animation: ws-rm-open 200ms ease-out; }
+  @keyframes ws-rm-open { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+}
+.ws-rm-note { font-size: 0.85rem; }
+.ws-rm-sem { align-self: flex-start; font-size: 0.82rem; font-weight: 700; color: var(--accent); text-decoration: none; }
+.ws-rm-sem:hover, .ws-rm-sem:focus-visible { text-decoration: underline; }

@@ -56,6 +56,9 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
   탭 설명 문구 폐지 — 아이콘(`TAB_ICONS`)이 대신. 원천 = `Workspace.jsx`의 `WS_TABS`·`visibleTabs()`. 구 탭명 딥링크 = `LEGACY_TAB_MAP`.
   **내정보 구성(2026-08-14)**: 상단 = 내 북마크·**관심 공고**(공고 카드 ★ 체크 — `posting_interests`, migration **0013**·미적용 = 빈 목록 강등) /
   하단 = 접힘 설정(`.ws-settings` details — 프로필 수정·비밀번호 변경) / 레일 = 활동내역. 내정보 전용 CSS = `workspace-mypage.css`(분할).
+- **AIM 커리큘럼 로드맵 단일원천(2026-08-14) = `src/data/aim-roadmap.js`** — 워크스페이스 로드맵 탭(`workspace/Roadmap.jsx`)과
+  공개 /recruit 로드맵(`data/recruit.js` AIM_ROADMAP 파생)이 이 파일 하나를 소비. **로드맵 개정 = 이 파일 1곳 수정**(표면별 하드코딩 금지).
+  구간 표기 = '시험기간'(구 '시험 휴지' 폐기, 오너 2026-08-14). 로드맵 탭 CSS = `workspace-roadmap.css`(분할).
   홈(`Home.jsx`) = 요약 헤더(이름+7일 내 일정·마감 — Classroom '할 일' 문법) + **대형 월 캘린더 + 다가오는 업무**(계산 = `calendar-logic.js` 순수 함수) + 과제 제출·공지·세션 흡수(구 탭명 딥링크는 매핑).
   캘린더 원천 = 운영 일정(`events`, **0007 적용됨**) + 과제 마감 자동 + 세션 날짜 자동 + 공고 마감·시험일(0009). 주간 기고 반복 핀 = `WEEKLY_CONTRIB.dueDay`(현재 null=[미정] — 오너 확정 시 값 1개).
   **다가오는 업무 = ★ 지정만**(오너 2026-08-07 — 전량 노출은 소음): `events.중요`(**0010**)·`postings.고정` 겸용, `upcoming()`이 필터. 캘린더는 전 항목 유지.

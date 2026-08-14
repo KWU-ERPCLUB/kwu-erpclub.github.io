@@ -2,8 +2,8 @@ import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
 import Recruit from './Recruit.jsx'
 import {
-  RECRUIT, PHASES, ACADEMIC_RULE, COHORT_LABEL, RECRUIT_DO, AIM_ROADMAP,
-  RECRUIT_SHOWCASE, SHOWCASE_LEAD, formatWindow, shortDate,
+  RECRUIT, ACADEMIC_RULE, COHORT_LABEL, RECRUIT_DO, AIM_ROADMAP,
+  RECRUIT_SHOWCASE, SHOWCASE_LEAD, formatWindow,
 } from './data/recruit.js'
 import { FAQ, RECRUIT_FAQ } from './data/faq.js'
 
@@ -95,28 +95,29 @@ test('SHOWCASE 사실 가드 — 문항 총계·라이브·전부 접속 가능 
   expect(RECRUIT_SHOWCASE[0].href).toBe('/projects/adsp/')
 })
 
-// 2026-08-07 2차 — AIM 1기 로드맵: 회차 = 한 포인트(1차 5회 + 2차 4회), 원천 = 운영틀 확정값(워크스페이스 동일 큐레이션).
-test('AIM 1기 로드맵 = 페이즈 4 + 회차 9 — 날짜 = PHASES 파생·진행선·스파이 구조', () => {
+// 2026-08-14 일원화 — AIM 1기 로드맵: 원천 = data/aim-roadmap.js(워크스페이스 로드맵과 완전 동일 값, 2단 재편 1차 4 + 2차 5).
+test('AIM 1기 로드맵 = 페이즈 3 + 회차 9 — 단일원천 파생·진행선 구조', () => {
   const html = flat(<Recruit />)
   expect(html).toContain(`${COHORT_LABEL} 로드맵`) // 섹션명
   expect(html).toContain('rc-rm')
   expect(html).toContain('rc-rm-fill') // 스크롤 진행 채움선
-  expect(AIM_ROADMAP.filter((n) => n.type === 'phase').length).toBe(4) // 1차·휴지·2차·최종 발표
+  expect(AIM_ROADMAP.filter((n) => n.type === 'phase').length).toBe(3) // 1차·시험기간·2차(모집 구간 = 공개면 제외)
   expect(AIM_ROADMAP.filter((n) => n.type === 'session').length).toBe(9) // 회차 = 포인트
   expect(html).toContain('1차 프로젝트')
   expect(html).toContain('2차 프로젝트')
+  expect(html).toContain('시험기간')               // '시험 휴지' 개명(오너 2026-08-14)
+  expect(html).not.toContain('시험 휴지')
   expect(html).not.toContain('전반부') // 구 명명 = 대외 표기에서 제거
   expect(html).not.toContain('후반부')
-  expect(html).toContain('중간고사 2주 전부터 활동 중지')
-  // 날짜 = data/recruit.js PHASES 파생(운영틀 §2 — 하드코딩 아님)
-  expect(html).toContain(`${shortDate(PHASES.p1.킥오프주간)} 주 ~ ${shortDate(PHASES.p1.쇼케이스주간)} 주`)
-  expect(html).toContain(`${shortDate(PHASES.휴지.start)} ~ ${shortDate(PHASES.휴지.end)}`)
-  expect(html).toContain(`${shortDate(PHASES.p2.개시주간)} 주 ~ ${shortDate(PHASES.p2.상한주간)} 주`)
+  // 날짜 = 단일원천(aim-roadmap.js — 운영틀 §2 2026-08-13 재편 값)
+  expect(html).toContain('09-07 주 ~ 10-06')
+  expect(html).toContain('10-07 ~ 10-26')
+  expect(html).toContain('10-27 주 ~ 11-24')
   expect(html).toContain(ACADEMIC_RULE) // 학사일정 연동 원칙 1줄 명기
   expect(html).not.toContain('산출물 = 본인 소유') // 요강 하단 콜아웃 = 오너 삭제 2026-08-07(폼 안내 rc-callout은 별개)
 })
 
-test('로드맵 회차 = 번호·주제·배움·세부 전량 렌더 + OT·발표 태그', () => {
+test('로드맵 회차 = 번호·주제·배움·세부 전량 렌더 + OT·쇼케이스·최종 발표 태그', () => {
   const html = flat(<Recruit />)
   for (const s of AIM_ROADMAP.filter((n) => n.type === 'session')) {
     expect(html, `회차 번호 부재: ${s.no}`).toContain(`>${s.no}<`)
@@ -125,16 +126,17 @@ test('로드맵 회차 = 번호·주제·배움·세부 전량 렌더 + OT·발�
     for (const d of s.세부) expect(html, `세부 부재: ${d}`).toContain(d)
   }
   expect(html).toContain('>OT<') // 1회 = OT 태그(오너 "맨 처음은 OT")
-  expect(html).toContain('1차 발표')
-  expect(html).toContain('팀 편성')
+  expect(html).toContain('쇼케이스')       // 4회 태그
+  expect(html).toContain('최종 발표')      // 9회 태그
+  expect(html).not.toContain('중간 쇼케이스') // 2026-08-13 재편 — 폐기 노드
+  expect(html).not.toContain('다섯 활용 축')  // 구 커리큘럼 잔재 금지
   expect(html).not.toContain('rc-rounds') // 구 차시 목록 폐지
   expect(html).not.toContain('rc-steps-spy')
 })
 
-test('2차·최종 발표 페이즈 = 버건디 포인트(rc-rm-hl) + 예상 시기 표기', () => {
+test('2차 프로젝트 페이즈 = 버건디 포인트(rc-rm-hl)', () => {
   const html = flat(<Recruit />)
-  expect((html.match(/rc-rm-hl/g) || []).length).toBe(2) // 2차 프로젝트 + 최종 발표
-  expect(html).toContain('예상 시기')
+  expect((html.match(/rc-rm-hl/g) || []).length).toBe(1) // 2차 프로젝트(최종 발표 = 9회차로 흡수)
 })
 
 test('[미정] 게재 금지(운영틀 §8) — 최종 발표 주간·요일·인원·선발 방식 값 없음', () => {

@@ -139,7 +139,7 @@
   width: 11px; height: 11px; border-radius: 50%; background: var(--accent); border: 2px solid var(--bg);
   transition: transform 300ms ease-out, box-shadow 300ms ease-out;
 }
-/* 페이즈 헤더(1차·2차·휴지·최종 발표) — 대형(차시 주제의 약 1.5배) */
+/* 페이즈 헤더(1차·시험기간·2차) — 대형(차시 주제의 약 1.5배) */
 .rc-rm-when { display: block; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; color: var(--text-sub); margin-bottom: 0.3rem; }
 .rc-phase-t { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.55rem, 2.8vw, 1.95rem); letter-spacing: -0.015em; word-break: keep-all; margin: 0 0 0.35rem; }
 .rc-rm-desc { margin: 0; font-size: 0.92rem; line-height: 1.6; color: var(--text-sub); word-break: keep-all; }
