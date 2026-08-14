@@ -29,12 +29,18 @@ function whenLabel(s) {
 }
 
 // 상단 피처 밴드 — 리스트 첫 항목(최신·다음). 예정 = 블랙 밴드 / 과거 = 라이트 밴드(같은 골격).
+// 밴드 전체 클릭 = 상세 진입(오너 2026-08-14 — "세미나 내용 보기" 버튼 폐지). 내부 PDF 링크는 전파 차단.
 // export = 콘텐츠 무관 단위 테스트용.
 export function SeminarFeature({ s, today, onOpen = () => {} }) {
   const upcoming = isUpcoming(s, today)
   const thumbs = Array.isArray(s['썸네일']) ? s['썸네일'].filter(Boolean) : []
+  const pdfHref = s.pdf || s['슬라이드']
   return (
-    <section className={`sem-feat${upcoming ? ' is-next' : ''}`} aria-label={upcoming ? '다음 세미나' : '최신 세미나'}>
+    <section
+      className={`sem-feat${upcoming ? ' is-next' : ''} sem-feat-clickable`}
+      aria-label={upcoming ? '다음 세미나' : '최신 세미나'}
+      onClick={() => onOpen(s.slug)}
+    >
       <div className="sem-feat-in">
         <div className="sem-feat-txt">
           <div className="sem-next-top">
@@ -48,20 +54,19 @@ export function SeminarFeature({ s, today, onOpen = () => {} }) {
           <Chips s={s} />
           <button type="button" className="sem-tl-title" onClick={() => onOpen(s.slug)}>{s.title}</button>
           <Desc s={s} />
-          <div className="sem-feat-actions">
-            <button type="button" className="btn-2nd" onClick={() => onOpen(s.slug)}>세미나 내용 보기</button>
-            {s['슬라이드'] && (
-              <a className="btn-2nd" href={s['슬라이드']} target="_blank" rel="noreferrer">발표자료 PDF 열기</a>
-            )}
-          </div>
+          {pdfHref && (
+            <div className="sem-feat-actions">
+              <a className="btn-2nd" href={pdfHref} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>발표자료 PDF 열기</a>
+            </div>
+          )}
         </div>
         {thumbs.length > 0 && (
           <a
-            className="sem-feat-thumb" href={s['슬라이드'] || undefined} target="_blank" rel="noreferrer"
-            aria-label="발표자료 열기"
+            className="sem-feat-thumb" href={pdfHref || undefined} target="_blank" rel="noreferrer"
+            aria-label="발표자료 열기" onClick={(e) => e.stopPropagation()}
           >
             <img src={thumbs[0]} alt={`${s.title} 발표자료 미리보기`} loading="lazy" />
-            {s['슬라이드'] && <span className="sem-feat-thumb-note">클릭하면 발표자료 PDF가 새 탭에서 열립니다</span>}
+            {pdfHref && <span className="sem-feat-thumb-note">클릭하면 발표자료 PDF가 새 탭에서 열립니다</span>}
           </a>
         )}
       </div>
@@ -89,8 +94,8 @@ export function SeminarCard({ s, today, onOpen = () => {} }) {
           <span className="sem-card-title">{s.title}</span>
         </span>
       </button>
-      {s['슬라이드'] && (
-        <a className="sem-card-pdf" href={s['슬라이드']} target="_blank" rel="noreferrer">발표자료 PDF 열기</a>
+      {(s.pdf || s['슬라이드']) && (
+        <a className="sem-card-pdf" href={s.pdf || s['슬라이드']} target="_blank" rel="noreferrer">발표자료 PDF 열기</a>
       )}
     </li>
   )

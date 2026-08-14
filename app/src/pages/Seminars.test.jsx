@@ -86,6 +86,17 @@ test('SeminarDetail 구조형 — 발제 블록 + "다루는 내용" 번호 목�
   expect(html).toContain('https://origin.example/a')
 })
 
+// 상세 최상단 표지(2026-08-14 오너) — 썸네일 + pdf(∨슬라이드) 있으면 클릭형 표지, 새 탭.
+test('SeminarDetail 표지 — 썸네일·pdf 있으면 최상단 표지 링크(pdf 우선·새 탭), 썸네일 없으면 비표시', () => {
+  const withCover = flat(<SeminarDetail s={{ ...labSem, 썸네일: ['/img/세미나/cover-s3.png'], pdf: '/pdf/세미나/b.pdf' }} onBack={() => {}} />)
+  expect(withCover).toContain('sem-ed-cover')
+  expect(withCover).toContain('/img/세미나/cover-s3.png')
+  expect(withCover).toContain('/pdf/세미나/b.pdf') // pdf 우선
+  expect(withCover).toContain('클릭하면 발표자료 PDF가 새 탭에서 열립니다')
+  const noThumb = flat(<SeminarDetail s={labSem} onBack={() => {}} />)
+  expect(noThumb).not.toContain('sem-ed-cover')
+})
+
 test('페이지 구조 — 목록(타임라인 소개 헤드·필터 바) 상시 렌더(콘텐츠·시점 무관)', () => {
   const html = renderToString(<Seminars />)
   expect(html).toContain('pg-head') // 소개 page-head 골격(3차 통일 = 공용 PageHead)

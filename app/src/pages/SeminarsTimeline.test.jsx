@@ -52,14 +52,16 @@ test('피처 — 일정미정 = 예정 취급(is-next) + 날짜 대신 "일정 �
   expect(html).not.toContain('2026.06.01')
 })
 
-// CTA 명확화(피드백 "눌러야 될 것 같이 안 생겼다") — 문장 버튼 2종.
-test('피처 CTA — "세미나 내용 보기" 상시 + 슬라이드 있으면 "발표자료 PDF 열기"', () => {
-  const withSlide = flat(<SeminarFeature s={base({ 슬라이드: 'https://slides/s1/' })} today={TODAY} onOpen={noop} />)
-  expect(withSlide).toContain('세미나 내용 보기')
-  expect(withSlide).toContain('발표자료 PDF 열기')
-  expect(withSlide).toContain('https://slides/s1/')
+// 밴드 전체 클릭 = 상세 진입(오너 2026-08-14 — "세미나 내용 보기" 버튼 폐지). PDF 링크 = pdf 우선, 없으면 슬라이드.
+test('피처 CTA — 내용 보기 버튼 없음 + 밴드 클릭 클래스 + PDF 링크는 pdf 우선', () => {
+  const withPdf = flat(<SeminarFeature s={base({ 슬라이드: 'https://slides/s1/', pdf: '/pdf/세미나/a.pdf' })} today={TODAY} onOpen={noop} />)
+  expect(withPdf).not.toContain('세미나 내용 보기')
+  expect(withPdf).toContain('sem-feat-clickable')
+  expect(withPdf).toContain('발표자료 PDF 열기')
+  expect(withPdf).toContain('/pdf/세미나/a.pdf')
+  const slideOnly = flat(<SeminarFeature s={base({ 슬라이드: 'https://slides/s1/' })} today={TODAY} onOpen={noop} />)
+  expect(slideOnly).toContain('https://slides/s1/') // pdf 없으면 슬라이드 폴백
   const noSlide = flat(<SeminarFeature s={base()} today={TODAY} onOpen={noop} />)
-  expect(noSlide).toContain('세미나 내용 보기')
   expect(noSlide).not.toContain('발표자료 PDF 열기')
 })
 

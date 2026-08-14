@@ -58,6 +58,8 @@ function SeminarSources({ md }) {
 //  ③ 폴백(그 외 인지) = 본문 일반 마크다운. export = 단위 테스트용.
 export function SeminarDetail({ s, onBack }) {
   const isLab = s.유형 === '실습'
+  const thumbs = Array.isArray(s['썸네일']) ? s['썸네일'].filter(Boolean) : []
+  const pdfHref = s.pdf || s['슬라이드']
   const { intro, sections } = splitSeminarBody(s.body)
   const hasOutline = Boolean(sections['다루는 내용'])
   const hasSources = Boolean(sections['출처'])
@@ -83,6 +85,13 @@ export function SeminarDetail({ s, onBack }) {
       </header>
 
       <div className="sem-ed-body">
+        {pdfHref && thumbs.length > 0 && (
+          <a className="sem-ed-cover" href={pdfHref} target="_blank" rel="noreferrer" aria-label="발표자료 PDF 열기">
+            <img src={thumbs[0]} alt={`${s.title} 발표자료 표지`} />
+            <span className="sem-ed-cover-note">클릭하면 발표자료 PDF가 새 탭에서 열립니다</span>
+          </a>
+        )}
+
         {isStructured && (
           <div className="sem-ed-byline">
             <span className="sem-ed-mono" aria-hidden="true">{(s.author || '?').charAt(0).toUpperCase()}</span>
