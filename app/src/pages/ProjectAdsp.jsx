@@ -1,4 +1,4 @@
-// ADsP 스터디 1기 — 인터랙티브 상세. spec = erp-club/docs/specs/2026-08-12-adsp-인터랙티브-개편.md
+// ADsP 스터디 1기 — 인터랙티브 상세. 구 spec 압축 = erp-club/docs/아카이브.md · 여정 = erp-club/roadmap.md §62·§64
 // 고도화(오너 픽 2026-08-13): 레퍼런스 5종 복합(Linear 로그 레일·Comeau 토글/타일·R2D3 도트 스텝 스크롤·
 // Ciechanowski 색코딩·rauno 실패 카드) + 콘텐츠 갭(실패 챕터·조건부 판정·투입 실측) 반영.
 // 텍스트 규칙: 정보형 제목·챕터당 문단 ≤2·핵심구만 볼드·keep-all. 수치 = data/project-adsp-data.js 단일원천.

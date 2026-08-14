@@ -262,7 +262,7 @@ button.proof-link:focus-visible, .sem-ed-back:focus-visible {
   .sem-card:hover { transform: none; }
 }
 
-/* ── 인쇄판(PDF 산출 — 2026-08-13): 세미나 상세를 A4 문서로. 생성 = scripts/export-seminar-pdf.mjs ── */
+/* ── 인쇄 스타일(브라우저 Ctrl+P용) — 세미나 PDF 산출물 원천은 덱 인쇄(scripts/export-deck-pdf.mjs, 2026-08-14) ── */
 @media print {
   .skip-link, .nav, .footer, .sem-ed-back, .sem-ed-actions, .sem-ed-toc, .sem-ed-cover { display: none !important; }
   .sem-main { padding: 0; }

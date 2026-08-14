@@ -1,5 +1,5 @@
 // 기고 1트랙 형식 단일원천 — 구분자·필드 정의 + 프롬프트 키트 문안.
-// 파서(contrib-parser.js)와 키트가 이 상수를 공유한다(spec 2026-08-05-기고-투트랙 §1-2 — 이중 원천 금지).
+// 파서(contrib-parser.js)와 키트가 이 상수를 공유한다(기고 투트랙 규칙 — 이중 원천 금지. 구 spec 압축 = erp-club/docs/아카이브.md).
 // 성격·주제 허용값은 schema.js에서 동적으로 끼워 넣는다(하드코딩 금지).
 import { NATURES, TOPICS } from '../content/schema.js'
 

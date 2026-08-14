@@ -79,7 +79,7 @@ export function validateEntry(kind, filename, data, body = '') {
     }
     // 슬라이드 = 선택(사후 자료 링크) — 있으면 비어있지 않은 문자열(URL)만 허용
     if ('슬라이드' in data && (typeof data['슬라이드'] !== 'string' || data['슬라이드'].trim() === '')) errs.push('슬라이드는 비어있지 않은 문자열(URL)만 허용')
-    // pdf = 선택(인쇄판 경로 — 최종 산출물 2026-08-13, 생성 = scripts/export-seminar-pdf.mjs) — 있으면 비어있지 않은 문자열만 허용
+    // pdf = 선택(발표자료 PDF 경로 — 최종 산출물 2026-08-13, 생성 = scripts/export-deck-pdf.mjs 덱 인쇄) — 있으면 비어있지 않은 문자열만 허용
     if ('pdf' in data && (typeof data.pdf !== 'string' || data.pdf.trim() === '')) errs.push('pdf는 비어있지 않은 문자열(경로)만 허용')
     // 주제 = 선택(단일 — 기사 TOPICS enum 재사용, 세미나 v3 필터 축 2026-07-25)
     if ('주제' in data && (typeof data['주제'] !== 'string' || !TOPICS.includes(data['주제']))) errs.push(`주제 enum 밖: ${data['주제']}`)
