@@ -1,7 +1,7 @@
 // 홈 탭(2026-08-06 개편) — 첫 화면 = 대형 월 캘린더 + 다가오는 업무. 아래로 과제 제출·공지·세션 흡수(구 제출·스터디 탭).
 // 데이터 = 운영 일정(events, 0007) + 과제 마감 자동 + 세션 날짜 자동. 계산은 calendar-logic.js(순수)만 쓴다.
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { monthGrid, buildAgenda, itemsOn, upcoming, dday, toKey, WEEKLY_CONTRIB, weeklyContribItems } from './calendar-logic.js'
+import { monthGrid, buildAgenda, itemsOn, upcoming, dday, daysBetween, toKey, WEEKLY_CONTRIB, weeklyContribItems } from './calendar-logic.js'
 import { postingAgendaItems } from './postings-logic.js'
 import Assignments from './Assignments.jsx'
 import Notices from './Notices.jsx'
@@ -96,7 +96,8 @@ export function UpcomingTasks({ items, todayKey, onSelect }) {
             <button type="button" className="ws-up-item" onClick={() => onSelect(it.date)}>
               <span className={`ws-cal-dot ${KIND_CLASS[it['종류']] || 'ev'}`} aria-hidden="true" />
               <span className="ws-up-title">{it['제목']}</span>
-              <span className="ws-up-when">{it.date.slice(5).replace('-', '/')} · {dday(todayKey, it.date)}</span>
+              <span className="ws-up-when">{it.date.slice(5).replace('-', '/')}</span>
+              <span className={`ws-up-dday${daysBetween(todayKey, it.date) <= 7 ? ' soon' : ''}`}>{dday(todayKey, it.date)}</span>
             </button>
           </li>
         ))}

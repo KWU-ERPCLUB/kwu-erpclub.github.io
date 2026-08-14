@@ -90,6 +90,7 @@
   cursor: pointer;
 }
 .ws-submit:hover { background: var(--btn-hover); } /* 차콜 hover 시프트 토큰(구 하드코딩 #000) */
+.ws-submit:active { transform: scale(0.98); }      /* §5 active 상태 */
 .ws-submit:disabled { opacity: 0.4; cursor: default; } /* 규칙 §5 disabled = opacity 0.4(구 0.55 정합 수정) */
 .ws-error { margin: 0; font-size: 0.85rem; color: var(--accent); font-weight: 600; }
 
@@ -126,7 +127,7 @@
 /* ⑤ 컬렉션 탭 — 북마크 목록 + 스크랩 CRUD */
 .ws-block { margin-bottom: 1.8rem; }
 .ws-block:last-child { margin-bottom: 0; }
-.ws-h2 { margin: 0 0 0.7rem; font-family: var(--font-display); font-size: 1rem; font-weight: 800; }
+.ws-h2 { margin: 0 0 0.7rem; font-family: var(--font-display); font-size: 1.2rem; font-weight: 800; letter-spacing: -0.01em; }
 .ws-list { list-style: none; margin: 0.6rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; }
 .ws-mark, .ws-scrap {
   border: 1px solid var(--line); border-radius: 8px; background: #fff; padding: 0.55rem 0.85rem;
@@ -189,7 +190,7 @@
 .ws-h3 {
   margin: 1.4rem 0 0.5rem;
   font-family: var(--font-display);
-  font-size: 0.92rem;
+  font-size: 0.98rem;
   font-weight: 800;
 }
 .ws-h3:first-child { margin-top: 0; }

@@ -81,8 +81,12 @@ export function weeklyContribItems(todayKey, n = 4, dueDay = WEEKLY_CONTRIB.dueD
 }
 
 // D-day 라벨 — 캘린더 키 문자열끼리의 날짜 차이(시간대 영향 없게 정오 고정).
+export function daysBetween(fromKey, toKey2) {
+  return Math.round((new Date(`${toKey2}T12:00:00`) - new Date(`${fromKey}T12:00:00`)) / 86400000)
+}
+
 export function dday(fromKey, toKey2) {
-  const diff = Math.round((new Date(`${toKey2}T12:00:00`) - new Date(`${fromKey}T12:00:00`)) / 86400000)
+  const diff = daysBetween(fromKey, toKey2)
   if (diff === 0) return '오늘'
   return diff > 0 ? `D-${diff}` : `D+${-diff}`
 }
