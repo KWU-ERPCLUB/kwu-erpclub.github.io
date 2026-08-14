@@ -8,31 +8,31 @@
   <rect x="0" y="0" width="1400" height="660" fill="#ffffff"/>
 
   <!-- 순환 화살표 -->
-  <path d="M 850 130 Q 1120 220 1090 430" fill="none" stroke="#141414" stroke-width="3" marker-end="url(#arw)"/>
-  <path d="M 960 550 Q 700 640 440 550" fill="none" stroke="#141414" stroke-width="3" marker-end="url(#arw)"/>
-  <path d="M 310 430 Q 280 220 550 130" fill="none" stroke="#141414" stroke-width="3" marker-end="url(#arw)"/>
+  <path d="M 850 130 Q 1120 220 1090 430" fill="none" stroke="#141414" stroke-width="4" marker-end="url(#arw)"/>
+  <path d="M 960 550 Q 700 640 440 550" fill="none" stroke="#141414" stroke-width="4" marker-end="url(#arw)"/>
+  <path d="M 310 430 Q 280 220 550 130" fill="none" stroke="#141414" stroke-width="4" marker-end="url(#arw)"/>
 
   <!-- 노드 1 — 위임 -->
   <rect x="560" y="52" width="280" height="116" rx="18" fill="#fafaf9" stroke="#e7e7e5" stroke-width="2"/>
   <circle cx="560" cy="52" r="20" fill="#161616"/>
-  <text x="560" y="60" text-anchor="middle" font-size="22" font-weight="700" fill="#ffffff">1</text>
+  <text x="560" y="60" text-anchor="middle" font-size="26" font-weight="700" fill="#ffffff">1</text>
   <text x="700" y="104" text-anchor="middle" font-size="30" font-weight="800" fill="#141414">위임</text>
-  <text x="700" y="142" text-anchor="middle" font-size="22" fill="#55606c">시킨다</text>
+  <text x="700" y="142" text-anchor="middle" font-size="26" fill="#55606c">시킨다</text>
 
   <!-- 노드 2 — 확인 -->
   <rect x="950" y="440" width="330" height="140" rx="18" fill="#fafaf9" stroke="#e7e7e5" stroke-width="2"/>
   <circle cx="950" cy="440" r="20" fill="#161616"/>
-  <text x="950" y="448" text-anchor="middle" font-size="22" font-weight="700" fill="#ffffff">2</text>
+  <text x="950" y="448" text-anchor="middle" font-size="26" font-weight="700" fill="#ffffff">2</text>
   <text x="1115" y="494" text-anchor="middle" font-size="30" font-weight="800" fill="#141414">확인</text>
-  <text x="1115" y="532" text-anchor="middle" font-size="22" fill="#55606c">원자료와 대조한다</text>
+  <text x="1115" y="532" text-anchor="middle" font-size="26" fill="#55606c">원자료와 대조한다</text>
 
   <!-- 노드 3 — 재위임 -->
   <rect x="120" y="440" width="330" height="140" rx="18" fill="#fafaf9" stroke="#e7e7e5" stroke-width="2"/>
   <circle cx="120" cy="440" r="20" fill="#161616"/>
-  <text x="120" y="448" text-anchor="middle" font-size="22" font-weight="700" fill="#ffffff">3</text>
+  <text x="120" y="448" text-anchor="middle" font-size="26" font-weight="700" fill="#ffffff">3</text>
   <text x="285" y="490" text-anchor="middle" font-size="30" font-weight="800" fill="#141414">재위임</text>
-  <text x="285" y="524" text-anchor="middle" font-size="22" fill="#55606c">어긋난 곳만 지목해</text>
-  <text x="285" y="554" text-anchor="middle" font-size="22" fill="#55606c">다시 시킨다</text>
+  <text x="285" y="522" text-anchor="middle" font-size="26" fill="#55606c">어긋난 곳만 지목해</text>
+  <text x="285" y="556" text-anchor="middle" font-size="26" fill="#55606c">다시 시킨다</text>
 
   <!-- 중앙 축 -->
   <rect x="570" y="322" width="260" height="66" rx="33" fill="#ffffff" stroke="#e7e7e5" stroke-width="2"/>

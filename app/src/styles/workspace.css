@@ -8,25 +8,7 @@
   flex: 1;
 }
 
-/* page-head 골격(§3-1): 눈썹 → 헤드라인(1단어 강조) → 서브 1줄 → 헤어라인 */
-.ws-head { border-bottom: 1px solid var(--line); padding-bottom: 1.4rem; margin-bottom: 1.8rem; }
-.ws-eyebrow {
-  margin: 0 0 0.5rem;
-  font-size: 0.82rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  color: var(--accent);      /* 버건디 = 섹션 인덱스 문법(화이트리스트 ④) */
-}
-.ws-h1 {
-  margin: 0 0 0.6rem;
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(1.7rem, 3.8vw, 2.6rem);
-  line-height: 1.22;
-  letter-spacing: -0.02em;
-}
-.ws-h1 em { font-style: normal; color: var(--accent); }  /* 화이트리스트 ① */
-.ws-lead { margin: 0; font-size: 0.92rem; color: var(--text-sub); }
+/* (구 자체 page-head(.ws-head/.ws-eyebrow/.ws-h1/.ws-lead) = 2026-08-14 폐지 — 공용 PageHead(global.css .pg-head)로 이관, §3-1) */
 
 /* 패널 = 카드 1장(밀도 1단계 위) */
 .ws-panel {

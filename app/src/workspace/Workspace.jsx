@@ -1,7 +1,7 @@
 // 워크스페이스 셸(M1) — 로그인 + 기능 자리표시. 데이터는 전부 저장소 계층 경유(SPEC §1, P1).
 // 공개 6페이지와 코드·CSS를 공유하지 않는다(styles/workspace.css 별도). 공개 헤더에 링크 상시 노출(오너 개정 2026-08-07).
 import { useEffect, useState } from 'react'
-import { SiteNav, SiteFooter } from '../shared.jsx'
+import { SiteNav, SiteFooter, PageHead } from '../shared.jsx'
 import { getRepositories, isBackendConfigured } from '../data/index.js'
 import { CONTACT, CONTACT_MAILTO } from '../data/recruit.js'
 import Contribute from './Contribute.jsx'
@@ -55,16 +55,6 @@ export function initialTab(search) {
   const raw = new URLSearchParams(search || '').get('tab')
   const q = LEGACY_TAB_MAP[raw] || raw
   return WS_TABS.some(([name]) => name === q) ? q : WS_TABS[0][0]
-}
-
-function PageHead({ sub }) {
-  return (
-    <div className="ws-head">
-      <p className="ws-eyebrow">WORKSPACE</p>
-      <h1 className="ws-h1">스터디원 <em>작업면</em></h1>
-      <p className="ws-lead">{sub}</p>
-    </div>
-  )
 }
 
 // ① 미설정 상태 — env 2종이 없을 때(백엔드 프로비저닝 전)
@@ -240,7 +230,8 @@ export default function Workspace({ repos, configured }) {
     <>
       <SiteNav />
       <main id="main" className={`ws-main${app ? ' ws-app' : ''}`}>
-        {!app && <PageHead sub={sub} />}
+        {/* 로그인 전 헤드 = 공용 PageHead(§3-1 — 자체 head CSS 금지, 2026-08-14 이관) */}
+        {!app && <PageHead label="WORKSPACE" title={<>스터디원 <em>작업면</em></>} sub={sub} />}
         {!ready && <NotConfigured />}
         {ready && !user && <LoginForm onSubmit={signIn} error={error} busy={busy} />}
         {app && (

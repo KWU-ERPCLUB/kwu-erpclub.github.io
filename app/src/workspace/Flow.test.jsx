@@ -15,7 +15,7 @@ test('weekStatus — 시작일~+6일 = 이번 주, 이전 = 예정, 이후 = 지
 
 test('흐름 탭 골격 = 클릭형 로드맵 + 주차 기록(SSR — 데이터는 클라이언트 로드)', () => {
   const html = flat(<Flow store={createMockRepositories({ user: 'mock-member' })} staff={false} />)
-  expect(html).toContain('차시를 누르면')          // 2026-08-13 개편 — 로드맵 = 진입점
+  expect(html).toContain('회차를 누르면')          // 2026-08-13 개편 — 로드맵 = 진입점('차시'→'회차' 표면 통일 2026-08-14)
   expect(html).not.toContain('차시 진행')          // 구 별도 섹션은 로드맵에 흡수·제거
   expect(html).toContain('주차 기록')
   expect(html).toContain('주 단위 진행 기록')

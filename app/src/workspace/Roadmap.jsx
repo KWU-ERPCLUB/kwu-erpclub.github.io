@@ -58,7 +58,7 @@ function SessionNode({ item, session, note, materials, seminar, todayKey, opened
             </ul>
             {session?.['설명'] && <p className="ws-rm-desc">{session['설명']}</p>}
             {note && !noteLocked && <div className="ws-rm-note"><Markdown body={note['본문'] || ''} /></div>}
-            {noteLocked && <p className="ws-note">🔒 차시 내용 — {note['공개일']} 공개(운영진에게만 보임)</p>}
+            {noteLocked && <p className="ws-note">🔒 회차 내용 — {note['공개일']} 공개(운영진에게만 보임)</p>}
             {materials.length > 0 && (
               <ul className="ws-sublist">
                 {materials.map((m) => (
@@ -73,8 +73,8 @@ function SessionNode({ item, session, note, materials, seminar, todayKey, opened
               </ul>
             )}
             {seminar
-              ? <a className="ws-rm-sem" href={seminarHref(seminar)}>세미나에서 이 차시 보기 →</a>
-              : !note && <p className="ws-note">차시 내용 준비 중 — 발제 글이 발행되면 세미나로 이어짐.</p>}
+              ? <a className="ws-rm-sem" href={seminarHref(seminar)}>세미나에서 이 회차 보기 →</a>
+              : !note && <p className="ws-note">회차 내용 준비 중 — 발제 글이 발행되면 세미나로 이어짐.</p>}
           </div>
         )}
       </div>
@@ -102,7 +102,7 @@ export default function RoadmapSection({ store, todayKey }) {
   return (
     <section className="ws-block ws-roadmap">
       <h2 className="ws-h2">1기 로드맵</h2>
-      <p className="ws-note">차시를 누르면 세부·자료가 열림. 발제 글이 있는 차시는 세미나로 이어짐. 🔒 = 공개일 전.</p>
+      <p className="ws-note">회차를 누르면 세부·자료가 열림. 발제 글이 있는 회차는 세미나로 이어짐. 🔒 = 공개일 전.</p>
       {error && <p className="ws-error" role="alert">{error}</p>}
       <ol className="ws-rm">
         {AIM_TIMELINE.map((item, i) => {

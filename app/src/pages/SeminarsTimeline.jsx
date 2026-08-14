@@ -142,7 +142,7 @@ export default function SeminarsTimeline({ all, today, onOpen }) {
       <PageHead
         label="SEMINARS"
         title="세미나"
-        sub="스터디 세미나를 회차별로 기록하는 공간입니다 — 발표자료를 내려받을 수 있습니다."
+        sub="스터디 세미나를 회차별로 기록하는 공간입니다 — 발표자료를 열람할 수 있습니다."
       >
         <div className="sem-filter-bar">
           <div className="sem-filter" role="group" aria-label="주제 필터">

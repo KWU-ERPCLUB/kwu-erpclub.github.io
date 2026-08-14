@@ -6,7 +6,7 @@
 
 /* ── 페이지 셸 ── (B2 좌 레일·페이지 헤드 = 공용 PageHead(global.css .pg-head)로 통합, 3차 통일 2026-08-05:
    구 .pj-shell/.pj-rail-label/.pj-rail-dot/.pj-head 규칙 제거 — 레일 폭은 --rail-w 토큰이 담당) */
-.pj-page { max-width: 1200px; }
+.pj-page { max-width: 1280px; }   /* §3-2 목록형 데스크톱 기본 폭 통일(2026-08-14) */
 
 /* (구 B1 블랙 통계 밴드(.pj-stats) = 4차 개편 2026-08-06 삭제 — 피드백 "홈 내용". 홈 StatsBand가 담당.) */
 

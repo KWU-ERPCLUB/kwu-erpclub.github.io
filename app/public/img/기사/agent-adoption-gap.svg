@@ -2,9 +2,9 @@
   <style>
     text { font-family: Pretendard, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
     .t { font-size: 15px; font-weight: 700; fill: #141414; }
-    .s { font-size: 12px; fill: #55606c; }
-    .lb { font-size: 12.5px; fill: #141414; }
-    .v { font-size: 12px; font-weight: 700; fill: #55606c; }
+    .s { font-size: 15px; fill: #55606c; }
+    .lb { font-size: 14px; fill: #141414; }
+    .v { font-size: 15px; font-weight: 700; fill: #55606c; }
   </style>
   <rect width="720" height="300" fill="#ffffff"/>
   <text class="t" x="16" y="30">도입은 다수파, 확장은 소수파</text>
@@ -32,8 +32,8 @@
   <path d="M228,196 h101 a4,4 0 0 1 4,4 v18 a4,4 0 0 1 -4,4 h-101 z" fill="#a94b5c"/>
   <text class="v" x="343" y="213" style="fill:#a94b5c">23</text>
 
-  <line x1="228" y1="236" x2="704" y2="236" stroke="#e7e7e5" stroke-width="1"/>
-  <text class="s" x="228" y="256">도입 79 → 확장 23. 이 격차의 1순위 원인은 기술이 아니라 보안·거버넌스다.</text>
+  <line x1="16" y1="236" x2="704" y2="236" stroke="#e7e7e5" stroke-width="1"/>
+  <text class="s" x="16" y="256">도입 79 → 확장 23. 이 격차의 1순위 원인은 기술이 아니라 보안·거버넌스다.</text>
 
   <text class="s" x="16" y="292">출처: McKinsey State of AI(88·23) · PwC Agent Survey(79·66)</text>
 </svg>

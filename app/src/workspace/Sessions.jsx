@@ -46,10 +46,10 @@ export default function Sessions({ store }) {
               {s['설명'] && <p className="ws-scrap-memo">{s['설명']}</p>}
               {note && !noteLocked && (
                 <button type="button" className="ws-btn" onClick={() => setOpen(opened ? null : s.id)}>
-                  {opened ? '내용 접기' : '이 차시 내용 보기'}
+                  {opened ? '내용 접기' : '이 회차 내용 보기'}
                 </button>
               )}
-              {noteLocked && <p className="ws-note">🔒 차시 내용 — {note['공개일']} 공개(운영진에게만 보임)</p>}
+              {noteLocked && <p className="ws-note">🔒 회차 내용 — {note['공개일']} 공개(운영진에게만 보임)</p>}
               {opened && note && !noteLocked && (
                 <div className="ws-scrap-memo"><Markdown body={note['본문'] || ''} /></div>
               )}

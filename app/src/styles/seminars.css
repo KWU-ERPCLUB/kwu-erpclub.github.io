@@ -12,7 +12,7 @@ button.proof-link {
 
 /* ── 페이지 셸 ── */
 .sem-main { width: 100%; }
-.sem-list { max-width: 1200px; margin: 0 auto; padding: clamp(2rem, 5vh, 3rem) 1.5rem clamp(3rem, 6vh, 4rem); }
+.sem-list { max-width: 1280px; margin: 0 auto; padding: clamp(2rem, 5vh, 3rem) 1.5rem clamp(3rem, 6vh, 4rem); }
 @media (max-width: 700px) { .sem-list { padding: 1.75rem 1.25rem 2.5rem; } }
 
 /* ── 필터 바 — PageHead children(중앙 정렬) ── */

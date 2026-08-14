@@ -48,7 +48,7 @@ export default function AdminContent({ store }) {
         onSave={saver('materials')} labelOf={(m) => `${m['제목']} · ${m.url || '파일'}`}
       />
       <AdminForm
-        title="세션 본문(차시 상세 — 목표·진행)" fields={FIELDS.notes} rows={data.notes} sessions={data.sessions}
+        title="세션 본문(회차 상세 — 목표·진행)" fields={FIELDS.notes} rows={data.notes} sessions={data.sessions}
         onSave={saver('notes')} labelOf={(n) => `${(n['본문'] || '').slice(0, 24)}… · ${n['공개일'] || '즉시 공개'}`}
       />
       <AdminForm

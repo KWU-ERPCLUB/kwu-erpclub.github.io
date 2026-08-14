@@ -30,8 +30,8 @@ function NowCard({ todayKey }) {
     <section className="ws-block">
       <h2 className="ws-h2">지금 위치</h2>
       {current && <p className="ws-note">이번 주 = {current.회차} · {current.주제}</p>}
-      {!current && next && <p className="ws-note">다음 차시 = {next.회차} · {next.주제} ({dday(todayKey, next.startKey)})</p>}
-      {!current && !next && <p className="ws-note">1기 차시 일정 종료 — 세부는 위 로드맵에서.</p>}
+      {!current && next && <p className="ws-note">다음 회차 = {next.회차} · {next.주제} ({dday(todayKey, next.startKey)})</p>}
+      {!current && !next && <p className="ws-note">1기 회차 일정 종료 — 세부는 위 로드맵에서.</p>}
       {current && next && <p className="ws-note">다음 = {next.회차} · {dday(todayKey, next.startKey)}</p>}
       <p className="ws-note">기록 작성 = 운영진 — 열람 전용.</p>
     </section>

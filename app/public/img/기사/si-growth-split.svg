@@ -2,9 +2,9 @@
   <style>
     text { font-family: Pretendard, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
     .t { font-size: 15px; font-weight: 700; fill: #141414; }
-    .s { font-size: 12px; fill: #55606c; }
-    .lb { font-size: 12.5px; fill: #141414; }
-    .v { font-size: 12px; font-weight: 700; fill: #55606c; }
+    .s { font-size: 15px; fill: #55606c; }
+    .lb { font-size: 14px; fill: #141414; }
+    .v { font-size: 15px; font-weight: 700; fill: #55606c; }
   </style>
   <rect width="720" height="300" fill="#ffffff"/>
   <text class="t" x="16" y="30">성장이 나온 칸은 전통 SI가 아니었다</text>
@@ -32,8 +32,8 @@
   <path d="M228,196 h454 a4,4 0 0 1 4,4 v18 a4,4 0 0 1 -4,4 h-454 z" fill="#a94b5c"/>
   <text class="v" x="596" y="213" style="fill:#ffffff">+75</text>
 
-  <line x1="228" y1="248" x2="704" y2="248" stroke="#e7e7e5" stroke-width="1"/>
-  <text class="s" x="228" y="268">LG CNS도 같은 방향 — 상반기 AI·클라우드 1조6,714억원으로 매출의 약 59%.</text>
+  <line x1="16" y1="248" x2="704" y2="248" stroke="#e7e7e5" stroke-width="1"/>
+  <text class="s" x="16" y="268">LG CNS도 같은 방향 — 상반기 AI·클라우드 1조6,714억원으로 매출의 약 59%.</text>
 
   <text class="s" x="16" y="292">출처: 삼성SDS·LG CNS 2026년 2분기 실적발표 · ZDNet Korea</text>
 </svg>

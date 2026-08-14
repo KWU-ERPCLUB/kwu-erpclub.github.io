@@ -14,38 +14,38 @@
   <text x="340" y="172" text-anchor="middle" font-size="26" fill="#141414">요약해줘</text>
 
   <!-- 결과 박스 = 우열과 같은 y대(456~596)로 정렬, 화살표는 종점(446)까지 연장 -->
-  <line x1="340" y1="212" x2="340" y2="446" stroke="#141414" stroke-width="3" marker-end="url(#arw2)"/>
+  <line x1="340" y1="212" x2="340" y2="446" stroke="#141414" stroke-width="4" marker-end="url(#arw2)"/>
 
   <rect x="120" y="456" width="440" height="140" rx="16" fill="#ffffff" stroke="#55606c" stroke-width="2" stroke-dasharray="8 7"/>
   <text x="340" y="502" text-anchor="middle" font-size="40" font-weight="800" fill="#55606c">?</text>
-  <text x="340" y="546" text-anchor="middle" font-size="24" font-weight="700" fill="#141414">판정 불가 출력</text>
-  <text x="340" y="578" text-anchor="middle" font-size="21" fill="#55606c">기준이 없어 맞는지 알 수 없음</text>
+  <text x="340" y="546" text-anchor="middle" font-size="26" font-weight="700" fill="#141414">판정 불가 출력</text>
+  <text x="340" y="578" text-anchor="middle" font-size="26" fill="#55606c">기준이 없어 맞는지 알 수 없음</text>
 
   <!-- 중앙 구분 -->
-  <text x="700" y="330" text-anchor="middle" font-size="24" font-weight="700" fill="#55606c">vs</text>
+  <text x="700" y="330" text-anchor="middle" font-size="26" font-weight="700" fill="#55606c">vs</text>
 
   <!-- 우 — 브리프 4블록 -->
   <text x="1060" y="82" text-anchor="middle" font-size="26" font-weight="800" fill="#141414">브리프 4블록</text>
 
   <rect x="840" y="108" width="440" height="60" rx="12" fill="#fafaf9" stroke="#e7e7e5" stroke-width="2"/>
-  <text x="868" y="147" font-size="23" font-weight="700" fill="#141414">[소스]</text>
-  <text x="1000" y="147" font-size="21" fill="#55606c">대조할 원문</text>
+  <text x="868" y="147" font-size="26" font-weight="700" fill="#141414">[소스]</text>
+  <text x="1000" y="147" font-size="26" fill="#55606c">대조할 원문</text>
 
   <rect x="840" y="178" width="440" height="60" rx="12" fill="#fafaf9" stroke="#e7e7e5" stroke-width="2"/>
-  <text x="868" y="217" font-size="23" font-weight="700" fill="#141414">[무엇을]</text>
-  <text x="1000" y="217" font-size="21" fill="#55606c">산출물·분량</text>
+  <text x="868" y="217" font-size="26" font-weight="700" fill="#141414">[무엇을]</text>
+  <text x="1000" y="217" font-size="26" fill="#55606c">산출물·분량</text>
 
   <rect x="840" y="248" width="440" height="60" rx="12" fill="#fafaf9" stroke="#e7e7e5" stroke-width="2"/>
-  <text x="868" y="287" font-size="23" font-weight="700" fill="#7a2030">[기준]</text>
-  <text x="1000" y="287" font-size="21" fill="#55606c">구조·금지 사항</text>
+  <text x="868" y="287" font-size="26" font-weight="700" fill="#7a2030">[기준]</text>
+  <text x="1000" y="287" font-size="26" fill="#55606c">구조·금지 사항</text>
 
   <rect x="840" y="318" width="440" height="60" rx="12" fill="#fafaf9" stroke="#e7e7e5" stroke-width="2"/>
-  <text x="868" y="357" font-size="23" font-weight="700" fill="#7a2030">[확인법]</text>
-  <text x="1000" y="357" font-size="21" fill="#55606c">검수 필요 항목 목록</text>
+  <text x="868" y="357" font-size="26" font-weight="700" fill="#7a2030">[확인법]</text>
+  <text x="1000" y="357" font-size="26" fill="#55606c">검수 필요 항목 목록</text>
 
-  <line x1="1060" y1="386" x2="1060" y2="446" stroke="#141414" stroke-width="3" marker-end="url(#arw2)"/>
+  <line x1="1060" y1="386" x2="1060" y2="446" stroke="#141414" stroke-width="4" marker-end="url(#arw2)"/>
 
   <rect x="840" y="456" width="440" height="140" rx="16" fill="#ffffff" stroke="#161616" stroke-width="2"/>
-  <text x="1060" y="516" text-anchor="middle" font-size="24" font-weight="700" fill="#141414">판정 가능한 출력</text>
-  <text x="1060" y="552" text-anchor="middle" font-size="21" fill="#55606c">기준대로 나왔는지 대조·검수 가능</text>
+  <text x="1060" y="516" text-anchor="middle" font-size="26" font-weight="700" fill="#141414">판정 가능한 출력</text>
+  <text x="1060" y="552" text-anchor="middle" font-size="26" fill="#55606c">기준대로 나왔는지 대조·검수 가능</text>
 </svg>

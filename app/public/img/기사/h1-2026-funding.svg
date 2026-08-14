@@ -2,9 +2,9 @@
   <style>
     text { font-family: Pretendard, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
     .t { font-size: 15px; font-weight: 700; fill: #141414; }
-    .s { font-size: 12px; fill: #55606c; }
-    .lb { font-size: 12.5px; fill: #141414; }
-    .v { font-size: 12px; font-weight: 700; fill: #55606c; }
+    .s { font-size: 15px; fill: #55606c; }
+    .lb { font-size: 14px; fill: #141414; }
+    .v { font-size: 15px; font-weight: 700; fill: #55606c; }
   </style>
   <rect width="720" height="330" fill="#ffffff"/>
   <text class="t" x="16" y="30">2026 상반기 — 돈의 단위</text>

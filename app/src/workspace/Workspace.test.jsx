@@ -172,12 +172,13 @@ test('운영 탭에 제출 현황 매트릭스 포함(운영진)', () => {
   expect(html).toContain('제출 현황')
 })
 
-// ── 공통 골격(디자인규칙 §3-1) ──
-test('page-head 골격 = 눈썹 WORKSPACE + h1 + 서브 1줄, nav·footer 공용', () => {
+// ── 공통 골격(디자인규칙 §3-1 — 자체 head 폐지, 공용 PageHead 이관 2026-08-14) ──
+test('page-head 골격 = 공용 PageHead(눈썹 WORKSPACE + h1 + 서브 1줄), nav·footer 공용', () => {
   const html = flat(<Workspace repos={createMockRepositories()} configured={false} />)
-  expect(html).toContain('ws-eyebrow">WORKSPACE')
-  expect(html).toContain('ws-h1')
-  expect(html).toContain('ws-lead')
+  expect(html).toContain('pg-label">WORKSPACE')
+  expect(html).toContain('pg-title')
+  expect(html).toContain('pg-sub')
+  expect(html).not.toContain('ws-eyebrow')       // 구 자체 head CSS = 위반(§3-1) — 제거됨
   expect(html).toContain('class="nav"')
   expect(html).toContain('class="footer"')
 })
