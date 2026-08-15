@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css" />
 <style>
   :root{
-    --accent:#7a2030; --dark:#161616; --bg:#ffffff; --surface:#fafaf9;
+    --accent:#7a2030; --tint:#f6edef; --dark:#161616; --bg:#ffffff; --surface:#fafaf9;
     --text:#141414; --text-sub:#55606c; --line:#e7e7e5; --dm:#d18f9a;
     --fd:'Paperlogy','Pretendard Variable',Pretendard,sans-serif;
     --fb:'Pretendard Variable',Pretendard,-apple-system,sans-serif;
@@ -78,11 +78,22 @@
   .qorig{font:600 22px var(--fd);color:var(--text);line-height:1.4}
   .qtr{font-size:17px;color:var(--text-sub);margin-top:10px}
 
-  .tslide{justify-content:center;padding:60px 72px}
-  .tslide .big{font:800 82px/1.06 var(--fd);letter-spacing:-.03em;color:var(--text)}
-  .tslide .accbar{width:64px;height:4px;background:var(--accent);margin:24px 0 6px}
-  .tslide .sub{font:600 21px var(--fb);color:var(--text-sub);margin-top:18px}
-  .tslide .badge{align-self:flex-start;margin-top:26px;border:1px solid var(--line);border-radius:999px;padding:10px 20px;font-size:15px;color:var(--dark)}
+  /* 표지 = 세미나 목록 썸네일(/img/세미나/cover-s*.png)과 같은 서식. 1280×720 = 커버 1600×900의 0.8배 환산.
+     서식을 고치면 scripts/export-seminar-cover.mjs도 같이 고친다(두 곳이 한 벌). */
+  .cover{justify-content:center;padding:0 80px;overflow:hidden} /* position은 .slide(absolute)를 유지 — 덮어쓰면 배치가 깨진다 */
+  .cover .blob{position:absolute;right:-120px;bottom:-208px;width:608px;height:608px;border-radius:999px;background:var(--tint)}
+  .cover .cdot{position:absolute;right:173px;bottom:120px;width:11px;height:11px;border-radius:999px;background:var(--accent)}
+  .cover .ctop{position:absolute;top:59px;left:80px;right:80px;display:flex;justify-content:space-between;align-items:center}
+  .cover .cpill{background:var(--dark);color:#fff;font:700 16px var(--fb);letter-spacing:.1em;padding:9px 21px;border-radius:999px}
+  .cover .ckind{font:700 18px var(--fb);color:var(--accent)}
+  .cover .accbar{position:relative;width:77px;height:5px;background:var(--accent);margin:0 0 27px}
+  .cover .big{position:relative;font:800 93px/1.06 var(--fd);letter-spacing:-.03em;color:var(--text);word-break:keep-all}
+  .cover .sub{position:relative;font:600 26px var(--fb);color:var(--text-sub);margin-top:24px}
+  .cover .cfoot{position:absolute;bottom:56px;left:80px;right:80px;display:flex;justify-content:space-between;
+                align-items:flex-end;border-top:1px solid var(--line);padding-top:21px}
+  .cover .cbrand{font:800 24px var(--fd);color:var(--text)}
+  .cover .corg{font:500 15px var(--fb);color:var(--text-sub);margin-top:6px}
+  .cover .ccount{font:700 17px var(--fb);color:var(--text-sub)}
 
   .fig{width:100%;max-width:760px;height:auto;margin:0 auto;display:block}
   .fnote{text-align:center;font-size:12px;color:var(--text-sub);margin-top:8px}
@@ -124,13 +135,16 @@
   <div id="stage">
 
   <!-- 1 -->
-  <section class="slide tslide" aria-label="1. 제작 스프린트">
-    <div class="top" style="position:absolute;top:44px;left:60px;right:60px"><span class="pill">차시 3 · 실습</span><span class="pnum">01</span></div>
-    <div class="big">제작<br>스프린트</div>
+  <section class="slide cover" aria-label="1. 제작 스프린트">
+    <div class="blob"></div><div class="cdot"></div>
+    <div class="ctop"><span class="cpill">SEMINAR 03</span><span class="ckind">실습</span></div>
     <div class="accbar"></div>
+    <div class="big">제작<br>스프린트</div>
     <div class="sub">위임 · 확인 · 재위임으로 내 소재 1회 돌리기</div>
-    <span class="badge">광운대학교 경영학부 ERP연구회 · MIS·AI 스터디</span>
-    <div class="foot" style="position:absolute;bottom:32px;left:60px;right:60px"><span>출처: 세미나 원고 차시 3</span><span class="r">KWU ERP연구회 · 세미나 3회차</span></div>
+    <div class="cfoot">
+      <div><div class="cbrand">AIM</div><div class="corg">광운대학교 경영학부 ERP연구회 · MIS·AI 스터디</div></div>
+      <div class="ccount">발표자료 26장</div>
+    </div>
   </section>
 
   <!-- 2 -->
