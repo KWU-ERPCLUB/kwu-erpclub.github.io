@@ -4,7 +4,7 @@ import App, { PROJECTS, RecruitBand, StatsBand, Roadmap } from './App.jsx'
 import { COHORT_LABEL, formatWindowShort } from './data/recruit.js'
 import { FAQ } from './data/faq.js'
 import { loadContent } from './content/loader.js'
-import { HomeInsights, HOME_INSIGHTS_COUNT } from './home-parts.jsx'
+import { HomeInsights, HOME_INSIGHTS_COUNT, splitTitle } from './home-parts.jsx'
 
 // 구조 검증(콘텐츠·시점 무관) — v7(2026-08-06 외부 피드백): 정중앙 히어로+블롭 배경, 마퀴·스크롤 유도·격자 키비주얼 폐지.
 test('메인 = 정중앙 히어로(대형 타이포·블롭 배경) — 마퀴·스크롤 유도 부재', () => {
@@ -39,11 +39,12 @@ test('섹션 헤드 4종(중앙 정렬) + 각 섹션 구조 마크업', () => {
   expect(html).not.toContain('hs-cols')
   expect((html.match(/hs-head/g) || []).length).toBe(4)
   expect((html.match(/hs-label/g) || []).length).toBe(4)
-  // ROADMAP: 브랜치 계보(2026-08-07) — 본류 2(ERP연구회→SAP 특강) + 분기점(AIM) + 브랜치 2(ADsP·슬롯)
-  expect((html.match(/rm-item/g) || []).length).toBe(5)
+  // ROADMAP: 브랜치 계보 — 본류 2(ERP연구회→SAP 특강) + 분기점(AIM 신설) + 브랜치 3(ADsP·AIM 1기·슬롯)
+  // AIM 1기 노드 = 2026-08-15 신설(슬롯 앞에 현 기수 자리를 명시).
+  expect((html.match(/rm-item/g) || []).length).toBe(6)
   expect((html.match(/rm-trunk/g) || []).length).toBe(2)
   expect(html).toContain('rm-fork')
-  expect((html.match(/rm-branch/g) || []).length).toBe(2)
+  expect((html.match(/rm-branch/g) || []).length).toBe(3)
   expect(html).toContain('rm-slot')
   expect(html).not.toContain('rm-right') // 구 지그재그 좌우 교대 폐지
   expect(html).not.toContain('rm-zig')
@@ -86,7 +87,7 @@ test('WHY 섹션 부재 유지 + B1 블랙 통계 밴드 1개(2×2 실측 수치
   expect((band.match(/sb-cell/g) || []).length).toBe(3) // 1×3
   // 수치 = 실측만: 게재 건수 = content/ 글롭 집계와 일치(recruit 증빙과 동일 원천)
   expect(band).toContain(`>${loadContent('기사').length}</span>`)
-  for (const label of ['게재 기사', '만든 실물']) expect(band).toContain(label) // '라이브' 표기 폐지(검수 2026-08-13 — 보드 아카이브)
+  for (const label of ['AI Insight', '만든 실물']) expect(band).toContain(label) // 라벨 개정 2026-08-15(구 '게재 기사')
   expect((band.match(/sb-src/g) || []).length).toBe(3) // 수치엔 출처 각주 의무(디자인규칙 §6)
 })
 
@@ -104,16 +105,18 @@ test('RECORD = 0건 지표 미게재(세미나 셀 없음)', () => {
   expect(band).not.toContain('세미나 기록')
 })
 
-// "진행 중 스터디 1"은 ADsP 시험(2026-08-08) 이후 허위 → 날짜 파생 라벨.
-test('RECORD 스터디 셀 = 시험일 경계로 진행 중 → 완주 전환', () => {
+// "운영 중"은 ADsP 시험(2026-08-08) 이후 허위 → 날짜 파생.
+// 라벨 = 기수명 고정(2026-08-15 오너) → 진행/완주 구분은 출처 줄이 진다.
+test('RECORD 스터디 셀 = 라벨 고정 + 시험일 경계로 운영 중 → 완주 전환', () => {
   const before = renderToString(<StatsBand today="2026-08-08" />)
-  expect(before).toContain('진행 중 스터디')
-  expect(before).toContain('ADsP 1기 — 진도 보드 운영')
-  expect(before).not.toContain('완주 스터디')
+  expect(before).toContain('ADsP 1기')
+  expect(before).toContain('진도 보드 운영 중')
+  expect(before).not.toContain('완주')
 
   const after = renderToString(<StatsBand today="2026-08-09" />)
-  expect(after).toContain('완주 스터디')
-  expect(after).not.toContain('진행 중 스터디')
+  expect(after).toContain('ADsP 1기')
+  expect(after).toContain('6주 운영 완주')
+  expect(after).not.toContain('진도 보드 운영 중')
 })
 
 test('모집 섹션(확대 2026-08-05) = 국면별 렌더 — 전·중=대형 공고, 종료=다음 기수 안내', () => {
@@ -160,11 +163,13 @@ test('메인 하단 INSIGHTS = 썸네일 카드 3건(제목·날짜·딥링크) 
   expect(recent.length).toBe(3)
   expect((html.match(/hi-item/g) || []).length).toBe(3)
   expect((html.match(/art-cover/g) || []).length).toBeGreaterThanOrEqual(3) // 썸네일 프레임(4계층 해석 재사용)
+  // 제목 = 대시 폐지·의미 단위 줄바꿈(2026-08-15) → 원문 통짜가 아니라 분할된 절이 각각 렌더된다.
   for (const a of recent) {
-    expect(html).toContain(a.title)
+    for (const line of splitTitle(a.title)) expect(html).toContain(line)
     expect(html).toContain(a.date)
     expect(html).toContain(`/insights/?p=${a.slug}`)
   }
+  expect(html).not.toContain(' — ') // 카드 표면에 대시 0건
   expect(html).toContain('전체 보기')
   expect(html).toContain('href="/insights/"')
 })

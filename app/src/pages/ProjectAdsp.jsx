@@ -266,8 +266,9 @@ export default function ProjectAdsp() {
           <div className="pa-rv"><VerdictSplit /></div>
 
           <div className="pa-cta-block pa-rv">
-            <h3 className="pa-cta-title">이 과정을 <em>당신의 프로젝트</em>로.</h3>
-            <p>기획은 사람이, 구현은 AI가 — 필요한 도구를 직접 만들어 운영하는 법을 AIM에서 같이 합니다.</p>
+            {/* 권유형 카피('이 과정을 당신의 프로젝트로') = 오너 삭제 2026-08-15 → 운영 사실 서술로 교체. 대시 표기도 폐지. */}
+            <h3 className="pa-cta-title">AIM 1기도 <em>같은 방식</em>으로 굴립니다.</h3>
+            <p>기획은 사람이 쓰고 구현은 AI에 맡기는 방식으로, 필요한 도구를 직접 만들어 운영합니다.</p>
             <div className="pa-cta-row">
               <a className="btn-dark" href="/recruit/">AIM 1기 모집 보기 <Arrow /></a>
             </div>

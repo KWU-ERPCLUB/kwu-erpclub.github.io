@@ -42,11 +42,11 @@ export function recruitPhase(ymd, win = RECRUIT.window) {
 // ADsP 1기 시험일 — 이 날짜 이후 "진행 중"은 허위가 된다(시험 종료 = 기수 완주).
 const ADSP_EXAM_YMD = '2026-08-08'
 
-// RECORD 4번째 셀 [수치, 라벨, 출처] — 시험일 경계로 진행 중 → 완주 전환.
+// RECORD 3번째 셀 [수치, 라벨, 출처] — 라벨 = 기수명 고정(오너 2026-08-15), 진행/완주 구분은 출처 줄이 진다.
 export function studyCell(ymd) {
   return ymd <= ADSP_EXAM_YMD
-    ? ['1', '진행 중 스터디', 'ADsP 1기 — 진도 보드 운영']
-    : ['1', '완주 스터디', 'ADsP 1기 — 진도 보드 운영 완료']
+    ? ['1', 'ADsP 1기', '진도 보드 운영 중']
+    : ['1', 'ADsP 1기', '6주 운영 완주']
 }
 
 // ease-out cubic — 카운트업 감속(끝에서 부드럽게 멈춤).

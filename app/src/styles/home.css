@@ -255,9 +255,24 @@
   letter-spacing: -0.025em;
   margin: 0 0 0.7rem;
 }
-/* 학생 후킹 1줄(P1-B 2026-08-13) — 본문보다 한 단계 진하게, 기간 줄 위. */
-.home .rb-hook { margin: 0 0 0.45rem; font-size: 1.04rem; font-weight: 700; color: var(--text); word-break: keep-all; }
-.home .rb-text { margin: 0 0 1.8rem; font-size: 0.98rem; color: var(--text-sub); }
+/* 정체성 1줄(오너 픽 2026-08-15) — 본문보다 한 단계 진하게, 기간 표 위. */
+.home .rb-hook { margin: 0 0 1.5rem; font-size: 1.04rem; font-weight: 700; color: var(--text); word-break: keep-all; }
+/* 모집·활동 = 한 줄 나열 폐지 → 2행 라벨/값 표(오너 2026-08-15 "다른 줄에 · 강조 서식").
+   강조는 색이 아니라 위계로 준다(버건디 화이트리스트 불변): 라벨 = 소형 회색, 값 = 굵은 상향 타이포. */
+.home .rb-meta { margin: 0 0 1.9rem; display: grid; gap: 0.55rem; justify-items: center; }
+.home .rb-row { display: grid; grid-template-columns: 3.4rem auto; align-items: baseline; gap: 1rem; text-align: left; }
+.home .rb-row dt { font-size: 0.78rem; font-weight: 700; color: var(--text-sub); }
+.home .rb-row dd {
+  margin: 0;
+  font-size: clamp(1.02rem, 1.9vw, 1.24rem);
+  font-weight: 800;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  word-break: keep-all;
+}
+@media (max-width: 480px) {
+  .home .rb-row { grid-template-columns: 1fr; gap: 0.1rem; justify-items: center; text-align: center; }
+}
 /* 모집안내 CTA — 확대판(피드백 2026-08-06 "가로 3배·세로 1.5배"): 기본 .rc-cta-xl 대비
    좌우 패딩 ~3배·상하 ~1.5배 + 타이포 한 단계 상향. 폰에서는 화면 폭에 맞춰 축소. */
 .home .rb-cta {

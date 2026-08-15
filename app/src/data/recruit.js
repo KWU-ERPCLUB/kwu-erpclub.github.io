@@ -32,6 +32,11 @@ export const CONTACT_MAILTO = `mailto:${CONTACT.email}`
 // 'AIM 1기' — 기수 전체 표기(밴드·로그·모집 페이지 공용).
 export const COHORT_LABEL = `${RECRUIT.study} ${RECRUIT.cohort}`
 
+// 메인 모집 밴드 정체성 1줄(오너 픽 2026-08-15 = 활동 축 — 구 SHOWCASE_LEAD 재사용 폐지).
+// 북극성 §2 준수: 개조식·짧은 사실만(정체성 문장 §1·존재 의의 서사 = 웹 비표기).
+// 값 근거 = RECRUIT_DO 1·3번 항목(주 1건 기고 · 개인 산출물 제작).
+export const AIM_HOOK = 'AI 인사이트를 매주 쌓고, 각자 쓸 산출물을 직접 만든다.'
+
 // 'YYYY-MM-DD' → 'MM-DD'(같은 해 두 번째 날짜·짧은 표기용).
 export function shortDate(ymd) {
   return String(ymd).slice(5)

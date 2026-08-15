@@ -5,7 +5,7 @@
 // 신규 무한루프 = 배경 블롭 CSS 1건(reduced-motion 정지) · transform·opacity만.
 import { Arrow, SiteNav, SiteFooter } from './shared.jsx'
 import { localYmd, recruitPhase, studyCell } from './home-logic.js'
-import { RECRUIT, COHORT_LABEL, SHOWCASE_LEAD, formatWindowShort } from './data/recruit.js'
+import { RECRUIT, COHORT_LABEL, AIM_HOOK, formatWindowShort } from './data/recruit.js'
 import { FAQ } from './data/faq.js'
 import { loadContent } from './content/loader.js'
 import { useSectionSpy, useParallax, useItemReveal, StaggerChars, CountUp } from './home-motion.jsx'
@@ -20,14 +20,17 @@ export const PROJECTS = [
 ]
 
 // ROADMAP — 브랜치 계보(오너 2026-08-07: "지그재그보다 브랜치 형태로").
-// 서사 = ERP연구회 본류에 SAP 특강이 이어져 오다가, AI 화두로 AIM을 분기 신설, 그 기반으로 ADsP 스터디 운영.
+// 계보 = ERP연구회 → SAP 특강 → AI 화두로 AIM 분기 신설 → ADsP 스터디로 첫 운영 → AIM 1기.
 // lane: trunk = 본류(차콜 선) / fork = 분기점(곡선으로 갈라짐) / branch = 분기 이후(버건디 선).
+// 카피 규칙(오너 2026-08-15) = 설명에 대시(—) 쓰지 않는다. 한 항목 = 짧은 두 문장까지.
 const LINEAGE = [
-  { era: 'ORIGIN', title: 'ERP연구회', desc: '경영학부 MIS 스터디 — ERP·정보시스템의 뿌리.', lane: 'trunk' },
-  { era: 'SAP ERA', title: 'SAP 특강', desc: '실무 컨설턴트가 이끈 MM·ABAP 교육 — 이어져 온 본류.', lane: 'trunk' },
+  { era: 'ORIGIN', title: 'ERP연구회', desc: '경영학부 MIS 스터디. ERP·정보시스템의 뿌리.', lane: 'trunk' },
+  { era: 'SAP ERA', title: 'SAP 특강', desc: '실무 컨설턴트가 이끈 MM·ABAP 교육.', lane: 'trunk' },
+  { era: '2026 · NEW BRANCH', title: 'MIS·AI 스터디', desc: 'AI가 화두로 떠오르며 갈라져 나온 갈래. AIM 신설.', lane: 'fork' },
+  { era: 'FIRST RUN', title: 'ADsP 스터디 1기', desc: '데이터분석 준전문가 대비로 치른 첫 운영. 진도 보드를 직접 만들어 굴렸다.', status: ['planned', '1기 완주'], lane: 'branch' },
   // 모집 칩 = 하드코딩 금지(검수 2026-08-13 — 8/25 이후 모집 밴드와 모순 예약) → recruitChip = 국면 파생.
-  { era: '2026 · NEW BRANCH', title: 'MIS·AI 스터디', desc: 'AI가 화두로 떠오르며 본류에서 분기 — AIM 신설.', recruitChip: true, lane: 'fork' },
-  { era: 'FIRST RUN', title: 'ADsP 스터디 1기', desc: 'AIM 기반으로 진행해 본 첫 운영 — 데이터분석 준전문가 대비, 진도 보드 운영.', status: ['planned', '1기 완주'], lane: 'branch' },
+  // 칩 위치 = 모집 대상 기수 노드(2026-08-15 이동 — 구 위치는 상위 '스터디 신설' 노드라 대상 불일치).
+  { era: 'NOW', title: 'AIM 1기', desc: '2학기 정규 1기. 개인 산출물을 만들고 팀 프로젝트로 잇는다.', recruitChip: true, lane: 'branch' },
   { era: 'NEXT', title: '앞으로 채워갈 공간', desc: '새 트랙·기수가 이어질 자리.', slot: true, lane: 'branch' },
 ]
 
@@ -79,17 +82,22 @@ function Hero() {
 // .page 미부여 = 섹션 스파이(감쇠) 제외. 카피 = 사실 서술만. export = 국면별(전·중·후) 렌더 테스트용.
 // [배지, 배지문구, 노트, 제목, 본문] — 값은 전부 data/recruit.js 파생(표시 문자열 중복 0).
 const RECRUIT_COPY = {
-  before: ['prep', '모집 예정', `${RECRUIT.window.start} 모집 시작`, `${COHORT_LABEL} 모집`,
-    `모집 ${formatWindowShort()} · 활동 ${RECRUIT.활동기간}`],
-  open: ['live', '모집 중', `${RECRUIT.window.end} 마감`, `${COHORT_LABEL} 모집`,
-    `모집 ${formatWindowShort()} · 활동 ${RECRUIT.활동기간}`],
-  after: ['planned', '모집 마감', `${COHORT_LABEL} 접수 종료`, '다음 기수 안내',
-    `${COHORT_LABEL} 활동 ${RECRUIT.활동기간} · 다음 기수 모집 = 확정 시 이 자리·모집 페이지 공지`],
+  before: ['prep', '모집 예정', `${RECRUIT.window.start} 모집 시작`, `${COHORT_LABEL} 모집`],
+  open: ['live', '모집 중', `${RECRUIT.window.end} 마감`, `${COHORT_LABEL} 모집`],
+  after: ['planned', '모집 마감', `${COHORT_LABEL} 접수 종료`, '다음 기수 안내'],
+}
+
+// 기간 = 한 줄 나열(구 '모집 A · 활동 B') 폐지 → 라벨·값 2행 표(오너 2026-08-15).
+// 값이 읽히는 자리를 디자인이 잡는다: 라벨 = 소형 회색, 값 = 굵은 상향 타이포(.rb-meta).
+const RECRUIT_ROWS = {
+  before: [['모집', formatWindowShort()], ['활동', RECRUIT.활동기간]],
+  open: [['모집', formatWindowShort()], ['활동', RECRUIT.활동기간]],
+  after: [['활동', `${COHORT_LABEL} ${RECRUIT.활동기간}`], ['다음 기수', '확정 시 모집 페이지 공지']],
 }
 
 export function RecruitBand({ today = localYmd() }) {
   const phase = recruitPhase(today)
-  const [badge, badgeLabel, note, title, text] = RECRUIT_COPY[phase]
+  const [badge, badgeLabel, note, title] = RECRUIT_COPY[phase]
   const ctaLabel = phase === 'after' ? '모집 페이지' : '모집 안내'
   return (
     <section className="recruit-band" id="recruit" aria-label="AIM 모집 안내">
@@ -99,9 +107,16 @@ export function RecruitBand({ today = localYmd() }) {
           <span className="rb-note">{note}</span>
         </div>
         <h2 className="rb-title">{title}</h2>
-        {/* 학생 후킹 1줄(검수 P1-B 오너 픽 2026-08-13) — 문안 = SHOWCASE_LEAD 재사용(신조 0). */}
-        <p className="rb-hook">{SHOWCASE_LEAD}</p>
-        <p className="rb-text">{text}</p>
+        {/* 정체성 1줄(오너 픽 2026-08-15 활동 축) — 원천 = data/recruit.js AIM_HOOK. */}
+        <p className="rb-hook">{AIM_HOOK}</p>
+        <dl className="rb-meta">
+          {RECRUIT_ROWS[phase].map(([k, v]) => (
+            <div className="rb-row" key={k}>
+              <dt>{k}</dt>
+              <dd>{v}</dd>
+            </div>
+          ))}
+        </dl>
         {/* Primary CTA(§4 위계) — 메인의 유일한 Primary(차콜 필 + 버건디 원형 화살표). */}
         <a className="rc-cta-xl rb-cta" href="/recruit/">{ctaLabel} <Arrow /></a>
       </div>
@@ -115,8 +130,8 @@ export function RecruitBand({ today = localYmd() }) {
 export function StatsBand({ today = localYmd() }) {
   const 기사수 = loadContent('기사').length
   const cells = [
-    [String(기사수), '게재 기사', 'content/ 집계'],
-    ['2', '만든 실물', '진도 보드(1기 아카이브) · 이 사이트'], // '라이브' 표기 = 보드 아카이브 전환으로 폐지(검수 2026-08-13)
+    [String(기사수), 'AI Insight', 'content/ 집계'],
+    ['2', '만든 실물', 'ADsP 스터디 보드 · AIM 웹사이트'], // 실물 이름 그대로 표기(오너 2026-08-15)
     studyCell(today),
   ]
   return (
@@ -195,10 +210,7 @@ function Projects() {
             </a>
           ))}
         </div>
-        {/* 주인공 다리(검수 P1-C 오너 픽 2026-08-13) — 1기 실물 = 운영자 작 오독 차단. 문안 = 인터랙티브 CTA·FAQ 재사용. */}
-        <p className="hp-note rv" style={{ transitionDelay: '220ms' }}>
-          이 과정을 당신의 프로젝트로 — 다음 기수는 참가자가 만들고, 결과물은 본인 소유.
-        </p>
+        {/* (구 주인공 다리 1줄 = 오너 삭제 2026-08-15 — 권유형 카피 폐지. 소유 관계 = FAQ '무엇을 만들게 되나요?'가 보관.) */}
         <p className="hs-more rv" style={{ transitionDelay: '260ms' }}>
           <a className="btn-2nd" href="/projects/">전체 아카이브 <Arrow /></a>
         </p>

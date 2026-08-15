@@ -193,8 +193,7 @@
 }
 .hp-card:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 @media (max-width: 700px) { .hp-list { grid-template-columns: 1fr; } }
-/* 주인공 다리 1줄(P1-C 2026-08-13) — 카드 아래 중앙, 아카이브 버튼 위. */
-.hp-note { text-align: center; margin: 1.8rem 0 0; font-size: 0.95rem; font-weight: 600; color: var(--text-sub); word-break: keep-all; }
+/* (구 .hp-note 주인공 다리 1줄 = 오너 삭제 2026-08-15 — 마크업과 함께 규칙 제거) */
 
 /* ══ FAQ — 아코디언(4차: 질문 타이포 축소·답변 경어체). 구분 = 흰 카드 면(가로줄 폐지) ══ */
 .faq-xl { margin-top: clamp(2rem, 5vh, 3rem); display: grid; gap: 0.7rem; max-width: 800px; margin-left: auto; margin-right: auto; }
@@ -235,7 +234,9 @@
   margin: clamp(2rem, 5vh, 3rem) 0 0;
   padding: 0;
 }
-.hi-card { display: block; text-decoration: none; color: var(--text); }
+/* 카드 = 중앙 정렬(오너 2026-08-15) + 세로 flex — 제목 줄 수가 달라도 날짜는 바닥에 정렬된다. */
+.hi-item { display: flex; }
+.hi-card { display: flex; flex-direction: column; width: 100%; text-align: center; text-decoration: none; color: var(--text); }
 .hi-card .art-cover {
   display: block;
   aspect-ratio: 16 / 10;
@@ -248,19 +249,19 @@
 .hi-card .art-cover img, .hi-card .art-cover svg { width: 100%; height: 100%; display: block; }
 .hi-card .art-cover img { object-fit: cover; }
 .hi-card .art-cover--fit-contain img { object-fit: contain; padding: 12%; box-sizing: border-box; }
+/* 제목 = 의미 단위 줄바꿈(.hi-line 블록). 구 2줄 클램프 폐지 — 분할된 뒷절이 잘리면 뜻이 끊긴다. */
 .hi-title {
   display: block;
   font-weight: 700;
   font-size: 0.95rem;
-  line-height: 1.4;
+  line-height: 1.45;
   letter-spacing: -0.01em;
   word-break: keep-all;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  text-wrap: balance;
 }
-.hi-date { display: block; margin-top: 0.35rem; font-size: 0.76rem; color: var(--text-sub); }
+.hi-line { display: block; }
+.hi-line + .hi-line { font-weight: 600; color: var(--text-sub); } /* 부제 절 = 한 단계 낮춰 주·부 구분 */
+.hi-date { display: block; margin-top: auto; padding-top: 0.45rem; font-size: 0.76rem; color: var(--text-sub); }
 .hi-card:hover .hi-title { color: var(--accent); } /* 화이트리스트 ⑤ 링크 호버 */
 .hi-card:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 @media (max-width: 700px) { .hi-grid { grid-template-columns: 1fr; gap: 1.1rem; } }

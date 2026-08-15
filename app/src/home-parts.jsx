@@ -20,6 +20,13 @@ export function SectionHead({ label, title }) {
 // 새 로더·런타임 fetch 0. 딥링크 = /insights/?p=<슬러그>(Articles.jsx searchFromState 계약).
 export const HOME_INSIGHTS_COUNT = 3
 
+// 카드 제목 = 대시 표기 폐지(오너 2026-08-15). 원문 제목의 ' — '는 화면에서 줄바꿈이 대신한다 —
+// 문장이 끊기는 지점에서 줄을 넘겨 "10억 명 / 공개된 칸과…"처럼 의미 단위로 읽히게 한다.
+// 원문(md frontmatter·상세 페이지 h1)은 건드리지 않는다. 표시 계층에서만 분할.
+export function splitTitle(title) {
+  return String(title).split(/\s*[—–]\s*/).filter(Boolean)
+}
+
 export function HomeInsights() {
   const recent = loadContent('기사').slice(0, HOME_INSIGHTS_COUNT)
   return (
@@ -31,7 +38,9 @@ export function HomeInsights() {
             <li className="hi-item" key={a.slug}>
               <a className="hi-card" href={`/insights/?p=${a.slug}`}>
                 <Thumb a={a} />
-                <span className="hi-title">{a.title}</span>
+                <span className="hi-title">
+                  {splitTitle(a.title).map((line) => <span className="hi-line" key={line}>{line}</span>)}
+                </span>
                 <span className="hi-date">{a.date}</span>
               </a>
             </li>
