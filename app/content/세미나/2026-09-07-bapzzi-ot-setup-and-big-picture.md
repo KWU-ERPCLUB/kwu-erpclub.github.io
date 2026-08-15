@@ -1,5 +1,5 @@
 ---
-title: 세팅과 큰 그림 — AIM 1기 오리엔테이션
+title: AIM 1기 OT — 세팅과 큰 그림
 author: bapzzi
 date: 2026-09-07
 회차: 1
