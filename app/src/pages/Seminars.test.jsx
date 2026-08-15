@@ -100,13 +100,14 @@ test('SeminarDetail 구조형 — 발제 블록 + "다루는 내용" 번호 목�
   expect(html).toContain('https://origin.example/a')
 })
 
-// 상세 최상단 표지(2026-08-14 오너) — 썸네일 + pdf(∨슬라이드) 있으면 클릭형 표지, 새 탭.
-test('SeminarDetail 표지 — 썸네일·pdf 있으면 최상단 표지 링크(pdf 우선·새 탭), 썸네일 없으면 비표시', () => {
+// 상세 최상단 표지(2026-08-15 오너 개정) — 클릭 = 웹 덱 우선(PDF는 헤더 'PDF 받기' 담당), 캡션 없음(둥실 모션이 유도).
+test('SeminarDetail 표지 — 클릭 = 슬라이드(웹 덱) 우선·새 탭·캡션 없음, 썸네일 없으면 비표시', () => {
   const withCover = flat(<SeminarDetail s={{ ...labSem, 썸네일: ['/img/세미나/cover-s3.png'], pdf: '/pdf/세미나/b.pdf' }} onBack={() => {}} />)
   expect(withCover).toContain('sem-ed-cover')
   expect(withCover).toContain('/img/세미나/cover-s3.png')
-  expect(withCover).toContain('/pdf/세미나/b.pdf') // pdf 우선
-  expect(withCover).toContain('클릭 = 발표자료 PDF 새 탭 열기') // 개조식 + pdf 있을 때만 PDF 표기
+  expect(withCover).toContain('href="https://slides/3"') // 슬라이드(웹 덱) 우선 — pdf가 있어도
+  expect(withCover).not.toContain('sem-ed-cover-note')  // 캡션 폐지
+  expect(withCover).toContain('/pdf/세미나/b.pdf')       // PDF 접근은 헤더 'PDF 받기'로 보존
   const noThumb = flat(<SeminarDetail s={labSem} onBack={() => {}} />)
   expect(noThumb).not.toContain('sem-ed-cover')
 })

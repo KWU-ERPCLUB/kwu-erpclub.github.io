@@ -184,18 +184,20 @@ button.proof-link {
 @media (max-width: 700px) { .sem-ed-body { padding: 1.75rem 1.25rem 2.5rem; } }
 
 /* ── 상세 최상단 표지(2026-08-14 오너) — 클릭 = 발표자료 PDF 새 탭 ── */
-.sem-ed-cover { display: block; max-width: 720px; margin: 0 auto 2.25rem; text-decoration: none; }
+/* 표지 = 웹 덱 진입 카드(2026-08-15) — 캡션 대신 둥실(bob) 모션이 클릭 유도. 클릭 = 인터랙티브 웹판. */
+.sem-ed-cover { display: block; max-width: 720px; margin: 0 auto 2.25rem; text-decoration: none; animation: sem-cover-bob 3.4s ease-in-out infinite; }
+.sem-ed-cover:hover { animation-play-state: paused; transform: translateY(-6px); transition: transform 0.25s; }
+@keyframes sem-cover-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-9px); }
+}
+@media (prefers-reduced-motion: reduce) { .sem-ed-cover { animation: none; } }
 .sem-ed-cover img {
   display: block; width: 100%; height: auto; border-radius: 14px;
   border: 1px solid var(--line); box-shadow: 0 10px 28px rgba(20, 20, 20, 0.12);
 }
-.sem-ed-cover:hover img { border-color: var(--accent); }
+.sem-ed-cover:hover img { border-color: var(--accent); box-shadow: 0 14px 34px rgba(20, 20, 20, 0.14); }
 .sem-ed-cover:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 14px; }
-.sem-ed-cover-note {
-  display: block; margin-top: 0.6rem; text-align: center;
-  font-size: 0.78rem; font-weight: 600; color: var(--text-sub);
-}
-.sem-ed-cover:hover .sem-ed-cover-note { color: var(--accent); }
 .sem-ed-intro { max-width: 720px; margin: 0 auto 2.25rem; }
 .sem-ed-toc { /* 회색 면 폐지(2026-08-15) → 흰 면 + 헤어라인 */
   display: flex; flex-wrap: wrap; justify-content: center; gap: 0.6rem 2rem; padding: 1.1rem 1.25rem; margin-bottom: 2.5rem;

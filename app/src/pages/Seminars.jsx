@@ -82,7 +82,8 @@ function SeminarSources({ md }) {
 export function SeminarDetail({ s, onBack }) {
   const isLab = s.유형 === '실습'
   const thumbs = Array.isArray(s['썸네일']) ? s['썸네일'].filter(Boolean) : []
-  const pdfHref = s.pdf || s['슬라이드']
+  // 표지 클릭 = 웹 덱 우선(2026-08-15 오너 — PDF는 헤더 'PDF 받기'가 담당, 표지는 인터랙티브 웹판으로)
+  const deckHref = s['슬라이드'] || s.pdf
   const { intro, sections } = splitSeminarBody(s.body)
   const hasOutline = Boolean(sections['다루는 내용'])
   const hasSources = Boolean(sections['출처'])
@@ -120,10 +121,10 @@ export function SeminarDetail({ s, onBack }) {
         {/* 핵심 카드 = 본문 맨 앞(오너 2026-08-15) — 텍스트 벽 앞에 요점부터 눈에 들어오게 */}
         <SeminarKeys points={points} />
 
-        {pdfHref && thumbs.length > 0 && (
-          <a className="sem-ed-cover" href={pdfHref} target="_blank" rel="noreferrer" aria-label={s.pdf ? '발표자료 PDF 열기' : '슬라이드 열기'}>
+        {/* 캡션 폐지(2026-08-15 오너) — 설명글 대신 둥실 모션이 클릭 유도를 담당 */}
+        {deckHref && thumbs.length > 0 && (
+          <a className="sem-ed-cover" href={deckHref} target="_blank" rel="noreferrer" aria-label="발표자료 열기">
             <img src={thumbs[0]} alt={`${s.title} 발표자료 표지`} />
-            <span className="sem-ed-cover-note">{s.pdf ? '클릭 = 발표자료 PDF 새 탭 열기' : '클릭 = 슬라이드 새 탭 열기'}</span>
           </a>
         )}
 
