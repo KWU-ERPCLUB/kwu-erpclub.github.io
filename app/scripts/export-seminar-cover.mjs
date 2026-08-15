@@ -14,11 +14,11 @@ const APP = resolve(import.meta.dirname, '..')
 const OUT = join(APP, 'public', 'img', '세미나')
 
 // 표지 데이터 = 덱별 1레코드. 제목 2줄·부제 = md title에서 파생하되 **대시로 절을 잇지 않는다**(2026-08-15 규칙):
-// 동격 나열이면 가운뎃점, 아니면 앞절만 싣는다.
+// 동격 나열이면 가운뎃점, 아니면 앞절만 싣는다. pill = 상단 좌측 검정 pill 문구(정규 = SEMINAR 0N / 특강 = SPECIAL).
 const COVERS = {
-  s1: { ep: '01', kind: '인지', l1: '질문에서', l2: '위임으로', sub: 'AI 활용 구조 3단 · Prompt · Context · Harness', count: 45 },
-  s2: { ep: '02', kind: '실습', l1: '따라 치기에서', l2: '첫 위임까지', sub: '기고 1건과 내 소재 확정', count: 30 },
-  s3: { ep: '03', kind: '실습', l1: '제작', l2: '스프린트', sub: '위임 · 확인 · 재위임으로 내 소재 1회 돌리기', count: 26 },
+  sp1: { pill: 'SPECIAL', kind: '인지', l1: '질문에서', l2: '위임으로', sub: 'AI 활용 구조 3단 · Prompt · Context · Harness', count: 45 },
+  s2: { pill: 'SEMINAR 02', kind: '실습', l1: '따라 치기에서', l2: '첫 위임까지', sub: '기고 1건과 내 소재 확정', count: 30 },
+  s3: { pill: 'SEMINAR 03', kind: '실습', l1: '제작', l2: '스프린트', sub: '위임 · 확인 · 재위임으로 내 소재 1회 돌리기', count: 26 },
 }
 
 const CHROME = [
@@ -58,7 +58,7 @@ const html = (c) => `<!doctype html><meta charset="utf-8" />
   .count{font:700 21px var(--fb);color:var(--text-sub)}
 </style>
 <div class="blob"></div><div class="dot"></div>
-<div class="top"><span class="pill">SEMINAR ${c.ep}</span><span class="kind">${c.kind}</span></div>
+<div class="top"><span class="pill">${c.pill}</span><span class="kind">${c.kind}</span></div>
 <div class="accbar"></div>
 <h1>${c.l1}<br />${c.l2}</h1>
 <div class="sub">${c.sub}</div>

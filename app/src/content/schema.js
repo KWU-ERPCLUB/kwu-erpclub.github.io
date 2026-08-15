@@ -71,7 +71,12 @@ export function validateEntry(kind, filename, data, body = '') {
         errs.push('태그는 # 없는 문자열 1~5개 배열만 허용')
     }
   } else if (kind === '세미나') {
-    if (!/^\d+$/.test(data['회차'] || '')) errs.push('회차는 숫자여야 함')
+    // 특강 = 선택(boolean) — true = 정규 차시 밖 단발 자료(2026-08-15 오너: 차시 연속성 유지 + 새 특강 재료 편입 용이).
+    // 특강은 회차를 갖지 않는다(둘 다 있으면 정합 오류) — 표시 = 번호 대신 '특강' 라벨.
+    if ('특강' in data && typeof data['특강'] !== 'boolean') errs.push('특강은 boolean(true/false)만 허용')
+    if (data['특강'] === true) {
+      if ('회차' in data) errs.push('특강은 회차를 갖지 않음(특강 ∧ 회차 = 금지)')
+    } else if (!/^\d+$/.test(data['회차'] || '')) errs.push('회차는 숫자여야 함')
     if (!SEMINAR_TYPES.includes(data['유형'])) errs.push(`유형 enum 밖: ${data['유형']}`)
     // §5-3: 유형=실습 → 3블록 헤딩 전부 존재
     if (data['유형'] === '실습') {

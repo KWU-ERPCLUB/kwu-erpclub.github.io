@@ -55,6 +55,7 @@ button.proof-link {
   transition: border-color 220ms ease-out, transform 220ms ease-out;
 }
 .sem-tl-ep { font-family: var(--font-display); font-weight: 800; font-size: 1.02rem; line-height: 1; color: var(--text-sub); }
+.sem-tl-ep.is-sp { font-size: 0.68rem; letter-spacing: 0.02em; } /* '특강' 두 글자 — 번호보다 축소(2026-08-15) */
 /* 활성 = 중앙에 가장 가까운 행: 테두리 버건디 + 확대 + 바깥 링 */
 .sem-tl-row.is-active .sem-tl-node { border-color: var(--accent); transform: scale(1.12); }
 .sem-tl-row.is-active .sem-tl-ep { color: var(--accent); }
@@ -104,6 +105,7 @@ button.proof-link {
 .sem-tl-row.is-lead .sem-tl-h-sub { font-size: clamp(1.2rem, 2.4vw, 1.75rem); }
 .sem-tl-row.is-lead .sem-tl-node { width: 56px; height: 56px; border-color: var(--accent); }
 .sem-tl-row.is-lead .sem-tl-ep { font-size: 1.25rem; color: var(--accent); }
+.sem-tl-row.is-lead .sem-tl-ep.is-sp { font-size: 0.8rem; } /* lead 행 특강 라벨 — 56px 원 안 수용 */
 
 @media (max-width: 860px) {
   .sem-tl { --rail: 46px; }

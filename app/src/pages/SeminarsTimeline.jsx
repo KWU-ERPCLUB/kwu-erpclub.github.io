@@ -25,7 +25,8 @@ export function SeminarRow({ s, today, onOpen = () => {}, lead = false, active =
     <li className={cls} data-row={index}>
       <span className="sem-tl-node" aria-hidden="true">
         <i className="sem-tl-dot" />
-        <b className="sem-tl-ep">{s.회차}</b>
+        {/* 특강(2026-08-15) = 정규 차시 밖 — 번호 대신 '특강' 라벨(글자라 축소 클래스) */}
+        <b className={s['특강'] === true ? 'sem-tl-ep is-sp' : 'sem-tl-ep'}>{s['특강'] === true ? '특강' : s.회차}</b>
       </span>
       <button type="button" className="sem-tl-card" onClick={() => onOpen(s.slug)}>
         {thumbs.length > 0 && (

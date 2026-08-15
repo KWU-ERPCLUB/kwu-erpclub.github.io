@@ -98,7 +98,7 @@ export function SeminarDetail({ s, onBack }) {
       <header className="sem-ed-band">
         <div className="sem-ed-band-in">
           <button type="button" className="sem-ed-back" onClick={onBack}>← 목록</button>
-          <span className="sem-ed-eyebrow">{s.회차}회 · {s.유형}</span>
+          <span className="sem-ed-eyebrow">{s['특강'] === true ? '특강' : `${s.회차}회`} · {s.유형}</span>
           {/* 제목 = 대시 폐지·의미 단위 줄바꿈(2026-08-15) */}
           <h1 className="sem-ed-title">
             {splitTitle(s.title).map((line, i) => (

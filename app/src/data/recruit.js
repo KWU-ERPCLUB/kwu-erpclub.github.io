@@ -97,11 +97,11 @@ export const RECRUIT_SHOWCASE = [
     img: '/img/projects/erpclub-site.png',
   },
   {
-    name: '세미나 1회차 자료',
+    name: 'AIM 특강 자료',
     core: '질문에서 위임으로',
     sub: '발표자료 45장',
     href: '/seminars/?p=2026-07-25-bapzzi-question-to-delegation',
-    img: '/img/세미나/cover-s1.png', /* 신 표지 통일(2026-08-14) — 구 /slides/s1/thumb-1.png 폐기 */
+    img: '/img/세미나/cover-sp1.png', /* 특강 전환(2026-08-15) — 구 세미나 1회차 → 특강, 덱 = /slides/sp1/ */
   },
 ]
 

@@ -27,6 +27,18 @@ test('SeminarDetail 실습 — 다크 헤더 밴드(눈썹 회차·유형·대�
   expect(html).toContain('재현 가이드') // 3블록 타이틀(실습 헤딩)
 })
 
+// 특강(2026-08-15) — 정규 차시 밖 단발 자료. 회차 대신 '특강' 라벨(목록 노드·상세 눈썹 둘 다).
+test('특강 = 회차 번호 대신 특강 라벨 (상세 눈썹 + 목록 노드)', async () => {
+  const sp = { slug: 'sp', title: '특강 자료', author: '김', date: '2026-07-25', 특강: true, 유형: '인지', body: '특강 리드.' }
+  const html = flat(<SeminarDetail s={sp} onBack={() => {}} />)
+  expect(html).toContain('특강 · 인지') // 눈썹 = 회차 없이 특강
+  expect(html).not.toContain('undefined') // 회차 부재가 표시로 새지 않음
+  const { SeminarRow } = await import('./SeminarsTimeline.jsx')
+  const row = flat(<SeminarRow s={sp} today="2026-08-15" />)
+  expect(row).toContain('is-sp') // 노드 축소 클래스
+  expect(row).toContain('특강') // 번호 자리 라벨
+})
+
 test('SeminarDetail 인지 — 목차 없이 리드 + 본문 + 다크 밴드', () => {
   const cog = { slug: 'y', title: '개념', author: '김', date: '2026-10-01', 회차: '4', 유형: '인지', body: '개론 리드.\n\n본문 이어짐.' }
   const html = flat(<SeminarDetail s={cog} onBack={() => {}} />)
