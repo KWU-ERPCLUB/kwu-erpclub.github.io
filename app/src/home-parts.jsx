@@ -4,6 +4,7 @@
 import { Arrow } from './shared.jsx'
 import { loadContent } from './content/loader.js'
 import { Thumb } from './pages/insights-parts.jsx'
+import { splitTitle } from './pages/insights-logic.js'
 
 // 중앙 섹션 헤드 — 소형 영문 키커 + h2(전 섹션 공용, 라벨 영문 정책 승계).
 export function SectionHead({ label, title }) {
@@ -20,13 +21,7 @@ export function SectionHead({ label, title }) {
 // 새 로더·런타임 fetch 0. 딥링크 = /insights/?p=<슬러그>(Articles.jsx searchFromState 계약).
 export const HOME_INSIGHTS_COUNT = 3
 
-// 카드 제목 = 대시 표기 폐지(오너 2026-08-15). 원문 제목의 ' — '는 화면에서 줄바꿈이 대신한다 —
-// 문장이 끊기는 지점에서 줄을 넘겨 "10억 명 / 공개된 칸과…"처럼 의미 단위로 읽히게 한다.
-// 원문(md frontmatter·상세 페이지 h1)은 건드리지 않는다. 표시 계층에서만 분할.
-export function splitTitle(title) {
-  return String(title).split(/\s*[—–]\s*/).filter(Boolean)
-}
-
+// 제목 줄바꿈 규칙 = insights-parts.splitTitle 공유(메인 카드·인사이트 목록 카드가 같은 규칙).
 export function HomeInsights() {
   const recent = loadContent('기사').slice(0, HOME_INSIGHTS_COUNT)
   return (

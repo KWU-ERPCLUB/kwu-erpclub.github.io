@@ -63,8 +63,10 @@ test('SeminarDetail 구조형 — 발제 블록 + "다루는 내용" 번호 목�
   // ① 발제 블록 — 모노그램(author 첫 글자 대문자) + 발제 author + date
   expect(html).toContain('sem-ed-byline')
   expect(html).toContain('sem-ed-mono')
-  expect(html).toContain('>B<') // 'bapzzi' → 'B'
-  expect(html).toContain('발제 bapzzi')
+  // 표시명 = 계정 id가 아니라 실명(2026-08-15 오너) — 매핑 = content/authors.js
+  expect(html).toContain('>신<') // 'bapzzi' → '신해원' → 모노그램 '신'
+  expect(html).toContain('발제 신해원')
+  expect(html).not.toContain('bapzzi')
   // ② "다루는 내용" 번호 목차 — 01/02 + 불릿 텍스트
   expect(html).toContain('sem-ed-outline')
   expect(html).toContain('sem-ed-outline-num')

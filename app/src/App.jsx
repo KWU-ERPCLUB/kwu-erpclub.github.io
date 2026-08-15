@@ -130,7 +130,7 @@ export function RecruitBand({ today = localYmd() }) {
 export function StatsBand({ today = localYmd() }) {
   const 기사수 = loadContent('기사').length
   const cells = [
-    [String(기사수), 'AI Insight', 'content/ 집계'],
+    [String(기사수), 'AI Insight', '인사이트 페이지 게재분'],
     ['2', '만든 실물', 'ADsP 스터디 보드 · AIM 웹사이트'], // 실물 이름 그대로 표기(오너 2026-08-15)
     studyCell(today),
   ]

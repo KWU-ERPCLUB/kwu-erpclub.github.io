@@ -129,21 +129,33 @@
 /* 핀 배지(고정) — 무채색(버건디·성격색 면 금지) */
 .art-pin { display: inline-flex; align-items: center; color: var(--text-sub); }
 
+/* 제목·설명 = 대시 폐지·의미 단위 줄바꿈(오너 2026-08-15, .art-title-line/.art-exc-line 블록).
+   구 2줄 클램프 폐지 — 분할된 뒷절이 잘리면 뜻이 끊긴다. */
 .art-card-title {
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  display: block;
   font-size: 1.02rem; font-weight: 700; line-height: 1.4; letter-spacing: -0.01em; color: var(--text); margin-bottom: 0.4rem;
+  word-break: keep-all; text-wrap: balance;
 }
+.art-title-line { display: block; }
+.art-title-line--sub { font-weight: 600; color: var(--text-sub); } /* 뒷절 = 한 단계 낮춰 주·부 구분 */
 /* 4차 — 피처 제목 축소(콤팩트 카드 비례) */
-.art-feature .art-card-title { font-family: var(--font-display); font-size: 1.12rem; font-weight: 800; line-height: 1.32; -webkit-line-clamp: 2; }
+.art-feature .art-card-title { font-family: var(--font-display); font-size: 1.12rem; font-weight: 800; line-height: 1.32; }
 
-/* 설명 = frontmatter 1문장(clamp 2줄) */
+/* 설명 = frontmatter 1문장 */
 .art-card-excerpt {
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  display: block;
   font-size: 0.86rem; line-height: 1.52; color: var(--text-sub); margin-bottom: 0.7rem;
+  word-break: keep-all;
 }
+.art-exc-line { display: block; }
+.art-exc-line--sub { margin-top: 0.15rem; }
 .art-feature .art-card-excerpt { font-size: 0.92rem; }
-/* 메타 줄(2026-08-07) — 날짜·작성자 배지(좌) + 좋아요·북마크 수(우하단 끝) */
-.art-card-meta { margin-top: auto; display: flex; align-items: center; gap: 0.45rem; min-width: 0; }
+
+/* 카드 중앙 정렬(오너 2026-08-15) — 메인 홈 카드와 같은 규칙. 메타 줄만 가운데 모아 배치. */
+.art-card-body { text-align: center; align-items: center; }
+.art-card-labels { justify-content: center; }
+/* 메타 줄(2026-08-07) — 날짜·작성자 배지 + 좋아요·북마크 수. 중앙 정렬로 전환 */
+.art-card-meta { margin-top: auto; display: flex; align-items: center; justify-content: center; gap: 0.45rem; min-width: 0; }
 .art-card-date { font-size: 0.76rem; color: var(--text-sub); font-variant-numeric: tabular-nums; }
 .art-author {
   flex: none; font-size: 0.68rem; font-weight: 700; line-height: 1;
@@ -181,9 +193,13 @@
   }
   .art-card > button:hover { box-shadow: none; transform: none; }
   .art-card .art-cover { flex: none; width: 104px; border: 1px solid var(--line); border-radius: 10px; }
-  .art-card-body { padding: 0; }
+  /* 폰 = 썸네일 좌측 리스트라 중앙 정렬을 되돌린다(중앙은 카드 그리드에서만 성립). */
+  .art-card-body { padding: 0; text-align: left; align-items: stretch; }
+  .art-card-labels { justify-content: flex-start; }
+  .art-card-meta { justify-content: flex-start; }
   .art-card-title { font-size: 0.98rem; margin-bottom: 0.3rem; }
-  .art-card-excerpt { -webkit-line-clamp: 1; margin-bottom: 0.4rem; }
+  .art-card-excerpt { margin-bottom: 0.4rem; }
+  .art-exc-line--sub { display: none; } /* 구 1줄 클램프 대체 — 리스트 행 높이 유지(앞절만 노출) */
 }
 
 /* ── 디자인된 빈 상태 (§3-1: 무엇이 쌓이는지 + 기고 방법) ── */

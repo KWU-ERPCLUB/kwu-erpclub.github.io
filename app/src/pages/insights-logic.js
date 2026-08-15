@@ -16,6 +16,13 @@ export function natureKey(nature) { return NATURE_KEY[nature] || 'analysis' }
 // 저자 이니셜(아바타 1자) — 첫 글자 대문자.
 export function authorInitial(author) { return (author || '?').trim().charAt(0).toUpperCase() || '?' }
 
+// 대시 표기 폐지(오너 2026-08-15) — 제목·설명의 ' — '는 화면에서 줄바꿈이 대신한다.
+// 문장이 끊기는 지점에서 줄을 넘겨 의미 단위로 읽히게 한다. 원문(md·상세 h1)은 그대로 두고 표시만 분할.
+// 소비처 = 메인 홈 카드 · 인사이트 목록 카드 · 자동 생성 커버 SVG(전부 같은 규칙).
+export function splitTitle(text) {
+  return String(text ?? '').split(/\s*[—–]\s*/).filter(Boolean)
+}
+
 // ── URL ↔ 상태 (뒤로가기·딥링크) : ?tab=<key> · ?series=<id> · ?p=<slug> ──
 // 기존 계약(?tab·?p)은 불변 — series 파라미터만 추가(2026-08-05 시리즈 체계).
 // search(location.search 문자열) → { tab, slug, series }. 미지의 tab 키 = 허브, 미지의 series = null.

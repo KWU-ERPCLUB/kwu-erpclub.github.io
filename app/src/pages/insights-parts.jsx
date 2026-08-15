@@ -3,10 +3,18 @@
 // 해시태그·아바타 = 카드에서 제거(데이터는 유지 — 상세에서만 표시).
 // + v3.1(§6-2a, 2026-08-05 2차) 골격 조각: SectionLabel(B2 좌 라벨 컬럼).
 //   v3.2(오너 피드백 2026-08-05): 블랙 통계 밴드(StatBand) 완전 제거 — 인사이트 디자인은 이것으로 확정.
-import { natureKey } from './insights-logic.js'
+import { natureKey, splitTitle } from './insights-logic.js'
 import { resolveThumb } from './thumb-resolver.js'
 import { InsightCover } from './insights-cover.jsx'
 import SeriesCover from './SeriesCover.jsx'
+import { authorName } from '../content/authors.js'
+
+// 분할된 절을 블록 줄로 렌더(규칙 = insights-logic.splitTitle). 절이 하나면 그냥 한 줄.
+export function Lines({ text, className }) {
+  return splitTitle(text).map((line, i) => (
+    <span className={i ? `${className} ${className}--sub` : className} key={line}>{line}</span>
+  ))
+}
 
 // 썸네일 프레임 — 전 계층 동일 비율(16:10)·동일 보더. 사진=cover / 로고·도판=contain(+여백).
 // 4계층 해석은 thumb-resolver가 담당. SVG 컴포넌트 = 시리즈 커버(⓪ SeriesCover)·자동 커버(④ InsightCover).
@@ -44,8 +52,9 @@ export function dateTimeOf(a) {
 }
 
 // 작성자 배지(2026-08-07 오너) — 시간 옆 이름 3글자, 검은 타원 배경 + 흰 글씨.
+// 표시는 계정 id가 아니라 사람 이름(2026-08-15 오너: 'bapzzi'→'bap' 절단 대신 '신해원'). 매핑 = content/authors.js.
 export function AuthorBadge({ a }) {
-  const name = String(a.author || '').trim()
+  const name = authorName(a.author)
   if (!name) return null
   return <span className="art-author" title={name}>{name.slice(0, 3)}</span>
 }
@@ -109,8 +118,8 @@ export function ArticleRow({ a, onOpen, pinned = false, counts = null, fresh = f
             {pinned && <PinBadge />}
             <NatureLabel a={a} />
           </span>
-          <span className="art-card-title">{a.title}</span>
-          {a['설명'] && <span className="art-card-excerpt">{a['설명']}</span>}
+          <span className="art-card-title"><Lines text={a.title} className="art-title-line" /></span>
+          {a['설명'] && <span className="art-card-excerpt"><Lines text={a['설명']} className="art-exc-line" /></span>}
           <CardMeta a={a} counts={counts} />
         </span>
       </button>
@@ -130,8 +139,8 @@ export function FeatureCard({ a, onOpen, pinned = false, counts = null, fresh = 
             {pinned && <PinBadge />}
             <NatureLabel a={a} />
           </span>
-          <span className="art-card-title">{a.title}</span>
-          {a['설명'] && <span className="art-card-excerpt">{a['설명']}</span>}
+          <span className="art-card-title"><Lines text={a.title} className="art-title-line" /></span>
+          {a['설명'] && <span className="art-card-excerpt"><Lines text={a['설명']} className="art-exc-line" /></span>}
           <CardMeta a={a} counts={counts} />
         </span>
       </button>

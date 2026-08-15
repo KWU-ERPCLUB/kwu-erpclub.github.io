@@ -256,10 +256,11 @@
   margin: 0 0 0.7rem;
 }
 /* 정체성 1줄(오너 픽 2026-08-15) — 본문보다 한 단계 진하게, 기간 표 위. */
-.home .rb-hook { margin: 0 0 1.5rem; font-size: 1.04rem; font-weight: 700; color: var(--text); word-break: keep-all; }
+.home .rb-hook { margin: 0 0 1.15rem; font-size: 1.04rem; font-weight: 700; color: var(--text); word-break: keep-all; }
 /* 모집·활동 = 한 줄 나열 폐지 → 2행 라벨/값 표(오너 2026-08-15 "다른 줄에 · 강조 서식").
    강조는 색이 아니라 위계로 준다(버건디 화이트리스트 불변): 라벨 = 소형 회색, 값 = 굵은 상향 타이포. */
-.home .rb-meta { margin: 0 0 1.9rem; display: grid; gap: 0.55rem; justify-items: center; }
+/* 간격 축소(오너 2026-08-15) — 행 사이·표↔CTA 사이가 멀어 한 덩어리로 안 읽혔다. */
+.home .rb-meta { margin: 0 0 1.15rem; display: grid; gap: 0.3rem; justify-items: center; }
 .home .rb-row { display: grid; grid-template-columns: 3.4rem auto; align-items: baseline; gap: 1rem; text-align: left; }
 .home .rb-row dt { font-size: 0.78rem; font-weight: 700; color: var(--text-sub); }
 .home .rb-row dd {

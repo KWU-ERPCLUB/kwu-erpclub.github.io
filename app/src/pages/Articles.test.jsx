@@ -6,7 +6,7 @@ import { ArticleRow, FeatureCard } from './insights-parts.jsx'
 import { loadContent } from '../content/loader.js'
 import { toDbRow, fromDbRow } from '../content/db-map.js'
 import { createMockRepositories } from '../data/mock.js'
-import { PAGE_SIZE, FEATURE_COUNT } from './insights-logic.js'
+import { PAGE_SIZE, FEATURE_COUNT, splitTitle } from './insights-logic.js'
 
 // M2 — 서빙 원천이 DB로 바뀌었다. 두 경로 모두 네트워크 없이 검증한다(P4):
 //   configured={false} = md 글롭 폴백(아래 기존 단언 전부 — 로컬 dev·포크·백엔드 미설정 상태)
@@ -22,6 +22,8 @@ const esc = (s) => String(s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
   .replace(/"/g, '&quot;').replace(/'/g, '&#x27;')
 const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
+// 제목은 대시 지점에서 줄이 나뉘어 렌더된다(2026-08-15) → 통짜가 아니라 절 단위로 대조한다.
+const hasTitle = (html, title) => splitTitle(title).every((seg) => html.includes(esc(seg)))
 const noop = () => {}
 const listProps = { tab: '전체', onTab: noop, topic: null, setTopic: noop, month: null, setMonth: noop, q: '', setQ: noop, onOpen: noop }
 // 합성 기사(콘텐츠 비의존) — 필요한 필드만 채운다.
@@ -52,7 +54,7 @@ test('목록 = 성격 탭(전체+4) + 검색 + 주제 칩 + 카운트 라인 + �
   expect(html).toContain('art-grid')
   expect(html).toContain('art-card-title')
   expect(html).toContain('art-cover')
-  if (ALL.length > 0) expect(flat(<Articles configured={false} />)).toContain(esc(ALL[0].title)) // 실제 기고 1건(동적 선택)
+  if (ALL.length > 0) expect(hasTitle(flat(<Articles configured={false} />), ALL[0].title)).toBe(true) // 실제 기고 1건(동적 선택)
   // 폐지된 구조 마크업 부재
   expect(html).not.toContain('art-tabs')       // 좌측 탭 폐지(구조 개혁 2026-07-24)
   expect(html).not.toContain('art-month-head') // 월별 그룹 폐지
@@ -171,8 +173,8 @@ test('성격 탭 딥링크 — ?tab=analysis 복원 + 해당 성격 카드만', 
     const html = flat(<Articles configured={false} />)
     expect(html).toContain('art-grid')
     expect(html).toContain('art-card-title')
-    if (inTab) expect(html).toContain(esc(inTab.title))       // 심층 분석 기고 = 표시
-    if (outTab) expect(html).not.toContain(esc(outTab.title)) // 다른 성격 = 필터링됨
+    if (inTab) expect(hasTitle(html, inTab.title)).toBe(true)    // 심층 분석 기고 = 표시
+    if (outTab) expect(hasTitle(html, outTab.title)).toBe(false) // 다른 성격 = 필터링됨
     expect(html).toContain('placeholder="제목·요약 검색"')   // 검색박스 유지
     expect(html).not.toContain('art-month-head')             // 월별 그룹 폐지
   } finally {
@@ -212,7 +214,7 @@ test('DB 행으로 그린 카드 = md 경로와 같은 마크업(썸네일·라�
   const html = renderToString(<FeatureCard a={items[0]} onOpen={noop} />)
   expect(html).toContain('art-cover')
   expect(html).toContain('art-card-title')
-  expect(html).toContain(esc(items[0].title))
+  expect(hasTitle(html, items[0].title)).toBe(true)
 })
 
 // md 파일에서 만든 DB 행도 같은 화면 객체로 돌아온다(이전 무손실 — P6의 화면 측 대응).

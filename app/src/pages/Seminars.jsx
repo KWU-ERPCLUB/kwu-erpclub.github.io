@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { SiteNav, SiteFooter, Arrow } from '../shared.jsx'
 import { loadContent } from '../content/loader.js'
 import { LAB_HEADINGS } from '../content/schema.js'
+import { authorName } from '../content/authors.js'
 import { todayString, splitSeminarBody, splitLead, parseBullets, parseSources } from './seminars-logic.js'
 import SeminarsTimeline from './SeminarsTimeline.jsx'
 import Markdown from './Markdown.jsx'
@@ -9,7 +10,7 @@ import Markdown from './Markdown.jsx'
 // 일시·장소·발제자 한 줄(마이크로) — 장소는 있을 때만, 일정미정=true면 날짜 대신 '일정 미정'. 상세 밴드 메타용.
 function metaLine(s) {
   const when = s['일정미정'] === true ? '일정 미정' : s.date
-  return [when, s['장소'], `발제 ${s.author}`].filter(Boolean).join(' · ')
+  return [when, s['장소'], `발제 ${authorName(s.author)}`].filter(Boolean).join(' · ')
 }
 
 // "다루는 내용" 섹션 → 01~NN 번호 목차형(번호=버건디, 데스크톱 2열 grid·모바일 1열). 불릿 0개면 비표시.
@@ -94,9 +95,9 @@ export function SeminarDetail({ s, onBack }) {
 
         {isStructured && (
           <div className="sem-ed-byline">
-            <span className="sem-ed-mono" aria-hidden="true">{(s.author || '?').charAt(0).toUpperCase()}</span>
+            <span className="sem-ed-mono" aria-hidden="true">{(authorName(s.author) || '?').charAt(0).toUpperCase()}</span>
             <span className="sem-ed-byline-txt">
-              <span className="sem-ed-byline-name">발제 {s.author}</span>
+              <span className="sem-ed-byline-name">발제 {authorName(s.author)}</span>
               <span className="sem-ed-byline-date">{s['일정미정'] === true ? '일정 미정' : s.date}</span>
             </span>
           </div>

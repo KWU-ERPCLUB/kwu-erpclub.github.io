@@ -259,11 +259,10 @@ export default function Articles({ repos, configured }) {
     <>
       <SiteNav />
       <main id="main" className="art-page art-page--list">
-        {/* 페이지 헤드 = 공용 PageHead(4차 중앙 정렬) — 설명 = 문장형 한 줄(피드백 "문장으로 좀 썼으면") */}
+        {/* 설명 1줄 = 오너 삭제 2026-08-15(대시로 이어붙인 긴 설명 폐지) — 제목·목록이 이미 무슨 면인지 말한다. */}
         <PageHead
           label="INSIGHTS"
           title={<>AI <em>인사이트</em></>}
-          sub="AI 이슈를 분석하고 축적하는 공간입니다 — 스터디원이 매주 기고합니다."
           meta={latestUpdated(all)}
         />
         <ListView

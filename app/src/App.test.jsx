@@ -4,7 +4,8 @@ import App, { PROJECTS, RecruitBand, StatsBand, Roadmap } from './App.jsx'
 import { COHORT_LABEL, formatWindowShort } from './data/recruit.js'
 import { FAQ } from './data/faq.js'
 import { loadContent } from './content/loader.js'
-import { HomeInsights, HOME_INSIGHTS_COUNT, splitTitle } from './home-parts.jsx'
+import { HomeInsights, HOME_INSIGHTS_COUNT } from './home-parts.jsx'
+import { splitTitle } from './pages/insights-logic.js'
 
 // 구조 검증(콘텐츠·시점 무관) — v7(2026-08-06 외부 피드백): 정중앙 히어로+블롭 배경, 마퀴·스크롤 유도·격자 키비주얼 폐지.
 test('메인 = 정중앙 히어로(대형 타이포·블롭 배경) — 마퀴·스크롤 유도 부재', () => {

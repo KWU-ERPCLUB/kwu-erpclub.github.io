@@ -1,7 +1,7 @@
 // 썸네일 4계층 ④ — 자동 타이포 커버(인라인 SVG, 외부 의존 0). 성격색 배경 + 주제 라벨 + 제목 2줄.
 // 이미지·로고·스톡이 전부 없을 때만 그린다(thumb-resolver kind='cover').
 // 비율 = 16:10 고정(다른 계층과 같은 프레임 — .art-cover가 크롭·보더를 통일).
-import { natureKey } from './insights-logic.js'
+import { natureKey, splitTitle } from './insights-logic.js'
 
 // 성격 4색(§1 파생 — articles.css .chip-* 와 같은 값). SVG는 CSS 변수를 못 받으므로 여기서 상수 보유.
 const NATURE_COLOR = {
@@ -41,13 +41,29 @@ export function wrapTitle(title, budget = 13, lines = 2) {
   return out
 }
 
+// 한 줄을 budget에 맞춰 말줄임(넘칠 때만).
+function fitLine(s, budget) {
+  if (weigh(s) <= budget) return s
+  let t = s
+  while (t.length > 1 && weigh(`${t}…`) > budget) t = t.slice(0, -1)
+  return `${t}…`
+}
+
+// 커버 제목 줄 — 대시로 나뉜 제목은 절이 곧 줄이다(오너 2026-08-15: 커버에도 대시 미표기).
+// 절이 하나면 기존 폭 기준 자동 줄바꿈(wrapTitle) 그대로.
+export function coverLines(title, budget = 13, lines = 2) {
+  const segs = splitTitle(title)
+  if (segs.length < 2) return wrapTitle(title, budget, lines)
+  return segs.slice(0, lines).map((s) => fitLine(s, budget))
+}
+
 export function InsightCover({ a }) {
   const nk = natureKey(a && a['성격'])
   const [bg, fg] = NATURE_COLOR[nk] || NATURE_COLOR.analysis
-  const lines = wrapTitle(a && a.title)
+  const lines = coverLines(a && a.title)
   const label = (a && a['주제']) || (a && a['성격']) || 'AI INSIGHTS'
   return (
-    <svg className="art-cover-svg" viewBox="0 0 320 200" role="img" aria-label={`${label} — ${a ? a.title : ''}`} preserveAspectRatio="xMidYMid slice">
+    <svg className="art-cover-svg" viewBox="0 0 320 200" role="img" aria-label={[label, ...splitTitle(a && a.title)].join('. ')} preserveAspectRatio="xMidYMid slice">
       <rect width="320" height="200" fill={bg} />
       {/* 헤어라인 격자(Tars 문법 승계) — 장식 최소, 면 채움 없음 */}
       <g stroke={fg} strokeOpacity="0.16" strokeWidth="1">

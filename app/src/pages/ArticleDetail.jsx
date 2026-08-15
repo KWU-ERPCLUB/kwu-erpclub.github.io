@@ -2,6 +2,7 @@
 import { Arrow } from '../shared.jsx'
 import { neighbors } from './insights-logic.js'
 import { TagChips, dateTimeOf } from './insights-parts.jsx'
+import { authorName } from '../content/authors.js'
 import { resolveHero } from './thumb-resolver.js'
 import SeriesCover from './SeriesCover.jsx'
 import Markdown from './Markdown.jsx'
@@ -33,7 +34,7 @@ export default function ArticleDetail({ cur, all, onOpen, onBack, interactions }
       <header className="art-doc-head">
         <span className="art-idx">AI INSIGHTS</span>
         <h1>{cur.title}</h1>
-        <p className="art-detail-meta">{dateTimeOf(cur)} · {cur.author}</p>
+        <p className="art-detail-meta">{dateTimeOf(cur)} · {authorName(cur.author)}</p>
         {hasTags && <div className="art-detail-tags"><TagChips a={cur} /></div>}
         <ArticleActions articleId={cur.id} api={interactions} />
       </header>
