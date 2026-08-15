@@ -17,7 +17,7 @@ test('page-head = 키커 RECRUIT + 헤드라인 + 문장형 서브(메타 줄 �
   expect(html).toContain('>RECRUIT<')
   expect(html).toContain('pg-title')
   expect(html).toContain('pg-sub')
-  expect(html).toContain('스터디입니다') // 문장형 설명(피드백)
+  expect(html).toContain('첫 기수를 모집합니다') // 문장형 설명(대시 부연 폐지 2026-08-15)
   expect(html).not.toContain('pg-meta') // 갱신 메타 = 인사이트 전용(피드백 "다른 건 굳이")
   expect(html).not.toContain('rc-eyebrow') // 구 4구현 잔재 금지
 })

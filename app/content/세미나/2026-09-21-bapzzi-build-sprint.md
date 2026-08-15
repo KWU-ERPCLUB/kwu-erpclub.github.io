@@ -6,6 +6,7 @@ date: 2026-09-21
 유형: 실습
 주제: 워크플로·자동화
 일정미정: true
+공개: false
 슬라이드: https://kwu-erpclub.github.io/slides/s3/
 썸네일: [/img/세미나/cover-s3.png]
 pdf: /pdf/세미나/2026-09-21-bapzzi-build-sprint.pdf

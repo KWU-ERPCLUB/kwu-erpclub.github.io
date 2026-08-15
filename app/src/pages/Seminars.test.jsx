@@ -99,9 +99,10 @@ test('SeminarDetail 표지 — 썸네일·pdf 있으면 최상단 표지 링크(
   expect(noThumb).not.toContain('sem-ed-cover')
 })
 
-test('페이지 구조 — 목록(타임라인 소개 헤드·필터 바) 상시 렌더(콘텐츠·시점 무관)', () => {
+test('페이지 구조 — 목록(헤드 + 세로 타임라인) 상시 렌더(콘텐츠·시점 무관)', () => {
   const html = renderToString(<Seminars />)
   expect(html).toContain('pg-head') // 소개 page-head 골격(3차 통일 = 공용 PageHead)
   expect(html).toContain('SEMINARS') // 눈썹
-  expect(html).toContain('sem-filter-bar') // 필터 바
+  expect(html).toContain('sem-tl-spine') // v5 세로 타임라인(2026-08-15) — 구 필터 바 폐지
+  expect(html).not.toContain('sem-filter-bar')
 })

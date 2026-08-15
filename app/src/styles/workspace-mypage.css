@@ -1,22 +1,25 @@
 /* 내정보 탭 전용(2026-08-14 재편 — workspace.css 300줄 규격 분할). workspace-entry에서만 import.
    구성 = 북마크 정사각 그리드(인사이트 축소판) + 설정 접힘(프로필·비밀번호 — 자주 안 볼 것 숨김). */
 
-/* 북마크 그리드 — 정사각 카드: 위 썸네일(∨성격색 타일) + 아래 제목 2줄 */
-.ws-marks { list-style: none; margin: 0.7rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.7rem; }
+/* 북마크 그리드 — 카드 확대(오너 2026-08-15: "제목이 끊긴다. 안 잘리는 선에서 크기를 키워라").
+   150→220px, 정사각→세로형(제목 자리 확보), 제목 = 핵심 절만 + 3줄까지. */
+.ws-marks { list-style: none; margin: 0.85rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.9rem; }
 .ws-markcard a {
-  display: flex; flex-direction: column; aspect-ratio: 1 / 1; overflow: hidden;
+  display: flex; flex-direction: column; aspect-ratio: 4 / 5; overflow: hidden;
   background: #fff; border: 1px solid var(--line); border-radius: 14px; text-decoration: none; color: var(--text);
-  transition: transform 150ms ease-out, box-shadow 150ms ease-out;
+  transition: transform 150ms ease-out, box-shadow 150ms ease-out, border-color 150ms ease-out;
 }
+@media (hover: hover) { .ws-markcard a:hover { border-color: var(--accent); } }
 @media (hover: hover) { .ws-markcard a:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(20, 20, 20, 0.08); } }
 @media (prefers-reduced-motion: reduce) { .ws-markcard a { transition: none; } .ws-markcard a:hover { transform: none; } }
 .ws-markcard a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-.ws-markcard-thumb { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; background: var(--surface); }
+.ws-markcard-thumb { flex: 0 0 58%; min-height: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #fff; }
 .ws-markcard-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.ws-markcard-kind { font-size: 0.74rem; font-weight: 800; letter-spacing: 0.02em; }
+.ws-markcard-kind { font-size: 0.8rem; font-weight: 800; letter-spacing: 0.02em; }
 .ws-markcard-title {
-  padding: 0.5rem 0.65rem 0.6rem; font-size: 0.8rem; font-weight: 700; line-height: 1.35;
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  flex: 1; padding: 0.7rem 0.85rem 0.85rem; font-size: 0.95rem; font-weight: 700; line-height: 1.4;
+  word-break: keep-all;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
 }
 .ws-markcard.is-gone { border: 1px dashed var(--line); border-radius: 14px; padding: 0.6rem; }
 

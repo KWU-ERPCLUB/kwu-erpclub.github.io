@@ -187,6 +187,8 @@ export default function Contribute({ store }) {
           <label className="ws-field">
             <span>제목</span>
             <input ref={titleRef} value={draft['제목']} onChange={set('제목')} />
+            {/* 제목 규약 안내(오너 2026-08-15) — 앞절이 카드·북마크 제목이 된다 */}
+            <span className="ws-hint">핵심 — 부연 순서로. 앞절만 카드·북마크에 쓰이니 앞절은 그것만 읽어도 뜻이 통하게.</span>
           </label>
           <div className="ws-field-row">
             <label className="ws-field">

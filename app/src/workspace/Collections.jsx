@@ -2,6 +2,7 @@
 // 표시 = 인사이트 축소판: 정사각 카드 그리드(위 = 썸네일 ∨ 성격색 타일, 아래 = 제목). 클릭 = 공개 상세.
 // (collections 데이터 계층·테이블은 유지. 북마크 추가·해제 = 공개 인사이트 상세에서 — 여기는 읽기 전용.)
 import { useCallback, useEffect, useState } from 'react'
+import { splitTitle } from '../pages/insights-logic.js'
 
 // 성격 4색(디자인규칙 §1 파생 토큰과 동일 값) — 이미지 없는 기사 폴백 타일 배경/전경.
 const KIND_TINT = {
@@ -25,7 +26,8 @@ function MarkCard({ m }) {
             ? <img src={a['이미지']} alt="" loading="lazy" />
             : <span className="ws-markcard-kind">{a['성격'] || '인사이트'}</span>}
         </span>
-        <span className="ws-markcard-title">{a['제목']}</span>
+        {/* 카드 제목 = 핵심 절만(오너 2026-08-15) — 제목의 ' — ' 뒷절(부연)은 카드에서 잘리기만 한다. */}
+        <span className="ws-markcard-title">{splitTitle(a['제목'])[0] || a['제목']}</span>
       </a>
     </li>
   )
@@ -48,7 +50,7 @@ export default function Collections({ store }) {
       {status === 'loading' && <div className="ws-skel" aria-label="불러오는 중"><span /><span /></div>}
       {error && <p className="ws-error" role="alert">{error}</p>}
       {status === 'ready' && marks.length === 0 && (
-        <p className="ws-note">북마크 0건 — <a href="/insights/">인사이트</a> 상세에서 북마크하면 여기 모인다.</p>
+        <p className="ws-note">아직 없음. <a href="/insights/">인사이트</a> 상세에서 북마크하면 여기 모인다.</p>
       )}
       <ul className="ws-marks">
         {marks.map((m) => <MarkCard key={m.article_id} m={m} />)}

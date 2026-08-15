@@ -59,7 +59,7 @@ test('4차 — 페이지에 블랙 통계 밴드 부재 + 중앙 헤드(문장�
   expect(html).not.toContain('pj-stats')
   expect(html).not.toContain('pj-stat-num')
   expect(html).toContain('pg-head')
-  expect(html).toContain('기록입니다') // 문장형 설명(4차)
+  expect(html).not.toContain('pg-sub') // 설명 줄 = 오너 삭제 2026-08-15(대시 부연 폐지)
 })
 test('ProjectCard — idx 전달 시 쇼케이스 번호(01), 미전달 시 미렌더', () => {
   expect(flat(<ProjectCard p={P} idx={0} onOpen={noop} />)).toContain('pj-card-idx')

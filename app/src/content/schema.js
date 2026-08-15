@@ -99,6 +99,9 @@ export function validateEntry(kind, filename, data, body = '') {
     if ('장소' in data && (typeof data['장소'] !== 'string' || data['장소'].trim() === '')) errs.push('장소는 비어있지 않은 문자열만 허용')
     // 일정미정 = 선택(boolean) — true = 개최일 미확정(예정 취급·날짜 대신 '일정 미정' 표기, 2026-07-27)
     if ('일정미정' in data && typeof data['일정미정'] !== 'boolean') errs.push('일정미정은 boolean(true/false)만 허용')
+    // 공개 = 선택(boolean, 미기재 = 공개. 2026-08-15 오너) — false = 준비 중이라 대외 미노출.
+    // 공개 페이지(/seminars/)에서 걸러진다. 운영진 열람 = 워크스페이스.
+    if ('공개' in data && typeof data['공개'] !== 'boolean') errs.push('공개는 boolean(true/false)만 허용')
   } else if (kind === '프로젝트') {
     // 설명 = 필수 1줄(비어있지 않은 문자열)
     const desc = data['설명']

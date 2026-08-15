@@ -1,107 +1,54 @@
-// 세미나 목록 v4 (2026-08-06 외부 피드백 개편) — 구 세로 날짜 타임라인(가로줄·좌 라벨 레일) 폐지.
-// 구조 = [PageHead(중앙) + 필터 바] → [상단 반 = 최신·다음 세미나 피처 밴드] → [아래 = 과거 세미나 3열 카드 그리드].
-// 피처 밴드: 예정이면 블랙 밴드(NEXT SEMINAR) / 과거면 라이트 밴드(LATEST SEMINAR) — 같은 골격.
-// CTA 명확화(피드백 "눌러야 될 것 같이 안 생겼다") = "발표자료 PDF 열기" 문장 버튼.
-// 상세(SeminarDetail)는 별도. 필터·정렬 = 세션 상태만(URL 미반영). all/today는 상위(Seminars)가 주입.
-import { useMemo, useState } from 'react'
-import { excerpt, splitSeminarBody, sortSeminars, extractTopics, filterByTopic, isUpcoming } from './seminars-logic.js'
+// 세미나 목록 v5 (2026-08-15 오너 개편) — 구 [피처 밴드 + 3열 카드 그리드] 폐지.
+// 지적 5건: ①피처 썸네일이 나머지와 크기 차이가 없다 ②그 밴드만 블랙이라 톤이 어긋난다
+// ③회색 배경 쓰지 마라 ④인사이트처럼 모아둔 꼴 말고 타임라인이 드러나게, 내리면 인터랙티브하게
+// ⑤썸네일·제목 키우고 텍스트는 줄여라 + 필터 제거.
+//
+// 구조 = 세로 스파인(스크롤 진행 채움) + 회차 노드 + 큰 썸네일 카드.
+//   맨 위 1건(최신·다음) = lead 행 = 썸네일 전폭·제목 최대 / 나머지 = 썸네일 좌측 고정폭.
+// 면 = 흰색만(블랙·회색 면 0). 강조 = 버건디 선·점(화이트리스트 범위).
+// 텍스트 = 회차·날짜·유형 + 제목까지. 발췌·요점 나열은 상세로 내렸다.
+import { sortSeminars, isUpcoming, publicOnly } from './seminars-logic.js'
+import { splitTitle } from './insights-logic.js'
+import { useTimelineFlow, useRowReveal } from './seminars-motion.js'
 import { PageHead } from '../shared.jsx'
-
-// 항목 공용 조각 — 메타 칩(회차·유형·주제) / 설명(요점 불릿 ∨ 본문 발췌).
-function Chips({ s }) {
-  return (
-    <span className="hub-chips sem-tl-chips">
-      <span className="hub-chip">{s.회차}회</span>
-      <span className="hub-chip">{s.유형}</span>
-      {s['주제'] && <span className="hub-chip">{s['주제']}</span>}
-    </span>
-  )
-}
-
-function Desc({ s }) {
-  const points = Array.isArray(s['요점']) ? s['요점'] : null
-  if (points) return <ul className="sem-tl-points">{points.map((p) => <li key={p}>{p}</li>)}</ul>
-  return <p className="sem-tl-excerpt">{excerpt(splitSeminarBody(s.body).intro || s.body, 120)}</p>
-}
 
 function whenLabel(s) {
   return s['일정미정'] === true ? '일정 미정' : (s.date || '').replace(/-/g, '.')
 }
 
-// 상단 피처 밴드 — 리스트 첫 항목(최신·다음). 예정 = 블랙 밴드 / 과거 = 라이트 밴드(같은 골격).
-// 밴드 전체 클릭 = 상세 진입(오너 2026-08-14 — "세미나 내용 보기" 버튼 폐지). 내부 PDF 링크는 전파 차단.
-// export = 콘텐츠 무관 단위 테스트용.
-export function SeminarFeature({ s, today, onOpen = () => {} }) {
+// 한 행 = 노드 + 카드. lead = 맨 위 1건(크게). export = 픽스처 주입 테스트용.
+export function SeminarRow({ s, today, onOpen = () => {}, lead = false, active = false, index = 0 }) {
   const upcoming = isUpcoming(s, today)
   const thumbs = Array.isArray(s['썸네일']) ? s['썸네일'].filter(Boolean) : []
-  const pdfHref = s.pdf || s['슬라이드']
+  const cls = ['sem-tl-row', lead ? 'is-lead' : '', active ? 'is-active' : ''].filter(Boolean).join(' ')
   return (
-    <section
-      className={`sem-feat${upcoming ? ' is-next' : ''} sem-feat-clickable`}
-      aria-label={upcoming ? '다음 세미나' : '최신 세미나'}
-      onClick={() => onOpen(s.slug)}
-    >
-      <div className="sem-feat-in">
-        <div className="sem-feat-txt">
-          <div className="sem-next-top">
-            <span className="sem-next-kicker">{upcoming ? 'NEXT SEMINAR' : 'LATEST SEMINAR'}</span>
-            {upcoming && <span className="sem-soon-badge">예정</span>}
-          </div>
-          <div className="sem-next-figures">
-            <span className="sem-next-ep">{s.회차}<span className="sem-next-unit">회</span></span>
-            <span className="sem-next-when">{whenLabel(s)}</span>
-          </div>
-          <Chips s={s} />
-          <button type="button" className="sem-tl-title" onClick={() => onOpen(s.slug)}>{s.title}</button>
-          <Desc s={s} />
-          {pdfHref && (
-            <div className="sem-feat-actions">
-              <a className="btn-2nd" href={pdfHref} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>{s.pdf ? '발표자료 PDF 열기' : '슬라이드 열기'}</a>
-            </div>
-          )}
-        </div>
+    <li className={cls} data-row={index}>
+      <span className="sem-tl-node" aria-hidden="true">
+        <i className="sem-tl-dot" />
+        <b className="sem-tl-ep">{s.회차}</b>
+      </span>
+      <button type="button" className="sem-tl-card" onClick={() => onOpen(s.slug)}>
         {thumbs.length > 0 && (
-          <a
-            className="sem-feat-thumb" href={pdfHref || undefined} target="_blank" rel="noreferrer"
-            aria-label="발표자료 열기" onClick={(e) => e.stopPropagation()}
-          >
-            <img src={thumbs[0]} alt={`${s.title} 발표자료 미리보기`} loading="lazy" />
-            {pdfHref && <span className="sem-feat-thumb-note">{s.pdf ? '클릭 = 발표자료 PDF 새 탭 열기' : '클릭 = 슬라이드 새 탭 열기'}</span>}
-          </a>
+          <span className="sem-tl-shot"><img src={thumbs[0]} alt="" loading="lazy" /></span>
         )}
-      </div>
-    </section>
-  )
-}
-
-// 과거 세미나 카드 — 3열 그리드 항목(썸네일 · 날짜 · 칩 · 제목 · PDF 링크).
-// export = 콘텐츠 무관 단위 테스트용.
-export function SeminarCard({ s, today, onOpen = () => {} }) {
-  const upcoming = isUpcoming(s, today)
-  const thumbs = Array.isArray(s['썸네일']) ? s['썸네일'].filter(Boolean) : []
-  return (
-    <li className="sem-card">
-      <button type="button" className="sem-card-main" onClick={() => onOpen(s.slug)}>
-        {thumbs.length > 0 && (
-          <span className="sem-card-thumb"><img src={thumbs[0]} alt="" loading="lazy" /></span>
-        )}
-        <span className="sem-card-body">
-          <span className="sem-card-meta">
-            <span className="sem-card-date">{whenLabel(s)}</span>
+        <span className="sem-tl-txt">
+          <span className="sem-tl-meta">
+            <span className="sem-tl-when">{whenLabel(s)}</span>
+            <span className="sem-tl-kind">{s.유형}</span>
             {upcoming && <span className="sem-soon-badge">예정</span>}
           </span>
-          <Chips s={s} />
-          <span className="sem-card-title">{s.title}</span>
+          <span className="sem-tl-h">
+            {splitTitle(s.title).map((line, i) => (
+              <span className={i ? 'sem-tl-h-sub' : 'sem-tl-h-main'} key={line}>{line}</span>
+            ))}
+          </span>
         </span>
       </button>
-      {(s.pdf || s['슬라이드']) && (
-        <a className="sem-card-pdf" href={s.pdf || s['슬라이드']} target="_blank" rel="noreferrer">{s.pdf ? '발표자료 PDF 열기' : '슬라이드 열기'}</a>
-      )}
     </li>
   )
 }
 
-// 피처 선정 — 오늘 이후(date > today) 중 가장 가까운 것 > 일정미정(예정 취급) > 최신(date 최대). 순수 함수.
+// 맨 위 강조 대상 = 오늘 이후 중 가장 가까운 것 > 일정미정 > 최신. 순수 함수(기존 계약 유지).
 export function pickFeature(items, today) {
   const dated = items.filter((s) => s['일정미정'] !== true && (s.date || '') > (today || ''))
   if (dated.length > 0) return dated.reduce((a, b) => ((a.date || '') <= (b.date || '') ? a : b))
@@ -110,53 +57,39 @@ export function pickFeature(items, today) {
   return items.reduce((a, b) => ((a.date || '') >= (b.date || '') ? a : b))
 }
 
-// 프리젠테이션 리스트 — items(이미 정렬·필터됨): 피처 밴드 = pickFeature(다가오는 세미나 우선), 나머지 = 3열 그리드.
-// 0건 = 디자인된 1줄 빈 상태. export = 픽스처 주입 테스트용(순수 렌더).
+// 타임라인 — items(이미 정렬·공개 필터됨). 0건 = 디자인된 1줄 빈 상태.
 export function SeminarTimeline({ items, today, onOpen = () => {} }) {
-  if (!items || items.length === 0) {
+  const list = items || []
+  const { ref, fill, active } = useTimelineFlow(list.length)
+  useRowReveal('.sem-tl-row', [list.length])
+  if (list.length === 0) {
     return <p className="sem-tl-empty">세미나 기록 아직 없음.</p>
   }
-  const first = pickFeature(items, today)
-  const rest = items.filter((s) => s !== first)
+  const first = pickFeature(list, today)
+  const ordered = [first, ...list.filter((s) => s !== first)]
   return (
-    <div className="sem-arch">
-      <SeminarFeature s={first} today={today} onOpen={onOpen} />
-      {rest.length > 0 && (
-        <ol className="sem-grid">
-          {rest.map((s) => <SeminarCard key={s.slug} s={s} today={today} onOpen={onOpen} />)}
-        </ol>
-      )}
+    <div className="sem-tl-wrap">
+      <ol className="sem-tl" ref={ref}>
+        <span className="sem-tl-spine" aria-hidden="true">
+          <i className="sem-tl-fill" style={{ transform: `scaleY(${fill})` }} />
+        </span>
+        {ordered.map((s, i) => (
+          <SeminarRow
+            key={s.slug} s={s} today={today} onOpen={onOpen}
+            lead={i === 0} active={i === active} index={i}
+          />
+        ))}
+      </ol>
     </div>
   )
 }
 
-// 목록 뷰 컨테이너 — [PageHead(중앙·문장형 설명) + 필터 바] → [피처 밴드 + 그리드].
-// 상태(주제·정렬) = 세션만·URL 미반영.
+// 목록 뷰 컨테이너 — PageHead(설명 줄·필터 바 폐지 2026-08-15) + 타임라인. 정렬 = 최신순 고정.
 export default function SeminarsTimeline({ all, today, onOpen }) {
-  const [topic, setTopic] = useState(null)
-  const [order, setOrder] = useState('newest') // 기본 = 최신순
-  const topics = useMemo(() => extractTopics(all), [all])
-  const items = useMemo(() => sortSeminars(filterByTopic(all, topic), order), [all, topic, order])
+  const items = sortSeminars(publicOnly(all), 'newest')
   return (
     <>
-      <PageHead
-        label="SEMINARS"
-        title="세미나"
-        sub="스터디 세미나를 회차별로 기록하는 공간입니다 — 발표자료를 열람할 수 있습니다."
-      >
-        <div className="sem-filter-bar">
-          <div className="sem-filter" role="group" aria-label="주제 필터">
-            <button type="button" className={topic === null ? 'on' : ''} aria-pressed={topic === null} onClick={() => setTopic(null)}>전체</button>
-            {topics.map((t) => (
-              <button key={t} type="button" className={topic === t ? 'on' : ''} aria-pressed={topic === t} onClick={() => setTopic(t)}>{t}</button>
-            ))}
-          </div>
-          <button type="button" className="sem-sort" onClick={() => setOrder(order === 'newest' ? 'oldest' : 'newest')} aria-label="정렬 순서 전환">
-            {order === 'newest' ? '최신순' : '과거순'}
-          </button>
-        </div>
-      </PageHead>
-
+      <PageHead label="SEMINARS" title="세미나" />
       <SeminarTimeline items={items} today={today} onOpen={onOpen} />
     </>
   )

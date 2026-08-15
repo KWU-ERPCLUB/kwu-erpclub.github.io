@@ -121,7 +121,7 @@ export default function Recruit() {
             <PageHead
               label="RECRUIT"
               title={<>{RECRUIT.study} <em>{RECRUIT.cohort}</em> 모집</>}
-              sub={`${RECRUIT.study}은 ERP연구회 산하 MIS·AI 스터디입니다 — 경영학부 중심·전공 무관, 2026 ${RECRUIT.term} 첫 기수를 모집합니다.`}
+              sub={`경영학부 중심·전공 무관. 2026 ${RECRUIT.term} 첫 기수를 모집합니다.`}
             >
               {/* 오너 2026-08-07: 세로 배치 — 대형 CTA 정중앙, 접수기간은 버튼 아래 줄 */}
               <div className="rc-head-cta">
@@ -145,7 +145,7 @@ export default function Recruit() {
                       <dt>{label}</dt>
                       <dd>
                         <strong>{core}</strong>
-                        {rest.length > 0 && <span className="rc-fact-sub"> — {rest.join(' — ')}</span>}
+                        {rest.length > 0 && <span className="rc-fact-sub">{rest.join(' ')}</span>}
                       </dd>
                     </div>
                   )
@@ -227,7 +227,7 @@ export default function Recruit() {
           <div className="rc-band-in">
             <div className="rc-body">
               <h2 className="rc-h2" id="rc-steps-h">{COHORT_LABEL} 로드맵</h2>
-              <p className="rc-sched-rule">{ACADEMIC_RULE} — 주 1회, 회차가 곧 진행 단위</p>
+              <p className="rc-sched-rule">주 1회, 회차가 곧 진행 단위. {ACADEMIC_RULE}.</p>
               <ol className="rc-rm">
                 <span className="rc-rm-fill" aria-hidden="true" />
                 {AIM_ROADMAP.map((n) => n.type === 'phase' ? (

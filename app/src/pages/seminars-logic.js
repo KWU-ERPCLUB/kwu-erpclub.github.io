@@ -33,6 +33,26 @@ export function filterByTopic(all, topic) {
   return (all || []).filter((s) => s['주제'] === topic)
 }
 
+// 첫 문장만 잘라낸다(오너 2026-08-15: 상세 헤더 리드가 4줄이라 핵심이 안 보인다).
+// 헤더 = 첫 문장 1줄 / 나머지 = 본문으로 내려보낸다. 종결부호(.!?·다.)까지 포함해 자른다.
+export function splitFirstSentence(text) {
+  const t = String(text || '').trim()
+  if (!t) return { first: '', rest: '' }
+  const m = t.match(/^[\s\S]*?[.!?](\s|$)/)
+  if (!m) return { first: t, rest: '' }
+  const first = m[0].trim()
+  const rest = t.slice(m[0].length).trim()
+  // 첫 문장이 지나치게 짧으면(발췌 실패) 통째로 헤더에 둔다.
+  if (first.length < 12) return { first: t, rest: '' }
+  return { first, rest }
+}
+
+// 대외 공개분만(오너 2026-08-15) — frontmatter `공개: false` = 준비 중이라 공개 페이지에서 뺀다.
+// 미기재 = 공개(기존 콘텐츠 무영향). 운영진 열람 경로 = 워크스페이스.
+export function publicOnly(all) {
+  return (all || []).filter((s) => s && s['공개'] !== false)
+}
+
 // date > today(엄격 미래) ∨ 일정미정=true → "예정" 배지. today == date는 예정 아님(SPEC §4 v3).
 // 일정미정 = 개최일 미확정 세미나(과거 date여도 예정 취급 — 2026-07-27 오너 지시).
 export function isUpcoming(s, today) {

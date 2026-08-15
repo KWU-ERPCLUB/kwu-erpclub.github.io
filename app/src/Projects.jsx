@@ -173,11 +173,8 @@ export default function Projects() {
     <>
       <SiteNav />
       <main id="main" className="hub-page pj-page">
-        <PageHead
-          label="PROJECTS"
-          title={<em>프로젝트</em>}
-          sub="필요한 도구를 AI로 만들어 활동에 쓴 기록입니다 — 배포물과 운영 기록을 모읍니다."
-        />
+        {/* 설명 줄 = 오너 삭제 2026-08-15(대시로 이어붙인 부연 폐지) */}
+        <PageHead label="PROJECTS" title={<em>프로젝트</em>} />
         <ProjectGrid list={all} onOpen={open} />
       </main>
       <SiteFooter />

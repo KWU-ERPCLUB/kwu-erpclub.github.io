@@ -3,7 +3,8 @@ import { SiteNav, SiteFooter, Arrow } from '../shared.jsx'
 import { loadContent } from '../content/loader.js'
 import { LAB_HEADINGS } from '../content/schema.js'
 import { authorName } from '../content/authors.js'
-import { todayString, splitSeminarBody, splitLead, parseBullets, parseSources } from './seminars-logic.js'
+import { todayString, splitSeminarBody, splitLead, splitFirstSentence, parseBullets, parseSources } from './seminars-logic.js'
+import { splitTitle } from './insights-logic.js'
 import SeminarsTimeline from './SeminarsTimeline.jsx'
 import Markdown from './Markdown.jsx'
 
@@ -11,6 +12,27 @@ import Markdown from './Markdown.jsx'
 function metaLine(s) {
   const when = s['일정미정'] === true ? '일정 미정' : s.date
   return [when, s['장소'], `발제 ${authorName(s.author)}`].filter(Boolean).join(' · ')
+}
+
+// 핵심 카드(2026-08-15 오너: "서식이 거의 없고 텍스트가 너무 많아 핵심이 한 번에 안 보인다").
+// 원천 = frontmatter `요점`(이미 있는 데이터 — 신조 0). 목록에서 쓰던 것을 상세 맨 위로 올려
+// 긴 리드 문단 대신 이 카드가 먼저 읽히게 한다. 대시 절은 줄바꿈(뒷절 = 톤 한 단계 낮춤).
+function SeminarKeys({ points }) {
+  if (!points || points.length === 0) return null
+  return (
+    <ul className="sem-ed-keys" aria-label="이 회차의 핵심">
+      {points.map((p, i) => (
+        <li className="sem-ed-key" key={p}>
+          <span className="sem-ed-key-n">{String(i + 1).padStart(2, '0')}</span>
+          <span className="sem-ed-key-t">
+            {splitTitle(p).map((line, j) => (
+              <span className={j ? 'sem-ed-key-sub' : 'sem-ed-key-main'} key={line}>{line}</span>
+            ))}
+          </span>
+        </li>
+      ))}
+    </ul>
+  )
 }
 
 // "다루는 내용" 섹션 → 01~NN 번호 목차형(번호=버건디, 데스크톱 2열 grid·모바일 1열). 불릿 0개면 비표시.
@@ -67,14 +89,23 @@ export function SeminarDetail({ s, onBack }) {
   const isStructured = !isLab && (hasOutline || hasSources)
   // 밴드 리드: 실습·구조형 = intro 첫 단락 / 일반 폴백 = 본문 첫 단락
   const { lead, rest } = splitLead(isLab || isStructured ? intro : s.body)
+  // 헤더 리드 = 첫 문장만(2026-08-15 오너) — 남은 문장은 본문 맨 앞으로 내려보낸다.
+  const { first: leadFirst, rest: leadRest } = splitFirstSentence(lead)
+  const intro2 = [leadRest, rest].filter(Boolean).join('\n\n')
+  const points = Array.isArray(s['요점']) ? s['요점'].filter(Boolean) : []
   return (
     <article className="sem-ed">
       <header className="sem-ed-band">
         <div className="sem-ed-band-in">
           <button type="button" className="sem-ed-back" onClick={onBack}>← 목록</button>
           <span className="sem-ed-eyebrow">{s.회차}회 · {s.유형}</span>
-          <h1 className="sem-ed-title">{s.title}</h1>
-          {lead && <p className="sem-ed-lead">{lead}</p>}
+          {/* 제목 = 대시 폐지·의미 단위 줄바꿈(2026-08-15) */}
+          <h1 className="sem-ed-title">
+            {splitTitle(s.title).map((line, i) => (
+              <span className={i ? 'sem-ed-title-sub' : 'sem-ed-title-main'} key={line}>{line}</span>
+            ))}
+          </h1>
+          {leadFirst && <p className="sem-ed-lead">{leadFirst}</p>}
           <p className="sem-ed-meta">{metaLine(s)}</p>
           {(s.발원기사 || s.pdf) && (
             <div className="sem-ed-actions">
@@ -86,6 +117,9 @@ export function SeminarDetail({ s, onBack }) {
       </header>
 
       <div className="sem-ed-body">
+        {/* 핵심 카드 = 본문 맨 앞(오너 2026-08-15) — 텍스트 벽 앞에 요점부터 눈에 들어오게 */}
+        <SeminarKeys points={points} />
+
         {pdfHref && thumbs.length > 0 && (
           <a className="sem-ed-cover" href={pdfHref} target="_blank" rel="noreferrer" aria-label={s.pdf ? '발표자료 PDF 열기' : '슬라이드 열기'}>
             <img src={thumbs[0]} alt={`${s.title} 발표자료 표지`} />
@@ -103,7 +137,7 @@ export function SeminarDetail({ s, onBack }) {
           </div>
         )}
 
-        {rest && <div className="sem-ed-intro"><Markdown body={rest} /></div>}
+        {intro2 && <div className="sem-ed-intro"><Markdown body={intro2} /></div>}
 
         {isLab && (
           <>
