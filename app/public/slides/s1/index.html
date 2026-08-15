@@ -10,7 +10,7 @@
 <style>
 /* ===================================================================
    AIM 세미나 덱 · 차시 1 OT
-   규격 = erp-club docs/aim-덱-규격.md v2 (1920x1080 · 톤 A/B/C · 진입 모션)
+   규격 = erp-club docs/aim-덱-규격.md v3 (1920x1080 · 톤 A/B/C · 라운드 §2-1 · 강조 §9)
    대본 = docs/aim-덱-01-OT-대본.md v3 (31장 · aria-label 1:1)
    디자인 원천 = 롯데케미칼 발표 시스템 문법을 AIM 색으로 번안
    이 파일 밖 패턴·색 신설 금지
@@ -48,6 +48,11 @@
   --fs-kpi:118px;
   --fs-kpi-sm:84px;
   --num-circle:46px;
+
+  /* 라운드 (규격 §2-1 · v3) — 직각 허용 = 표·풀블리드 면·헤어라인뿐 */
+  --r-lg:28px;   /* 면·패널·shot·code·dark */
+  --r-md:16px;   /* 카드·행·KPI·밴드·타임라인 보조 */
+  --r-sm:10px;   /* 칩·소형 라벨 */
 
   /* 슬라이드 패딩 (톤이 오버라이드) */
   --px:80px;
@@ -120,32 +125,40 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
 /* --- 5. 카드 · 그리드 ------------------------------------------- */
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:28px}
 .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:18px}
 .g-side{display:grid;grid-template-columns:1.35fr 1fr;gap:32px}
 .g-side-w{display:grid;grid-template-columns:1.6fr 1fr;gap:32px}
 
 .card{
-  position:relative;background:var(--surface);border:1px solid var(--line);
+  position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);
   padding:28px 30px;display:flex;flex-direction:column;gap:14px;min-height:0;
   transition:opacity .3s,border-color .3s;
 }
-.card--top{border-top:4px solid var(--dark)}
-.card.hl{background:var(--tint);border-color:var(--tint-line);border-left:8px solid var(--accent)}
+/* 상단 액센트 = 테두리 대신 인셋 바(라운드 미터 방지) */
+.card--top{padding-top:33px}
+.card--top::before{content:'';position:absolute;left:-1px;right:-1px;top:-1px;height:5px;background:var(--dark);border-radius:var(--r-md) var(--r-md) 0 0}
+.card.hl{background:var(--tint);border-color:var(--tint-line);padding-left:38px}
+.card.hl::after{content:'';position:absolute;left:-1px;top:-1px;bottom:-1px;width:8px;background:var(--accent);border-radius:var(--r-md) 0 0 var(--r-md)}
 .card.hl .ctag{color:var(--accent)}
 .ctag{font:600 var(--fs-label)/1 var(--fm);letter-spacing:.08em;color:var(--mute);text-transform:uppercase}
-.card h3{margin:0;font:700 var(--fs-card-title)/1.28 var(--fd);letter-spacing:-.02em;color:var(--text);word-break:keep-all}
-.card p{margin:0;font:400 var(--fs-card-body)/1.55 var(--fb);color:var(--sub);word-break:keep-all}
-.card p strong{font-weight:700;color:var(--text)}
-.card li{position:relative;padding-left:20px;font:400 var(--fs-card-body)/1.5 var(--fb);color:var(--text);word-break:keep-all;margin:10px 0}
-.card li::before{content:'';position:absolute;left:0;top:14px;width:8px;height:2px;background:var(--accent)}
-.card .fill{flex:1}
+.card h3,.sp h3{margin:0;font:700 var(--fs-card-title)/1.28 var(--fd);letter-spacing:-.02em;color:var(--text);word-break:keep-all}
+.card p,.sp p{margin:0;font:400 var(--fs-card-body)/1.55 var(--fb);color:var(--sub);word-break:keep-all}
+.card p strong,.sp p strong{font-weight:700;color:var(--text)}
+.card p b,.sp p b{font-weight:700;color:var(--accent)}
+.card li,.sp li{position:relative;padding-left:20px;font:400 var(--fs-card-body)/1.5 var(--fb);color:var(--text);word-break:keep-all;margin:10px 0}
+.card li::before,.sp li::before{content:'';position:absolute;left:0;top:14px;width:8px;height:2px;background:var(--accent)}
+.card li b,.sp li b{font-weight:700;color:var(--text)}
+/* 카드 하단 구역 = 헤어라인으로 분리(빈 공간이 아니라 2구역 카드로 읽히게) */
+.card .fill,.sp .fill{flex:1;border-bottom:1px solid var(--line);margin-bottom:4px}
+.card.hl .fill{border-bottom-color:var(--tint-line)}
 
 /* --- 6. KPI (카운트업) ------------------------------------------ */
 .kpi{
-  position:relative;background:var(--bg);border:1px solid var(--line);border-top:4px solid var(--dark);
-  padding:30px 30px 26px;display:flex;flex-direction:column;justify-content:space-between;gap:16px;
+  position:relative;background:var(--bg);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:36px 30px 28px;display:flex;flex-direction:column;justify-content:space-between;gap:16px;
 }
-.kpi--em{border-top-color:var(--accent);background:linear-gradient(180deg,var(--tint) 0%,var(--bg) 62%)}
+.kpi::before{content:'';position:absolute;left:-1px;right:-1px;top:-1px;height:5px;background:var(--dark);border-radius:var(--r-md) var(--r-md) 0 0}
+.kpi--em::before{background:var(--accent)}
+.kpi--em{background:linear-gradient(180deg,var(--tint) 0%,var(--bg) 62%)}
 .kpi .num{
   display:flex;align-items:baseline;gap:4px;font-family:var(--fm);font-size:var(--fs-kpi);
   font-weight:600;letter-spacing:-.05em;line-height:1;color:var(--text);
@@ -158,47 +171,93 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
 
 /* --- 7. 밴드 · 다크 패널 ---------------------------------------- */
 .band{
-  background:var(--tint);border-left:8px solid var(--accent);padding:22px 30px;
+  position:relative;background:var(--tint);border-radius:var(--r-md);padding:22px 30px 22px 40px;
   font:600 26px/1.5 var(--fb);color:var(--text);letter-spacing:-.01em;word-break:keep-all;
 }
+.band::before{content:'';position:absolute;left:0;top:0;bottom:0;width:8px;background:var(--accent);border-radius:var(--r-md) 0 0 var(--r-md)}
 .band span{color:var(--accent)}
+.band b{font-weight:800;color:var(--text)}
 .band .band-sub{display:block;margin-top:8px;font:400 var(--fs-sub)/1.5 var(--fb);color:var(--sub)}
 
-.dark{background:var(--dark);color:#f4f2f1;padding:38px 46px;display:flex;flex-direction:column;gap:26px}
+/* 다크 메시지 패널 — 내부 단계 구분 = 박스 아닌 번호·연결선·타이포(규격 §2-1) */
+.dark{background:var(--dark);color:#f4f2f1;border-radius:var(--r-lg);padding:38px 46px 34px;display:flex;flex-direction:column;gap:26px}
 .dark .dlab{font:600 var(--fs-label)/1 var(--fm);letter-spacing:.1em;color:#9b9793;text-transform:uppercase}
-.dark .dflow{display:flex;align-items:center;gap:18px;flex-wrap:nowrap}
-.dark .dstep{
-  flex:1;border:1px solid #3a3a3a;background:#1e1e1e;padding:18px 20px;
-  font:700 var(--fs-card-title)/1.2 var(--fd);letter-spacing:-.02em;color:#f4f2f1;text-align:center;white-space:nowrap;
+.dark .dsteps{display:flex;align-items:stretch;gap:0}
+.dark .ds{flex:1;display:flex;flex-direction:column;gap:10px;padding:0 22px 0 0}
+.dark .ds .dsn{font:600 15px var(--fm);color:#8d8884;letter-spacing:.1em}
+.dark .ds .dst{font:700 var(--fs-card-title)/1.2 var(--fd);letter-spacing:-.02em;color:#f4f2f1;white-space:nowrap}
+.dark .dsep{flex:0 0 66px;align-self:center;height:1px;background:#403e3c;position:relative}
+.dark .dsep::after{
+  content:'';position:absolute;right:0;top:-4px;
+  border-left:8px solid #56524f;border-top:4px solid transparent;border-bottom:4px solid transparent;
 }
-.dark .dstep .dsn{display:block;font:600 15px var(--fm);color:#8d8884;letter-spacing:.08em;margin-bottom:8px}
-.dark .darr{font-family:var(--fm);font-size:26px;color:#6b6663;flex:0 0 auto}
-.dark .dend{
-  border-color:var(--dm);background:rgba(209,143,154,.10);color:var(--dm);
-}
-.dark .dend .dsn{color:var(--dm)}
+.dark .dsep--eq{background:none}
+.dark .dsep--eq::after{content:'=';border:0;top:-16px;right:22px;font:600 24px var(--fm);color:#6b6663}
+.dark .ds--end{flex:0 0 auto;padding:0 0 0 8px;border-left:1px solid #403e3c;padding-left:30px}
+.dark .ds--end .dsn{color:var(--dm)}
+.dark .ds--end .dst{color:var(--dm)}
 .dark .dnote{font:400 var(--fs-card-body)/1.5 var(--fb);color:#b9b4b0}
 .dark .dnote b{color:var(--dm);font-weight:700}
 
-/* --- 8. 행 목록 ------------------------------------------------- */
+/* --- 8. 행 목록(박스) · 헤어라인 목록(v3) ----------------------- */
 .rows{display:flex;flex-direction:column;gap:12px}
 .row{
-  display:grid;grid-template-columns:var(--rowl,260px) 1fr;gap:26px;align-items:center;
-  background:var(--surface);border:1px solid var(--line);padding:18px 24px;
+  position:relative;display:grid;grid-template-columns:var(--rowl,260px) 1fr;gap:26px;align-items:center;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:18px 24px;
 }
-.row .rl{font:700 26px/1.3 var(--fd);letter-spacing:-.02em;color:var(--text);word-break:keep-all}
-.row .rl small{display:block;font:500 16px var(--fm);color:var(--mute);letter-spacing:.04em;margin-top:5px}
-.row .rr{font:400 var(--fs-card-body)/1.5 var(--fb);color:var(--sub);word-break:keep-all}
-.row .rr b{color:var(--text);font-weight:700}
-.row.mark{border-left:6px solid var(--accent);background:var(--tint);border-color:var(--tint-line)}
-.row.mark .rr{color:var(--text)}
+.row.mark{background:var(--tint);border-color:var(--tint-line);padding-left:32px}
+.row.mark::before{content:'';position:absolute;left:-1px;top:-1px;bottom:-1px;width:6px;background:var(--accent);border-radius:var(--r-md) 0 0 var(--r-md)}
+
+/* 헤어라인 목록(v3 §7) — 박스 없이 1px 구분선만. 5행+ 병렬의 기본형 */
+.hlist{display:flex;flex-direction:column}
+.hitem{
+  position:relative;display:grid;grid-template-columns:var(--rowl,260px) 1fr;gap:26px;align-items:center;
+  padding:16px 8px 16px 24px;border-bottom:1px solid var(--line);
+}
+.hitem:first-child{border-top:1px solid var(--line)}
+.hitem.mark::before{content:'';position:absolute;left:4px;top:8px;bottom:8px;width:4px;background:var(--accent);border-radius:2px}
+.hitem.mark .rl{color:var(--accent)}
+.hlist.grow-1{justify-content:stretch}
+.hlist.grow-1 .hitem{flex:1;min-height:0}
+
+.row .rl,.hitem .rl{font:700 26px/1.3 var(--fd);letter-spacing:-.02em;color:var(--text);word-break:keep-all}
+.row .rl small,.hitem .rl small{display:block;font:500 16px var(--fm);color:var(--mute);letter-spacing:.04em;margin-top:5px}
+.row .rr,.hitem .rr{font:400 var(--fs-card-body)/1.5 var(--fb);color:var(--sub);word-break:keep-all}
+.row .rr b,.hitem .rr b{color:var(--text);font-weight:700}
+.row .rr em,.hitem .rr em{font-style:normal;color:var(--accent);font-weight:700}
+.row.mark .rr,.hitem.mark .rr{color:var(--text)}
 .rnum{
   width:var(--num-circle);height:var(--num-circle);border-radius:999px;border:1.5px solid var(--line);
   background:var(--bg);display:flex;align-items:center;justify-content:center;
   font:600 22px var(--fm);color:var(--sub);flex:0 0 auto;
 }
-.row.mark .rnum{background:var(--accent);border-color:var(--accent);color:#fff}
+.row.mark .rnum,.hitem.mark .rnum{background:var(--accent);border-color:var(--accent);color:#fff}
 .rlead{display:flex;align-items:center;gap:18px}
+
+/* 면 분할 패널(v3 §7) — surface 면 1장 안을 헤어라인으로 내부 분할 */
+.split{
+  position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
+  overflow:hidden;display:grid;min-height:0;
+}
+.split--c{grid-auto-flow:column;grid-auto-columns:1fr}
+.split--c>.sp+.sp{border-left:1px solid var(--line)}
+.split--r{grid-auto-rows:1fr}
+.split--r>.sp+.sp{border-top:1px solid var(--line)}
+.sp{position:relative;display:flex;flex-direction:column;gap:12px;padding:26px 28px;min-height:0}
+.sp.mark{background:var(--tint)}
+.sp.mark::before{content:'';position:absolute;left:0;top:0;bottom:0;width:6px;background:var(--accent)}
+.sp--row{flex-direction:row;align-items:center;gap:30px;padding:0 36px 0 42px}
+.spk{flex:0 0 66px;font:600 22px var(--fm);letter-spacing:.04em;color:var(--mute)}
+.spt{font:700 var(--fs-card-title)/1.25 var(--fd);letter-spacing:-.02em;color:var(--text);word-break:keep-all}
+.sp--row .spt{flex:1}
+.spd{flex:0 0 auto;font:500 var(--fs-sub) var(--fb);color:var(--mute)}
+.sp.mark .spk,.sp.mark .spt{color:var(--accent)}
+.sp.mark .spd{color:var(--accent);font-weight:700}
+.sp--cat .spt{flex:0 0 330px}
+.spn{flex:1;font:400 var(--fs-card-body)/1.5 var(--fb);color:var(--sub);word-break:keep-all}
+.spn b{color:var(--accent);font-weight:700}
+.spx{flex:0 0 330px;text-align:right;font:400 var(--fs-sub)/1.4 var(--fb);color:var(--mute)}
+.spx strong{color:var(--text);font-weight:700}
 
 /* --- 9. 목차 ---------------------------------------------------- */
 .toc{display:flex;flex-direction:column;gap:14px}
@@ -214,6 +273,7 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
 }
 .toc-item .tt{font:700 var(--fs-card-title)/1.2 var(--fd);letter-spacing:-.02em;color:var(--text)}
 .toc-item .td{font:400 var(--fs-card-body)/1.45 var(--fb);color:var(--sub);word-break:keep-all}
+.toc-item .td b{color:var(--text);font-weight:700}
 .toc-item .tm{font:600 21px var(--fm);color:var(--mute);letter-spacing:.02em}
 .toc-item.cur .tnum{background:var(--accent);border-color:var(--accent);color:#fff}
 .toc-item.cur .tt{color:var(--accent)}
@@ -225,6 +285,7 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
 
 /* 타임라인 */
 .tl{display:flex;flex-direction:column;gap:0}
+.tl>.tlrow{flex:1;align-items:stretch} /* 잔여 높이 = 두 행이 분할 흡수(§4 여백 흡수 금지) */
 .tlline{position:relative;height:4px;background:var(--line);margin:0 0 0}
 .tlfill{position:absolute;inset:0;background:linear-gradient(90deg,var(--accent),#a04a58);transform:scaleX(0);transform-origin:left}
 .tlrow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:26px}
@@ -235,10 +296,12 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
 .tlcell.on .tperiod{color:var(--accent)}
 .tlcell .ttitle{margin-top:10px;font:700 var(--fs-card-title)/1.25 var(--fd);letter-spacing:-.02em;color:var(--text)}
 .tlcell .tdesc{margin-top:12px;font:400 var(--fs-card-body)/1.5 var(--fb);color:var(--sub);word-break:keep-all}
+.tlcell .tdesc b{color:var(--text);font-weight:700}
 /* 타임라인 보조 행 — 구간별 세부(공백 40% 규칙 대응) */
-.tlsub{padding:22px 26px;background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--dark);border-radius:6px}
-.tlsub b{display:block;font:700 var(--fs-sub) var(--fb);color:var(--text)}
-.tlsub span{display:block;margin-top:8px;font:400 var(--fs-sub)/1.5 var(--fb);color:var(--sub);word-break:keep-all}
+.tlsub{position:relative;padding:25px 26px 22px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md)}
+.tlsub::before{content:'';position:absolute;left:-1px;right:-1px;top:-1px;height:4px;background:var(--dark);border-radius:var(--r-md) var(--r-md) 0 0}
+.tlsub b{display:block;font:700 var(--fs-card-body) var(--fd);letter-spacing:-.01em;color:var(--text)}
+.tlsub span{display:block;margin-top:10px;font:400 var(--fs-card-body)/1.55 var(--fb);color:var(--sub);word-break:keep-all}
 
 /* 단계 파이프 */
 .pipe{display:flex;align-items:flex-start;justify-content:space-between;gap:6px}
@@ -250,11 +313,16 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
 .pstep.cur .pc{background:var(--accent);border-color:var(--accent);color:#fff}
 .pstep .pt{font:700 26px/1.3 var(--fd);letter-spacing:-.02em;color:var(--text);word-break:keep-all}
 .pstep .ps{font:400 var(--fs-sub)/1.4 var(--fb);color:var(--mute);word-break:keep-all}
+.pstep .ps b{color:var(--text);font-weight:700}
 .pstep.cur .pt{color:var(--accent)}
 .parr{flex:0 0 auto;margin-top:12px;font-family:var(--fm);font-size:24px;color:#c4c4c1}
-.pipe--v{flex-direction:column;align-items:stretch;gap:14px}
-.pipe--v .pstep{flex-direction:row;align-items:center;text-align:left;gap:20px;padding:16px 22px;background:var(--surface);border:1px solid var(--line)}
-.pipe--v .pstep.cur{background:var(--tint);border-color:var(--tint-line)}
+/* 세로 파이프 = 헤어라인 목록 형태(박스 해체 · 규격 §2-1) */
+.pipe--v{flex-direction:column;align-items:stretch;gap:0}
+.pipe--v .pstep{
+  flex-direction:row;align-items:center;text-align:left;gap:20px;padding:18px 6px;
+  border-bottom:1px solid var(--line);
+}
+.pipe--v .pstep:first-child{border-top:1px solid var(--line)}
 .pipe--v .pbody{display:flex;flex-direction:column;gap:4px}
 
 /* --- 11. 표 ----------------------------------------------------- */
@@ -265,37 +333,41 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
 }
 .tbl th.em{color:var(--accent)}
 .tbl td{
-  padding:18px 20px;border-bottom:1px solid var(--line);vertical-align:top;
+  padding:18px 20px;border-bottom:1px solid var(--line);vertical-align:middle;
   font:400 var(--fs-card-body)/1.45 var(--fb);color:var(--sub);word-break:keep-all;
   transition:opacity .3s;
 }
+.tbl td b{color:var(--text);font-weight:700}
+.tbl td em{font-style:normal;color:var(--accent);font-weight:700}
+/* 표는 잔여 세로 공간을 행 높이로 흡수(규격 §4 — 빈 스페이서 금지) */
+.grow-1>.tbl{height:100%}
 .tbl td.k{font-weight:700;color:var(--text);font-family:var(--fb)}
 .tbl td.em{color:var(--text);background:var(--tint)}
 .tbl td .mono{font-family:var(--fm);font-size:21px;color:var(--accent);font-weight:600}
 
 /* --- 12. 캡처 프레임 -------------------------------------------- */
-.shot{border:1px solid var(--line);background:var(--bg);overflow:hidden;box-shadow:0 8px 28px -12px rgba(20,20,20,.20);display:flex;flex-direction:column}
+.shot{border:1px solid var(--line);border-radius:var(--r-lg);background:var(--bg);overflow:hidden;box-shadow:0 8px 28px -12px rgba(20,20,20,.20);display:flex;flex-direction:column}
 .shot .bar{display:flex;align-items:center;gap:9px;background:#f1f0ee;border-bottom:1px solid var(--line);padding:11px 18px;flex:0 0 auto}
 .shot .dot{width:11px;height:11px;border-radius:999px;background:#d3d2cf}
-.shot .url{margin-left:10px;font:500 15px var(--fm);color:var(--sub);background:#fff;border:1px solid var(--line);border-radius:6px;padding:4px 14px}
+.shot .url{margin-left:10px;font:500 15px var(--fm);color:var(--sub);background:#fff;border:1px solid var(--line);border-radius:var(--r-sm);padding:4px 14px}
 .shot .clip{overflow:hidden;position:relative;flex:1;min-height:0}
 .shot .clip img{width:100%;height:100%;object-fit:cover;object-position:top center}
 /* 촬영 대기 = 라벨 카드(규격 §11 · 빈 프레임 금지) */
 .shot .todo{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:var(--surface);padding:40px 24px;text-align:center}
 .shot .todo b{font:700 26px var(--fd);color:var(--sub);letter-spacing:-.02em}
 .shot .todo span{font:400 var(--fs-sub) var(--fb);color:var(--mute)}
-.shot .todo .tag{font:600 15px var(--fm);letter-spacing:.06em;color:var(--accent);border:1px solid var(--tint-line);background:var(--tint);padding:6px 14px}
+.shot .todo .tag{font:600 15px var(--fm);letter-spacing:.06em;color:var(--accent);border:1px solid var(--tint-line);border-radius:var(--r-sm);background:var(--tint);padding:6px 14px}
 .shotcap{font:500 var(--fs-sub)/1.4 var(--fb);color:var(--mute);margin-top:12px}
 
 /* --- 13. 프롬프트(다크) ----------------------------------------- */
-.code{background:var(--dark);padding:26px 32px;display:flex;flex-direction:column;gap:16px}
+.code{background:var(--dark);border-radius:var(--r-lg);padding:26px 34px;display:flex;flex-direction:column;gap:16px}
 .code .ct{display:flex;justify-content:space-between;font:600 var(--fs-label) var(--fm);letter-spacing:.08em;color:#9b9793;text-transform:uppercase}
 .code pre{margin:0;font:500 30px/1.55 var(--fm);color:#f4f2f1;white-space:pre-wrap;word-break:keep-all}
 .code .hi{color:var(--dm)}
 
-/* --- 14. 칩 ----------------------------------------------------- */
+/* --- 14. 칩(소형 라벨 — 5개+ 나열 금지 §2-1, 면 분할 패널 사용) -- */
 .chips{display:flex;flex-wrap:wrap;gap:12px}
-.chip{border:1px solid var(--line);background:var(--bg);padding:12px 20px;font:600 var(--fs-sub) var(--fb);color:var(--text)}
+.chip{border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);padding:12px 20px;font:600 var(--fs-sub) var(--fb);color:var(--text)}
 .chip small{display:block;font:500 15px var(--fm);color:var(--mute);margin-top:4px;letter-spacing:.02em}
 .chip.on{border-color:var(--accent);background:var(--tint);color:var(--accent)}
 .chip.on small{color:var(--accent)}
@@ -340,17 +412,21 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
 .ab .pa,.ab .pb{transition:opacity .3s,border-color .3s}
 .ab.pickA .pb,.ab.pickB .pa{opacity:.26}
 .ab.pickA .card.pa,.ab.pickB .card.pb{border-color:var(--accent)}
-.abbar{display:flex;gap:12px}
-.abbtn{border:1px solid var(--line);background:var(--bg);padding:10px 22px;font:600 var(--fs-sub) var(--fb);color:var(--text);cursor:pointer}
-.abbtn.on{background:var(--dark);color:#fff;border-color:var(--dark)}
+/* A/B 토글 = 텍스트 버튼(박스 아님 · 활성 = 밑줄+색) */
+.abbar{display:flex;gap:30px;align-items:center}
+.abbtn{
+  border:0;border-bottom:2px solid transparent;background:none;padding:4px 2px 8px;
+  font:600 var(--fs-sub) var(--fb);color:var(--mute);cursor:pointer;letter-spacing:-.01em;
+}
+.abbtn.on{color:var(--accent);border-bottom-color:var(--accent)}
 .ck{cursor:pointer;user-select:none}
 .cbox{
-  width:34px;height:34px;border:1.5px solid var(--line);background:var(--bg);flex:0 0 auto;
-  display:flex;align-items:center;justify-content:center;font:700 20px var(--fb);color:#fff;
+  width:34px;height:34px;border-radius:999px;border:1.5px solid var(--line);background:var(--bg);flex:0 0 auto;
+  display:flex;align-items:center;justify-content:center;font:700 18px var(--fb);color:#fff;
 }
 .ck.on .cbox{background:var(--accent);border-color:var(--accent)}
 .ck.on .cbox::after{content:'✓'}
-.ck.on{border-left:6px solid var(--accent);padding-left:18px}
+.ck.on .rl{color:var(--accent)}
 
 /* --- 18. 모션 (규격 §8) ----------------------------------------- */
 .an{opacity:0}
@@ -432,11 +508,11 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
         <p class="sub">5파트 60분 · 파트마다 남는 것이 하나씩</p>
       </div>
       <div class="toc grow-1">
-        <div class="toc-item cur an"><span class="tnum">1</span><span class="tt">왜 이 스터디인가</span><span class="td">창설 배경 · 시장 수치 · 최종 목표 · 학기 구조</span><span class="tm">15분</span></div>
+        <div class="toc-item cur an"><span class="tnum">1</span><span class="tt">왜 이 스터디인가</span><span class="td">창설 배경 · 시장 수치 · <b>최종 목표</b> · 학기 구조</span><span class="tm">15분</span></div>
         <div class="toc-item an"><span class="tnum">2</span><span class="tt">허브 투어</span><span class="td">공개면과 워크스페이스 · 인사이트 · 기고 제출 흐름</span><span class="tm">15분</span></div>
-        <div class="toc-item an"><span class="tnum">3</span><span class="tt">세팅과 첫 실습</span><span class="td">설치 점검 · 한 줄 질문과 브리프 결과 대조</span><span class="tm">15분</span></div>
+        <div class="toc-item an"><span class="tnum">3</span><span class="tt">세팅과 첫 실습</span><span class="td">설치 점검 · <b>한 줄 질문과 브리프 결과 대조</b></span><span class="tm">15분</span></div>
         <div class="toc-item an"><span class="tnum">4</span><span class="tt">한 학기 주제</span><span class="td">개인 소재 카탈로그 · 팀 주제 · 다음 4주</span><span class="tm">10분</span></div>
-        <div class="toc-item an"><span class="tnum">5</span><span class="tt">마무리</span><span class="td">시작 설문 · 다음 시간 준비물</span><span class="tm">5분</span></div>
+        <div class="toc-item an"><span class="tnum">5</span><span class="tt">마무리</span><span class="td"><b>시작 설문</b> · 다음 시간 준비물</span><span class="tm">5분</span></div>
       </div>
       <div class="band an">
         오늘의 판정 2 = <span>결과 차이 확인</span> · <span>시작 설문 제출</span>
@@ -468,7 +544,7 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
         <div class="card card--top an">
           <span class="ctag">01 시장</span>
           <h3>AI 활용 = 기본값</h3>
-          <p>채용·실무 평가 기준에 이미 반영. 사용 여부는 변별 항목에서 제외.</p>
+          <p>채용·실무 평가 기준에 이미 반영. 사용 여부는 <b>변별 항목에서 제외</b>.</p>
           <div class="fill"></div>
           <p><strong>도구 접근성</strong> 무료 범위로 대부분 해소</p>
         </div>
@@ -476,7 +552,7 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
         <div class="card card--top an">
           <span class="ctag">02 간극</span>
           <h3>기존 수업·스터디 미반영</h3>
-          <p>도구 소개 수준에서 종료. 본인 업무에 적용한 사례와 검수 절차 부재.</p>
+          <p>도구 소개 수준에서 종료. 본인 업무에 적용한 사례와 <strong>검수 절차 부재</strong>.</p>
           <div class="fill"></div>
           <p><strong>결과</strong> 사용 경험은 있으나 활용 방식은 제각각</p>
         </div>
@@ -484,7 +560,7 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
         <div class="card hl an">
           <span class="ctag">03 결론</span>
           <h3>MIS에서 MIS×AI 탐구</h3>
-          <p>IT와 가장 가까운 전공 위치. 업무·프로세스가 주어인 학과 관점으로 접근.</p>
+          <p>IT와 가장 가까운 전공 위치. <b>업무·프로세스가 주어</b>인 학과 관점으로 접근.</p>
           <div class="fill"></div>
           <p><strong>범위</strong> 본인 학업·진로에 직접 적용</p>
         </div>
@@ -503,7 +579,7 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
         <h1>시장 수치</h1>
         <p class="sub">평가 대상 = 사용 여부가 아니라 시키는 방식과 검수</p>
       </div>
-      <div class="g3 grow-1">
+      <div class="g3 grow-1" style="flex:1.05">
         <div class="kpi kpi--em an">
           <div class="num"><span class="count" data-target="78">78</span><span class="unit">%</span></div>
           <div>
@@ -526,10 +602,10 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
           </div>
         </div>
       </div>
-      <div class="rows an">
-        <div class="row" style="--rowl:300px"><span class="rl">도구 사용 = 전제</span><span class="rr">계정 보유·기본 조작은 변별 항목에서 제외. 출발선이 이미 동일.</span></div>
-        <div class="row mark" style="--rowl:300px"><span class="rl">검수·판정 = 변별</span><span class="rr">결과를 원문과 대조하고 <b>수정 지점을 지목</b>하는 능력이 상위 역량.</span></div>
-        <div class="row" style="--rowl:300px"><span class="rl">문구 암기 = 하락</span><span class="rr">지시 설계와 검증 절차로 요구가 이동. 마법 문구 목록은 유효기간 짧음.</span></div>
+      <div class="hlist an grow-1" style="--rowl:300px">
+        <div class="hitem"><span class="rl">도구 사용 = 전제</span><span class="rr">계정 보유·기본 조작은 변별 항목에서 제외. <b>출발선이 이미 동일</b>.</span></div>
+        <div class="hitem mark"><span class="rl">검수·판정 = 변별</span><span class="rr">결과를 원문과 대조하고 <b>수정 지점을 지목</b>하는 능력이 상위 역량.</span></div>
+        <div class="hitem"><span class="rl">문구 암기 = 하락</span><span class="rr">지시 설계와 검증 절차로 요구가 이동. 마법 문구 목록은 <b>유효기간 짧음</b>.</span></div>
       </div>
     </div>
   </section>
@@ -551,8 +627,8 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
             <span class="ctag">A · 지금까지</span>
             <h3>질문 한 줄 → 답 한 번</h3>
             <ul>
-              <li>결과가 매번 다름</li>
-              <li>기준이 없어 검사 불가</li>
+              <li>결과가 <b>매번 다름</b></li>
+              <li>기준이 없어 <b>검사 불가</b></li>
               <li>다음 회차에 처음부터 재입력</li>
               <li>남는 자산 없음</li>
             </ul>
@@ -561,10 +637,10 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
             <span class="ctag">B · 이 스터디</span>
             <h3>브리프 → 결과 → 검수 → 재위임</h3>
             <ul>
-              <li>소스·무엇을·기준·확인법을 문장으로 지정</li>
-              <li>결과를 기준과 대조 후 수정 지점 지목</li>
+              <li><b>소스·무엇을·기준·확인법</b>을 문장으로 지정</li>
+              <li>결과를 기준과 대조 후 <b>수정 지점 지목</b></li>
               <li>브리프 수정만으로 재실행</li>
-              <li>지시문이 재사용 자산으로 축적</li>
+              <li>지시문이 <b>재사용 자산</b>으로 축적</li>
             </ul>
           </div>
         </div>
@@ -581,33 +657,31 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
     <div class="sbody">
       <div class="htitle an">
         <h1>최종 목표</h1>
-        <p class="sub">한 학기 뒤 도달 상태 · 4단 순서로 도달</p>
+        <p class="sub">한 학기 뒤 도달 상태 · <em>4단 순서</em>로 도달 · 아래 = 역량 C1~C7 도입 시점</p>
       </div>
       <div class="dark an">
         <span class="dlab">Target State</span>
-        <div class="dflow">
-          <div class="dstep"><span class="dsn">STEP 1</span>트렌드 파악</div>
-          <span class="darr">→</span>
-          <div class="dstep"><span class="dsn">STEP 2</span>적용처 선정</div>
-          <span class="darr">→</span>
-          <div class="dstep"><span class="dsn">STEP 3</span>기획</div>
-          <span class="darr">→</span>
-          <div class="dstep"><span class="dsn">STEP 4</span>AI 구현</div>
-          <span class="darr">=</span>
-          <div class="dstep dend"><span class="dsn">RESULT</span>증명 가능한 일상 활용자</div>
+        <div class="dsteps">
+          <span class="ds"><span class="dsn">STEP 1</span><span class="dst">트렌드 파악</span></span>
+          <span class="dsep"></span>
+          <span class="ds"><span class="dsn">STEP 2</span><span class="dst">적용처 선정</span></span>
+          <span class="dsep"></span>
+          <span class="ds"><span class="dsn">STEP 3</span><span class="dst">기획</span></span>
+          <span class="dsep"></span>
+          <span class="ds"><span class="dsn">STEP 4</span><span class="dst">AI 구현</span></span>
+          <span class="dsep dsep--eq"></span>
+          <span class="ds ds--end"><span class="dsn">RESULT</span><span class="dst">증명 가능한 일상 활용자</span></span>
         </div>
         <p class="dnote">증명 = <b>전·후 수치</b>와 <b>동작하는 결과물</b> 두 가지. 학기말 쇼케이스가 확인 지점.</p>
       </div>
-      <div class="grow-1">
-        <div class="chips an">
-          <span class="chip on">C1 문제 포착<small>오늘 도입</small></span>
-          <span class="chip">C2 위임 브리프<small>차시 2~</small></span>
-          <span class="chip">C3 검수·판정<small>차시 2~</small></span>
-          <span class="chip on">C4 측정·증명<small>오늘 기준선</small></span>
-          <span class="chip">C5 기획<small>2차 팀</small></span>
-          <span class="chip">C6 습관·전이<small>학기 전체</small></span>
-          <span class="chip on">C7 프롬프트·명세<small>오늘 도입</small></span>
-        </div>
+      <div class="split split--r an grow-1">
+        <div class="sp sp--row mark"><span class="spk">C1</span><span class="spt">문제 포착</span><span class="spd">오늘 도입</span></div>
+        <div class="sp sp--row"><span class="spk">C2</span><span class="spt">위임 브리프</span><span class="spd">차시 2~</span></div>
+        <div class="sp sp--row"><span class="spk">C3</span><span class="spt">검수·판정</span><span class="spd">차시 2~</span></div>
+        <div class="sp sp--row mark"><span class="spk">C4</span><span class="spt">측정·증명</span><span class="spd">오늘 기준선</span></div>
+        <div class="sp sp--row"><span class="spk">C5</span><span class="spt">기획</span><span class="spd">2차 팀</span></div>
+        <div class="sp sp--row"><span class="spk">C6</span><span class="spt">습관·전이</span><span class="spd">학기 전체</span></div>
+        <div class="sp sp--row mark"><span class="spk">C7</span><span class="spt">프롬프트·명세</span><span class="spd">오늘 도입</span></div>
       </div>
     </div>
   </section>
@@ -625,17 +699,17 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
           <div class="tlcell on an">
             <div class="tperiod">09월 ~ 10-06</div>
             <div class="ttitle">1차 · 개인</div>
-            <p class="tdesc">학업 효율화 또는 취미 자동화 1건. 소재 조건 = 본인이 실사용자. 회당 소요를 전·후로 기록.</p>
+            <p class="tdesc">학업 효율화 또는 취미 자동화 1건. 소재 조건 = <b>본인이 실사용자</b>. 회당 소요를 전·후로 기록.</p>
           </div>
           <div class="tlcell an">
             <div class="tperiod">10-07 ~ 10-26</div>
             <div class="ttitle">시험기간</div>
-            <p class="tdesc">세션 중지. 14일 규칙 = 시험 14일 전부터 무조건 휴식. 중간 10-06 · 기말 11-24 기준.</p>
+            <p class="tdesc">세션 중지. <b>14일 규칙</b> = 시험 14일 전부터 무조건 휴식. 중간 10-06 · 기말 11-24 기준.</p>
           </div>
           <div class="tlcell an">
             <div class="tperiod">10-27 ~ 11월 말</div>
             <div class="ttitle">2차 · 팀</div>
-            <p class="tdesc">MIS 주제 1건을 팀 단위 MVP로 제작. 기획 = 사람, 구현 = AI. 팀 결성은 차시 3.</p>
+            <p class="tdesc">MIS 주제 1건을 팀 단위 MVP로 제작. <b>기획 = 사람, 구현 = AI</b>. 팀 결성은 차시 3.</p>
           </div>
         </div>
         <div class="tlrow" style="margin-top:40px">
@@ -667,12 +741,12 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
             <span class="tag">오너 촬영분 교체 예정</span>
           </div>
         </div>
-        <div class="rows an" style="--rowl:150px">
-          <div class="row"><span class="rl">입력</span><span class="rr">브리프 1건 · 소스와 기준 포함</span></div>
-          <div class="row"><span class="rl">산출</span><span class="rr">동작하는 화면 · 즉시 확인 가능</span></div>
-          <div class="row"><span class="rl">소요</span><span class="rr">수 분 단위</span></div>
-          <div class="row mark"><span class="rl">확인 지점</span><span class="rr">사실 오류 · 형식 · 누락 3항</span></div>
-          <div class="row"><span class="rl">전제</span><span class="rr">코드 작성 능력 아님 · 지시와 검수</span></div>
+        <div class="hlist an grow-1" style="--rowl:150px">
+          <div class="hitem"><span class="rl">입력</span><span class="rr">브리프 1건 · 소스와 기준 포함</span></div>
+          <div class="hitem"><span class="rl">산출</span><span class="rr"><b>동작하는 화면</b> · 즉시 확인 가능</span></div>
+          <div class="hitem"><span class="rl">소요</span><span class="rr"><b>수 분 단위</b></span></div>
+          <div class="hitem mark"><span class="rl">확인 지점</span><span class="rr">사실 오류 · 형식 · 누락 3항</span></div>
+          <div class="hitem"><span class="rl">전제</span><span class="rr">코드 작성 능력 아님 · <b>지시와 검수</b></span></div>
         </div>
       </div>
       <div class="band an">
@@ -708,7 +782,7 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
           <span class="ctag">공개면 · 로그인 불필요</span>
           <h3>누구나 열람</h3>
           <ul>
-            <li>AI 인사이트 · 주 3회 자동 발행과 멤버 기고</li>
+            <li>AI 인사이트 · <b>주 3회 자동 발행</b>과 멤버 기고</li>
             <li>세미나 · 차시 자료와 기록</li>
             <li>프로젝트 · 완료 산출물 상세</li>
             <li>모집 · 기수 안내와 운영 증빙</li>
@@ -722,7 +796,7 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
             <li>홈 · 캘린더와 다가오는 업무</li>
             <li>로드맵 · 차시별 자료·과제</li>
             <li>공고 · 공모전·채용 스크랩</li>
-            <li>인사이트 기고 · 주 1건 제출</li>
+            <li>인사이트 기고 · <b>주 1건 제출</b></li>
             <li>내정보 · 북마크·관심 공고·비밀번호</li>
           </ul>
         </div>
@@ -752,8 +826,8 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
         </div>
       </div>
       <div class="rows an" style="--rowl:200px">
-        <div class="row"><span class="rl">발행 주기</span><span class="rr">운영 자동 발행 주 3회 + 멤버 기고 · 시리즈 필터로 주간 트렌드 분리 열람</span></div>
-        <div class="row"><span class="rl">카드 배지</span><span class="rr">작성자 · 게재 7일 이내 미열람 표시 · 좋아요와 북마크 수</span></div>
+        <div class="row"><span class="rl">발행 주기</span><span class="rr">운영 자동 발행 <b>주 3회</b> + 멤버 기고 · 시리즈 필터로 주간 트렌드 분리 열람</span></div>
+        <div class="row mark"><span class="rl">카드 배지</span><span class="rr">작성자 · <b>게재 7일 이내 미열람 표시</b> · 좋아요와 북마크 수</span></div>
       </div>
     </div>
   </section>
@@ -770,12 +844,12 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
           <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">kwu-erpclub.github.io/workspace</span></div>
           <div class="clip"><img src="/slides/ws/ws-home.png" alt="워크스페이스 홈 캘린더" /></div>
         </div>
-        <div class="rows an" style="--rowl:170px">
-          <div class="row mark"><span class="rl">첫 로그인</span><span class="rr">학번 입력 · 비밀번호 000000 · 즉시 변경</span></div>
-          <div class="row"><span class="rl">캘린더</span><span class="rr">세션 · 과제 마감 · 공고 마감 · 시험일 통합</span></div>
-          <div class="row"><span class="rl">다가오는 업무</span><span class="rr">운영진이 ★ 지정한 항목만 상단 표시</span></div>
-          <div class="row"><span class="rl">과제 제출</span><span class="rr">링크 1개 등록 · 파일 업로드 없음</span></div>
-          <div class="row"><span class="rl">공지</span><span class="rr">세션 밖 질문 창구</span></div>
+        <div class="hlist an grow-1" style="--rowl:170px">
+          <div class="hitem mark"><span class="rl">첫 로그인</span><span class="rr">학번 입력 · 비밀번호 <b>000000</b> · 즉시 변경</span></div>
+          <div class="hitem"><span class="rl">캘린더</span><span class="rr">세션 · 과제 마감 · 공고 마감 · 시험일 통합</span></div>
+          <div class="hitem"><span class="rl">다가오는 업무</span><span class="rr">운영진이 <b>★ 지정한 항목만</b> 상단 표시</span></div>
+          <div class="hitem"><span class="rl">과제 제출</span><span class="rr"><b>링크 1개 등록</b> · 파일 업로드 없음</span></div>
+          <div class="hitem"><span class="rl">공지</span><span class="rr">세션 밖 질문 창구</span></div>
         </div>
       </div>
     </div>
@@ -803,7 +877,7 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
         </div>
       </div>
       <div class="rows an" style="--rowl:200px">
-        <div class="row"><span class="rl">로드맵</span><span class="rr">차시별 자료·과제 · 공개일 도달 전 항목은 잠금 표시</span></div>
+        <div class="row"><span class="rl">로드맵</span><span class="rr">차시별 자료·과제 · 공개일 도달 전 항목은 <b>잠금 표시</b></span></div>
         <div class="row mark"><span class="rl">공고</span><span class="rr">등록 시 <b>유효 근거 한 줄 필수</b> · 관심 공고 ★ 등록분은 내정보에 모임</span></div>
       </div>
     </div>
@@ -823,8 +897,8 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
         </div>
         <div class="pipe pipe--v an">
           <div class="pstep cur"><span class="pc">1</span><span class="pbody"><span class="pt">학번 로그인</span><span class="ps">오늘 숙제 · 1회</span></span></div>
-          <div class="pstep"><span class="pc">2</span><span class="pbody"><span class="pt">인사이트 기고</span><span class="ps">주 1건 · 키트 초안 붙여넣기</span></span></div>
-          <div class="pstep"><span class="pc">3</span><span class="pbody"><span class="pt">과제 제출</span><span class="ps">링크 1개 등록</span></span></div>
+          <div class="pstep"><span class="pc">2</span><span class="pbody"><span class="pt">인사이트 기고</span><span class="ps"><b>주 1건</b> · 키트 초안 붙여넣기</span></span></div>
+          <div class="pstep"><span class="pc">3</span><span class="pbody"><span class="pt">과제 제출</span><span class="ps"><b>링크 1개</b> 등록</span></span></div>
           <div class="pstep"><span class="pc">4</span><span class="pbody"><span class="pt">내정보</span><span class="ps">비밀번호 변경 · 북마크 확인</span></span></div>
         </div>
       </div>
@@ -856,12 +930,12 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
         <h1>설치 점검</h1>
         <p class="sub">미완료 항목은 이 시간에 해소 · 운영진 순회 · 항목 클릭으로 체크</p>
       </div>
-      <div class="rows grow-1" style="--rowl:340px">
-        <div class="row ck an" data-ck><span class="rlead"><span class="cbox"></span><span class="rl">구글 계정</span></span><span class="rr">드라이브에서 새 문서 1개 생성 완료</span></div>
-        <div class="row ck an" data-ck><span class="rlead"><span class="cbox"></span><span class="rl">챗봇 계정 1개 이상</span></span><span class="rr">질문 1개 전송 후 답변 수신 · 도구 종류 무관</span></div>
-        <div class="row ck an" data-ck><span class="rlead"><span class="cbox"></span><span class="rl">아티팩트 확인</span></span><span class="rr">"할 일 목록 웹앱" 요청 시 동작하는 화면 표시</span></div>
-        <div class="row ck an" data-ck><span class="rlead"><span class="cbox"></span><span class="rl">NotebookLM</span></span><span class="rr">노트북 1개 생성 · 문서 1개 업로드 · 질문 1개</span></div>
-        <div class="row ck an" data-ck><span class="rlead"><span class="cbox"></span><span class="rl">허브 로그인</span></span><span class="rr">학번 로그인 후 내정보 화면 표시</span></div>
+      <div class="hlist grow-1" style="--rowl:340px">
+        <div class="hitem ck an" data-ck><span class="rlead"><span class="cbox"></span><span class="rl">구글 계정</span></span><span class="rr">드라이브에서 <b>새 문서 1개 생성</b> 완료</span></div>
+        <div class="hitem ck an" data-ck><span class="rlead"><span class="cbox"></span><span class="rl">챗봇 계정 1개 이상</span></span><span class="rr">질문 1개 전송 후 <b>답변 수신</b> · 도구 종류 무관</span></div>
+        <div class="hitem ck an" data-ck><span class="rlead"><span class="cbox"></span><span class="rl">아티팩트 확인</span></span><span class="rr">"할 일 목록 웹앱" 요청 시 <b>동작하는 화면</b> 표시</span></div>
+        <div class="hitem ck an" data-ck><span class="rlead"><span class="cbox"></span><span class="rl">NotebookLM</span></span><span class="rr">노트북 1개 생성 · 문서 1개 업로드 · 질문 1개</span></div>
+        <div class="hitem ck an" data-ck><span class="rlead"><span class="cbox"></span><span class="rl">허브 로그인</span></span><span class="rr">학번 로그인 후 <b>내정보 화면 표시</b></span></div>
       </div>
       <div class="band an">
         빈발 함정 = 학교 구글 계정의 서비스 제한
@@ -882,18 +956,18 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
           <span class="ctag">미완료</span>
           <h3>계정만 존재하는 상태</h3>
           <ul>
-            <li>가입 후 화면 미확인</li>
+            <li>가입 후 <b>화면 미확인</b></li>
             <li>예시 프롬프트 열람만</li>
-            <li>결과물 미생성</li>
+            <li><b>결과물 미생성</b></li>
           </ul>
         </div>
         <div class="card hl an">
           <span class="ctag">통과</span>
           <h3>본인 프롬프트 1개가 실제 동작</h3>
           <ul>
-            <li>직접 입력한 지시로 결과 수신</li>
+            <li><b>직접 입력한 지시</b>로 결과 수신</li>
             <li>결과 화면을 본인이 확인</li>
-            <li>재실행 경로를 앎</li>
+            <li><b>재실행 경로</b>를 앎</li>
           </ul>
         </div>
       </div>
@@ -921,11 +995,11 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
             </tr>
           </thead>
           <tbody>
-            <tr><td class="k">관심 대상</td><td>모델 성능 순위와 최신 출시</td><td class="em">어떤 상황에 무엇을 맡길지 결정</td></tr>
-            <tr><td class="k">결과 차이</td><td>단순 과제 구간에서 미미</td><td class="em">전 구간에서 발생 · 과제가 복잡할수록 확대</td></tr>
-            <tr><td class="k">학습 전이</td><td>도구 교체 시 소멸</td><td class="em">도구 교체 후에도 유지</td></tr>
-            <tr><td class="k">필요 비용</td><td>상위 등급 = 유료 필요</td><td class="em">무료 범위에서 전 과정 수행 가능</td></tr>
-            <tr><td class="k">스터디 적용</td><td>등급 비교는 다루지 않음</td><td class="em">매 회차 판정 대상</td></tr>
+            <tr><td class="k">관심 대상</td><td>모델 성능 순위와 최신 출시</td><td class="em"><b>어떤 상황에 무엇을 맡길지</b> 결정</td></tr>
+            <tr><td class="k">결과 차이</td><td>단순 과제 구간에서 미미</td><td class="em">전 구간에서 발생 · <b>과제가 복잡할수록 확대</b></td></tr>
+            <tr><td class="k">학습 전이</td><td>도구 교체 시 소멸</td><td class="em">도구 교체 후에도 <b>유지</b></td></tr>
+            <tr><td class="k">필요 비용</td><td>상위 등급 = 유료 필요</td><td class="em"><em>무료 범위</em>에서 전 과정 수행 가능</td></tr>
+            <tr><td class="k">스터디 적용</td><td>등급 비교는 다루지 않음</td><td class="em">매 회차 <b>판정 대상</b></td></tr>
           </tbody>
         </table>
       </div>
@@ -956,11 +1030,11 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
             <span class="tag">오너 촬영분 교체 예정</span>
           </div>
         </div>
-        <div class="rows an" style="--rowl:130px">
-          <div class="row"><span class="rl">입력</span><span class="rr">위 문장 그대로 · 추가 설명 금지</span></div>
-          <div class="row"><span class="rl">시간</span><span class="rr">3분 · 재질문 없이 1회</span></div>
-          <div class="row mark"><span class="rl">결과</span><span class="rr">삭제 금지 · 실습 B와 대조에 사용</span></div>
-          <div class="row"><span class="rl">관찰</span><span class="rr">내 과목·기한 반영 여부 확인</span></div>
+        <div class="hlist an grow-1" style="--rowl:130px">
+          <div class="hitem"><span class="rl">입력</span><span class="rr">위 문장 그대로 · <b>추가 설명 금지</b></span></div>
+          <div class="hitem"><span class="rl">시간</span><span class="rr"><b>3분</b> · 재질문 없이 1회</span></div>
+          <div class="hitem mark"><span class="rl">결과</span><span class="rr"><b>삭제 금지</b> · 실습 B와 대조에 사용</span></div>
+          <div class="hitem"><span class="rl">관찰</span><span class="rr">내 과목·기한 반영 여부 확인</span></div>
         </div>
       </div>
     </div>
@@ -974,13 +1048,13 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
         <p class="sub">같은 과제를 4칸 작성 후 재실행 · 3분 30초</p>
       </div>
       <div class="g-side grow-1">
-        <img class="an" src="/img/세미나/brief-4blocks.svg" alt="한 줄 지시와 브리프 4블록의 결과 대비" style="width:100%;height:auto;align-self:center;border:1px solid var(--line)" />
-        <div class="rows an" style="--rowl:150px">
-          <div class="row"><span class="rl">소스</span><span class="rr">과목 · 주제 · 기한 등 본인 상황</span></div>
-          <div class="row"><span class="rl">무엇을</span><span class="rr">출력 형태 · 표 · 일정 · 체크리스트</span></div>
-          <div class="row"><span class="rl">기준</span><span class="rr">제외 항목 · 분량 · 구조</span></div>
-          <div class="row mark"><span class="rl">확인법</span><span class="rr">본인이 검사할 항목 목록</span></div>
-          <div class="row"><span class="rl">재실행</span><span class="rr">A와 동일 과제 · 동일 도구</span></div>
+        <img class="an" src="/img/세미나/brief-4blocks.svg" alt="한 줄 지시와 브리프 4블록의 결과 대비" style="width:100%;height:auto;align-self:center;border:1px solid var(--line);border-radius:var(--r-lg)" />
+        <div class="hlist an grow-1" style="--rowl:150px">
+          <div class="hitem"><span class="rl">소스</span><span class="rr">과목 · 주제 · 기한 등 <b>본인 상황</b></span></div>
+          <div class="hitem"><span class="rl">무엇을</span><span class="rr">출력 형태 · 표 · 일정 · 체크리스트</span></div>
+          <div class="hitem"><span class="rl">기준</span><span class="rr">제외 항목 · 분량 · 구조</span></div>
+          <div class="hitem mark"><span class="rl">확인법</span><span class="rr"><b>본인이 검사할 항목</b> 목록</span></div>
+          <div class="hitem"><span class="rl">재실행</span><span class="rr">A와 <b>동일 과제 · 동일 도구</b></span></div>
         </div>
       </div>
       <div class="shot an" style="flex:0 0 auto">
@@ -1015,10 +1089,10 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
               </tr>
             </thead>
             <tbody>
-              <tr><td class="k">내 상황 반영</td><td class="pa">없음 · 일반론 목차</td><td class="pb em">소스 칸 내용이 그대로 반영</td></tr>
-              <tr><td class="k">검사 기준</td><td class="pa">없음 · 맞는지 판단 불가</td><td class="pb em">확인법 칸이 검사 목록으로 작동</td></tr>
-              <tr><td class="k">수정 방식</td><td class="pa">재질문 반복 · 매번 다른 결과</td><td class="pb em">수정 지점 지목 1회로 재위임</td></tr>
-              <tr><td class="k">다음 회 재사용</td><td class="pa">처음부터 재입력</td><td class="pb em">브리프 수정만으로 재실행</td></tr>
+              <tr><td class="k">내 상황 반영</td><td class="pa">없음 · <b>일반론 목차</b></td><td class="pb em"><b>소스 칸 내용</b>이 그대로 반영</td></tr>
+              <tr><td class="k">검사 기준</td><td class="pa">없음 · 맞는지 <b>판단 불가</b></td><td class="pb em"><em>확인법 칸</em>이 검사 목록으로 작동</td></tr>
+              <tr><td class="k">수정 방식</td><td class="pa">재질문 반복 · 매번 다른 결과</td><td class="pb em"><b>수정 지점 지목 1회</b>로 재위임</td></tr>
+              <tr><td class="k">다음 회 재사용</td><td class="pa">처음부터 재입력</td><td class="pb em"><b>브리프 수정만</b>으로 재실행</td></tr>
               <tr><td class="k">소요 시간</td><td class="pa">입력은 짧고 정리는 김</td><td class="pb em">입력은 길고 정리는 짧음</td></tr>
             </tbody>
           </table>
@@ -1052,42 +1126,12 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
         <h1>개인 소재 카탈로그</h1>
         <p class="sub">조건 = 본인이 실사용자인 반복 작업 · 화면 클릭으로 순차 공개</p>
       </div>
-      <div class="g5 grow-1">
-        <div class="card rv">
-          <span class="ctag">01</span>
-          <h3>학업 관리</h3>
-          <p>과제·시험 일정 수집과 주간 정리</p>
-          <div class="fill"></div>
-          <p><strong>확인 지점</strong> 누락 일정</p>
-        </div>
-        <div class="card rv">
-          <span class="ctag">02</span>
-          <h3>자격증 학습</h3>
-          <p>요약·문제·오답 루틴의 반복 생성</p>
-          <div class="fill"></div>
-          <p><strong>확인 지점</strong> 정답 근거</p>
-        </div>
-        <div class="card rv">
-          <span class="ctag">03</span>
-          <h3>발표 파이프라인</h3>
-          <p>자료 조사부터 초안 구성까지 연결</p>
-          <div class="fill"></div>
-          <p><strong>확인 지점</strong> 출처·수치</p>
-        </div>
-        <div class="card rv">
-          <span class="ctag">04</span>
-          <h3>공고 레이더</h3>
-          <p>채용·공모전 수집과 조건 선별</p>
-          <div class="fill"></div>
-          <p><strong>확인 지점</strong> 마감·자격</p>
-        </div>
-        <div class="card rv">
-          <span class="ctag">05</span>
-          <h3>주식 브리핑</h3>
-          <p>종목 조사와 요약까지 · 매매 판단 제외</p>
-          <div class="fill"></div>
-          <p><strong>확인 지점</strong> 사실 오류</p>
-        </div>
+      <div class="split split--r grow-1">
+        <div class="sp sp--row sp--cat rv"><span class="spk">01</span><span class="spt">학업 관리</span><span class="spn">과제·시험 일정 수집과 <b>주간 정리</b></span><span class="spx"><strong>확인 지점</strong> 누락 일정</span></div>
+        <div class="sp sp--row sp--cat rv"><span class="spk">02</span><span class="spt">자격증 학습</span><span class="spn">요약·문제·오답 루틴의 반복 생성</span><span class="spx"><strong>확인 지점</strong> 정답 근거</span></div>
+        <div class="sp sp--row sp--cat rv"><span class="spk">03</span><span class="spt">발표 파이프라인</span><span class="spn">자료 조사부터 초안 구성까지 연결</span><span class="spx"><strong>확인 지점</strong> 출처·수치</span></div>
+        <div class="sp sp--row sp--cat rv"><span class="spk">04</span><span class="spt">공고 레이더</span><span class="spn">채용·공모전 수집과 조건 선별</span><span class="spx"><strong>확인 지점</strong> 마감·자격</span></div>
+        <div class="sp sp--row sp--cat rv"><span class="spk">05</span><span class="spt">주식 브리핑</span><span class="spn">종목 조사와 요약까지 · <b>매매 판단 제외</b></span><span class="spx"><strong>확인 지점</strong> 사실 오류</span></div>
       </div>
       <div class="band an">
         예시 = 발상 보조 · 본인 소재 우선
@@ -1103,11 +1147,11 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
         <h1>소재 카드 4문항</h1>
         <p class="sub">4문항 전부 기입 시 통과 · 다음 주 세션에서 확정</p>
       </div>
-      <div class="rows grow-1" style="--rowl:520px">
-        <div class="row an"><span class="rlead"><span class="rnum">1</span><span class="rl">반복 작업<small>WHAT</small></span></span><span class="rr">주 1회 이상 발생하는 작업 1건 · 수업·과제·자격증·진로·생활 루틴</span></div>
-        <div class="row an"><span class="rlead"><span class="rnum">2</span><span class="rl">회당 소요<small>HOW LONG</small></span></span><span class="rr">최근 1회 기준 분 단위 기록 · 학기말 전·후 비교의 기준값</span></div>
-        <div class="row an"><span class="rlead"><span class="rnum">3</span><span class="rl">확인 지점<small>CHECK</small></span></span><span class="rr">AI 위임 후 본인이 검사할 항목 · 사실·형식·누락 중 해당분</span></div>
-        <div class="row mark an"><span class="rlead"><span class="rnum">4</span><span class="rl">수취인·용처<small>FOR WHOM</small></span></span><span class="rr">결과물을 누가 어떤 판단·제출에 사용하는지 특정 · <b>공란이면 반려</b></span></div>
+      <div class="hlist grow-1" style="--rowl:520px">
+        <div class="hitem an"><span class="rlead"><span class="rnum">1</span><span class="rl">반복 작업<small>WHAT</small></span></span><span class="rr"><b>주 1회 이상</b> 발생하는 작업 1건 · 수업·과제·자격증·진로·생활 루틴</span></div>
+        <div class="hitem an"><span class="rlead"><span class="rnum">2</span><span class="rl">회당 소요<small>HOW LONG</small></span></span><span class="rr">최근 1회 기준 <b>분 단위 기록</b> · 학기말 전·후 비교의 기준값</span></div>
+        <div class="hitem an"><span class="rlead"><span class="rnum">3</span><span class="rl">확인 지점<small>CHECK</small></span></span><span class="rr">AI 위임 후 본인이 검사할 항목 · 사실·형식·누락 중 해당분</span></div>
+        <div class="hitem mark an"><span class="rlead"><span class="rnum">4</span><span class="rl">수취인·용처<small>FOR WHOM</small></span></span><span class="rr">결과물을 누가 어떤 판단·제출에 사용하는지 특정 · <b>공란이면 반려</b></span></div>
       </div>
       <div class="band an">
         카드 배포 = 워크스페이스 로드맵 탭
@@ -1123,32 +1167,32 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
         <h1>팀 주제 미리 보기</h1>
         <p class="sub">팀 결성 = 차시 3 · 기획은 사람, 구현은 AI · 산출 형태 = MVP</p>
       </div>
-      <div class="g2 grow-1">
+      <div class="g2 grow-1" style="flex:2.4">
         <div class="card card--top an">
           <span class="ctag">무대 A</span>
           <h3>조직 실운영</h3>
-          <p>동아리·학회의 실제 운영 절차를 AI로 재구축. 운영 담당자가 실사용자.</p>
+          <p>동아리·학회의 실제 운영 절차를 AI로 재구축. <strong>운영 담당자가 실사용자</strong>.</p>
           <div class="fill"></div>
           <ul>
-            <li>앵커 = 실재하는 조직 1곳</li>
+            <li>앵커 = <b>실재하는 조직 1곳</b></li>
             <li>산출 = 운영 중 사용 가능한 화면</li>
           </ul>
         </div>
         <div class="card card--top an">
           <span class="ctag">무대 B</span>
           <h3>프로세스 재설계</h3>
-          <p>현행 업무를 실측한 뒤 절차를 다시 설계하고 구현. MIS 관점의 주 무대.</p>
+          <p>현행 업무를 실측한 뒤 절차를 다시 설계하고 구현. <strong>MIS 관점의 주 무대</strong>.</p>
           <div class="fill"></div>
           <ul>
-            <li>순서 = 실측 → 재설계 → 구현</li>
+            <li>순서 = <b>실측 → 재설계 → 구현</b></li>
             <li>산출 = 전·후 비교가 가능한 결과물</li>
           </ul>
         </div>
       </div>
-      <div class="chips an">
-        <span class="chip on">공모전 요강 = 기획 템플릿<small>응모는 선택 · 수상 목표 아님</small></span>
-        <span class="chip">평가 기준 = 실사용 여부<small>완성도보다 사용 흔적</small></span>
-        <span class="chip">범위 = 4주<small>10-27 이후 구간</small></span>
+      <div class="split split--c an grow-1">
+        <div class="sp mark"><span class="spt">공모전 요강 = 기획 템플릿</span><span class="spd">응모는 선택 · 수상 목표 아님</span></div>
+        <div class="sp"><span class="spt">평가 기준 = 실사용 여부</span><span class="spd">완성도보다 사용 흔적</span></div>
+        <div class="sp"><span class="spt">범위 = 4주</span><span class="spd">10-27 이후 구간</span></div>
       </div>
     </div>
   </section>
@@ -1172,9 +1216,9 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
         <div class="pstep"><span class="pc">5</span><span class="pt">10-07 이후</span><span class="ps">시험기간 · 세션 중지</span></div>
       </div>
       <div class="rows an" style="--rowl:240px">
-        <div class="row"><span class="rl">매주 고정</span><span class="rr">인사이트 기고 1건 · 세션 주 1회 60분</span></div>
+        <div class="row"><span class="rl">매주 고정</span><span class="rr">인사이트 기고 <b>1건</b> · 세션 주 1회 <b>60분</b></span></div>
         <div class="row"><span class="rl">과제 제출</span><span class="rr">링크 1개 등록 · 워크스페이스 홈에서 마감 확인</span></div>
-        <div class="row mark"><span class="rl">다음 주 준비물</span><span class="rr">소재 후보 1건 · 4문항 초안</span></div>
+        <div class="row mark"><span class="rl">다음 주 준비물</span><span class="rr"><b>소재 후보 1건</b> · 4문항 초안</span></div>
       </div>
     </div>
   </section>
@@ -1186,13 +1230,13 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
         <h1>기록이 곧 <em>증명</em></h1>
         <p class="sub">시작 설문의 위치 = 학기말 비교의 기준점</p>
       </div>
-      <div class="tl grow-1">
+      <div class="tl grow-1" style="justify-content:center">
         <div class="tlline"><span class="tlfill grow"></span></div>
-        <div class="tlrow" style="grid-template-columns:1fr 1fr 1fr">
+        <div class="tlrow" style="grid-template-columns:1fr 1fr 1fr;flex:0 0 auto">
           <div class="tlcell on an">
             <div class="tperiod">오늘</div>
             <div class="ttitle">기준선 기록</div>
-            <p class="tdesc">현재 사용 도구·빈도·활용 범위·검수 방식을 5문항으로 기록.</p>
+            <p class="tdesc">현재 사용 도구·빈도·활용 범위·검수 방식을 <b>5문항</b>으로 기록.</p>
           </div>
           <div class="tlcell an">
             <div class="tperiod">학기 중</div>
@@ -1202,7 +1246,7 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
           <div class="tlcell on an">
             <div class="tperiod">학기말</div>
             <div class="ttitle">동일 문항 재측정</div>
-            <p class="tdesc">같은 5문항으로 재응답. 차이가 스터디 성과의 근거 자료.</p>
+            <p class="tdesc">같은 5문항으로 재응답. <b>차이가 스터디 성과의 근거 자료</b>.</p>
           </div>
         </div>
       </div>
@@ -1231,12 +1275,12 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
             <span class="tag">설문 폼 확정 시 교체</span>
           </div>
         </div>
-        <div class="rows an" style="--rowl:64px">
-          <div class="row"><span class="rl">1</span><span class="rr">현재 사용 중인 AI 도구</span></div>
-          <div class="row"><span class="rl">2</span><span class="rr">주당 사용 빈도</span></div>
-          <div class="row"><span class="rl">3</span><span class="rr">활용 범위 · 과제·정보 조사·제작</span></div>
-          <div class="row"><span class="rl">4</span><span class="rr">결과 검수 방식</span></div>
-          <div class="row mark"><span class="rl">5</span><span class="rr">이번 학기 목표 1건</span></div>
+        <div class="hlist an grow-1" style="--rowl:64px">
+          <div class="hitem"><span class="rl">1</span><span class="rr">현재 사용 중인 <b>AI 도구</b></span></div>
+          <div class="hitem"><span class="rl">2</span><span class="rr">주당 사용 <b>빈도</b></span></div>
+          <div class="hitem"><span class="rl">3</span><span class="rr">활용 범위 · 과제·정보 조사·제작</span></div>
+          <div class="hitem"><span class="rl">4</span><span class="rr">결과 <b>검수 방식</b></span></div>
+          <div class="hitem mark"><span class="rl">5</span><span class="rr">이번 학기 <b>목표 1건</b></span></div>
         </div>
       </div>
       <div class="band an">
@@ -1257,17 +1301,17 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
         <div class="card card--top an">
           <span class="ctag">오늘 숙제</span>
           <h3>허브 로그인 1회</h3>
-          <p>학번 로그인 후 초기 비밀번호 변경. 소요 2분.</p>
+          <p>학번 로그인 후 초기 비밀번호 변경. 소요 <b>2분</b>.</p>
         </div>
         <div class="card card--top an">
           <span class="ctag">준비물</span>
           <h3>소재 후보 1건</h3>
-          <p>소재 카드 4문항 초안. 확정은 다음 주 세션에서.</p>
+          <p>소재 카드 <strong>4문항 초안</strong>. 확정은 다음 주 세션에서.</p>
         </div>
         <div class="card hl an">
           <span class="ctag">예습</span>
           <h3>특강 「질문에서 위임으로」</h3>
-          <p>허브 세미나 기록에 자료 게재. 열람만으로 충분.</p>
+          <p>허브 세미나 기록에 자료 게재. <b>열람만으로 충분</b>.</p>
         </div>
       </div>
       <div class="band an">
