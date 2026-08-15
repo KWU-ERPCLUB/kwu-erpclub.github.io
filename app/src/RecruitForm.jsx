@@ -37,14 +37,14 @@ export default function RecruitForm({ configured, repos, today = localYmd() }) {
   if (!open) {
     return (
       <p className="rc-callout">
-        온라인 접수 = 현재 서버 미연결 — 이 페이지에서 제출 불가.
+        현재 온라인 접수를 받을 수 없습니다.
         참여 문의 = <a href={CONTACT_MAILTO}>{CONTACT.email}</a>
         {' '}· <a href="/#faq">자주 묻는 질문</a>.
       </p>
     )
   }
   if (phase === 'done') {
-    return <p className="rc-form-done" role="status">신청 접수 완료 — 모집 기간 내 개별 연락.</p>
+    return <p className="rc-form-done" role="status">신청 접수 완료. 모집 기간 내 개별 연락드립니다.</p>
   }
 
   const set = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }))
@@ -70,7 +70,7 @@ export default function RecruitForm({ configured, repos, today = localYmd() }) {
       <div className="rc-form-grid">
         {REQUIRED_FIELDS.map(([key, label, hint]) => (
           <p className="rc-field" key={key}>
-            <label htmlFor={`ap-${key}`}>{label} <span className="rc-req">필수</span>{hint && <span className="rc-hint"> — {hint}</span>}</label>
+            <label htmlFor={`ap-${key}`}>{label} <span className="rc-req">필수</span>{hint && <span className="rc-hint">{hint}</span>}</label>
             <input
               id={`ap-${key}`} type={key === '전화번호' ? 'tel' : 'text'} value={form[key]}
               onChange={set(key)} aria-invalid={Boolean(errors[key])}
@@ -81,7 +81,7 @@ export default function RecruitForm({ configured, repos, today = localYmd() }) {
       </div>
       {FREE_FIELDS.map(([key, label, hint]) => (
         <p className="rc-field" key={key}>
-          <label htmlFor={`ap-${key}`}>{label}<span className="rc-hint"> — {hint}</span></label>
+          <label htmlFor={`ap-${key}`}>{label}<span className="rc-hint">{hint}</span></label>
           <textarea id={`ap-${key}`} rows={3} value={form[key]} onChange={set(key)} />
         </p>
       ))}

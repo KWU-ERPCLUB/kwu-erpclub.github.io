@@ -22,7 +22,7 @@ test('모집 창 안 + 백엔드 연결 시 = 필수 4필드 + 자유 서술 2�
 
 test('백엔드 미연결 시 = 폼 대신 제출 불가 안내(조용한 목 폴백 금지)', () => {
   const html = flat(<RecruitForm configured={false} today={OPEN_DAY} />)
-  expect(html).toContain('제출 불가')
+  expect(html).toContain('받을 수 없습니다') // 문안 개정 2026-08-15(대시·기계 표현 제거) — 의미 = 제출 불가
   expect(html).not.toContain('신청 제출')
   expect(html).not.toContain('<input')
 })
