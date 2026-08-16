@@ -3,580 +3,1299 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>제작 스프린트 — 위임·확인·재위임으로 내 소재 1회 돌리기 · 세미나 3회차</title>
+<title>제작 스프린트 · AIM 1기 회차 3</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" />
 <style>
-  :root{
-    --accent:#7a2030; --tint:#f6edef; --dark:#161616; --bg:#ffffff; --surface:#fafaf9;
-    --text:#141414; --text-sub:#55606c; --line:#e7e7e5; --dm:#d18f9a;
-    --fd:'Paperlogy','Pretendard Variable',Pretendard,sans-serif;
-    --fb:'Pretendard Variable',Pretendard,-apple-system,sans-serif;
-    --fm:'Consolas','Pretendard Variable',monospace;
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0;height:100%}
-  body{background:#e9e8e5;font-family:var(--fb);color:var(--text);overflow:hidden}
-  #deck{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
-  #stage{width:1280px;height:720px;position:relative;background:var(--bg);transform-origin:center center;
-         box-shadow:0 10px 40px rgba(0,0,0,.18);overflow:hidden}
+/* ===================================================================
+   AIM 1기 회차 3 덱 (s3) — 23장 · 하네스 4부작 클린룸 제작 2026-08-16 (파트 분할 4에이전트)
+   원천 = 하네스 4부작
+     · aim-덱-규격.md v4.3        (캔버스·색·형태·타이포·톤·구조·게이트)
+     · aim-덱-카피.md v1.2        (명사형 단정·AI투 사전·grep 8패턴)
+     · aim-덱-모션-시각화.md      (모션 토큰·연출 판정표·인터랙션 배치)
+     · aim-덱-블루프린트.md       (BP1~BP10 와이어프레임)
+   시각 정답지 = public/slides/g1/index.html (오너 검수 2R 통과 골든 샘플)
+     — CSS 토큰·컴포넌트·웨이브·아이콘·모션·네비 스크립트를 계승·확장.
+     — g1의 5장 = 본편 #1(표지)·#3(디바이더)·#5(수치)·#7(흐름)·#6(대비)에 대응.
+   대본 = docs/aim-덱-03-스프린트-대본.md (aria-label = 대본 제목 1:1)
+   =================================================================== */
+:root{
+  --bg:#ffffff; --dark:#161616; --accent:#7a2030;
+  --tint:#f6edef; --tint2:#ecd9de; --surface:#fafaf9;
+  --dm:#d18f9a; --text:#141414; --sub:#55606c; --mute:#8a8f96;
+  --line:#e7e7e5; --line-soft:#f1f0ee; --tint-line:#e6d3d7;
+  --fd:'Paperlogy','Pretendard Variable',sans-serif;
+  --fb:'Pretendard Variable',Pretendard,-apple-system,'Malgun Gothic',sans-serif;
+  --fm:'JetBrains Mono','Consolas',monospace;
+  --fs-hero:140px; --fs-cover-sub:54px; --fs-page-title:58px; --fs-section:44px; --fs-card-title:34px;
+  --fs-card-body:26px; --fs-sub:22px; --fs-label:18px; --fs-kpi:118px; --fs-kpi-sm:84px;
+  --num-circle:46px;
+  --r-lg:28px; --r-md:16px; --r-sm:10px;
+  /* 모션 토큰 (모션-시각화 §4) */
+  --ease-in:cubic-bezier(0,0,.38,.9); --ease-std:cubic-bezier(.2,0,.38,.9);
+  --d-fast:110ms; --d-move:240ms; --d-enter:400ms; --d-hero:700ms;
+  --px:80px; --py:40px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:#e9e8e5;font-family:var(--fb);color:var(--text);overflow:hidden;
+  -webkit-font-smoothing:antialiased;font-feature-settings:'ss01','tnum'}
+ul{margin:0;padding:0;list-style:none}
 
-  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:44px 60px 32px;background:var(--bg)}
-  .slide.active{display:flex}
+#deck{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+#stage{width:1920px;height:1080px;position:relative;background:var(--bg);transform-origin:center;
+  overflow:hidden;box-shadow:0 20px 70px -20px rgba(20,20,20,.28)}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;background:var(--bg);overflow:hidden;
+  opacity:0;transition:opacity var(--d-move) var(--ease-std)} /* 크로스페이드 (§5-1) */
+.slide.active{display:flex}
+.slide.shown{opacity:1}
 
-  .top{display:flex;justify-content:space-between;align-items:center}
-  .pill{background:var(--dark);color:#fff;font:600 12px var(--fb);letter-spacing:.08em;text-transform:uppercase;padding:6px 14px;border-radius:999px}
-  .pnum{border:1px solid var(--line);border-radius:8px;padding:5px 11px;font:700 13px var(--fb);color:var(--dark)}
+/* ---- 웨이브·도트 브랜드 장치 [OP] ---- */
+.wave{position:absolute;pointer-events:none}
+.dot{position:absolute;border-radius:999px;pointer-events:none}
 
-  .head{margin-top:20px}
-  .head h1{font:800 36px/1.16 var(--fd);letter-spacing:-.02em;margin:0;color:var(--text);word-break:keep-all}
-  .emph{font:700 17px var(--fb);color:var(--dark);margin:10px 0 0}
-  .emph.ac{color:var(--accent)}
+/* ---- 헤더·푸터 (본문 장) ---- */
+.shead{position:relative;z-index:5;display:grid;grid-template-columns:auto 1fr auto;align-items:center;
+  gap:32px;padding:34px var(--px) 20px}
+.shead::after{content:'';position:absolute;left:var(--px);right:var(--px);bottom:0;height:1px;
+  background:linear-gradient(90deg,#f7f6f4,var(--line) 12%,var(--line) 88%,#f7f6f4)}
+.wordmark{display:flex;align-items:center;gap:9px;font:800 26px var(--fd);letter-spacing:-.02em}
+.wordmark::after{content:'';width:8px;height:8px;border-radius:999px;background:var(--accent)}
+.hmeta{justify-self:center;font:600 var(--fs-label)/1 var(--fb);color:var(--mute)}
+.hpage{font-family:var(--fm);font-size:22px;font-weight:600;color:var(--sub)}
+.hpage i{font-style:normal;font-size:15px;color:#c9c9c6}
+.sfoot{position:relative;display:flex;justify-content:space-between;align-items:center;
+  padding:16px var(--px) 26px;font:500 15px var(--fb);color:var(--mute)}
+.sfoot::before{content:'';position:absolute;left:var(--px);right:var(--px);top:0;height:1px;background:var(--line-soft)}
+.sfoot .fr{font-family:var(--fm);font-size:13px;letter-spacing:.06em}
 
-  .body{flex:1;min-height:0;margin-top:20px;display:flex;flex-direction:column;justify-content:center}
+.sbody{flex:1;min-height:0;display:flex;flex-direction:column;gap:26px;padding:34px var(--px) 0;position:relative;z-index:2}
+.htitle h1{margin:0;font:800 var(--fs-page-title)/1.14 var(--fd);letter-spacing:-.03em;word-break:keep-all}
+.htitle h1 em{font-style:normal;color:var(--accent)}
+.htitle .sub{margin:12px 0 0;font:500 var(--fs-sub)/1.5 var(--fb);color:var(--sub)}
+.htitle .sub b{color:var(--text)}
+.grow-1{flex:1;min-height:0}
 
-  .key{margin:14px auto 0;width:88%;background:var(--dark);color:#fff;text-align:center;border-radius:12px;padding:13px 20px;font:600 16px var(--fb);word-break:keep-all}
+/* ---- 아이콘 컨테이너 [OP] ---- */
+.ic{width:72px;height:72px;border-radius:999px;background:var(--tint);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.ic svg{width:34px;height:34px;stroke:var(--accent);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.ic--solid{background:var(--accent)}
+.ic--solid svg{stroke:#fff}
+.ic--mute{background:var(--surface);border:1.5px solid var(--line)}
+.ic--mute svg{stroke:var(--mute)}
 
-  .foot{display:flex;justify-content:space-between;align-items:flex-end;margin-top:14px;font-size:11px;color:var(--text-sub)}
-  .foot .r{font-weight:600}
+/* ---- BP1 표지 ---- */
+.cover{justify-content:flex-start;padding:0}
+.cover .cwrap{position:relative;z-index:3;display:grid;grid-template-columns:1.15fr .85fr;gap:70px;height:100%;padding:170px 120px 0;align-items:start}
+.cover .eyebrow{display:flex;align-items:center;gap:14px;font:700 var(--fs-label)/1 var(--fb);letter-spacing:.02em;color:var(--accent)}
+.cover .eyebrow::before{content:'';width:44px;height:3px;background:var(--accent)}
+.cover .hero{margin:30px 0 0;font:800 var(--fs-hero)/1.04 var(--fd);letter-spacing:-.045em}
+.cover .hero em{font-style:normal;color:var(--accent)}
+.cover .csub{margin:22px 0 0;font:700 var(--fs-cover-sub)/1.25 var(--fd);letter-spacing:-.03em;color:var(--sub)}
+.cover .csteps{margin-top:52px;display:flex;align-items:center;gap:10px}
+.cover .cstep{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;width:150px;
+  transition:transform var(--d-move) var(--ease-std)}
+.cover .cstep .ic{width:78px;height:78px;transition:background var(--d-move) var(--ease-std)}
+.cover .cstep .ic svg{width:36px;height:36px;transition:stroke var(--d-move) var(--ease-std)}
+.cover .cstep b{font:700 21px/1.25 var(--fb);color:var(--text);word-break:keep-all;transition:color var(--d-move) var(--ease-std)}
+.cover .cstep.hot .ic{background:var(--accent)}
+.cover .cstep.hot .ic svg{stroke:#fff}
+.cover .cstep.hot b{color:var(--accent)}
+.cover .carr{font:600 24px var(--fm);color:#c9b8bc;margin-bottom:34px}
+.cover .cnote{margin-top:34px;font:500 var(--fs-card-body)/1.5 var(--fb);color:var(--sub)}
+.cover .cnote b{color:var(--accent);font-weight:700}
+.cover .cshot{position:relative;z-index:3;margin-top:12px}
+.cover .cshot .shotf{border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;background:var(--bg);
+  box-shadow:0 30px 70px -30px rgba(122,32,48,.35),0 8px 24px -10px rgba(20,20,20,.12)}
+.cover .cshot .bar{display:flex;align-items:center;gap:8px;background:#f1f0ee;border-bottom:1px solid var(--line);padding:12px 18px}
+.cover .cshot .dot2{width:11px;height:11px;border-radius:999px;background:#d3d2cf}
+.cover .cshot .url{margin-left:10px;font:500 15px var(--fm);color:var(--sub);background:#fff;border:1px solid var(--line);border-radius:8px;padding:4px 16px}
+.cover .cshot img{display:block;width:100%;height:460px;object-fit:cover;object-position:top center}
+.cover .cshot .cap{margin-top:14px;font:500 var(--fs-sub)/1.4 var(--fb);color:var(--mute);text-align:center}
+.cover .cfoot{position:absolute;left:120px;right:120px;bottom:52px;z-index:4;display:flex;
+  justify-content:space-between;align-items:flex-end;border-top:1px solid var(--line);padding-top:22px}
+.cover .cbrand{font:800 30px var(--fd)}
+.cover .corg{margin-top:7px;font:500 var(--fs-sub) var(--fb);color:var(--sub)}
+.cover .cpill{font:600 var(--fs-sub) var(--fm);letter-spacing:.12em;color:var(--accent);
+  border:1.5px solid var(--tint-line);background:var(--tint);border-radius:999px;padding:10px 24px}
+.cover .cwm{position:absolute;right:56px;top:20px;font:700 220px/1 var(--fm);color:var(--accent);opacity:.08;letter-spacing:-.06em;z-index:2}
 
-  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:stretch;width:100%}
-  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;align-items:stretch;width:100%}
-  .card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px 26px;display:flex;flex-direction:column}
-  .card.hl{border-color:var(--accent);border-width:1.5px}
-  .ctag{font:600 12px var(--fb);letter-spacing:.05em;text-transform:uppercase;color:var(--text-sub);margin-bottom:8px}
-  .card h3{margin:0 0 12px;font:700 18px var(--fd);color:var(--text)}
-  .card ul{margin:0;padding-left:18px}
-  .card li{margin:8px 0;font-size:15px;line-height:1.5;color:var(--text);word-break:keep-all}
+/* ---- BP2 목차 ---- */
+.toc{display:flex;flex-direction:column}
+.tocr{display:grid;grid-template-columns:auto auto 1fr auto;align-items:center;gap:26px;
+  flex:1;padding:19px 4px;border-bottom:1px solid var(--line)}
+.tocr:first-of-type{border-top:1px solid var(--line)}
+.tocr .tw{display:flex;flex-direction:column;min-width:0}
+.tocr .tn{width:56px;height:56px;border-radius:999px;background:var(--surface);border:1.5px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font:600 24px var(--fm);color:var(--sub);flex:0 0 auto}
+.tocr .ic{width:60px;height:60px}
+.tocr .ic svg{width:28px;height:28px}
+.tocr .tt{display:block;font:700 32px/1.2 var(--fd);letter-spacing:-.02em;word-break:keep-all}
+.tocr .tt em{font-style:normal;color:var(--accent)}
+.tocr .td{display:block;margin-top:7px;font:400 var(--fs-sub)/1.4 var(--fb);color:var(--mute);word-break:keep-all}
+.tocr .td b{color:var(--text)}
+.tocr .td em{font-style:normal;color:var(--accent);font-weight:600}
+.tocr .tm{font:600 20px var(--fm);color:var(--sub);text-align:right;flex:0 0 auto;white-space:nowrap}
 
-  .chips{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:6px}
-  .chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:11px 20px;font:600 15px var(--fb);color:var(--text)}
-  .chip .cs{display:block;font-size:12px;color:var(--text-sub);font-weight:500;margin-top:2px}
+/* ---- BP3 디바이더 ---- */
+.divider{justify-content:center;padding:0 120px}
+.divider .drow{position:relative;z-index:3;display:flex;align-items:center;gap:56px}
+.divider .dnum{width:120px;height:120px;border-radius:999px;background:var(--accent);color:#fff;
+  display:flex;align-items:center;justify-content:center;font:600 52px var(--fm);flex:0 0 auto;
+  transition:transform var(--d-move) var(--ease-std),box-shadow var(--d-move) var(--ease-std)}
+.divider .dnum.hot{transform:scale(1.06);box-shadow:0 18px 40px -18px rgba(122,32,48,.6)}
+.divider .dtitle{font:800 var(--fs-section)/1.2 var(--fd);letter-spacing:-.03em}
+.divider .dline{margin-top:18px;font:400 26px/1.5 var(--fb);color:var(--sub)}
+.divider .dline b{color:var(--accent);font-weight:700}
+.divider .dwm{position:absolute;right:40px;top:50%;transform:translateY(-50%);
+  font:700 560px/1 var(--fm);color:var(--accent);opacity:.07;z-index:1;letter-spacing:-.08em}
+.divider .tracker{position:absolute;left:120px;bottom:64px;z-index:3;display:flex;gap:14px}
+.divider .tp{font:600 var(--fs-label) var(--fb);color:var(--mute);border:1.5px solid var(--line);
+  border-radius:999px;padding:10px 22px;background:var(--bg)}
+.divider .tp.cur{background:var(--accent);border-color:var(--accent);color:#fff}
+.divider .dprev{margin-top:48px;max-width:1180px;display:flex;flex-direction:column;position:relative;z-index:3}
+.divider .dprev .ph{font:600 15px var(--fm);letter-spacing:.12em;color:var(--mute);margin-bottom:8px}
+.divider .pv{display:flex;align-items:center;gap:24px;padding:19px 4px;border-bottom:1px solid var(--line)}
+.divider .pv:first-of-type{border-top:1px solid var(--line)}
+.divider .pv .pn{width:var(--num-circle);height:var(--num-circle);border-radius:999px;background:var(--surface);
+  border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font:600 21px var(--fm);color:var(--sub);flex:0 0 auto}
+.divider .pv .pvt{font:700 29px/1.3 var(--fd);letter-spacing:-.02em;word-break:keep-all}
+.divider .pv .pvt em{font-style:normal;color:var(--accent)}
+.divider .pv .pvs{margin-left:auto;font:500 var(--fs-sub) var(--fb);color:var(--mute);flex:0 0 auto}
 
-  .steps{display:flex;align-items:flex-start;justify-content:center;gap:4px;margin-top:6px}
-  .step{display:flex;flex-direction:column;align-items:center;gap:12px;min-width:118px;text-align:center;padding:0 2px}
-  .circ{width:52px;height:52px;border-radius:999px;border:1.5px solid var(--line);background:#fff;
-        display:flex;align-items:center;justify-content:center;font:800 19px var(--fd);color:var(--dark)}
-  .step.cur .circ{background:var(--accent);border-color:var(--accent);color:#fff}
-  .step .st{font:700 15px var(--fb);color:var(--text);word-break:keep-all}
-  .step .ss{font-size:12px;color:var(--text-sub);word-break:keep-all}
-  .arr{align-self:center;margin-top:14px;color:#b8b8b4;font-size:19px;flex:0 0 auto}
+/* ---- BP4 히어로 수치 ---- */
+.g-kpi{display:grid;grid-template-columns:.95fr 1.05fr;gap:56px;align-items:stretch}
+.ring-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
+  background:var(--surface);border-radius:var(--r-lg);padding:36px;position:relative;
+  border:1.5px solid transparent;transition:border-color var(--d-move) var(--ease-std)}
+.ring-wrap.hot{border-color:var(--accent)}
+.ring-box{position:relative;width:340px;height:340px}
+.ring-box svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring-bg{stroke:#efe9ea;stroke-width:22;fill:none}
+.ring-fg{stroke:var(--accent);stroke-width:22;fill:none;stroke-linecap:round}
+.ring-val{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-val .num{font:800 var(--fs-kpi)/1 var(--fd);letter-spacing:-.04em;color:var(--accent);display:flex;align-items:baseline;font-feature-settings:'tnum'}
+.ring-val .unit{font:700 42px var(--fd);color:var(--accent);margin-left:4px}
+.ring-lab{font:700 var(--fs-card-title)/1.3 var(--fd);letter-spacing:-.02em;text-align:center;word-break:keep-all}
+.ring-note{font:400 var(--fs-sub)/1.4 var(--fb);color:var(--mute)}
+.kside{display:flex;flex-direction:column;gap:0}
+.krow{flex:1;display:flex;flex-direction:column;justify-content:center;gap:14px;padding:26px 4px;border-bottom:1px solid var(--line)}
+.krow:first-child{border-top:1px solid var(--line)}
+.krow .kh{display:flex;align-items:baseline;justify-content:space-between;gap:20px}
+.krow .kt{font:700 var(--fs-card-title)/1.3 var(--fd);letter-spacing:-.02em;word-break:keep-all}
+.krow .kv{font:800 var(--fs-kpi-sm)/1 var(--fd);letter-spacing:-.03em;color:var(--text);display:flex;align-items:baseline;font-feature-settings:'tnum'}
+.krow .kv .unit{font:700 32px var(--fd);color:var(--sub);margin-left:3px}
+.krow .kbar{height:14px;border-radius:999px;background:#efe9ea;overflow:hidden}
+.krow .kfill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--accent),#a04a58);
+  transform:scaleX(0);transform-origin:left}
+.krow .kfill.in{transform:scaleX(1);transition:transform var(--d-hero) var(--ease-in) .2s}
+.krow .kn{font:400 var(--fs-sub)/1.45 var(--fb);color:var(--mute)}
 
-  .tbl{width:100%;border-collapse:collapse;font-size:14px}
-  .tbl th{text-align:left;font:700 12px var(--fb);letter-spacing:.04em;text-transform:uppercase;color:var(--text-sub);padding:9px 12px;border-bottom:1.5px solid var(--dark)}
-  .tbl td{padding:10px 12px;border-bottom:1px solid var(--line);color:var(--text);vertical-align:top;line-height:1.45}
-  .tbl td .tm{font-weight:700}
+/* ---- 결론 밴드 = 다크 통일 (규격 v4.3) ---- */
+.band,.dark{background:var(--dark);color:#f4f2f1;border-radius:var(--r-lg);padding:26px 40px;position:relative;
+  font:600 28px/1.5 var(--fb);word-break:keep-all}
+.band span,.dark span,.dark b{color:var(--dm)}
+.band .band-sub,.dark .dsub{display:block;margin-top:8px;font:400 var(--fs-sub)/1.5 var(--fb);color:#b9b4b0}
+.dark{opacity:.35;transform:translateY(8px); /* 은닉 금지 — 활성 전에도 판독 가능(감쇠→활성) */
+  transition:opacity var(--d-enter) var(--ease-in),transform var(--d-enter) var(--ease-in)}
+.dark.hot{opacity:1;transform:none}
 
-  .bridge{flex:1;display:flex;flex-direction:column;justify-content:center;gap:22px}
-  .bigline{font:800 42px/1.22 var(--fd);letter-spacing:-.02em;color:var(--text);max-width:24ch;word-break:keep-all}
-  .bigline em{font-style:normal;color:var(--accent)}
-  .bsub{display:flex;flex-direction:column;gap:8px}
-  .bsub span{font-size:16px;color:var(--text-sub);padding-left:16px;border-left:2px solid var(--line)}
+/* ---- BP5 흐름·단계 ---- */
+.pipe{display:flex;align-items:flex-start;justify-content:space-between;gap:0;padding:30px 10px 0}
+.pnode{display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;flex:1;position:relative}
+.pnode .pl{font:600 16px var(--fm);letter-spacing:.12em;color:var(--mute)}
+.pnode .ic{width:96px;height:96px}
+.pnode .ic svg{width:44px;height:44px}
+.pnode .pt{font:700 var(--fs-card-title)/1.25 var(--fd);letter-spacing:-.02em;word-break:keep-all}
+.pnode .ps{font:400 var(--fs-card-body)/1.45 var(--fb);color:var(--mute);max-width:290px;word-break:keep-all}
+.pnode.off .pt,.pnode.off .ps,.pnode.off .pl{color:var(--mute)}
+/* 감쇠 상태는 .an.in(fill:forwards)보다 우선해야 함 — 애니메이션 최종값 override */
+.pnode.off{opacity:.55!important}
+.plink{flex:0 0 80px;margin-top:76px;overflow:visible}
+.plink line{stroke:var(--mute);stroke-width:2}
+.plink polyline{stroke:var(--mute);stroke-width:2;fill:none}
+.pnode.res .ic{width:120px;height:120px;transition:transform var(--d-move) var(--ease-std)}
+.pnode.res .ic svg{width:54px;height:54px}
+.pnode.res .pl{color:var(--accent)}
+.pnode.res .pt{color:var(--accent);font-size:38px}
+.pnode.res.hot .ic{transform:scale(1.08)}
+.peq{flex:0 0 64px;margin-top:80px;font:700 44px var(--fd);color:var(--mute);text-align:center}
 
-  .quote{flex:1;display:flex;flex-direction:column;justify-content:center;gap:22px}
-  .qbox{border-left:4px solid var(--accent);background:var(--surface);border-radius:0 14px 14px 0;padding:24px 30px}
-  .qorig{font:600 22px var(--fd);color:var(--text);line-height:1.4}
-  .qtr{font-size:17px;color:var(--text-sub);margin-top:10px}
+/* ---- BP6 대비 ---- */
+.ab{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.abcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:30px 34px;display:flex;flex-direction:column;gap:18px;
+  transition:opacity var(--d-move) var(--ease-std),background var(--d-move) var(--ease-std),border-color var(--d-move) var(--ease-std)}
+.abcard .abh{display:flex;align-items:center;gap:18px}
+.abcard .abl{font:600 15px var(--fm);letter-spacing:.1em;color:var(--mute);border:1px solid var(--line);
+  border-radius:999px;padding:7px 16px;background:var(--bg)}
+.abcard h3{margin:0;font:700 var(--fs-card-title)/1.25 var(--fd);letter-spacing:-.02em;word-break:keep-all}
+.abcard .abq{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-sm);
+  padding:18px 22px;font:500 22px/1.55 var(--fm);color:var(--sub);word-break:keep-all;
+  flex:1;display:flex;flex-direction:column;justify-content:center}
+.abcard p{margin:0;font:400 var(--fs-card-body)/1.55 var(--fb);color:var(--sub);word-break:keep-all}
+.abcard p b{color:var(--text)}
+.abcard .abtag{font:600 15px var(--fm);letter-spacing:.1em;color:var(--mute);margin-bottom:-8px}
+.abcard .abdef{font:500 var(--fs-sub)/1.5 var(--fb);color:var(--accent);background:var(--tint);border-radius:var(--r-sm);padding:12px 18px}
+.abcard .abr{display:flex;align-items:flex-start;gap:14px;border-top:1px solid var(--line);padding-top:16px}
+.abcard .abr .rl2{font:700 15px var(--fm);letter-spacing:.1em;color:#fff;background:var(--accent);border-radius:999px;padding:7px 14px;flex:0 0 auto}
+.abcard .abr.bad .rl2{background:var(--mute)}
+.abcard .abr p{font:500 var(--fs-card-body)/1.5 var(--fb);color:var(--text)}
+.judge .abcard.lose{opacity:.38!important}
+.abcard.dim{opacity:.62!important}
+.judge .abcard.win{border-color:var(--accent);box-shadow:inset 6px 0 0 var(--accent);background:var(--bg)}
+.judge .abcard.win .abl{background:var(--accent);border-color:var(--accent);color:#fff}
 
-  /* 표지 = 세미나 목록 썸네일(/img/세미나/cover-s*.png)과 같은 서식. 1280×720 = 커버 1600×900의 0.8배 환산.
-     서식을 고치면 scripts/export-seminar-cover.mjs도 같이 고친다(두 곳이 한 벌). */
-  .cover{justify-content:center;padding:0 80px;overflow:hidden} /* position은 .slide(absolute)를 유지 — 덮어쓰면 배치가 깨진다 */
-  .cover .blob{position:absolute;right:-120px;bottom:-208px;width:608px;height:608px;border-radius:999px;background:var(--tint)}
-  .cover .cdot{position:absolute;right:173px;bottom:120px;width:11px;height:11px;border-radius:999px;background:var(--accent)}
-  .cover .ctop{position:absolute;top:59px;left:80px;right:80px;display:flex;justify-content:space-between;align-items:center}
-  .cover .cpill{background:var(--dark);color:#fff;font:700 16px var(--fb);letter-spacing:.1em;padding:9px 21px;border-radius:999px}
-  .cover .ckind{font:700 18px var(--fb);color:var(--accent)}
-  .cover .accbar{position:relative;width:77px;height:5px;background:var(--accent);margin:0 0 27px}
-  .cover .big{position:relative;font:800 93px/1.06 var(--fd);letter-spacing:-.03em;color:var(--text);word-break:keep-all}
-  .cover .sub{position:relative;font:600 26px var(--fb);color:var(--text-sub);margin-top:24px}
-  .cover .cfoot{position:absolute;bottom:56px;left:80px;right:80px;display:flex;justify-content:space-between;
-                align-items:flex-end;border-top:1px solid var(--line);padding-top:21px}
-  .cover .cbrand{font:800 24px var(--fd);color:var(--text)}
-  .cover .corg{font:500 15px var(--fb);color:var(--text-sub);margin-top:6px}
-  .cover .ccount{font:700 17px var(--fb);color:var(--text-sub)}
+/* ---- BP7 캡처 프레임(shot) ---- */
+.shot{border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;background:var(--bg);
+  display:flex;flex-direction:column;min-height:0;
+  box-shadow:0 24px 60px -32px rgba(122,32,48,.3),0 6px 18px -10px rgba(20,20,20,.12);
+  transition:border-color var(--d-move) var(--ease-std),box-shadow var(--d-move) var(--ease-std)}
+.shot.hot{border-color:var(--accent);box-shadow:0 0 0 3px var(--tint2),0 30px 70px -28px rgba(122,32,48,.45)}
+.shot .bar{display:flex;align-items:center;gap:8px;background:#f1f0ee;border-bottom:1px solid var(--line);padding:11px 18px;flex:0 0 auto}
+.shot .dot2{width:11px;height:11px;border-radius:999px;background:#d3d2cf}
+.shot .url{margin-left:10px;font:500 14px var(--fm);color:var(--sub);background:#fff;border:1px solid var(--line);border-radius:8px;padding:4px 14px}
+.shot .sview{flex:1;min-height:0;overflow:hidden;display:flex}
+.shot img{display:block;width:100%;height:100%;object-fit:cover;object-position:top center}
+.shot .pend{flex:1;background:var(--surface);display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:16px;text-align:center;padding:36px}
+.shot .pend .pl2{font:600 15px var(--fm);letter-spacing:.12em;color:var(--accent);
+  border:1.5px solid var(--tint-line);background:var(--tint);border-radius:999px;padding:9px 20px}
+.shot .pend h4{margin:0;font:700 34px/1.25 var(--fd);letter-spacing:-.02em;word-break:keep-all}
+.shot .pend p{margin:0;font:400 var(--fs-sub)/1.5 var(--fb);color:var(--mute);max-width:520px;word-break:keep-all}
+.scap{margin-top:12px;font:500 var(--fs-sub)/1.4 var(--fb);color:var(--mute)}
 
-  .fig{width:100%;max-width:760px;height:auto;margin:0 auto;display:block}
-  .fnote{text-align:center;font-size:12px;color:var(--text-sub);margin-top:8px}
+/* ---- 포인트 행(헤어라인 목록) ---- */
+.pts{display:flex;flex-direction:column}
+/* 본문 점유 ≥70% (규격 §4) — 포인트 열이 본문 높이를 채우는 변형 */
+.pts.fill{height:100%}
+.pts.fill .ptr{flex:1;align-items:center}
+.ptr{display:flex;gap:20px;align-items:flex-start;padding:20px 2px;border-bottom:1px solid var(--line)}
+.ptr:first-child{border-top:1px solid var(--line)}
+.ptr .pnum{width:var(--num-circle);height:var(--num-circle);border-radius:999px;background:var(--tint);
+  color:var(--accent);font:600 20px var(--fm);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.ptr h4{margin:0;font:700 30px/1.25 var(--fd);letter-spacing:-.02em;word-break:keep-all}
+.ptr h4 em{font-style:normal;color:var(--accent)}
+.ptr p{margin:7px 0 0;font:400 var(--fs-card-body)/1.45 var(--fb);color:var(--sub);word-break:keep-all}
 
-  .rows{display:flex;flex-direction:column;gap:14px;width:88%;margin:0 auto}
-  .row{display:grid;grid-template-columns:200px 1fr;gap:22px;align-items:center;padding:14px 18px;background:var(--surface);border:1px solid var(--line);border-radius:14px}
-  .row .rl{font:700 16px var(--fd);color:var(--text)}
-  .row .rr{font-size:15px;color:var(--text-sub)}
-  .row.mark{border-left:3px solid var(--accent)}
+/* ---- 면 분할 패널 / 카드 그리드 (BP8) ---- */
+.split{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);display:grid;overflow:hidden}
+.split.cols{grid-auto-flow:column;grid-auto-columns:1fr}
+.split.cols>*{padding:28px 32px}
+.split.cols>*+*{border-left:1px solid var(--line)}
+.split.rows>*{padding:20px 32px}
+.split.rows>*+*{border-top:1px solid var(--line)}
+.spt{font:700 32px/1.25 var(--fd);letter-spacing:-.02em;word-break:keep-all}
+.spt em{font-style:normal;color:var(--accent)}
+.sps{margin:8px 0 0;font:400 var(--fs-card-body)/1.45 var(--fb);color:var(--sub);word-break:keep-all}
+.spl{font:600 15px var(--fm);letter-spacing:.12em;color:var(--mute);display:block;margin-bottom:10px}
+.gcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:28px 32px;display:flex;flex-direction:column;gap:14px;
+  transition:border-color var(--d-move) var(--ease-std),background var(--d-move) var(--ease-std)}
+.gcard.on{border-color:var(--accent);box-shadow:inset 6px 0 0 var(--accent);background:var(--bg)}
+.gcard h3{margin:0;font:700 var(--fs-card-title)/1.25 var(--fd);letter-spacing:-.02em;word-break:keep-all}
+.gcard p{margin:0;font:400 var(--fs-card-body)/1.5 var(--fb);color:var(--sub);word-break:keep-all}
+.gcard p b{color:var(--text)}
+.chips{display:flex;gap:12px;flex-wrap:wrap}
+.chip{font:600 var(--fs-label) var(--fb);color:var(--accent);border:1.5px solid var(--tint-line);
+  background:var(--tint);border-radius:999px;padding:9px 20px}
+.chip.mute{color:var(--sub);border-color:var(--line);background:var(--bg)}
 
-  .shot{width:100%;max-width:980px;margin:0 auto;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 6px 24px rgba(0,0,0,.10)}
-  .shot .bar{display:flex;align-items:center;gap:8px;background:#f1f0ee;border-bottom:1px solid var(--line);padding:8px 14px}
-  .shot .dot{width:9px;height:9px;border-radius:999px;background:#d3d2cf}
-  .shot .url{margin-left:8px;font:500 11px var(--fm);color:var(--text-sub);background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px 10px}
-  .shot .clip{overflow:hidden;position:relative}
-  .shot img{display:block;width:100%;height:auto}
-  .shotnote{text-align:center;font-size:12px;color:var(--text-sub);margin-top:10px}
+/* ---- BP9 선언 ---- */
+.decl{text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px}
+.decl .dtxt{font:800 76px/1.3 var(--fd);letter-spacing:-.035em;word-break:keep-all;max-width:1420px}
+.decl .dtxt em{font-style:normal;color:var(--accent);
+  background-image:linear-gradient(var(--tint2),var(--tint2));background-repeat:no-repeat;
+  background-size:0 16px;background-position:0 92%;
+  transition:background-size var(--d-hero) var(--ease-in)}
+.decl.hot .dtxt em{background-size:100% 16px}
+.decl .dnote{font:500 var(--fs-card-body)/1.5 var(--fb);color:var(--sub)}
 
-  .code{width:100%;max-width:980px;margin:0 auto;background:var(--dark);border-radius:14px;padding:20px 26px;color:#f2f1ef}
-  .code .ct{font:600 11px var(--fb);letter-spacing:.08em;text-transform:uppercase;color:#b9b6b2;margin-bottom:10px;display:flex;justify-content:space-between}
-  .code pre{margin:0;font:500 13.5px/1.62 var(--fm);white-space:pre-wrap;word-break:keep-all}
-  .code .hi{color:var(--dm);font-weight:700}
-  .code.sm pre{font-size:12.5px;line-height:1.55}
+/* ---- 타임라인 (BP5 변형) ---- */
+.tlseg{display:flex;flex-direction:column;gap:12px;justify-content:flex-start}
+.tlseg .per{font:600 20px var(--fm);letter-spacing:.04em;color:var(--accent)}
+.tlseg.off .per{color:var(--mute)}
+.tlseg .rail{height:12px;border-radius:999px;background:var(--tint2)}
+.tlseg.cur .rail{background:var(--accent)}
+.tlseg.off .rail{background:transparent;border:2px dashed #d8d6d2}
+.tlseg h3{margin:6px 0 0;font:700 32px/1.25 var(--fd);letter-spacing:-.02em}
+.tlseg p{margin:0;font:400 var(--fs-card-body)/1.45 var(--fb);color:var(--sub);word-break:keep-all}
+.tlseg .ses{margin-top:6px;font:600 var(--fs-label) var(--fm);color:var(--mute);letter-spacing:.04em}
 
-  #counter{position:fixed;right:18px;bottom:14px;z-index:30;font:600 14px var(--fb);color:#fff;background:rgba(22,22,22,.78);padding:5px 13px;border-radius:999px}
+/* ---- 체크리스트 ---- */
+.chkr{display:flex;align-items:center;gap:22px;cursor:pointer}
+.chkr .box{width:40px;height:40px;border-radius:11px;border:2px solid var(--line);background:var(--bg);
+  display:flex;align-items:center;justify-content:center;flex:0 0 auto;
+  transition:background var(--d-fast) var(--ease-std),border-color var(--d-fast) var(--ease-std)}
+.chkr .box svg{width:22px;height:22px;stroke:#fff;stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:0;
+  transition:opacity var(--d-fast) var(--ease-std)}
+.chkr.done .box{background:var(--accent);border-color:var(--accent)}
+.chkr.done .box svg{opacity:1}
+.chkr .ct{font:700 30px/1.3 var(--fd);letter-spacing:-.02em}
+.chkr .cs{margin-left:auto;font:500 var(--fs-sub) var(--fb);color:var(--mute);text-align:right}
 
-  @page{size:1280px 720px;margin:0}
-  @media print{
-    body{background:#fff;overflow:visible}
-    #deck{position:static;display:block;height:auto}
-    #stage{transform:none!important;width:1280px;height:auto;box-shadow:none;display:block}
-    .slide{position:relative;display:flex!important;width:1280px;height:720px;page-break-after:always;box-shadow:none}
-    #counter{display:none}
-  }
+/* ---- 출처 표 ---- */
+.srct{width:100%;border-collapse:collapse}
+.srct th{text-align:left;font:600 15px var(--fm);letter-spacing:.12em;color:var(--mute);
+  padding:0 12px 14px;border-bottom:1.5px solid var(--line)}
+.srct td{text-align:left;padding:26px 12px;border-bottom:1px solid var(--line);
+  font:400 var(--fs-card-body)/1.45 var(--fb);color:var(--sub);word-break:keep-all;vertical-align:top}
+.srct td.n{font-family:var(--fm);color:var(--accent);font-weight:600;width:70px}
+.srct td.s{color:var(--text);font-weight:600}
+
+/* ---- 리빌·수동 인터랙션 ---- */
+.rv{opacity:.42!important;transition:opacity var(--d-move) var(--ease-std)} /* 초기 감쇠 완화(오너 3차: 빈 장처럼 보임) */
+.rv.on{opacity:1!important}
+/* 2카드 장 전용 확대(#19·#26 — §4 잔여는 타이포 확장이 흡수) */
+.roomy .abcard{justify-content:center;gap:26px}
+.roomy .abcard h3{font-size:42px}
+.roomy .abcard>p{font:400 30px/1.6 var(--fb);color:var(--sub)}
+.roomy .abr p{font-size:28px}
+/* 소재 목록 압축(#24 — 5행이 본문을 넘지 않게) */
+.split.tight>.rv{padding:15px 28px}
+.split.tight .spt{font-size:30px}
+.split.tight .sps{font-size:22px;margin-top:4px}
+.uibar{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.uib{font:600 var(--fs-label) var(--fb);border:1.5px solid var(--line);background:var(--bg);
+  border-radius:999px;padding:11px 24px;cursor:pointer;color:var(--sub);
+  transition:background var(--d-fast) var(--ease-std),color var(--d-fast) var(--ease-std),border-color var(--d-fast) var(--ease-std)}
+.uib:hover{border-color:var(--tint-line);background:var(--tint)}
+.uib.cur{background:var(--accent);border-color:var(--accent);color:#fff}
+.uihint{font:500 var(--fs-label) var(--fb);color:var(--mute)}
+
+/* ---- 모션 공통 (모션-시각화 §4) ---- */
+.an{opacity:0}
+.an.in{animation:rise var(--d-enter) var(--ease-in) forwards;animation-delay:var(--ad,0s)}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.draw{stroke-dasharray:1;stroke-dashoffset:1}
+#counter{position:fixed;right:20px;bottom:16px;z-index:30;font:600 15px var(--fm);color:#fff;
+  background:rgba(22,22,22,.78);padding:6px 15px;border-radius:999px}
+
+@media (prefers-reduced-motion: reduce){
+  .slide{transition:none}
+  .an,.an.in{opacity:1!important;animation:none!important;transform:none!important}
+  .kfill,.kfill.in{transform:scaleX(1)!important;transition:none!important}
+  .draw{stroke-dashoffset:0!important}
+  .dark{opacity:1!important;transform:none!important;transition:none}
+  .rv{opacity:1!important}
+}
+@page{size:1920px 1080px;margin:0}
+@media print{
+  html,body{background:#fff;overflow:visible;height:auto}
+  #deck{position:static;display:block;height:auto}
+  #stage{transform:none!important;width:1920px;height:auto;box-shadow:none;display:block;overflow:visible}
+  .slide{position:relative!important;display:flex!important;opacity:1!important;width:1920px;height:1080px;page-break-after:always}
+  #counter{display:none!important}
+  .an,.an.in{opacity:1!important;animation:none!important;transform:none!important}
+  .kfill{transform:scaleX(1)!important}.draw{stroke-dashoffset:0!important}
+  .dark{opacity:1!important;transform:none!important}
+  /* print = 최종 상태 강제 (모션-시각화 §7) */
+  .rv{opacity:1!important}
+  .uibar{display:none!important}
+  .chkr .box{background:var(--accent)!important;border-color:var(--accent)!important}
+  .chkr .box svg{opacity:1!important}
+  .ring-wrap{border-color:var(--accent)!important}
+  .pnode.res .ic{transform:scale(1.08)!important}
+  .cover .cstep:first-child .ic{background:var(--accent)!important}
+  .cover .cstep:first-child .ic svg{stroke:#fff!important}
+  .cover .cstep:first-child b{color:var(--accent)!important}
+  .divider .dnum{transform:scale(1.06)!important}
+  .decl .dtxt em{background-size:100% 16px!important}
+  .shot[data-hero]{border-color:var(--accent)!important}
+  .gcard[data-hero]{border-color:var(--accent)!important;box-shadow:inset 6px 0 0 var(--accent)!important}
+  .judge .abcard[data-side=b]{border-color:var(--accent)!important;box-shadow:inset 6px 0 0 var(--accent)!important;background:var(--bg)!important}
+  .judge .abcard[data-side=b] .abl{background:var(--accent)!important;border-color:var(--accent)!important;color:#fff!important}
+  .judge .abcard[data-side=a]{opacity:.38!important}
+}
 </style>
 </head>
 <body>
 <div id="deck">
-  <div id="stage">
+<div id="stage">
 
-  <!-- 1 -->
-  <section class="slide cover" aria-label="1. 제작 스프린트">
-    <div class="blob"></div><div class="cdot"></div>
-    <div class="ctop"><span class="cpill">SEMINAR 03</span><span class="ckind">실습</span></div>
-    <div class="accbar"></div>
-    <div class="big">제작<br>스프린트</div>
-    <div class="sub">위임 · 확인 · 재위임으로 내 소재 1회 돌리기</div>
-    <div class="cfoot">
-      <div><div class="cbrand">AIM</div><div class="corg">광운대학교 경영학부 ERP연구회 · MIS·AI 스터디</div></div>
-      <div class="ccount">발표자료 26장</div>
-    </div>
-  </section>
-
-  <!-- 2 -->
-  <section class="slide" aria-label="2. 오늘의 판정">
-    <div class="top"><span class="pill">OPENING</span><span class="pnum">02</span></div>
-    <div class="head"><h1>오늘의 성공 판정은 하나</h1><p class="emph">설명을 듣는 시간이 아니라 각자 만드는 시간</p></div>
-    <div class="body">
-      <div class="chips">
-        <div class="chip">내 소재가 <b>1회 이상 실제로 돌아감</b><span class="cs">입력 → AI 처리 → 내 눈으로 확인</span></div>
-        <div class="chip">측정 빈칸 확정<span class="cs">"얼마나 달라졌나"를 무엇으로 잴지</span></div>
+<!-- ===== #1 · BP1 표지 (A) ===== -->
+<section class="slide cover" aria-label="1. 표지">
+  <svg class="wave" style="left:0;top:0;width:1150px;height:320px" viewBox="0 0 1150 320" fill="none">
+    <path d="M0 0 H1150 C 940 40 850 210 620 190 C 430 175 330 60 0 110 Z" fill="var(--tint2)"/>
+    <path d="M0 0 H900 C 760 30 640 150 460 140 C 300 132 210 40 0 78 Z" fill="var(--tint)"/>
+    <path class="draw" d="M1150 12 C 930 55 845 222 615 202 C 425 186 330 72 0 122" stroke="var(--accent)" stroke-width="1.5"/>
+  </svg>
+  <svg class="wave" style="right:0;bottom:0;width:1300px;height:380px" viewBox="0 0 1300 380" fill="none">
+    <path d="M1300 380 H0 C 240 330 380 160 640 200 C 880 236 1010 350 1300 270 Z" fill="var(--tint)"/>
+    <path d="M1300 380 H420 C 640 330 780 240 980 262 C 1120 277 1210 330 1300 300 Z" fill="var(--tint2)"/>
+  </svg>
+  <span class="dot" style="width:46px;height:46px;right:340px;top:120px;background:var(--tint2)"></span>
+  <span class="dot" style="width:18px;height:18px;right:300px;top:210px;background:var(--accent)"></span>
+  <div class="cwm">03</div>
+  <div class="cwrap">
+    <div>
+      <div class="eyebrow an">광운대학교 ERP연구회 · MIS×AI 스터디</div>
+      <h1 class="hero an">제작 <em>스프린트</em></h1>
+      <p class="csub an">위임 · 확인 · 재위임으로 내 소재 1회 돌리기</p>
+      <div class="csteps">
+        <div class="cstep an" data-hero><span class="ic"><svg viewBox="0 0 34 34"><rect x="6" y="4" width="22" height="26" rx="3"/><polyline points="11,17 15,21 23,12"/></svg></span><b>준비<br/>점검</b></div>
+        <span class="carr an">→</span>
+        <div class="cstep an"><span class="ic"><svg viewBox="0 0 34 34"><path d="M5 10 h13 M5 17 h20 M5 24 h9"/><polyline points="24,7 29,12 24,17"/></svg></span><b>위임</b></div>
+        <span class="carr an">→</span>
+        <div class="cstep an"><span class="ic"><svg viewBox="0 0 34 34"><circle cx="15" cy="15" r="10"/><line x1="23" y1="23" x2="30" y2="30"/></svg></span><b>확인</b></div>
+        <span class="carr an">→</span>
+        <div class="cstep an"><span class="ic"><svg viewBox="0 0 34 34"><polyline points="6,12 29,12"/><polyline points="23,6 29,12 23,18"/><polyline points="28,24 5,24"/><polyline points="11,18 5,24 11,30"/></svg></span><b>재위임</b></div>
+        <span class="carr an">→</span>
+        <div class="cstep an"><span class="ic"><svg viewBox="0 0 34 34"><rect x="5" y="14" width="8" height="15"/><rect x="21" y="6" width="8" height="23"/></svg></span><b>측정<br/>확정</b></div>
       </div>
-      <div class="key" style="margin-top:26px">두 개가 손에 있으면 오늘을 재현한 것 — 결석자는 재현 가이드로 같은 지점 도달</div>
+      <p class="cnote an">판정 1개 = <b>내 소재 1회 돌아감</b> · 설명 듣는 시간 아님 · <b>각자 만드는 60분</b></p>
     </div>
-    <div class="foot"><span>출처: 세미나 원고 차시 3</span><span class="r">KWU ERP연구회 · 세미나 3회차</span></div>
-  </section>
-
-  <!-- 3 -->
-  <section class="slide" aria-label="3. 위임 확인 재위임 루프">
-    <div class="top"><span class="pill">OPENING</span><span class="pnum">03</span></div>
-    <div class="head"><h1>중심 동작 — 위임 · 확인 · 재위임</h1><p class="emph">1회차에서 본 구조를 오늘 손으로 돈다</p></div>
-    <div class="body">
-      <img class="fig" src="/img/세미나/delegation-loop.svg" alt="위임 확인 재위임 루프 도식" style="max-width:860px" />
-    </div>
-    <div class="key">한 바퀴에 끝나는 경우는 드물고, 끝나지 않는 것이 실패도 아니다</div>
-    <div class="foot"><span>출처: 세미나 원고 차시 3 도식</span><span class="r">KWU ERP연구회 · 세미나 3회차</span></div>
-  </section>
-
-  <!-- 4 -->
-  <section class="slide" aria-label="4. 오늘의 지도">
-    <div class="top"><span class="pill">OPENING</span><span class="pnum">04</span></div>
-    <div class="head"><h1>오늘의 지도 — 두 구간</h1><p class="emph">시간 배분 예: 제작 45분 + 측정 방법 확정 15분</p></div>
-    <div class="body">
-      <div class="steps">
-        <div class="step cur"><div class="circ">1</div><div class="st">제작 (예: 45분)</div><div class="ss">각자 작업 — 위임문 만들기<br>→ 실행 → 확인 → 재위임</div></div>
-        <div class="arr">→</div>
-        <div class="step"><div class="circ">2</div><div class="st">측정 확정 (예: 15분)</div><div class="ss">절감형 / 신규 루틴형 분기<br>→ 양식 채우기</div></div>
+    <div class="cshot an">
+      <div class="shotf">
+        <div class="bar"><span class="dot2"></span><span class="dot2"></span><span class="dot2"></span><span class="url">kwu-erpclub.github.io</span></div>
+        <img src="../ws/ws-flow.png" alt="워크스페이스 로드맵 탭 화면" />
       </div>
+      <p class="cap">자료 받는 곳 = 워크스페이스 로드맵 탭</p>
     </div>
-    <div class="key">진행자는 순회하며 말로만 — 화면 조작은 본인이 한다 (대신 해주면 다음에 같은 곳에서 다시 막힌다)</div>
-    <div class="foot"><span>출처: 세미나 원고 차시 3 진행 절</span><span class="r">KWU ERP연구회 · 세미나 3회차</span></div>
-  </section>
-
-  <!-- 5 -->
-  <section class="slide" aria-label="5. 준비 3가지">
-    <div class="top"><span class="pill">준비</span><span class="pnum">05</span></div>
-    <div class="head"><h1>준비 3가지</h1><p class="emph">빈칸이 남았으면 스프린트 첫 5분에 채운다</p></div>
-    <div class="body">
-      <div class="grid3">
-        <div class="card"><div class="ctag">1 · 차시 2 산출물</div><h3>소재 카드 + 미니 PRD 5칸</h3>
-          <ul><li>①문제 ②as-is 실측 계획 ③완성 기준(T/F) ④폐기 조건 ⑤개정 이력</li><li>1칸·3칸이 오늘 위임문의 뼈대</li></ul></div>
-        <div class="card hl"><div class="ctag">2 · 검증 장치</div><h3>원자료 1건</h3>
-          <ul><li>강의자료 · 공고 원문 · 표 등 실물</li><li>결과가 맞는지 대조할 유일한 기준</li></ul></div>
-        <div class="card"><div class="ctag">3 · 도구</div><h3>챗봇 로그인 (아무거나)</h3>
-          <ul><li>한도에 걸리면 갈아타는 것까지 연습</li><li>로그인 문제 = 사전 설치 가이드 해당 절</li></ul></div>
-      </div>
-    </div>
-    <div class="foot"><span>출처: 세미나 원고 차시 3 준비 절</span><span class="r">KWU ERP연구회 · 세미나 3회차</span></div>
-  </section>
-
-  <!-- 6 -->
-  <section class="slide" aria-label="6. 원자료가 검증 장치인 이유">
-    <div class="top"><span class="pill">준비</span><span class="pnum">06</span></div>
-    <div class="body quote">
-      <div class="qbox">
-        <div class="qorig">AI의 출력은 그 자체로 진위를 보증하지 않는다</div>
-        <div class="qtr">판정 기준은 항상 AI 바깥의 내 자료다. 원자료 1건은 준비물이 아니라 검증 장치 — 이것이 없으면 오늘 만든 것이 맞는지 판정할 방법이 없다.</div>
-      </div>
-    </div>
-    <div class="foot"><span>출처: 세미나 원고 차시 3 준비 절</span><span class="r">KWU ERP연구회 · 세미나 3회차</span></div>
-  </section>
-
-  <!-- 7 -->
-  <section class="slide" aria-label="7. 위임문 브릿지">
-    <div class="top"><span class="pill">위임</span><span class="pnum">07</span></div>
-    <div class="body bridge">
-      <div class="bigline">위임문을 <em>백지에서</em><br>짓지 않는다</div>
-      <div class="bsub">
-        <span>미니 PRD 1칸(문제)과 3칸(완성 기준)을 그대로 읽어주듯 넣는 것이 기본형</span>
-        <span>"나는 ___할 때마다 ___가 문제다. ___가 되면 완성이다. 이걸 만들어줘."</span>
-      </div>
-    </div>
-    <div class="foot"><span>출처: 세미나 원고 차시 3 — PRD가 위임문이 되는 원리</span><span class="r">KWU ERP연구회 · 세미나 3회차</span></div>
-  </section>
-
-  <!-- 8 -->
-  <section class="slide" aria-label="8. 왜 이 형태가 작동하나">
-    <div class="top"><span class="pill">위임</span><span class="pnum">08</span></div>
-    <div class="head"><h1>왜 이 형태가 작동하나</h1></div>
-    <div class="body">
-      <div class="grid2">
-        <div class="card"><div class="ctag">빗나가는 원인</div><h3>"무엇이 완성인지"가 지시문에 없다</h3>
-          <ul><li>AI가 산출물을 빗나가게 만드는 대부분의 원인</li></ul></div>
-        <div class="card hl"><div class="ctag">고치는 방법</div><h3>완성 기준을 문장으로 박는다</h3>
-          <ul><li>AI는 그 기준을 향해 출력을 조립</li><li>나는 그 기준으로 결과를 판정</li><li>위임과 검증이 같은 문장을 공유</li></ul></div>
-      </div>
-    </div>
-    <div class="key">이것이 차시 2에서 미니 PRD를 먼저 쓴 이유다</div>
-    <div class="foot"><span>출처: 세미나 원고 차시 3</span><span class="r">KWU ERP연구회 · 세미나 3회차</span></div>
-  </section>
-
-  <!-- 9 -->
-  <section class="slide" aria-label="9. 절감형 예문">
-    <div class="top"><span class="pill">위임</span><span class="pnum">09</span></div>
-    <div class="head"><h1>위임문 예문 ① — 절감형</h1><p class="emph">예: 강의노트 요약·퀴즈</p></div>
-    <div class="body">
-      <div class="code sm">
-        <div class="ct"><span>절감형 소재 예문 전문</span><span>자기 소재로 4부분만 갈아끼우기</span></div>
-        <pre>나는 시험 전에 강의노트를 훑을 때마다 양이 많아 정리가 안 되는 게 문제다.
-챕터 요약 1페이지와 퀴즈 10문항이 나오면 완성이다.
-
-아래 강의노트 1개 챕터를 기준으로 만들어줘.
-
-<span class="hi">[기준]</span>
-1. 요약은 목록 형식, 항목 10개 이내
-2. 퀴즈는 10문항, 각 문항에 정답 표기
-3. 노트에 없는 내용은 넣지 않는다
-
-<span class="hi">[붙여넣기: 강의노트 챕터 원문]</span></pre>
-      </div>
-    </div>
-    <div class="foot"><span>출처: 세미나 원고 차시 3 재현 가이드 1단계</span><span class="r">KWU ERP연구회 · 세미나 3회차</span></div>
-  </section>
-
-  <!-- 10 -->
-  <section class="slide" aria-label="10. 신규 루틴형 예문">
-    <div class="top"><span class="pill">위임</span><span class="pnum">10</span></div>
-    <div class="head"><h1>위임문 예문 ② — 신규 루틴형</h1><p class="emph">예: 공고 레이더 주간 브리핑</p></div>
-    <div class="body">
-      <div class="code sm">
-        <div class="ct"><span>신규 루틴형 소재 예문 전문</span><span>자기 소재로 4부분만 갈아끼우기</span></div>
-        <pre>나는 대외활동 공고를 챙겨야 할 때마다 여러 사이트를 도는 게 문제다.
-공고 목록을 넣으면 마감순 브리핑 1개가 나오면 완성이다.
-
-아래 공고 목록을 기준으로 만들어줘.
-
-<span class="hi">[기준]</span>
-1. 표 형식 — 공고명 / 마감일 / 지원 자격 3열
-2. 마감 임박순 정렬
-3. 목록에 없는 공고는 만들어 넣지 않는다
-
-<span class="hi">[붙여넣기: 이번 주 수집한 공고 목록 원문]</span></pre>
-      </div>
-    </div>
-    <div class="foot"><span>출처: 세미나 원고 차시 3 재현 가이드 1단계</span><span class="r">KWU ERP연구회 · 세미나 3회차</span></div>
-  </section>
-
-  <!-- 11 -->
-  <section class="slide" aria-label="11. 공통 구조 4부분">
-    <div class="top"><span class="pill">위임</span><span class="pnum">11</span></div>
-    <div class="head"><h1>두 예문의 공통 구조 — 4부분</h1><p class="emph">자기 소재로 바꿀 때 이 네 부분만 갈아끼운다</p></div>
-    <div class="body">
-      <div class="rows">
-        <div class="row"><div class="rl">1문장째</div><div class="rr">PRD 1칸 — 문제</div></div>
-        <div class="row mark"><div class="rl">2문장째</div><div class="rr">PRD 3칸 — 완성 기준 (T/F 판정 가능한 문장)</div></div>
-        <div class="row"><div class="rl">[기준]</div><div class="rr">형식 · 개수 · 순서의 번호 목록</div></div>
-        <div class="row"><div class="rl">마지막</div><div class="rr">원자료 붙여넣기</div></div>
-      </div>
-    </div>
-    <div class="foot"><span>출처: 세미나 원고 차시 3 재현 가이드</span><span class="r">KWU ERP연구회 · 세미나 3회차</span></div>
-  </section>
-
-  <!-- 12 -->
-  <section class="slide" aria-label="12. 확인 브릿지">
-    <div class="top"><span class="pill">확인</span><span class="pnum">12</span></div>
-    <div class="body bridge">
-      <div class="bigline">그럴듯한지 훑지 말고<br><em>원자료에서 찾아라</em></div>
-      <div class="bsub">
-        <span>결과의 한 줄을 골라 원자료에서 같은 내용을 찾는다</span>
-        <span>원자료에 없는 문장이 결과에 있으면 — 그것이 환각</span>
-      </div>
-    </div>
-    <div class="foot"><span>출처: 세미나 원고 차시 3 확인 절</span><span class="r">KWU ERP연구회 · 세미나 3회차</span></div>
-  </section>
-
-  <!-- 13 -->
-  <section class="slide" aria-label="13. 환각은 구조의 귀결">
-    <div class="top"><span class="pill">확인</span><span class="pnum">13</span></div>
-    <div class="head"><h1>왜 검증이 고정 단계인가</h1><p class="emph">1회차 복습 — 환각은 AI의 실수가 아니라 구조의 귀결</p></div>
-    <div class="body">
-      <div class="grid2">
-        <div class="card"><div class="ctag">구조</div><h3>"맞는 말"이 아니라 "그럴듯한 다음 말"</h3>
-          <ul><li>언어모델의 생성 원리 자체</li><li>그래서 검증은 선택이 아니라 루프의 고정 단계</li></ul></div>
-        <div class="card hl"><div class="ctag">함정</div><h3>AI에게 "이거 맞아?"</h3>
-          <ul><li>그 답도 같은 방식으로 생성된 출력일 뿐</li><li>검증 기준은 내 원자료에서 나와야 한다</li></ul></div>
-      </div>
-    </div>
-    <div class="foot"><span>출처: 세미나 원고 차시 3 확인 절</span><span class="r">KWU ERP연구회 · 세미나 3회차</span></div>
-  </section>
-
-  <!-- 14 -->
-  <section class="slide" aria-label="14. 지목 재위임">
-    <div class="top"><span class="pill">재위임</span><span class="pnum">14</span></div>
-    <div class="head"><h1>어긋나면 — 전체 말고 그 부분만</h1><p class="emph">지목 재위임이 어긋난 곳이 고쳐질 확률을 높인다</p></div>
-    <div class="body">
-      <div class="code" style="max-width:820px">
-        <div class="ct"><span>지목 재위임 예문</span></div>
-        <pre>퀴즈 7번은 노트에 없는 내용이다. 노트에 있는 내용만으로 다시 만들어줘.
-나머지 문항은 그대로 둔다.</pre>
-      </div>
-      <div class="key" style="margin-top:22px">AI 출력은 매번 조금씩 달라질 수 있다 — 수정본 전체를 다시 원자료와 대조한다</div>
-    </div>
-    <div class="foot"><span>출처: 세미나 원고 차시 3 재현 가이드 3단계</span><span class="r">KWU ERP연구회 · 세미나 3회차</span></div>
-  </section>
-
-  <!-- 15 -->
-  <section class="slide" aria-label="15. 막힘 브릿지">
-    <div class="top"><span class="pill">막힘</span><span class="pnum">15</span></div>
-    <div class="body bridge">
-      <div class="bigline">막힘에는 각각<br><em>원리 있는 처방</em>이 있다</div>
-      <div class="bsub">
-        <span>당일에는 처방표로 진단 — 외우는 것보다 왜 작동하는지가 오래 남는다</span>
-      </div>
-    </div>
-    <div class="foot"><span>출처: 세미나 원고 차시 3 막힘 절</span><span class="r">KWU ERP연구회 · 세미나 3회차</span></div>
-  </section>
-
-  <!-- 16 -->
-  <section class="slide" aria-label="16. 막힘 처방 1">
-    <div class="top"><span class="pill">막힘</span><span class="pnum">16</span></div>
-    <div class="head"><h1>막힘 처방 ① — 출력이 문제일 때</h1></div>
-    <div class="body">
-      <table class="tbl">
-        <tr><th style="width:280px">증상</th><th style="width:250px">처방</th><th>원리</th></tr>
-        <tr><td class="tm">원하는 형식이 안 나온다</td><td>결과 예시 1개를 붙여넣는다</td><td>형식은 설명보다 견본 — 견본 1개가 형용사 열 개보다 강하다</td></tr>
-        <tr><td class="tm">돌릴 때마다 다르게 나온다</td><td>기준을 번호 목록으로 고정</td><td>형식·개수·순서가 문장에 흩어지면 매번 다르게 해석된다 — 번호로 박으면 해석 여지가 줄어든다</td></tr>
-        <tr><td class="tm">결과가 맞는지 모르겠다</td><td>원자료 대조</td><td>판정 기준은 AI 바깥의 내 자료 — AI에게 물으면 같은 방식의 출력일 뿐</td></tr>
-      </table>
-    </div>
-    <div class="foot"><span>출처: 세미나 원고 차시 3 막힘 절</span><span class="r">KWU ERP연구회 · 세미나 3회차</span></div>
-  </section>
-
-  <!-- 17 -->
-  <section class="slide" aria-label="17. 막힘 처방 2">
-    <div class="top"><span class="pill">막힘</span><span class="pnum">17</span></div>
-    <div class="head"><h1>막힘 처방 ② — 환경·상태가 문제일 때</h1></div>
-    <div class="body">
-      <table class="tbl">
-        <tr><th style="width:280px">증상</th><th style="width:250px">처방</th><th>원리</th></tr>
-        <tr><td class="tm">대화가 길어지자 앞을 잊는다</td><td>새 대화 + PRD 요약 재투입</td><td>컨텍스트 윈도 한계 — 대화가 날아가도 PRD가 있으면 어디서든 재시작</td></tr>
-        <tr><td class="tm">무료 한도에 걸렸다</td><td>다른 챗봇으로 같은 위임문</td><td>도구는 바뀌어도 위임문 능력은 이식된다 — 기능 축을 가르치는 이유</td></tr>
-        <tr><td class="tm">뭘 시켜야 할지 막막하다</td><td>PRD 1·3칸을 그대로 넣는다</td><td>백지에서 위임문 짓기는 오늘의 과제가 아니다</td></tr>
-        <tr><td class="tm">로그인·계정 문제</td><td>사전 설치 가이드 해당 절</td><td>학교 구글 계정은 일부 서비스 차단 가능 → 개인 계정 우회</td></tr>
-      </table>
-    </div>
-    <div class="foot"><span>출처: 세미나 원고 차시 3 막힘 절</span><span class="r">KWU ERP연구회 · 세미나 3회차</span></div>
-  </section>
-
-  <!-- 18 -->
-  <section class="slide" aria-label="18. 15분 규칙">
-    <div class="top"><span class="pill">막힘</span><span class="pnum">18</span></div>
-    <div class="head"><h1>15분 규칙 — 더 붙잡지 말고 줄인다</h1><p class="emph">완성 기준(PRD 3칸)을 절반 크기로 다시 쓴다</p></div>
-    <div class="body">
-      <div class="grid2">
-        <div class="card"><div class="ctag">예</div><h3>줄이기 전 → 후</h3>
-          <ul><li>"강의노트 전체 → 요약+퀴즈 10문항"이 안 돌면</li><li>"강의노트 1개 챕터 → 요약만"으로</li></ul></div>
-        <div class="card hl"><div class="ctag">근거</div><h3>0회가 가장 나쁜 결과</h3>
-          <ul><li>오늘의 판정 = "1회 돌아감"</li><li>절반 소재라도 돌면 다음 주에 범위 복구 가능</li><li>0회는 되돌릴 것 자체가 없다</li></ul></div>
-      </div>
-    </div>
-    <div class="foot"><span>출처: 세미나 원고 차시 3 — 15분 규칙</span><span class="r">KWU ERP연구회 · 세미나 3회차</span></div>
-  </section>
-
-  <!-- 19 -->
-  <section class="slide" aria-label="19. 축소는 v2 개정">
-    <div class="top"><span class="pill">막힘</span><span class="pnum">19</span></div>
-    <div class="body quote">
-      <div class="qbox">
-        <div class="qorig">축소는 폐기가 아니라 개정이다</div>
-        <div class="qtr">줄인 내용을 PRD 5칸(개정 이력)에 v2로 적는다 — "AI에 시켰는데 안 된 것 / 바꾼 것". v1로 끝난 PRD는 위임을 안 해봤다는 뜻이고, v2가 생긴 PRD는 루프를 실제로 돌았다는 증거다.</div>
-      </div>
-      <div class="bsub">
-        <span>이 기록이 다음 회차 발표의 "실패 1건" 재료 — 실패 슬롯이 발표 템플릿에 처음부터 있는 이유</span>
-      </div>
-    </div>
-    <div class="foot"><span>출처: 세미나 원고 차시 3</span><span class="r">KWU ERP연구회 · 세미나 3회차</span></div>
-  </section>
-
-  <!-- 20 -->
-  <section class="slide" aria-label="20. 측정 브릿지">
-    <div class="top"><span class="pill">측정</span><span class="pnum">20</span></div>
-    <div class="body bridge">
-      <div class="bigline">분기 질문은 하나 —<br><em>"스터디 전에도 하고 있었나?"</em></div>
-      <div class="bsub">
-        <span>예 → 절감형 — 이전 소요 시간이 실제로 존재하므로 전·후 시간으로 잰다</span>
-        <span>아니오 → 신규 루틴형 — "전 시간"이 존재하지 않으니 사용 횟수·지속 주수로 잰다</span>
-      </div>
-    </div>
-    <div class="foot"><span>출처: 세미나 원고 차시 3 측정 절</span><span class="r">KWU ERP연구회 · 세미나 3회차</span></div>
-  </section>
-
-  <!-- 21 -->
-  <section class="slide" aria-label="21. 측정 분기 트리">
-    <div class="top"><span class="pill">측정</span><span class="pnum">21</span></div>
-    <div class="head"><h1>측정 2종 분기 — 결정 트리</h1><p class="emph">존재할 수 없는 측정값에 전·후 비교를 강요하면 지어낸 수치가 나온다</p></div>
-    <div class="body">
-      <img class="fig" src="/img/세미나/measure-fork.svg" alt="측정 2종 분기 결정 트리" style="max-width:840px" />
-    </div>
-    <div class="fnote">애매하면(하다 말다 했음) 절감형 — 전 값 = 최근 1회 실측값</div>
-    <div class="foot"><span>출처: 세미나 원고 차시 3 도식</span><span class="r">KWU ERP연구회 · 세미나 3회차</span></div>
-  </section>
-
-  <!-- 22 -->
-  <section class="slide" aria-label="22. 측정 양식 2종">
-    <div class="top"><span class="pill">측정</span><span class="pnum">22</span></div>
-    <div class="head"><h1>측정 양식 2종 — 그대로 채우기</h1><p class="emph">채운 값은 PRD 2칸(as-is 실측 계획)에 옮겨 적는다</p></div>
-    <div class="body">
-      <div class="grid2">
-        <div class="code sm" style="max-width:none;margin:0">
-          <div class="ct"><span>절감형 양식</span></div>
-          <pre>전 = ___분
-(잰 날짜: ____ /
- 없으면 다음 세션 전 재는 날짜: ____)
-
-측정법 = ______________
-(언제·무엇을 재는지 한 문장.
- 예: "다음 과제 1건을 손으로 할 때
- 시작~끝 스톱워치")</pre>
-        </div>
-        <div class="code sm" style="max-width:none;margin:0">
-          <div class="ct"><span>신규 루틴형 양식</span></div>
-          <pre>주 ___회 사용 목표
-지금까지 ___회
-
-기록처 = 주중 폼
-(실사용 횟수 칸에 매주 자가보고)</pre>
-        </div>
-      </div>
-    </div>
-    <div class="foot"><span>출처: 세미나 원고 차시 3 재현 가이드 5단계</span><span class="r">KWU ERP연구회 · 세미나 3회차</span></div>
-  </section>
-
-  <!-- 23 -->
-  <section class="slide" aria-label="23. 수치 어디서 났어">
-    <div class="top"><span class="pill">측정</span><span class="pnum">23</span></div>
-    <div class="body quote">
-      <div class="qbox">
-        <div class="qorig">"그 수치 어디서 났어?"</div>
-        <div class="qtr">채운 값은 옆 사람이 읽고 이 질문에 답이 되는지 확인한다. 답이 "감이다"면 측정법 칸을 다시 쓴다.</div>
-      </div>
-    </div>
-    <div class="foot"><span>출처: 세미나 원고 차시 3 측정 절</span><span class="r">KWU ERP연구회 · 세미나 3회차</span></div>
-  </section>
-
-  <!-- 24 -->
-  <section class="slide" aria-label="24. 재현 가이드 요약">
-    <div class="top"><span class="pill">재현</span><span class="pnum">24</span></div>
-    <div class="head"><h1>결석자 재현 가이드 — 6단계 요약</h1><p class="emph">소요 예: 60분 — 전문은 세미나 본문</p></div>
-    <div class="body">
-      <div class="steps">
-        <div class="step"><div class="circ">0</div><div class="st">준비 점검</div><div class="ss">PRD·원자료·챗봇</div></div>
-        <div class="arr">→</div>
-        <div class="step"><div class="circ">1</div><div class="st">위임문</div><div class="ss">PRD 1·3칸 끼우기</div></div>
-        <div class="arr">→</div>
-        <div class="step"><div class="circ">2</div><div class="st">실행·확인</div><div class="ss">원자료 대조</div></div>
-        <div class="arr">→</div>
-        <div class="step"><div class="circ">3</div><div class="st">재위임</div><div class="ss">지목 수정 1사이클</div></div>
-        <div class="arr">→</div>
-        <div class="step"><div class="circ">4</div><div class="st">자가 처방</div><div class="ss">막히면 처방표</div></div>
-        <div class="arr">→</div>
-        <div class="step cur"><div class="circ">5</div><div class="st">측정 확정</div><div class="ss">분기 → 양식</div></div>
-      </div>
-    </div>
-    <div class="foot"><span>출처: 세미나 원고 차시 3 재현 가이드</span><span class="r">KWU ERP연구회 · 세미나 3회차</span></div>
-  </section>
-
-  <!-- 25 -->
-  <section class="slide" aria-label="25. 주중 할 일">
-    <div class="top"><span class="pill">이후</span><span class="pnum">25</span></div>
-    <div class="head"><h1>주중 — 실사용 횟수 1칸</h1><p class="emph">0회면 0회 그대로 — 부풀리지 않는 것이 측정의 시작</p></div>
-    <div class="body">
-      <div class="shot" style="max-width:900px">
-        <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">workspace › 홈 — 과제 제출 · 다가오는 업무</span></div>
-        <div class="clip" style="height:330px"><img src="/slides/ws/ws-home.png" alt="워크스페이스 홈 — 캘린더와 과제" style="margin-top:-60px" /></div>
-      </div>
-      <p class="shotnote">오늘 돌아간 것을 실제로 쓴 횟수만 주중 폼에 적는다 (화면 = 예시 데이터).</p>
-    </div>
-    <div class="foot"><span>화면: 허브 워크스페이스 홈</span><span class="r">KWU ERP연구회 · 세미나 3회차</span></div>
-  </section>
-
-  <!-- 26 -->
-  <section class="slide" aria-label="26. 마무리">
-    <div class="top"><span class="pill">CLOSING</span><span class="pnum">26</span></div>
-    <div class="head"><h1>완료 판정 (T/F)</h1></div>
-    <div class="body">
-      <div class="chips">
-        <div class="chip">내 소재 1회 돌아감<span class="cs">입력 → 처리 → 내 눈 확인</span></div>
-        <div class="chip">측정 빈칸 확정<span class="cs">절감형 or 신규 루틴형 양식</span></div>
-      </div>
-      <div class="key" style="margin-top:26px">자동화(폼 → 시트 → 자동 메일)까지 가보고 싶으면 선택 자료 「자동화 따라 치기」 — 필수 아니다</div>
-    </div>
-    <div class="foot"><span>출처: 세미나 원고 차시 3</span><span class="r">KWU ERP연구회 · 세미나 3회차</span></div>
-  </section>
-
   </div>
+  <div class="cfoot">
+    <div><div class="cbrand">AIM</div><div class="corg">광운대학교 경영학부 ERP연구회 · MIS×AI 스터디</div></div>
+    <span class="cpill">SESSION 03</span>
+  </div>
+</section>
+
+<!-- ===== #2 · BP2 목차 (B) ===== -->
+<section class="slide" data-pname="오늘의 구성" aria-label="2. 오늘의 구성">
+  <svg class="wave" style="left:0;top:0;width:620px;height:175px" viewBox="0 0 620 175" fill="none">
+    <path d="M0 0 H620 C 430 40 340 150 130 118 C 60 107 30 60 0 78 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 회차 3 · 오늘의 구성</span><span class="hpage">02 <i>/ 23</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>오늘 = <em>각자 만드는 60분</em> · 판정 1개</h1>
+      <p class="sub">제작 45분 + 측정 확정 15분 · 진행자는 <b>순회하며 말로 안내</b>, 화면 조작은 본인</p></div>
+    <div class="toc grow-1">
+      <div class="tocr an"><span class="tn">1</span>
+        <span class="ic"><svg viewBox="0 0 34 34"><rect x="6" y="4" width="22" height="26" rx="3"/><polyline points="11,17 15,21 23,12"/></svg></span>
+        <span class="tw"><span class="tt">준비</span><span class="td">미니 PRD·원자료·챗봇 3건 점검, <b>원자료</b> = 결과를 대조할 내 자료</span></span>
+        <span class="tm">2장 · 5분</span></div>
+      <div class="tocr an"><span class="tn">2</span>
+        <span class="ic"><svg viewBox="0 0 34 34"><path d="M5 10 h13 M5 17 h20 M5 24 h9"/><polyline points="24,7 29,12 24,17"/></svg></span>
+        <span class="tw"><span class="tt">위임</span><span class="td">미니 PRD 1칸·3칸을 그대로 <em>위임문</em>으로, 백지에서 짓지 않음</span></span>
+        <span class="tm">3장 · 10분</span></div>
+      <div class="tocr an"><span class="tn">3</span>
+        <span class="ic"><svg viewBox="0 0 34 34"><polyline points="6,12 29,12"/><polyline points="23,6 29,12 23,18"/><polyline points="28,24 5,24"/><polyline points="11,18 5,24 11,30"/></svg></span>
+        <span class="tw"><span class="tt">확인·재위임</span><span class="td">원자료 대조로 <em>환각 검출</em>, 어긋난 곳만 지목해 다시 위임</span></span>
+        <span class="tm">4장 · 15분</span></div>
+      <div class="tocr an"><span class="tn">4</span>
+        <span class="ic"><svg viewBox="0 0 34 34"><path d="M13 21 a6 6 0 1 1 8 -8 l6 -6 M25 13 l3 3"/><circle cx="12" cy="22" r="5"/></svg></span>
+        <span class="tw"><span class="tt">막힘 처방</span><span class="td">막힘 6유형 자가 처방과 <em>15분 규칙</em>, 축소 = PRD v2 개정</span></span>
+        <span class="tm">4장 · 15분</span></div>
+      <div class="tocr an"><span class="tn">5</span>
+        <span class="ic"><svg viewBox="0 0 34 34"><rect x="5" y="14" width="8" height="15"/><rect x="21" y="6" width="8" height="23"/></svg></span>
+        <span class="tw"><span class="tt">측정·마무리</span><span class="td">분기 1문으로 유형 판정, 양식 2종 기입과 완료 판정</span></span>
+        <span class="tm">6장 · 15분</span></div>
+    </div>
+    <div class="dark" data-hero>성공 판정 = <b>내 소재 1회 돌아감</b> + <b>측정 빈칸 확정</b>
+      <span class="dsub">두 건이 손에 있으면 오늘 완료 · 제작 45분과 측정 15분 안에서 처리</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">SESSION 03 · 2026-09-21</span></div>
+</section>
+
+<!-- ===== #3 · BP5 도입 상황·문제·질문 (B) ===== -->
+<section class="slide" data-pname="오늘의 진행" aria-label="3. 도입 3박자">
+  <svg class="wave" style="right:0;top:0;width:520px;height:170px" viewBox="0 0 520 170" fill="none">
+    <path d="M520 0 H0 C 170 30 260 140 520 96 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 회차 3 · 오늘의 진행</span><span class="hpage">03 <i>/ 23</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>PRD는 있다 · 아직 <em>돌려보지 않았다</em></h1>
+      <p class="sub">미니 PRD = 소재 1건의 문제·완성 기준을 5칸으로 적은 계획서 · 확정 시점 = <b>회차 2</b></p></div>
+    <div class="grow-1" style="display:flex;align-items:center">
+    <div class="pipe" style="flex:1">
+      <div class="pnode an"><span class="pl">STEP 1</span><span class="ic"><svg viewBox="0 0 34 34"><rect x="6" y="4" width="22" height="26" rx="3"/><polyline points="11,17 15,21 23,12"/></svg></span>
+        <span class="pt">상황</span><span class="ps">회차 2에서 소재 카드 판정 통과 · <b>미니 PRD 5칸 확정</b></span></div>
+      <svg class="plink" width="80" height="26"><line class="draw" x1="4" y1="13" x2="66" y2="13"/><polyline class="draw" points="58,5 68,13 58,21"/></svg>
+      <div class="pnode an"><span class="pl">STEP 2</span><span class="ic"><svg viewBox="0 0 34 34"><rect x="6" y="4" width="22" height="26" rx="3"/><line x1="11" y1="12" x2="23" y2="12"/><line x1="11" y1="18" x2="23" y2="18"/><line x1="11" y1="24" x2="18" y2="24"/></svg></span>
+        <span class="pt">문제</span><span class="ps">종이 위 계획 상태 · 실제 실행 <b>0회</b>, 결과를 본 적 없음</span></div>
+      <svg class="plink" width="80" height="26"><line class="draw" x1="4" y1="13" x2="66" y2="13"/><polyline class="draw" points="58,5 68,13 58,21"/></svg>
+      <div class="pnode res an" data-hero><span class="pl">QUESTION</span><span class="ic ic--solid"><svg viewBox="0 0 34 34"><path d="M12 12 a5 5 0 1 1 5 5 v3"/><line x1="17" y1="26" x2="17" y2="27"/></svg></span>
+        <span class="pt">무엇이<br/>"돌아감"인가</span><span class="ps">오늘 완료를 가르는 판정 기준</span></div>
+    </div>
+    </div>
+    <div class="band an">질문의 답 = <span>다음 장의 판정 정의 1줄</span>
+      <span class="band-sub">정의를 먼저 고정한 뒤 제작 구간 시작 · 오늘의 완료 판정 = 이 정의 하나</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">SESSION 03 · 2026-09-21</span></div>
+</section>
+
+<!-- ===== #4 · BP5 판정 정의 (A) ===== -->
+<section class="slide" data-pname="오늘의 진행" aria-label="4. 1회 돌아감 정의">
+  <svg class="wave" style="left:0;bottom:0;width:640px;height:180px" viewBox="0 0 640 180" fill="none">
+    <path d="M0 180 H640 C 470 150 380 40 180 76 C 80 94 40 150 0 130 Z" fill="var(--tint)"/>
+  </svg>
+  <span class="dot" style="width:26px;height:26px;right:150px;bottom:280px;background:var(--tint2)"></span>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 회차 3 · 오늘의 진행</span><span class="hpage">04 <i>/ 23</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>1회 돌아감 = <em>입력 → AI 처리 → 내 눈 확인</em></h1>
+      <p class="sub">판정 1건 = 이 3단이 끝까지 이어진 상태 · <b>결과물의 완성도는 별도 기준</b></p></div>
+    <div class="grow-1" style="display:flex;align-items:center">
+    <div class="pipe" style="flex:1">
+      <div class="pnode an"><span class="pl">STEP 1</span><span class="ic" style="width:140px;height:140px"><svg viewBox="0 0 34 34" style="width:64px;height:64px"><path d="M5 10 h13 M5 17 h20 M5 24 h9"/><polyline points="24,7 29,12 24,17"/></svg></span>
+        <span class="pt" style="font-size:50px">입력</span><span class="ps" style="font-size:30px;max-width:360px">위임문과 원자료를 챗봇에 넣음</span></div>
+      <svg class="plink" width="80" height="26" style="margin-top:98px"><line class="draw" x1="4" y1="13" x2="66" y2="13"/><polyline class="draw" points="58,5 68,13 58,21"/></svg>
+      <div class="pnode an"><span class="pl">STEP 2</span><span class="ic" style="width:140px;height:140px"><svg viewBox="0 0 34 34" style="width:64px;height:64px"><rect x="9" y="9" width="16" height="16" rx="3"/><path d="M13 4 v5 M21 4 v5 M13 25 v5 M21 25 v5 M4 13 h5 M4 21 h5 M25 13 h5 M25 21 h5"/></svg></span>
+        <span class="pt" style="font-size:50px">AI 처리</span><span class="ps" style="font-size:30px;max-width:360px">위임문 기준으로 결과 1건 생성</span></div>
+      <svg class="plink" width="80" height="26" style="margin-top:98px"><line class="draw" x1="4" y1="13" x2="66" y2="13"/><polyline class="draw" points="58,5 68,13 58,21"/></svg>
+      <div class="pnode res an"><span class="pl">RESULT</span><span class="ic ic--solid" style="width:166px;height:166px"><svg viewBox="0 0 34 34" style="width:74px;height:74px"><path d="M2 17 C 8 8 26 8 32 17 C 26 26 8 26 2 17 Z"/><circle cx="17" cy="17" r="5"/></svg></span>
+        <span class="pt" style="font-size:56px">내 눈 확인</span><span class="ps" style="font-size:30px;max-width:360px">나온 결과를 직접 확인한 상태</span></div>
+    </div>
+    </div>
+    <div class="dark" data-hero style="font-size:32px">1회로 끝나는 경우는 드물다 · <b>끝나지 않는 것 ≠ 실패</b>
+      <span class="dsub">루프를 도는 사람과 못 도는 사람의 차이 = 이후 팀 프로젝트의 차이</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">SESSION 03 · 2026-09-21</span></div>
+</section>
+
+<!-- ===== #5 · BP3 파트 1 디바이더 (A) ===== -->
+<section class="slide divider" aria-label="5. 파트 1 디바이더">
+  <svg class="wave" style="right:0;top:0;width:900px;height:1080px" viewBox="0 0 900 1080" fill="none">
+    <path d="M900 0 V1080 H560 C 700 880 590 690 700 520 C 800 365 760 160 900 0 Z" fill="var(--tint)"/>
+    <path d="M900 0 V1080 H700 C 815 900 720 700 815 540 C 880 430 860 180 900 60 Z" fill="var(--tint2)"/>
+  </svg>
+  <span class="dot" style="width:38px;height:38px;right:760px;top:180px;background:var(--tint2)"></span>
+  <span class="dot" style="width:16px;height:16px;right:720px;bottom:260px;background:var(--accent)"></span>
+  <div class="dwm">1</div>
+  <div style="margin-top:auto;margin-bottom:auto;position:relative;z-index:3">
+    <div class="drow">
+      <div class="dnum an" data-hero>01</div>
+      <div>
+        <div class="dtitle an">준비</div>
+        <p class="dline an">이 파트에서 얻는 것 = <b>준비 3건</b> 점검 완료 · 소요 5분</p>
+      </div>
+    </div>
+    <div class="dprev" style="margin-top:64px">
+      <div class="ph an">PART 1 구성</div>
+      <div class="pv an" style="padding:34px 4px"><span class="pn">1</span><span class="pvt" style="font-size:34px">준비 3 = 미니 PRD · <em>원자료</em> · 챗봇</span><span class="pvs">3카드 · 빈칸은 첫 5분</span></div>
+      <div class="pv an" style="padding:34px 4px"><span class="pn">2</span><span class="pvt" style="font-size:34px">원자료 = 준비물이 아니라 <em>검증 장치</em></span><span class="pvs">판정 기준 = AI 바깥</span></div>
+    </div>
+  </div>
+  <div class="tracker">
+    <span class="tp cur an">1 준비</span><span class="tp an">2 위임</span><span class="tp an">3 확인·재위임</span><span class="tp an">4 막힘 처방</span><span class="tp an">5 측정·마무리</span>
+  </div>
+</section>
+
+<!-- ===== #6 · BP8 준비 3건 (C) ===== -->
+<section class="slide" data-pname="준비" aria-label="6. 준비 3건">
+  <svg class="wave" style="right:0;bottom:0;width:560px;height:160px" viewBox="0 0 560 160" fill="none">
+    <path d="M560 160 H0 C 150 130 260 30 420 66 C 500 84 530 130 560 112 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 회차 3 · 준비</span><span class="hpage">06 <i>/ 23</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>준비 3 = 미니 PRD · <em>원자료</em> · 챗봇</h1>
+      <p class="sub">첫 5분 = 빈칸 채우는 구간 · 3건이 손에 있으면 <b>제작 구간 진입</b></p></div>
+    <div class="grow-1" style="display:flex;align-items:center">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:28px;width:100%">
+      <div class="gcard an" style="gap:18px;padding:34px 36px">
+        <span class="ic" style="width:96px;height:96px"><svg viewBox="0 0 34 34" style="width:44px;height:44px"><rect x="6" y="4" width="22" height="26" rx="3"/><polyline points="11,17 15,21 23,12"/></svg></span>
+        <h3>소재 카드 + 미니 PRD</h3>
+        <p style="font-size:30px;line-height:1.6">회차 2 산출물. 빈칸이 남았으면 <b>첫 5분</b>에 채운 뒤 시작.</p>
+        <p style="margin:auto 0 0;padding-top:18px;border-top:1px solid var(--line);font:500 21px/1.6 var(--fb);color:var(--mute)">5칸 = ①문제 ②as-is 실측 ③완성 기준 ④폐기 조건 ⑤개정 이력</p>
+      </div>
+      <div class="gcard an on" style="gap:18px;padding:34px 36px">
+        <span class="ic" style="width:96px;height:96px"><svg viewBox="0 0 34 34" style="width:44px;height:44px"><rect x="6" y="4" width="22" height="26" rx="3"/><line x1="11" y1="12" x2="23" y2="12"/><line x1="11" y1="18" x2="23" y2="18"/><line x1="11" y1="24" x2="18" y2="24"/></svg></span>
+        <h3>원자료 1건</h3>
+        <p style="font-size:30px;line-height:1.6">강의자료·공고 원문·표 등 <b>결과를 대조할 내 자료</b>.</p>
+        <p style="margin:auto 0 0;padding-top:18px;border-top:1px solid var(--line);font:500 21px/1.6 var(--fb);color:var(--mute)">위임문에 붙여넣을 원문 1건 · 없으면 판정 불가</p>
+      </div>
+      <div class="gcard an" style="gap:18px;padding:34px 36px">
+        <span class="ic" style="width:96px;height:96px"><svg viewBox="0 0 34 34" style="width:44px;height:44px"><rect x="4" y="6" width="26" height="18" rx="4"/><polyline points="11,24 11,30 18,24"/></svg></span>
+        <h3>챗봇 로그인</h3>
+        <p style="font-size:30px;line-height:1.6">도구 지정 없음. 무료 한도에 걸리면 <b>다른 챗봇으로 갈아타기</b>도 오늘 범위.</p>
+        <p style="margin:auto 0 0;padding-top:18px;border-top:1px solid var(--line);font:500 21px/1.6 var(--fb);color:var(--mute)">로그인 실패 = 사전 설치 가이드 해당 절</p>
+      </div>
+      </div>
+    </div>
+    <div class="dark" data-hero>원자료 = 준비물이 아니라 <b>검증 장치</b> · 판정 기준은 항상 AI 바깥의 내 자료
+      <span class="dsub">원자료가 없으면 오늘 만든 결과가 맞는지 판정할 방법 없음</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 1 · 준비</span></div>
+</section>
+
+<!-- ===== #7 · BP3 파트 2 디바이더 (A) ===== -->
+<section class="slide divider" aria-label="7. 파트 2 디바이더">
+  <svg class="wave" style="right:0;top:0;width:900px;height:1080px" viewBox="0 0 900 1080" fill="none">
+    <path d="M900 0 V1080 H560 C 700 880 590 690 700 520 C 800 365 760 160 900 0 Z" fill="var(--tint)"/>
+    <path d="M900 0 V1080 H700 C 815 900 720 700 815 540 C 880 430 860 180 900 60 Z" fill="var(--tint2)"/>
+  </svg>
+  <span class="dot" style="width:38px;height:38px;right:760px;top:180px;background:var(--tint2)"></span>
+  <span class="dot" style="width:16px;height:16px;right:720px;bottom:260px;background:var(--accent)"></span>
+  <div class="dwm">2</div>
+  <div style="margin-top:auto;margin-bottom:auto;position:relative;z-index:3">
+    <div class="drow">
+      <div class="dnum an" data-hero>02</div>
+      <div>
+        <div class="dtitle an">위임</div>
+        <p class="dline an">이 파트에서 얻는 것 = <b>위임문 기본형</b> 1개</p>
+      </div>
+    </div>
+    <div class="dprev">
+      <div class="ph an">PART 2 구성</div>
+      <div class="pv an"><span class="pn">1</span><span class="pvt">위임문 = 미니 PRD <em>1칸 + 3칸</em></span><span class="pvs">2단 도식</span></div>
+      <div class="pv an"><span class="pn">2</span><span class="pvt">완성 기준 한 문장을 <em>AI와 내가 공유</em></span><span class="pvs">A·B 비교</span></div>
+    </div>
+  </div>
+  <div class="tracker">
+    <span class="tp an">1 준비</span><span class="tp cur an">2 위임</span><span class="tp an">3 확인·재위임</span><span class="tp an">4 막힘 처방</span><span class="tp an">5 측정·마무리</span>
+  </div>
+</section>
+
+<!-- ===== #8 · BP5 위임문 기본형 (B) ===== -->
+<section class="slide" data-pname="위임" aria-label="8. 위임문 기본형">
+  <svg class="wave" style="left:0;bottom:0;width:560px;height:165px" viewBox="0 0 560 165" fill="none">
+    <path d="M0 165 H560 C 410 134 300 30 140 68 C 60 86 30 132 0 115 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 회차 3 · 위임</span><span class="hpage">08 <i>/ 23</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>위임문 = 미니 PRD <em>1칸 + 3칸</em> · 백지에서 짓지 않는다</h1>
+      <p class="sub">미니 PRD = 회차 2에서 쓴 5칸 양식 · 오늘 쓰는 칸 = <b>①문제</b>와 <b>③완성 기준</b></p></div>
+    <div class="grow-1" style="display:grid;grid-template-columns:.9fr 80px 1.1fr;gap:24px;align-items:stretch">
+      <div class="split rows an">
+        <div style="display:flex;flex-direction:column;justify-content:center;gap:6px"><span class="spl">미니 PRD ① 문제</span>
+          <div class="spt">반복 작업과 <em>걸림돌</em> 한 줄</div>
+          <p class="sps">위임문 <b>1문장째</b>로 그대로 이동</p>
+          <p class="sps" style="font-family:var(--fm);font-size:22px;color:var(--mute);margin-top:12px">"강의노트를 훑을 때마다 양이 많다"</p></div>
+        <div style="display:flex;flex-direction:column;justify-content:center;gap:6px"><span class="spl">미니 PRD ③ 완성 기준</span>
+          <div class="spt">T/F 판정 조건 <em>1개</em></div>
+          <p class="sps">위임문 <b>2문장째</b>로 그대로 이동</p>
+          <p class="sps" style="font-family:var(--fm);font-size:22px;color:var(--mute);margin-top:12px">"요약 1페이지 + 퀴즈 10문항"</p></div>
+      </div>
+      <svg class="plink an" width="80" height="26" style="margin-top:0;align-self:center;justify-self:center">
+        <line class="draw" x1="4" y1="13" x2="66" y2="13"/><polyline class="draw" points="58,5 68,13 58,21"/></svg>
+      <div class="dark" data-hero style="display:flex;flex-direction:column;justify-content:center;gap:28px;padding:40px 44px">
+        <span style="font:600 16px var(--fm);letter-spacing:.12em">위임문 기본형</span>
+        <p style="margin:0;font:500 34px/1.8 var(--fm);color:#f4f2f1;word-break:keep-all">"나는 ___할 때마다 ___가 문제다.<br/>___가 되면 완성이다.<br/>이걸 만들어줘."</p>
+        <div style="border-top:1px solid #35322f;padding-top:20px;font:400 25px/1.7 var(--fb);color:#b9b4b0">[기준] = 형식 · 개수 · 순서 <b>번호 목록</b><br/>마지막 = <b>원자료</b> 붙여넣기</div>
+      </div>
+    </div>
+    <div class="an" style="border-top:1.5px solid var(--line);padding-top:22px">
+      <div style="font:700 32px/1.4 var(--fd);letter-spacing:-.02em;word-break:keep-all">오늘 과제 = 기본형 <b style="color:var(--accent)">그대로 사용</b> · 새 위임문 작성 <b style="color:var(--accent)">아님</b></div>
+      <p style="margin:8px 0 0;font:400 var(--fs-sub)/1.5 var(--fb);color:var(--sub)">백지에서 문장을 짓는 대신 미니 PRD 두 칸을 옮겨 적는 방식</p>
+    </div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 2 · 위임</span></div>
+</section>
+
+<!-- ===== #9 · BP6 완성 기준 공유 (B) ===== -->
+<section class="slide" data-pname="위임" aria-label="9. 완성 기준 공유">
+  <svg class="wave" style="right:0;bottom:0;width:560px;height:160px" viewBox="0 0 560 160" fill="none">
+    <path d="M560 160 H0 C 150 130 260 30 420 66 C 500 84 530 130 560 112 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 회차 3 · 위임</span><span class="hpage">09 <i>/ 23</i></span></div>
+  <div class="sbody judge" data-judge>
+    <div class="htitle an"><h1>완성 기준 한 문장을 <em>AI와 내가 공유</em>한다</h1>
+      <p class="sub">같은 소재 · 같은 도구 · <b>완성 기준 문장 1개</b>의 유무만 차이 · 판정 = 출력이 기준에 닿는가</p></div>
+    <div class="ab grow-1">
+      <div class="abcard an" data-side="a">
+        <div class="abh"><span class="ic" style="width:56px;height:56px"><svg viewBox="0 0 34 34"><circle cx="15" cy="15" r="10"/><line x1="23" y1="23" x2="30" y2="30"/></svg></span>
+          <span class="abl">방식 A</span><h3>완성 기준 없는 위임</h3></div>
+        <div class="abtag">입력</div>
+        <div class="abq">"나는 강의노트를 훑을 때마다 양이 많아 정리가 안 되는 게 문제다. 이걸 만들어줘."</div>
+        <div class="abr bad"><span class="rl2">결과</span><p>AI가 무엇을 완성으로 볼지 모르는 상태. 출력이 <b>매번 빗나감</b>.</p></div>
+      </div>
+      <div class="abcard an" data-side="b">
+        <div class="abh"><span class="ic" style="width:56px;height:56px"><svg viewBox="0 0 34 34"><rect x="6" y="4" width="22" height="26" rx="3"/><polyline points="11,16 15,20 23,11"/><line x1="11" y1="25" x2="23" y2="25"/></svg></span>
+          <span class="abl">방식 B</span><h3>완성 기준 T/F 1개 명시</h3></div>
+        <div class="abdef an">완성 기준 = 미니 PRD ③칸. 됐다·안 됐다로 갈리는 조건 1개.</div>
+        <div class="abtag">입력</div>
+        <div class="abq">"…정리가 안 되는 게 문제다.<br/>챕터 요약 1페이지와 퀴즈 10문항이 나오면 완성이다. 이걸 만들어줘."</div>
+        <div class="abr"><span class="rl2">결과</span><p>AI = 그 기준으로 조립 · 나 = <b>같은 기준으로 판정</b>.</p></div>
+      </div>
+    </div>
+    <div class="uibar an" data-ui><span class="uihint">비교 보기</span>
+      <button class="uib" data-ab="a">방식 A</button>
+      <button class="uib" data-ab="b">방식 B</button>
+      <button class="uib" data-ab="judge">판정</button></div>
+    <div class="dark" data-hero>위임과 검증이 <b>같은 문장을 공유</b>
+      <span class="dsub">회차 2에서 미니 PRD를 먼저 쓴 이유 · 기준 문장이 없으면 판정할 자리도 없음</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 2 · 위임</span></div>
+</section>
+
+<!-- ===== #10 · BP3 파트 3 디바이더 (A) ===== -->
+<section class="slide divider" aria-label="10. 파트 3 디바이더">
+  <svg class="wave" style="right:0;top:0;width:900px;height:1080px" viewBox="0 0 900 1080" fill="none">
+    <path d="M900 0 V1080 H560 C 700 880 590 690 700 520 C 800 365 760 160 900 0 Z" fill="var(--tint)"/>
+    <path d="M900 0 V1080 H700 C 815 900 720 700 815 540 C 880 430 860 180 900 60 Z" fill="var(--tint2)"/>
+  </svg>
+  <span class="dot" style="width:38px;height:38px;right:760px;top:180px;background:var(--tint2)"></span>
+  <span class="dot" style="width:16px;height:16px;right:720px;bottom:260px;background:var(--accent)"></span>
+  <div class="dwm">3</div>
+  <div style="margin-top:auto;margin-bottom:auto;position:relative;z-index:3">
+    <div class="drow">
+      <div class="dnum an" data-hero>03</div>
+      <div>
+        <div class="dtitle an">확인·재위임</div>
+        <p class="dline an">이 파트에서 얻는 것 = <b>환각 검출</b>과 <b>지목 수정</b> 1사이클</p>
+      </div>
+    </div>
+    <div class="dprev">
+      <div class="ph an">PART 3 구성</div>
+      <div class="pv an"><span class="pn">1</span><span class="pvt">확인 = <em>원자료 대조</em> · 없는 문장이 환각</span><span class="pvs">3단 도식</span></div>
+      <div class="pv an"><span class="pn">2</span><span class="pvt">재위임 = <em>어긋난 곳만 지목</em></span><span class="pvs">예문 1건</span></div>
+      <div class="pv an"><span class="pn">3</span><span class="pvt">위임 → 확인 → 재위임 = <em>중심 동작</em></span><span class="pvs">순환 도식</span></div>
+    </div>
+  </div>
+  <div class="tracker">
+    <span class="tp an">1 준비</span><span class="tp an">2 위임</span><span class="tp cur an">3 확인·재위임</span><span class="tp an">4 막힘 처방</span><span class="tp an">5 측정·마무리</span>
+  </div>
+</section>
+
+<!-- ===== #11 · BP5 원자료 대조 (B) ===== -->
+<section class="slide" data-pname="확인·재위임" aria-label="11. 원자료 대조">
+  <svg class="wave" style="right:0;top:0;width:540px;height:170px" viewBox="0 0 540 170" fill="none">
+    <path d="M540 0 H0 C 180 30 270 140 540 96 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 회차 3 · 확인·재위임</span><span class="hpage">11 <i>/ 23</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>확인 = <em>원자료 대조</em> · 없는 문장이 환각</h1>
+      <p class="sub">원자료 = 결과를 맞춰볼 내 원본 자료 1건 · 그럴듯한지 훑는 것은 <b>대조 아님</b></p></div>
+    <div class="grow-1" style="display:flex;flex-direction:column;justify-content:center;gap:34px">
+      <div class="pipe" style="padding-top:0">
+        <div class="pnode an"><span class="pl">STEP 1</span><span class="ic"><svg viewBox="0 0 34 34"><rect x="6" y="4" width="22" height="26" rx="3"/><line x1="11" y1="12" x2="23" y2="12"/><line x1="11" y1="18" x2="23" y2="18"/><line x1="11" y1="24" x2="18" y2="24"/></svg></span>
+          <span class="pt">결과 한 줄 선택</span><span class="ps">결과물에서 확인할 문장 <b>하나</b>를 고름</span></div>
+        <svg class="plink" width="80" height="26"><line class="draw" x1="4" y1="13" x2="66" y2="13"/><polyline class="draw" points="58,5 68,13 58,21"/></svg>
+        <div class="pnode an"><span class="pl">STEP 2</span><span class="ic"><svg viewBox="0 0 34 34"><circle cx="15" cy="15" r="10"/><line x1="23" y1="23" x2="30" y2="30"/></svg></span>
+          <span class="pt">원자료에서 찾기</span><span class="ps">같은 내용이 원자료에 있는지 한 건씩 대조</span></div>
+        <svg class="plink" width="80" height="26"><line class="draw" x1="4" y1="13" x2="66" y2="13"/><polyline class="draw" points="58,5 68,13 58,21"/></svg>
+        <div class="pnode res an" data-hero><span class="pl">RESULT</span><span class="ic ic--solid"><svg viewBox="0 0 34 34"><path d="M17 5 L30 28 H4 Z"/><line x1="17" y1="14" x2="17" y2="20"/><line x1="17" y1="23.5" x2="17" y2="24"/></svg></span>
+          <span class="pt">없으면 환각</span><span class="ps">원자료에 없는 문장 = 환각 · 재위임의 재료</span></div>
+      </div>
+      <div class="pts">
+        <div class="ptr an"><span class="pnum" style="width:auto;padding:0 20px;font:700 18px var(--fb)">근거</span>
+          <span><h4>언어모델 = "맞는 말"이 아니라 <em>"그럴듯한 다음 말"</em> 생성</h4>
+          <p>환각 = 실수가 아니라 구조의 귀결 · 회차 1에서 다룬 내용</p></span></div>
+      </div>
+    </div>
+    <div class="band an">AI에 "이거 맞아?" = <span>같은 방식의 출력</span> · 판정 기준 = <span>원자료</span>
+      <span class="band-sub">AI 바깥의 내 자료가 유일한 판정 근거 · 원자료 없이는 확인 단계가 성립하지 않음</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 3 · 확인·재위임</span></div>
+</section>
+
+<!-- ===== #12 · BP7 지목 재위임 (B) ===== -->
+<section class="slide" data-pname="확인·재위임" aria-label="12. 지목 재위임">
+  <svg class="wave" style="left:0;bottom:0;width:520px;height:155px" viewBox="0 0 520 155" fill="none">
+    <path d="M0 155 H520 C 380 128 280 28 130 64 C 54 82 26 126 0 108 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 회차 3 · 확인·재위임</span><span class="hpage">12 <i>/ 23</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>재위임 = <em>어긋난 곳만 지목</em> · 수정본은 다시 대조</h1>
+      <p class="sub">예문 = 퀴즈 10문항 중 <b>7번 1건</b>만 지목 · 나머지 문항은 유지 명시</p></div>
+    <div class="grow-1" style="display:grid;grid-template-columns:1.18fr .82fr;gap:48px;align-items:stretch">
+      <div class="dark" data-hero style="display:flex;flex-direction:column;justify-content:center;gap:22px;padding:36px 42px">
+        <span style="font:600 16px var(--fm);letter-spacing:.12em">재위임 예문</span>
+        <p style="margin:0;font:500 31px/1.75 var(--fm);color:#f4f2f1;word-break:keep-all">퀴즈 7번은 노트에 없는 내용이다.<br/>노트에 있는 내용만으로 다시 만들어줘.<br/>나머지 문항은 그대로 둔다.</p>
+        <div style="border-top:1px solid #35322f;padding-top:18px;font:400 23px/1.6 var(--fb);color:#b9b4b0">지목 대상 = <b>어긋난 1건</b> · 유지 범위 = <b>나머지 전부</b></div>
+      </div>
+      <div class="pts fill">
+        <div class="ptr an"><span class="pnum">1</span><span><h4>전체 재생성 <em>아님</em></h4>
+          <p>어긋난 지점만 짚어야 그 지점이 고쳐질 확률이 올라감.</p></span></div>
+        <div class="ptr an"><span class="pnum">2</span><span><h4>출력은 <em>매번 달라질 수 있음</em></h4>
+          <p>수정본 <b>전체</b>를 다시 원자료와 대조. 고친 문항만 보는 것으로는 부족.</p></span></div>
+      </div>
+    </div>
+    <div class="an" style="border-top:1.5px solid var(--line);padding-top:22px">
+      <div style="font:700 32px/1.4 var(--fd);letter-spacing:-.02em;word-break:keep-all">루프 종료 조건 = <b style="color:var(--accent)">수정본 재대조까지</b></div>
+      <p style="margin:8px 0 0;font:400 var(--fs-sub)/1.5 var(--fb);color:var(--sub)">재위임 직후 대조를 건너뛰면 확인 단계가 <b style="color:var(--text)">없는 것과 같음</b></p>
+    </div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 3 · 확인·재위임</span></div>
+</section>
+
+<!-- ===== #13 · BP5 루프 순환 1회 (A) ===== -->
+<section class="slide" data-pname="확인·재위임" aria-label="13. 루프 순환">
+  <svg class="wave" style="right:0;bottom:0;width:560px;height:160px" viewBox="0 0 560 160" fill="none">
+    <path d="M560 160 H0 C 150 130 260 30 420 66 C 500 84 530 130 560 112 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 회차 3 · 확인·재위임</span><span class="hpage">13 <i>/ 23</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>위임 → 확인 → 재위임 = <em>학기 내내 쓰는 중심 동작</em></h1>
+      <p class="sub">세 단계가 순환 1회 · 오늘 이 순환을 <b>내 소재로 1회</b> 돌리는 것이 판정 항목</p></div>
+    <div class="ring-wrap an grow-1" data-hero style="width:100%;padding:30px 36px">
+      <svg viewBox="0 0 1500 462" style="width:100%;max-width:1440px;height:auto" fill="none">
+        <text x="210" y="42" text-anchor="middle" style="font:600 18px var(--fm);letter-spacing:.12em;fill:var(--mute)">STEP 1</text>
+        <text x="750" y="42" text-anchor="middle" style="font:600 18px var(--fm);letter-spacing:.12em;fill:var(--mute)">STEP 2</text>
+        <text x="1290" y="42" text-anchor="middle" style="font:600 18px var(--fm);letter-spacing:.12em;fill:var(--mute)">STEP 3</text>
+
+        <circle cx="210" cy="140" r="80" fill="var(--tint)" stroke="var(--tint-line)" stroke-width="2"/>
+        <circle cx="750" cy="140" r="80" fill="var(--tint)" stroke="var(--tint-line)" stroke-width="2"/>
+        <circle cx="1290" cy="140" r="80" fill="var(--tint)" stroke="var(--tint-line)" stroke-width="2"/>
+
+        <svg x="184" y="114" width="52" height="52" viewBox="0 0 34 34" style="stroke:var(--accent);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round">
+          <path d="M6 28 l3 -8 L23 6 l5 5 L14 25 Z"/><line x1="20" y1="9" x2="25" y2="14"/></svg>
+        <svg x="724" y="114" width="52" height="52" viewBox="0 0 34 34" style="stroke:var(--accent);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round">
+          <circle cx="15" cy="15" r="10"/><line x1="23" y1="23" x2="30" y2="30"/></svg>
+        <svg x="1264" y="114" width="52" height="52" viewBox="0 0 34 34" style="stroke:var(--accent);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round">
+          <path d="M29 17 a12 12 0 1 1 -5 -9.7"/><polyline points="29,4 29,12 21,12"/></svg>
+
+        <line class="draw" x1="306" y1="140" x2="654" y2="140" stroke="var(--mute)" stroke-width="2"/>
+        <polyline class="draw" points="646,132 658,140 646,148" stroke="var(--mute)" stroke-width="2"/>
+        <line class="draw" x1="846" y1="140" x2="1194" y2="140" stroke="var(--mute)" stroke-width="2"/>
+        <polyline class="draw" points="1186,132 1198,140 1186,148" stroke="var(--mute)" stroke-width="2"/>
+
+        <text x="210" y="274" text-anchor="middle" style="font:700 36px var(--fd);letter-spacing:-.02em;fill:var(--text)">위임</text>
+        <text x="750" y="274" text-anchor="middle" style="font:700 36px var(--fd);letter-spacing:-.02em;fill:var(--text)">확인</text>
+        <text x="1290" y="274" text-anchor="middle" style="font:700 36px var(--fd);letter-spacing:-.02em;fill:var(--accent)">재위임</text>
+        <text x="210" y="310" text-anchor="middle" style="font:400 22px var(--fb);fill:var(--sub)">PRD 1·3칸으로 시킨다</text>
+        <text x="750" y="310" text-anchor="middle" style="font:400 22px var(--fb);fill:var(--sub)">원자료와 대조한다</text>
+        <text x="1290" y="310" text-anchor="middle" style="font:400 22px var(--fb);fill:var(--sub)">어긋난 곳을 지목한다</text>
+
+        <path class="draw" d="M1370 140 C 1444 140 1462 194 1462 248 C 1462 330 1400 380 1300 380 L 200 380 C 100 380 38 330 38 248 C 38 194 56 140 130 140" stroke="var(--accent)" stroke-width="2.5"/>
+        <polyline class="draw" points="121,131 131,140 121,149" stroke="var(--accent)" stroke-width="2.5"/>
+        <text x="750" y="432" text-anchor="middle" style="font:700 26px var(--fb);fill:var(--accent)">다시 위임</text>
+      </svg>
+    </div>
+    <div class="band an">여기까지 = <span>순환 1회 완료</span> · 오늘 이 순환을 <span>내 소재로</span> 돌린다
+      <span class="band-sub">회차 4 이후의 팀 작업도 같은 순환 · 도구가 바뀌어도 이 세 단계는 유지</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 3 · 확인·재위임</span></div>
+</section>
+
+<!-- ===== #14 · BP3 파트 4 디바이더 (A) ===== -->
+<section class="slide divider" data-pname="막힘 처방" aria-label="14. 파트 4 디바이더">
+  <svg class="wave" style="right:0;top:0;width:900px;height:1080px" viewBox="0 0 900 1080" fill="none">
+    <path d="M900 0 V1080 H560 C 700 880 590 690 700 520 C 800 365 760 160 900 0 Z" fill="var(--tint)"/>
+    <path d="M900 0 V1080 H700 C 815 900 720 700 815 540 C 880 430 860 180 900 60 Z" fill="var(--tint2)"/>
+  </svg>
+  <span class="dot" style="width:38px;height:38px;right:760px;top:180px;background:var(--tint2)"></span>
+  <span class="dot" style="width:16px;height:16px;right:720px;bottom:260px;background:var(--accent)"></span>
+  <div class="dwm">4</div>
+  <div style="margin-top:auto;margin-bottom:auto;position:relative;z-index:3">
+    <div class="drow">
+      <div class="dnum an" data-hero>04</div>
+      <div>
+        <div class="dtitle an">막힘 처방</div>
+        <p class="dline an">이 파트에서 얻는 것 = 막힘 <b>6유형</b>의 자가 처방과 <b>15분 규칙</b></p>
+      </div>
+    </div>
+    <div class="dprev">
+      <div class="ph an">PART 4 구성</div>
+      <div class="pv an"><span class="pn">1</span><span class="pvt">막힘 6유형 = 각각 <em>원리 있는 처방</em></span><span class="pvs">면 분할 6행</span></div>
+      <div class="pv an"><span class="pn">2</span><span class="pvt">같은 지점 <em>15분</em> 막히면 = 소재를 절반으로</span><span class="pvs">대비 2안</span></div>
+      <div class="pv an"><span class="pn">3</span><span class="pvt">축소는 폐기가 아니라 <em>v2 개정</em></span><span class="pvs">선언</span></div>
+    </div>
+  </div>
+  <div class="tracker">
+    <span class="tp an">1 준비</span><span class="tp an">2 위임</span><span class="tp an">3 확인·재위임</span><span class="tp cur an">4 막힘 처방</span><span class="tp an">5 측정·마무리</span>
+  </div>
+</section>
+
+<!-- ===== #15 · BP8 막힘 6유형 (C) ===== -->
+<section class="slide" data-pname="막힘 처방" aria-label="15. 막힘 6유형">
+  <svg class="wave" style="right:0;top:0;width:520px;height:160px" viewBox="0 0 520 160" fill="none">
+    <path d="M520 0 H0 C 170 30 260 132 520 90 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 회차 3 · 막힘 처방</span><span class="hpage">15 <i>/ 23</i></span></div>
+  <div class="sbody">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:48px">
+      <div class="htitle an"><h1>막힘 6유형 = 각각 <em>원리 있는 처방</em></h1>
+        <p class="sub">당일 진단 = 처방표 · 여기서 다루는 것 = <b>처방이 작동하는 이유</b></p></div>
+      <div class="uibar an" data-ui style="flex:0 0 auto"><span class="uihint">유형 공개</span>
+        <button class="uib" data-rvnext>다음 유형</button>
+        <button class="uib" data-rvall>전체 보기</button></div>
+    </div>
+    <div class="grow-1" style="display:flex;align-items:center">
+      <div class="split rows tight an" style="width:100%">
+        <div class="rv" style="display:grid;grid-template-columns:420px 1fr;gap:34px;align-items:center;padding:12px 30px">
+          <div><span class="spl" style="margin-bottom:5px">막힘 01</span>
+            <div class="spt" style="font-size:28px">형식이 안 나옴</div></div>
+          <div><div class="spt" style="font-size:28px">처방 = 결과 견본 1개 붙여넣기</div>
+            <p class="sps">견본이 패턴을 고정 · 말 설명은 해석 여지가 넓음</p></div>
+        </div>
+        <div class="rv" style="display:grid;grid-template-columns:420px 1fr;gap:34px;align-items:center;padding:12px 30px">
+          <div><span class="spl" style="margin-bottom:5px">막힘 02</span>
+            <div class="spt" style="font-size:28px">돌릴 때마다 다르게 나옴</div></div>
+          <div><div class="spt" style="font-size:28px">처방 = 기준을 번호 목록으로 고정</div>
+            <p class="sps">형식·개수·순서를 번호로 박으면 해석 여지가 줄어듦</p></div>
+        </div>
+        <div class="rv" style="display:grid;grid-template-columns:420px 1fr;gap:34px;align-items:center;padding:12px 30px">
+          <div><span class="spl" style="margin-bottom:5px">막힘 03</span>
+            <div class="spt" style="font-size:28px">앞 내용을 잊음</div></div>
+          <div><div class="spt" style="font-size:28px">처방 = 새 대화 + 미니 PRD 요약 재투입</div>
+            <p class="sps">챗봇이 기억하는 범위(컨텍스트 윈도)에 한계 · 초반 지시가 밀림</p></div>
+        </div>
+        <div class="rv" style="display:grid;grid-template-columns:420px 1fr;gap:34px;align-items:center;padding:12px 30px">
+          <div><span class="spl" style="margin-bottom:5px">막힘 04</span>
+            <div class="spt" style="font-size:28px">무료 한도에 걸림</div></div>
+          <div><div class="spt" style="font-size:28px">처방 = 다른 챗봇에 같은 위임문</div>
+            <p class="sps">도구는 학기 중에도 바뀜 · 위임문은 그대로 옮겨 붙음</p></div>
+        </div>
+        <div class="rv" style="display:grid;grid-template-columns:420px 1fr;gap:34px;align-items:center;padding:12px 30px">
+          <div><span class="spl" style="margin-bottom:5px">막힘 05</span>
+            <div class="spt" style="font-size:28px">뭘 시킬지 막막함</div></div>
+          <div><div class="spt" style="font-size:28px">처방 = 미니 PRD ①·③칸 그대로</div>
+            <p class="sps">오늘 과제 = 새 위임문 짓기가 아니라 기본형 재사용</p></div>
+        </div>
+        <div class="rv" style="display:grid;grid-template-columns:420px 1fr;gap:34px;align-items:center;padding:12px 30px">
+          <div><span class="spl" style="margin-bottom:5px">막힘 06</span>
+            <div class="spt" style="font-size:28px">맞는지 모르겠음</div></div>
+          <div><div class="spt" style="font-size:28px">처방 = 원자료 대조</div>
+            <p class="sps">판정 기준은 AI 바깥의 내 자료 · 파트 3 절차 그대로</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="dark" data-hero>막힘 01~05 = <b>위임문을 고치는 처방</b> · 06 = <b>원자료 대조</b>
+      <span class="dsub">같은 지점 15분 초과 = 처방이 아니라 범위 축소 · 당일 진단표 = 스프린트 운영 가이드</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 4 · 막힘 처방</span></div>
+</section>
+
+<!-- ===== #16 · BP6 15분 규칙 (B) ===== -->
+<section class="slide" data-pname="막힘 처방" aria-label="16. 15분 규칙">
+  <svg class="wave" style="left:0;bottom:0;width:520px;height:155px" viewBox="0 0 520 155" fill="none">
+    <path d="M0 155 H520 C 380 128 280 28 130 64 C 54 82 26 126 0 108 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 회차 3 · 막힘 처방</span><span class="hpage">16 <i>/ 23</i></span></div>
+  <div class="sbody judge" data-judge>
+    <div class="htitle an"><h1>같은 지점 <em>15분</em> 막히면 = 소재를 <em>절반</em>으로</h1>
+      <p class="sub">15분 규칙 = 한 지점에서 15분 초과 시 미니 PRD ③완성 기준을 <b>절반 크기로 다시 쓰는</b> 고정 규칙</p></div>
+    <div class="ab grow-1 roomy">
+      <div class="abcard an" data-side="a" style="justify-content:space-between">
+        <div class="abh"><span class="ic" style="width:56px;height:56px"><svg viewBox="0 0 34 34"><rect x="6" y="4" width="22" height="26" rx="3"/><line x1="11" y1="12" x2="23" y2="12"/><line x1="11" y1="18" x2="23" y2="18"/><line x1="11" y1="24" x2="18" y2="24"/></svg></span>
+          <span class="abl">선택 A</span><h3>큰 소재 고수</h3></div>
+        <div class="abtag">완성 기준 v1</div>
+        <div class="abq" style="flex:0 0 auto">강의노트 전체<br/>요약 1페이지 + 퀴즈 10문항</div>
+        <p>15분이 지나도 같은 지점 · 남은 시간은 같은 소재를 계속 붙잡는 데 소진</p>
+        <div class="abr bad"><span class="rl2">결과</span><p>60분 안에 <b>0회</b>. 손에 남는 것 = 미완성 대화.</p></div>
+      </div>
+      <div class="abcard an" data-side="b" style="justify-content:space-between">
+        <div class="abh"><span class="ic" style="width:56px;height:56px"><svg viewBox="0 0 34 34"><rect x="6" y="4" width="22" height="26" rx="3"/><polyline points="11,17 15,21 23,12"/></svg></span>
+          <span class="abl">선택 B</span><h3>완성 기준 절반으로</h3></div>
+        <div class="abtag">완성 기준 v2</div>
+        <div class="abq" style="flex:0 0 auto">강의노트 1개 챕터<br/>요약만</div>
+        <p>미니 PRD ③칸을 절반 크기로 다시 씀 · 줄인 내용은 ⑤ 개정 이력으로</p>
+        <div class="abr"><span class="rl2">결과</span><p><b>1회 돌아감</b>. 범위는 다음 주에 되돌릴 수 있음.</p></div>
+      </div>
+    </div>
+    <div class="uibar an" data-ui><span class="uihint">대비 보기</span>
+      <button class="uib" data-ab="a">선택 A</button>
+      <button class="uib" data-ab="b">선택 B</button>
+      <button class="uib" data-ab="judge">판정</button></div>
+    <div class="dark" data-hero>오늘의 판정 = 1회 돌아감 · <b>0회가 가장 나쁜 결과</b>
+      <span class="dsub">절반 소재는 다음 주에 범위를 되돌릴 수 있음 · 0회는 되돌릴 것 자체가 없음</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 4 · 막힘 처방</span></div>
+</section>
+
+<!-- ===== #17 · BP9 v2 개정 (A) ===== -->
+<section class="slide" data-pname="막힘 처방" aria-label="17. v2 개정">
+  <svg class="wave" style="right:0;bottom:0;width:560px;height:160px" viewBox="0 0 560 160" fill="none">
+    <path d="M560 160 H0 C 150 130 260 30 420 66 C 500 84 530 130 560 112 Z" fill="var(--tint)"/>
+  </svg>
+  <span class="dot" style="width:24px;height:24px;left:140px;top:250px;background:var(--tint2)"></span>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 회차 3 · 막힘 처방</span><span class="hpage">17 <i>/ 23</i></span></div>
+  <div class="sbody">
+    <div class="grow-1 decl" data-hero>
+      <p class="dtxt" style="margin:0;font-size:84px"><span class="an">축소는 </span><span class="an">폐기가 아니라 </span><span class="an"><em>v2 개정</em></span></p>
+      <p class="dnote an" style="margin:0">줄인 내용 = 미니 PRD ⑤ 개정 이력에 <b>v2</b>로 기록 · 기입 항목 = 안 된 것 / 바꾼 것</p>
+      <div class="pts" style="width:1340px">
+        <div class="ptr an" style="padding:24px 2px"><span class="pnum">v1</span><span><h4 style="font-size:34px">v1로 끝난 미니 PRD</h4>
+          <p style="font-size:28px">개정 이력 칸이 공란인 상태. 위임을 한 번도 돌리지 않았다는 기록으로 남고, 다음 회차 발표에 가져갈 재료도 공란.</p></span></div>
+        <div class="ptr an" style="padding:24px 2px"><span class="pnum">v2</span><span><h4 style="font-size:34px">v2가 생긴 미니 PRD</h4>
+          <p style="font-size:28px"><b>위임 루프를 실제로 돌린 증거.</b> 안 된 지점과 바꾼 범위가 문장으로 남아 다음 소재의 크기를 잡을 때 근거가 됨.</p></span></div>
+        <div class="ptr an" style="padding:24px 2px"><span class="pnum">→</span><span><h4 style="font-size:34px">다음 회차 발표 「실패 1건」</h4>
+          <p style="font-size:28px">v2 기록이 그대로 발표 재료. 실패 슬롯이 발표 템플릿에 처음부터 들어 있는 이유가 여기에 있음.</p></span></div>
+      </div>
+    </div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 4 · 막힘 처방</span></div>
+</section>
+
+<!-- ===== #18 · BP3 파트 5 디바이더 (A) ===== -->
+<section class="slide divider" data-pname="측정·마무리" aria-label="18. 파트 5 디바이더">
+  <svg class="wave" style="right:0;top:0;width:900px;height:1080px" viewBox="0 0 900 1080" fill="none">
+    <path d="M900 0 V1080 H560 C 700 880 590 690 700 520 C 800 365 760 160 900 0 Z" fill="var(--tint)"/>
+    <path d="M900 0 V1080 H700 C 815 900 720 700 815 540 C 880 430 860 180 900 60 Z" fill="var(--tint2)"/>
+  </svg>
+  <span class="dot" style="width:38px;height:38px;right:760px;top:180px;background:var(--tint2)"></span>
+  <span class="dot" style="width:16px;height:16px;right:720px;bottom:260px;background:var(--accent)"></span>
+  <div class="dwm">5</div>
+  <div style="margin-top:auto;margin-bottom:auto;position:relative;z-index:3">
+    <div class="drow">
+      <div class="dnum an" data-hero>05</div>
+      <div>
+        <div class="dtitle an">측정·마무리</div>
+        <p class="dline an">이 파트에서 얻는 것 = <b>측정 방법 확정</b>과 오늘의 완료 판정 <b>2건</b></p>
+      </div>
+    </div>
+    <div class="dprev">
+      <div class="ph an">PART 5 구성</div>
+      <div class="pv an"><span class="pn">1</span><span class="pvt">측정 분기 1문 = <em>"스터디 전에도 하던 일인가"</em></span><span class="pvs">유형 2종</span></div>
+      <div class="pv an"><span class="pn">2</span><span class="pvt">양식 2종 = 채우면 <em>PRD ② 칸으로 이관</em></span><span class="pvs">기입 양식</span></div>
+      <div class="pv an"><span class="pn">3</span><span class="pvt">완료 2건 = <em>1회 돌아감 · 측정 확정</em></span><span class="pvs">체크 2항</span></div>
+    </div>
+  </div>
+  <div class="tracker">
+    <span class="tp an">1 준비</span><span class="tp an">2 위임</span><span class="tp an">3 확인·재위임</span><span class="tp an">4 막힘 처방</span><span class="tp cur an">5 측정·마무리</span>
+  </div>
+</section>
+
+<!-- ===== #19 · BP6 측정 분기 1문 (B) ===== -->
+<!-- 토글 배선 메모: data-side 값 = 표준 스크립트(applyJudge) 배선용일 뿐 승패 의미 없음.
+     기본 활성 = 절감형(data-side=b, 애매하면 절감형 규칙과 일치) · 두 카드 모두 inline opacity 고정 →
+     감쇠·은닉 0, 토글은 활성 카드만 이동. '판정' 버튼 없음(유형 선택 2버튼). -->
+<section class="slide" data-pname="측정·마무리" aria-label="19. 측정 분기 1문">
+  <svg class="wave" style="right:0;bottom:0;width:540px;height:160px" viewBox="0 0 540 160" fill="none">
+    <path d="M540 160 H0 C 145 130 250 30 405 66 C 483 84 512 130 540 112 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 회차 3 · 측정·마무리</span><span class="hpage">19 <i>/ 23</i></span></div>
+  <div class="sbody judge" data-judge>
+    <div class="htitle an"><h1>측정 분기 1문 = <em>"스터디 전에도 하던 일인가"</em></h1>
+      <p class="sub">돌아가게 만든 다음 구간 = 얼마나 달라졌는지 잴 방법 · 답 하나로 <b>측정 유형 2종</b>이 갈림</p></div>
+    <div class="ab grow-1 roomy an">
+      <div class="abcard" data-side="b" style="opacity:1!important">
+        <div class="abh"><span class="ic" style="width:56px;height:56px"><svg viewBox="0 0 34 34"><circle cx="17" cy="17" r="12"/><path d="M17 11 v6 l4 3"/></svg></span>
+          <span class="abl">예 · 절감형</span><h3>원래 하던 일을 더 짧게</h3></div>
+        <p>이전 소요 시간이 실제로 존재하는 유형. 전·후 시간이 그대로 비교값.</p>
+        <div class="abtag">분기 답 예시</div>
+        <div class="abq">"시험 전 강의노트 정리"<br/>스터디 전에도 하던 일 = 예</div>
+        <div class="abr"><span class="rl2">측정</span><p>전 <b>___분</b> → 후 <b>___분</b> · 같은 작업 1건 기준</p></div>
+      </div>
+      <div class="abcard" data-side="a" style="opacity:1!important">
+        <div class="abh"><span class="ic" style="width:56px;height:56px"><svg viewBox="0 0 34 34"><rect x="5" y="8" width="24" height="21" rx="3"/><line x1="5" y1="15" x2="29" y2="15"/><line x1="12" y1="4" x2="12" y2="11"/><line x1="22" y1="4" x2="22" y2="11"/></svg></span>
+          <span class="abl">아니오 · 신규 루틴형</span><h3>원래 안 하던 일을 새로</h3></div>
+        <p>전 시간이 애초에 없는 유형. 사용량 자체가 비교값.</p>
+        <div class="abtag">분기 답 예시</div>
+        <div class="abq">"주간 공고 브리핑"<br/>스터디 전에는 안 하던 일 = 아니오</div>
+        <div class="abr"><span class="rl2">측정</span><p>주 <b>___회</b> 사용 · 지속 <b>___주</b> · 횟수와 주수로</p></div>
+      </div>
+    </div>
+    <div class="uibar an" data-ui><span class="uihint">유형 선택</span>
+      <button class="uib" data-ab="b">예 · 절감형</button>
+      <button class="uib" data-ab="a">아니오 · 신규 루틴형</button></div>
+    <div class="dark" data-hero>존재하지 않는 전 값과 비교 강요 = <b>지어낸 수치</b>
+      <span class="dsub">분기가 필요한 이유는 이것 하나 · 애매하면(하다 말다 했음) 절감형 + 전 값 = 최근 1회 실측</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 5 · 측정·마무리</span></div>
+</section>
+
+<!-- ===== #20 · BP8 양식 2종 (C) ===== -->
+<section class="slide" data-pname="측정·마무리" aria-label="20. 측정 양식 2종">
+  <svg class="wave" style="left:0;bottom:0;width:520px;height:155px" viewBox="0 0 520 155" fill="none">
+    <path d="M0 155 H520 C 380 128 280 28 130 64 C 54 82 26 126 0 108 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 회차 3 · 측정·마무리</span><span class="hpage">20 <i>/ 23</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>양식 2종 = 채우면 <em>PRD ② 칸으로 이관</em></h1>
+      <p class="sub">판정한 유형의 양식 1종만 기입 · 빈칸 <b>___</b>은 이 자리에서 채움 · 소요 5분</p></div>
+    <div class="grow-1" style="display:flex;align-items:center">
+      <div class="split cols an" style="width:100%">
+        <div class="an" style="display:flex;flex-direction:column;gap:16px">
+          <span class="spl">유형 1 · 절감형</span>
+          <div class="spt">전·후 <em>시간</em></div>
+          <div style="font:500 25px/1.9 var(--fm);color:var(--sub);background:var(--bg);border:1px solid var(--line);border-radius:var(--r-sm);padding:22px 26px;word-break:keep-all">전 = ___분  (잰 날짜: ____)<br/>없으면 다음 회차 전 재는 날짜 = ____<br/>측정법 = ________________</div>
+          <p class="sps">측정법 = 언제 무엇을 재는지 한 문장. 예: <b>다음 과제 1건 시작~끝 스톱워치</b></p>
+        </div>
+        <div class="an" style="display:flex;flex-direction:column;gap:16px">
+          <span class="spl">유형 2 · 신규 루틴형</span>
+          <div class="spt">사용 <em>횟수</em> · 지속 주수</div>
+          <div style="font:500 25px/1.9 var(--fm);color:var(--sub);background:var(--bg);border:1px solid var(--line);border-radius:var(--r-sm);padding:22px 26px;word-break:keep-all">주 ___회 사용 목표<br/>지금까지 ___회<br/>기록처 = 주중 폼 (실사용 횟수 칸)</div>
+          <p class="sps">목표치는 주 단위로 기입. 실적은 <b>매주 자가보고</b>로 누적</p>
+        </div>
+      </div>
+    </div>
+    <div class="dark" data-hero>점검 질문 = <b>"그 수치 어디서 났어?"</b>에 한 문장으로 답이 되면 통과
+      <span class="dsub">답이 "감이다"면 측정법 칸을 다시 기입 · 채운 값은 미니 PRD ② 칸(as-is 실측 계획)으로 이관</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 5 · 측정·마무리</span></div>
+</section>
+
+<!-- ===== #21 · BP8 완료 판정 (C) ===== -->
+<section class="slide" data-pname="측정·마무리" aria-label="21. 완료 판정 2건">
+  <svg class="wave" style="right:0;top:0;width:520px;height:160px" viewBox="0 0 520 160" fill="none">
+    <path d="M520 0 H0 C 170 30 260 132 520 90 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 회차 3 · 측정·마무리</span><span class="hpage">21 <i>/ 23</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>완료 2건 = <em>1회 돌아감 · 측정 확정</em></h1>
+      <p class="sub">항목을 눌러 체크 · 두 칸 모두 체크된 상태 = <b>회차 3 완료</b></p></div>
+    <div class="grow-1" style="display:flex;flex-direction:column;justify-content:center;gap:24px">
+      <div class="split rows an">
+        <div class="chkr" data-ui style="padding:30px 32px"><span class="box"><svg viewBox="0 0 24 24"><polyline points="5,13 10,18 19,7"/></svg></span>
+          <span class="ct">내 소재 1회 돌아감</span><span class="cs">입력 → AI 처리 → 내 눈 확인</span></div>
+        <div class="chkr" data-ui style="padding:30px 32px"><span class="box"><svg viewBox="0 0 24 24"><polyline points="5,13 10,18 19,7"/></svg></span>
+          <span class="ct">측정 빈칸 확정</span><span class="cs">양식 2종 중 1종 기입 완료</span></div>
+      </div>
+      <div class="pts">
+        <div class="ptr an"><span class="pnum">1</span><span><h4>주중 폼 = <em>실사용 횟수</em> 1칸</h4>
+          <p>오늘 돌아간 것을 실제로 쓴 횟수만 기입. 0회면 <b>0회 그대로</b>.</p></span></div>
+        <div class="ptr an"><span class="pnum">2</span><span><h4>선택 = 「자동화 따라 치기」</h4>
+          <p>폼 → 시트 → 자동 메일까지 이어가는 별도 자료. <b>필수 아님</b>.</p></span></div>
+      </div>
+    </div>
+    <div class="dark" data-hero>미체크 항목 = <b>이번 주 안에 재현 가이드로 보완</b>
+      <span class="dsub">0회를 부풀리지 않는 것이 측정의 시작 · 두 값 모두 다음 회차 발표 템플릿이 그대로 가져감</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 5 · 측정·마무리</span></div>
+</section>
+
+<!-- ===== #22 · BP10 마침 (A) ===== -->
+<section class="slide" data-pname="측정·마무리" aria-label="22. 마침">
+  <svg class="wave" style="left:0;top:0;width:900px;height:230px" viewBox="0 0 900 230" fill="none">
+    <path d="M0 0 H900 C 720 40 620 200 400 170 C 240 148 160 62 0 96 Z" fill="var(--tint2)"/>
+    <path d="M0 0 H700 C 570 30 480 150 330 138 C 210 128 140 48 0 76 Z" fill="var(--tint)"/>
+  </svg>
+  <svg class="wave" style="right:0;bottom:0;width:900px;height:230px" viewBox="0 0 900 230" fill="none">
+    <path d="M900 230 H0 C 200 190 330 46 570 86 C 720 111 810 190 900 160 Z" fill="var(--tint)"/>
+  </svg>
+  <span class="dot" style="width:24px;height:24px;right:210px;top:190px;background:var(--accent)"></span>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 회차 3 · 측정·마무리</span><span class="hpage">22 <i>/ 23</i></span></div>
+  <div class="sbody">
+    <div class="grow-1 decl" data-hero>
+      <p class="dtxt" style="margin:0"><span class="an">오늘 돌아간 것을 </span><span class="an"><em>이번 주에 실제로 쓴다</em></span></p>
+      <p class="dnote an" style="margin:0">위임 → 확인 → 재위임 = <b>학기 내내 쓰는 중심 동작</b> · 오늘은 그 동작을 내 소재로 1회 실행</p>
+      <div class="chips an" style="justify-content:center;gap:16px">
+        <span class="chip" style="font-size:24px;padding:16px 32px">주중 폼 = 실사용 횟수 기입</span>
+        <span class="chip" style="font-size:24px;padding:16px 32px">PRD v2 보관 = 「실패 1건」 재료</span>
+        <span class="chip mute" style="font-size:24px;padding:16px 32px">다음 회차 = 워크스페이스 공지</span>
+      </div>
+      <p class="dnote an" style="margin:0;color:var(--mute)">오늘 미완료분 = 재현 가이드로 이번 주 안에 보완 · 소요 60분</p>
+    </div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 5 · 측정·마무리</span></div>
+</section>
+
+<!-- ===== #23 · BP10 자료 위치 (C) ===== -->
+<section class="slide" data-pname="측정·마무리" aria-label="23. 자료 위치">
+  <svg class="wave" style="right:0;bottom:0;width:520px;height:150px" viewBox="0 0 520 150" fill="none">
+    <path d="M520 150 H0 C 140 124 240 26 390 62 C 466 79 494 122 520 105 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 회차 3 · 측정·마무리</span><span class="hpage">23 <i>/ 23</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>자료 위치 = 전부 <em>워크스페이스 로드맵 탭</em></h1>
+      <p class="sub">배포 자료 3종과 예문 전문의 자리 · 오늘 자료의 <b>외부 인용 수치 0건</b></p></div>
+    <div class="grow-1" style="display:flex;align-items:center">
+      <table class="srct an" style="width:100%">
+        <thead><tr><th style="width:70px">NO</th><th style="width:470px">자료</th><th>받는 곳</th><th style="width:330px">용도</th></tr></thead>
+        <tbody>
+          <tr><td class="n">01</td><td class="s">스프린트 운영 가이드(막힘 처방표) · 미니 PRD 양식 · 사전 설치 가이드</td><td>로드맵 탭 &gt; 회차 3 자료</td><td>당일 제작과 자가 처방</td></tr>
+          <tr><td class="n">02</td><td class="s">위임문 예문 전문(절감형 · 신규 루틴형)</td><td>세미나 상세 「재현 가이드」</td><td>내 소재로 갈아끼워 재사용</td></tr>
+          <tr><td class="n">03</td><td class="s">외부 인용 수치</td><td>0건</td><td>근거 = 스터디 내부 규칙</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="dark" data-hero>결석 시 = <b>재현 가이드</b>만으로 같은 지점 도달
+      <span class="dsub">소요 60분 · 준비물 = 소재 카드 · 미니 PRD 5칸 · 원자료 1건 · 챗봇 로그인</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 5 · 측정·마무리</span></div>
+</section>
+
 </div>
-<div id="counter">1 / 26</div>
+</div>
+<div id="counter">1 / 23</div>
+
 <script>
+/* 표준 스크립트 = g1 골든 샘플 계승 — 규격 §1 네비 + 모션-시각화 §4·§5-1(크로스페이드·스태거 40ms·활성화 스텝)
+   확장분 = 수동 인터랙션 3종(리빌·A/B 토글·체크리스트, 장당 ≤1종 · 비활성 = 감쇠) */
 (function(){
-  var stage=document.getElementById('stage');
-  var slides=Array.prototype.slice.call(document.querySelectorAll('.slide'));
-  var counter=document.getElementById('counter');
-  var i=0, N=slides.length;
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var stage=document.getElementById('stage'), counter=document.getElementById('counter');
+  var cur=0;
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  function fit(){
-    var s=Math.min(window.innerWidth/1280, window.innerHeight/720);
-    stage.style.transform='scale('+s+')';
+  function fit(){ var s=Math.min(innerWidth/1920,innerHeight/1080); stage.style.transform='scale('+s+')'; }
+  addEventListener('resize',fit); fit();
+
+  function countUp(el,delay){
+    var t=parseFloat(el.getAttribute('data-target')); if(isNaN(t))return;
+    if(reduce){ el.textContent=Math.round(t); return; }
+    var dur=700,t0=null; el.textContent='0';
+    function step(ts){ if(t0===null)t0=ts; var p=Math.min(1,(ts-t0)/dur), e=1-Math.pow(1-p,3);
+      el.textContent=Math.round(t*e); if(p<1)requestAnimationFrame(step); else el.textContent=Math.round(t); }
+    setTimeout(function(){ requestAnimationFrame(step); },delay);
   }
+
+  function applyJudge(sl,mode){
+    var jd=sl.querySelector('[data-judge]'); if(!jd)return;
+    var a=jd.querySelector('[data-side=a]'), b=jd.querySelector('[data-side=b]');
+    [a,b].forEach(function(c){ if(c) c.classList.remove('win','lose'); });
+    if(mode==='a'){ if(a)a.classList.add('win'); if(b)b.classList.add('lose'); }
+    else if(mode==='b'){ if(b)b.classList.add('win'); if(a)a.classList.add('lose'); }
+    else if(mode==='judge'){ if(b)b.classList.add('win'); if(a)a.classList.add('lose'); }
+    [].forEach.call(sl.querySelectorAll('[data-ab]'),function(btn){ btn.classList.toggle('cur',btn.getAttribute('data-ab')===mode); });
+  }
+
+  function play(sl){
+    var els=[].slice.call(sl.querySelectorAll('.an'));
+    els.forEach(function(el){ el.classList.remove('in'); el.style.removeProperty('--ad'); });
+    var fills=[].slice.call(sl.querySelectorAll('.kfill'));
+    fills.forEach(function(el){ el.classList.remove('in'); });
+    var draws=[].slice.call(sl.querySelectorAll('.draw'));
+    draws.forEach(function(el){ var L=0; try{L=el.getTotalLength();}catch(e){L=300;}
+      el.style.transition='none'; el.style.strokeDasharray=L; el.style.strokeDashoffset=reduce?0:L; });
+    var rings=[].slice.call(sl.querySelectorAll('[data-ring]'));
+    rings.forEach(function(el){ var C=2*Math.PI*148; el.style.transition='none';
+      el.style.strokeDasharray=C; el.style.strokeDashoffset=C; });
+    [].forEach.call(sl.querySelectorAll('.hot'),function(el){ el.classList.remove('hot'); });
+    [].forEach.call(sl.querySelectorAll('.rv'),function(el){ el.classList.remove('on'); });
+    var rv0=sl.querySelector('.rv'); if(rv0) rv0.classList.add('on'); /* 첫 항목 자동 활성(초기 빈 장 방지) */
+    [].forEach.call(sl.querySelectorAll('.chkr'),function(el){ el.classList.remove('done'); });
+    [].forEach.call(sl.querySelectorAll('.uib'),function(el){ el.classList.remove('cur'); });
+    applyJudge(sl,null);
+    void sl.offsetWidth;
+    els.forEach(function(el,k){ el.style.setProperty('--ad',(k*0.04).toFixed(3)+'s'); el.classList.add('in'); }); /* 스태거 40ms */
+    fills.forEach(function(el){ el.classList.add('in'); });
+    if(!reduce){
+      draws.forEach(function(el,k){ el.style.transition='stroke-dashoffset .7s cubic-bezier(0,0,.38,.9) '+(0.15+k*0.08)+'s'; el.style.strokeDashoffset=0; });
+      rings.forEach(function(el){ var C=2*Math.PI*148, v=parseFloat(el.getAttribute('data-ring'))/100;
+        el.style.transition='stroke-dashoffset .7s cubic-bezier(0,0,.38,.9) .2s'; el.style.strokeDashoffset=C*(1-v); });
+    } else {
+      rings.forEach(function(el){ var C=2*Math.PI*148, v=parseFloat(el.getAttribute('data-ring'))/100; el.style.strokeDashoffset=C*(1-v); });
+    }
+    [].forEach.call(sl.querySelectorAll('.count'),function(el,k){ countUp(el,200+k*100); });
+    /* 활성화 스텝: 진입 완료 +300ms 뒤 히어로 점등 (§5-1) */
+    var hero=sl.querySelector('[data-hero]');
+    if(hero){ setTimeout(function(){ hero.classList.add('hot');
+      if(sl.querySelector('[data-judge]') && !sl.querySelector('[data-ab].cur')) applyJudge(sl,'judge');
+    }, reduce?0:1100); }
+  }
+
+  /* ---- 수동 인터랙션 (모션-시각화 §5·§6 — 비활성 = 감쇠, 은닉 없음) ---- */
+  document.addEventListener('click',function(e){
+    var ab=e.target.closest && e.target.closest('[data-ab]');
+    if(ab){ applyJudge(slides[cur],ab.getAttribute('data-ab')); return; }
+    var nx=e.target.closest && e.target.closest('[data-rvnext]');
+    if(nx){ var next=slides[cur].querySelector('.rv:not(.on)'); if(next) next.classList.add('on'); return; }
+    var all=e.target.closest && e.target.closest('[data-rvall]');
+    if(all){ [].forEach.call(slides[cur].querySelectorAll('.rv'),function(el){ el.classList.add('on'); }); return; }
+    var ck=e.target.closest && e.target.closest('.chkr');
+    if(ck){ ck.classList.toggle('done'); return; }
+  },true);
+
   function show(n){
-    i=Math.max(0,Math.min(N-1,n));
-    for(var k=0;k<N;k++){ slides[k].classList.toggle('active',k===i); }
-    counter.textContent=(i+1)+' / '+N;
-    if(('#'+(i+1))!==location.hash){ history.replaceState(null,'','#'+(i+1)); }
-  }
-  function fromHash(){
-    var m=(location.hash||'').replace('#','');
-    var n=parseInt(m,10);
-    if(!isNaN(n)&&n>=1&&n<=N){ show(n-1); } else { show(0); }
+    n=Math.max(0,Math.min(slides.length-1,n));
+    var prev=slides[cur]; cur=n;
+    slides.forEach(function(sl,i){ if(i!==cur && sl!==prev){ sl.classList.remove('active','shown'); } });
+    var next=slides[cur];
+    next.classList.add('active'); void next.offsetWidth;
+    if(prev && prev!==next){ prev.classList.remove('shown');
+      setTimeout(function(){ if(slides[cur]!==prev) prev.classList.remove('active'); },260); }
+    next.classList.add('shown');
+    counter.textContent=(cur+1)+' / '+slides.length;
+    location.hash='#'+(cur+1);
+    play(next);
   }
 
-  window.addEventListener('resize',fit);
-  window.addEventListener('keydown',function(e){
-    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){ e.preventDefault(); show(i+1); }
-    else if(e.key==='ArrowLeft'||e.key==='PageUp'){ e.preventDefault(); show(i-1); }
-    else if(e.key==='Home'){ show(0); }
-    else if(e.key==='End'){ show(N-1); }
+  addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key===' ') show(cur+1);
+    else if(e.key==='ArrowLeft') show(cur-1);
+    else if(e.key==='Home') show(0);
+    else if(e.key==='End') show(slides.length-1);
+    else if(e.key==='r'||e.key==='R') play(slides[cur]);
   });
-  document.getElementById('deck').addEventListener('click',function(e){
-    if(e.clientX < window.innerWidth*0.32){ show(i-1); } else { show(i+1); }
+  addEventListener('click',function(e){
+    if(e.target.closest && e.target.closest('[data-ui]')) return; /* 조작 영역 클릭 = 장 전환 제외 */
+    show(e.clientX < innerWidth*0.32 ? cur-1 : cur+1);
   });
-  window.addEventListener('hashchange',fromHash);
 
-  fit(); fromHash();
+  var h=parseInt((location.hash||'').replace('#',''),10);
+  show(isNaN(h)?0:h-1);
 })();
 </script>
 </body>

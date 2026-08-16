@@ -18,8 +18,8 @@ const OUT = join(APP, 'public', 'img', '세미나')
 const COVERS = {
   s1: { pill: 'SEMINAR 01', kind: 'OT', l1: 'AIM 1기', l2: 'OT', sub: '세팅과 큰 그림 · 오리엔테이션', count: null },
   sp1: { pill: 'SPECIAL', kind: '인지', l1: '질문에서', l2: '위임으로', sub: 'AI 활용 구조 3단 · Prompt · Context · Harness', count: 45 },
-  s2: { pill: 'SEMINAR 02', kind: '실습', l1: '따라 치기에서', l2: '첫 위임까지', sub: '기고 1건과 내 소재 확정', count: 30 },
-  s3: { pill: 'SEMINAR 03', kind: '실습', l1: '제작', l2: '스프린트', sub: '위임 · 확인 · 재위임으로 내 소재 1회 돌리기', count: 26 },
+  s2: { pill: 'SEMINAR 02', kind: '실습', l1: '따라 치기에서', l2: '첫 위임까지', sub: '기고 1건과 내 소재 확정', count: 26 },
+  s3: { pill: 'SEMINAR 03', kind: '실습', l1: '제작', l2: '스프린트', sub: '위임 · 확인 · 재위임으로 내 소재 1회 돌리기', count: 23 },
 }
 
 const CHROME = [
