@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AIM 골든 샘플 g1 · 하네스 검증용 5장</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" />
+<style>
+/* ===================================================================
+   AIM 골든 샘플 g1 — 하네스 4부작만으로 신작 (클린룸 · 기존 덱 미참조)
+   원천 = aim-덱-규격 v4.1 · aim-덱-블루프린트(BP1·3·4·5·6) · aim-덱-모션-시각화 §4~5 · aim-덱-카피
+   [OP] 오너 픽 웨이브 인포그래픽 문법의 버건디 번안 검증판
+   =================================================================== */
+:root{
+  --bg:#ffffff; --dark:#161616; --accent:#7a2030;
+  --tint:#f6edef; --tint2:#ecd9de; --surface:#fafaf9;
+  --dm:#d18f9a; --text:#141414; --sub:#55606c; --mute:#8a8f96;
+  --line:#e7e7e5; --line-soft:#f1f0ee; --tint-line:#e6d3d7;
+  --fd:'Paperlogy','Pretendard Variable',sans-serif;
+  --fb:'Pretendard Variable',Pretendard,-apple-system,'Malgun Gothic',sans-serif;
+  --fm:'JetBrains Mono','Consolas',monospace;
+  --fs-hero:108px; --fs-page-title:58px; --fs-section:44px; --fs-card-title:34px;
+  --fs-card-body:24px; --fs-sub:21px; --fs-label:18px; --fs-kpi:118px; --fs-kpi-sm:84px;
+  --num-circle:46px;
+  --r-lg:28px; --r-md:16px; --r-sm:10px;
+  /* 모션 토큰 (모션-시각화 §4) */
+  --ease-in:cubic-bezier(0,0,.38,.9); --ease-std:cubic-bezier(.2,0,.38,.9);
+  --d-fast:110ms; --d-move:240ms; --d-enter:400ms; --d-hero:700ms;
+  --px:80px; --py:40px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:#e9e8e5;font-family:var(--fb);color:var(--text);overflow:hidden;
+  -webkit-font-smoothing:antialiased;font-feature-settings:'ss01','tnum'}
+ul{margin:0;padding:0;list-style:none}
+
+#deck{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+#stage{width:1920px;height:1080px;position:relative;background:var(--bg);transform-origin:center;
+  overflow:hidden;box-shadow:0 20px 70px -20px rgba(20,20,20,.28)}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;background:var(--bg);overflow:hidden;
+  opacity:0;transition:opacity var(--d-move) var(--ease-std)} /* 크로스페이드 (§5-1) */
+.slide.active{display:flex}
+.slide.shown{opacity:1}
+
+/* ---- 웨이브·도트 브랜드 장치 [OP] ---- */
+.wave{position:absolute;pointer-events:none}
+.dot{position:absolute;border-radius:999px;pointer-events:none}
+
+/* ---- 헤더 (본문 장) ---- */
+.shead{position:relative;z-index:5;display:grid;grid-template-columns:auto 1fr auto;align-items:center;
+  gap:32px;padding:34px var(--px) 20px}
+.shead::after{content:'';position:absolute;left:var(--px);right:var(--px);bottom:0;height:1px;
+  background:linear-gradient(90deg,#f7f6f4,var(--line) 12%,var(--line) 88%,#f7f6f4)}
+.wordmark{display:flex;align-items:center;gap:9px;font:800 26px var(--fd);letter-spacing:-.02em}
+.wordmark::after{content:'';width:8px;height:8px;border-radius:999px;background:var(--accent)}
+.hmeta{justify-self:center;font:600 var(--fs-label)/1 var(--fb);color:var(--mute)}
+.hpage{font-family:var(--fm);font-size:22px;font-weight:600;color:var(--sub)}
+.hpage i{font-style:normal;font-size:15px;color:#c9c9c6}
+.sfoot{position:relative;display:flex;justify-content:space-between;align-items:center;
+  padding:16px var(--px) 26px;font:500 15px var(--fb);color:var(--mute)}
+.sfoot::before{content:'';position:absolute;left:var(--px);right:var(--px);top:0;height:1px;background:var(--line-soft)}
+.sfoot .fr{font-family:var(--fm);font-size:13px;letter-spacing:.06em}
+
+.sbody{flex:1;min-height:0;display:flex;flex-direction:column;gap:26px;padding:34px var(--px) 0;position:relative;z-index:2}
+.htitle h1{margin:0;font:800 var(--fs-page-title)/1.14 var(--fd);letter-spacing:-.03em;word-break:keep-all}
+.htitle h1 em{font-style:normal;color:var(--accent)}
+.htitle .sub{margin:12px 0 0;font:500 var(--fs-sub)/1.5 var(--fb);color:var(--sub)}
+.grow-1{flex:1;min-height:0}
+
+/* ---- 아이콘 컨테이너 [OP] ---- */
+.ic{width:72px;height:72px;border-radius:999px;background:var(--tint);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.ic svg{width:34px;height:34px;stroke:var(--accent);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.ic--solid{background:var(--accent)}
+.ic--solid svg{stroke:#fff}
+.ic--dia{border-radius:var(--r-md);transform:rotate(45deg)}
+.ic--dia svg{transform:rotate(-45deg)}
+
+/* ---- BP1 표지 ---- */
+.cover{justify-content:flex-start;padding:0}
+.cover .cwrap{position:relative;z-index:3;display:flex;flex-direction:column;height:100%;padding:150px 120px 0}
+.cover .eyebrow{display:flex;align-items:center;gap:14px;font:700 var(--fs-label)/1 var(--fb);letter-spacing:.02em;color:var(--accent)}
+.cover .eyebrow::before{content:'';width:44px;height:3px;background:var(--accent)}
+.cover .hero{margin:30px 0 0;font:800 var(--fs-hero)/1.05 var(--fd);letter-spacing:-.045em}
+.cover .hero em{font-style:normal;color:var(--accent)}
+.cover .csub{margin:24px 0 0;font:700 var(--fs-section)/1.25 var(--fd);letter-spacing:-.03em;color:var(--sub)}
+.cover .cmsg{margin-top:46px;max-width:980px;background:var(--tint);border-radius:var(--r-md);padding:24px 32px;
+  font:600 26px/1.5 var(--fb);position:relative}
+.cover .cmsg::before{content:'';position:absolute;left:0;top:0;bottom:0;width:8px;border-radius:var(--r-md) 0 0 var(--r-md);background:var(--accent)}
+.cover .cmsg span{color:var(--accent)}
+.cover .cmsg .s2{display:block;margin-top:8px;font:400 var(--fs-sub)/1.5 var(--fb);color:var(--sub)}
+.cover .cfoot{position:absolute;left:120px;right:120px;bottom:52px;z-index:4;display:flex;
+  justify-content:space-between;align-items:flex-end;border-top:1px solid var(--line);padding-top:22px}
+.cover .cbrand{font:800 30px var(--fd)}
+.cover .corg{margin-top:7px;font:500 var(--fs-sub) var(--fb);color:var(--sub)}
+.cover .cpill{font:600 var(--fs-sub) var(--fm);letter-spacing:.12em;color:var(--accent);
+  border:1.5px solid var(--tint-line);background:var(--tint);border-radius:999px;padding:10px 24px}
+.cover .cwm{position:absolute;right:150px;top:150px;font:700 340px/1 var(--fm);color:var(--accent);opacity:.08;letter-spacing:-.06em;z-index:2}
+
+/* ---- BP3 디바이더 ---- */
+.divider{justify-content:center;padding:0 120px}
+.divider .drow{position:relative;z-index:3;display:flex;align-items:center;gap:56px}
+.divider .dnum{width:120px;height:120px;border-radius:999px;background:var(--accent);color:#fff;
+  display:flex;align-items:center;justify-content:center;font:600 52px var(--fm);flex:0 0 auto}
+.divider .dtitle{font:800 var(--fs-section)/1.2 var(--fd);letter-spacing:-.03em}
+.divider .dline{margin-top:18px;font:400 26px/1.5 var(--fb);color:var(--sub)}
+.divider .dline b{color:var(--accent);font-weight:700}
+.divider .dwm{position:absolute;right:40px;top:50%;transform:translateY(-50%);
+  font:700 560px/1 var(--fm);color:var(--accent);opacity:.07;z-index:1;letter-spacing:-.08em}
+.divider .tracker{position:absolute;left:120px;bottom:64px;z-index:3;display:flex;gap:14px}
+.divider .tp{font:600 var(--fs-label) var(--fb);color:var(--mute);border:1.5px solid var(--line);
+  border-radius:999px;padding:10px 22px;background:var(--bg)}
+.divider .tp.cur{background:var(--accent);border-color:var(--accent);color:#fff}
+
+/* ---- BP4 히어로 수치 ---- */
+.g-kpi{display:grid;grid-template-columns:.95fr 1.05fr;gap:56px;align-items:stretch}
+.ring-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
+  background:var(--surface);border-radius:var(--r-lg);padding:36px;position:relative;
+  transition:background var(--d-move) var(--ease-std)}
+.ring-wrap.hot{background:var(--tint)}
+.ring-box{position:relative;width:340px;height:340px}
+.ring-box svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring-bg{stroke:#efe9ea;stroke-width:22;fill:none}
+.ring-fg{stroke:var(--accent);stroke-width:22;fill:none;stroke-linecap:round}
+.ring-val{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-val .num{font:600 var(--fs-kpi)/1 var(--fm);letter-spacing:-.05em;color:var(--accent);display:flex;align-items:baseline}
+.ring-val .unit{font:600 40px var(--fb);color:var(--accent);margin-left:2px}
+.ring-lab{font:700 var(--fs-card-title)/1.3 var(--fd);letter-spacing:-.02em;text-align:center;word-break:keep-all}
+.ring-note{font:400 var(--fs-sub)/1.4 var(--fb);color:var(--mute)}
+.kside{display:flex;flex-direction:column;gap:0}
+.krow{flex:1;display:flex;flex-direction:column;justify-content:center;gap:14px;padding:26px 4px;border-bottom:1px solid var(--line)}
+.krow:first-child{border-top:1px solid var(--line)}
+.krow .kh{display:flex;align-items:baseline;justify-content:space-between;gap:20px}
+.krow .kt{font:700 var(--fs-card-title)/1.3 var(--fd);letter-spacing:-.02em;word-break:keep-all}
+.krow .kv{font:600 var(--fs-kpi-sm)/1 var(--fm);letter-spacing:-.04em;color:var(--text);display:flex;align-items:baseline}
+.krow .kv .unit{font:600 30px var(--fb);color:var(--sub);margin-left:2px}
+.krow .kbar{height:14px;border-radius:999px;background:#efe9ea;overflow:hidden}
+.krow .kfill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--accent),#a04a58);
+  transform:scaleX(0);transform-origin:left}
+.krow .kfill.in{transform:scaleX(1);transition:transform var(--d-hero) var(--ease-in) .2s}
+.krow .kn{font:400 var(--fs-sub)/1.45 var(--fb);color:var(--mute)}
+.band{background:var(--tint);border-radius:var(--r-md);padding:22px 30px;position:relative;
+  font:600 26px/1.5 var(--fb);word-break:keep-all;
+  transition:background var(--d-move) var(--ease-std),transform var(--d-move) var(--ease-std)}
+.band::before{content:'';position:absolute;left:0;top:0;bottom:0;width:8px;border-radius:var(--r-md) 0 0 var(--r-md);background:var(--accent)}
+.band span{color:var(--accent)}
+.band .band-sub{display:block;margin-top:8px;font:400 var(--fs-sub)/1.5 var(--fb);color:var(--sub)}
+
+/* ---- BP5 흐름 ---- */
+.pipe{display:flex;align-items:flex-start;justify-content:space-between;gap:0;padding:30px 10px 0}
+.pnode{display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center;flex:1;position:relative}
+.pnode .pt{font:700 30px/1.3 var(--fd);letter-spacing:-.02em;word-break:keep-all}
+.pnode .ps{font:400 var(--fs-sub)/1.45 var(--fb);color:var(--mute);max-width:250px;word-break:keep-all}
+.plink{flex:0 0 96px;margin-top:32px;overflow:visible}
+.plink line{stroke:var(--mute);stroke-width:2}
+.plink polyline{stroke:var(--mute);stroke-width:2;fill:none}
+.pnode.res .ic{width:90px;height:90px;transition:transform var(--d-move) var(--ease-std)}
+.pnode.res .pt{color:var(--accent)}
+.pnode.res.hot .ic{transform:scale(1.08)}
+.peq{flex:0 0 70px;margin-top:44px;font:600 40px var(--fm);color:var(--mute);text-align:center}
+
+/* ---- BP6 대비 ---- */
+.ab{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.abcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:30px 34px;display:flex;flex-direction:column;gap:18px;
+  transition:opacity var(--d-move) var(--ease-std),background var(--d-move) var(--ease-std),border-color var(--d-move) var(--ease-std)}
+.abcard .abh{display:flex;align-items:center;gap:18px}
+.abcard .abl{font:600 15px var(--fm);letter-spacing:.1em;color:var(--mute);border:1px solid var(--line);
+  border-radius:999px;padding:7px 16px;background:var(--bg)}
+.abcard h3{margin:0;font:700 var(--fs-card-title)/1.25 var(--fd);letter-spacing:-.02em}
+.abcard .abq{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-sm);
+  padding:18px 22px;font:500 22px/1.55 var(--fm);color:var(--sub);word-break:keep-all;
+  flex:1;display:flex;flex-direction:column;justify-content:center}
+.abcard p{margin:0;font:400 var(--fs-card-body)/1.55 var(--fb);color:var(--sub);word-break:keep-all}
+.abcard p b{color:var(--text)}
+.judge .abcard.lose{opacity:.38}
+.judge .abcard.win{background:var(--tint);border-color:var(--tint-line)}
+.judge .abcard.win .abl{background:var(--accent);border-color:var(--accent);color:#fff}
+.dark{background:var(--dark);color:#f4f2f1;border-radius:var(--r-lg);padding:30px 40px;
+  font:600 28px/1.5 var(--fb);word-break:keep-all;
+  opacity:0;transform:translateY(14px);
+  transition:opacity var(--d-enter) var(--ease-in),transform var(--d-enter) var(--ease-in)}
+.dark.hot{opacity:1;transform:none}
+.dark b{color:var(--dm);font-weight:700}
+.dark .dsub{display:block;margin-top:8px;font:400 var(--fs-sub)/1.5 var(--fb);color:#b9b4b0}
+
+/* ---- 모션 공통 (모션-시각화 §4) ---- */
+.an{opacity:0}
+.an.in{animation:rise var(--d-enter) var(--ease-in) forwards;animation-delay:var(--ad,0s)}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.draw{stroke-dasharray:1;stroke-dashoffset:1}
+#counter{position:fixed;right:20px;bottom:16px;z-index:30;font:600 15px var(--fm);color:#fff;
+  background:rgba(22,22,22,.78);padding:6px 15px;border-radius:999px}
+
+@media (prefers-reduced-motion: reduce){
+  .slide{transition:none}
+  .an,.an.in{opacity:1!important;animation:none!important;transform:none!important}
+  .kfill,.kfill.in{transform:scaleX(1)!important;transition:none!important}
+  .draw{stroke-dashoffset:0!important}
+  .dark{opacity:1!important;transform:none!important;transition:none}
+}
+@page{size:1920px 1080px;margin:0}
+@media print{
+  html,body{background:#fff;overflow:visible;height:auto}
+  #deck{position:static;display:block;height:auto}
+  #stage{transform:none!important;width:1920px;height:auto;box-shadow:none;display:block;overflow:visible}
+  .slide{position:relative!important;display:flex!important;opacity:1!important;width:1920px;height:1080px;page-break-after:always}
+  #counter{display:none!important}
+  .an,.an.in{opacity:1!important;animation:none!important;transform:none!important}
+  .kfill{transform:scaleX(1)!important}.draw{stroke-dashoffset:0!important}
+  .dark{opacity:1!important;transform:none!important}
+}
+</style>
+</head>
+<body>
+<div id="deck">
+<div id="stage">
+
+<!-- 1 · BP1 표지 -->
+<section class="slide cover" aria-label="1. 표지 (BP1)">
+  <svg class="wave" style="left:0;top:0;width:1150px;height:320px" viewBox="0 0 1150 320" fill="none">
+    <path d="M0 0 H1150 C 940 40 850 210 620 190 C 430 175 330 60 0 110 Z" fill="var(--tint2)"/>
+    <path d="M0 0 H900 C 760 30 640 150 460 140 C 300 132 210 40 0 78 Z" fill="var(--tint)"/>
+    <path class="draw" d="M1150 12 C 930 55 845 222 615 202 C 425 186 330 72 0 122" stroke="var(--accent)" stroke-width="1.5"/>
+  </svg>
+  <svg class="wave" style="right:0;bottom:0;width:1300px;height:380px" viewBox="0 0 1300 380" fill="none">
+    <path d="M1300 380 H0 C 240 330 380 160 640 200 C 880 236 1010 350 1300 270 Z" fill="var(--tint)"/>
+    <path d="M1300 380 H420 C 640 330 780 240 980 262 C 1120 277 1210 330 1300 300 Z" fill="var(--tint2)"/>
+  </svg>
+  <span class="dot" style="width:46px;height:46px;right:340px;top:120px;background:var(--tint2)"></span>
+  <span class="dot" style="width:18px;height:18px;right:300px;top:210px;background:var(--accent)"></span>
+  <div class="cwm">01</div>
+  <div class="cwrap">
+    <div class="eyebrow an">광운대학교 ERP연구회 · MIS×AI 스터디</div>
+    <h1 class="hero an"><em>AIM</em> 1기 OT</h1>
+    <p class="csub an">세팅과 큰 그림</p>
+    <div class="cmsg an">오늘 진행 = 스터디 소개 → 허브 투어 → 세팅·비교 실습 → <span>학기 주제 공개</span> → 시작 설문
+      <span class="s2">진도 없음 · 환경 세팅과 방향 정렬이 오늘의 범위</span></div>
+  </div>
+  <div class="cfoot">
+    <div><div class="cbrand">AIM</div><div class="corg">광운대학교 경영학부 ERP연구회 · MIS×AI 스터디</div></div>
+    <span class="cpill">SESSION 01</span>
+  </div>
+</section>
+
+<!-- 2 · BP3 디바이더 -->
+<section class="slide divider" aria-label="2. 파트 1 디바이더 (BP3)">
+  <svg class="wave" style="right:0;top:0;width:900px;height:1080px" viewBox="0 0 900 1080" fill="none">
+    <path d="M900 0 V1080 H560 C 700 880 590 690 700 520 C 800 365 760 160 900 0 Z" fill="var(--tint)"/>
+    <path d="M900 0 V1080 H700 C 815 900 720 700 815 540 C 880 430 860 180 900 60 Z" fill="var(--tint2)"/>
+  </svg>
+  <span class="dot" style="width:38px;height:38px;right:760px;top:180px;background:var(--tint2)"></span>
+  <span class="dot" style="width:16px;height:16px;right:720px;bottom:260px;background:var(--accent)"></span>
+  <div class="dwm">1</div>
+  <div class="drow" style="margin-top:auto;margin-bottom:auto">
+    <div class="dnum an">01</div>
+    <div>
+      <div class="dtitle an">왜 이 스터디인가</div>
+      <p class="dline an">이 파트에서 얻는 것 = <b>시장 기준</b>과 스터디의 <b>최종 목표</b> 한 줄</p>
+    </div>
+  </div>
+  <div class="tracker">
+    <span class="tp cur an">1 왜</span><span class="tp an">2 허브</span><span class="tp an">3 세팅·실습</span><span class="tp an">4 학기 주제</span><span class="tp an">5 마무리</span>
+  </div>
+</section>
+
+<!-- 3 · BP4 히어로 수치 -->
+<section class="slide" data-pname="왜 이 스터디인가" aria-label="3. 시장 수치 (BP4)">
+  <svg class="wave" style="right:0;top:0;width:520px;height:170px" viewBox="0 0 520 170" fill="none">
+    <path d="M520 0 H0 C 170 30 260 140 520 96 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 왜 이 스터디인가</span><span class="hpage">03 <i>/ 05</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>시장의 평가 대상 = <em>시키는 방식과 검수</em></h1>
+      <p class="sub">사용 여부는 변별 항목이 아님 · 대표 수치 3건</p></div>
+    <div class="g-kpi grow-1">
+      <div class="ring-wrap an" data-hero>
+        <div class="ring-box">
+          <svg viewBox="0 0 340 340">
+            <circle class="ring-bg" cx="170" cy="170" r="148"/>
+            <circle class="ring-fg" cx="170" cy="170" r="148" data-ring="78"/>
+          </svg>
+          <div class="ring-val"><span class="num"><span class="count" data-target="78">78</span><span class="unit">%</span></span></div>
+        </div>
+        <div class="ring-lab">채용에서 AI 활용 역량 우대</div>
+        <div class="ring-note">기업 응답 비율 · 2026 채용 트렌드</div>
+      </div>
+      <div class="kside">
+        <div class="krow an">
+          <div class="kh"><span class="kt">중요 역량 1위 = <b style="color:var(--accent)">AI 결과 검수</b></span>
+            <span class="kv"><span class="count" data-target="50">50</span><span class="unit">%</span></span></div>
+          <div class="kbar"><span class="kfill" style="width:50%"></span></div>
+          <div class="kn">업무 현장 응답 · 사용 능력보다 상위</div>
+        </div>
+        <div class="krow an">
+          <div class="kh"><span class="kt">프롬프트 직군 공고 감소</span>
+            <span class="kv"><span class="count" data-target="-40">-40</span><span class="unit">%</span></span></div>
+          <div class="kbar"><span class="kfill" style="width:40%;background:linear-gradient(90deg,#8a8f96,#b9bdc2)"></span></div>
+          <div class="kn">전년 대비 · 문구 암기형 역할 축소</div>
+        </div>
+        <div class="krow an">
+          <div class="kh"><span class="kt">도구 사용 = 전제</span></div>
+          <div class="kn">계정 보유·기본 조작은 변별 항목에서 제외. <b style="color:var(--text)">출발선이 이미 동일.</b></div>
+        </div>
+      </div>
+    </div>
+    <div class="band an">시장이 묻는 것 = <span>시키는 방식</span>과 <span>검수 능력</span>
+      <span class="band-sub">이 두 가지가 이번 학기 스터디의 축</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 1 · 왜 이 스터디인가</span></div>
+</section>
+
+<!-- 4 · BP5 흐름 -->
+<section class="slide" data-pname="왜 이 스터디인가" aria-label="4. 최종 목표 (BP5)">
+  <svg class="wave" style="left:0;bottom:0;width:640px;height:180px" viewBox="0 0 640 180" fill="none">
+    <path d="M0 180 H640 C 470 150 380 40 180 76 C 80 94 40 150 0 130 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 왜 이 스터디인가</span><span class="hpage">04 <i>/ 05</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>최종 목표 = <em>증명 가능한 일상 활용자</em></h1>
+      <p class="sub">한 학기 뒤 도달 상태 · 4단 순서로 도달</p></div>
+    <div class="grow-1" style="display:flex;align-items:center">
+    <div class="pipe" style="flex:1">
+      <div class="pnode an"><span class="ic"><svg viewBox="0 0 34 34"><polyline points="4,24 12,15 19,20 30,7"/><polyline points="22,7 30,7 30,15"/></svg></span>
+        <span class="pt">트렌드 파악</span><span class="ps">주간 브리핑·인사이트로 흐름 감지</span></div>
+      <svg class="plink" width="96" height="26"><line class="draw" x1="4" y1="13" x2="80" y2="13"/><polyline class="draw" points="72,5 82,13 72,21"/></svg>
+      <div class="pnode an"><span class="ic"><svg viewBox="0 0 34 34"><circle cx="17" cy="17" r="12"/><circle cx="17" cy="17" r="5"/></svg></span>
+        <span class="pt">적용처 선정</span><span class="ps">본인이 실사용자인 반복 작업에서 발굴</span></div>
+      <svg class="plink" width="96" height="26"><line class="draw" x1="4" y1="13" x2="80" y2="13"/><polyline class="draw" points="72,5 82,13 72,21"/></svg>
+      <div class="pnode an"><span class="ic"><svg viewBox="0 0 34 34"><rect x="6" y="4" width="22" height="26" rx="3"/><line x1="11" y1="12" x2="23" y2="12"/><line x1="11" y1="18" x2="23" y2="18"/><line x1="11" y1="24" x2="18" y2="24"/></svg></span>
+        <span class="pt">기획</span><span class="ps">요구·조건을 브리프로 명세</span></div>
+      <svg class="plink" width="96" height="26"><line class="draw" x1="4" y1="13" x2="80" y2="13"/><polyline class="draw" points="72,5 82,13 72,21"/></svg>
+      <div class="pnode an"><span class="ic"><svg viewBox="0 0 34 34"><path d="M17 4 L20 13 L29 13 L22 19 L25 28 L17 22 L9 28 L12 19 L5 13 L14 13 Z"/></svg></span>
+        <span class="pt">AI 구현</span><span class="ps">구현·반복은 AI에 위임, 결과는 검수</span></div>
+      <span class="peq an">=</span>
+      <div class="pnode res an" data-hero><span class="ic ic--solid"><svg viewBox="0 0 34 34"><polyline points="7,18 14,25 27,9"/></svg></span>
+        <span class="pt">증명 가능한<br/>일상 활용자</span><span class="ps">전·후 수치와 동작하는 결과물로 증명</span></div>
+    </div>
+    </div>
+    <div class="band an">증명 = <span>전·후 수치</span> + <span>동작하는 결과물</span>
+      <span class="band-sub">확인 지점 = 학기말 쇼케이스</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 1 · 왜 이 스터디인가</span></div>
+</section>
+
+<!-- 5 · BP6 대비 -->
+<section class="slide" data-pname="왜 이 스터디인가" aria-label="5. 질문 vs 위임 (BP6)">
+  <svg class="wave" style="right:0;bottom:0;width:560px;height:160px" viewBox="0 0 560 160" fill="none">
+    <path d="M560 160 H0 C 150 130 260 30 420 66 C 500 84 530 130 560 112 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 왜 이 스터디인가</span><span class="hpage">05 <i>/ 05</i></span></div>
+  <div class="sbody judge" id="judge">
+    <div class="htitle an"><h1>격차의 원인 = 도구가 아니라 <em>시키는 방식</em></h1>
+      <p class="sub">전원 챗봇 경험자 · 같은 과제를 두 방식으로</p></div>
+    <div class="ab grow-1">
+      <div class="abcard an" data-side="a">
+        <div class="abh"><span class="ic" style="width:56px;height:56px"><svg viewBox="0 0 34 34"><circle cx="15" cy="15" r="10"/><line x1="23" y1="23" x2="30" y2="30"/></svg></span>
+          <span class="abl">A · 한 줄 질문</span></div>
+        <h3>평소처럼 한 줄로 요청</h3>
+        <div class="abq">"과제 발표자료 만들어줘"</div>
+        <p>맥락·조건·형식이 비어 있어 결과가 <b>일반론</b>으로 수렴. 다시 시키는 왕복이 반복.</p>
+      </div>
+      <div class="abcard an" data-side="b">
+        <div class="abh"><span class="ic" style="width:56px;height:56px"><svg viewBox="0 0 34 34"><rect x="5" y="5" width="10" height="10" rx="2"/><rect x="19" y="5" width="10" height="10" rx="2"/><rect x="5" y="19" width="10" height="10" rx="2"/><rect x="19" y="19" width="10" height="10" rx="2"/></svg></span>
+          <span class="abl">B · 브리프 4블록</span></div>
+        <h3>배경 · 목표 · 조건 · 형식을 명세</h3>
+        <div class="abq">배경 = 경영정보 팀과제<br/>목표 = 10분 발표 골격<br/>조건 = 출처 필수 · 표 1개<br/>형식 = 슬라이드 개요 8장</div>
+        <p>같은 도구, 같은 시간. 결과는 <b>그대로 쓸 수 있는 초안</b>에 근접.</p>
+      </div>
+    </div>
+    <div class="dark" data-hero>판정 기준 = <b>그대로 사용 가능한 쪽</b>은 어느 결과인가
+      <span class="dsub">도구 등급이 아니라 브리프의 유무가 격차를 만든 변수</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 1 · 왜 이 스터디인가</span></div>
+</section>
+
+</div>
+</div>
+<div id="counter">1 / 5</div>
+
+<script>
+/* 골든 샘플 표준 스크립트 — 규격 §1 네비 + 모션-시각화 §4·§5-1 (크로스페이드·활성화 스텝) */
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var stage=document.getElementById('stage'), counter=document.getElementById('counter');
+  var cur=0;
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function fit(){ var s=Math.min(innerWidth/1920,innerHeight/1080); stage.style.transform='scale('+s+')'; }
+  addEventListener('resize',fit); fit();
+
+  function countUp(el,delay){
+    var t=parseFloat(el.getAttribute('data-target')); if(isNaN(t))return;
+    if(reduce){ el.textContent=Math.round(t); return; }
+    var dur=700,t0=null; el.textContent='0';
+    function step(ts){ if(t0===null)t0=ts; var p=Math.min(1,(ts-t0)/dur), e=1-Math.pow(1-p,3);
+      el.textContent=Math.round(t*e); if(p<1)requestAnimationFrame(step); else el.textContent=Math.round(t); }
+    setTimeout(function(){ requestAnimationFrame(step); },delay);
+  }
+
+  function play(sl){
+    var els=[].slice.call(sl.querySelectorAll('.an'));
+    els.forEach(function(el){ el.classList.remove('in'); el.style.removeProperty('--ad'); });
+    var fills=[].slice.call(sl.querySelectorAll('.kfill'));
+    fills.forEach(function(el){ el.classList.remove('in'); });
+    var draws=[].slice.call(sl.querySelectorAll('.draw'));
+    draws.forEach(function(el){ var L=0; try{L=el.getTotalLength();}catch(e){L=300;}
+      el.style.transition='none'; el.style.strokeDasharray=L; el.style.strokeDashoffset=reduce?0:L; });
+    var rings=[].slice.call(sl.querySelectorAll('[data-ring]'));
+    rings.forEach(function(el){ var C=2*Math.PI*148; el.style.transition='none';
+      el.style.strokeDasharray=C; el.style.strokeDashoffset=C; });
+    sl.querySelectorAll('.hot').forEach(function(el){ el.classList.remove('hot'); });
+    var jd=sl.querySelector('#judge'); if(jd){ jd.classList.remove('on');
+      jd.querySelectorAll('.abcard').forEach(function(c){ c.classList.remove('win','lose'); }); }
+    void sl.offsetWidth;
+    els.forEach(function(el,k){ el.style.setProperty('--ad',(k*0.04).toFixed(3)+'s'); el.classList.add('in'); }); /* 스태거 40ms */
+    fills.forEach(function(el){ el.classList.add('in'); });
+    if(!reduce){
+      draws.forEach(function(el,k){ el.style.transition='stroke-dashoffset .7s cubic-bezier(0,0,.38,.9) '+(0.15+k*0.08)+'s'; el.style.strokeDashoffset=0; });
+      rings.forEach(function(el){ var C=2*Math.PI*148, v=parseFloat(el.getAttribute('data-ring'))/100;
+        el.style.transition='stroke-dashoffset .7s cubic-bezier(0,0,.38,.9) .2s'; el.style.strokeDashoffset=C*(1-v); });
+    } else {
+      rings.forEach(function(el){ var C=2*Math.PI*148, v=parseFloat(el.getAttribute('data-ring'))/100; el.style.strokeDashoffset=C*(1-v); });
+    }
+    [].forEach.call(sl.querySelectorAll('.count'),function(el,k){ countUp(el,200+k*100); });
+    /* 활성화 스텝: 진입 완료 +300ms 뒤 히어로 점등 (§5-1) */
+    var hero=sl.querySelector('[data-hero]');
+    if(hero){ setTimeout(function(){ hero.classList.add('hot');
+      if(hero.classList.contains('dark')){ var j=sl.querySelector('#judge');
+        if(j){ j.querySelector('[data-side=b]').classList.add('win'); j.querySelector('[data-side=a]').classList.add('lose'); } }
+    }, reduce?0:1100); }
+    if(reduce){ var h2=sl.querySelector('[data-hero]'); if(h2) h2.classList.add('hot'); }
+  }
+
+  function show(n){
+    n=Math.max(0,Math.min(slides.length-1,n));
+    var prev=slides[cur]; cur=n;
+    slides.forEach(function(sl,i){ if(i!==cur && sl!==prev){ sl.classList.remove('active','shown'); } });
+    var next=slides[cur];
+    next.classList.add('active'); void next.offsetWidth;
+    if(prev && prev!==next){ prev.classList.remove('shown');
+      setTimeout(function(){ if(slides[cur]!==prev) prev.classList.remove('active'); },260); }
+    next.classList.add('shown');
+    counter.textContent=(cur+1)+' / '+slides.length;
+    location.hash='#'+(cur+1);
+    play(next);
+  }
+
+  addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key===' ') show(cur+1);
+    else if(e.key==='ArrowLeft') show(cur-1);
+    else if(e.key==='Home') show(0);
+    else if(e.key==='End') show(slides.length-1);
+    else if(e.key==='r'||e.key==='R') play(slides[cur]);
+  });
+  addEventListener('click',function(e){ show(e.clientX < innerWidth*0.32 ? cur-1 : cur+1); });
+
+  var h=parseInt((location.hash||'').replace('#',''),10);
+  show(isNaN(h)?0:h-1);
+})();
+</script>
+</body>
+</html>
