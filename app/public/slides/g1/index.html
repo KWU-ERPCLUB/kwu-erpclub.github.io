@@ -142,7 +142,8 @@ ul{margin:0;padding:0;list-style:none}
 .ring-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
   background:var(--surface);border-radius:var(--r-lg);padding:36px;position:relative;
   transition:background var(--d-move) var(--ease-std)}
-.ring-wrap.hot{background:var(--tint)}
+.ring-wrap{border:1.5px solid transparent}
+.ring-wrap.hot{border-color:var(--accent)}
 .ring-box{position:relative;width:340px;height:340px}
 .ring-box svg{width:100%;height:100%;transform:rotate(-90deg)}
 .ring-bg{stroke:#efe9ea;stroke-width:22;fill:none}
@@ -164,12 +165,12 @@ ul{margin:0;padding:0;list-style:none}
   transform:scaleX(0);transform-origin:left}
 .krow .kfill.in{transform:scaleX(1);transition:transform var(--d-hero) var(--ease-in) .2s}
 .krow .kn{font:400 var(--fs-sub)/1.45 var(--fb);color:var(--mute)}
-.band{background:var(--tint);border-radius:var(--r-md);padding:22px 30px;position:relative;
-  font:600 26px/1.5 var(--fb);word-break:keep-all;
-  transition:background var(--d-move) var(--ease-std),transform var(--d-move) var(--ease-std)}
-.band::before{content:'';position:absolute;left:0;top:0;bottom:0;width:8px;border-radius:var(--r-md) 0 0 var(--r-md);background:var(--accent)}
-.band span{color:var(--accent)}
-.band .band-sub{display:block;margin-top:8px;font:400 var(--fs-sub)/1.5 var(--fb);color:var(--sub)}
+/* 결론 밴드 = 다크 통일 (오너 2차 검수 — 틴트 밴드 약함·웨이브와 색 충돌·장별 불일치 해소) */
+.band{background:var(--dark);color:#f4f2f1;border-radius:var(--r-lg);padding:26px 40px;position:relative;
+  font:600 28px/1.5 var(--fb);word-break:keep-all;
+  transition:opacity var(--d-move) var(--ease-std),transform var(--d-move) var(--ease-std)}
+.band span{color:var(--dm)}
+.band .band-sub{display:block;margin-top:8px;font:400 var(--fs-sub)/1.5 var(--fb);color:#b9b4b0}
 
 /* ---- BP5 흐름 ---- */
 .pipe{display:flex;align-items:flex-start;justify-content:space-between;gap:0;padding:30px 10px 0}
@@ -210,7 +211,7 @@ ul{margin:0;padding:0;list-style:none}
 .abcard .abr.bad .rl2{background:var(--mute)}
 .abcard .abr p{font:500 var(--fs-card-body)/1.5 var(--fb);color:var(--text)}
 .judge .abcard.lose{opacity:.38}
-.judge .abcard.win{background:var(--tint);border-color:var(--tint-line)}
+.judge .abcard.win{border-color:var(--accent);box-shadow:inset 6px 0 0 var(--accent)}
 .judge .abcard.win .abl{background:var(--accent);border-color:var(--accent);color:#fff}
 .dark{background:var(--dark);color:#f4f2f1;border-radius:var(--r-lg);padding:30px 40px;
   font:600 28px/1.5 var(--fb);word-break:keep-all;
@@ -289,7 +290,7 @@ ul{margin:0;padding:0;list-style:none}
         <div class="bar"><span class="dot2"></span><span class="dot2"></span><span class="dot2"></span><span class="url">kwu-erpclub.github.io</span></div>
         <img src="../ws/ws-home.png" alt="AIM 워크스페이스 홈 화면" />
       </div>
-      <p class="cap">오늘 투어할 실물 = AIM 허브 워크스페이스</p>
+      <p class="cap">오늘 로그인할 곳 = AIM 허브 워크스페이스</p>
     </div>
   </div>
   <div class="cfoot">
