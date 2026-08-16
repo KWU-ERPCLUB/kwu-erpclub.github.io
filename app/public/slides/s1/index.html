@@ -10,7 +10,7 @@
 <style>
 /* ===================================================================
    AIM 세미나 덱 · 차시 1 OT
-   규격 = erp-club docs/aim-덱-규격.md v3 (1920x1080 · 톤 A/B/C · 라운드 §2-1 · 강조 §9)
+   규격 = erp-club docs 하네스 3부작 v4 (aim-덱-규격 · aim-덱-카피 · aim-덱-모션-시각화)
    대본 = docs/aim-덱-01-OT-대본.md v3 (31장 · aria-label 1:1)
    디자인 원천 = 롯데케미칼 발표 시스템 문법을 AIM 색으로 번안
    이 파일 밖 패턴·색 신설 금지
@@ -131,7 +131,7 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
 .card{
   position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);
   padding:28px 30px;display:flex;flex-direction:column;gap:14px;min-height:0;
-  transition:opacity .3s,border-color .3s;
+  transition:opacity .24s cubic-bezier(.2,0,.38,.9),border-color .24s cubic-bezier(.2,0,.38,.9);
 }
 /* 상단 액센트 = 테두리 대신 인셋 바(라운드 미터 방지) */
 .card--top{padding-top:33px}
@@ -335,7 +335,7 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
 .tbl td{
   padding:18px 20px;border-bottom:1px solid var(--line);vertical-align:middle;
   font:400 var(--fs-card-body)/1.45 var(--fb);color:var(--sub);word-break:keep-all;
-  transition:opacity .3s;
+  transition:opacity .24s cubic-bezier(.2,0,.38,.9);
 }
 .tbl td b{color:var(--text);font-weight:700}
 .tbl td em{font-style:normal;color:var(--accent);font-weight:700}
@@ -407,9 +407,9 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
 .divider .dmeta{position:absolute;left:var(--px);bottom:56px;font:600 var(--fs-label) var(--fm);letter-spacing:.1em;color:var(--mute);z-index:3}
 
 /* --- 17. 인터랙션 (규격 §8 · 비활성 = 감쇠만) ------------------- */
-.rv{opacity:.16;transition:opacity .35s}
+.rv{opacity:.16;transition:opacity .24s cubic-bezier(.2,0,.38,.9)} /* d-move · standard-productive */
 .rv.on{opacity:1}
-.ab .pa,.ab .pb{transition:opacity .3s,border-color .3s}
+.ab .pa,.ab .pb{transition:opacity .24s cubic-bezier(.2,0,.38,.9),border-color .24s cubic-bezier(.2,0,.38,.9)}
 .ab.pickA .pb,.ab.pickB .pa{opacity:.26}
 .ab.pickA .card.pa,.ab.pickB .card.pb{border-color:var(--accent)}
 /* A/B 토글 = 텍스트 버튼(박스 아님 · 활성 = 밑줄+색) */
@@ -430,11 +430,11 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
 
 /* --- 18. 모션 (규격 §8) ----------------------------------------- */
 .an{opacity:0}
-.an.in{animation:riseIn .62s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:var(--ad,0s)}
+.an.in{animation:riseIn .4s cubic-bezier(0,0,.38,.9) forwards;animation-delay:var(--ad,0s)} /* d-enter 400 · entrance-productive */
 @keyframes riseIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 .draw{stroke-dasharray:1;stroke-dashoffset:1}
 .grow{transform:scaleX(0)}
-.grow.in{transform:scaleX(1);transition:transform 1.05s cubic-bezier(.2,.7,.2,1) var(--gd,.25s)}
+.grow.in{transform:scaleX(1);transition:transform .7s cubic-bezier(0,0,.38,.9) var(--gd,.2s)} /* d-hero 700 */
 
 @media (prefers-reduced-motion: reduce){
   .an,.an.in{opacity:1!important;animation:none!important;transform:none!important}
@@ -504,8 +504,8 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
   <section class="slide tone-b" data-part="0" data-pname="오늘의 흐름" aria-label="2. 오늘의 흐름">
     <div class="sbody">
       <div class="htitle an">
-        <h1>오늘의 흐름</h1>
-        <p class="sub">5파트 60분 · 파트마다 남는 것이 하나씩</p>
+        <h1>오늘 = <em>5파트 60분</em> · 진도 없음</h1>
+        <p class="sub">환경 세팅과 방향 정렬이 오늘의 범위 · 파트마다 남는 것 하나</p>
       </div>
       <div class="toc grow-1">
         <div class="toc-item cur an"><span class="tnum">1</span><span class="tt">왜 이 스터디인가</span><span class="td">창설 배경 · 시장 수치 · <b>최종 목표</b> · 학기 구조</span><span class="tm">15분</span></div>
@@ -537,8 +537,8 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
   <section class="slide tone-b" data-part="1" aria-label="4. 창설 배경">
     <div class="sbody">
       <div class="htitle an">
-        <h1>창설 배경</h1>
-        <p class="sub">시장 기준과 교육 과정 사이의 간극 · 전공 위치에서 나온 결론</p>
+        <h1>창설 이유 = 시장 기준과 교육 과정의 <em>간극</em></h1>
+        <p class="sub">전공(MIS) 위치에서 그 간극을 메우는 선택</p>
       </div>
       <div class="flow grow-1">
         <div class="card card--top an">
@@ -576,8 +576,8 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
   <section class="slide tone-c" data-part="1" aria-label="5. 시장 수치 3">
     <div class="sbody">
       <div class="htitle an">
-        <h1>시장 수치</h1>
-        <p class="sub">평가 대상 = 사용 여부가 아니라 시키는 방식과 검수</p>
+        <h1>시장의 평가 대상 = <em>시키는 방식과 검수</em></h1>
+        <p class="sub">사용 여부는 변별 항목이 아님 · 대표 수치 3건</p>
       </div>
       <div class="g3 grow-1" style="flex:1.05">
         <div class="kpi kpi--em an">
@@ -614,8 +614,8 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
   <section class="slide tone-b" data-part="1" aria-label="6. 질문 vs 위임">
     <div class="sbody">
       <div class="htitle an">
-        <h1>질문과 위임</h1>
-        <p class="sub">전원 챗봇 경험자 · 격차의 원인 = 도구가 아니라 시키는 방식</p>
+        <h1>격차의 원인 = 도구가 아니라 <em>시키는 방식</em></h1>
+        <p class="sub">전원 챗봇 경험자 · 한 줄 질문과 위임 브리프의 차이</p>
       </div>
       <div class="ab grow-1" data-ab style="display:flex;flex-direction:column;gap:22px">
         <div class="abbar an">
@@ -656,8 +656,8 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
   <section class="slide tone-a" data-part="1" aria-label="7. 최종 목표">
     <div class="sbody">
       <div class="htitle an">
-        <h1>최종 목표</h1>
-        <p class="sub">한 학기 뒤 도달 상태 · <em>4단 순서</em>로 도달 · 아래 = 역량 C1~C7 도입 시점</p>
+        <h1>최종 목표 = <em>증명 가능한 일상 활용자</em></h1>
+        <p class="sub">한 학기 뒤 도달 상태 · 4단 순서로 도달 · 아래 = 역량 C1~C7 도입 시점</p>
       </div>
       <div class="dark an">
         <span class="dlab">Target State</span>
@@ -690,8 +690,8 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
   <section class="slide tone-b" data-part="1" aria-label="8. 학기 구조">
     <div class="sbody">
       <div class="htitle an">
-        <h1>학기 구조</h1>
-        <p class="sub">주 1회 60분 고정 · 1차 개인 → 시험기간 중지 → 2차 팀</p>
+        <h1>학기 = 개인 4주 + 팀 5주 · <em>시험 2주 전 중지</em></h1>
+        <p class="sub">주 1회 60분 고정 · 1차 개인 → 시험기간 → 2차 팀</p>
       </div>
       <div class="tl grow-1">
         <div class="tlline"><span class="tlfill grow"></span></div>
@@ -729,8 +729,8 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
   <section class="slide tone-c" data-part="1" aria-label="9. 시연">
     <div class="sbody">
       <div class="htitle an">
-        <h1>시연</h1>
-        <p class="sub">위임의 상한선 예시 · 오늘 따라 만드는 대상 아님</p>
+        <h1>시연 = <em>위임의 상한선</em> 확인</h1>
+        <p class="sub">오늘 따라 만드는 대상 아님 · 시키는 방식의 수준 차이만 확인</p>
       </div>
       <div class="g-side-w grow-1">
         <div class="shot an">
@@ -774,8 +774,8 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
   <section class="slide tone-b" data-part="2" aria-label="11. 허브 구조">
     <div class="sbody">
       <div class="htitle an">
-        <h1>허브 구조</h1>
-        <p class="sub">공개면 = 보이는 곳 · 워크스페이스 = 내는 곳</p>
+        <h1>허브 = <em>보이는 곳</em> + <em>내는 곳</em></h1>
+        <p class="sub">공개면 = 인사이트·세미나 열람 · 워크스페이스 = 제출·일정</p>
       </div>
       <div class="g2 grow-1">
         <div class="card an">
@@ -812,8 +812,8 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
   <section class="slide tone-c" data-part="2" aria-label="12. 인사이트">
     <div class="sbody">
       <div class="htitle an">
-        <h1>AI 인사이트</h1>
-        <p class="sub">주 3회 자동 발행 + 멤버 기고 주 1건 · 다음 주부터 멤버 글 게재</p>
+        <h1>인사이트 = 자동 주 3회 + <em>멤버 기고 주 1건</em></h1>
+        <p class="sub">다음 주부터 멤버 글이 게재되는 지면</p>
       </div>
       <div class="g2 grow-1">
         <div class="shot an">
@@ -836,8 +836,8 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
   <section class="slide tone-c" data-part="2" aria-label="13. 워크스페이스 홈">
     <div class="sbody">
       <div class="htitle an">
-        <h1>워크스페이스 홈</h1>
-        <p class="sub">로그인 ID = 학번 · 초기 비밀번호 000000 · 내정보에서 변경</p>
+        <h1>로그인 = <em>학번</em> · 초기 비밀번호 000000</h1>
+        <p class="sub">내정보에서 변경 · 홈에서 일정·마감 확인</p>
       </div>
       <div class="g-side grow-1">
         <div class="shot an">
@@ -859,8 +859,8 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
   <section class="slide tone-c" data-part="2" aria-label="14. 로드맵·공고">
     <div class="sbody">
       <div class="htitle an">
-        <h1>로드맵 · 공고</h1>
-        <p class="sub">학기 구조의 상세판 + 운영진 선별 공고 보드</p>
+        <h1>로드맵 탭 = <em>학기 구조의 상세판</em></h1>
+        <p class="sub">공고 보드 = 운영진이 선별해 올리는 대외 정보</p>
       </div>
       <div class="g2 grow-1">
         <div class="shot an">
@@ -887,8 +887,8 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
   <section class="slide tone-b" data-part="2" aria-label="15. 기고 폼·제출 흐름">
     <div class="sbody">
       <div class="htitle an">
-        <h1>기고와 제출 흐름</h1>
-        <p class="sub">승인 = 형식 확인만 · 내용 검열 없음</p>
+        <h1>승인 = <em>형식 확인만</em> · 내용 검열 없음</h1>
+        <p class="sub">키트 작성 → 폼 제출 → 게재 흐름</p>
       </div>
       <div class="g-side grow-1">
         <div class="shot an">
@@ -927,8 +927,8 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
   <section class="slide tone-c" data-part="3" aria-label="17. 설치 체크">
     <div class="sbody">
       <div class="htitle an">
-        <h1>설치 점검</h1>
-        <p class="sub">미완료 항목은 이 시간에 해소 · 운영진 순회 · 항목 클릭으로 체크</p>
+        <h1>설치 점검 = <em>이 시간에 전원 완료</em></h1>
+        <p class="sub">미완료 항목 해소 · 운영진 순회 · 항목 클릭으로 체크</p>
       </div>
       <div class="hlist grow-1" style="--rowl:340px">
         <div class="hitem ck an" data-ck><span class="rlead"><span class="cbox"></span><span class="rl">구글 계정</span></span><span class="rr">드라이브에서 <b>새 문서 1개 생성</b> 완료</span></div>
@@ -948,8 +948,8 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
   <section class="slide tone-b" data-part="3" aria-label="18. 통과 기준">
     <div class="sbody">
       <div class="htitle an">
-        <h1>통과 기준</h1>
-        <p class="sub">설치 완료가 아니라 <em>실행 1회</em></p>
+        <h1>통과 기준 = 설치가 아니라 <em>실행 1회</em></h1>
+        <p class="sub">결과 화면 확인까지가 이 파트의 범위</p>
       </div>
       <div class="g2 grow-1">
         <div class="card an">
@@ -982,7 +982,7 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
   <section class="slide tone-c" data-part="3" aria-label="19. 도구 방침">
     <div class="sbody">
       <div class="htitle an">
-        <h1>도구 방침</h1>
+        <h1>도구 방침 = <em>무료 표준</em> · 유료는 자유</h1>
         <p class="sub">판단 대상 = 도구 등급이 아니라 상황별 활용 방식</p>
       </div>
       <div class="grow-1 an">
@@ -1014,7 +1014,7 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
   <section class="slide tone-b" data-part="3" aria-label="20. 실습 A — 한 줄 질문">
     <div class="sbody">
       <div class="htitle an">
-        <h1>실습 A · 한 줄 질문</h1>
+        <h1>실습 A = <em>평소처럼 한 줄 질문</em></h1>
         <p class="sub">본인 도구에 원문 그대로 입력 · 결과 보존</p>
       </div>
       <div class="code an">
@@ -1044,8 +1044,8 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
   <section class="slide tone-b" data-part="3" aria-label="21. 실습 B — 브리프 4블록">
     <div class="sbody">
       <div class="htitle an">
-        <h1>실습 B · 브리프 4블록</h1>
-        <p class="sub">같은 과제를 4칸 작성 후 재실행 · 3분 30초</p>
+        <h1>실습 B = 같은 과제를 <em>브리프 4블록</em>으로</h1>
+        <p class="sub">4칸 작성 후 재실행 · 3분 30초</p>
       </div>
       <div class="g-side grow-1">
         <img class="an" src="/img/세미나/brief-4blocks.svg" alt="한 줄 지시와 브리프 4블록의 결과 대비" style="width:100%;height:auto;align-self:center;border:1px solid var(--line);border-radius:var(--r-lg)" />
@@ -1071,8 +1071,8 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
   <section class="slide tone-c" data-part="3" aria-label="22. 결과 비교">
     <div class="sbody">
       <div class="htitle an">
-        <h1>결과 비교</h1>
-        <p class="sub">판정 질문 = 그대로 사용 가능한 상태는 어느 쪽인가</p>
+        <h1>판정 = <em>그대로 사용 가능한 쪽</em></h1>
+        <p class="sub">한 줄 질문 결과와 브리프 결과를 같은 기준으로 비교</p>
       </div>
       <div class="ab grow-1" data-ab style="display:flex;flex-direction:column;gap:20px">
         <div class="abbar an">
@@ -1123,8 +1123,8 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
   <section class="slide tone-c" data-part="4" aria-label="24. 개인 소재 카탈로그">
     <div class="sbody">
       <div class="htitle an">
-        <h1>개인 소재 카탈로그</h1>
-        <p class="sub">조건 = 본인이 실사용자인 반복 작업 · 화면 클릭으로 순차 공개</p>
+        <h1>개인 소재 = <em>본인이 실사용자</em>인 반복 작업</h1>
+        <p class="sub">예시 5종 = 발상 보조 · 화면 클릭으로 순차 공개</p>
       </div>
       <div class="split split--r grow-1">
         <div class="sp sp--row sp--cat rv"><span class="spk">01</span><span class="spt">학업 관리</span><span class="spn">과제·시험 일정 수집과 <b>주간 정리</b></span><span class="spx"><strong>확인 지점</strong> 누락 일정</span></div>
@@ -1144,8 +1144,8 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
   <section class="slide tone-c" data-part="4" aria-label="25. 소재 카드 4문항">
     <div class="sbody">
       <div class="htitle an">
-        <h1>소재 카드 4문항</h1>
-        <p class="sub">4문항 전부 기입 시 통과 · 다음 주 세션에서 확정</p>
+        <h1>소재 카드 = <em>4문항 전부 기입</em> 시 통과</h1>
+        <p class="sub">오늘은 후보로 충분 · 다음 주 세션에서 확정</p>
       </div>
       <div class="hlist grow-1" style="--rowl:520px">
         <div class="hitem an"><span class="rlead"><span class="rnum">1</span><span class="rl">반복 작업<small>WHAT</small></span></span><span class="rr"><b>주 1회 이상</b> 발생하는 작업 1건 · 수업·과제·자격증·진로·생활 루틴</span></div>
@@ -1164,8 +1164,8 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
   <section class="slide tone-b" data-part="4" aria-label="26. 팀 주제 미리 보기">
     <div class="sbody">
       <div class="htitle an">
-        <h1>팀 주제 미리 보기</h1>
-        <p class="sub">팀 결성 = 차시 3 · 기획은 사람, 구현은 AI · 산출 형태 = MVP</p>
+        <h1>팀 주제 = <em>기획은 사람 · 구현은 AI</em></h1>
+        <p class="sub">팀 결성 = 차시 3 · 산출 형태 = MVP</p>
       </div>
       <div class="g2 grow-1" style="flex:2.4">
         <div class="card card--top an">
@@ -1201,8 +1201,8 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
   <section class="slide tone-c" data-part="4" aria-label="27. 다음 4주">
     <div class="sbody">
       <div class="htitle an">
-        <h1>다음 4주</h1>
-        <p class="sub">차시별 완료 조건 · 준비물 = 소재 후보 1건</p>
+        <h1>다음 4주 = 차시별 <em>완료 조건 하나씩</em></h1>
+        <p class="sub">다음 주 준비물 = 소재 후보 1건</p>
       </div>
       <div class="pipe an grow-1" style="align-items:flex-start">
         <div class="pstep cur"><span class="pc">1</span><span class="pt">오늘</span><span class="ps">OT · 세팅 · 비교 실습</span></div>
@@ -1263,7 +1263,7 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
   <section class="slide tone-a" data-part="5" aria-label="29. 시작 설문">
     <div class="sbody">
       <div class="htitle an">
-        <h1>시작 설문</h1>
+        <h1>시작 설문 = <em>학기말 비교의 기준점</em></h1>
         <p class="sub">5문항 · 3분 · 평가 아님 · 개인 응답 비공개</p>
       </div>
       <div class="g-side grow-1" style="grid-template-columns:1fr 1.25fr">
@@ -1395,7 +1395,7 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
     var dec=parseInt(el.getAttribute('data-decimal')||'0',10);
     if(isNaN(target)) return;
     if(reduce){ el.textContent=fmt(target,dec); return; }
-    var dur=1100, t0=null;
+    var dur=700, t0=null; /* d-hero */
     el.textContent=fmt(0,dec);
     function step(ts){
       if(t0===null) t0=ts;
@@ -1423,17 +1423,17 @@ sup.fn{font-size:.42em;font-family:var(--fm);color:var(--accent);vertical-align:
     });
     void sl.offsetWidth;
     els.forEach(function(el,k){
-      el.style.setProperty('--ad',(0.05+k*0.075).toFixed(3)+'s');
+      el.style.setProperty('--ad',(k*0.04).toFixed(3)+'s'); /* 스태거 40ms (모션-시각화 §4-3) */
       el.classList.add('in');
     });
     grows.forEach(function(el){ el.classList.add('in'); });
     if(!reduce){
       draws.forEach(function(el,k){
-        el.style.transition='stroke-dashoffset .85s cubic-bezier(.2,.7,.2,1) '+(0.45+k*0.18)+'s';
+        el.style.transition='stroke-dashoffset .7s cubic-bezier(0,0,.38,.9) '+(0.15+k*0.08)+'s';
         el.style.strokeDashoffset=0;
       });
     }
-    [].forEach.call(sl.querySelectorAll('.count'),function(el,k){ countUp(el,320+k*160); });
+    [].forEach.call(sl.querySelectorAll('.count'),function(el,k){ countUp(el,200+k*100); });
   }
 
   /* ---- 네비 ---- */
