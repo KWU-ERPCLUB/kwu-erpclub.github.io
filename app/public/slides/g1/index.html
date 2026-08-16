@@ -210,7 +210,7 @@ ul{margin:0;padding:0;list-style:none}
 .abcard .abr .rl2{font:700 15px var(--fm);letter-spacing:.1em;color:#fff;background:var(--accent);border-radius:999px;padding:7px 14px;flex:0 0 auto}
 .abcard .abr.bad .rl2{background:var(--mute)}
 .abcard .abr p{font:500 var(--fs-card-body)/1.5 var(--fb);color:var(--text)}
-.judge .abcard.lose{opacity:.38}
+.judge .abcard.lose{opacity:.38!important} /* .an.in forwards가 opacity 고정하는 캐스케이드 버그 수리(s1과 동일) */
 .judge .abcard.win{border-color:var(--accent);box-shadow:inset 6px 0 0 var(--accent)}
 .judge .abcard.win .abl{background:var(--accent);border-color:var(--accent);color:#fff}
 .dark{background:var(--dark);color:#f4f2f1;border-radius:var(--r-lg);padding:30px 40px;
