@@ -197,7 +197,7 @@ ul{margin:0;padding:0;list-style:none}
   font:600 28px/1.5 var(--fb);word-break:keep-all}
 .band span,.dark span,.dark b{color:var(--dm)}
 .band .band-sub,.dark .dsub{display:block;margin-top:8px;font:400 var(--fs-sub)/1.5 var(--fb);color:#b9b4b0}
-.dark{opacity:0;transform:translateY(14px);
+.dark{opacity:.35;transform:translateY(8px); /* 은닉 금지 — 활성 전에도 판독 가능(감쇠→활성) */
   transition:opacity var(--d-enter) var(--ease-in),transform var(--d-enter) var(--ease-in)}
 .dark.hot{opacity:1;transform:none}
 
@@ -345,8 +345,17 @@ ul{margin:0;padding:0;list-style:none}
 .srct td.s{color:var(--text);font-weight:600}
 
 /* ---- 리빌·수동 인터랙션 ---- */
-.rv{opacity:.24!important;transition:opacity var(--d-move) var(--ease-std)}
+.rv{opacity:.42!important;transition:opacity var(--d-move) var(--ease-std)} /* 초기 감쇠 완화(오너 3차: 빈 장처럼 보임) */
 .rv.on{opacity:1!important}
+/* 2카드 장 전용 확대(#19·#26 — §4 잔여는 타이포 확장이 흡수) */
+.roomy .abcard{justify-content:center;gap:26px}
+.roomy .abcard h3{font-size:42px}
+.roomy .abcard>p{font:400 30px/1.6 var(--fb);color:var(--sub)}
+.roomy .abr p{font-size:28px}
+/* 소재 목록 압축(#24 — 5행이 본문을 넘지 않게) */
+.split.tight>.rv{padding:15px 28px}
+.split.tight .spt{font-size:30px}
+.split.tight .sps{font-size:22px;margin-top:4px}
 .uibar{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 .uib{font:600 var(--fs-label) var(--fb);border:1.5px solid var(--line);background:var(--bg);
   border-radius:999px;padding:11px 24px;cursor:pointer;color:var(--sub);
@@ -1024,7 +1033,7 @@ ul{margin:0;padding:0;list-style:none}
   <div class="sbody">
     <div class="htitle an"><h1>도구 방침 = <em>무료 표준</em> · 유료는 자유</h1>
       <p class="sub">스터디가 다루는 대상과 다루지 않는 대상의 경계 · <b>도구명 추천 없음</b></p></div>
-    <div class="ab grow-1">
+    <div class="ab grow-1 roomy">
       <div class="abcard an dim">
         <div class="abh"><span class="ic ic--mute" style="width:56px;height:56px"><svg viewBox="0 0 34 34"><rect x="5" y="14" width="8" height="15"/><rect x="21" y="6" width="8" height="23"/></svg></span>
           <span class="abl">비우선</span><h3>도구 등급 비교</h3></div>
@@ -1195,7 +1204,7 @@ ul{margin:0;padding:0;list-style:none}
     <div class="htitle an"><h1>개인 소재 = <em>본인이 실사용자</em>인 반복 작업</h1>
       <p class="sub">1기 후보 5종 · 목록에서 고르는 방식이 아니라 <b>기준을 보여주는 예시</b></p></div>
     <div class="grow-1" style="display:flex;align-items:center">
-      <div class="split rows an" style="width:100%">
+      <div class="split rows tight an" style="width:100%">
         <div class="rv"><div class="spt">학업 관리 <em>=</em> 강의 일정·과제 마감 정리</div>
           <p class="sps">공지·강의계획서를 넣으면 주간 할 일로 정리. 주 3회 이상 반복.</p></div>
         <div class="rv"><div class="spt">자격증 학습 <em>=</em> 오답에서 복습 문항 생성</div>
@@ -1252,7 +1261,7 @@ ul{margin:0;padding:0;list-style:none}
   <div class="sbody">
     <div class="htitle an"><h1>팀 주제 = 기획은 <em>사람</em> · 구현은 <em>AI</em></h1>
       <p class="sub">2차 프로젝트(10-27 주 ~ 11-24) 범위 · 팀 결성 = <b>차시 4</b> · 무대 2종 중 택 1</p></div>
-    <div class="ab grow-1">
+    <div class="ab grow-1 roomy">
       <div class="abcard an">
         <div class="abh"><span class="ic" style="width:56px;height:56px"><svg viewBox="0 0 34 34"><circle cx="13" cy="12" r="5"/><path d="M4 28 a9 9 0 0 1 18 0"/><path d="M23 8 a5 5 0 0 1 0 9"/><path d="M24 28 a9 9 0 0 0 -3 -8"/></svg></span>
           <span class="abl">무대 A</span><h3>조직 실운영</h3></div>
@@ -1475,6 +1484,7 @@ ul{margin:0;padding:0;list-style:none}
       el.style.strokeDasharray=C; el.style.strokeDashoffset=C; });
     [].forEach.call(sl.querySelectorAll('.hot'),function(el){ el.classList.remove('hot'); });
     [].forEach.call(sl.querySelectorAll('.rv'),function(el){ el.classList.remove('on'); });
+    var rv0=sl.querySelector('.rv'); if(rv0) rv0.classList.add('on'); /* 첫 항목 자동 활성(초기 빈 장 방지) */
     [].forEach.call(sl.querySelectorAll('.chkr'),function(el){ el.classList.remove('done'); });
     [].forEach.call(sl.querySelectorAll('.uib'),function(el){ el.classList.remove('cur'); });
     applyJudge(sl,null);
