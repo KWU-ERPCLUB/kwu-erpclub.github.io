@@ -21,8 +21,8 @@
   --fd:'Paperlogy','Pretendard Variable',sans-serif;
   --fb:'Pretendard Variable',Pretendard,-apple-system,'Malgun Gothic',sans-serif;
   --fm:'JetBrains Mono','Consolas',monospace;
-  --fs-hero:108px; --fs-page-title:58px; --fs-section:44px; --fs-card-title:34px;
-  --fs-card-body:24px; --fs-sub:21px; --fs-label:18px; --fs-kpi:118px; --fs-kpi-sm:84px;
+  --fs-hero:140px; --fs-cover-sub:54px; --fs-page-title:58px; --fs-section:44px; --fs-card-title:34px;
+  --fs-card-body:26px; --fs-sub:22px; --fs-label:18px; --fs-kpi:118px; --fs-kpi-sm:84px;
   --num-circle:46px;
   --r-lg:28px; --r-md:16px; --r-sm:10px;
   /* 모션 토큰 (모션-시각화 §4) */
@@ -77,26 +77,40 @@ ul{margin:0;padding:0;list-style:none}
 .ic--dia{border-radius:var(--r-md);transform:rotate(45deg)}
 .ic--dia svg{transform:rotate(-45deg)}
 
-/* ---- BP1 표지 ---- */
+/* ---- BP1 표지 (v1.1 — 대형 제목·아이콘 스텝·실물 캡처) ---- */
 .cover{justify-content:flex-start;padding:0}
-.cover .cwrap{position:relative;z-index:3;display:flex;flex-direction:column;height:100%;padding:150px 120px 0}
+.cover .cwrap{position:relative;z-index:3;display:grid;grid-template-columns:1.15fr .85fr;gap:70px;height:100%;padding:170px 120px 0;align-items:start}
 .cover .eyebrow{display:flex;align-items:center;gap:14px;font:700 var(--fs-label)/1 var(--fb);letter-spacing:.02em;color:var(--accent)}
 .cover .eyebrow::before{content:'';width:44px;height:3px;background:var(--accent)}
-.cover .hero{margin:30px 0 0;font:800 var(--fs-hero)/1.05 var(--fd);letter-spacing:-.045em}
+.cover .hero{margin:30px 0 0;font:800 var(--fs-hero)/1.04 var(--fd);letter-spacing:-.045em}
 .cover .hero em{font-style:normal;color:var(--accent)}
-.cover .csub{margin:24px 0 0;font:700 var(--fs-section)/1.25 var(--fd);letter-spacing:-.03em;color:var(--sub)}
-.cover .cmsg{margin-top:46px;max-width:980px;background:var(--tint);border-radius:var(--r-md);padding:24px 32px;
-  font:600 26px/1.5 var(--fb);position:relative}
-.cover .cmsg::before{content:'';position:absolute;left:0;top:0;bottom:0;width:8px;border-radius:var(--r-md) 0 0 var(--r-md);background:var(--accent)}
-.cover .cmsg span{color:var(--accent)}
-.cover .cmsg .s2{display:block;margin-top:8px;font:400 var(--fs-sub)/1.5 var(--fb);color:var(--sub)}
+.cover .csub{margin:22px 0 0;font:700 var(--fs-cover-sub)/1.25 var(--fd);letter-spacing:-.03em;color:var(--sub)}
+.cover .csteps{margin-top:52px;display:flex;align-items:center;gap:10px}
+.cover .cstep{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;width:150px}
+.cover .cstep .ic{width:78px;height:78px}
+.cover .cstep .ic svg{width:36px;height:36px}
+.cover .cstep b{font:700 21px/1.25 var(--fb);color:var(--text);word-break:keep-all}
+.cover .cstep.on .ic{background:var(--accent)}
+.cover .cstep.on .ic svg{stroke:#fff}
+.cover .cstep.on b{color:var(--accent)}
+.cover .carr{font:600 24px var(--fm);color:#c9b8bc;margin-bottom:34px}
+.cover .cnote{margin-top:34px;font:500 var(--fs-card-body)/1.5 var(--fb);color:var(--sub)}
+.cover .cnote b{color:var(--accent);font-weight:700}
+.cover .cshot{position:relative;z-index:3;margin-top:12px}
+.cover .cshot .shotf{border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;background:var(--bg);
+  box-shadow:0 30px 70px -30px rgba(122,32,48,.35),0 8px 24px -10px rgba(20,20,20,.12)}
+.cover .cshot .bar{display:flex;align-items:center;gap:8px;background:#f1f0ee;border-bottom:1px solid var(--line);padding:12px 18px}
+.cover .cshot .dot2{width:11px;height:11px;border-radius:999px;background:#d3d2cf}
+.cover .cshot .url{margin-left:10px;font:500 15px var(--fm);color:var(--sub);background:#fff;border:1px solid var(--line);border-radius:8px;padding:4px 16px}
+.cover .cshot img{display:block;width:100%;height:460px;object-fit:cover;object-position:top center}
+.cover .cshot .cap{margin-top:14px;font:500 var(--fs-sub)/1.4 var(--fb);color:var(--mute);text-align:center}
 .cover .cfoot{position:absolute;left:120px;right:120px;bottom:52px;z-index:4;display:flex;
   justify-content:space-between;align-items:flex-end;border-top:1px solid var(--line);padding-top:22px}
 .cover .cbrand{font:800 30px var(--fd)}
 .cover .corg{margin-top:7px;font:500 var(--fs-sub) var(--fb);color:var(--sub)}
 .cover .cpill{font:600 var(--fs-sub) var(--fm);letter-spacing:.12em;color:var(--accent);
   border:1.5px solid var(--tint-line);background:var(--tint);border-radius:999px;padding:10px 24px}
-.cover .cwm{position:absolute;right:150px;top:150px;font:700 340px/1 var(--fm);color:var(--accent);opacity:.08;letter-spacing:-.06em;z-index:2}
+.cover .cwm{position:absolute;right:56px;top:20px;font:700 220px/1 var(--fm);color:var(--accent);opacity:.08;letter-spacing:-.06em;z-index:2}
 
 /* ---- BP3 디바이더 ---- */
 .divider{justify-content:center;padding:0 120px}
@@ -112,6 +126,16 @@ ul{margin:0;padding:0;list-style:none}
 .divider .tp{font:600 var(--fs-label) var(--fb);color:var(--mute);border:1.5px solid var(--line);
   border-radius:999px;padding:10px 22px;background:var(--bg)}
 .divider .tp.cur{background:var(--accent);border-color:var(--accent);color:#fff}
+/* 파트 구성 미리보기 (BP3 v1.1 — 빈 디바이더 금지) */
+.divider .dprev{margin-top:64px;max-width:1100px;display:flex;flex-direction:column}
+.divider .dprev .ph{font:600 15px var(--fm);letter-spacing:.12em;color:var(--mute);margin-bottom:8px}
+.divider .pv{display:flex;align-items:center;gap:24px;padding:24px 4px;border-bottom:1px solid var(--line)}
+.divider .pv:first-of-type{border-top:1px solid var(--line)}
+.divider .pv .pn{width:var(--num-circle);height:var(--num-circle);border-radius:999px;background:var(--surface);
+  border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font:600 21px var(--fm);color:var(--sub);flex:0 0 auto}
+.divider .pv .pvt{font:700 30px/1.3 var(--fd);letter-spacing:-.02em;word-break:keep-all}
+.divider .pv .pvt em{font-style:normal;color:var(--accent)}
+.divider .pv .pvs{margin-left:auto;font:500 var(--fs-sub) var(--fb);color:var(--mute);flex:0 0 auto}
 
 /* ---- BP4 히어로 수치 ---- */
 .g-kpi{display:grid;grid-template-columns:.95fr 1.05fr;gap:56px;align-items:stretch}
@@ -124,8 +148,8 @@ ul{margin:0;padding:0;list-style:none}
 .ring-bg{stroke:#efe9ea;stroke-width:22;fill:none}
 .ring-fg{stroke:var(--accent);stroke-width:22;fill:none;stroke-linecap:round}
 .ring-val{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.ring-val .num{font:600 var(--fs-kpi)/1 var(--fm);letter-spacing:-.05em;color:var(--accent);display:flex;align-items:baseline}
-.ring-val .unit{font:600 40px var(--fb);color:var(--accent);margin-left:2px}
+.ring-val .num{font:800 var(--fs-kpi)/1 var(--fd);letter-spacing:-.04em;color:var(--accent);display:flex;align-items:baseline;font-feature-settings:'tnum'}
+.ring-val .unit{font:700 42px var(--fd);color:var(--accent);margin-left:4px}
 .ring-lab{font:700 var(--fs-card-title)/1.3 var(--fd);letter-spacing:-.02em;text-align:center;word-break:keep-all}
 .ring-note{font:400 var(--fs-sub)/1.4 var(--fb);color:var(--mute)}
 .kside{display:flex;flex-direction:column;gap:0}
@@ -133,8 +157,8 @@ ul{margin:0;padding:0;list-style:none}
 .krow:first-child{border-top:1px solid var(--line)}
 .krow .kh{display:flex;align-items:baseline;justify-content:space-between;gap:20px}
 .krow .kt{font:700 var(--fs-card-title)/1.3 var(--fd);letter-spacing:-.02em;word-break:keep-all}
-.krow .kv{font:600 var(--fs-kpi-sm)/1 var(--fm);letter-spacing:-.04em;color:var(--text);display:flex;align-items:baseline}
-.krow .kv .unit{font:600 30px var(--fb);color:var(--sub);margin-left:2px}
+.krow .kv{font:800 var(--fs-kpi-sm)/1 var(--fd);letter-spacing:-.03em;color:var(--text);display:flex;align-items:baseline;font-feature-settings:'tnum'}
+.krow .kv .unit{font:700 32px var(--fd);color:var(--sub);margin-left:3px}
 .krow .kbar{height:14px;border-radius:999px;background:#efe9ea;overflow:hidden}
 .krow .kfill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--accent),#a04a58);
   transform:scaleX(0);transform-origin:left}
@@ -149,16 +173,21 @@ ul{margin:0;padding:0;list-style:none}
 
 /* ---- BP5 흐름 ---- */
 .pipe{display:flex;align-items:flex-start;justify-content:space-between;gap:0;padding:30px 10px 0}
-.pnode{display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center;flex:1;position:relative}
-.pnode .pt{font:700 30px/1.3 var(--fd);letter-spacing:-.02em;word-break:keep-all}
-.pnode .ps{font:400 var(--fs-sub)/1.45 var(--fb);color:var(--mute);max-width:250px;word-break:keep-all}
-.plink{flex:0 0 96px;margin-top:32px;overflow:visible}
+.pnode{display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;flex:1;position:relative}
+.pnode .pl{font:600 16px var(--fm);letter-spacing:.12em;color:var(--mute)}
+.pnode .ic{width:96px;height:96px}
+.pnode .ic svg{width:44px;height:44px}
+.pnode .pt{font:700 var(--fs-card-title)/1.25 var(--fd);letter-spacing:-.02em;word-break:keep-all}
+.pnode .ps{font:400 var(--fs-card-body)/1.45 var(--fb);color:var(--mute);max-width:290px;word-break:keep-all}
+.plink{flex:0 0 80px;margin-top:76px;overflow:visible}
 .plink line{stroke:var(--mute);stroke-width:2}
 .plink polyline{stroke:var(--mute);stroke-width:2;fill:none}
-.pnode.res .ic{width:90px;height:90px;transition:transform var(--d-move) var(--ease-std)}
-.pnode.res .pt{color:var(--accent)}
+.pnode.res .ic{width:120px;height:120px;transition:transform var(--d-move) var(--ease-std)}
+.pnode.res .ic svg{width:54px;height:54px}
+.pnode.res .pl{color:var(--accent)}
+.pnode.res .pt{color:var(--accent);font-size:38px}
 .pnode.res.hot .ic{transform:scale(1.08)}
-.peq{flex:0 0 70px;margin-top:44px;font:600 40px var(--fm);color:var(--mute);text-align:center}
+.peq{flex:0 0 64px;margin-top:80px;font:700 44px var(--fd);color:var(--mute);text-align:center}
 
 /* ---- BP6 대비 ---- */
 .ab{display:grid;grid-template-columns:1fr 1fr;gap:32px}
@@ -174,6 +203,12 @@ ul{margin:0;padding:0;list-style:none}
   flex:1;display:flex;flex-direction:column;justify-content:center}
 .abcard p{margin:0;font:400 var(--fs-card-body)/1.55 var(--fb);color:var(--sub);word-break:keep-all}
 .abcard p b{color:var(--text)}
+.abcard .abtag{font:600 15px var(--fm);letter-spacing:.1em;color:var(--mute);margin-bottom:-8px}
+.abcard .abdef{font:500 var(--fs-sub)/1.5 var(--fb);color:var(--accent);background:var(--tint);border-radius:var(--r-sm);padding:12px 18px}
+.abcard .abr{display:flex;align-items:flex-start;gap:14px;border-top:1px solid var(--line);padding-top:16px}
+.abcard .abr .rl2{font:700 15px var(--fm);letter-spacing:.1em;color:#fff;background:var(--accent);border-radius:999px;padding:7px 14px;flex:0 0 auto}
+.abcard .abr.bad .rl2{background:var(--mute)}
+.abcard .abr p{font:500 var(--fs-card-body)/1.5 var(--fb);color:var(--text)}
 .judge .abcard.lose{opacity:.38}
 .judge .abcard.win{background:var(--tint);border-color:var(--tint-line)}
 .judge .abcard.win .abl{background:var(--accent);border-color:var(--accent);color:#fff}
@@ -232,11 +267,30 @@ ul{margin:0;padding:0;list-style:none}
   <span class="dot" style="width:18px;height:18px;right:300px;top:210px;background:var(--accent)"></span>
   <div class="cwm">01</div>
   <div class="cwrap">
-    <div class="eyebrow an">광운대학교 ERP연구회 · MIS×AI 스터디</div>
-    <h1 class="hero an"><em>AIM</em> 1기 OT</h1>
-    <p class="csub an">세팅과 큰 그림</p>
-    <div class="cmsg an">오늘 진행 = 스터디 소개 → 허브 투어 → 세팅·비교 실습 → <span>학기 주제 공개</span> → 시작 설문
-      <span class="s2">진도 없음 · 환경 세팅과 방향 정렬이 오늘의 범위</span></div>
+    <div>
+      <div class="eyebrow an">광운대학교 ERP연구회 · MIS×AI 스터디</div>
+      <h1 class="hero an"><em>AIM</em> 1기 OT</h1>
+      <p class="csub an">세팅과 큰 그림</p>
+      <div class="csteps">
+        <div class="cstep an"><span class="ic"><svg viewBox="0 0 34 34"><circle cx="17" cy="17" r="12"/><path d="M17 11 v6 l4 3"/></svg></span><b>스터디<br/>소개</b></div>
+        <span class="carr an">→</span>
+        <div class="cstep an"><span class="ic"><svg viewBox="0 0 34 34"><rect x="4" y="6" width="26" height="20" rx="3"/><line x1="4" y1="12" x2="30" y2="12"/></svg></span><b>허브<br/>투어</b></div>
+        <span class="carr an">→</span>
+        <div class="cstep an"><span class="ic"><svg viewBox="0 0 34 34"><path d="M13 21 a6 6 0 1 1 8 -8 l6 -6 M25 13 l3 3"/><circle cx="12" cy="22" r="5"/></svg></span><b>세팅·비교<br/>실습</b></div>
+        <span class="carr an">→</span>
+        <div class="cstep on an"><span class="ic"><svg viewBox="0 0 34 34"><path d="M17 4 L20 13 L29 13 L22 19 L25 28 L17 22 L9 28 L12 19 L5 13 L14 13 Z"/></svg></span><b>학기 주제<br/>공개</b></div>
+        <span class="carr an">→</span>
+        <div class="cstep an"><span class="ic"><svg viewBox="0 0 34 34"><rect x="6" y="4" width="22" height="26" rx="3"/><polyline points="11,17 15,21 23,12"/></svg></span><b>시작<br/>설문</b></div>
+      </div>
+      <p class="cnote an">진도 없음 · <b>환경 세팅과 방향 정렬</b>이 오늘의 범위 · 60분</p>
+    </div>
+    <div class="cshot an">
+      <div class="shotf">
+        <div class="bar"><span class="dot2"></span><span class="dot2"></span><span class="dot2"></span><span class="url">kwu-erpclub.github.io</span></div>
+        <img src="../ws/ws-home.png" alt="AIM 워크스페이스 홈 화면" />
+      </div>
+      <p class="cap">오늘 투어할 실물 = AIM 허브 워크스페이스</p>
+    </div>
   </div>
   <div class="cfoot">
     <div><div class="cbrand">AIM</div><div class="corg">광운대학교 경영학부 ERP연구회 · MIS×AI 스터디</div></div>
@@ -253,11 +307,19 @@ ul{margin:0;padding:0;list-style:none}
   <span class="dot" style="width:38px;height:38px;right:760px;top:180px;background:var(--tint2)"></span>
   <span class="dot" style="width:16px;height:16px;right:720px;bottom:260px;background:var(--accent)"></span>
   <div class="dwm">1</div>
-  <div class="drow" style="margin-top:auto;margin-bottom:auto">
-    <div class="dnum an">01</div>
-    <div>
-      <div class="dtitle an">왜 이 스터디인가</div>
-      <p class="dline an">이 파트에서 얻는 것 = <b>시장 기준</b>과 스터디의 <b>최종 목표</b> 한 줄</p>
+  <div style="margin-top:auto;margin-bottom:auto;position:relative;z-index:3">
+    <div class="drow">
+      <div class="dnum an">01</div>
+      <div>
+        <div class="dtitle an">왜 이 스터디인가</div>
+        <p class="dline an">이 파트에서 얻는 것 = <b>시장 기준</b>과 스터디의 <b>최종 목표</b> 한 줄</p>
+      </div>
+    </div>
+    <div class="dprev">
+      <div class="ph an">PART 1 구성</div>
+      <div class="pv an"><span class="pn">1</span><span class="pvt">시장의 평가 대상 = <em>시키는 방식과 검수</em></span><span class="pvs">수치 3건</span></div>
+      <div class="pv an"><span class="pn">2</span><span class="pvt">최종 목표 = <em>증명 가능한 일상 활용자</em></span><span class="pvs">4단 도식</span></div>
+      <div class="pv an"><span class="pn">3</span><span class="pvt">격차의 원인 = 도구가 아니라 <em>시키는 방식</em></span><span class="pvs">두 방식 비교</span></div>
     </div>
   </div>
   <div class="tracker">
@@ -322,19 +384,19 @@ ul{margin:0;padding:0;list-style:none}
       <p class="sub">한 학기 뒤 도달 상태 · 4단 순서로 도달</p></div>
     <div class="grow-1" style="display:flex;align-items:center">
     <div class="pipe" style="flex:1">
-      <div class="pnode an"><span class="ic"><svg viewBox="0 0 34 34"><polyline points="4,24 12,15 19,20 30,7"/><polyline points="22,7 30,7 30,15"/></svg></span>
+      <div class="pnode an"><span class="pl">STEP 1</span><span class="ic"><svg viewBox="0 0 34 34"><polyline points="4,24 12,15 19,20 30,7"/><polyline points="22,7 30,7 30,15"/></svg></span>
         <span class="pt">트렌드 파악</span><span class="ps">주간 브리핑·인사이트로 흐름 감지</span></div>
-      <svg class="plink" width="96" height="26"><line class="draw" x1="4" y1="13" x2="80" y2="13"/><polyline class="draw" points="72,5 82,13 72,21"/></svg>
-      <div class="pnode an"><span class="ic"><svg viewBox="0 0 34 34"><circle cx="17" cy="17" r="12"/><circle cx="17" cy="17" r="5"/></svg></span>
+      <svg class="plink" width="80" height="26"><line class="draw" x1="4" y1="13" x2="66" y2="13"/><polyline class="draw" points="58,5 68,13 58,21"/></svg>
+      <div class="pnode an"><span class="pl">STEP 2</span><span class="ic"><svg viewBox="0 0 34 34"><circle cx="17" cy="17" r="12"/><circle cx="17" cy="17" r="5"/></svg></span>
         <span class="pt">적용처 선정</span><span class="ps">본인이 실사용자인 반복 작업에서 발굴</span></div>
-      <svg class="plink" width="96" height="26"><line class="draw" x1="4" y1="13" x2="80" y2="13"/><polyline class="draw" points="72,5 82,13 72,21"/></svg>
-      <div class="pnode an"><span class="ic"><svg viewBox="0 0 34 34"><rect x="6" y="4" width="22" height="26" rx="3"/><line x1="11" y1="12" x2="23" y2="12"/><line x1="11" y1="18" x2="23" y2="18"/><line x1="11" y1="24" x2="18" y2="24"/></svg></span>
+      <svg class="plink" width="80" height="26"><line class="draw" x1="4" y1="13" x2="66" y2="13"/><polyline class="draw" points="58,5 68,13 58,21"/></svg>
+      <div class="pnode an"><span class="pl">STEP 3</span><span class="ic"><svg viewBox="0 0 34 34"><rect x="6" y="4" width="22" height="26" rx="3"/><line x1="11" y1="12" x2="23" y2="12"/><line x1="11" y1="18" x2="23" y2="18"/><line x1="11" y1="24" x2="18" y2="24"/></svg></span>
         <span class="pt">기획</span><span class="ps">요구·조건을 브리프로 명세</span></div>
-      <svg class="plink" width="96" height="26"><line class="draw" x1="4" y1="13" x2="80" y2="13"/><polyline class="draw" points="72,5 82,13 72,21"/></svg>
-      <div class="pnode an"><span class="ic"><svg viewBox="0 0 34 34"><path d="M17 4 L20 13 L29 13 L22 19 L25 28 L17 22 L9 28 L12 19 L5 13 L14 13 Z"/></svg></span>
+      <svg class="plink" width="80" height="26"><line class="draw" x1="4" y1="13" x2="66" y2="13"/><polyline class="draw" points="58,5 68,13 58,21"/></svg>
+      <div class="pnode an"><span class="pl">STEP 4</span><span class="ic"><svg viewBox="0 0 34 34"><path d="M17 4 L20 13 L29 13 L22 19 L25 28 L17 22 L9 28 L12 19 L5 13 L14 13 Z"/></svg></span>
         <span class="pt">AI 구현</span><span class="ps">구현·반복은 AI에 위임, 결과는 검수</span></div>
       <span class="peq an">=</span>
-      <div class="pnode res an" data-hero><span class="ic ic--solid"><svg viewBox="0 0 34 34"><polyline points="7,18 14,25 27,9"/></svg></span>
+      <div class="pnode res an" data-hero><span class="pl">RESULT</span><span class="ic ic--solid"><svg viewBox="0 0 34 34"><polyline points="7,18 14,25 27,9"/></svg></span>
         <span class="pt">증명 가능한<br/>일상 활용자</span><span class="ps">전·후 수치와 동작하는 결과물로 증명</span></div>
     </div>
     </div>
@@ -352,25 +414,26 @@ ul{margin:0;padding:0;list-style:none}
   <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 왜 이 스터디인가</span><span class="hpage">05 <i>/ 05</i></span></div>
   <div class="sbody judge" id="judge">
     <div class="htitle an"><h1>격차의 원인 = 도구가 아니라 <em>시키는 방식</em></h1>
-      <p class="sub">전원 챗봇 경험자 · 같은 과제를 두 방식으로</p></div>
+      <p class="sub">같은 과제(경영정보 팀과제 발표자료 준비)를 <b style="color:var(--text)">두 방식으로 AI에 요청</b>한 결과 비교 · 전원 챗봇 경험자</p></div>
     <div class="ab grow-1">
       <div class="abcard an" data-side="a">
         <div class="abh"><span class="ic" style="width:56px;height:56px"><svg viewBox="0 0 34 34"><circle cx="15" cy="15" r="10"/><line x1="23" y1="23" x2="30" y2="30"/></svg></span>
-          <span class="abl">A · 한 줄 질문</span></div>
-        <h3>평소처럼 한 줄로 요청</h3>
+          <span class="abl">방식 A</span><h3 style="margin:0">질문 한 줄만 입력</h3></div>
+        <div class="abtag">입력</div>
         <div class="abq">"과제 발표자료 만들어줘"</div>
-        <p>맥락·조건·형식이 비어 있어 결과가 <b>일반론</b>으로 수렴. 다시 시키는 왕복이 반복.</p>
+        <div class="abr bad"><span class="rl2">결과</span><p>뼈대만 있는 <b>일반 목차</b>. 과목·분량·형식 미반영이라 다시 시키는 왕복 반복.</p></div>
       </div>
       <div class="abcard an" data-side="b">
         <div class="abh"><span class="ic" style="width:56px;height:56px"><svg viewBox="0 0 34 34"><rect x="5" y="5" width="10" height="10" rx="2"/><rect x="19" y="5" width="10" height="10" rx="2"/><rect x="5" y="19" width="10" height="10" rx="2"/><rect x="19" y="19" width="10" height="10" rx="2"/></svg></span>
-          <span class="abl">B · 브리프 4블록</span></div>
-        <h3>배경 · 목표 · 조건 · 형식을 명세</h3>
+          <span class="abl">방식 B</span><h3 style="margin:0">브리프 4칸을 채워 입력</h3></div>
+        <div class="abdef an">브리프 = AI에 주는 작업 지시서. 배경·목표·조건·형식 4칸이 기본형.</div>
+        <div class="abtag">입력</div>
         <div class="abq">배경 = 경영정보 팀과제<br/>목표 = 10분 발표 골격<br/>조건 = 출처 필수 · 표 1개<br/>형식 = 슬라이드 개요 8장</div>
-        <p>같은 도구, 같은 시간. 결과는 <b>그대로 쓸 수 있는 초안</b>에 근접.</p>
+        <div class="abr"><span class="rl2">결과</span><p>같은 도구·같은 시간에 <b>조건이 반영된 제출용 초안</b>.</p></div>
       </div>
     </div>
-    <div class="dark" data-hero>판정 기준 = <b>그대로 사용 가능한 쪽</b>은 어느 결과인가
-      <span class="dsub">도구 등급이 아니라 브리프의 유무가 격차를 만든 변수</span></div>
+    <div class="dark" data-hero>판정 = 두 결과 중 <b>그대로 제출할 수 있는 쪽</b>은 어느 것인가
+      <span class="dsub">격차를 만든 변수 = 도구 등급이 아니라 브리프의 유무 · 이 브리프 작성법이 차시 2의 내용</span></div>
   </div>
   <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 1 · 왜 이 스터디인가</span></div>
 </section>
