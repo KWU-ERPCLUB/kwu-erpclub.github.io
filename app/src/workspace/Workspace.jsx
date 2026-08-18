@@ -10,11 +10,14 @@ import Home from './Home.jsx'
 import Flow from './Flow.jsx'
 import Postings from './Postings.jsx'
 import Admin, { Denied } from './Admin.jsx'
+import Notices from './Notices.jsx'
 
 // 기능 탭 — [이름, 접근]. 접근 'staff' = 운영진에게만 노출(M3 ④).
 // 2026-08-14 재편(오너): 스터디 흐름 → 로드맵 개명 · 북마크 탭 = 내정보로 흡수 · 탭 설명 문구 폐지(아이콘 대체).
+// 2026-08-18 오너: 공지 = 홈 레일 구석에서 전용 탭 승격(홈 레일은 제목만 남긴다).
 export const WS_TABS = [
   ['홈'],
+  ['공지'],
   ['로드맵'],
   ['공고'],
   ['인사이트 기고'],
@@ -22,9 +25,9 @@ export const WS_TABS = [
   ['운영', 'staff'],
 ]
 
-// 구 탭명 딥링크 호환 — 구 탭명 진입 시 새 탭으로 매핑(링크 깨짐 0).
+// 구 탭명 딥링크 호환 — 구 탭명 진입 시 새 탭으로 매핑(링크 깨짐 0). (공지 = 2026-08-18 전용 탭 승격으로 제거)
 const LEGACY_TAB_MAP = {
-  제출: '홈', 스터디: '홈', 과제: '홈', 공지: '홈', 세션: '홈',
+  제출: '홈', 스터디: '홈', 과제: '홈', 세션: '홈',
   컬렉션: '내정보', 북마크: '내정보', 흐름: '로드맵', '스터디 흐름': '로드맵', 기고: '인사이트 기고',
 }
 
@@ -37,6 +40,7 @@ const TAB_SHORT = { '인사이트 기고': '기고' }
 // 탭 아이콘(설명 문구 대체 — "텍스트보다 시각 전달", 오너 2026-08-14). 16px stroke 인라인 SVG.
 const TAB_ICONS = {
   홈: <path d="M3.5 10.2 12 3l8.5 7.2V20a1 1 0 0 1-1 1h-5.2v-5.6H9.7V21H4.5a1 1 0 0 1-1-1z" />,
+  공지: <><path d="M12 3.5a5 5 0 0 0-5 5v3.2l-1.7 3h13.4l-1.7-3V8.5a5 5 0 0 0-5-5z" /><path d="M10 18a2 2 0 0 0 4 0" /></>,
   로드맵: <><circle cx="5.5" cy="5.5" r="2" /><circle cx="18.5" cy="18.5" r="2" /><path d="M7.5 5.5h7a3.5 3.5 0 0 1 0 7h-5a3.5 3.5 0 0 0 0 7h7" /></>,
   공고: <><path d="M3.5 10.5v3.5l11.5 5V5l-11.5 5.5z" /><path d="M18.5 9a4.2 4.2 0 0 1 0 6.4" /></>,
   '인사이트 기고': <path d="M4.5 19.5l1-4L17 4a2.05 2.05 0 0 1 2.9 2.9L8.4 18.5l-3.9 1z" />,
@@ -135,7 +139,8 @@ export function Shell({ member, onSignOut, store, onMemberChanged, search }) {
   // 탭 본문 — visited에 든 탭만 마운트, 비활성은 hidden(display:none)으로 상태 보존.
   function paneOf(name) {
     if (!store) return null
-    if (name === '홈') return <Home store={store} member={member} />
+    if (name === '홈') return <Home store={store} member={member} onGoTab={go} />
+    if (name === '공지') return <Notices store={store} />
     if (name === '로드맵') return <Flow store={store} staff={staff} />
     if (name === '공고') return <Postings store={store} />
     if (name === '인사이트 기고') return <Contribute store={store} />

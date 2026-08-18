@@ -1,4 +1,5 @@
-// 공지 섹션(홈 탭 조립부 — 2026-08-06 홈 개편) — 내부 공지 열람. 작성·수정은 운영 탭(운영진 전용).
+// 공지(2026-08-18 오너 개편 — 전용 탭 승격): 기본 export = 공지 탭 본문(제목·날짜·본문 카드),
+// NoticeTitles = 홈 레일용 제목만 목록(클릭 = 공지 탭 이동). 작성·수정은 운영 탭(운영진 전용).
 // 운영 기록(OpsLog, 구 /log 내부화)은 2026-08-18 운영 탭으로 이동(오너 — 스터디원이 볼 필요 없음). export만 여기 유지.
 // notices_select_member: 내부여부=true 행은 멤버에게만 보인다.
 // 운영 기록 = 읽기 전용 렌더 — 데이터 원천 = src/data/log.js(기록 추가 = 데이터 1줄 추가).
@@ -64,7 +65,8 @@ export function OpsLog() {
   )
 }
 
-export default function Notices({ store }) {
+// 공지 로드 공용 훅 — 탭 본문·홈 제목 목록이 같은 원천을 쓴다.
+function useNotices(store) {
   const [rows, setRows] = useState([])
   const [status, setStatus] = useState('loading')
   const [error, setError] = useState('')
@@ -74,26 +76,53 @@ export default function Notices({ store }) {
     .catch((e) => { setError(e?.message || '불러오기 실패'); setStatus('error') }), [store])
 
   useEffect(() => { load() }, [load])
+  return { rows, status, error }
+}
 
+const ymd = (ts) => String(ts || '').slice(0, 10)
+
+// 홈 레일용 — 제목·날짜만(오너 2026-08-18: 홈에서 본문 전체 노출 폐지). 클릭 = 공지 탭 이동.
+export function NoticeTitles({ store, onOpen }) {
+  const { rows, status, error } = useNotices(store)
   return (
-      <section className="ws-block">
-        <h2 className="ws-h2">공지 <span className="ws-count">{rows.length}</span></h2>
-        {status === 'loading' && <div className="ws-skel" aria-label="불러오는 중"><span /><span /></div>}
-        {error && <p className="ws-error" role="alert">{error}</p>}
-        {status === 'ready' && rows.length === 0 && <p className="ws-note">공지 0건.</p>}
-        <ul className="ws-list">
-          {rows.map((n) => (
-            <li key={n.id} className="ws-scrap">
-              <div className="ws-row-top">
-                <span className="ws-row-title">{n['제목']}</span>
-                <span className="ws-mark-meta">{n['내부여부'] === false ? '공개' : '내부'}</span>
-              </div>
-              <div className="ws-preview">
-                <Markdown body={n['본문'] || ''} />
-              </div>
-            </li>
-          ))}
-        </ul>
-      </section>
+    <section className="ws-block">
+      <h2 className="ws-h2">공지 <span className="ws-count">{rows.length}</span></h2>
+      {status === 'loading' && <div className="ws-skel" aria-label="불러오는 중"><span /><span /></div>}
+      {error && <p className="ws-error" role="alert">{error}</p>}
+      {status === 'ready' && rows.length === 0 && <p className="ws-note">공지 0건.</p>}
+      <ul className="ws-list">
+        {rows.map((n) => (
+          <li key={n.id}>
+            <button type="button" className="ws-up-item" onClick={onOpen}>
+              <span className="ws-up-title">{n['제목']}</span>
+              <span className="ws-up-when">{ymd(n.created_at)}</span>
+            </button>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
+// 공지 탭 본문 — 한 공지 = 한 카드(제목 크게 + 날짜 + 본문 서식).
+export default function Notices({ store }) {
+  const { rows, status, error } = useNotices(store)
+  return (
+    <div className="ws-notices">
+      {status === 'loading' && <div className="ws-skel" aria-label="불러오는 중"><span /><span /></div>}
+      {error && <p className="ws-error" role="alert">{error}</p>}
+      {status === 'ready' && rows.length === 0 && <p className="ws-note">공지 0건.</p>}
+      {rows.map((n) => (
+        <article key={n.id} className="ws-block ws-notice">
+          <div className="ws-row-top">
+            <h2 className="ws-notice-title">{n['제목']}</h2>
+            <span className="ws-mark-meta">{ymd(n.created_at)}</span>
+          </div>
+          <div className="ws-notice-body">
+            <Markdown body={n['본문'] || ''} />
+          </div>
+        </article>
+      ))}
+    </div>
   )
 }

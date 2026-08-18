@@ -99,11 +99,11 @@ test('직접 진입(?tab=운영) — 스터디원은 안내만, 운영진은 운
 })
 
 // 구 탭명 딥링크 = 새 탭으로 매핑(링크 깨짐 0 — 2026-08-06 홈 개편, 2026-08-14 재편)
-test('구 탭명 딥링크 매핑 — 제출·스터디·과제·공지·세션 → 홈 / 컬렉션·북마크 → 내정보 / 흐름 → 로드맵 / 기고 → 새 이름', () => {
+test('구 탭명 딥링크 매핑 — 제출·스터디·과제·세션 → 홈 / 컬렉션·북마크 → 내정보 / 흐름 → 로드맵 / 기고 → 새 이름', () => {
   expect(initialTab('?tab=제출')).toBe('홈')
   expect(initialTab('?tab=스터디')).toBe('홈')
   expect(initialTab('?tab=과제')).toBe('홈')
-  expect(initialTab('?tab=공지')).toBe('홈')
+  expect(initialTab('?tab=공지')).toBe('공지')   // 2026-08-18 전용 탭 승격 — 더는 홈으로 안 보냄
   expect(initialTab('?tab=세션')).toBe('홈')
   expect(initialTab('?tab=컬렉션')).toBe('내정보')
   expect(initialTab('?tab=북마크')).toBe('내정보')
@@ -121,6 +121,14 @@ test('홈 = 과제 제출·공지 화면(구 딥링크 경유 포함) — 세션
   expect(홈).toContain('공지')
   expect(홈).not.toContain('운영 기록')        // 운영 탭으로 이동(오너 — 스터디원 열람 불필요)
   expect(홈).not.toContain('준비 중')
+})
+
+// 공지 전용 탭(2026-08-18 오너) — 스터디원에게도 노출 + 탭 본문 = 카드 서식.
+test('공지 탭 — 사이드바 노출 + ?tab=공지 진입 시 공지 본문 렌더, 홈 레일은 제목만', () => {
+  expect(visibleTabs({ role: '스터디원' }).map(([n]) => n)).toContain('공지')
+  const store = createMockRepositories({ user: 'mock-member' })
+  const html = flat(<Shell member={{ 이름: 'ㄱ', role: '스터디원' }} store={store} search="?tab=공지" />)
+  expect(html).toContain('ws-notices')
 })
 
 // P5 재해석(§0-5 개정): 학번 = 로그인 ID → 본인 화면 표시 허용. 사적 필드는 전공뿐 — 셸이 그리지 않는다.

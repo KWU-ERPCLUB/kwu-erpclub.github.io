@@ -5,7 +5,7 @@ import { monthGrid, buildAgenda, itemsOn, upcoming, dday, daysBetween, toKey, we
 import { postingAgendaItems } from './postings-logic.js'
 import { filterAgendaBySubs, SUBS_CHANGED } from './postings-taxonomy.js'
 import Assignments from './Assignments.jsx'
-import Notices from './Notices.jsx'
+import { NoticeTitles } from './Notices.jsx'
 
 const KIND_CLASS = { 일정: 'ev', 세미나: 'sem', 모집: 'rec', 마감: 'due', 과제: 'due', 세션: 'sem', 공고: 'post', 학사: 'ac' }
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토']
@@ -195,7 +195,7 @@ export function HomeSummary({ member, items, todayKey }) {
   )
 }
 
-export default function Home({ store, member }) {
+export default function Home({ store, member, onGoTab }) {
   const todayKey = useMemo(() => toKey(new Date()), [])
   const [ym, setYm] = useState(() => ({ y: Number(todayKey.slice(0, 4)), m: Number(todayKey.slice(5, 7)) }))
   const [selected, setSelected] = useState(todayKey)
@@ -274,7 +274,8 @@ export default function Home({ store, member }) {
           <UpcomingTasks items={items} todayKey={todayKey} onSelect={setSelected} />
           <DayDetail items={items} selected={selected} onOpenItem={setPopup} />
         </div>
-        <Notices store={store} />
+        {/* 공지 = 제목만(오너 2026-08-18 — 본문은 전용 공지 탭). 클릭 = 공지 탭 이동 */}
+        <NoticeTitles store={store} onOpen={() => onGoTab?.('공지')} />
       </aside>
       <ItemPopup item={popup} onClose={() => setPopup(null)} />
     </div>

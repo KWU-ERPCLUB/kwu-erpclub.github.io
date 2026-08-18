@@ -257,3 +257,14 @@
   .ws-field input, .ws-field select, .ws-textarea, .ws-table select { font-size: 16px; }   /* px 고정 — 폰 루트 15px 축소와 무관하게 iOS 확대 방지 */
   .ws-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
 }
+
+/* ══ 공지 탭(2026-08-18 오너 — 전용 탭 승격, 홈 레일은 제목만) — 한 공지 = 한 카드 + 본문 서식 ══ */
+.ws-notices { display: grid; gap: 0.9rem; max-width: 760px; }
+.ws-notice { margin: 0; background: var(--surface); border-radius: 14px; padding: 1.15rem 1.35rem 1.25rem; }
+.ws-notice-title { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; letter-spacing: -0.01em; word-break: keep-all; }
+.ws-notice-body { margin-top: 0.6rem; font-size: 0.94rem; line-height: 1.7; color: var(--text); word-break: keep-all; }
+.ws-notice-body p { margin: 0.55rem 0; }
+.ws-notice-body ul, .ws-notice-body ol { margin: 0.55rem 0; padding-left: 1.25rem; }
+.ws-notice-body li { margin: 0.3rem 0; list-style: disc; }
+.ws-notice-body a { color: var(--accent); font-weight: 700; word-break: break-all; }
+.ws-notice-body strong { font-weight: 750; }

@@ -3,7 +3,7 @@ import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
 import Sessions from './Sessions.jsx'
 import Assignments, { dueLabel } from './Assignments.jsx'
-import Notices from './Notices.jsx'
+import Notices, { NoticeTitles } from './Notices.jsx'
 import { createMockRepositories } from '../data/mock.js'
 
 const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
@@ -21,8 +21,10 @@ test('과제 탭 골격 = 제목 + 링크 제출 입력', () => {
   expect(html).toContain('불러오는 중')
 })
 
-test('공지 탭 골격 = 내부 공지 목록', () => {
-  expect(flat(<Notices store={member()} />)).toContain('공지')
+// 2026-08-18 공지 전용 탭 승격 — 탭 본문 = 카드 골격(제목은 셸 헤더가 담당), 홈 레일 = 제목만 목록.
+test('공지 — 탭 본문 = 카드 골격, 홈 레일 = 제목만 목록', () => {
+  expect(flat(<Notices store={member()} />)).toContain('ws-notices')
+  expect(flat(<NoticeTitles store={member()} />)).toContain('공지')
 })
 
 test('마감 표시 — 없음·예정·지남 3상태', () => {
