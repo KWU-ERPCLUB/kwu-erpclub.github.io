@@ -92,6 +92,8 @@
 /* 레일 블록 = surface 면 카드(4차 "구분 = 면 교대" — 헤어라인 대신 면·라운드) */
 .ws-crail .ws-block { margin-bottom: 0; background: var(--surface); border-radius: 18px; padding: 1.15rem 1.2rem 1.25rem; }
 .ws-cmain > .ws-block + .ws-block { margin-top: 2.2rem; }
+/* 폰 전용 복제 묶음(.ws-m-only — 데스크탑 display:none)이 사이에 끼어도 인접 마진 유지 */
+.ws-cmain > .ws-m-only + .ws-block { margin-top: 2.2rem; }
 
 /* 세로 덜컥 방지 — 짧은 탭도 화면 높이를 유지(내용 길이 차이로 페이지가 확 줄지 않게) */
 .ws-content { min-height: calc(100vh - 200px); }
@@ -203,9 +205,13 @@
 /* 폰(<760) — 모바일 전용 개편(2026-08-18 spec §3-1): 사이드바 → 하단 고정 탭 바(아이콘+축약 라벨).
    근거 = 로그인 후 반복 사용 화면은 상시 노출·엄지 도달(HIG·Material 하단 탭 3~5 권고). */
 @media (max-width: 760px) {
-  /* 본문 하단 = 탭 바 높이 + 홈 인디케이터 안전영역만큼 확보(M5) */
-  .ws-main.ws-app { padding: 0.6rem 1rem calc(5.2rem + env(safe-area-inset-bottom)); }
+  /* 본문 하단 = 탭 바 높이 + 홈 인디케이터 안전영역만큼 확보(M5). 상단 = 숨통(오너 "꽉 차 보임") */
+  .ws-main.ws-app { padding: 1.3rem 1rem calc(5.2rem + env(safe-area-inset-bottom)); }
   .ws-shell { grid-template-columns: minmax(0, 1fr); gap: 0.4rem; }
+  /* 타이포 하향(오너 "폰트·요소 좀 더 작게") — 루트 15px에 더해 대형 헤딩 한 단계 */
+  .ws-content-title { font-size: 1.3rem; }
+  .ws-summary-hi { font-size: 1.25rem; }
+  .ws-summary-line { font-size: 0.88rem; }
   .ws-side {
     position: fixed; left: 0; right: 0; bottom: 0; top: auto; z-index: 40;
     height: auto; overflow: visible;
@@ -227,16 +233,22 @@
   .ws-sidebtn-short { display: block; font-size: 0.75rem; font-weight: 600; line-height: 1; }
   .ws-sidebtn.on .ws-sidebtn-short { font-weight: 800; }
   /* 폰 전용 계정 줄 — 이름·역할 + 로그아웃 한 줄 */
-  .ws-me-mobile { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.9rem; }
+  .ws-me-mobile { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1.1rem; }
   .ws-me-mobile p { margin: 0; }
   .ws-me-mobile .ws-signout { margin-left: auto; }
-  .ws-cols { grid-template-columns: 1fr; }   /* 폰 = 본문 아래 레일 적층. 캘린더 폰 규칙 = workspace-calendar.css */
+  .ws-cols { grid-template-columns: 1fr; gap: 1.5rem; }   /* 폰 = 본문 아래 레일 적층. 캘린더 폰 규칙 = workspace-calendar.css */
   .ws-tracks { grid-template-columns: 1fr; }
   /* 폰 전용 복제 블록(홈: 선택일 아젠다·다가오는 업무 = 캘린더 직하) + 레일 원본 숨김 */
   .ws-m-only { display: block; }
   .ws-d-only { display: none; }
-  .ws-m-only .ws-daydetail { margin-top: 1.2rem; }
-  .ws-m-only .ws-upcoming { min-height: 0; margin-top: 1.4rem; }
+  /* 면 카드 구획(오너 "꽉 차 보임" — 구분은 선이 아니라 면·라운드, 4차 규칙 재사용) */
+  .ws-home .ws-block { background: var(--surface); border-radius: 18px; padding: 1.05rem 0.95rem 1.15rem; }
+  .ws-cmain > .ws-block + .ws-block, .ws-cmain > .ws-m-only + .ws-block { margin-top: 1.4rem; }
+  .ws-m-only .ws-daydetail { margin-top: 1.4rem; border-top: 0; }
+  .ws-m-only .ws-upcoming {
+    min-height: 0; margin-top: 1.4rem;
+    background: var(--surface); border-radius: 18px; padding: 1.05rem 0.95rem 1.15rem;
+  }
   /* 다가오는 업무 = 5건 + "전체 N건 보기" 펼침(spec §3-2) */
   .ws-up-list:not(.open) li:nth-child(n + 6) { display: none; }
   .ws-up-more {

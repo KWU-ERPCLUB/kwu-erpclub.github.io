@@ -9,7 +9,7 @@
   margin: 0 auto;
   padding: 3rem 1.5rem 5rem; /* 내부형 — 소개형 4.5rem의 ~55% */
 }
-@media (max-width: 700px) { .hub-page { padding: 2rem 1.25rem 3.5rem; } }
+@media (max-width: 700px) { .hub-page { padding: 2.4rem 1.25rem 3.5rem; } }   /* 폰 상단 숨통(오너 2026-08-18) */
 /* 상세 전용 폭 해제(2026-07-28 도판 브레이크아웃) — 목록 셸은 920 유지, 폭 책임 = .hub-md 그리드(hub-md.css) */
 .hub-page--wide { max-width: none; }
 

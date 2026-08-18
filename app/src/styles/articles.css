@@ -13,7 +13,7 @@
 .art-page--list { max-width: var(--maxw); }
 /* 데스크톱 = 중앙 몰림 해소(콘텐츠 폭 1280 활용) */
 @media (min-width: 1200px) { .art-page--list { max-width: 1280px; } }
-@media (max-width: 700px) { .art-page { padding: 2rem 1.25rem 3.5rem; } }
+@media (max-width: 700px) { .art-page { padding: 2.4rem 1.25rem 3.5rem; } }   /* 폰 상단 숨통(오너 2026-08-18) */
 
 /* ── 접근성 유틸 ── */
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }

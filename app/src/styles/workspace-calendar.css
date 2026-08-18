@@ -111,7 +111,8 @@
 .ws-cal-dots { display: none; }
 
 @media (max-width: 760px) {
-  .ws-cal-cell { min-height: 56px; }        /* 393÷7 ≈ 56px 폭과 정합 — 터치 타깃 M1 */
+  .ws-cal-head .ws-h2 { font-size: 1.1rem; }   /* 폰 타이포 하향(오너 2026-08-18) */
+  .ws-cal-cell { min-height: 52px; }        /* 393÷7 ≈ 53px 폭과 정합 — 터치 타깃 M1(44px+) */
   .ws-cal-chip { display: none; }           /* 폰 = 점만(칩은 좁아서 뭉개짐) */
   .ws-cal-cell .ws-cal-more { display: none; }
   /* 구 중립 도트 1개(has-items::after) 폐지 → 종류색 도트 최대 3개(Apple Compact 문법 — 종류 정보 보존) */

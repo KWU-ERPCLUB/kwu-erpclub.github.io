@@ -193,6 +193,15 @@ body {
 .pg-sub { margin: 0 auto; max-width: 56ch; font-size: 1rem; color: var(--text-sub); word-break: keep-all; }
 .pg-meta { margin: 0.8rem 0 0; font-size: 0.78rem; color: var(--text-sub); } /* 갱신일 — 인사이트만 전달 */
 
+/* ── 폰 전역 축소(오너 2026-08-18 — "폰트·요소 좀 더 작게") ──
+   루트 15px = rem 기반 크기 전량 ~6% 축소. 터치 타깃(44px)·입력 16px은 px 고정이라 불변(모바일 spec M1·M2).
+   대형 디스플레이 타이포는 별도 하향(clamp 하한이 폰에서 지배하는 것 보정). */
+@media (max-width: 760px) {
+  html { font-size: 15px; }
+  .pg-title { font-size: clamp(1.85rem, 8vw, 2.4rem); }
+  .pg-sub { font-size: 0.95rem; }
+}
+
 /* ── 스탯 숫자 — 소비 = home-motion CountUp·블랙 밴드(4차: 버건디 언더바 폐지 — 피드백 "작대기 삭제") ── */
 .stat-num {
   font-family: var(--font-display); font-weight: 800; font-size: 2.6rem;

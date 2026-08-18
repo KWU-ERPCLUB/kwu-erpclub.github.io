@@ -11,7 +11,7 @@
   margin: 0 auto;
   padding: clamp(3rem, 7vh, 5rem) 1.5rem;
 }
-@media (max-width: 700px) { .hs-in { padding: 2.5rem 1.25rem; } }
+@media (max-width: 700px) { .hs-in { padding: 2.75rem 1.25rem; } }   /* 폰 섹션 숨통(오너 2026-08-18) */
 
 /* 섹션 배경 교대 — 선 대신 면으로 구분(피드백 "배경색을 바꿔가면서") */
 .hs-roadmap, .hs-faq { background: var(--surface); }

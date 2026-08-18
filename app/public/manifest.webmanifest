@@ -1,0 +1,15 @@
+{
+  "name": "AIM — MIS·AI 스터디 허브",
+  "short_name": "AIM",
+  "description": "광운대학교 경영학부 ERP연구회 산하 MIS·AI 스터디 허브",
+  "start_url": "/workspace/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": [
+    { "src": "/img/app/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/img/app/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/img/app/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

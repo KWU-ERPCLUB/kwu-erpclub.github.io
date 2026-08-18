@@ -288,7 +288,7 @@
 }
 .rc-field input:focus-visible, .rc-field textarea:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 /* 폰 = 입력 16px 하한(모바일 spec M2) — 15px대면 iOS Safari가 포커스 시 화면을 자동 확대 */
-@media (max-width: 700px) { .rc-field input, .rc-field textarea { font-size: 1rem; } }
+@media (max-width: 700px) { .rc-field input, .rc-field textarea { font-size: 16px; } }   /* px 고정 — 폰 루트 15px 축소와 무관 */
 .rc-field input[aria-invalid='true'] { border-color: var(--accent); }
 .rc-field-error { font-size: 0.8rem; color: var(--accent); }
 .rc-form-privacy { margin: 0.5rem 0 1rem; font-size: 0.8rem; color: var(--text-sub); }
