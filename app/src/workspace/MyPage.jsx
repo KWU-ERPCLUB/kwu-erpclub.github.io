@@ -3,6 +3,7 @@
 // 수정 가능 범위 = 자기소개·관심사(이름·학번·role은 운영진이 관리 — RLS members_update_self가 role 변경을 거부).
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import Collections from './Collections.jsx'
+import MySubscriptions from './MySubscriptions.jsx'
 import { toKey, dday, daysBetween } from './calendar-logic.js'
 import { postingStatus } from './postings-logic.js'
 
@@ -231,6 +232,7 @@ export default function MyPage({ store, member, onProfileSaved }) {
         {error && <p className="ws-error" role="alert">{error}</p>}
         <Collections store={store} />
         <InterestedPostings store={store} />
+        <MySubscriptions store={store} />
         {/* 설정 = 접힘(2026-08-14 오너 — 자주 확인 안 할 내용은 숨김) */}
         <section className="ws-block">
           <details className="ws-settings">

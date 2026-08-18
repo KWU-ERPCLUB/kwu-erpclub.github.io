@@ -3,11 +3,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { monthGrid, buildAgenda, itemsOn, upcoming, dday, daysBetween, toKey, WEEKLY_CONTRIB, weeklyContribItems } from './calendar-logic.js'
 import { postingAgendaItems } from './postings-logic.js'
+import { filterAgendaBySubs } from './postings-taxonomy.js'
 import Assignments from './Assignments.jsx'
 import Notices from './Notices.jsx'
 import Sessions from './Sessions.jsx'
 
-const KIND_CLASS = { 일정: 'ev', 세미나: 'sem', 모집: 'rec', 마감: 'due', 과제: 'due', 세션: 'sem', 공고: 'post' }
+const KIND_CLASS = { 일정: 'ev', 세미나: 'sem', 모집: 'rec', 마감: 'due', 과제: 'due', 세션: 'sem', 공고: 'post', 학사: 'ac' }
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토']
 
 // 항목 세부 팝업(2026-08-07 오너) — 새 창 대신 작은 둥근 팝업. 캘린더 칩·선택일 목록 어디서든 연다.
@@ -67,7 +68,7 @@ export function MonthCalendar({ year, month, items, todayKey, selected, onSelect
       </div>
       {/* 범례(2026-08-14 검수) — 점 색이 곧 종류: 기존 ws-cal-dot 색 재사용 */}
       <ul className="ws-cal-legend">
-        {[['ev', '일정'], ['sem', '세미나'], ['rec', '모집'], ['due', '마감'], ['post', '공고']].map(([c, label]) => (
+        {[['ev', '일정'], ['sem', '세미나'], ['rec', '모집'], ['due', '마감'], ['post', '공고'], ['ac', '학사']].map(([c, label]) => (
           <li key={c}><span className={`ws-cal-dot ${c}`} aria-hidden="true" />{label}</li>
         ))}
       </ul>
@@ -194,7 +195,7 @@ export default function Home({ store, member }) {
   const [ym, setYm] = useState(() => ({ y: Number(todayKey.slice(0, 4)), m: Number(todayKey.slice(5, 7)) }))
   const [selected, setSelected] = useState(todayKey)
   const [popup, setPopup] = useState(null)          // 세부 팝업 대상 항목(2026-08-07)
-  const [raw, setRaw] = useState({ events: [], assignments: [], sessions: [], postings: [] })
+  const [raw, setRaw] = useState({ events: [], assignments: [], sessions: [], postings: [], subs: null })
   const [error, setError] = useState('')
 
   const load = useCallback(() => Promise.all([
@@ -202,17 +203,20 @@ export default function Home({ store, member }) {
     store.assignments.list(),
     store.sessions.list(),
     store.postings.list(),
-  ]).then(([events, assignments, sessions, postings]) => {
-    setRaw({ events: events || [], assignments: assignments || [], sessions: sessions || [], postings: postings || [] })
+    store.postings.listSubscriptions(),
+  ]).then(([events, assignments, sessions, postings, subs]) => {
+    setRaw({ events: events || [], assignments: assignments || [], sessions: sessions || [], postings: postings || [], subs })
   }).catch((e) => setError(e?.message || '불러오기 실패')), [store])
 
   useEffect(() => { load() }, [load])
 
   // 네 원천(운영 일정·과제·세션 + 공고 마감·시험일) + 주간 기고 반복 — 합친 뒤 날짜 재정렬(upcoming이 정렬 전제).
+  // 구독 필터(2026-08-18) — 공고·운영 일정은 구독 카테고리만 합류(행 0건 = 학사+AIM, null = 0014 미적용 강등: 전부).
   const items = useMemo(
-    () => buildAgenda(raw)
-      .concat(postingAgendaItems(raw.postings), weeklyContribItems(todayKey))
-      .sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0)),
+    () => filterAgendaBySubs(
+      buildAgenda(raw).concat(postingAgendaItems(raw.postings), weeklyContribItems(todayKey)),
+      raw.subs,
+    ).sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0)),
     [raw, todayKey],
   )
 

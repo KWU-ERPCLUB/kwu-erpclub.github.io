@@ -39,3 +39,18 @@
 .ws-settings summary:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; border-radius: 12px; }
 .ws-settings > .ws-block { padding: 0 1rem 1.1rem; margin-bottom: 0; }
 .ws-settings .ws-h2 { display: none; }
+
+/* 캘린더 구독 요약(2026-08-18) — 구독 칩 + × 해제. 추가는 공고 탭에서 */
+.ws-sub-chips { list-style: none; display: flex; flex-wrap: wrap; gap: 0.45rem; margin: 0 0 0.6rem; padding: 0; }
+.ws-sub-chip {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  font-size: 0.8rem; font-weight: 600; color: var(--text);
+  border: 1px solid var(--line); border-radius: var(--radius-pill); padding: 0.26rem 0.5rem 0.26rem 0.8rem;
+  background: #fff;
+}
+.ws-sub-chip button {
+  border: 0; background: none; cursor: pointer; font-size: 0.95rem; line-height: 1;
+  color: var(--text-sub); padding: 0.2rem 0.3rem;
+}
+.ws-sub-chip button:hover { color: var(--accent); }
+.ws-sub-chip button:focus-visible { outline: 3px solid var(--accent); outline-offset: 1px; border-radius: 4px; }

@@ -206,6 +206,18 @@ export function createMockRepositories({ user = null, data = {} } = {}) {
         if (!on && at >= 0) store.posting_interests.splice(at, 1)
         return on
       },
+      async listSubscriptions() {   // 캘린더 구독(0014 동형) — 본인 행만
+        if (!currentId) return null
+        return store.posting_subscriptions.filter((r) => r.member_id === currentId).map(({ 종류, 분류 }) => ({ 종류, 분류 }))
+      },
+      async toggleSubscription(kind, sub, on) {
+        if (!currentId) throw new Error('로그인 필요')
+        const rows = store.posting_subscriptions
+        const at = rows.findIndex((r) => r.member_id === currentId && r['종류'] === kind && r['분류'] === (sub || ''))
+        if (on && at < 0) rows.push({ member_id: currentId, 종류: kind, 분류: sub || '' })
+        if (!on && at >= 0) rows.splice(at, 1)
+        return on
+      },
     },
     notes: {
       async list() { return clone(store.session_notes) },

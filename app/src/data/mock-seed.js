@@ -17,9 +17,9 @@ export const SEED = {
   sessions: [{ id: 'mock-s1', 회차: 1, 날짜: '2026-09-08', 제목: '샘플 세션', 설명: '목 데이터' }],
   events: [{ id: 'mock-e1', 제목: '샘플 모임', 날짜: '2026-09-12', 시간: '19:00', 설명: '목 데이터', 종류: '일정', 중요: true }],
   postings: [
-    { id: 'mock-p1', 제목: '샘플 공모전', 종류: '공모전', 주최: '샘플 주최', url: 'https://example.com/contest', 접수시작: '2026-09-01', 접수마감: '2026-09-20', 시험일: null, 코멘트: '목 데이터 — 데이터 분석 트랙', 고정: false },
-    { id: 'mock-p2', 제목: '샘플 자격시험', 종류: '자격시험', 주최: '샘플 기관', url: 'https://example.com/exam', 접수시작: '2026-09-05', 접수마감: '2026-09-09', 시험일: '2026-10-11', 코멘트: '목 데이터 — 접수창 5일 주의', 고정: true },
-    { id: 'mock-p3', 제목: '샘플 상시 채용', 종류: '채용', 주최: '샘플 회사', url: 'https://example.com/job', 접수시작: null, 접수마감: null, 시험일: null, 코멘트: '목 데이터 — 상시 항목', 고정: false },
+    { id: 'mock-p1', 제목: '샘플 공모전', 종류: '공모전', 분류: '기업', 주최: '샘플 주최', url: 'https://example.com/contest', 접수시작: '2026-09-01', 접수마감: '2026-09-20', 시험일: null, 코멘트: '목 데이터 — 데이터 분석 트랙', 고정: false },
+    { id: 'mock-p2', 제목: '샘플 자격시험', 종류: '자격시험', 분류: 'ADsP', 주최: '샘플 기관', url: 'https://example.com/exam', 접수시작: '2026-09-05', 접수마감: '2026-09-09', 시험일: '2026-10-11', 코멘트: '목 데이터 — 접수창 5일 주의', 고정: true },
+    { id: 'mock-p3', 제목: '샘플 상시 채용', 종류: '채용', 분류: '대기업', 주최: '샘플 회사', url: 'https://example.com/job', 접수시작: null, 접수마감: null, 시험일: null, 코멘트: '목 데이터 — 상시 항목', 고정: false },
   ],
   flow_weeks: [
     { id: 'mock-f1', 주차: '9월 1주', 시작일: '2026-09-07', 제목: '샘플 킥오프', 내용: '목 데이터' },
@@ -32,6 +32,8 @@ export const SEED = {
   notices: [{ id: 'mock-n1', 제목: '샘플 공지', 본문: '목 데이터', 내부여부: true }],
   collections: [{ id: 'mock-c1', member_id: 'mock-member', url: 'https://example.com/scrap', 메모: '샘플 스크랩' }],
   posting_interests: [{ member_id: 'mock-member', posting_id: 'mock-p2' }],
+  posting_subscriptions: [],   // 행 0건 = 기본 구독(학사+AIM) 해석 — postings-taxonomy.js effectiveSubs
+
   article_likes: [{ member_id: 'mock-member', article_id: 'mock-a1' }],
   article_bookmarks: [{ member_id: 'mock-member', article_id: 'mock-a1' }],
   seminars: [{ id: 'mock-sem1', 회차: 1, 날짜: '2026-09-20', 제목: '샘플 세미나', 유형: '인지', 공개여부: true }],

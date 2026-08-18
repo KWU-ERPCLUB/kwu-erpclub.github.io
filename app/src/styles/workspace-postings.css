@@ -64,6 +64,30 @@
 /* 카드 본문 메타 — 공용 .ws-mark-meta의 margin-left:auto(행 우측 정렬용)를 해제하고 줄바꿈 허용 */
 .ws-posting > .ws-mark-meta { display: block; margin: 0; line-height: 1.5; overflow-wrap: anywhere; }
 
+/* 세부 분류 배지(2026-08-18) — 종류 배지 옆 보조(값 있을 때만) */
+.ws-post-sub {
+  font-size: 0.72rem; font-weight: 600; border-radius: var(--radius-pill); padding: 0.14rem 0.55rem;
+  border: 1px solid var(--line); color: var(--text-sub); background: #fff;
+}
+
+/* 세부 분류 칩 2줄차(2026-08-18) — 대분류 아래 작은 칩 줄 */
+.ws-subbar2 { margin-top: -0.35rem; }
+.ws-tabbtn.sm { font-size: 0.78rem; padding: 0.28rem 0.7rem; }
+
+/* 구독 토글 줄(2026-08-18) — 선택된 필터를 캘린더에 구독 */
+.ws-subline { display: flex; gap: 0.7rem; align-items: center; flex-wrap: wrap; margin: 0.15rem 0 0.8rem; }
+.ws-sub-toggle {
+  border: 1px solid var(--line); background: #fff; color: var(--text); cursor: pointer;
+  font-family: inherit; font-size: 0.8rem; font-weight: 700;
+  border-radius: var(--radius-pill); padding: 0.3rem 0.85rem;
+  transition: background 150ms ease-out, color 150ms ease-out, border-color 150ms ease-out;
+}
+.ws-sub-toggle:hover { border-color: var(--dark); }
+.ws-sub-toggle:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.ws-sub-toggle.on { background: var(--dark); border-color: var(--dark); color: #fff; }
+@media (prefers-reduced-motion: reduce) { .ws-sub-toggle { transition: none; } }
+.ws-subline .ws-note { margin: 0; }
+
 /* 운영 폼 — 고정 체크박스 한 줄 */
 .ws-check {
   display: flex; gap: 0.45rem; align-items: center; font-size: 0.86rem; color: var(--text);

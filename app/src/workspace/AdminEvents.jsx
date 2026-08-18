@@ -2,7 +2,8 @@
 // 테이블 미적용(마이그레이션 0007 전)이면 저장이 실패한다 — 오류를 그대로 보여 적용 필요를 알린다.
 import { useCallback, useEffect, useState } from 'react'
 
-const KINDS = ['일정', '세미나', '모집', '마감']
+// '학사' = 학사일정(0014) — 공고 탭 학사일정 필터·홈 캘린더 '학사' 구독 카테고리로 표시된다.
+const KINDS = ['일정', '세미나', '모집', '마감', '학사']
 
 export default function AdminEvents({ store }) {
   const EMPTY = { 제목: '', 날짜: '', 시간: '', 설명: '', 종류: '일정', 중요: false }

@@ -2,18 +2,24 @@
 // 코멘트 = 필수(오너 확정 2026-08-07) — 빈 값은 폼에서 차단. 테이블 미적용(마이그레이션 0009 전)이면 오류를 그대로 보여준다.
 import { useCallback, useEffect, useState } from 'react'
 import { POSTING_KINDS } from './postings-logic.js'
+import { taxonomyOptions } from './postings-taxonomy.js'
 
-const EMPTY = { 제목: '', 종류: POSTING_KINDS[0], 주최: '', url: '', 접수시작: '', 접수마감: '', 시험일: '', 코멘트: '', 고정: false }
+const EMPTY = { 제목: '', 종류: POSTING_KINDS[0], 분류: '', 주최: '', url: '', 접수시작: '', 접수마감: '', 시험일: '', 코멘트: '', 고정: false }
 const isUrl = (v) => /^https?:\/\/\S+$/.test(String(v || '').trim())
 
 // date input 빈 문자열 → null(빈 문자열은 date 컬럼 insert 실패).
-const toRow = (f) => ({
-  ...f,
-  url: f.url.trim(),
-  접수시작: f['접수시작'] || null,
-  접수마감: f['접수마감'] || null,
-  시험일: f['시험일'] || null,
-})
+// 분류 = 미분류('')면 컬럼 자체를 생략 — 0014 미적용 DB에서도 미분류 등록은 계속 동작(강등).
+const toRow = (f) => {
+  const row = {
+    ...f,
+    url: f.url.trim(),
+    접수시작: f['접수시작'] || null,
+    접수마감: f['접수마감'] || null,
+    시험일: f['시험일'] || null,
+  }
+  if (!row['분류']) delete row['분류']
+  return row
+}
 
 export default function AdminPostings({ store }) {
   const [rows, setRows] = useState([])
@@ -71,8 +77,17 @@ export default function AdminPostings({ store }) {
           <label className="ws-field"><span>제목</span><input value={form['제목']} onChange={set('제목')} /></label>
           <label className="ws-field">
             <span>종류</span>
-            <select value={form['종류']} onChange={set('종류')}>
+            {/* 종류 변경 = 분류 초기화(다른 종류의 세부 값이 남는 오류 방지) */}
+            <select value={form['종류']} onChange={(e) => setForm((f) => ({ ...f, 종류: e.target.value, 분류: '' }))}>
               {POSTING_KINDS.map((k) => <option key={k} value={k}>{k}</option>)}
+            </select>
+          </label>
+          <label className="ws-field">
+            {/* 세부 분류 = 레지스트리 선택만(자유 입력 금지 — 표기 drift가 구독 매칭을 깬다. postings-taxonomy.js) */}
+            <span>세부 분류(선택)</span>
+            <select value={form['분류']} onChange={set('분류')}>
+              <option value="">미분류</option>
+              {taxonomyOptions(form['종류']).map((s) => <option key={s} value={s}>{s}</option>)}
             </select>
           </label>
           <label className="ws-field"><span>주최(선택)</span><input value={form['주최']} placeholder="LG CNS, KPC…" onChange={set('주최')} /></label>
@@ -100,7 +115,7 @@ export default function AdminPostings({ store }) {
         {rows.map((r) => (
           <li key={r.id} className="ws-scrap">
             <span className="ws-scrap-url">{r['제목']}</span>
-            <span className="ws-mark-meta">{r['종류']} · {r['접수마감'] ? `~${r['접수마감']}` : '상시'}{r['고정'] ? ' · 고정' : ''}</span>
+            <span className="ws-mark-meta">{r['종류']}{r['분류'] ? `/${r['분류']}` : ''} · {r['접수마감'] ? `~${r['접수마감']}` : '상시'}{r['고정'] ? ' · 고정' : ''}</span>
             <div className="ws-row-acts">
               <button type="button" onClick={() => remove(r.id)}>삭제</button>
             </div>

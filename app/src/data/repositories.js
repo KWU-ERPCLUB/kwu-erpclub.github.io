@@ -19,7 +19,7 @@ export const REPO_CONTRACT = {
   sessions: ['list', 'save'],
   notes: ['list', 'save'],
   events: ['list', 'save', 'remove'],
-  postings: ['list', 'save', 'remove', 'listInterests', 'toggleInterest'],
+  postings: ['list', 'save', 'remove', 'listInterests', 'toggleInterest', 'listSubscriptions', 'toggleSubscription'],
   flow: ['list', 'save', 'remove'],
   materials: ['list', 'save'],
   assignments: ['list', 'save'],
@@ -197,6 +197,22 @@ export function createSupabaseRepositories(backend) {
         if (!id) throw new Error('로그인 필요')
         if (on) await backend.db.insert('posting_interests', { member_id: id, posting_id: postingId })
         else await backend.db.remove('posting_interests', { member_id: id, posting_id: postingId })
+        return on
+      },
+      // 캘린더 구독(0014) — 본인 구독 행 [{종류, 분류}]. 미적용 = null 강등(호출부가 "전체 켜짐"으로 해석 — 현행 화면 유지).
+      async listSubscriptions() {
+        const id = uid()
+        if (!id) return null
+        return backend.db.select('posting_subscriptions', { columns: '종류,분류', filters: { member_id: id } })
+          .then((rows) => rows || [])
+          .catch(() => null)
+      },
+      // 켜기 = insert, 끄기 = 본인 행 remove. 기본값 실체화(첫 토글) 판단은 호출부(planToggle)가 한다.
+      async toggleSubscription(kind, sub, on) {
+        const id = uid()
+        if (!id) throw new Error('로그인 필요')
+        if (on) await backend.db.insert('posting_subscriptions', { member_id: id, 종류: kind, 분류: sub || '' })
+        else await backend.db.remove('posting_subscriptions', { member_id: id, 종류: kind, 분류: sub || '' })
         return on
       },
     },

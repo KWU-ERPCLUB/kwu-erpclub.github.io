@@ -154,7 +154,7 @@ export function createBackend(config = readEnv(), deps = {}) {
 
   // 행 삭제가 허용된 테이블(M2) — 상호작용 취소·개인 스크랩·운영 등록물(events·flow_weeks·postings, RLS=운영진만)뿐.
   // 콘텐츠·멤버 테이블은 여기 없다 = 앱이 원천 데이터를 지울 경로가 구조적으로 없음.
-  const DELETABLE = new Set(['article_likes', 'article_bookmarks', 'collections', 'events', 'flow_weeks', 'postings', 'posting_interests'])
+  const DELETABLE = new Set(['article_likes', 'article_bookmarks', 'collections', 'events', 'flow_weeks', 'postings', 'posting_interests', 'posting_subscriptions'])
 
   const db = {
     select: (table, opts) => request(`/rest/v1/${table}${buildQuery(opts)}`),
