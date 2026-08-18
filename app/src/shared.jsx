@@ -8,6 +8,9 @@ import { CONTACT, CONTACT_MAILTO } from './data/recruit.js'
 export const REPO_URL = CONTACT.githubUrl
 export const CONTRIBUTING_URL = `${REPO_URL}/blob/main/CONTRIBUTING.md`
 
+// 버전 = 빌드 시 package.json에서 주입(vite.config define). 숫자를 여기 적지 않는다 — 릴리스 체계 spec §6·§10.
+export const APP_VERSION = __APP_VERSION__
+
 // 탭=페이지 이동만(owner 2026-07-11 — 메인 섹션 앵커 퀵바 폐지).
 // IA 4차(2026-08-05): 5종 = 메인(brand)·인사이트·세미나·프로젝트·모집 — about·log 폐지(증빙→recruit 하단,
 // 운영 기록→워크스페이스 공지 탭 내부화). labs·reports·join 제거 유지. 재도입 = 오너 재승인.
@@ -118,6 +121,7 @@ export function SiteFooter() {
           <a href={CONTACT_MAILTO}>{CONTACT.email}</a>
           <a href={REPO_URL}>GITHUB</a>
         </span>
+        <span className="f-ver">v{APP_VERSION}</span>
       </div>
     </footer>
   )

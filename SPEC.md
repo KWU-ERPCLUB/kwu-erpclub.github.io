@@ -32,7 +32,9 @@
 ## §3 저장소·배포 (R4 — 유지)
 
 - 소스 = KWU-ERPCLUB/kwu-erpclub.github.io 공개 repo. 멤버 쓰기 = collaborator.
-- 배포 = GitHub Pages(main → 자동). CI: `빌드 실패 ∨ §5 검증 실패 → merge·배포 차단`.
+- 배포 = GitHub Pages. **브랜치 2종(2026-08-19 베타 전환)**: `main` = 배포판(push → 자동 배포) / `dev` = 작업대(push → 검증만, 배포 없음). 코드 변경은 `dev`에 모아 릴리스 시 머지하고, `main` 직행은 콘텐츠·오타정정·장애수리 3종만(spec §5).
+- 버전 = `app/package.json` 단일원천. 릴리스마다 태그 `vX.Y.Z` + `CHANGELOG.md` 갱신. 절차·게이트 = `erp-club/docs/specs/2026-08-19-릴리스-체계.md`.
+- CI: `빌드 실패 ∨ §5 검증 실패 → merge·배포 차단`.
 - 웹앱 규격 = 워크스페이스 §8(app/CLAUDE.md · vitest · oxlint · roadmap.md).
 
 ## §4 페이지 레코드 (R1)

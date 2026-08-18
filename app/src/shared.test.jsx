@@ -1,7 +1,8 @@
 // 공개 헤더 — 워크스페이스 링크 상시 노출(오너 개정 2026-08-07: 링크가 없으면 로그인 화면 입구가 없다).
 import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
-import { SiteNav, PageHead, latestUpdated } from './shared.jsx'
+import { SiteNav, PageHead, latestUpdated, SiteFooter } from './shared.jsx'
+import pkg from '../package.json'
 
 const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
 
@@ -45,4 +46,11 @@ test('갱신일 메타 = 콘텐츠 최신 게재일 파생(없으면 null = 줄 
   expect(latestUpdated([{ title: '날짜 없음' }])).toBe(null)
   // 메타 없으면 줄 자체가 렌더되지 않는다(하드코딩 날짜 금지)
   expect(flat(<PageHead label="X" title="제목" />)).not.toContain('pg-meta')
+})
+
+// 릴리스 체계 spec §6·§10 — 버전 원천은 package.json 한 곳. 화면 숫자가 그 값과 어긋나면 실패한다.
+test('푸터 버전 = package.json 파생(하드코딩 금지)', () => {
+  const html = flat(<SiteFooter />)
+  expect(html).toContain('f-ver')
+  expect(html).toContain(`v${pkg.version}`)
 })
