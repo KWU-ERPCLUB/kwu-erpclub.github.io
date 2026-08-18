@@ -92,6 +92,19 @@ jobs:
             exit 0
           fi
           node scripts/sync-content-db.mjs
+      # 공고 JSON → DB(2026-08-18) — supabase/postings.json을 postings·events에 upsert(키 충돌, 삭제 없음).
+      # 주간 루틴이 JSON을 갱신·push하면 이 스텝이 자동 등록한다. 사전 조건 = migration 0014~0016.
+      - name: sync postings -> DB
+        working-directory: app
+        env:
+          SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_SERVICE_KEY" ]; then
+            echo "::notice::SUPABASE secrets 미등록 — 공고 동기화 건너뜀"
+            exit 0
+          fi
+          node scripts/sync-postings-db.mjs
 
   deploy:
     needs: build
