@@ -27,19 +27,20 @@ test('백엔드 미연결 시 = 폼 대신 제출 불가 안내(조용한 목 �
   expect(html).not.toContain('<input')
 })
 
-// 모집 창 연동(2026-08-05) — 창 밖 상시 접수는 "기간 내 접수분만 유효" 카피와 모순이었다.
-test('접수 국면 3분기 — 창 전=접수 시작일 안내 / 창 안=폼 / 창 후=다음 기수 안내', () => {
-  expect(applyPhase('2026-08-24', {})).toBe('before')
+// 사전 접수 개방(오너 2026-08-18) — 창 전에도 폼 + 정식 기간 안내 한 줄. 마감 후만 닫는다.
+test('접수 국면 — 창 전=폼+정식 기간 안내 / 창 안=폼 / 창 후=다음 기수 안내', () => {
+  expect(applyPhase('2026-08-24', {})).toBe('open')   // before도 폼 개방
   expect(applyPhase('2026-08-25', {})).toBe('open')   // 경계일 포함
   expect(applyPhase('2026-09-08', {})).toBe('open')
   expect(applyPhase('2026-09-09', {})).toBe('after')
 
   const before = flat(<RecruitForm configured={true} today="2026-08-01" />)
-  expect(before).toContain('접수 시작 2026-08-25')
-  expect(before).not.toContain('<input')
+  expect(before).toContain('정식 모집 2026-08-25')
+  expect(before).toContain('<input')                  // 폼이 실물로 뜬다
 
   const open = flat(<RecruitForm configured={true} today={OPEN_DAY} />)
   expect(open).toContain('<input')
+  expect(open).not.toContain('정식 모집 2026-08-25')   // 창 안에서는 사전 안내 없음
 
   const after = flat(<RecruitForm configured={true} today="2026-09-20" />)
   expect(after).toContain('모집 마감')

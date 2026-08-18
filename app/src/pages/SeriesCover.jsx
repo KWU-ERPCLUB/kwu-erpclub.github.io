@@ -32,13 +32,15 @@ export function coverLines(name) {
   return [w.slice(0, 2).join(' '), w.slice(2).join(' ')]
 }
 
-// 주간 AI 트렌드 커버 — 좌정렬 대형 타이포 + 부드러운 블루 그레이디언트 면.
+// 주간 AI 트렌드 커버 — 중앙 정렬 대형 타이포 + 부드러운 블루 그레이디언트 면.
+// v4(2026-08-18): 좌정렬 → 중앙 + 안전폭 640(가운데) 안에 텍스트 수납 — 피처 카드(세로 프레임, slice 크롭)에서
+// 좌우가 잘려도 텍스트가 온전히 보인다(오너: 최신 기고 썸네일 깨짐). 그리드(16:10 전체 뷰)에서도 중앙 구도로 성립.
 function WeeklyCover({ label, name, className }) {
   const lines = coverLines(name)
   const two = lines.length > 1
   // 주차 줄이 있으면 [주차 → 코너명 2줄], 없으면 코너명만 세로 중앙.
-  const y0 = label ? 186 : 0
-  const nameY = label ? [452, 680] : [380, 608]
+  const y0 = label ? 205 : 0
+  const nameY = label ? [438, 634] : [345, 541]
   const alt = label ? `${label} ${name}` : name
   return (
     <svg className={className} viewBox="0 0 1200 750" role="img" aria-label={alt} preserveAspectRatio="xMidYMid slice">
@@ -66,11 +68,11 @@ function WeeklyCover({ label, name, className }) {
       <circle cx="1120" cy="700" r="380" fill="url(#sc-w-blob2)" />
 
       {label && (
-        <text className="sc-t" x="66" y={y0} fill="#38618C" fontSize="118" fontWeight="700" letterSpacing="-3">{label}</text>
+        <text className="sc-t" x="600" y={y0} textAnchor="middle" fill="#38618C" fontSize="96" fontWeight="700" letterSpacing="-2">{label}</text>
       )}
-      <text className="sc-t" x="66" y={nameY[0]} fill="#141414" fontSize="222" fontWeight="800" letterSpacing="-9">{lines[0]}</text>
+      <text className="sc-t" x="600" y={nameY[0]} textAnchor="middle" fill="#141414" fontSize="168" fontWeight="800" letterSpacing="-6">{lines[0]}</text>
       {two && (
-        <text className="sc-t" x="66" y={nameY[1]} fill="#141414" fontSize="222" fontWeight="800" letterSpacing="-9">{lines[1]}</text>
+        <text className="sc-t" x="600" y={nameY[1]} textAnchor="middle" fill="#141414" fontSize="168" fontWeight="800" letterSpacing="-6">{lines[1]}</text>
       )}
     </svg>
   )

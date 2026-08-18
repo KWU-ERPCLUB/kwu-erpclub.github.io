@@ -1,9 +1,9 @@
 // /recruit 신청 폼(온사이트 접수 — 오너 보류 해제 2026-08-05). 데이터 출처 = pages/apply-source.js 어댑터만.
-// 모집 창 밖 = 폼 미표시 + 국면 안내(before = 접수 시작일 / after = 다음 기수 공지) — 상시 접수 금지.
+// 사전 접수 개방(오너 2026-08-18): 창 시작 전에도 폼 표시 + 정식 모집 기간 안내 한 줄. 마감 후(after)만 닫는다.
 // env 미설정 = 폼 미표시 + 제출 불가 안내(목 폴백으로 성공하는 척 금지 — 오너 확정).
 import { useState } from 'react'
 import {
-  EMPTY_APPLICATION, APPLY_NOTE, applyPhase, isBackendReady,
+  EMPTY_APPLICATION, APPLY_NOTE, APPLY_EARLY_NOTE, applyPhase, isEarlyApply, isBackendReady,
   validateApplication, submitApplication,
 } from './pages/apply-source.js'
 import { localYmd } from './home-logic.js'
@@ -67,6 +67,8 @@ export default function RecruitForm({ configured, repos, today = localYmd() }) {
 
   return (
     <form className="rc-form" onSubmit={onSubmit} noValidate>
+      {/* 사전 접수 구간(창 시작 전) — 정식 기간 안내 한 줄(2026-08-18 오너: 미리 받아도 유효) */}
+      {isEarlyApply(today) && <p className="rc-callout">{APPLY_EARLY_NOTE}</p>}
       <div className="rc-form-grid">
         {REQUIRED_FIELDS.map(([key, label, hint]) => (
           <p className="rc-field" key={key}>

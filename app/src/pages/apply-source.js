@@ -8,20 +8,23 @@ import { localYmd, recruitPhase } from '../home-logic.js'
 
 export const EMPTY_APPLICATION = { 이름: '', 학번: '', 전공: '', 전화번호: '', 써본ai: '', 관심주제: '' }
 
-// 접수 국면 = 모집 창 3분기(2026-08-05 수정 — 구 구현은 창과 무관하게 상시 접수라
-// "기간 내 접수분만 유효"(data/recruit.js RECRUIT_TIMELINE) 카피와 모순).
-// 창의 유일 원천 = data/recruit.js RECRUIT.window(home-logic.recruitPhase 재사용).
-// 개발용 오버라이드 = VITE_APPLY_FORCE_OPEN=1(로컬 폼 점검 — 프로덕션 미설정).
+// 접수 국면 = 모집 창 파생 + **사전 접수 개방**(오너 2026-08-18: "미리 받아도 문제없다" — before도 폼 개방).
+// 창의 유일 원천 = data/recruit.js RECRUIT.window(home-logic.recruitPhase 재사용) — 모집 밴드 국면 전환은 그대로.
+// 마감 후(after)만 폼을 닫는다. 개발용 오버라이드 = VITE_APPLY_FORCE_OPEN=1(로컬 폼 점검 — 프로덕션 미설정).
 export function applyPhase(today = localYmd(), env = import.meta.env) {
   if (env && String(env.VITE_APPLY_FORCE_OPEN) === '1') return 'open'
-  return recruitPhase(today)
+  const phase = recruitPhase(today)
+  return phase === 'before' ? 'open' : phase
 }
 
-// 국면별 안내 문구(개조식) — 창 밖에서는 폼 대신 이 문구만 렌더(깨진 접수 경로 금지).
+// 창 시작 전인지(사전 접수 구간) — 폼 위 안내 한 줄에 쓴다.
+export const isEarlyApply = (today = localYmd()) => recruitPhase(today) === 'before'
+
+// 국면별 안내 문구(개조식) — after만 폼 대신 렌더. EARLY = 사전 접수 구간에 폼 위에 붙는 한 줄.
 export const APPLY_NOTE = {
-  before: `접수 시작 ${RECRUIT.window.start} — 모집 시작일에 이 자리에서 폼 개방.`,
   after: '모집 마감 — 다음 기수는 메인·모집 페이지에 공지.',
 }
+export const APPLY_EARLY_NOTE = `정식 모집 ${RECRUIT.window.start} ~ ${RECRUIT.window.end} — 지금 제출해도 접수분으로 인정.`
 
 // 접수 가능 = 모집 창 open ∧ 백엔드 연결. 둘은 별개 축이라 안내 문구도 각각 다르다(RecruitForm 분기).
 export function isApplyOpen(env, today = localYmd()) {
