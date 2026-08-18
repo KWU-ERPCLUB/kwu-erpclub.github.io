@@ -111,17 +111,18 @@ export function latestUpdated(list) {
   return d ? `최종 갱신 ${d}` : null
 }
 
-// 푸터 — 전 페이지 공통, 문의 채널(이메일·GitHub) 명시(피드백 2026-08-06 "맨 밑에 이메일·문의 주소").
+// 푸터 — 전 페이지 공통. 2줄 축약(오너 2026-08-19 "너무 길다"): 1줄 = AIM 단독, 2줄 = GitHub·이메일·버전.
+// 구 1줄의 산하 계보 문구는 홈 소개(App.jsx)·모집 요강이 보유 — 푸터에서는 뺀다.
 export function SiteFooter() {
   return (
     <footer className="footer">
       <div className="footer-inner">
-        <span className="f-brand">AIM — 광운대학교 ERP연구회 산하 MIS·AI 스터디</span>
+        <span className="f-brand">AIM</span>
         <span className="f-links">
-          <a href={CONTACT_MAILTO}>{CONTACT.email}</a>
           <a href={REPO_URL}>GITHUB</a>
+          <a href={CONTACT_MAILTO}>{CONTACT.email}</a>
+          <span className="f-ver">v{APP_VERSION}</span>
         </span>
-        <span className="f-ver">v{APP_VERSION}</span>
       </div>
     </footer>
   )

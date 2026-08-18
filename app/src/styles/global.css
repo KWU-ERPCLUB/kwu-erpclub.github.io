@@ -251,7 +251,8 @@ body {
 }
 .footer .f-brand { font-family: var(--font-display); font-weight: 800; color: #fff; }
 .footer .f-links { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; justify-content: center; }
-/* 베타 버전 표기(릴리스 체계 spec §10) — 보조 텍스트 이하 크기, 설명 문구 없이 번호만 */
+/* 베타 버전 표기(릴리스 체계 spec §10) — 2줄 축약(2026-08-19) 이후 f-links 행의 마지막 항목.
+   링크보다 한 단 낮은 존재감: 보조 텍스트 이하 크기 + 낮은 명도, 설명 문구 없이 번호만 */
 .footer .f-ver { font-size: 0.72rem; color: rgba(255, 255, 255, 0.4); letter-spacing: 0.04em; }
 .footer a { color: rgba(255, 255, 255, 0.65); text-decoration: none; }
 .footer a:hover { color: #fff; }

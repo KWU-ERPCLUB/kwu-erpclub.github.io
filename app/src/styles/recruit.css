@@ -122,7 +122,9 @@
 .rc-fact dd { margin: 0; font-size: 0.98rem; font-weight: 650; line-height: 1.55; word-break: keep-all; }
 /* 오너 2026-08-07: 값 강조 — 핵심(버건디 700) / 부연(회색) + 행 호버 인터랙션 */
 .rc-fact dd strong { color: var(--accent); font-weight: 800; }
-.rc-fact-sub { color: var(--text-sub); font-weight: 550; }
+/* 부연 = 다음 줄(2026-08-19 수리). 8/15 대시 폐지 때 구분자만 빼고 대체 줄바꿈을 넣지 않아
+   핵심과 부연이 붙어 렌더됐음(예 "AIMERP연구회 산하 MIS·AI 스터디"). 데이터의 ' — '가 줄 나눔을 뜻한다. */
+.rc-fact-sub { display: block; color: var(--text-sub); font-weight: 550; }
 .rc-fact { transition: transform 150ms ease-out, box-shadow 150ms ease-out, border-color 150ms ease-out; }
 .rc-fact:hover { transform: translateX(6px); border-color: rgba(122, 32, 48, 0.35); box-shadow: 0 8px 22px rgba(0, 0, 0, 0.06); }
 @media (prefers-reduced-motion: reduce) { .rc-fact { transition: none; } .rc-fact:hover { transform: none; } }

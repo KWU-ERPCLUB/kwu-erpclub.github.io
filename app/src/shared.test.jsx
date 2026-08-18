@@ -54,3 +54,13 @@ test('푸터 버전 = package.json 파생(하드코딩 금지)', () => {
   expect(html).toContain('f-ver')
   expect(html).toContain(`v${pkg.version}`)
 })
+
+// 푸터 2줄 축약(오너 2026-08-19) — 1줄 = AIM 단독 / 2줄 = GitHub·이메일·버전 순.
+test('푸터 = AIM 한 줄 + 링크·버전 한 줄', () => {
+  const html = flat(<SiteFooter />)
+  expect(html).toContain('<span class="f-brand">AIM</span>')
+  expect(html).not.toContain('산하') // 계보 문구는 홈·모집이 보유
+  // 2줄 순서 = GITHUB → 이메일 → 버전
+  expect(html.indexOf('GITHUB')).toBeLessThan(html.indexOf('mailto:'))
+  expect(html.indexOf('mailto:')).toBeLessThan(html.indexOf('f-ver'))
+})
