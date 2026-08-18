@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>허브 사용법 — AIM</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<style>
+  :root { --accent: #7a2030; --dark: #161616; --text: #1d1d1f; --sub: #6b6b70; --line: #e6e2dc; --surface: #f7f5f2; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: "Pretendard Variable", Pretendard, sans-serif; color: var(--text); background: #fff; line-height: 1.65; word-break: keep-all; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 3.5rem 1.25rem 5rem; }
+  header { text-align: center; margin-bottom: 3rem; }
+  .eyebrow { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.14em; color: var(--sub); }
+  h1 { font-size: clamp(2rem, 6vw, 3rem); font-weight: 900; letter-spacing: -0.02em; margin: 0.4rem 0 0.6rem; }
+  h1 em { font-style: normal; color: var(--accent); }
+  .lead { color: var(--sub); font-weight: 600; margin: 0; }
+  section { margin-top: 3.25rem; }
+  h2 { display: flex; align-items: center; gap: 0.7rem; font-size: 1.35rem; font-weight: 800; letter-spacing: -0.01em; margin: 0 0 0.9rem; }
+  .no { display: inline-flex; align-items: center; justify-content: center; flex: none; width: 2rem; height: 2rem; border-radius: 50%; background: var(--dark); color: #fff; font-size: 0.95rem; font-weight: 800; }
+  p { margin: 0.4rem 0; }
+  ul, ol { margin: 0.5rem 0 0; padding-left: 1.3rem; }
+  li { margin: 0.35rem 0; }
+  .box { background: var(--surface); border-radius: 14px; padding: 1rem 1.2rem; margin-top: 0.9rem; }
+  .pill { display: inline-block; background: var(--dark); color: #fff; border-radius: 999px; padding: 0.15rem 0.7rem; font-size: 0.82rem; font-weight: 700; }
+  .keyval { font-weight: 800; color: var(--accent); }
+  figure { margin: 1.1rem 0 0; }
+  figure img { width: 100%; height: auto; display: block; border: 1px solid var(--line); border-radius: 12px; }
+  figcaption { font-size: 0.8rem; color: var(--sub); margin-top: 0.4rem; text-align: center; }
+  .warn { border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 10px 10px 0; padding: 0.75rem 1rem; font-size: 0.92rem; margin-top: 0.9rem; }
+  footer { margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid var(--line); text-align: center; color: var(--sub); font-size: 0.9rem; }
+  a { color: var(--accent); font-weight: 700; }
+  @media (max-width: 560px) { .wrap { padding-top: 2.5rem; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">GUIDE</div>
+  <h1>허브 <em>사용법</em></h1>
+  <p class="lead">AIM 허브 사이트를 처음 쓰는 사람을 위한 안내. 5분이면 전부 읽는다.</p>
+</header>
+
+<section>
+  <h2><span class="no">1</span>이 사이트는</h2>
+  <p>AIM(광운대 ERP연구회 산하 MIS·AI 스터디)의 허브다. 두 영역으로 나뉜다.</p>
+  <ul>
+    <li><b>공개 영역</b> = 누구나 열람. AI 인사이트, 세미나 기록, 프로젝트, 모집 안내</li>
+    <li><b>워크스페이스</b> = 스터디원 전용(로그인). 일정·공고·기고·내정보</li>
+  </ul>
+  <p>주소 = <a href="https://kwu-erpclub.github.io/">kwu-erpclub.github.io</a></p>
+</section>
+
+<section>
+  <h2><span class="no">2</span>처음 로그인</h2>
+  <p>가입 버튼이 없다. 계정은 운영진이 만들어 준다.</p>
+  <ol>
+    <li>상단 메뉴 <span class="pill">WORKSPACE</span> 클릭</li>
+    <li>아이디 = <span class="keyval">본인 학번</span> (숫자만)</li>
+    <li>비밀번호 = 초기 비밀번호 <span class="keyval">000000</span></li>
+  </ol>
+  <div class="warn">첫 로그인 후 <b>내정보 탭 &gt; 비밀번호 변경</b>에서 꼭 바꾼다. 비밀번호를 잊으면 운영진에게 초기화를 요청한다.</div>
+  <figure>
+    <img src="/img/guide/login.jpg" alt="워크스페이스 로그인 화면" loading="lazy" />
+    <figcaption>워크스페이스 로그인 화면. 학번과 비밀번호만 입력한다.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2><span class="no">3</span>홈 = 일정 한눈에</h2>
+  <p>로그인하면 홈이 먼저 뜬다.</p>
+  <ul>
+    <li><b>캘린더</b> = 스터디 세션, 공고 마감, 학사일정이 한 달 단위로 표시. 날짜의 항목을 누르면 세부 팝업</li>
+    <li><b>다가오는 업무</b> = 우측 상단. 챙겨야 할 핵심 일정만 추려서 표시</li>
+    <li><b>공지</b> = 우측 하단. 운영진이 올린 안내</li>
+  </ul>
+  <figure>
+    <img src="/img/guide/home.jpg" alt="워크스페이스 홈 화면" loading="lazy" />
+    <figcaption>홈. 캘린더 + 다가오는 업무 + 공지.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2><span class="no">4</span>로드맵 = 이번 학기 흐름</h2>
+  <p>1기 전체 일정이 회차 단위로 나열된다. 지금 어디까지 왔는지, 다음 세션이 무엇인지 여기서 확인한다.</p>
+  <ul>
+    <li>회차를 누르면 세부 내용과 자료가 열린다</li>
+    <li>자물쇠 표시 = 공개일 전. 세션이 진행되면 자동으로 열린다</li>
+  </ul>
+  <figure>
+    <img src="/img/guide/roadmap.jpg" alt="로드맵 탭" loading="lazy" />
+    <figcaption>로드맵. 다음 세션이 강조되어 표시된다.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2><span class="no">5</span>공고 = 공모전·채용·자격증 보드</h2>
+  <p>운영진이 골라 올리는 외부 공고 모음. 모든 공고에 "왜 볼만한가" 한 줄이 붙는다.</p>
+  <ul>
+    <li>상단 필터로 분류별 열람(공모전, 채용, 자격증, 대외활동, 학사일정)</li>
+    <li>카드의 <b>★</b>을 누르면 관심 공고로 저장(내정보 탭에 모임)</li>
+    <li>필터의 <b>캘린더에 등록</b>을 켜면 그 분류의 마감일이 홈 캘린더에 뜬다</li>
+  </ul>
+  <figure>
+    <img src="/img/guide/postings.jpg" alt="공고 탭" loading="lazy" />
+    <figcaption>공고 보드. 우측에 접수 임박 목록.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2><span class="no">6</span>인사이트 기고 = 주 1건 상시 과제</h2>
+  <p>관심 소재를 AI로 정리해 한 편씩 기고한다. 두 방법 중 하나를 고른다.</p>
+  <ul>
+    <li><b>사이트 서식으로 게재</b> = 제공되는 프롬프트를 복사해 본인 AI에 넣고, 나온 초안을 붙여넣으면 폼이 채워진다. 디자인은 사이트가 맡는다</li>
+    <li><b>본인이 디자인까지</b> = HTML 한 벌을 직접 만들어 붙여넣는다. 게재 시 그 모습 그대로</li>
+  </ul>
+  <p>제출하면 운영진 승인 후 공개 인사이트 페이지에 게재된다.</p>
+  <figure>
+    <img src="/img/guide/contribute.jpg" alt="인사이트 기고 탭" loading="lazy" />
+    <figcaption>기고 탭. 절차 안내와 프롬프트 복사 버튼이 있다.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2><span class="no">7</span>내정보 = 내 것 모아보기</h2>
+  <ul>
+    <li><b>내 북마크</b> = 인사이트에서 북마크한 글</li>
+    <li><b>관심 공고</b> = 공고에서 ★ 누른 것</li>
+    <li><b>캘린더에 등록한 분류</b> = 홈 캘린더에 띄울 공고 분류 관리</li>
+    <li><b>프로필 수정 · 비밀번호 변경</b> = 하단 접힘 메뉴</li>
+  </ul>
+  <figure>
+    <img src="/img/guide/mypage.jpg" alt="내정보 탭" loading="lazy" />
+    <figcaption>내정보. 우측에 내 기고·과제 제출 현황.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2><span class="no">8</span>인사이트 읽기</h2>
+  <p>로그인 없이도 읽을 수 있다. 로그인 상태면 글 상세에서 <b>좋아요</b>와 <b>북마크</b>를 누를 수 있다.</p>
+  <ul>
+    <li>카드의 빨간 <b>N</b> = 최근 7일 내 게재 + 아직 안 읽은 글</li>
+    <li>필터 칩으로 시리즈(주간 AI 트렌드 등)만 골라 볼 수 있다</li>
+  </ul>
+  <figure>
+    <img src="/img/guide/insights.jpg" alt="AI 인사이트 페이지" loading="lazy" />
+    <figcaption>공개 인사이트 페이지.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2><span class="no">9</span>폰에서 앱처럼 쓰기</h2>
+  <p>홈 화면에 추가하면 앱처럼 전체 화면으로 열린다. 앱스토어 설치와 비용이 없다.</p>
+  <ul>
+    <li>아이폰 = <b>사파리</b>로 접속하고 공유 버튼에서 <b>홈 화면에 추가</b> (아이폰의 크롬 앱에서는 안 됨)</li>
+    <li>갤럭시(크롬) = 우상단 ⋮ 메뉴에서 <b>홈 화면에 추가</b> (기기에 따라 "앱 설치")</li>
+    <li>갤럭시(삼성 인터넷) = 하단 ☰ 메뉴에서 현재 페이지 추가, <b>홈 화면</b> 선택</li>
+  </ul>
+</section>
+
+<footer>
+  <p>안 풀리는 문제나 계정 문의 = <a href="mailto:win7374@kw.ac.kr">win7374@kw.ac.kr</a></p>
+  <p>AIM — 광운대학교 ERP연구회 산하 MIS·AI 스터디</p>
+</footer>
+
+</div>
+</body>
+</html>
