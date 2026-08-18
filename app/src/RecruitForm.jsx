@@ -15,39 +15,48 @@ import { CONTACT, CONTACT_MAILTO, PRIVACY_NOTE, RECRUIT_TOPICS, KWU_MAJORS } fro
 // 필수 표시 * — 구글폼 문법
 const Req = () => <span className="rc-req" aria-label="필수">*</span>
 
-// 써본 AI 체크 선택지 — 2026-08-18 기준 목록(오너 지시: 클로드 코드·코덱스 등 누락분 보강).
-// '없음'도 유효한 답(초심자 환영이 모집 방침). 목록 밖 도구 = 기타 체크(CheckGroup 내장 입력).
-const AI_OPTIONS = [
-  'ChatGPT', 'Claude', 'Gemini', 'Perplexity', 'Claude Code', 'Codex',
-  'Cursor', 'Copilot', 'NotebookLM', 'Grok', 'DeepSeek', '뤼튼', '없음',
+// 써본 AI 체크 선택지 — 2026-08-18 4차: 분류 틀로 구분(오너 — "주르르 나열은 선택 기준이 없다").
+// [분류 라벨, [도구…]]. '없음'도 유효한 답(초심자 환영이 모집 방침). 목록 밖 = 마지막 그룹의 기타 체크.
+const AI_GROUPS = [
+  ['대화형 AI (LLM 챗봇)', ['ChatGPT', 'Claude', 'Gemini', 'Grok', 'DeepSeek', '뤼튼']],
+  ['코딩·에이전트 AI', ['Claude Code', 'Codex', 'Cursor', 'Copilot']],
+  ['검색·리서치 AI', ['Perplexity', 'NotebookLM']],
+  ['그 외', ['없음']],
 ]
 
 // 기타 체크값 — 합성 시 제외하고 입력 텍스트만 쓴다(compose* 호출부에서 필터).
 export const ETC = '기타'
 
-// 체크 그룹 공용 — fieldset + 체크박스 목록(구글폼 문법). checked = 배열 상태.
-// desc = 제목(legend) 아래 블록 설명. etc 3종 주면 '기타' 체크 + 체크 시 텍스트 입력 노출.
-function CheckGroup({ legend, desc, options, checked, onToggle, etcValue, onEtcChange, etcPlaceholder }) {
+// 체크 그룹 공용 — fieldset + 체크박스 칩(구글폼 문법). checked = 배열 상태.
+// options = 평면 목록 / groups = [분류 라벨, 목록] 배열(써본 AI). etc 주면 마지막에 '기타' 체크 + 입력 노출.
+function CheckGroup({ legend, desc, options, groups, checked, onToggle, etcValue, onEtcChange, etcPlaceholder }) {
   const hasEtc = onEtcChange !== undefined
   const etcOn = checked.includes(ETC)
+  const grouped = groups || [[null, options]]
+  const chip = (opt) => (
+    <label key={opt} className="rc-check">
+      <input type="checkbox" checked={checked.includes(opt)} onChange={() => onToggle(opt)} />
+      {opt}
+    </label>
+  )
   return (
     <fieldset className="rc-field rc-checkset">
       <legend>{legend}</legend>
       {desc && <p className="rc-desc">{desc}</p>}
-      <div className="rc-checks">
-        {options.map((opt) => (
-          <label key={opt} className="rc-check">
-            <input type="checkbox" checked={checked.includes(opt)} onChange={() => onToggle(opt)} />
-            {opt}
-          </label>
-        ))}
-        {hasEtc && (
-          <label className="rc-check">
-            <input type="checkbox" checked={etcOn} onChange={() => onToggle(ETC)} />
-            {ETC}
-          </label>
-        )}
-      </div>
+      {grouped.map(([cat, opts], i) => (
+        <div key={cat || 'flat'}>
+          {cat && <span className="rc-check-cat">{cat}</span>}
+          <div className="rc-checks">
+            {opts.map(chip)}
+            {hasEtc && i === grouped.length - 1 && (
+              <label className="rc-check">
+                <input type="checkbox" checked={etcOn} onChange={() => onToggle(ETC)} />
+                {ETC}
+              </label>
+            )}
+          </div>
+        </div>
+      ))}
       {hasEtc && etcOn && (
         <input
           className="rc-etc-input" type="text" value={etcValue} onChange={onEtcChange}
@@ -214,7 +223,7 @@ export default function RecruitForm({ configured, repos, today = localYmd() }) {
 
       <CheckGroup
         legend="지금까지 써본 AI" desc="중복 선택 가능"
-        options={AI_OPTIONS} checked={aiChecks} onToggle={toggleOf(setAiChecks)}
+        groups={AI_GROUPS} checked={aiChecks} onToggle={toggleOf(setAiChecks)}
         etcValue={aiEtc} onEtcChange={(e) => setAiEtc(e.target.value)}
         etcPlaceholder="목록에 없는 도구 이름"
       />

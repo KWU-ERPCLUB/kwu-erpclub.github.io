@@ -58,7 +58,12 @@
 /* 푸터 — 개인정보 문구·제출 버튼 전부 정중앙(grid justify-items — inline-flex 좌측 치우침 근절) */
 .rc-form-foot { display: grid; justify-items: center; gap: 1rem; margin-top: clamp(1.5rem, 3.5vh, 2rem); text-align: center; }
 .rc-form-privacy { margin: 0; font-size: 0.8rem; color: var(--text-sub); word-break: keep-all; }
-.rc-form-submit { font-family: var(--font-display); }
+/* 제출 = rc-cta-xl 승계인데 그 패딩(좌 2.4/우 1.4rem)은 우측 화살표 아이콘 전제 —
+   아이콘 없는 이 버튼은 텍스트가 우로 치우침 → 대칭 패딩으로 재정의(오너 2026-08-18 4차) */
+.rc-form-submit { font-family: var(--font-display); padding: 1.15rem 2.2rem; }
+/* 써본 AI 분류 라벨(4차 — LLM 챗봇/코딩 에이전트/검색·리서치 틀로 구분) */
+.rc-check-cat { display: block; margin: 0.6rem 0 0.45rem; font-size: 0.76rem; font-weight: 700; letter-spacing: 0.05em; color: var(--text-sub); }
+.rc-check-cat:first-of-type { margin-top: 0.1rem; }
 .rc-form-done {
   margin-top: clamp(1.75rem, 4vh, 2.5rem); max-width: 46rem;
   background: var(--surface); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0;

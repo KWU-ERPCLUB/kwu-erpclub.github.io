@@ -35,7 +35,10 @@ test('모집 창 안 + 백엔드 연결 시 = 필수 4필드(*) + 체크 그룹 
   for (const ai of ['ChatGPT', 'Claude Code', 'Codex', 'Cursor', 'NotebookLM', '없음', '기타']) {
     expect(html).toContain(ai)                        // AI 목록 2026-08-18 기준 + 기타 내장
   }
-  expect(html).toContain('연구회 운영 자동화')          // 주제 풀(§E) 체크 선택지
+  // AI = 분류 틀 구분(4차 — LLM 챗봇/코딩 에이전트/검색·리서치)
+  for (const cat of ['대화형 AI', '코딩·에이전트 AI', '검색·리서치 AI']) expect(html).toContain(cat)
+  expect(html).toContain('학업 노트·요약 자동화')       // 주제 풀 = 개인 프로젝트 주제(4차 교체)
+  expect(html).not.toContain('연구회 운영 자동화')      // 구 스터디 내부 주제 = 폼에서 내림
   expect(html).toContain('type="checkbox"')
   expect(html).not.toContain('rc-etc"')               // 구 별도 기타 필드 폐지(내장 rc-etc-input으로)
   expect(html).toContain('최대 500자')                 // 지원 계기 상한 안내
