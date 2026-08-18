@@ -1,10 +1,10 @@
-// 공고 탭(2026-08-07 신설 → 2026-08-18 구독 개인화) — 공모전·채용·자격시험·대외활동 스크랩 + 학사·AIM 일정 열람.
+// 공고 탭(2026-08-07 신설 → 2026-08-18 구독 개인화) — 공모전·채용·자격증·대외활동 스크랩 + 학사·AIM 일정 열람.
 // 개인 스크랩(내정보 > 북마크)과 별개. 등록·삭제 = 운영 탭(운영진 전용). 마감·시험일은 홈 캘린더에 합류.
 // 구독(0014) = 카테고리·세부 단위 캘린더 필터 — 여기 필터 칩 자리에서 바로 토글(오너 확정 2026-08-18).
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { toKey, dday } from './calendar-logic.js'
 import { POSTING_KINDS, postingStatus, groupPostings, filterPostings } from './postings-logic.js'
-import { taxonomyOptions, effectiveSubs, hasSubRow, subMatches, eventCategory, planToggle, SUBS_CHANGED } from './postings-taxonomy.js'
+import { taxonomyOptions, effectiveSubs, hasSubRow, eventCategory, planToggle, SUBS_CHANGED } from './postings-taxonomy.js'
 
 // 카드 1장 — 종류·세부 분류 배지 + 제목(원문 링크) + 주최 + 접수·시험 일정 + 큐레이션 코멘트(필수 필드).
 // 관심 ★(0013) — 체크한 공고는 내정보 상단 "관심 공고"에 모인다(구독과 별개: ★=모음, 구독=캘린더).
@@ -132,7 +132,8 @@ export default function Postings({ store }) {
   const isEventCat = kind === '학사' || kind === 'AIM'
   const subOptions = !isEventCat && kind !== '전체' ? taxonomyOptions(kind) : []
   const selSub = sub === '전체' ? '' : sub
-  const { active, always, closed } = useMemo(
+  // 마감 묶음(closed)은 화면에서 제외(2026-08-18 오너 — 쌓이면 너무 많음. 데이터는 DB에 그대로).
+  const { active, always } = useMemo(
     () => groupPostings(filterPostings(rows, isEventCat ? '전체' : kind, selSub), todayKey),
     [rows, kind, selSub, todayKey, isEventCat],
   )
@@ -142,10 +143,9 @@ export default function Postings({ store }) {
     [events, kind],
   )
 
-  // 구독 버튼 상태 — on = 정확한 행 존재(행 0건 = 기본 학사+AIM 해석). 종류 전체 구독이 세부를 덮는 경우는 안내문으로 구분.
+  // 등록 버튼 상태 — on = 정확한 행 존재(행 0건 = 기본 학사+AIM 해석).
   const eff = effectiveSubs(subs)
   const subbed = eff !== null && hasSubRow(eff, kind, selSub)
-  const coveredByKind = eff !== null && !subbed && Boolean(selSub) && subMatches(eff, kind, selSub)
 
   // 공통 프레임(ws-cols): 본문 = 필터 2줄 + 구독 토글 + 카드/일정 + 마감 접힘 / 레일 = 접수 임박 + 보드 안내.
   return (
@@ -184,11 +184,8 @@ export default function Postings({ store }) {
                   <rect x="3" y="4.5" width="18" height="16" rx="2.5" /><path d="M3 9.5h18M8 2.5v4M16 2.5v4" />
                   {subbed && <path d="m8.5 14.5 2.5 2.5 4.5-4.5" />}
                 </svg>
-                {subbed ? '내 캘린더에 담김' : `${selSub || CAT_LABEL[kind] || kind} 캘린더에 담기`}
+                {subbed ? '캘린더에 등록됨' : `${selSub || CAT_LABEL[kind] || kind} 캘린더에 등록`}
               </button>
-              <span className="ws-note">
-                {coveredByKind ? `${CAT_LABEL[kind] || kind} 전체가 이미 캘린더에 담겨 있다` : '담은 분류의 마감·일정만 홈 캘린더에 뜬다'}
-              </span>
             </div>
           )}
           {status === 'loading' && <div className="ws-skel" aria-label="불러오는 중"><span /><span /></div>}
@@ -198,23 +195,13 @@ export default function Postings({ store }) {
           {!isEventCat && (
             <>
               {status === 'ready' && open.length === 0 && (
-                <p className="ws-note">진행 중 공고 0건 — 운영진이 등록하면 여기에 뜬다.</p>
+                <p className="ws-empty">진행 중 공고 0건</p>
               )}
               <ul className="ws-list ws-post-grid">
                 {open.map((r) => (
                   <PostingCard key={r.id} row={r} todayKey={todayKey} interested={interests.includes(r.id)} onToggleInterest={toggleInterest} />
                 ))}
               </ul>
-              {closed.length > 0 && (
-                <details className="ws-fold">
-                  <summary>마감된 공고 {closed.length}건</summary>
-                  <ul className="ws-list ws-post-grid">
-                    {closed.map((r) => (
-                      <PostingCard key={r.id} row={r} todayKey={todayKey} interested={interests.includes(r.id)} onToggleInterest={toggleInterest} />
-                    ))}
-                  </ul>
-                </details>
-              )}
             </>
           )}
         </section>
@@ -239,7 +226,7 @@ export default function Postings({ store }) {
         <section className="ws-block">
           <h2 className="ws-h2">보드 안내</h2>
           <p className="ws-note">운영진이 선별해 올리는 외부 기회 스크랩 — 링크 모음이 아니라 "우리에게 왜 유효한가" 한 줄이 붙는다.</p>
-          <p className="ws-note">홈 캘린더에는 내가 담은 분류의 마감·시험일만 뜬다(기본 = 학사일정+AIM 일정). 각 필터의 「캘린더에 담기」로 켜고 끈다.</p>
+          <p className="ws-note">홈 캘린더에는 내가 등록한 분류의 마감·시험일만 뜬다(기본 = 학사일정+AIM 일정). 각 필터의 「캘린더에 등록」으로 켜고 끈다.</p>
         </section>
       </aside>
     </div>

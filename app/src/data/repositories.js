@@ -174,7 +174,7 @@ export function createSupabaseRepositories(backend) {
         return rowId
       },
     },
-    // 공고(0009) — 공모전·채용·자격시험 스크랩(공고 탭·홈 캘린더 합류). 미적용 = 빈 배열 강등(events와 동일).
+    // 공고(0009) — 공모전·채용·자격증 스크랩(공고 탭·홈 캘린더 합류). 미적용 = 빈 배열 강등(events와 동일).
     postings: {
       list: () => backend.db.select('postings', { order: 'created_at.desc' }).catch(() => []),
       save: saveRow('postings'),

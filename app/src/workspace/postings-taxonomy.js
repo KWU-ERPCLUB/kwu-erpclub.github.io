@@ -4,7 +4,7 @@
 // 신규 값 추가 = 이 파일 1곳(마이그레이션 불필요).
 
 export const TAXONOMY = {
-  자격시험: [
+  자격증: [
     { id: 'ADsP' }, { id: 'SQLD' }, { id: '컴활' }, { id: 'SAP' }, { id: '정보처리기사' }, { id: '기타' },
   ],
   채용: [
@@ -22,7 +22,7 @@ export const TAXONOMY = {
 export const taxonomyOptions = (kind) => (TAXONOMY[kind] || []).filter((t) => !t.retired).map((t) => t.id)
 
 // 캘린더 구독 카테고리 = 공고 4종 + 일정 2종(학사·AIM). AIM = events 기존 4종(일정·세미나·모집·마감)의 묶음 해석.
-export const CAL_CATEGORIES = ['공모전', '채용', '자격시험', '대외활동', '학사', 'AIM']
+export const CAL_CATEGORIES = ['공모전', '채용', '자격증', '대외활동', '학사', 'AIM']
 
 // 구독 변경 브로드캐스트 이벤트명 — 탭이 hidden으로 상태 보존되는 구조(Workspace.jsx)라
 // 공고 탭·내정보의 토글이 홈 캘린더에 즉시 반영되도록 window 이벤트로 동기화한다(2026-08-18 오너).

@@ -15,7 +15,7 @@
 
 .ws-posting .ws-row-top { display: flex; gap: 0.45rem; align-items: center; margin-bottom: 0.45rem; }
 
-/* 종류 배지 — POSTING_KINDS 순서(k-0 공모전 · k-1 채용 · k-2 자격시험 · k-3 대외활동) */
+/* 종류 배지 — POSTING_KINDS 순서(k-0 공모전 · k-1 채용 · k-2 자격증 · k-3 대외활동) */
 .ws-post-kind {
   font-size: 0.72rem; font-weight: 700; border-radius: var(--radius-pill); padding: 0.14rem 0.62rem;
 }
@@ -91,6 +91,9 @@
 .ws-sub-toggle.on:hover { background: var(--btn-hover, #2a2a2a); border-color: var(--btn-hover, #2a2a2a); }
 @media (prefers-reduced-motion: reduce) { .ws-sub-toggle { transition: none; } }
 .ws-subline .ws-note { margin: 0; }
+
+/* 빈 상태(2026-08-18 오너 — "진행 중 공고 0건"만, 크고 볼드) */
+.ws-empty { margin: 1.4rem 0; font-size: 1.05rem; font-weight: 700; color: var(--text); }
 
 /* 운영 폼 — 고정 체크박스 한 줄 */
 .ws-check {
