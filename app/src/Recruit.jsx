@@ -281,7 +281,7 @@ export default function Recruit() {
         <section className="rc-secs" id="apply" aria-labelledby="rc-apply-h">
           <div className="rc-band-in">
             <div className="rc-body">
-              <h2 className="rc-h2" id="rc-apply-h">신청 폼 — 이 페이지에서 제출</h2>
+              <h2 className="rc-h2" id="rc-apply-h">신청 폼</h2>
               <RecruitForm />
             </div>
           </div>

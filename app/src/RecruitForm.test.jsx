@@ -3,21 +3,35 @@
 import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
 import RecruitForm from './RecruitForm.jsx'
-import { validateApplication, submitApplication, EMPTY_APPLICATION, applyPhase } from './pages/apply-source.js'
+import { validateApplication, submitApplication, EMPTY_APPLICATION, applyPhase, composeAiText, composeTopicText } from './pages/apply-source.js'
 
 const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
 
 const VALID = { 이름: '가나다', 학번: '2024000004', 전공: '경영학부', 전화번호: '010-1234-5678', 써본ai: ' ChatGPT ', 관심주제: '' }
 
-const OPEN_DAY = '2026-09-01' // 모집 창 안(RECRUIT.window 2026-08-25 ~ 09-08)
+const OPEN_DAY = '2026-09-01' // 모집 창 안(RECRUIT.window ~ 09-08)
 
-test('모집 창 안 + 백엔드 연결 시 = 필수 4필드 + 자유 서술 2필드 + 개인정보 문구 렌더', () => {
+// 2026-08-18 개편 — 세로 1열·빨간 *·써본 AI 체크형·팀 프로젝트 주제 관심 체크.
+test('모집 창 안 + 백엔드 연결 시 = 필수 4필드(*) + 체크 그룹 2벌 + 개인정보 문구 렌더', () => {
   const html = flat(<RecruitForm configured={true} today={OPEN_DAY} />)
-  for (const label of ['이름', '학번', '학부/전공', '전화번호', '지금까지 써본 AI', '관심 있는 주제']) {
+  for (const label of ['이름', '학번', '학부/전공', '전화번호', '지금까지 써본 AI', '팀 프로젝트 주제']) {
     expect(html).toContain(label)
   }
+  expect(html).toContain('rc-req')                    // 필수 = * 표기
+  expect(html).toContain('ChatGPT')                   // AI 체크 선택지
+  expect(html).toContain('연구회 운영 자동화')          // 주제 풀(§E) 체크 선택지
+  expect(html).toContain('type="checkbox"')
+  expect(html).not.toContain('rc-form-grid')          // 2열 그리드 폐지 — 세로 1열
   expect(html).toContain('모집 연락·기수 운영')      // 개인정보 용도 1줄
   expect(html).toContain('신청 제출')
+})
+
+test('체크 합성 — 써본 AI(체크+기타)·주제(체크+자유)를 text 컬럼 문자열로', () => {
+  expect(composeAiText(['ChatGPT', 'Claude'], ' 감마 ')).toBe('ChatGPT, Claude, 기타: 감마')
+  expect(composeAiText([], '')).toBe('')
+  expect(composeTopicText(['알바 업무 재설계'], '프롬프트')).toBe('알바 업무 재설계 / 프롬프트')
+  expect(composeTopicText([], '프롬프트만')).toBe('프롬프트만')
+  expect(composeTopicText(['교내 행정 재설계'], '')).toBe('교내 행정 재설계')
 })
 
 test('백엔드 미연결 시 = 폼 대신 제출 불가 안내(조용한 목 폴백 금지)', () => {
@@ -27,20 +41,15 @@ test('백엔드 미연결 시 = 폼 대신 제출 불가 안내(조용한 목 �
   expect(html).not.toContain('<input')
 })
 
-// 사전 접수 개방(오너 2026-08-18) — 창 전에도 폼 + 정식 기간 안내 한 줄. 마감 후만 닫는다.
-test('접수 국면 — 창 전=폼+정식 기간 안내 / 창 안=폼 / 창 후=다음 기수 안내', () => {
-  expect(applyPhase('2026-08-24', {})).toBe('open')   // before도 폼 개방
-  expect(applyPhase('2026-08-25', {})).toBe('open')   // 경계일 포함
-  expect(applyPhase('2026-09-08', {})).toBe('open')
+// 창 개편(오너 2026-08-18 2차) — start = 폼 공개일(08-18)로 당김: "25일부터"는 폐기, 표기는 마감만.
+test('접수 국면 — 폼 공개일부터 open, 마감 다음 날 after', () => {
+  expect(applyPhase('2026-08-18', {})).toBe('open')   // 폼 공개일 = 접수 시작
+  expect(applyPhase('2026-08-25', {})).toBe('open')
+  expect(applyPhase('2026-09-08', {})).toBe('open')   // 마감일 포함
   expect(applyPhase('2026-09-09', {})).toBe('after')
-
-  const before = flat(<RecruitForm configured={true} today="2026-08-01" />)
-  expect(before).toContain('정식 모집 2026-08-25')
-  expect(before).toContain('<input')                  // 폼이 실물로 뜬다
 
   const open = flat(<RecruitForm configured={true} today={OPEN_DAY} />)
   expect(open).toContain('<input')
-  expect(open).not.toContain('정식 모집 2026-08-25')   // 창 안에서는 사전 안내 없음
 
   const after = flat(<RecruitForm configured={true} today="2026-09-20" />)
   expect(after).toContain('모집 마감')

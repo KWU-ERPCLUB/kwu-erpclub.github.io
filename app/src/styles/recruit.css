@@ -264,13 +264,20 @@
 .rc-actions-center { justify-content: center; } /* 문의 — 가운데 정렬(오너 2026-08-07) */
 
 /* ══ 신청 폼(온사이트 접수) — 제출 = 대형 CTA(.rc-cta-xl) 승계, 라인 문법은 요강 표 승계 ══ */
-.rc-form { margin-top: clamp(1.75rem, 4vh, 2.5rem); max-width: 46rem; }
-.rc-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem 1.5rem; }
-@media (max-width: 700px) { .rc-form-grid { grid-template-columns: 1fr; } }
-.rc-field { margin: 0 0 1.1rem; display: flex; flex-direction: column; gap: 0.4rem; }
-.rc-form-grid .rc-field { margin: 0; }
+/* 2026-08-18 개편(오너) — 세로 1열 + 폼 블록 중앙 정렬(margin-inline auto — flex 부모 폭 수축 함정 회피)
+   + 필수 = 빨간 *(구글폼 문법) + 체크 그룹(써본 AI·주제 관심) */
+.rc-form { margin: clamp(1.75rem, 4vh, 2.5rem) auto 0; max-width: 42rem; }
+.rc-field { margin: 0 0 1.2rem; display: flex; flex-direction: column; gap: 0.4rem; }
 .rc-field label { font-size: 0.85rem; font-weight: 700; color: var(--text); letter-spacing: 0.02em; }
-.rc-req { font-size: 0.72rem; font-weight: 600; color: var(--text-sub); } /* 버건디 예산 절약 — 차콜 */
+.rc-req { font-size: 0.95rem; font-weight: 800; color: var(--accent); line-height: 1; }
+.rc-checkset { border: 1px solid var(--line); border-radius: 12px; padding: 0.9rem 1.1rem 1rem; }
+.rc-checkset legend { font-size: 0.85rem; font-weight: 700; color: var(--text); letter-spacing: 0.02em; padding: 0 0.35rem; }
+.rc-checks { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem 1rem; }
+@media (max-width: 560px) { .rc-checks { grid-template-columns: 1fr; } }
+.rc-check { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text); cursor: pointer; }
+.rc-check input { width: 17px; height: 17px; accent-color: var(--dark); flex: none; }
+.rc-check input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.rc-etc { margin-top: -0.5rem; }
 .rc-hint { font-weight: 500; color: var(--text-sub); }
 .rc-field input, .rc-field textarea {
   font: inherit; font-size: 0.94rem; color: var(--text);

@@ -7,7 +7,8 @@ export const RECRUIT = {
   study: 'AIM',
   cohort: '1기',
   term: '2학기',
-  window: { start: '2026-08-25', end: '2026-09-08' }, // 모집 창(경계일 포함)
+  // 접수 즉시 개방(오너 2026-08-18 — "25일부터"는 폐기, 마감만 표기): start = 폼 공개일. 표기는 formatWindow가 마감만 쓴다.
+  window: { start: '2026-08-18', end: '2026-09-08' }, // 모집 창(경계일 포함)
   활동기간: '2026-09 ~ 11월 말 (2학기)',   /* 로드맵 최종 발표 ~11-24 · 기말 2주 전 중지 — 12월 세션 없음(2026-08-14 정합) */
 }
 
@@ -116,12 +117,23 @@ export const AIM_ROADMAP = AIM_TIMELINE
     ? { type: 'phase', 라벨: n.라벨, 기간: n.기간, 설명: n.공개설명 || n.설명, hl: n.hl }
     : { type: 'session', no: String(n.no).padStart(2, '0'), 태그: n.태그, 주: n.주, 주제: n.주제, 배움: n.배움, 세부: n.세부 }))
 
-// '2026-08-25 ~ 2026-09-08' — 요강 등 전체 표기.
+// '~ 2026-09-08' — 마감만 표기(오너 2026-08-18: 시작일 표기 폐기 — 폼은 상시 열려 있고 마감만 있다).
 export function formatWindow(win = RECRUIT.window) {
-  return `${win.start} ~ ${win.end}`
+  return `~ ${win.end}`
 }
 
-// '2026-08-25 ~ 09-08' — 한 줄 문구용 짧은 표기.
+// '~ 09-08' — 한 줄 문구용 짧은 표기.
 export function formatWindowShort(win = RECRUIT.window) {
-  return `${win.start} ~ ${shortDate(win.end)}`
+  return `~ ${shortDate(win.end)}`
 }
+
+// 팀 프로젝트(2차) 주제 풀 — 신청 폼 관심 체크 항목(오너 2026-08-18).
+// 원천 = erp-club docs/aim-주제풀-2차.md §E(오너 픽 6건 전부 채택 2026-08-13 — 멤버 공개 가능 표면은 주제명·한 줄만).
+export const RECRUIT_TOPICS = [
+  '연구회 운영 자동화',
+  '동아리 운영 킷',
+  '스터디 진도 관리',
+  '알바 업무 재설계',
+  '소상공인 업무 재설계',
+  '교내 행정 재설계',
+]
