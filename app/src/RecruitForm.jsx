@@ -6,19 +6,14 @@
 // env 미설정 = 폼 미표시 + 제출 불가 안내(목 폴백으로 성공하는 척 금지 — 오너 확정).
 import { useState } from 'react'
 import {
-  EMPTY_APPLICATION, APPLY_NOTE, applyPhase, isBackendReady, REASON_MAX,
-  validateApplication, submitApplication, composeAiText, composeTopicText,
+  EMPTY_APPLICATION, APPLY_NOTE, applyPhase, isBackendReady, REASON_MAX, isValidHakbeon,
+  validateApplication, submitApplication, composeAiText, composeTopicText, composeMajorText,
 } from './pages/apply-source.js'
 import { localYmd } from './home-logic.js'
-import { CONTACT, CONTACT_MAILTO, PRIVACY_NOTE, RECRUIT_TOPICS } from './data/recruit.js'
+import { CONTACT, CONTACT_MAILTO, PRIVACY_NOTE, RECRUIT_TOPICS, KWU_MAJORS } from './data/recruit.js'
 
-// [키, 라벨, 보조 설명] — 필수 4(세로 1열). 설명은 라벨 아래 블록으로 렌더.
-const REQUIRED_FIELDS = [
-  ['이름', '이름', ''],
-  ['학번', '학번', '숫자 10자리 (예: 2021508001)'],
-  ['전공', '학부/전공', ''],
-  ['전화번호', '전화번호', '하이픈 포함 (예: 010-1234-5678)'],
-]
+// 필수 표시 * — 구글폼 문법
+const Req = () => <span className="rc-req" aria-label="필수">*</span>
 
 // 써본 AI 체크 선택지 — 2026-08-18 기준 목록(오너 지시: 클로드 코드·코덱스 등 누락분 보강).
 // '없음'도 유효한 답(초심자 환영이 모집 방침). 목록 밖 도구 = 기타 체크(CheckGroup 내장 입력).
@@ -72,6 +67,10 @@ export default function RecruitForm({ configured, repos, today = localYmd() }) {
   const [aiChecks, setAiChecks] = useState([])
   const [aiEtc, setAiEtc] = useState('')
   const [topicChecks, setTopicChecks] = useState([])
+  const [majorEtcOn, setMajorEtcOn] = useState(false)   // 전공 = 목록 밖 직접 입력 모드
+  const [subType, setSubType] = useState('')            // '' | 부전공 | 복수전공(오너 3차)
+  const [subMajor, setSubMajor] = useState('')
+  const [subEtcOn, setSubEtcOn] = useState(false)
   const [errors, setErrors] = useState({})
   const [phase, setPhase] = useState('idle')      // idle | busy | done
   const [failure, setFailure] = useState('')
@@ -95,16 +94,38 @@ export default function RecruitForm({ configured, repos, today = localYmd() }) {
   const set = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }))
   const toggleOf = (setter) => (opt) => setter((prev) => (prev.includes(opt) ? prev.filter((v) => v !== opt) : [...prev, opt]))
 
+  // 학번 라이브 검증(오너 2026-08-18 2차) — 입력 중 10자리 미충족 = 즉시 빨간 표시(설명·예시 미게재).
+  const hakbeonBad = form['학번'] !== '' && !isValidHakbeon(form['학번'])
+
+  // 전공 토글 — 목록 값 선택 = 그대로 저장 / '기타' = 직접 입력 모드(입력값이 전공이 된다).
+  const onMajorSel = (e) => {
+    const v = e.target.value
+    if (v === ETC) { setMajorEtcOn(true); setForm((f) => ({ ...f, 전공: '' })) }
+    else { setMajorEtcOn(false); setForm((f) => ({ ...f, 전공: v })) }
+  }
+  const onSubSel = (e) => {
+    const v = e.target.value
+    if (v === ETC) { setSubEtcOn(true); setSubMajor('') }
+    else { setSubEtcOn(false); setSubMajor(v) }
+  }
+  const onSubType = (e) => {
+    const v = e.target.value
+    setSubType(v)
+    if (!v) { setSubMajor(''); setSubEtcOn(false) }
+  }
+
   async function onSubmit(e) {
     e.preventDefault()
-    const found = validateApplication(form)
+    // 전공 = 주전공 + (있으면) 부/복수전공 합성 문자열 — 검증·저장 둘 다 합성값 기준.
+    const merged = { ...form, 전공: composeMajorText(form['전공'], subType, subMajor) }
+    const found = validateApplication(merged)
     setErrors(found)
     if (Object.keys(found).length > 0) return
     setPhase('busy')
     setFailure('')
     try {
       await submitApplication({
-        ...form,
+        ...merged,
         써본ai: composeAiText(aiChecks.filter((v) => v !== ETC), aiChecks.includes(ETC) ? aiEtc : ''),
         관심주제: composeTopicText(topicChecks.filter((v) => v !== ETC), topicChecks.includes(ETC) ? form['관심주제'] : ''),
       }, { repos, configured: open })
@@ -115,21 +136,81 @@ export default function RecruitForm({ configured, repos, today = localYmd() }) {
     }
   }
 
+  // 학부/전공 select 공용 옵션(주전공·부/복수전공 동일 목록)
+  const majorOptions = (
+    <>
+      <option value="">선택</option>
+      {KWU_MAJORS.map(([college, majors]) => (
+        <optgroup key={college} label={college}>
+          {majors.map((m) => <option key={m} value={m}>{m}</option>)}
+        </optgroup>
+      ))}
+      <option value={ETC}>기타(직접 입력)</option>
+    </>
+  )
+
   return (
     <form className="rc-form" onSubmit={onSubmit} noValidate>
-      {REQUIRED_FIELDS.map(([key, label, hint]) => (
-        <p className="rc-field" key={key}>
-          <label htmlFor={`ap-${key}`}>
-            {label} <span className="rc-req" aria-label="필수">*</span>
-          </label>
-          {hint && <span className="rc-desc">{hint}</span>}
+      <p className="rc-field">
+        <label htmlFor="ap-이름">이름 <Req /></label>
+        <input id="ap-이름" type="text" value={form['이름']} onChange={set('이름')} aria-invalid={Boolean(errors['이름'])} />
+        {errors['이름'] && <span className="rc-field-error" role="alert">{errors['이름']}</span>}
+      </p>
+
+      <p className="rc-field">
+        <label htmlFor="ap-학번">학번 <Req /></label>
+        <input
+          id="ap-학번" type="text" inputMode="numeric" value={form['학번']} onChange={set('학번')}
+          aria-invalid={hakbeonBad || Boolean(errors['학번'])}
+        />
+        {(hakbeonBad || errors['학번']) && <span className="rc-field-error" role="alert">학번 확인 필요</span>}
+      </p>
+
+      <p className="rc-field">
+        <label htmlFor="ap-전공">학부/전공 <Req /></label>
+        <select
+          id="ap-전공" value={majorEtcOn ? ETC : form['전공']} onChange={onMajorSel}
+          aria-invalid={Boolean(errors['전공'])}
+        >
+          {majorOptions}
+        </select>
+        {majorEtcOn && (
           <input
-            id={`ap-${key}`} type={key === '전화번호' ? 'tel' : 'text'} value={form[key]}
-            onChange={set(key)} aria-invalid={Boolean(errors[key])}
+            className="rc-etc-input" type="text" value={form['전공']} onChange={set('전공')}
+            placeholder="학부/전공 직접 입력" aria-label="학부/전공 직접 입력"
           />
-          {errors[key] && <span className="rc-field-error" role="alert">{errors[key]}</span>}
-        </p>
-      ))}
+        )}
+        <span className="rc-desc rc-desc-mid">부전공·복수전공이 있으면 함께 표기</span>
+        <span className="rc-subrow">
+          <select value={subType} onChange={onSubType} aria-label="부·복수전공 구분">
+            <option value="">없음</option>
+            <option value="부전공">부전공</option>
+            <option value="복수전공">복수전공</option>
+          </select>
+          {subType && (
+            <select value={subEtcOn ? ETC : subMajor} onChange={onSubSel} aria-label="부·복수전공 학부/전공">
+              {majorOptions}
+            </select>
+          )}
+        </span>
+        {subType && subEtcOn && (
+          <input
+            className="rc-etc-input" type="text" value={subMajor} onChange={(e) => setSubMajor(e.target.value)}
+            placeholder={`${subType} 직접 입력`} aria-label={`${subType} 직접 입력`}
+          />
+        )}
+        {errors['전공'] && <span className="rc-field-error" role="alert">{errors['전공']}</span>}
+      </p>
+
+      <p className="rc-field">
+        <label htmlFor="ap-전화번호">전화번호 <Req /></label>
+        <span className="rc-desc">하이픈 포함 (예: 010-1234-5678)</span>
+        <input
+          id="ap-전화번호" type="tel" value={form['전화번호']} onChange={set('전화번호')}
+          aria-invalid={Boolean(errors['전화번호'])}
+        />
+        {errors['전화번호'] && <span className="rc-field-error" role="alert">{errors['전화번호']}</span>}
+      </p>
 
       <CheckGroup
         legend="지금까지 써본 AI" desc="중복 선택 가능"
@@ -155,11 +236,13 @@ export default function RecruitForm({ configured, repos, today = localYmd() }) {
         {errors['지원계기'] && <span className="rc-field-error" role="alert">{errors['지원계기']}</span>}
       </p>
 
-      <p className="rc-form-privacy">{PRIVACY_NOTE}</p>
-      {failure && <p className="rc-field-error" role="alert">{failure}</p>}
-      <button className="rc-cta-xl rc-form-submit" type="submit" disabled={phase === 'busy'}>
-        {phase === 'busy' ? '제출 중' : '신청 제출'}
-      </button>
+      <div className="rc-form-foot">
+        <p className="rc-form-privacy">{PRIVACY_NOTE}</p>
+        {failure && <p className="rc-field-error" role="alert">{failure}</p>}
+        <button className="rc-cta-xl rc-form-submit" type="submit" disabled={phase === 'busy'}>
+          {phase === 'busy' ? '제출 중' : '신청 제출'}
+        </button>
+      </div>
     </form>
   )
 }

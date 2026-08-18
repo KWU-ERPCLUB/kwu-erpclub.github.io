@@ -43,6 +43,14 @@ export function composeAiText(checks = [], etc = '') {
   if (t) list.push(`기타: ${t}`)
   return list.join(', ')
 }
+// 전공 합성(오너 2026-08-18 3차 — 부/복수전공 표기 가능): '경영학부' 또는 '경영학부 (복수전공: 소프트웨어학부)'.
+// 주전공이 비면 부전공만으로 통과 못 하게 빈 문자열(validate가 잡는다).
+export function composeMajorText(main, subType = '', sub = '') {
+  const m = String(main || '').trim()
+  const s = String(sub || '').trim()
+  if (!m) return ''
+  return subType && s ? `${m} (${subType}: ${s})` : m
+}
 export function composeTopicText(checks = [], free = '') {
   const t = String(free || '').trim()
   const c = checks.join(', ')
@@ -51,14 +59,18 @@ export function composeTopicText(checks = [], free = '') {
 
 // 전화번호 = 느슨한 형식(오너 확정): 숫자·하이픈만 + 숫자 9~11자리.
 const PHONE_CHARS = /^[0-9-]+$/
-// 학번 = 정확히 숫자 10자리(오너 2026-08-18 — 예: 2021508001. 로그인 규칙 4~12보다 엄격 — 폼 전용).
+// 학번 = 정확히 숫자 10자리(오너 2026-08-18 — 로그인 규칙 4~12보다 엄격, 폼 전용).
+// 화면 문구에는 형식 설명·예시 미게재(오너 2차) — 입력 즉시 빨간 표시(라이브)로만 알린다.
 const HAKBEON_10 = /^[0-9]{10}$/
+export function isValidHakbeon(v) {
+  return HAKBEON_10.test(String(v || '').trim())
+}
 
 // 반환 = { 필드명: 오류 문구 } — 비면 통과. 폼이 문구를 그대로 보여준다.
 export function validateApplication(form) {
   const errors = {}
   if (!String(form['이름'] || '').trim()) errors['이름'] = '이름 입력 필요'
-  if (!HAKBEON_10.test(String(form['학번'] || '').trim())) errors['학번'] = '학번은 숫자 10자리(예: 2021508001)'
+  if (!isValidHakbeon(form['학번'])) errors['학번'] = '학번 확인 필요'
   if (!String(form['전공'] || '').trim()) errors['전공'] = '학부/전공 입력 필요'
   const phone = String(form['전화번호'] || '').trim()
   const digits = phone.replace(/-/g, '')

@@ -1,0 +1,66 @@
+/* /recruit 신청 폼 전용 CSS — recruit.css 300줄 규격 초과로 분할(2026-08-18, workspace-*.css 분할 관례).
+   페이지 셸·요강·로드맵·FAQ = recruit.css / 폼(질문 카드·토글 칩·라이브 오류·푸터) = 이 파일. */
+
+/* ══ 신청 폼(온사이트 접수) — 제출 = 대형 CTA(.rc-cta-xl) 승계 ══ */
+/* 2026-08-18 개편(오너, 같은 날 3차) — 세로 1열·중앙 + 질문 = 면 카드(구글폼 문법 × 요강 rc-fact 면 문법)
+   + 체크 = 토글 칩(검정 pill 채택 상태) + 학번 라이브 오류 + 전공 = 토글 select(+부/복수전공) + 푸터 중앙 */
+.rc-form { margin: clamp(1.75rem, 4vh, 2.5rem) auto 0; max-width: 44rem; }
+/* 질문 카드 — 요강 rc-fact 면 문법 승계(면 교대·radius 14). 포커스 = 행 하이라이트(rc-fact 호버 동형) */
+.rc-field {
+  margin: 0 0 0.8rem; display: flex; flex-direction: column; gap: 0.45rem;
+  background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 1.05rem 1.2rem 1.15rem;
+  transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
+}
+.rc-secs:nth-of-type(odd) .rc-field { background: var(--surface); border-color: transparent; }
+.rc-field:focus-within { border-color: rgba(122, 32, 48, 0.35); box-shadow: 0 8px 22px rgba(0, 0, 0, 0.06); }
+.rc-field label, .rc-checkset legend { font-size: 0.95rem; font-weight: 750; color: var(--text); letter-spacing: -0.01em; }
+.rc-req { font-size: 1rem; font-weight: 800; color: var(--accent); line-height: 1; }
+/* fieldset 카드 — legend를 보더 위가 아니라 카드 안 일반 블록으로(float 전폭 트릭) */
+.rc-checkset { min-inline-size: 0; }
+.rc-checkset legend { float: left; width: 100%; padding: 0; margin-bottom: 0.15rem; }
+.rc-checkset > * { clear: both; }
+/* 체크 = 토글 칩(검정 pill 문법 — 채택 시 dark 채움). 네이티브 체크박스는 시각만 숨김(접근성 유지) */
+.rc-checks { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.rc-check {
+  position: relative; display: inline-flex; align-items: center;
+  padding: 0.42rem 0.95rem; border: 1px solid var(--line); border-radius: var(--radius-pill);
+  font-size: 0.88rem; font-weight: 600; color: var(--text); background: #fff; cursor: pointer;
+  transition: background 150ms ease-out, color 150ms ease-out, border-color 150ms ease-out, transform 150ms ease-out;
+}
+.rc-check:hover { border-color: rgba(22, 22, 22, 0.45); }
+.rc-check:active { transform: scale(0.97); }
+.rc-check input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.rc-check:has(input:checked) { background: var(--dark); border-color: var(--dark); color: #fff; }
+.rc-check:has(input:focus-visible) { outline: 3px solid var(--accent); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .rc-check { transition: none; } .rc-check:active { transform: none; } }
+/* 설명 = 제목 바로 아래 블록(오너 2026-08-18 — 우측 인라인 병기 폐지) */
+.rc-desc { display: block; margin: -0.15rem 0 0.1rem; font-size: 0.8rem; font-weight: 500; color: var(--text-sub); word-break: keep-all; }
+.rc-desc-mid { margin-top: 0.55rem; }   /* 필드 중간 설명(부/복수전공 안내) */
+/* 기타 체크·직접 입력(체크 그룹/전공 내장 — 구 별도 rc-etc 필드 폐지) */
+.rc-etc-input { margin-top: 0.15rem; width: 100%; box-sizing: border-box; }
+/* 부/복수전공 행 — [구분][전공] 가로 배치, 폰 = 세로 적층 */
+.rc-subrow { display: flex; gap: 0.5rem; }
+.rc-subrow select:first-child { flex: none; width: 8.5rem; }
+.rc-subrow select + select { flex: 1; min-width: 0; }
+@media (max-width: 560px) { .rc-subrow { flex-direction: column; } .rc-subrow select:first-child { width: 100%; } }
+.rc-field input[type='text'], .rc-field input[type='tel'], .rc-field textarea, .rc-field select {
+  font: inherit; font-size: 0.94rem; color: var(--text);
+  padding: 0.65rem 0.85rem; border: 1px solid var(--line); border-radius: 10px; background: #fff;
+}
+.rc-field input:focus-visible, .rc-field textarea:focus-visible, .rc-field select:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+/* 폰 = 입력 16px 하한(모바일 spec M2) — 15px대면 iOS Safari가 포커스 시 화면을 자동 확대 */
+@media (max-width: 700px) { .rc-field input, .rc-field textarea, .rc-field select { font-size: 16px; } }   /* px 고정 — 폰 루트 15px 축소와 무관 */
+/* 오류 = 즉시 빨간 표시(학번 라이브 포함) — 보더 2중 + 옅은 적색 면으로 "해결 전 못 넘어감"을 명시 */
+.rc-field input[aria-invalid='true'], .rc-field select[aria-invalid='true'] {
+  border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); background: rgba(122, 32, 48, 0.04);
+}
+.rc-field-error { font-size: 0.8rem; font-weight: 600; color: var(--accent); }
+/* 푸터 — 개인정보 문구·제출 버튼 전부 정중앙(grid justify-items — inline-flex 좌측 치우침 근절) */
+.rc-form-foot { display: grid; justify-items: center; gap: 1rem; margin-top: clamp(1.5rem, 3.5vh, 2rem); text-align: center; }
+.rc-form-privacy { margin: 0; font-size: 0.8rem; color: var(--text-sub); word-break: keep-all; }
+.rc-form-submit { font-family: var(--font-display); }
+.rc-form-done {
+  margin-top: clamp(1.75rem, 4vh, 2.5rem); max-width: 46rem;
+  background: var(--surface); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0;
+  padding: 0.85rem 1.1rem; font-size: 0.94rem; font-weight: 600;
+}

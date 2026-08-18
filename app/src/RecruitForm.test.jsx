@@ -3,7 +3,10 @@
 import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
 import RecruitForm from './RecruitForm.jsx'
-import { validateApplication, submitApplication, EMPTY_APPLICATION, applyPhase, composeAiText, composeTopicText } from './pages/apply-source.js'
+import {
+  validateApplication, submitApplication, EMPTY_APPLICATION, applyPhase,
+  composeAiText, composeTopicText, composeMajorText, isValidHakbeon,
+} from './pages/apply-source.js'
 
 const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
 
@@ -18,8 +21,15 @@ test('모집 창 안 + 백엔드 연결 시 = 필수 4필드(*) + 체크 그룹 
     expect(html).toContain(label)
   }
   expect(html).toContain('rc-req')                    // 필수 = * 표기
-  expect(html).toContain('예: 2021508001')            // 학번 형식 예시(제목 아래 설명)
+  expect(html).not.toContain('숫자 10자리')            // 학번 = 형식 설명·예시 미게재(3차 — 라이브 빨간 표시만)
+  expect(html).not.toContain('2021508001')
   expect(html).toContain('예: 010-1234-5678')         // 전화번호 하이픈 예시
+  // 전공 = 광운대 학부 토글 select(+부/복수전공)
+  expect(html).toContain('<select')
+  expect(html).toContain('경영대학')                   // optgroup(단과대학)
+  expect(html).toContain('경영학부')                   // option(학부/전공)
+  expect(html).toContain('복수전공')                   // 부/복수전공 구분
+  expect(html).toContain('기타(직접 입력)')
   expect(html).toContain('중복 선택 가능')             // 체크 그룹 설명
   expect(html).toContain('추후 프로젝트 구성 시 참조')  // 주제 그룹 설명
   for (const ai of ['ChatGPT', 'Claude Code', 'Codex', 'Cursor', 'NotebookLM', '없음', '기타']) {
@@ -31,6 +41,14 @@ test('모집 창 안 + 백엔드 연결 시 = 필수 4필드(*) + 체크 그룹 
   expect(html).toContain('최대 500자')                 // 지원 계기 상한 안내
   expect(html).toContain('모집 연락·기수 운영')      // 개인정보 용도 1줄
   expect(html).toContain('신청 제출')
+})
+
+test('전공 합성 — 주전공 단독 / 부·복수전공 병기 / 주전공 없으면 빈 값(검증에 걸림)', () => {
+  expect(composeMajorText('경영학부')).toBe('경영학부')
+  expect(composeMajorText('경영학부', '복수전공', '소프트웨어학부')).toBe('경영학부 (복수전공: 소프트웨어학부)')
+  expect(composeMajorText('경영학부', '부전공', ' 산업심리학과 ')).toBe('경영학부 (부전공: 산업심리학과)')
+  expect(composeMajorText('경영학부', '복수전공', '')).toBe('경영학부')   // 구분만 고르고 전공 미선택 = 주전공만
+  expect(composeMajorText('', '복수전공', '소프트웨어학부')).toBe('')
 })
 
 test('체크 합성 — 써본 AI(체크+기타)·주제(체크+자유)를 text 컬럼 문자열로', () => {
@@ -73,10 +91,10 @@ test('필수 검증 — 빈 폼은 4필드 전부 오류, 유효 폼은 통과',
   const empty = validateApplication(EMPTY_APPLICATION)
   expect(Object.keys(empty).sort()).toEqual(['이름', '전공', '전화번호', '학번'].sort())
   expect(validateApplication(VALID)).toEqual({})
-  // 학번 = 정확히 숫자 10자리(2026-08-18) — 9자리·11자리·문자 섞임 전부 오류
-  expect(validateApplication({ ...VALID, 학번: '20a4' })['학번']).toContain('10자리')
-  expect(validateApplication({ ...VALID, 학번: '202150800' })['학번']).toContain('10자리')
-  expect(validateApplication({ ...VALID, 학번: '20215080011' })['학번']).toContain('10자리')
+  // 학번 = 정확히 숫자 10자리(2026-08-18) — 9자리·11자리·문자 섞임 전부 오류(문구는 미노출 원칙 — '확인'만)
+  expect(isValidHakbeon('2021508001')).toBe(true)
+  for (const bad of ['20a4', '202150800', '20215080011', '']) expect(isValidHakbeon(bad)).toBe(false)
+  expect(validateApplication({ ...VALID, 학번: '202150800' })['학번']).toContain('확인')
   expect(validateApplication({ ...VALID, 학번: '2021508001' })['학번']).toBeUndefined()
   expect(validateApplication({ ...VALID, 전화번호: '010-12' })['전화번호']).toContain('숫자·하이픈')
   expect(validateApplication({ ...VALID, 전화번호: '공일공-1234' })['전화번호']).toBeTruthy()

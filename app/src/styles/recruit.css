@@ -266,42 +266,6 @@
 .rc-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem; margin-top: clamp(1.5rem, 3vh, 2rem); }
 .rc-actions-center { justify-content: center; } /* 문의 — 가운데 정렬(오너 2026-08-07) */
 
-/* ══ 신청 폼(온사이트 접수) — 제출 = 대형 CTA(.rc-cta-xl) 승계, 라인 문법은 요강 표 승계 ══ */
-/* 2026-08-18 개편(오너) — 세로 1열 + 폼 블록 중앙 정렬(margin-inline auto — flex 부모 폭 수축 함정 회피)
-   + 필수 = 빨간 *(구글폼 문법) + 체크 그룹(써본 AI·주제 관심) */
-.rc-form { margin: clamp(1.75rem, 4vh, 2.5rem) auto 0; max-width: 42rem; }
-.rc-field { margin: 0 0 1.2rem; display: flex; flex-direction: column; gap: 0.4rem; }
-.rc-field label { font-size: 0.85rem; font-weight: 700; color: var(--text); letter-spacing: 0.02em; }
-.rc-req { font-size: 0.95rem; font-weight: 800; color: var(--accent); line-height: 1; }
-.rc-checkset { border: 1px solid var(--line); border-radius: 12px; padding: 0.9rem 1.1rem 1rem; }
-.rc-checkset legend { font-size: 0.85rem; font-weight: 700; color: var(--text); letter-spacing: 0.02em; padding: 0 0.35rem; }
-.rc-checks { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem 1rem; }
-@media (max-width: 560px) { .rc-checks { grid-template-columns: 1fr; } }
-.rc-check { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text); cursor: pointer; }
-.rc-check input { width: 17px; height: 17px; accent-color: var(--dark); flex: none; }
-.rc-check input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-/* 설명 = 제목(라벨·legend) 바로 아래 블록(오너 2026-08-18 — 우측 인라인 병기 폐지) */
-.rc-desc { display: block; margin: 0; font-size: 0.8rem; font-weight: 500; color: var(--text-sub); word-break: keep-all; }
-.rc-checkset .rc-desc { margin: 0.1rem 0.1rem 0.7rem; }
-/* 기타 체크 시 나타나는 직접 입력(체크 그룹 내장 — 구 별도 rc-etc 필드 폐지) */
-.rc-etc-input { margin-top: 0.65rem; width: 100%; box-sizing: border-box; }
-.rc-field input, .rc-field textarea {
-  font: inherit; font-size: 0.94rem; color: var(--text);
-  padding: 0.6rem 0.8rem; border: 1px solid var(--line); border-radius: 8px; background: #fff;
-}
-.rc-field input:focus-visible, .rc-field textarea:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-/* 폰 = 입력 16px 하한(모바일 spec M2) — 15px대면 iOS Safari가 포커스 시 화면을 자동 확대 */
-@media (max-width: 700px) { .rc-field input, .rc-field textarea { font-size: 16px; } }   /* px 고정 — 폰 루트 15px 축소와 무관 */
-.rc-field input[aria-invalid='true'] { border-color: var(--accent); }
-.rc-field-error { font-size: 0.8rem; color: var(--accent); }
-.rc-form-privacy { margin: 0.5rem 0 1rem; font-size: 0.8rem; color: var(--text-sub); }
-/* 제출 버튼 = 폼 가운데(오너 2026-08-18 — 좌측 치우침 수정. inline-flex는 margin auto가 안 먹어 flex + fit-content) */
-.rc-form-submit { font-family: var(--font-display); display: flex; width: fit-content; margin-inline: auto; }
-.rc-form-done {
-  margin-top: clamp(1.75rem, 4vh, 2.5rem); max-width: 46rem;
-  background: var(--surface); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0;
-  padding: 0.85rem 1.1rem; font-size: 0.94rem; font-weight: 600;
-}
 
 /* ══ v3.3 스크롤 인터랙션 복원(2026-08-05 — "화려하던 로직") — 전 규칙 = JS 게이트(html.rc-js / html.rc-spy-js) 뒤.
    게이트 클래스는 Recruit.jsx 훅이 런타임에만 부여 → no-JS·reduced-motion = 정적 상태 = 전부 선명·정지.

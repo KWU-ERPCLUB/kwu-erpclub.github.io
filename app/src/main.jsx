@@ -5,6 +5,7 @@ import './styles/global.css'
 import './styles/home.css'
 import './styles/home-sections.css'
 import './styles/recruit.css'
+import './styles/recruit-form.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
