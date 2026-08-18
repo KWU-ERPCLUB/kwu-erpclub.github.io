@@ -1,12 +1,11 @@
 // 홈 탭(2026-08-06 개편) — 첫 화면 = 대형 월 캘린더 + 다가오는 업무. 아래로 과제 제출·공지·세션 흡수(구 제출·스터디 탭).
 // 데이터 = 운영 일정(events, 0007) + 과제 마감 자동 + 세션 날짜 자동. 계산은 calendar-logic.js(순수)만 쓴다.
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { monthGrid, buildAgenda, itemsOn, upcoming, dday, daysBetween, toKey, WEEKLY_CONTRIB, weeklyContribItems } from './calendar-logic.js'
+import { monthGrid, buildAgenda, itemsOn, upcoming, dday, daysBetween, toKey, weeklyContribItems } from './calendar-logic.js'
 import { postingAgendaItems } from './postings-logic.js'
 import { filterAgendaBySubs, SUBS_CHANGED } from './postings-taxonomy.js'
 import Assignments from './Assignments.jsx'
 import Notices from './Notices.jsx'
-import Sessions from './Sessions.jsx'
 
 const KIND_CLASS = { 일정: 'ev', 세미나: 'sem', 모집: 'rec', 마감: 'due', 과제: 'due', 세션: 'sem', 공고: 'post', 학사: 'ac' }
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토']
@@ -112,35 +111,26 @@ export function MonthCalendar({ year, month, items, todayKey, selected, onSelect
   )
 }
 
-// 다가오는 업무 — ★(중요) 지정 항목만(2026-08-07 오너: 전량 노출은 소음). export = 단위 테스트용.
-export function UpcomingTasks({ items, todayKey, onSelect, staff = false }) {
-  const rows = upcoming(items, todayKey, 6)
+// 다가오는 업무(2026-08-18 개편) — 내 캘린더에 뜬 항목 전부, 2주 창(구 "★만" 폐기 — 캘린더 등록 개인화가 대신 거른다).
+// ★(중요·고정)는 마커로만 남는다. export = 단위 테스트용.
+export function UpcomingTasks({ items, todayKey, onSelect }) {
+  const rows = upcoming(items, todayKey, 12, 14)
   return (
     <aside className="ws-upcoming" aria-label="다가오는 업무">
-      <h2 className="ws-h2">다가오는 업무</h2>
-      {/* 빈 상태 role 분기(2026-08-14 검수) — 멤버에게 운영 탭 안내는 실행 불가 지시 */}
-      {rows.length === 0 && (
-        <p className="ws-note">
-          {staff
-            ? '지정된 업무 0건 — 운영 탭에서 일정에 ★, 공고에 고정을 지정하면 여기 뜬다.'
-            : '지정된 중요 업무 0건 — 전체 일정은 캘린더에서.'}
-        </p>
-      )}
+      <h2 className="ws-h2">다가오는 업무 <span className="ws-count">{rows.length}</span></h2>
+      {rows.length === 0 && <p className="ws-note">2주 내 일정 0건 — 공고 탭에서 분류를 캘린더에 등록하면 여기 모인다.</p>}
       <ul className="ws-list">
         {rows.map((it) => (
           <li key={`${it.source}-${it.id}`}>
             <button type="button" className="ws-up-item" onClick={() => onSelect(it.date)}>
               <span className={`ws-cal-dot ${KIND_CLASS[it['종류']] || 'ev'}`} aria-hidden="true" />
-              <span className="ws-up-title">{it['제목']}</span>
+              <span className="ws-up-title">{it['중요'] ? '★ ' : ''}{it['제목']}</span>
               <span className="ws-up-when">{it.date.slice(5).replace('-', '/')}</span>
               <span className={`ws-up-dday${daysBetween(todayKey, it.date) <= 7 ? ' soon' : ''}`}>{dday(todayKey, it.date)}</span>
             </button>
           </li>
         ))}
       </ul>
-      {WEEKLY_CONTRIB.dueDay === null && (
-        <p className="ws-note">{WEEKLY_CONTRIB.label} — 마감 요일 확정 전(인사이트 기고 탭에서 제출).</p>
-      )}
     </aside>
   )
 }
@@ -195,7 +185,7 @@ export default function Home({ store, member }) {
   const [ym, setYm] = useState(() => ({ y: Number(todayKey.slice(0, 4)), m: Number(todayKey.slice(5, 7)) }))
   const [selected, setSelected] = useState(todayKey)
   const [popup, setPopup] = useState(null)          // 세부 팝업 대상 항목(2026-08-07)
-  const [raw, setRaw] = useState({ events: [], assignments: [], sessions: [], postings: [], subs: null })
+  const [raw, setRaw] = useState({ events: [], assignments: [], sessions: [], postings: [], subs: null, interests: [] })
   const [error, setError] = useState('')
 
   const load = useCallback(() => Promise.all([
@@ -204,27 +194,30 @@ export default function Home({ store, member }) {
     store.sessions.list(),
     store.postings.list(),
     store.postings.listSubscriptions(),
-  ]).then(([events, assignments, sessions, postings, subs]) => {
-    setRaw({ events: events || [], assignments: assignments || [], sessions: sessions || [], postings: postings || [], subs })
+    store.postings.listInterests(),
+  ]).then(([events, assignments, sessions, postings, subs, interests]) => {
+    setRaw({ events: events || [], assignments: assignments || [], sessions: sessions || [], postings: postings || [], subs, interests: interests || [] })
   }).catch((e) => setError(e?.message || '불러오기 실패')), [store])
 
   useEffect(() => { load() }, [load])
 
-  // 공고 탭·내정보의 「캘린더에 담기」 토글 즉시 반영 — 탭이 hidden 보존이라 이벤트로 동기화(2026-08-18 오너).
+  // 공고 탭·내정보의 등록·관심 ★ 토글 즉시 반영 — 탭이 hidden 보존이라 이벤트로 동기화(2026-08-18 오너).
   useEffect(() => {
-    const sync = () => store.postings.listSubscriptions()
-      .then((subs) => setRaw((prev) => ({ ...prev, subs })))
+    const sync = () => Promise.all([store.postings.listSubscriptions(), store.postings.listInterests()])
+      .then(([subs, interests]) => setRaw((prev) => ({ ...prev, subs, interests: interests || [] })))
       .catch(() => {})
     window.addEventListener(SUBS_CHANGED, sync)
     return () => window.removeEventListener(SUBS_CHANGED, sync)
   }, [store])
 
   // 네 원천(운영 일정·과제·세션 + 공고 마감·시험일) + 주간 기고 반복 — 합친 뒤 날짜 재정렬(upcoming이 정렬 전제).
-  // 구독 필터(2026-08-18) — 공고·운영 일정은 구독 카테고리만 합류(행 0건 = 학사+AIM, null = 0014 미적용 강등: 전부).
+  // 구독 필터(2026-08-18) — 공고·운영 일정은 등록한 카테고리만 합류(행 0건 = 학사+AIM, null = 0014 미적용 강등: 전부).
+  // 관심 ★ 공고는 분류 미등록이어도 개별 합류(오너: "특정 공고만 보고 싶을 때").
   const items = useMemo(
     () => filterAgendaBySubs(
       buildAgenda(raw).concat(postingAgendaItems(raw.postings), weeklyContribItems(todayKey)),
       raw.subs,
+      raw.interests,
     ).sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0)),
     [raw, todayKey],
   )
@@ -254,10 +247,10 @@ export default function Home({ store, member }) {
           />
         </div>
         <Assignments store={store} />
-        <Sessions store={store} />
+        {/* 세션 섹션 = 로드맵 탭으로 편입(2026-08-18 오너 — 홈에선 제거, 자료·본문은 로드맵 차시 펼침이 담당) */}
       </div>
       <aside className="ws-crail">
-        <UpcomingTasks items={items} todayKey={todayKey} onSelect={setSelected} staff={member?.role === '운영진'} />
+        <UpcomingTasks items={items} todayKey={todayKey} onSelect={setSelected} />
         <DayDetail items={items} selected={selected} onOpenItem={setPopup} />
         <Notices store={store} />
       </aside>

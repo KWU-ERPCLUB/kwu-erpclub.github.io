@@ -112,15 +112,14 @@ test('구 탭명 딥링크 매핑 — 제출·스터디·과제·공지·세션 
   expect(initialTab('?tab=기고')).toBe('인사이트 기고')
 })
 
-test('홈 = 과제 제출·공지·세션·운영 기록까지 실제 화면(구 딥링크 경유 포함)', () => {
+test('홈 = 과제 제출·공지 화면(구 딥링크 경유 포함) — 세션·운영 기록은 홈에서 제거(2026-08-18)', () => {
   const store = createMockRepositories({ user: 'mock-member' })
   const member = { 이름: 'ㄱ', role: '스터디원' }
   const 홈 = flat(<Shell member={member} store={store} search="?tab=과제" />)
   expect(홈).toContain('ws-cal-grid')
   expect(홈).toContain('과제')
   expect(홈).toContain('공지')
-  expect(홈).toContain('세션')
-  expect(홈).toContain('운영 기록')            // OpsLog 승계(IA 4차)
+  expect(홈).not.toContain('운영 기록')        // 운영 탭으로 이동(오너 — 스터디원 열람 불필요)
   expect(홈).not.toContain('준비 중')
 })
 
@@ -144,14 +143,12 @@ test('로그인 후 = 앱 셸(히어로 헤드·문서 패널 없음, 사이드�
   expect(html).toContain('aria-current="true"')  // 사이드바 현재 탭 = aria-current(구 aria-pressed — 2026-08-14 검수)
 })
 
-// 빈 상태 role 분기(2026-08-14 검수) — 멤버에게 "운영 탭에서 지정" 안내는 실행 불가 지시.
-test('다가오는 업무 빈 상태 — 멤버 = 캘린더 안내 / 운영진 = 운영 탭 안내', async () => {
+// 2026-08-18 개편 — 다가오는 업무 = 개인 캘린더 2주 창 전량(구 ★만·역할 분기 안내 폐기).
+test('다가오는 업무 빈 상태 = 공고 탭 등록 안내 한 줄(역할 무관)', async () => {
   const { UpcomingTasks } = await import('./Home.jsx')
-  const member = flat(<UpcomingTasks items={[]} todayKey="2026-09-01" onSelect={() => {}} />)
-  expect(member).toContain('지정된 중요 업무 0건')
-  expect(member).not.toContain('운영 탭')
-  const staff = flat(<UpcomingTasks items={[]} todayKey="2026-09-01" onSelect={() => {}} staff />)
-  expect(staff).toContain('운영 탭')
+  const html = flat(<UpcomingTasks items={[]} todayKey="2026-09-01" onSelect={() => {}} />)
+  expect(html).toContain('2주 내 일정 0건')
+  expect(html).not.toContain('운영 탭')
 })
 
 // 공통 프레임(오너 확정 8/6 3차) — 전 탭 = 본문+우측 레일 단일 그리드. 탭 전환 시 열 경계 이동 0.

@@ -50,7 +50,7 @@ export function postingAgendaItems(rows) {
   const items = []
   for (const r of rows || []) {
     const 중요 = Boolean(r['고정'])
-    const base = { 종류: '공고', 시간: '', 설명: r['코멘트'] || '', 중요, url: r.url || '', 주최: r['주최'] || '', 공고종류: r['종류'], 분류: r['분류'] || '', source: 'posting' }
+    const base = { 종류: '공고', 시간: '', 설명: r['코멘트'] || '', 중요, url: r.url || '', 주최: r['주최'] || '', 공고종류: r['종류'], 분류: r['분류'] || '', posting_id: r.id, source: 'posting' }
     if (r['접수마감']) items.push({ ...base, date: r['접수마감'], 제목: `접수 마감 — ${r['제목']}`, id: `${r.id}-due` })
     if (r['시험일']) items.push({ ...base, date: r['시험일'], 제목: `시험일 — ${r['제목']}`, id: `${r.id}-exam` })
   }

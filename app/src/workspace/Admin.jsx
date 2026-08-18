@@ -9,9 +9,11 @@ import AdminApplicants from './AdminApplicants.jsx'
 import AdminEvents from './AdminEvents.jsx'
 import AdminPostings from './AdminPostings.jsx'
 import AdminSubmissions from './AdminSubmissions.jsx'
+import { OpsLog } from './Notices.jsx'
 import { CONTACT, CONTACT_MAILTO } from '../data/recruit.js'
 
-const SECTIONS = ['승인대기', '제출 현황', '지원자', '멤버', '콘텐츠', '일정', '공고']
+// 운영 기록 = 2026-08-18 홈에서 이동(오너 — 스터디원 열람 불필요, 운영진 참고 자료)
+const SECTIONS = ['승인대기', '제출 현황', '지원자', '멤버', '콘텐츠', '일정', '공고', '운영 기록']
 
 export function Denied() {
   return (
@@ -50,6 +52,7 @@ export default function Admin({ store, member }) {
         {section === '콘텐츠' && <AdminContent store={store} />}
         {section === '일정' && <AdminEvents store={store} />}
         {section === '공고' && <AdminPostings store={store} />}
+        {section === '운영 기록' && <OpsLog />}
       </div>
       <aside className="ws-crail">
         <section className="ws-block">

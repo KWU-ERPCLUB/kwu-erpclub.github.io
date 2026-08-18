@@ -98,7 +98,9 @@
 
 /* (월 캘린더·일정 칩·범례·점·선택일 상세·팝업 = workspace-calendar.css로 분할 이관 — 2026-08-14, 300줄 규격) */
 
-/* 다가오는 업무 — 흰 항목 카드(레일 surface 면 위) + 호버 리프트(포인터 있는 기기 + 모션 허용 시만) */
+/* 다가오는 업무 — 흰 항목 카드(레일 surface 면 위) + 호버 리프트(포인터 있는 기기 + 모션 허용 시만).
+   2026-08-18 개편: 개인 캘린더 2주 창 전량(최대 12건) — 최소 높이를 키워 많은 항목이 들어갈 자리를 확보 */
+.ws-upcoming { min-height: 380px; }
 .ws-upcoming .ws-list { gap: 0.4rem; }
 .ws-up-item {
   width: 100%; display: flex; align-items: center; gap: 0.5rem;

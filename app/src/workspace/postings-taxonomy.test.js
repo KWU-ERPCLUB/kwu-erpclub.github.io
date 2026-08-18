@@ -54,6 +54,8 @@ test('캘린더 구독 필터 — 공고=구독분만, 과제·세션은 상시 
   expect(filterAgendaBySubs(items, [{ 종류: '자격증', 분류: 'ADsP' }]).map((i) => i.id)).toEqual(['p1-due', 'a1'])
   // null(0014 미적용) = 강등: 전부 통과(현행 화면)
   expect(filterAgendaBySubs(items, null)).toHaveLength(5)
+  // 관심 ★ 개별 채택(2026-08-18) — 분류 미등록이어도 ★ 체크한 공고는 합류
+  expect(filterAgendaBySubs(items, [], ['p2']).map((i) => i.id)).toEqual(['p2-due', 'a1', 'e1', 'e2'])
 })
 
 test('첫 토글 실체화 — 행 0건이면 기본 2행을 먼저 쓰고 요청 적용, 기본 항목 자체를 끄면 나머지만 실체화', () => {

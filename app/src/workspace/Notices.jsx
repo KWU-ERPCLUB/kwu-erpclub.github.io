@@ -1,4 +1,5 @@
-// 공지 섹션(홈 탭 조립부 — 2026-08-06 홈 개편) — 내부 공지 열람 + 운영 기록(구 /log 페이지 내부화, IA 4차 2026-08-05). 작성·수정은 운영 탭(운영진 전용).
+// 공지 섹션(홈 탭 조립부 — 2026-08-06 홈 개편) — 내부 공지 열람. 작성·수정은 운영 탭(운영진 전용).
+// 운영 기록(OpsLog, 구 /log 내부화)은 2026-08-18 운영 탭으로 이동(오너 — 스터디원이 볼 필요 없음). export만 여기 유지.
 // notices_select_member: 내부여부=true 행은 멤버에게만 보인다.
 // 운영 기록 = 읽기 전용 렌더 — 데이터 원천 = src/data/log.js(기록 추가 = 데이터 1줄 추가).
 import { useCallback, useEffect, useState } from 'react'
@@ -75,7 +76,6 @@ export default function Notices({ store }) {
   useEffect(() => { load() }, [load])
 
   return (
-    <>
       <section className="ws-block">
         <h2 className="ws-h2">공지 <span className="ws-count">{rows.length}</span></h2>
         {status === 'loading' && <div className="ws-skel" aria-label="불러오는 중"><span /><span /></div>}
@@ -95,7 +95,5 @@ export default function Notices({ store }) {
           ))}
         </ul>
       </section>
-      <OpsLog />
-    </>
   )
 }

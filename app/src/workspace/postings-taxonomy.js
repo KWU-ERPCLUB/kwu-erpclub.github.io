@@ -53,11 +53,12 @@ export const eventCategory = (row) => (row?.['종류'] === '학사' ? '학사' :
 
 // 홈 캘린더 항목 필터(spec §4) — subs null = 강등(전부 통과). 과제·세션·주간 기고 = 구독 무관 상시 통과.
 // posting 항목 = 공고종류·분류(postingAgendaItems가 실어줌), event 항목 = 종류에서 학사/AIM 파생.
-export function filterAgendaBySubs(items, subsRows) {
+// interestIds(2026-08-18 오너: "분류 전체 말고 특정 공고만 보고 싶을 때") — ★ 관심 체크한 개별 공고는 분류 미등록이어도 합류.
+export function filterAgendaBySubs(items, subsRows, interestIds = []) {
   const subs = effectiveSubs(subsRows)
   if (subs === null) return items
   return (items || []).filter((it) => {
-    if (it.source === 'posting') return subMatches(subs, it['공고종류'], it['분류'])
+    if (it.source === 'posting') return subMatches(subs, it['공고종류'], it['분류']) || interestIds.includes(it.posting_id)
     if (it.source === 'event') return subMatches(subs, it['종류'] === '학사' ? '학사' : 'AIM')
     return true   // assignment·session·weekly = 스터디 의무(구독 대상 아님)
   })

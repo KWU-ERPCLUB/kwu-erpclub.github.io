@@ -26,7 +26,7 @@ export function PostingCard({ row, todayKey, interested = false, onToggleInteres
           <button
             type="button" className={`ws-post-star${interested ? ' on' : ''}`}
             aria-pressed={interested} aria-label={interested ? '관심 해제' : '관심 공고로 체크'}
-            title={interested ? '관심 해제' : '관심 공고로 체크 — 내정보에 모인다'}
+            title={interested ? '관심 해제' : '관심 공고로 체크 — 내정보에 모이고 이 공고만 홈 캘린더에도 뜬다'}
             onClick={() => onToggleInterest(row.id, !interested)}
           >
             ★
@@ -103,9 +103,11 @@ export default function Postings({ store }) {
   const flash = (msg) => { setNote(msg); setTimeout(() => setNote(''), 3000) }
 
   // 낙관적 토글 — 실패 시 원복(0013 미적용 환경 포함) + 한 줄 안내(무언 원복은 유령 동작으로 보임).
+  // 성공 시 SUBS_CHANGED — ★ 공고는 개별로 홈 캘린더에 합류하므로(2026-08-18) 홈이 즉시 다시 읽어야 한다.
   const toggleInterest = useCallback((postingId, on) => {
     setInterests((prev) => (on ? [...prev, postingId] : prev.filter((id) => id !== postingId)))
     store.postings.toggleInterest(postingId, on)
+      .then(() => window.dispatchEvent(new Event(SUBS_CHANGED)))
       .catch(() => {
         setInterests((prev) => (on ? prev.filter((id) => id !== postingId) : [...prev, postingId]))
         flash('관심 저장 실패 — 잠시 후 다시')

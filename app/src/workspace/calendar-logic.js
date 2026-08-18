@@ -57,10 +57,14 @@ export function weekStatus(startKey, todayKey) {
   return '이번 주'
 }
 
-// 다가오는 업무 — ★ 지정 항목만(2026-08-07 오너: 전량 노출은 소음), 오늘 포함 이후 날짜순 상위 n건.
-// 캘린더(itemsOn)는 전 항목 유지 — 필터는 이 리스트에만 적용된다.
-export function upcoming(items, todayKey, n = 6) {
-  return items.filter((i) => i['중요'] && i.date >= todayKey).slice(0, n)
+// 다가오는 업무(2026-08-18 개편 — 오너: "내 캘린더에 뜬 내용을 전부, 2주 창으로") —
+// 입력 items = 이미 구독·관심 필터를 통과한 개인 캘린더 항목. 오늘~+windowDays 안의 전 항목을 날짜순 상위 n건.
+// (구 "★ 지정만" 규칙 폐기 — 캘린더 등록 개인화가 소음 문제를 대신 해소. ★는 표시 마커로만 남는다.)
+export function upcoming(items, todayKey, n = 12, windowDays = 14) {
+  const end = new Date(`${todayKey}T12:00:00`)
+  end.setDate(end.getDate() + windowDays)
+  const endKey = toKey(end)
+  return items.filter((i) => i.date >= todayKey && i.date <= endKey).slice(0, n)
 }
 
 // 주간 기고 과제(상시 주 1건 — 기고 투트랙 spec) — 마감 요일은 오너 확정 대기([미정]).

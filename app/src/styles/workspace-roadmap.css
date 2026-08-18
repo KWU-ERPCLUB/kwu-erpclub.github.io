@@ -50,6 +50,20 @@
 .ws-rm-notes { margin: 0.5rem 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 0.35rem; }
 .ws-rm-notes li { font-size: 0.74rem; color: var(--text-sub); border: 1px solid var(--line); background: #fff; border-radius: var(--radius-pill); padding: 0.16rem 0.6rem; }
 
+/* 다음 세션 강조(2026-08-18 오너 — "흑백이라 밋밋": 가장 가까운 미래 차시를 색으로 세운다) */
+.ws-rm-item.is-upnext .ws-rm-card {
+  border: 2px solid var(--accent); background: var(--tint-accent, #f6edef);
+  box-shadow: 0 12px 30px rgba(20, 20, 20, 0.1);
+}
+.ws-rm-item.is-upnext .ws-rm-nno { background: var(--accent); border-color: var(--accent); color: #fff; }
+.ws-rm-next {
+  background: var(--accent); color: #fff; border-radius: var(--radius-pill); padding: 0.18rem 0.66rem;
+  font-size: 0.72rem; font-weight: 800; letter-spacing: 0.02em; white-space: nowrap;
+}
+/* 지난 차시 = ✓ 원 + 흐림 — 지나온 길이 한눈에 갈린다 */
+.ws-rm-item.is-past .ws-rm-nno { background: var(--dark); border-color: var(--dark); color: #fff; font-size: 0.72rem; }
+.ws-rm-item.is-past .ws-rm-topic { color: var(--text-sub); }
+
 /* 펼침 본문 — 열릴 때 페이드+슬라이드 1회 */
 .ws-rm-body { margin-top: 0.65rem; border-top: 1px solid var(--line); padding-top: 0.65rem; display: flex; flex-direction: column; gap: 0.55rem; }
 @media (prefers-reduced-motion: no-preference) {
