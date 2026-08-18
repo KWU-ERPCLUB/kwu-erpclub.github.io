@@ -93,7 +93,10 @@
 .rc-float-hide { opacity: 0; pointer-events: none; }
 @keyframes rc-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 @media (prefers-reduced-motion: reduce) { .rc-float { animation: none; } }
-@media (max-width: 560px) { .rc-float { right: 14px; bottom: 14px; font-size: 0.9rem; padding: 0.7rem 0.9rem 0.7rem 1.2rem; } }
+@media (max-width: 560px) {
+  /* 하단 고정 = 홈 인디케이터 안전영역 확보(모바일 spec M5, viewport-fit=cover 전제) */
+  .rc-float { right: 14px; bottom: max(14px, env(safe-area-inset-bottom)); font-size: 0.9rem; padding: 0.7rem 0.9rem 0.7rem 1.2rem; }
+}
 
 /* ══ 섹션 소제목 — 4차: 중앙 정렬 ══ */
 .rc-h2 {
@@ -284,6 +287,8 @@
   padding: 0.6rem 0.8rem; border: 1px solid var(--line); border-radius: 8px; background: #fff;
 }
 .rc-field input:focus-visible, .rc-field textarea:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+/* 폰 = 입력 16px 하한(모바일 spec M2) — 15px대면 iOS Safari가 포커스 시 화면을 자동 확대 */
+@media (max-width: 700px) { .rc-field input, .rc-field textarea { font-size: 1rem; } }
 .rc-field input[aria-invalid='true'] { border-color: var(--accent); }
 .rc-field-error { font-size: 0.8rem; color: var(--accent); }
 .rc-form-privacy { margin: 0.5rem 0 1rem; font-size: 0.8rem; color: var(--text-sub); }

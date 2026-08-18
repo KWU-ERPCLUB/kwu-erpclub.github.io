@@ -92,6 +92,14 @@ export function MonthCalendar({ year, month, items, todayKey, selected, onSelect
               }}
             >
               <span className="ws-cal-day">{cell.day}</span>
+              {/* 폰 = 종류색 도트 최대 3개(모바일 spec §3-2 — Apple Compact 문법, 구 중립 도트 1개 폐지). 데스크탑 = display:none */}
+              {dayItems.length > 0 && (
+                <span className="ws-cal-dots" aria-hidden="true">
+                  {dayItems.slice(0, 3).map((it) => (
+                    <i key={`d-${it.source}-${it.id}`} className={`ws-cal-dot ${KIND_CLASS[it['종류']] || 'ev'}`} />
+                  ))}
+                </span>
+              )}
               {dayItems.slice(0, 3).map((it) => (
                 <button
                   type="button" key={`${it.source}-${it.id}`}
@@ -115,11 +123,13 @@ export function MonthCalendar({ year, month, items, todayKey, selected, onSelect
 // ★(중요·고정)는 마커로만 남는다. export = 단위 테스트용.
 export function UpcomingTasks({ items, todayKey, onSelect }) {
   const rows = upcoming(items, todayKey, 12, 14)
+  // 폰 = 5건 + 펼침(모바일 spec §3-2 — progressive disclosure). 데스크탑은 CSS가 전량 노출(open 무관).
+  const [open, setOpen] = useState(false)
   return (
     <aside className="ws-upcoming" aria-label="다가오는 업무">
       <h2 className="ws-h2">다가오는 업무 <span className="ws-count">{rows.length}</span></h2>
       {rows.length === 0 && <p className="ws-note">2주 내 일정 0건 — 공고 탭에서 분류를 캘린더에 등록하면 여기 모인다.</p>}
-      <ul className="ws-list">
+      <ul className={`ws-list ws-up-list${open ? ' open' : ''}`}>
         {rows.map((it) => (
           <li key={`${it.source}-${it.id}`}>
             <button type="button" className="ws-up-item" onClick={() => onSelect(it.date)}>
@@ -131,6 +141,11 @@ export function UpcomingTasks({ items, todayKey, onSelect }) {
           </li>
         ))}
       </ul>
+      {rows.length > 5 && (
+        <button type="button" className="ws-up-more" onClick={() => setOpen((v) => !v)}>
+          {open ? '접기' : `전체 ${rows.length}건 보기`}
+        </button>
+      )}
     </aside>
   )
 }
@@ -246,12 +261,19 @@ export default function Home({ store, member }) {
             selected={selected} onSelect={setSelected} onMove={move} onOpenItem={setPopup}
           />
         </div>
+        {/* 폰 적층(모바일 spec §3-2): 요약→캘린더→선택일→업무→과제→공지 — 레일 소속 2종을 캘린더 직하에 폰 전용 복제 */}
+        <div className="ws-m-only">
+          <DayDetail items={items} selected={selected} onOpenItem={setPopup} />
+          <UpcomingTasks items={items} todayKey={todayKey} onSelect={setSelected} />
+        </div>
         <Assignments store={store} />
         {/* 세션 섹션 = 로드맵 탭으로 편입(2026-08-18 오너 — 홈에선 제거, 자료·본문은 로드맵 차시 펼침이 담당) */}
       </div>
       <aside className="ws-crail">
-        <UpcomingTasks items={items} todayKey={todayKey} onSelect={setSelected} />
-        <DayDetail items={items} selected={selected} onOpenItem={setPopup} />
+        <div className="ws-d-only">
+          <UpcomingTasks items={items} todayKey={todayKey} onSelect={setSelected} />
+          <DayDetail items={items} selected={selected} onOpenItem={setPopup} />
+        </div>
         <Notices store={store} />
       </aside>
       <ItemPopup item={popup} onClose={() => setPopup(null)} />

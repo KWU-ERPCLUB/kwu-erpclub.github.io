@@ -54,3 +54,10 @@
 }
 .ws-sub-chip button:hover { color: var(--accent); }
 .ws-sub-chip button:focus-visible { outline: 3px solid var(--accent); outline-offset: 1px; border-radius: 4px; }
+
+/* 폰(모바일 spec §3-5) — 북마크 = 2열(393px에서 정사각 카드 2열 성립) + 구독 해제 × 터치 타깃 M1 */
+@media (max-width: 760px) {
+  .ws-marks { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.7rem; }
+  .ws-markcard-title { font-size: 0.86rem; -webkit-line-clamp: 2; padding: 0.55rem 0.65rem 0.7rem; }
+  .ws-sub-chip button { padding: 0.65rem 0.55rem; margin: -0.5rem -0.25rem -0.5rem -0.15rem; }
+}

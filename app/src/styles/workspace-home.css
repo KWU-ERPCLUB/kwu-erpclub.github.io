@@ -193,22 +193,58 @@
   }
 }
 
-/* 폰(<760) — 사이드바 = 가로 스크롤 필 바 + 계정 블록 가로(1차: 데스크탑 우선 원칙, 모바일 전용 개편은 별도 트랙) */
+/* ── 폰/데스크탑 표시 유틸 + 폰 전용 요소 기본값(모바일 spec 2026-08-18) ── */
+.ws-m-only { display: none; }                    /* 폰 전용 복제 블록(홈 선택일·업무) */
+.ws-d-only { display: flex; flex-direction: column; gap: 1.4rem; }  /* 레일 원본 묶음 — 레일 gap 승계 */
+.ws-sidebtn-short { display: none; }             /* 하단 탭 바 축약 라벨 */
+.ws-me-mobile { display: none; }                 /* 폰 전용 계정 줄 */
+.ws-up-more { display: none; }                   /* 다가오는 업무 펼침 버튼 — 데스크탑 = 전량 노출이라 불필요 */
+
+/* 폰(<760) — 모바일 전용 개편(2026-08-18 spec §3-1): 사이드바 → 하단 고정 탭 바(아이콘+축약 라벨).
+   근거 = 로그인 후 반복 사용 화면은 상시 노출·엄지 도달(HIG·Material 하단 탭 3~5 권고). */
 @media (max-width: 760px) {
-  .ws-main.ws-app { padding: 1rem 1rem 2.4rem; }
-  /* minmax(0,1fr) — 필 바 min-content가 트랙을 벌려 페이지 가로 오버플로를 만들던 문제 수리(2026-08-14 실측) */
-  .ws-shell { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
-  .ws-side { min-width: 0; }
-  .ws-side-tabs { min-width: 0; }
-  /* 폰 = 가로 필 바 */
-  .ws-side { position: static; height: auto; overflow: visible; gap: 0.6rem; }
+  /* 본문 하단 = 탭 바 높이 + 홈 인디케이터 안전영역만큼 확보(M5) */
+  .ws-main.ws-app { padding: 0.6rem 1rem calc(5.2rem + env(safe-area-inset-bottom)); }
+  .ws-shell { grid-template-columns: minmax(0, 1fr); gap: 0.4rem; }
+  .ws-side {
+    position: fixed; left: 0; right: 0; bottom: 0; top: auto; z-index: 40;
+    height: auto; overflow: visible;
+    flex-direction: row; gap: 0;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border-top: 1px solid var(--line);
+    padding: 0.3rem 0.4rem calc(0.3rem + env(safe-area-inset-bottom));
+  }
   .ws-side-label { display: none; }
-  .ws-side-tabs { flex-direction: row; overflow-x: auto; padding-bottom: 0.2rem; }
-  .ws-sidebtn { flex: none; padding: 0.42rem 0.95rem; color: var(--text); background: #fff; border: 1px solid var(--line); }
-  .ws-sidebtn-name { font-size: 0.85rem; }
-  .ws-sidebtn .ws-tabicon { display: none; }     /* 폰 = 이름만(필 바) */
-  .ws-sidebtn.on { border-color: var(--dark); background: var(--dark); color: #fff; }
-  .ws-side-me { margin-top: 0; flex-direction: row; align-items: center; justify-content: space-between; width: 100%; border-top: 0; padding: 0; }
+  .ws-side-me { display: none; }                 /* 계정 = .ws-me-mobile(콘텐츠 상단)로 이동 */
+  .ws-side-tabs { flex-direction: row; flex: 1; gap: 0.15rem; min-width: 0; }
+  .ws-sidebtn {
+    flex: 1 1 0; min-width: 0; min-height: 48px; /* 터치 타깃 M1 */
+    flex-direction: column; justify-content: center; gap: 0.2rem;
+    padding: 0.3rem 0.1rem; border-radius: 12px;
+  }
+  .ws-sidebtn-name { display: none; }
+  .ws-sidebtn-short { display: block; font-size: 0.75rem; font-weight: 600; line-height: 1; }
+  .ws-sidebtn.on .ws-sidebtn-short { font-weight: 800; }
+  /* 폰 전용 계정 줄 — 이름·역할 + 로그아웃 한 줄 */
+  .ws-me-mobile { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.9rem; }
+  .ws-me-mobile p { margin: 0; }
+  .ws-me-mobile .ws-signout { margin-left: auto; }
   .ws-cols { grid-template-columns: 1fr; }   /* 폰 = 본문 아래 레일 적층. 캘린더 폰 규칙 = workspace-calendar.css */
   .ws-tracks { grid-template-columns: 1fr; }
+  /* 폰 전용 복제 블록(홈: 선택일 아젠다·다가오는 업무 = 캘린더 직하) + 레일 원본 숨김 */
+  .ws-m-only { display: block; }
+  .ws-d-only { display: none; }
+  .ws-m-only .ws-daydetail { margin-top: 1.2rem; }
+  .ws-m-only .ws-upcoming { min-height: 0; margin-top: 1.4rem; }
+  /* 다가오는 업무 = 5건 + "전체 N건 보기" 펼침(spec §3-2) */
+  .ws-up-list:not(.open) li:nth-child(n + 6) { display: none; }
+  .ws-up-more {
+    display: inline-flex; align-items: center; min-height: 44px; margin-top: 0.2rem;
+    padding: 0 0.9rem; font: inherit; font-size: 0.85rem; font-weight: 700; color: var(--text);
+    background: #fff; border: 1px solid var(--line); border-radius: var(--radius-pill); cursor: pointer;
+  }
+  .ws-up-more:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  /* 콘텐츠 최소높이 완화 — 탭 바가 뷰포트를 쓰는 만큼 과잉 여백 방지 */
+  .ws-content { min-height: 0; }
 }

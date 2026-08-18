@@ -104,3 +104,15 @@
 @media (max-width: 900px) {
   .ws-post-grid { grid-template-columns: 1fr; }
 }
+
+/* 폰(모바일 spec §3-3) — 필터 칩 = 가로 스크롤 한 줄(줄바꿈 누적 방지, Priority+ 계열) + 터치 타깃 M1 */
+@media (max-width: 760px) {
+  .ws-postings .ws-tabbar {
+    flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch;
+    margin: 1rem 0 0.9rem; padding-bottom: 0.25rem;
+  }
+  .ws-postings .ws-tabbtn { flex: none; min-height: 44px; }
+  .ws-sub-toggle { min-height: 44px; }
+  /* 코멘트("왜 유효한가") = 2줄 클램프 — 전문은 원문 링크·운영 탭이 담당 */
+  .ws-post-comment { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+}

@@ -107,9 +107,14 @@
 @media (max-width: 1199px) {
   .ws-cal-cell { min-height: 76px; }
 }
+/* 폰 종류색 도트(모바일 spec §3-2) — 데스크탑 = 칩이 정보 전달, 도트 행 숨김 */
+.ws-cal-dots { display: none; }
+
 @media (max-width: 760px) {
-  .ws-cal-cell { min-height: 56px; }
+  .ws-cal-cell { min-height: 56px; }        /* 393÷7 ≈ 56px 폭과 정합 — 터치 타깃 M1 */
   .ws-cal-chip { display: none; }           /* 폰 = 점만(칩은 좁아서 뭉개짐) */
   .ws-cal-cell .ws-cal-more { display: none; }
-  .ws-cal-cell.has-items::after { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #555; margin: auto auto 0; }   /* 중립 차콜 — 버건디 = 강조 의미 보존(2026-08-14) */
+  /* 구 중립 도트 1개(has-items::after) 폐지 → 종류색 도트 최대 3개(Apple Compact 문법 — 종류 정보 보존) */
+  .ws-cal-dots { display: flex; gap: 3px; margin-top: auto; align-self: center; padding-bottom: 2px; }
+  .ws-cal-dots .ws-cal-dot { width: 6px; height: 6px; }
 }

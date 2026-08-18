@@ -73,3 +73,11 @@
 .ws-rm-note { font-size: 0.85rem; }
 .ws-rm-sem { align-self: flex-start; font-size: 0.82rem; font-weight: 700; color: var(--accent); text-decoration: none; }
 .ws-rm-sem:hover, .ws-rm-sem:focus-visible { text-decoration: underline; }
+
+/* 폰(모바일 spec §3-4) — 구조 유지·밀도만: 스파인 여백 축소 + 기간 라벨 줄바꿈 허용(393px 오버플로 방지) */
+@media (max-width: 760px) {
+  .ws-rm { padding-left: 2.1rem; }
+  .ws-rm-nno { left: calc(-2.1rem + 1px); }
+  .ws-rm-phase { margin-left: -2.1rem; }
+  .ws-rm-when { white-space: normal; }
+}

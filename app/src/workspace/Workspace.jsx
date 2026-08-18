@@ -31,6 +31,9 @@ const LEGACY_TAB_MAP = {
 export const isStaffRole = (member) => member?.role === '운영진'
 export const visibleTabs = (member) => WS_TABS.filter(([, only]) => only !== 'staff' || isStaffRole(member))
 
+// 폰 하단 탭 바 축약 라벨(모바일 spec §3-1) — 긴 탭명만 등재, 나머지는 원명 그대로
+const TAB_SHORT = { '인사이트 기고': '기고' }
+
 // 탭 아이콘(설명 문구 대체 — "텍스트보다 시각 전달", 오너 2026-08-14). 16px stroke 인라인 SVG.
 const TAB_ICONS = {
   홈: <path d="M3.5 10.2 12 3l8.5 7.2V20a1 1 0 0 1-1 1h-5.2v-5.6H9.7V21H4.5a1 1 0 0 1-1-1z" />,
@@ -155,6 +158,8 @@ export function Shell({ member, onSignOut, store, onMemberChanged, search }) {
             >
               <TabIcon name={name} />
               <span className="ws-sidebtn-name">{name}</span>
+              {/* 폰 하단 탭 바 축약 라벨(모바일 spec §3-1) — 데스크탑은 풀네임 스팬 사용 */}
+              <span className="ws-sidebtn-short" aria-hidden="true">{TAB_SHORT[name] || name}</span>
             </button>
           ))}
         </div>
@@ -169,6 +174,12 @@ export function Shell({ member, onSignOut, store, onMemberChanged, search }) {
       </nav>
 
       <div className="ws-content">
+        {/* 폰 전용 계정 줄(모바일 spec §3-1) — 사이드바가 하단 탭 바로 내려가면 계정 블록 자리가 없다 */}
+        <div className="ws-me-mobile">
+          <p className="ws-me-name">{member?.이름 || '이름 미등록'}</p>
+          <p className="ws-me-role">{member?.role || '스터디원'}</p>
+          <button type="button" className="ws-signout" onClick={onSignOut}>로그아웃</button>
+        </div>
         {/* 탭 소형 헤더 — 전 탭 동일(홈 포함, 오너 8/6 4차): 시작 높이·헤어라인이 탭마다 같아야 틀이 안 흔들린다 */}
         <div className="ws-content-head">
           <h1 className="ws-content-title">{active[0]}</h1>
