@@ -1,8 +1,11 @@
 name: Deploy to GitHub Pages
 
+# 브랜치 2종(릴리스 체계 spec 2026-08-19):
+#   main = 배포판. 여기 push된 것만 라이브로 나간다(릴리스 머지·핫픽스·콘텐츠 루틴).
+#   dev  = 작업대. build·validate·test만 돌고 배포하지 않는다(deploy 잡의 ref 조건).
 on:
   push:
-    branches: [main]
+    branches: [main, dev]
   pull_request:
     branches: [main]
   # 안전망(2026-08-07): 야간 루틴 push의 Actions 이벤트가 유실된 사고(1241fbb — 런 0건 → DB 동기화 누락으로
@@ -108,7 +111,9 @@ jobs:
 
   deploy:
     needs: build
-    if: github.event_name != 'pull_request'
+    # main 한정(릴리스 체계 spec §4-C2) — dev push는 검증까지만 하고 여기서 멈춘다.
+    # schedule·workflow_dispatch는 기본 브랜치(main) 기준 실행이라 이 조건을 통과한다.
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:
       name: github-pages

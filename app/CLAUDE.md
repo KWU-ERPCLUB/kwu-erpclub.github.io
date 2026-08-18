@@ -3,7 +3,7 @@
 One-line: AIM(광운대 ERP연구회 산하 MIS·AI 스터디) 허브 — 주=스터디원 작업면(인사이트→세미나 파이프라인), 부=외부 증빙면.
 브랜드 표기 = **AIM 단독 + 산하 한 줄**(2026-08-05 오너) — 계보(ROADMAP ORIGIN·FAQ 관계 문항)는 유지.
 표면명 주의: 페이지 = **AI 인사이트 / INSIGHTS / `/insights/`** — 계약 내부 종류명은 `기사`(content/기사/·schema) 유지.
-Deploy: GitHub Pages, org repo `KWU-ERPCLUB/kwu-erpclub.github.io`, main push = auto deploy.
+Deploy: GitHub Pages, org repo `KWU-ERPCLUB/kwu-erpclub.github.io`. **Branches (2026-08-19 beta)**: `main` = release build (push → auto deploy) / `dev` = work branch (push → validate+test+build only, no deploy). Code lands on `dev`; `main` direct = content · typo/fact fix · outage fix only. Version source = `package.json` (injected as `__APP_VERSION__`, shown in footer). Release procedure = `erp-club/docs/specs/2026-08-19-릴리스-체계.md`.
 Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이지는 여전히 정적).
 
 ## Commands
@@ -41,7 +41,7 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
   매핑 단일원천 = `src/content/db-map.js`(toDbRow/fromDbRow). 파일 읽기 공용 = `scripts/content-files.mjs`(validate와 공유).
   로컬 확인 = `node scripts/sync-content-db.mjs --dry`(네트워크 0). 실행 env = `SUPABASE_URL`·`SUPABASE_SERVICE_KEY`(**repo 금지·secret만**).
   CI 잡 = deploy.yml `sync-content`(main push·build 이후·deploy 비차단).
-- CI = `.github/workflows/deploy.yml`: **validate + test + build 게이트** 통과해야 배포(PR에서도 build 실행, deploy는 push만). `guard-shared-paths` 잡 = 비오너(bapzzi 외) 변경은 `app/content`만 허용.
+- CI = `.github/workflows/deploy.yml`: **validate + test + build 게이트** 통과해야 배포(PR·dev push에서도 build 실행, deploy는 `main` push만 — `github.ref` 조건). `guard-shared-paths` 잡 = 비오너(bapzzi 외) 변경은 `app/content`만 허용.
 - **권한 구조(2026-07-25 하드 격리)**: GitHub 룰셋(id 19734261) — main 직접 push = repo 관리자만(오너·오너 자격 Claude). 멤버 = 브랜치→PR 필수. `app/content`만 고친 PR = 체크(build) 통과 시 셀프 머지(승인 0) / 공용 영역 터치 = CODEOWNERS(오너) 승인 필수. 룰셋 관리 = repo Settings > Rules.
 - **주간 트렌드 자동화**: 클라우드 루틴 `trig_0118sfWk88m1uYZMfcYUTik4`(매주 월 09:00 KST, sonnet-5, 멱등 스킵 규칙 내장) — 관리 = claude.ai/code/routines. 수동 실행 = 로컬 스킬 `weekly-trend`.
 
@@ -107,7 +107,7 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
 ## Docs map
 - Project docs live OUTSIDE this repo (workspace `erp-club/docs/` — Tier2): 디자인규칙-메인.md(v2 디자인 규격) ·
   정체성-북극성.md(카피 상위 기준) — 구 기록·근거 문서(`erp-club/docs/_archive/`)는 2026-08-12 삭제, 침전처 지도 = `erp-club/roadmap.md` §59
-- In-repo: `../README.md`(3칸 표면 — 재개 지점). 결정 여정=workspace `erp-club/roadmap.md`(아카이브·비필독).
+- In-repo: `../README.md`(3칸 표면 — 재개 지점) · `../CHANGELOG.md`(릴리스별 변경 이력 — 화면 기준 서술, 파일명·함수명 금지). 결정 여정=workspace `erp-club/roadmap.md`(아카이브·비필독).
 
 ## File rules
 - Max 300 lines/file. Facts only in page copy — every number needs a source (stat-src).
