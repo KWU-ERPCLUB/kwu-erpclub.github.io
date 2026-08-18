@@ -280,8 +280,11 @@
 .rc-check { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text); cursor: pointer; }
 .rc-check input { width: 17px; height: 17px; accent-color: var(--dark); flex: none; }
 .rc-check input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-.rc-etc { margin-top: -0.5rem; }
-.rc-hint { font-weight: 500; color: var(--text-sub); }
+/* 설명 = 제목(라벨·legend) 바로 아래 블록(오너 2026-08-18 — 우측 인라인 병기 폐지) */
+.rc-desc { display: block; margin: 0; font-size: 0.8rem; font-weight: 500; color: var(--text-sub); word-break: keep-all; }
+.rc-checkset .rc-desc { margin: 0.1rem 0.1rem 0.7rem; }
+/* 기타 체크 시 나타나는 직접 입력(체크 그룹 내장 — 구 별도 rc-etc 필드 폐지) */
+.rc-etc-input { margin-top: 0.65rem; width: 100%; box-sizing: border-box; }
 .rc-field input, .rc-field textarea {
   font: inherit; font-size: 0.94rem; color: var(--text);
   padding: 0.6rem 0.8rem; border: 1px solid var(--line); border-radius: 8px; background: #fff;
@@ -292,7 +295,8 @@
 .rc-field input[aria-invalid='true'] { border-color: var(--accent); }
 .rc-field-error { font-size: 0.8rem; color: var(--accent); }
 .rc-form-privacy { margin: 0.5rem 0 1rem; font-size: 0.8rem; color: var(--text-sub); }
-.rc-form-submit { font-family: var(--font-display); }
+/* 제출 버튼 = 폼 가운데(오너 2026-08-18 — 좌측 치우침 수정. inline-flex는 margin auto가 안 먹어 flex + fit-content) */
+.rc-form-submit { font-family: var(--font-display); display: flex; width: fit-content; margin-inline: auto; }
 .rc-form-done {
   margin-top: clamp(1.75rem, 4vh, 2.5rem); max-width: 46rem;
   background: var(--surface); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0;

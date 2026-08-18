@@ -11,17 +11,24 @@ const VALID = { 이름: '가나다', 학번: '2024000004', 전공: '경영학부
 
 const OPEN_DAY = '2026-09-01' // 모집 창 안(RECRUIT.window ~ 09-08)
 
-// 2026-08-18 개편 — 세로 1열·빨간 *·써본 AI 체크형·팀 프로젝트 주제 관심 체크.
-test('모집 창 안 + 백엔드 연결 시 = 필수 4필드(*) + 체크 그룹 2벌 + 개인정보 문구 렌더', () => {
+// 2026-08-18 개편(+같은 날 2차) — 세로 1열·빨간 *·체크 그룹 2벌(기타 내장)·지원 계기·설명 = 제목 아래 블록.
+test('모집 창 안 + 백엔드 연결 시 = 필수 4필드(*) + 체크 그룹 2벌 + 지원 계기 + 개인정보 문구 렌더', () => {
   const html = flat(<RecruitForm configured={true} today={OPEN_DAY} />)
-  for (const label of ['이름', '학번', '학부/전공', '전화번호', '지금까지 써본 AI', '팀 프로젝트 주제']) {
+  for (const label of ['이름', '학번', '학부/전공', '전화번호', '지금까지 써본 AI', '관심 있는 주제', '지원 계기']) {
     expect(html).toContain(label)
   }
   expect(html).toContain('rc-req')                    // 필수 = * 표기
-  expect(html).toContain('ChatGPT')                   // AI 체크 선택지
+  expect(html).toContain('예: 2021508001')            // 학번 형식 예시(제목 아래 설명)
+  expect(html).toContain('예: 010-1234-5678')         // 전화번호 하이픈 예시
+  expect(html).toContain('중복 선택 가능')             // 체크 그룹 설명
+  expect(html).toContain('추후 프로젝트 구성 시 참조')  // 주제 그룹 설명
+  for (const ai of ['ChatGPT', 'Claude Code', 'Codex', 'Cursor', 'NotebookLM', '없음', '기타']) {
+    expect(html).toContain(ai)                        // AI 목록 2026-08-18 기준 + 기타 내장
+  }
   expect(html).toContain('연구회 운영 자동화')          // 주제 풀(§E) 체크 선택지
   expect(html).toContain('type="checkbox"')
-  expect(html).not.toContain('rc-form-grid')          // 2열 그리드 폐지 — 세로 1열
+  expect(html).not.toContain('rc-etc"')               // 구 별도 기타 필드 폐지(내장 rc-etc-input으로)
+  expect(html).toContain('최대 500자')                 // 지원 계기 상한 안내
   expect(html).toContain('모집 연락·기수 운영')      // 개인정보 용도 1줄
   expect(html).toContain('신청 제출')
 })
@@ -66,9 +73,16 @@ test('필수 검증 — 빈 폼은 4필드 전부 오류, 유효 폼은 통과',
   const empty = validateApplication(EMPTY_APPLICATION)
   expect(Object.keys(empty).sort()).toEqual(['이름', '전공', '전화번호', '학번'].sort())
   expect(validateApplication(VALID)).toEqual({})
-  expect(validateApplication({ ...VALID, 학번: '20a4' })['학번']).toContain('숫자만')
+  // 학번 = 정확히 숫자 10자리(2026-08-18) — 9자리·11자리·문자 섞임 전부 오류
+  expect(validateApplication({ ...VALID, 학번: '20a4' })['학번']).toContain('10자리')
+  expect(validateApplication({ ...VALID, 학번: '202150800' })['학번']).toContain('10자리')
+  expect(validateApplication({ ...VALID, 학번: '20215080011' })['학번']).toContain('10자리')
+  expect(validateApplication({ ...VALID, 학번: '2021508001' })['학번']).toBeUndefined()
   expect(validateApplication({ ...VALID, 전화번호: '010-12' })['전화번호']).toContain('숫자·하이픈')
   expect(validateApplication({ ...VALID, 전화번호: '공일공-1234' })['전화번호']).toBeTruthy()
+  // 지원 계기 = 500자 상한(선택 필드 — 비어도 통과)
+  expect(validateApplication({ ...VALID, 지원계기: 'a'.repeat(501) })['지원계기']).toContain('500자')
+  expect(validateApplication({ ...VALID, 지원계기: 'a'.repeat(500) })['지원계기']).toBeUndefined()
 })
 
 test('제출 — trim된 값으로 저장소 submit 호출, 미연결이면 즉시 오류', async () => {
@@ -77,6 +91,29 @@ test('제출 — trim된 값으로 저장소 submit 호출, 미연결이면 즉�
   await submitApplication(VALID, { repos, configured: true })
   expect(sent['써본ai']).toBe('ChatGPT')
   expect(sent['학번']).toBe('2024000004')
+  expect('지원계기' in sent).toBe(false)   // 빈 계기 = 컬럼 자체 미포함(0017 미적용 DB 안전)
+
+  await submitApplication({ ...VALID, 지원계기: ' 계기 텍스트 ' }, { repos, configured: true })
+  expect(sent['지원계기']).toBe('계기 텍스트')
 
   await expect(submitApplication(VALID, { repos, configured: false })).rejects.toThrow('제출 불가')
+})
+
+// 0017 미적용 DB 폴백 — 지원계기 컬럼 오류면 관심주제에 합성해 1회 재시도(라이브 폼 무중단)
+test('지원계기 컬럼 미적용 시 = 관심주제 합성으로 재시도', async () => {
+  const calls = []
+  const repos = { applications: { submit: async (row) => {
+    calls.push(row)
+    if ('지원계기' in row) throw new Error("Could not find the '지원계기' column of 'applications'")
+    return true
+  } } }
+  await submitApplication({ ...VALID, 관심주제: '체크 주제', 지원계기: '계기' }, { repos, configured: true })
+  expect(calls.length).toBe(2)
+  expect('지원계기' in calls[1]).toBe(false)
+  expect(calls[1]['관심주제']).toBe('체크 주제 / 지원계기: 계기')
+
+  // 다른 오류는 재시도 없이 그대로 전파
+  const failing = { applications: { submit: async () => { throw new Error('network down') } } }
+  await expect(submitApplication({ ...VALID, 지원계기: '계기' }, { repos: failing, configured: true }))
+    .rejects.toThrow('network down')
 })

@@ -2,7 +2,7 @@
 // 서버 차단 = RLS applications_manage_staff(운영진만 select) — 비운영진이 불러도 0행.
 import { useEffect, useState } from 'react'
 
-const COLS = ['이름', '학번', '전공', '전화번호', '써본ai', '관심주제']
+const COLS = ['이름', '학번', '전공', '전화번호', '써본ai', '관심주제', '지원계기']
 
 export default function AdminApplicants({ store }) {
   const [rows, setRows] = useState([])
@@ -24,7 +24,7 @@ export default function AdminApplicants({ store }) {
         <table className="ws-table">
           <thead>
             <tr>
-              <th>이름</th><th>학번</th><th>전공</th><th>전화번호</th><th>써본 AI</th><th>관심 주제</th><th>제출일</th>
+              <th>이름</th><th>학번</th><th>전공</th><th>전화번호</th><th>써본 AI</th><th>관심 주제</th><th>지원 계기</th><th>제출일</th>
             </tr>
           </thead>
           <tbody>
