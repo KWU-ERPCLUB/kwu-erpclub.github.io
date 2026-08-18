@@ -4,7 +4,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { toKey, dday } from './calendar-logic.js'
 import { POSTING_KINDS, postingStatus, groupPostings, filterPostings } from './postings-logic.js'
-import { taxonomyOptions, effectiveSubs, hasSubRow, subMatches, eventCategory, planToggle } from './postings-taxonomy.js'
+import { taxonomyOptions, effectiveSubs, hasSubRow, subMatches, eventCategory, planToggle, SUBS_CHANGED } from './postings-taxonomy.js'
 
 // 카드 1장 — 종류·세부 분류 배지 + 제목(원문 링크) + 주최 + 접수·시험 일정 + 큐레이션 코멘트(필수 필드).
 // 관심 ★(0013) — 체크한 공고는 내정보 상단 "관심 공고"에 모인다(구독과 별개: ★=모음, 구독=캘린더).
@@ -93,6 +93,13 @@ export default function Postings({ store }) {
 
   useEffect(() => { load() }, [load])
 
+  // 다른 탭(내정보)의 변경 즉시 반영 — 탭이 hidden 보존이라 이벤트로 동기화(2026-08-18).
+  useEffect(() => {
+    const sync = () => store.postings.listSubscriptions().then(setSubs).catch(() => {})
+    window.addEventListener(SUBS_CHANGED, sync)
+    return () => window.removeEventListener(SUBS_CHANGED, sync)
+  }, [store])
+
   const flash = (msg) => { setNote(msg); setTimeout(() => setNote(''), 3000) }
 
   // 낙관적 토글 — 실패 시 원복(0013 미적용 환경 포함) + 한 줄 안내(무언 원복은 유령 동작으로 보임).
@@ -115,8 +122,9 @@ export default function Postings({ store }) {
     })
     try {
       for (const w of writes) await store.postings.toggleSubscription(w['종류'], w['분류'], w.on)
+      window.dispatchEvent(new Event(SUBS_CHANGED))   // 홈 캘린더·내정보 즉시 반영
     } catch {
-      flash('구독 저장 실패 — 마이그레이션 0014 적용 여부 확인')
+      flash('저장 실패 — 마이그레이션 0014 적용 여부 확인')
       store.postings.listSubscriptions().then(setSubs).catch(() => {})
     }
   }, [store, subs])
@@ -172,10 +180,14 @@ export default function Postings({ store }) {
                 type="button" className={`ws-sub-toggle${subbed ? ' on' : ''}`} aria-pressed={subbed}
                 onClick={() => toggleSub(kind, selSub, !subbed)}
               >
-                {subbed ? '✓ 캘린더 구독 중' : '캘린더 구독'}
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <rect x="3" y="4.5" width="18" height="16" rx="2.5" /><path d="M3 9.5h18M8 2.5v4M16 2.5v4" />
+                  {subbed && <path d="m8.5 14.5 2.5 2.5 4.5-4.5" />}
+                </svg>
+                {subbed ? '내 캘린더에 담김' : `${selSub || CAT_LABEL[kind] || kind} 캘린더에 담기`}
               </button>
               <span className="ws-note">
-                {coveredByKind ? `${CAT_LABEL[kind] || kind} 전체 구독에 이미 포함` : '구독한 분류의 마감·일정만 홈 캘린더에 뜬다'}
+                {coveredByKind ? `${CAT_LABEL[kind] || kind} 전체가 이미 캘린더에 담겨 있다` : '담은 분류의 마감·일정만 홈 캘린더에 뜬다'}
               </span>
             </div>
           )}
@@ -227,7 +239,7 @@ export default function Postings({ store }) {
         <section className="ws-block">
           <h2 className="ws-h2">보드 안내</h2>
           <p className="ws-note">운영진이 선별해 올리는 외부 기회 스크랩 — 링크 모음이 아니라 "우리에게 왜 유효한가" 한 줄이 붙는다.</p>
-          <p className="ws-note">홈 캘린더에는 구독한 분류의 마감·시험일만 합류한다(기본 = 학사일정+AIM 일정). 구독은 각 필터에서 켠다.</p>
+          <p className="ws-note">홈 캘린더에는 내가 담은 분류의 마감·시험일만 뜬다(기본 = 학사일정+AIM 일정). 각 필터의 「캘린더에 담기」로 켜고 끈다.</p>
         </section>
       </aside>
     </div>

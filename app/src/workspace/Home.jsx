@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { monthGrid, buildAgenda, itemsOn, upcoming, dday, daysBetween, toKey, WEEKLY_CONTRIB, weeklyContribItems } from './calendar-logic.js'
 import { postingAgendaItems } from './postings-logic.js'
-import { filterAgendaBySubs } from './postings-taxonomy.js'
+import { filterAgendaBySubs, SUBS_CHANGED } from './postings-taxonomy.js'
 import Assignments from './Assignments.jsx'
 import Notices from './Notices.jsx'
 import Sessions from './Sessions.jsx'
@@ -209,6 +209,15 @@ export default function Home({ store, member }) {
   }).catch((e) => setError(e?.message || '불러오기 실패')), [store])
 
   useEffect(() => { load() }, [load])
+
+  // 공고 탭·내정보의 「캘린더에 담기」 토글 즉시 반영 — 탭이 hidden 보존이라 이벤트로 동기화(2026-08-18 오너).
+  useEffect(() => {
+    const sync = () => store.postings.listSubscriptions()
+      .then((subs) => setRaw((prev) => ({ ...prev, subs })))
+      .catch(() => {})
+    window.addEventListener(SUBS_CHANGED, sync)
+    return () => window.removeEventListener(SUBS_CHANGED, sync)
+  }, [store])
 
   // 네 원천(운영 일정·과제·세션 + 공고 마감·시험일) + 주간 기고 반복 — 합친 뒤 날짜 재정렬(upcoming이 정렬 전제).
   // 구독 필터(2026-08-18) — 공고·운영 일정은 구독 카테고리만 합류(행 0건 = 학사+AIM, null = 0014 미적용 강등: 전부).

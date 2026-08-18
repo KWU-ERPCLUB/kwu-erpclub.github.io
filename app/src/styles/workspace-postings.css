@@ -74,17 +74,21 @@
 .ws-subbar2 { margin-top: -0.35rem; }
 .ws-tabbtn.sm { font-size: 0.78rem; padding: 0.28rem 0.7rem; }
 
-/* 구독 토글 줄(2026-08-18) — 선택된 필터를 캘린더에 구독 */
-.ws-subline { display: flex; gap: 0.7rem; align-items: center; flex-wrap: wrap; margin: 0.15rem 0 0.8rem; }
+/* 「캘린더에 담기」 토글 줄(2026-08-18, 카피·시인성 개정 = 오너 피드백) —
+   off = 버건디 틴트 pill(행동 유도), on = 검정 pill(확정 상태). 아이콘 = 미니 캘린더. */
+.ws-subline { display: flex; gap: 0.7rem; align-items: center; flex-wrap: wrap; margin: 0.15rem 0 0.9rem; }
 .ws-sub-toggle {
-  border: 1px solid var(--line); background: #fff; color: var(--text); cursor: pointer;
-  font-family: inherit; font-size: 0.8rem; font-weight: 700;
-  border-radius: var(--radius-pill); padding: 0.3rem 0.85rem;
+  display: inline-flex; align-items: center; gap: 0.42rem;
+  border: 1.5px solid var(--accent); background: var(--tint-accent, #f6edef); color: var(--accent); cursor: pointer;
+  font-family: inherit; font-size: 0.86rem; font-weight: 700;
+  border-radius: var(--radius-pill); padding: 0.42rem 1.05rem;
   transition: background 150ms ease-out, color 150ms ease-out, border-color 150ms ease-out;
 }
-.ws-sub-toggle:hover { border-color: var(--dark); }
+.ws-sub-toggle svg { flex: none; }
+.ws-sub-toggle:hover { background: var(--dark); border-color: var(--dark); color: #fff; }   /* 버건디 면 금지 — hover도 검정 pill */
 .ws-sub-toggle:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .ws-sub-toggle.on { background: var(--dark); border-color: var(--dark); color: #fff; }
+.ws-sub-toggle.on:hover { background: var(--btn-hover, #2a2a2a); border-color: var(--btn-hover, #2a2a2a); }
 @media (prefers-reduced-motion: reduce) { .ws-sub-toggle { transition: none; } }
 .ws-subline .ws-note { margin: 0; }
 

@@ -24,6 +24,10 @@ export const taxonomyOptions = (kind) => (TAXONOMY[kind] || []).filter((t) => !t
 // 캘린더 구독 카테고리 = 공고 4종 + 일정 2종(학사·AIM). AIM = events 기존 4종(일정·세미나·모집·마감)의 묶음 해석.
 export const CAL_CATEGORIES = ['공모전', '채용', '자격시험', '대외활동', '학사', 'AIM']
 
+// 구독 변경 브로드캐스트 이벤트명 — 탭이 hidden으로 상태 보존되는 구조(Workspace.jsx)라
+// 공고 탭·내정보의 토글이 홈 캘린더에 즉시 반영되도록 window 이벤트로 동기화한다(2026-08-18 오너).
+export const SUBS_CHANGED = 'ws-subs-changed'
+
 // 기본 구독(오너 확정 2026-08-18) — 학사+AIM만. 공고류는 opt-in(캘린더 오염의 근본 해소).
 export const DEFAULT_SUBS = [
   { 종류: '학사', 분류: '' },
