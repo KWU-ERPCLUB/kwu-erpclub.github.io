@@ -174,6 +174,8 @@ export function DayDetail({ items, selected, onOpenItem }) {
 }
 
 // 상단 요약(Classroom '할 일' 문법) — 로그인 직후 "오늘 나는 뭘 해야 하나"에 한 줄로 답한다.
+// 2026-08-19 오너 검수: 이름·요약·온보딩이 한 줄로 늘어져 스타일 없이 보였다 →
+// 이름은 제목 크기로 세우고, 요약은 숫자 칩으로. 온보딩 안내 줄은 삭제(첫 로그인 후엔 소음).
 export function HomeSummary({ member, items, todayKey }) {
   const week = new Date(`${todayKey}T12:00:00`)
   week.setDate(week.getDate() + 7)
@@ -182,15 +184,17 @@ export function HomeSummary({ member, items, todayKey }) {
   const due = soon.filter((i) => i['종류'] === '과제' || i['종류'] === '마감').length
   return (
     <div className="ws-summary">
-      <p className="ws-summary-hi">{member?.['이름'] || '스터디원'} —</p>
+      <h1 className="ws-summary-hi">{member?.['이름'] || '스터디원'}</h1>
       <p className="ws-summary-line">
-        7일 내 일정 <strong>{soon.length}건</strong>{due > 0 && <> · 마감 <strong className="due">{due}건</strong></>}
-        {soon.length === 0 && ' — 예정된 일정 없음'}
+        {soon.length === 0 ? (
+          <span className="ws-chip">7일 내 일정 없음</span>
+        ) : (
+          <>
+            <span className="ws-chip"><strong>{soon.length}</strong> 7일 내 일정</span>
+            {due > 0 && <span className="ws-chip due"><strong>{due}</strong> 마감</span>}
+          </>
+        )}
       </p>
-      {/* 온보딩 한 줄(2026-08-14 검수) — 일정 0건 첫 화면의 "다음에 뭘 하나" 안내(정적) */}
-      {soon.length === 0 && (
-        <p className="ws-note">처음이면: 내정보에서 비밀번호 변경 → 로드맵에서 커리큘럼 확인</p>
-      )}
     </div>
   )
 }
