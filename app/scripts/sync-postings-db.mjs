@@ -29,7 +29,8 @@ for (const [i, r] of postings.entries()) {
   if (!POSTING_KINDS.includes(r['종류'])) errs.push(`${at}: 종류는 ${POSTING_KINDS.join('·')}`)
   if (r['분류'] && !taxonomyOptions(r['종류']).includes(r['분류'])) errs.push(`${at}: 분류 '${r['분류']}' = 레지스트리 밖`)
   if (!/^https?:\/\/\S+$/.test(r.url || '')) errs.push(`${at}: url = http(s) 필수`)
-  if (!String(r['코멘트'] || '').trim()) errs.push(`${at}: 코멘트 필수(왜 유효한가)`)
+  // 코멘트 = 선택(2026-08-19 오너 — 보드가 "선별 + 한 줄 이유"에서 "링크 모음판"으로 바뀌었다).
+  // url이 곧 이 행의 값어치라 url 검증만 남긴다. 출처는 있으면 화면 배지로 쓴다(자유 문자열).
   for (const k of ['접수시작', '접수마감', '시험일']) {
     if (r[k] != null && !DATE.test(r[k])) errs.push(`${at}: ${k} = YYYY-MM-DD ∨ null`)
   }

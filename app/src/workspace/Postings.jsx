@@ -3,48 +3,37 @@
 // 구독(0014) = 카테고리·세부 단위 캘린더 필터 — 여기 필터 칩 자리에서 바로 토글(오너 확정 2026-08-18).
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { toKey, dday } from './calendar-logic.js'
-import { POSTING_KINDS, postingStatus, groupPostings, filterPostings, sectionPostings } from './postings-logic.js'
+import { POSTING_KINDS, postingStatus, groupPostings, filterPostings, sectionPostings, searchPostings } from './postings-logic.js'
 import { taxonomyOptions, effectiveSubs, hasSubRow, eventCategory, planToggle, SUBS_CHANGED } from './postings-taxonomy.js'
 
-// 마감·시험일 짧은 표기(09-07) — 행이 한 줄이라 연도를 뺀다. 연도 전체는 펼침 안에 그대로 있다.
+// 마감·시험일 짧은 표기(09-07) — 행이 한 줄이라 연도를 뺀다.
 const short = (d) => (d ? d.slice(5) : '')
 
-// 행 1줄(오너 2026-08-19 — 카드 4줄 → 행 1줄) — [종류] 제목 … 마감 D-n ★.
-// 클릭하면 주최·접수 기간·코멘트·원문 링크가 아래로 펼쳐진다(details = 접힘 상태도 DOM에 남아 검색·SSR 가능).
-// 관심 ★(0013) — 체크한 공고는 내정보 상단 "관심 공고"에 모인다(구독과 별개: ★=모음, 구독=캘린더).
+// 행 1줄(오너 2026-08-19 2차) — **행 전체가 원문 링크**다. 클릭하면 바로 그 사이트로 간다.
+// 이 보드의 목적 = 링커리어·잡코리아처럼 여러 곳에 흩어진 공고 링크를 한 곳에 모아 바로 연결해 주는 것.
+// 그래서 펼침(코멘트·주최 상세)을 없앴다 — 우리 화면에서 읽히는 것은 제목·출처·마감뿐이고,
+// 나머지는 원문이 더 잘 보여 준다. 코멘트는 데이터로는 남지만 목록에 쓰지 않는다.
+// 관심 ★(0013) — 체크한 공고는 내정보 상단 "관심 공고"에 모인다(★ = 개인 모음, 구독 = 캘린더).
 export function PostingCard({ row, todayKey, interested = false, onToggleInterest }) {
   const status = postingStatus(row, todayKey)
   const closed = status === '마감'
-  // 요약줄 날짜 = 지금 알아야 할 날짜 하나. 접수 전이면 마감이 아니라 **시작일**이 그 하나다
+  // 행에 찍는 날짜 = 지금 알아야 할 날짜 하나. 접수 전이면 마감이 아니라 **시작일**이 그 하나다
   // (마감만 띄우면 아직 열지도 않은 창을 놓친 것처럼 읽힌다). 상시는 날짜 칸을 비운다 — 상태가 이미 '상시'.
   const keyDate = status === '접수전' ? row['접수시작'] : (row['접수마감'] || row['시험일'])
   return (
     <li className={`ws-prow${closed ? ' closed' : ''}`}>
-      <details className="ws-prow-d">
-        <summary className="ws-prow-sum">
-          <span className={`ws-post-kind k-${POSTING_KINDS.indexOf(row['종류'])}`}>{row['종류']}</span>
-          <span className="ws-prow-title">{row['제목']}</span>
-          <span className="ws-prow-due">{short(keyDate)}</span>
-          <span className={`ws-post-status s-${status}`}>
-            {status === '접수중' && dday(todayKey, row['접수마감'])}
-            {status === '접수전' && `${dday(todayKey, row['접수시작'])} 시작`}
-            {status === '예정' && `시험 ${dday(todayKey, row['시험일'])}`}
-            {status !== '접수중' && status !== '접수전' && status !== '예정' && status}
-          </span>
-        </summary>
-        <div className="ws-prow-body">
-          <p className="ws-mark-meta">
-            {[
-              row['주최'],
-              row['분류'],
-              row['접수마감'] ? `접수 ${row['접수시작'] ? `${row['접수시작']} ~ ` : '~ '}${row['접수마감']}` : (!row['시험일'] && '상시 모집'),
-              row['시험일'] && `시험일 ${row['시험일']}`,
-            ].filter(Boolean).join(' · ')}
-          </p>
-          <p className="ws-post-comment">{row['코멘트']}</p>
-          <a className="ws-post-link" href={row.url} target="_blank" rel="noreferrer">원문 보기 ↗</a>
-        </div>
-      </details>
+      <a className="ws-prow-link" href={row.url} target="_blank" rel="noreferrer">
+        <span className={`ws-post-kind k-${POSTING_KINDS.indexOf(row['종류'])}`}>{row['종류']}</span>
+        <span className="ws-prow-title">{row['제목']}</span>
+        {row['출처'] && <span className="ws-prow-src">{row['출처']}</span>}
+        <span className="ws-prow-due">{short(keyDate)}</span>
+        <span className={`ws-post-status s-${status}`}>
+          {status === '접수중' && dday(todayKey, row['접수마감'])}
+          {status === '접수전' && `${dday(todayKey, row['접수시작'])} 시작`}
+          {status === '예정' && `시험 ${dday(todayKey, row['시험일'])}`}
+          {status !== '접수중' && status !== '접수전' && status !== '예정' && status}
+        </span>
+      </a>
       {onToggleInterest && (
         <button
           type="button" className={`ws-post-star${interested ? ' on' : ''}`}
@@ -97,6 +86,7 @@ export default function Postings({ store }) {
   const [note, setNote] = useState('')            // ★·구독 저장 실패 한 줄 안내(3초 후 소거)
   const [kind, setKind] = useState('전체')
   const [sub, setSub] = useState('전체')
+  const [q, setQ] = useState('')                  // 검색어(2026-08-19 2차 — 링크가 수백 건 쌓이면 칩만으로 못 찾는다)
 
   const load = useCallback(() => Promise.all([
     store.postings.list(), store.events.list(), store.postings.listInterests(), store.postings.listSubscriptions(),
@@ -148,11 +138,15 @@ export default function Postings({ store }) {
   const subOptions = !isEventCat && kind !== '전체' ? taxonomyOptions(kind) : []
   const selSub = sub === '전체' ? '' : sub
   // 마감 묶음(closed)은 화면에서 제외(2026-08-18 오너 — 쌓이면 너무 많음. 데이터는 DB에 그대로).
+  // 검색(q)은 종류·분류 필터 다음에 건다 — 칩으로 좁힌 뒤 낱말로 다시 좁히는 순서.
   const { active, always } = useMemo(
-    () => groupPostings(filterPostings(rows, isEventCat ? '전체' : kind, selSub), todayKey, interests),
-    [rows, kind, selSub, todayKey, isEventCat, interests],
+    () => groupPostings(
+      searchPostings(filterPostings(rows, isEventCat ? '전체' : kind, selSub), q),
+      todayKey, interests,
+    ),
+    [rows, kind, selSub, q, todayKey, isEventCat, interests],
   )
-  // 3단 섹션(★ 관심 → 고정 → 전체) + 상시. 빈 묶음은 sectionPostings가 이미 뺀다.
+  // 2단 섹션(★ 관심 → 전체) + 상시. 빈 묶음은 sectionPostings가 이미 뺀다.
   const sections = useMemo(() => sectionPostings(active, always, interests), [active, always, interests])
   const openCount = active.length + always.length
   const catEvents = useMemo(
@@ -191,6 +185,20 @@ export default function Postings({ store }) {
               ))}
             </nav>
           )}
+          {!isEventCat && (
+            <div className="ws-psearch">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+                <circle cx="10.5" cy="10.5" r="6.5" /><path d="m15.5 15.5 4 4" />
+              </svg>
+              <input
+                type="search" value={q} onChange={(e) => setQ(e.target.value)}
+                placeholder="제목·주최·출처로 찾기" aria-label="공고 검색"
+              />
+              {q && (
+                <button type="button" className="ws-psearch-x" onClick={() => setQ('')} aria-label="검색어 지우기">✕</button>
+              )}
+            </div>
+          )}
           {kind !== '전체' && subs !== null && (
             <div className="ws-subline">
               <button
@@ -212,7 +220,7 @@ export default function Postings({ store }) {
           {!isEventCat && (
             <>
               {status === 'ready' && openCount === 0 && (
-                <p className="ws-empty">진행 중 공고 0건</p>
+                <p className="ws-empty">{q ? `'${q}' 검색 결과 0건` : '진행 중 공고 0건'}</p>
               )}
               {sections.map((sec) => (
                 <div key={sec.key} className="ws-post-sec">

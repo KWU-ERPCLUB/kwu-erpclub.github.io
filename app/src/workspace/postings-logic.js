@@ -63,6 +63,17 @@ export const filterPostings = (rows, kind, sub) => {
   return !sub || sub === '전체' ? byKind : byKind.filter((r) => (r['분류'] || '') === sub)
 }
 
+// 검색(오너 2026-08-19 2차) — 링크를 수백 건 모으면 칩 필터만으로는 못 찾는다.
+// 대상 = 제목·주최·출처. 공백으로 나눈 낱말을 **전부** 포함해야 통과(AND) — 낱말을 더할수록 좁혀진다.
+export function searchPostings(rows, query) {
+  const words = String(query || '').trim().toLowerCase().split(/\s+/).filter(Boolean)
+  if (words.length === 0) return rows
+  return (rows || []).filter((r) => {
+    const hay = [r['제목'], r['주최'], r['출처'], r['분류']].filter(Boolean).join(' ').toLowerCase()
+    return words.every((w) => hay.includes(w))
+  })
+}
+
 // 홈 캘린더 합류 항목 — 접수마감·시험일을 캘린더 계약({ date, 제목, 종류:'공고', 중요, source, id })으로 변환.
 // 마감 지난 날짜도 그대로 둔다(캘린더는 과거 달 조회가 정상 동작). 중요(★) = 고정 겸용(다가오는 업무 노출).
 // 공고종류·분류 = 구독 필터(postings-taxonomy.js filterAgendaBySubs)가 소비(2026-08-18 구독 개인화).

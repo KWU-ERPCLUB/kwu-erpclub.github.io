@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { postingStatus, groupPostings, filterPostings, postingAgendaItems, POSTING_KINDS, postingRank, sectionPostings } from './postings-logic.js'
+import { postingStatus, groupPostings, filterPostings, postingAgendaItems, POSTING_KINDS, postingRank, sectionPostings, searchPostings } from './postings-logic.js'
 
 const TODAY = '2026-09-08'
 const row = (over) => ({ id: 'x', 제목: '공고', 종류: '공모전', url: 'https://example.com', 코멘트: 'c', 고정: false, ...over })
@@ -69,6 +69,20 @@ test('우선순위 2단 — ★ 관심이 먼저, 나머지는 고정 여부와 
   expect(postingRank(rows[2], ['star'])).toBe(0)
   expect(postingRank(rows[1], ['star'])).toBe(1)   // 고정이어도 관심이 아니면 같은 단
   expect(postingRank(rows[0], ['star'])).toBe(1)
+})
+
+test('검색 — 제목·주최·출처·분류를 훑고, 낱말 여러 개는 전부 포함(AND)', () => {
+  const rows = [
+    row({ id: 'a', 제목: '삼성 하반기 신입 공채', 주최: '삼성', 출처: '잡코리아' }),
+    row({ id: 'b', 제목: 'LG 하반기 인턴', 주최: 'LG', 출처: '링커리어' }),
+    row({ id: 'c', 제목: 'NAIS AI 해커톤', 주최: 'NST', 출처: '링커리어' }),
+  ]
+  expect(searchPostings(rows, '하반기').map((r) => r.id)).toEqual(['a', 'b'])
+  expect(searchPostings(rows, '하반기 인턴').map((r) => r.id)).toEqual(['b'])   // AND
+  expect(searchPostings(rows, '링커리어').map((r) => r.id)).toEqual(['b', 'c']) // 출처로도 찾힌다
+  expect(searchPostings(rows, 'nais').map((r) => r.id)).toEqual(['c'])          // 대소문자 무시
+  expect(searchPostings(rows, '  ')).toHaveLength(3)                            // 빈 검색 = 전체 통과
+  expect(searchPostings(rows, '없는말')).toHaveLength(0)
 })
 
 test('섹션 분할 — 빈 묶음은 빠지고, 상시는 맨 뒤 한 섹션', () => {
