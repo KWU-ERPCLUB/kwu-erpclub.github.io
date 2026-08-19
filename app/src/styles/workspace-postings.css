@@ -1,7 +1,24 @@
 /* 공고 탭(2026-08-07 신설) — 카드형 보드 + 종류 배지 + 파생 상태. workspace.css 분할 파일(300줄 규격),
    workspace-entry에서만 import. 토큰은 global.css 재사용. 공고 색 계열(#1f5c37)은 캘린더 칩(.post)과 동일. */
 
-.ws-post-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+/* 1열 고정(오너 2026-08-19) — 2열은 카드 높이가 제각각이라 시선이 지그재그로 튄다.
+   한 줄 = 한 공고 → 위에서 아래로 임박순만 따라가면 된다. */
+.ws-post-grid { display: grid; grid-template-columns: 1fr; gap: 0.7rem; }
+
+/* 우선순위 섹션(★ 내 관심 → 📌 운영진 추천 → 전체 → 상시 모집) */
+.ws-post-sec + .ws-post-sec { margin-top: 1.4rem; }
+.ws-post-sec-h {
+  display: flex; align-items: center; gap: 0.5rem;
+  margin: 0 0 0.6rem; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.02em;
+  color: var(--text-sub); text-transform: none;
+}
+.ws-post-sec-h::after {
+  content: ''; flex: 1; height: 1px; background: var(--line); order: 3;
+}
+.ws-post-sec-h span {
+  order: 2; font-size: 0.72rem; font-weight: 700; color: var(--text-sub);
+  background: var(--tint, #f2f1ee); border-radius: var(--radius-pill); padding: 0.06rem 0.5rem;
+}
 
 .ws-posting {
   display: block; background: #fff; border: 1px solid var(--line); border-radius: 14px;
@@ -99,10 +116,6 @@
 .ws-check {
   display: flex; gap: 0.45rem; align-items: center; font-size: 0.86rem; color: var(--text);
   margin: 0.2rem 0 0.4rem;
-}
-
-@media (max-width: 900px) {
-  .ws-post-grid { grid-template-columns: 1fr; }
 }
 
 /* 폰(모바일 spec §3-3) — 필터 칩 = 가로 스크롤 한 줄(줄바꿈 누적 방지, Priority+ 계열) + 터치 타깃 M1 */

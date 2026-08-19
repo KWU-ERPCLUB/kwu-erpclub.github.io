@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { postingStatus, groupPostings, filterPostings, postingAgendaItems, POSTING_KINDS } from './postings-logic.js'
+import { postingStatus, groupPostings, filterPostings, postingAgendaItems, POSTING_KINDS, postingRank, sectionPostings } from './postings-logic.js'
 
 const TODAY = '2026-09-08'
 const row = (over) => ({ id: 'x', 제목: '공고', 종류: '공모전', url: 'https://example.com', 코멘트: 'c', 고정: false, ...over })
@@ -54,6 +54,31 @@ test('캘린더 합류 — 접수마감·시험일이 종류 "공고" 항목으�
   expect(items).toHaveLength(2)
   expect(items[0]).toMatchObject({ date: '2026-09-09', 제목: '접수 마감 — ADsP 51회', 종류: '공고', source: 'posting', 설명: '접수창 5일' })
   expect(items[1]).toMatchObject({ date: '2026-10-11', 제목: '시험일 — ADsP 51회', 종류: '공고' })
+})
+
+test('우선순위 3단(2026-08-19) — ★ 관심 → 고정 → 일반, 같은 단은 임박순', () => {
+  const rows = [
+    row({ id: 'plain-late', 접수마감: '2026-09-30' }),
+    row({ id: 'pin', 접수마감: '2026-09-25', 고정: true }),
+    row({ id: 'star', 접수마감: '2026-10-20' }),
+    row({ id: 'plain-soon', 접수마감: '2026-09-10' }),
+  ]
+  const { active } = groupPostings(rows, TODAY, ['star'])
+  expect(active.map((r) => r.id)).toEqual(['star', 'pin', 'plain-soon', 'plain-late'])
+  expect(postingRank(rows[2], ['star'])).toBe(0)
+  expect(postingRank(rows[1], ['star'])).toBe(1)
+  expect(postingRank(rows[0], ['star'])).toBe(2)
+})
+
+test('섹션 분할 — 빈 묶음은 빠지고, 상시는 맨 뒤 한 섹션', () => {
+  const active = [row({ id: 'star', 접수마감: '2026-09-20' }), row({ id: 'plain', 접수마감: '2026-09-21' })]
+  const always = [row({ id: 'ever', 접수마감: null })]
+  const secs = sectionPostings(active, always, ['star'])
+  expect(secs.map((s) => s.key)).toEqual(['★ 내 관심', '전체', '상시'])
+  expect(secs[2].label).toBe('상시 모집')
+  expect(secs[0].items.map((r) => r.id)).toEqual(['star'])
+  expect(secs[2].items.map((r) => r.id)).toEqual(['ever'])
+  expect(sectionPostings([], [], []).length).toBe(0)
 })
 
 test('캘린더 합류 중요(★) = 고정 겸용 — 다가오는 업무 노출 플래그', () => {

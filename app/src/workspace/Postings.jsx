@@ -3,7 +3,7 @@
 // 구독(0014) = 카테고리·세부 단위 캘린더 필터 — 여기 필터 칩 자리에서 바로 토글(오너 확정 2026-08-18).
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { toKey, dday } from './calendar-logic.js'
-import { POSTING_KINDS, postingStatus, groupPostings, filterPostings } from './postings-logic.js'
+import { POSTING_KINDS, postingStatus, groupPostings, filterPostings, sectionPostings } from './postings-logic.js'
 import { taxonomyOptions, effectiveSubs, hasSubRow, eventCategory, planToggle, SUBS_CHANGED } from './postings-taxonomy.js'
 
 // 카드 1장 — 종류·세부 분류 배지 + 제목(원문 링크) + 주최 + 접수·시험 일정 + 큐레이션 코멘트(필수 필드).
@@ -136,10 +136,12 @@ export default function Postings({ store }) {
   const selSub = sub === '전체' ? '' : sub
   // 마감 묶음(closed)은 화면에서 제외(2026-08-18 오너 — 쌓이면 너무 많음. 데이터는 DB에 그대로).
   const { active, always } = useMemo(
-    () => groupPostings(filterPostings(rows, isEventCat ? '전체' : kind, selSub), todayKey),
-    [rows, kind, selSub, todayKey, isEventCat],
+    () => groupPostings(filterPostings(rows, isEventCat ? '전체' : kind, selSub), todayKey, interests),
+    [rows, kind, selSub, todayKey, isEventCat, interests],
   )
-  const open = active.concat(always)
+  // 3단 섹션(★ 관심 → 고정 → 전체) + 상시. 빈 묶음은 sectionPostings가 이미 뺀다.
+  const sections = useMemo(() => sectionPostings(active, always, interests), [active, always, interests])
+  const openCount = active.length + always.length
   const catEvents = useMemo(
     () => events.filter((e) => eventCategory(e) === kind).sort((a, b) => (a['날짜'] < b['날짜'] ? -1 : 1)),
     [events, kind],
@@ -196,14 +198,19 @@ export default function Postings({ store }) {
           {isEventCat && status === 'ready' && <EventList rows={catEvents} todayKey={todayKey} />}
           {!isEventCat && (
             <>
-              {status === 'ready' && open.length === 0 && (
+              {status === 'ready' && openCount === 0 && (
                 <p className="ws-empty">진행 중 공고 0건</p>
               )}
-              <ul className="ws-list ws-post-grid">
-                {open.map((r) => (
-                  <PostingCard key={r.id} row={r} todayKey={todayKey} interested={interests.includes(r.id)} onToggleInterest={toggleInterest} />
-                ))}
-              </ul>
+              {sections.map((sec) => (
+                <div key={sec.key} className="ws-post-sec">
+                  <h3 className="ws-post-sec-h">{sec.label}<span>{sec.items.length}</span></h3>
+                  <ul className="ws-list ws-post-grid">
+                    {sec.items.map((r) => (
+                      <PostingCard key={r.id} row={r} todayKey={todayKey} interested={interests.includes(r.id)} onToggleInterest={toggleInterest} />
+                    ))}
+                  </ul>
+                </div>
+              ))}
             </>
           )}
         </section>
