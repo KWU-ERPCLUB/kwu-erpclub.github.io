@@ -253,10 +253,14 @@ export default function Postings({ store }) {
             })}
           </ul>
         </section>
+        {/* 안내 = 3줄 상한(오너 2026-08-19: 길어서 핵심이 안 보인다). 문장이 아니라 조작법만 남긴다. */}
         <section className="ws-block">
           <h2 className="ws-h2">보드 안내</h2>
-          <p className="ws-note">운영진이 선별해 올리는 외부 기회 스크랩 — 링크 모음이 아니라 "우리에게 왜 유효한가" 한 줄이 붙는다.</p>
-          <p className="ws-note">홈 캘린더에는 내가 등록한 분류의 마감·시험일만 뜬다(기본 = 학사일정+AIM 일정). 각 필터의 「캘린더에 등록」으로 켜고 끈다.</p>
+          <ul className="ws-guide">
+            <li>줄을 누르면 원문 사이트로 이동</li>
+            <li>★ = 내 관심. 내정보에 모인다</li>
+            <li>「캘린더에 등록」한 분류만 홈 캘린더에 뜬다</li>
+          </ul>
         </section>
       </aside>
     </div>

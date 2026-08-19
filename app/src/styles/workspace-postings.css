@@ -51,6 +51,14 @@
 }
 .ws-prow-due { font-size: 0.8rem; color: var(--text-sub); font-variant-numeric: tabular-nums; }
 
+/* 보드 안내(2026-08-19 오너 축약) — 설명문 대신 조작법 3줄. 각 줄 앞에 · 를 붙여 목록으로 읽히게 */
+.ws-guide { list-style: none; margin: 0; padding: 0; }
+.ws-guide li {
+  position: relative; padding-left: 0.75rem; margin: 0.35rem 0;
+  font-size: 0.85rem; line-height: 1.5; color: var(--text-sub);
+}
+.ws-guide li::before { content: '·'; position: absolute; left: 0.1rem; }
+
 /* 검색(2026-08-19 2차) — 링크가 수백 건이면 칩 필터만으로 못 찾는다 */
 .ws-psearch {
   display: flex; align-items: center; gap: 0.45rem;

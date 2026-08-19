@@ -11,7 +11,10 @@ test('공고 탭 골격 = 종류 필터 + 접수 임박 레일 + 보드 안내',
   const html = flat(<Postings store={createMockRepositories({ user: 'mock-member' })} />)
   for (const k of ['전체', '공모전', '채용', '자격증', '교내활동']) expect(html).toContain(k)
   expect(html).toContain('접수 임박')
-  expect(html).toContain('왜 유효한가')
+  // 보드 안내 = 조작법 3줄(오너 2026-08-19 축약). 구 설명문("왜 유효한가")은 코멘트 폐지로 사실도 아니게 됐다.
+  expect(html).toContain('보드 안내')
+  expect(html).toContain('원문 사이트로 이동')
+  expect(html).not.toContain('왜 유효한가')
   expect(html).toContain('불러오는 중')
 })
 
@@ -75,11 +78,11 @@ test('관심 저장소 — 본인 행만 켜고 끈다(목 = 0013 RLS 동형), �
   await expect(anon.postings.toggleInterest('mock-p1', true)).rejects.toThrow('로그인 필요')
 })
 
-test('운영 폼 골격 = 전 필드 + 코멘트 필수 안내', () => {
+test('운영 폼 골격 = 전 필드 + 코멘트는 선택', () => {
   const html = flat(<AdminPostings store={createMockRepositories({ user: 'mock-staff' })} />)
   for (const label of ['제목', '종류', '주최(선택)', '원문 링크', '접수시작(선택)', '접수마감(선택)', '시험일(선택)', '다가오는 업무에 표시']) {
     expect(html).toContain(label)
   }
-  expect(html).toContain('왜 유효한가')
+  expect(html).toContain('코멘트(선택)')   // 필수 → 선택(2026-08-19, migration 0018)
   expect(html).toContain('캘린더에 자동 합류')
 })
