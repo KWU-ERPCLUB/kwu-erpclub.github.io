@@ -97,7 +97,7 @@ export const RECRUIT_SHOWCASE = [
     core: '인사이트·워크스페이스가 도는 지면',
     sub: '기고부터 모집까지 이 위에서 처리',
     href: '/',
-    img: '/img/projects/erpclub-site.png',
+    img: '/img/projects/hub/cover.jpg',
   },
   {
     name: 'AIM 특강 자료',

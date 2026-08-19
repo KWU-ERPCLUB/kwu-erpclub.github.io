@@ -19,7 +19,9 @@ const DIST = join(APP, 'dist')
 const OUT = join(APP, 'public', 'img', 'projects', 'hub')
 
 // 키 → 경로. 파일명 shot-<키>.jpg
+// cover = 예외(파일명 cover.jpg·16:9) — 프로젝트 목록 카드 커버. 다른 키와 규격이 달라 SIZES에서 분기한다.
 const SHOTS = {
+  cover: '/',
   home: '/',
   insights: '/insights/',
   seminars: '/seminars/',
@@ -32,6 +34,10 @@ const WIDTH = 1440
 const HEIGHT = 900
 const SCALE = 2
 const QUALITY = 82
+
+// 키별 예외 규격 — 목록 카드 커버만 16:9(카드가 16/9로 잘라 쓰므로 촬영부터 맞춘다).
+const SIZES = { cover: [1600, 900] }
+const fileName = (key) => (key === 'cover' ? 'cover.jpg' : `shot-${key}.jpg`)
 
 const CHROME = [
   'C:/Program Files/Google/Chrome/Application/chrome.exe',
@@ -68,18 +74,19 @@ server.listen(0, '127.0.0.1', async () => {
   try {
     for (const key of keys) {
       const png = join(tmp, `${key}.png`)
+      const [w, h] = SIZES[key] || [WIDTH, HEIGHT]
       await run(CHROME, [
         '--headless=new', '--disable-gpu', '--no-first-run', '--no-default-browser-check', '--hide-scrollbars',
         `--user-data-dir=${join(tmp, 'profile')}`,
         // 배율은 명시 고정 — 시스템 배율(이 PC 165%)이 새면 캡처 크기가 어긋난다.
-        `--force-device-scale-factor=${SCALE}`, `--window-size=${WIDTH},${HEIGHT}`,
+        `--force-device-scale-factor=${SCALE}`, `--window-size=${w},${h}`,
         // 진입 모션·CountUp이 끝난 뒤를 찍는다.
         '--virtual-time-budget=8000',
         `--screenshot=${png}`, `http://127.0.0.1:${port}${SHOTS[key]}`,
       ], { timeout: 120000 })
       if (!existsSync(png)) throw new Error(`캡처 실패: ${key}`)
 
-      const jpg = join(OUT, `shot-${key}.jpg`)
+      const jpg = join(OUT, fileName(key))
       await run('python', ['-c', [
         'import sys',
         'from PIL import Image',

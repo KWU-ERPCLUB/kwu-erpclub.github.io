@@ -21,6 +21,7 @@ export default defineConfig({
         recruit: fileURLToPath(new URL('./recruit/index.html', import.meta.url)),
         projects: fileURLToPath(new URL('./projects/index.html', import.meta.url)),
         projectsAdsp: fileURLToPath(new URL('./projects/adsp/index.html', import.meta.url)),
+        projectsSite: fileURLToPath(new URL('./projects/site/index.html', import.meta.url)),
         workspace: fileURLToPath(new URL('./workspace/index.html', import.meta.url)),
       },
     },
