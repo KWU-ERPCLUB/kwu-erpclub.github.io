@@ -3,1008 +3,1513 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>질문에서 위임으로 · AIM 특강</title>
+<title>AIM 특강 · 질문에서 위임으로 (활용 구조 3단)</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" />
 <style>
-  :root{
-    --accent:#7a2030; --tint:#f6edef; --dark:#161616; --bg:#ffffff; --surface:#fafaf9;
-    --text:#141414; --text-sub:#55606c; --line:#e7e7e5; --dm:#d18f9a;
-    --fd:'Paperlogy','Pretendard Variable',Pretendard,sans-serif;
-    --fb:'Pretendard Variable',Pretendard,-apple-system,sans-serif;
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0;height:100%}
-  body{background:#e9e8e5;font-family:var(--fb);color:var(--text);overflow:hidden}
-  #deck{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
-  #stage{width:1280px;height:720px;position:relative;background:var(--bg);transform-origin:center center;
-         box-shadow:0 10px 40px rgba(0,0,0,.18);overflow:hidden}
+/* ===================================================================
+   AIM 특강 덱 (sp1) — 30장 · 신서식 전면 재구축 2026-08-19
+   원천 = 하네스 4부작
+     · aim-덱-규격.md v4          (캔버스·색·형태·타이포·톤·구조·게이트)
+     · aim-덱-카피.md v1.2        (명사형 단정·AI투 사전·grep 8패턴)
+     · aim-덱-모션-시각화.md      (모션 토큰·연출 판정표·인터랙션 배치)
+     · aim-덱-블루프린트.md       (BP1~BP10 와이어프레임)
+   시각 정답지 = slides/g1 (골든 샘플) · 공통 CSS·네비 스크립트 계승
+   내용 승계 = 구 sp1 덱 45장 + 세미나 원고(2026-07-25) — 신규 사실 투입 0
+   =================================================================== */
+:root{
+  --bg:#ffffff; --dark:#161616; --accent:#7a2030;
+  --tint:#f6edef; --tint2:#ecd9de; --surface:#fafaf9;
+  --dm:#d18f9a; --text:#141414; --sub:#55606c; --mute:#8a8f96;
+  --line:#e7e7e5; --line-soft:#f1f0ee; --tint-line:#e6d3d7;
+  --fd:'Paperlogy','Pretendard Variable',sans-serif;
+  --fb:'Pretendard Variable',Pretendard,-apple-system,'Malgun Gothic',sans-serif;
+  --fm:'JetBrains Mono','Consolas',monospace;
+  --fs-hero:140px; --fs-cover-sub:54px; --fs-page-title:58px; --fs-section:44px; --fs-card-title:34px;
+  --fs-card-body:26px; --fs-sub:22px; --fs-label:18px; --fs-kpi:118px; --fs-kpi-sm:84px;
+  --num-circle:46px;
+  --r-lg:28px; --r-md:16px; --r-sm:10px;
+  /* 모션 토큰 (모션-시각화 §4) */
+  --ease-in:cubic-bezier(0,0,.38,.9); --ease-std:cubic-bezier(.2,0,.38,.9);
+  --d-fast:110ms; --d-move:240ms; --d-enter:400ms; --d-hero:700ms;
+  --px:80px; --py:40px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:#e9e8e5;font-family:var(--fb);color:var(--text);overflow:hidden;
+  -webkit-font-smoothing:antialiased;font-feature-settings:'ss01','tnum'}
+ul{margin:0;padding:0;list-style:none}
 
-  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:44px 60px 32px;background:var(--bg)}
-  .slide.active{display:flex}
+#deck{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+#stage{width:1920px;height:1080px;position:relative;background:var(--bg);transform-origin:center;
+  overflow:hidden;box-shadow:0 20px 70px -20px rgba(20,20,20,.28)}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;background:var(--bg);overflow:hidden;
+  opacity:0;transition:opacity var(--d-move) var(--ease-std)} /* 크로스페이드 (§5-1) */
+.slide.active{display:flex}
+.slide.shown{opacity:1}
 
-  .top{display:flex;justify-content:space-between;align-items:center}
-  .pill{background:var(--dark);color:#fff;font:600 12px var(--fb);letter-spacing:.08em;text-transform:uppercase;padding:6px 14px;border-radius:999px}
-  .pnum{border:1px solid var(--line);border-radius:8px;padding:5px 11px;font:700 13px var(--fb);color:var(--dark)}
+/* ---- 웨이브·도트 브랜드 장치 [OP] ---- */
+.wave{position:absolute;pointer-events:none}
+.dot{position:absolute;border-radius:999px;pointer-events:none}
 
-  .head{margin-top:20px}
-  .head h1{font:800 36px/1.16 var(--fd);letter-spacing:-.02em;margin:0;color:var(--text);word-break:keep-all}
-  .emph{font:700 17px var(--fb);color:var(--dark);margin:10px 0 0}
-  .emph.ac{color:var(--accent)}
+/* ---- 헤더·푸터 (본문 장) ---- */
+.shead{position:relative;z-index:5;display:grid;grid-template-columns:auto 1fr auto;align-items:center;
+  gap:32px;padding:34px var(--px) 20px}
+.shead::after{content:'';position:absolute;left:var(--px);right:var(--px);bottom:0;height:1px;
+  background:linear-gradient(90deg,#f7f6f4,var(--line) 12%,var(--line) 88%,#f7f6f4)}
+.wordmark{display:flex;align-items:center;gap:9px;font:800 26px var(--fd);letter-spacing:-.02em}
+.wordmark::after{content:'';width:8px;height:8px;border-radius:999px;background:var(--accent)}
+.hmeta{justify-self:center;font:600 var(--fs-label)/1 var(--fb);color:var(--mute)}
+.hpage{font-family:var(--fm);font-size:22px;font-weight:600;color:var(--sub)}
+.hpage i{font-style:normal;font-size:15px;color:#c9c9c6}
+.sfoot{position:relative;display:flex;justify-content:space-between;align-items:center;
+  padding:16px var(--px) 26px;font:500 15px var(--fb);color:var(--mute)}
+.sfoot::before{content:'';position:absolute;left:var(--px);right:var(--px);top:0;height:1px;background:var(--line-soft)}
+.sfoot .fr{font-family:var(--fm);font-size:13px;letter-spacing:.06em}
 
-  .body{flex:1;min-height:0;margin-top:20px;display:flex;flex-direction:column;justify-content:center}
+.sbody{flex:1;min-height:0;display:flex;flex-direction:column;gap:26px;padding:34px var(--px) 0;position:relative;z-index:2}
+.htitle h1{margin:0;font:800 var(--fs-page-title)/1.14 var(--fd);letter-spacing:-.03em;word-break:keep-all}
+.htitle h1 em{font-style:normal;color:var(--accent)}
+.htitle .sub{margin:12px 0 0;font:500 var(--fs-sub)/1.5 var(--fb);color:var(--sub)}
+.htitle .sub b{color:var(--text)}
+.grow-1{flex:1;min-height:0}
+.fnum{font-family:var(--fm);font-size:.62em;color:var(--mute);vertical-align:super;margin-left:4px}
 
-  .key{margin:14px auto 0;width:88%;background:var(--dark);color:#fff;text-align:center;border-radius:12px;padding:13px 20px;font:600 16px var(--fb);word-break:keep-all}
+/* ---- 아이콘 컨테이너 [OP] ---- */
+.ic{width:72px;height:72px;border-radius:999px;background:var(--tint);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.ic svg{width:34px;height:34px;stroke:var(--accent);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.ic--solid{background:var(--accent)}
+.ic--solid svg{stroke:#fff}
+.ic--mute{background:var(--surface);border:1.5px solid var(--line)}
+.ic--mute svg{stroke:var(--mute)}
 
-  .foot{display:flex;justify-content:space-between;align-items:flex-end;margin-top:14px;font-size:11px;color:var(--text-sub)}
-  .foot .r{font-weight:600}
+/* ---- BP1 표지 ---- */
+.cover{justify-content:flex-start;padding:0}
+.cover .cwrap{position:relative;z-index:3;display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr);gap:64px;height:100%;padding:160px 120px 0;align-items:start}
+.cover .eyebrow{display:flex;align-items:center;gap:14px;font:700 var(--fs-label)/1 var(--fb);letter-spacing:.02em;color:var(--accent)}
+.cover .eyebrow::before{content:'';width:44px;height:3px;background:var(--accent)}
+.cover .hero{margin:30px 0 0;font:800 var(--fs-hero)/1.04 var(--fd);letter-spacing:-.045em}
+.cover .hero em{font-style:normal;color:var(--accent)}
+.cover .csub{margin:22px 0 0;font:700 var(--fs-cover-sub)/1.25 var(--fd);letter-spacing:-.03em;color:var(--sub)}
+.cover .csteps{margin-top:48px;display:flex;align-items:center;gap:8px}
+.cover .cstep{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;width:146px;
+  transition:transform var(--d-move) var(--ease-std)}
+.cover .cstep .ic{width:78px;height:78px;transition:background var(--d-move) var(--ease-std)}
+.cover .cstep .ic svg{width:36px;height:36px;transition:stroke var(--d-move) var(--ease-std)}
+.cover .cstep b{font:700 21px/1.25 var(--fb);color:var(--text);word-break:keep-all;transition:color var(--d-move) var(--ease-std)}
+.cover .cstep.hot .ic{background:var(--accent)}
+.cover .cstep.hot .ic svg{stroke:#fff}
+.cover .cstep.hot b{color:var(--accent)}
+.cover .carr{font:600 24px var(--fm);color:#c9b8bc;margin-bottom:34px}
+.cover .cnote{margin-top:34px;font:500 var(--fs-card-body)/1.5 var(--fb);color:var(--sub)}
+.cover .cnote b{color:var(--accent);font-weight:700}
+.cover .cfoot{position:absolute;left:120px;right:120px;bottom:52px;z-index:4;display:flex;
+  justify-content:space-between;align-items:flex-end;border-top:1px solid var(--line);padding-top:22px}
+.cover .cbrand{font:800 30px var(--fd)}
+.cover .corg{margin-top:7px;font:500 var(--fs-sub) var(--fb);color:var(--sub)}
+.cover .cpill{font:600 var(--fs-sub) var(--fm);letter-spacing:.12em;color:var(--accent);
+  border:1.5px solid var(--tint-line);background:var(--tint);border-radius:999px;padding:10px 24px}
+.cover .cwm{position:absolute;right:96px;top:26px;font:700 190px/1 var(--fm);color:var(--accent);opacity:.08;letter-spacing:-.06em;z-index:2}
+/* 표지 대형 도판 = 3단 스택 (BP1 우측 시각 요소) */
+.stk{position:relative;z-index:3;display:flex;flex-direction:column;gap:16px;margin-top:24px}
+.stk .sl3{display:flex;align-items:center;gap:22px;border:1.5px solid var(--line);border-radius:var(--r-lg);
+  background:var(--surface);padding:22px 30px}
+.stk .sl3 .ic{width:70px;height:70px;flex:none}
+.stk .sl3 .ic svg{width:34px;height:34px}
+.stk .sl3 .n3{font:600 16px var(--fm);letter-spacing:.14em;color:var(--mute)}
+.stk .sl3 h4{margin:6px 0 0;font:700 32px/1.2 var(--fd);letter-spacing:-.02em}
+.stk .sl3 p{margin:6px 0 0;font:400 var(--fs-sub)/1.4 var(--fb);color:var(--sub)}
+.stk .sl3.on{border-color:var(--accent);background:var(--bg);box-shadow:inset 6px 0 0 var(--accent)}
+.stk .sarr{text-align:center;font:600 22px var(--fm);color:#c9b8bc;margin:-10px 0}
+.stk .scap{margin-top:6px;font:500 var(--fs-sub)/1.4 var(--fb);color:var(--mute);text-align:center}
 
-  /* cards */
-  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:stretch;width:100%}
-  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;align-items:stretch;width:100%}
-  .card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px 26px;display:flex;flex-direction:column}
-  .card.hl{border-color:var(--accent);border-width:1.5px}
-  .ctag{font:600 12px var(--fb);letter-spacing:.05em;text-transform:uppercase;color:var(--text-sub);margin-bottom:8px}
-  .card h3{margin:0 0 12px;font:700 18px var(--fd);color:var(--text)}
-  .card ul{margin:0;padding-left:18px}
-  .card li{margin:8px 0;font-size:15px;line-height:1.5;color:var(--text);word-break:keep-all}
-  .lead{font-size:15px;color:var(--text-sub);margin:0 0 14px;line-height:1.55}
+/* ---- BP2 목차 ---- */
+.toc{display:flex;flex-direction:column}
+.tocr{display:grid;grid-template-columns:auto auto 1fr auto;align-items:center;gap:26px;
+  flex:1;padding:19px 4px;border-bottom:1px solid var(--line)}
+.tocr:first-of-type{border-top:1px solid var(--line)}
+.tocr .tw{display:flex;flex-direction:column;min-width:0}
+.tocr .tn{width:56px;height:56px;border-radius:999px;background:var(--surface);border:1.5px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font:600 24px var(--fm);color:var(--sub);flex:0 0 auto}
+.tocr .ic{width:60px;height:60px}
+.tocr .ic svg{width:28px;height:28px}
+.tocr .tt{display:block;font:700 32px/1.2 var(--fd);letter-spacing:-.02em;word-break:keep-all}
+.tocr .tt em{font-style:normal;color:var(--accent)}
+.tocr .td{display:block;margin-top:7px;font:400 var(--fs-sub)/1.4 var(--fb);color:var(--mute);word-break:keep-all}
+.tocr .td b{color:var(--text)}
+.tocr .td em{font-style:normal;color:var(--accent);font-weight:600}
+.tocr .tm{font:600 20px var(--fm);color:var(--sub);text-align:right;flex:0 0 auto;white-space:nowrap}
 
-  /* chips */
-  .chips{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:6px}
-  .chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:11px 20px;font:600 15px var(--fb);color:var(--text)}
-  .chip .cs{display:block;font-size:12px;color:var(--text-sub);font-weight:500;margin-top:2px}
+/* ---- BP3 디바이더 ---- */
+.divider{justify-content:center;padding:0 120px}
+.divider .drow{position:relative;z-index:3;display:flex;align-items:center;gap:56px}
+.divider .dnum{width:120px;height:120px;border-radius:999px;background:var(--accent);color:#fff;
+  display:flex;align-items:center;justify-content:center;font:600 52px var(--fm);flex:0 0 auto;
+  transition:transform var(--d-move) var(--ease-std),box-shadow var(--d-move) var(--ease-std)}
+.divider .dnum.hot{transform:scale(1.06);box-shadow:0 18px 40px -18px rgba(122,32,48,.6)}
+.divider .dtitle{font:800 var(--fs-section)/1.2 var(--fd);letter-spacing:-.03em}
+.divider .dline{margin-top:18px;font:400 26px/1.5 var(--fb);color:var(--sub)}
+.divider .dline b{color:var(--accent);font-weight:700}
+.divider .dwm{position:absolute;right:40px;top:50%;transform:translateY(-50%);
+  font:700 560px/1 var(--fm);color:var(--accent);opacity:.07;z-index:1;letter-spacing:-.08em}
+.divider .tracker{position:absolute;left:120px;bottom:64px;z-index:3;display:flex;gap:14px}
+.divider .tp{font:600 var(--fs-label) var(--fb);color:var(--mute);border:1.5px solid var(--line);
+  border-radius:999px;padding:10px 22px;background:var(--bg)}
+.divider .tp.cur{background:var(--accent);border-color:var(--accent);color:#fff}
+.divider .dprev{margin-top:48px;max-width:1180px;display:flex;flex-direction:column;position:relative;z-index:3}
+.divider .dprev .ph{font:600 15px var(--fm);letter-spacing:.12em;color:var(--mute);margin-bottom:8px}
+.divider .pv{display:flex;align-items:center;gap:24px;padding:19px 4px;border-bottom:1px solid var(--line)}
+.divider .pv:first-of-type{border-top:1px solid var(--line)}
+.divider .pv .pn{width:var(--num-circle);height:var(--num-circle);border-radius:999px;background:var(--surface);
+  border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font:600 21px var(--fm);color:var(--sub);flex:0 0 auto}
+.divider .pv .pvt{font:700 29px/1.3 var(--fd);letter-spacing:-.02em;word-break:keep-all}
+.divider .pv .pvt em{font-style:normal;color:var(--accent)}
+.divider .pv .pvs{margin-left:auto;font:500 var(--fs-sub) var(--fb);color:var(--mute);flex:0 0 auto}
 
-  /* steps */
-  .steps{display:flex;align-items:flex-start;justify-content:center;gap:4px;margin-top:6px}
-  .step{display:flex;flex-direction:column;align-items:center;gap:12px;min-width:118px;text-align:center;padding:0 2px}
-  .circ{width:52px;height:52px;border-radius:999px;border:1.5px solid var(--line);background:#fff;
-        display:flex;align-items:center;justify-content:center;font:800 19px var(--fd);color:var(--dark)}
-  .step.cur .circ{background:var(--accent);border-color:var(--accent);color:#fff}
-  .step .st{font:700 15px var(--fb);color:var(--text);word-break:keep-all}
-  .step .ss{font-size:12px;color:var(--text-sub);word-break:keep-all}
-  .arr{align-self:center;margin-top:14px;color:#b8b8b4;font-size:19px;flex:0 0 auto}
+/* ---- BP4 히어로 수치 ---- */
+.g-kpi{display:grid;grid-template-columns:.95fr 1.05fr;gap:56px;align-items:stretch}
+.ring-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
+  background:var(--surface);border-radius:var(--r-lg);padding:36px;position:relative;
+  border:1.5px solid transparent;transition:border-color var(--d-move) var(--ease-std)}
+.ring-wrap.hot{border-color:var(--accent)}
+.ring-box{position:relative;width:340px;height:340px}
+.ring-box svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring-bg{stroke:#efe9ea;stroke-width:22;fill:none}
+.ring-fg{stroke:var(--accent);stroke-width:22;fill:none;stroke-linecap:round}
+.ring-val{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-val .num{font:800 var(--fs-kpi)/1 var(--fd);letter-spacing:-.04em;color:var(--accent);display:flex;align-items:baseline;font-feature-settings:'tnum'}
+.ring-val .unit{font:700 42px var(--fd);color:var(--accent);margin-left:4px}
+.ring-lab{font:700 var(--fs-card-title)/1.3 var(--fd);letter-spacing:-.02em;text-align:center;word-break:keep-all}
+.ring-note{font:400 var(--fs-sub)/1.4 var(--fb);color:var(--mute);text-align:center;word-break:keep-all}
+.kside{display:flex;flex-direction:column;gap:0}
+.krow{flex:1;display:flex;flex-direction:column;justify-content:center;gap:14px;padding:26px 4px;border-bottom:1px solid var(--line)}
+.krow:first-child{border-top:1px solid var(--line)}
+.krow .kh{display:flex;align-items:baseline;justify-content:space-between;gap:20px}
+.krow .kt{font:700 var(--fs-card-title)/1.3 var(--fd);letter-spacing:-.02em;word-break:keep-all}
+.krow .kt b{color:var(--accent)}
+.krow .kv{font:800 var(--fs-kpi-sm)/1 var(--fd);letter-spacing:-.03em;color:var(--text);display:flex;align-items:baseline;font-feature-settings:'tnum'}
+.krow .kv .unit{font:700 32px var(--fd);color:var(--sub);margin-left:3px}
+.krow .kbar{height:14px;border-radius:999px;background:#efe9ea;overflow:hidden}
+.krow .kfill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--accent),#a04a58);
+  transform:scaleX(0);transform-origin:left}
+.krow .kfill.in{transform:scaleX(1);transition:transform var(--d-hero) var(--ease-in) .2s}
+.krow .kn{font:400 var(--fs-sub)/1.45 var(--fb);color:var(--mute)}
+.krow .kn b{color:var(--text)}
 
-  /* stats */
-  .stats{display:flex;flex-direction:column;width:92%;margin:0 auto}
-  .stat{display:flex;align-items:center;gap:26px;padding:16px 4px;border-bottom:1px solid var(--line)}
-  .snum{font:800 50px var(--fd);color:var(--text);line-height:1;flex:0 0 auto}
-  .snum.u{border-bottom:3px solid var(--accent);padding-bottom:5px}
-  .stxt{display:flex;flex-direction:column;gap:3px}
-  .slab{font:600 16px var(--fb);color:var(--text)}
-  .ssub{font-size:12px;color:var(--text-sub)}
+/* ---- 결론 밴드 = 다크 통일 (규격 v4.3) ---- */
+.band,.dark{background:var(--dark);color:#f4f2f1;border-radius:var(--r-lg);padding:26px 40px;position:relative;
+  font:600 28px/1.5 var(--fb);word-break:keep-all}
+.band span,.dark span,.dark b{color:var(--dm)}
+.band .band-sub,.dark .dsub{display:block;margin-top:8px;font:400 var(--fs-sub)/1.5 var(--fb);color:#b9b4b0}
+.dark{opacity:.35;transform:translateY(8px); /* 은닉 금지 — 활성 전에도 판독 가능(감쇠→활성) */
+  transition:opacity var(--d-enter) var(--ease-in),transform var(--d-enter) var(--ease-in)}
+.dark.hot{opacity:1;transform:none}
 
-  /* table */
-  .tbl{width:100%;border-collapse:collapse;font-size:14px}
-  .tbl th{text-align:left;font:700 12px var(--fb);letter-spacing:.04em;text-transform:uppercase;color:var(--text-sub);padding:9px 12px;border-bottom:1.5px solid var(--dark)}
-  .tbl td{padding:10px 12px;border-bottom:1px solid var(--line);color:var(--text);vertical-align:top;line-height:1.45}
-  .tbl td .tm{font-weight:700}
-  .glosswrap{display:grid;grid-template-columns:1fr 1fr;gap:0 32px;width:100%}
+/* ---- BP5 흐름·단계 ---- */
+.pipe{display:flex;align-items:flex-start;justify-content:space-between;gap:0;padding:30px 10px 0}
+.pnode{display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;flex:1;position:relative}
+.pnode .pl{font:600 16px var(--fm);letter-spacing:.12em;color:var(--mute)}
+.pnode .ic{width:96px;height:96px}
+.pnode .ic svg{width:44px;height:44px}
+.pnode .pt{font:700 var(--fs-card-title)/1.25 var(--fd);letter-spacing:-.02em;word-break:keep-all}
+.pnode .ps{font:400 var(--fs-card-body)/1.45 var(--fb);color:var(--mute);max-width:280px;word-break:keep-all}
+.plink{flex:0 0 74px;margin-top:76px;overflow:visible}
+.plink line{stroke:var(--mute);stroke-width:2}
+.plink polyline{stroke:var(--mute);stroke-width:2;fill:none}
+.pnode.res .ic{width:120px;height:120px;transition:transform var(--d-move) var(--ease-std)}
+.pnode.res .ic svg{width:54px;height:54px}
+.pnode.res .pl{color:var(--accent)}
+.pnode.res .pt{color:var(--accent);font-size:38px}
+.pnode.res.hot .ic{transform:scale(1.08)}
+.peq{flex:0 0 60px;margin-top:80px;font:700 44px var(--fd);color:var(--mute);text-align:center}
+.loopnote{margin-top:18px;text-align:center;font:500 var(--fs-card-body) var(--fb);color:var(--mute)}
+.loopnote b{color:var(--accent)}
 
-  /* bridge / quote / title */
-  .bridge{flex:1;display:flex;flex-direction:column;justify-content:center;gap:22px}
-  .bigline{font:800 42px/1.22 var(--fd);letter-spacing:-.02em;color:var(--text);max-width:24ch;word-break:keep-all}
-  .bigline em{font-style:normal;color:var(--accent)}
-  .bsub{display:flex;flex-direction:column;gap:8px}
-  .bsub span{font-size:16px;color:var(--text-sub);padding-left:16px;border-left:2px solid var(--line)}
+/* ---- BP6 대비 ---- */
+.ab{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.abcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:30px 34px;display:flex;flex-direction:column;gap:18px;
+  transition:opacity var(--d-move) var(--ease-std),background var(--d-move) var(--ease-std),border-color var(--d-move) var(--ease-std)}
+.abcard .abh{display:flex;align-items:center;gap:18px}
+.abcard .abl{font:600 15px var(--fm);letter-spacing:.1em;color:var(--mute);border:1px solid var(--line);
+  border-radius:999px;padding:7px 16px;background:var(--bg)}
+.abcard h3{margin:0;font:700 var(--fs-card-title)/1.25 var(--fd);letter-spacing:-.02em;word-break:keep-all}
+.abcard .abq{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-sm);
+  padding:18px 22px;font:500 22px/1.55 var(--fm);color:var(--sub);word-break:keep-all;
+  flex:1;display:flex;flex-direction:column;justify-content:center}
+.abcard p{margin:0;font:400 var(--fs-card-body)/1.55 var(--fb);color:var(--sub);word-break:keep-all}
+.abcard p b{color:var(--text)}
+.abcard ul li{font:400 var(--fs-card-body)/1.6 var(--fb);color:var(--sub);padding-left:22px;position:relative;word-break:keep-all}
+.abcard ul li::before{content:'';position:absolute;left:2px;top:16px;width:8px;height:8px;border-radius:999px;background:var(--tint2)}
+.abcard ul li b{color:var(--text)}
+.abcard.mid{justify-content:center;gap:24px} /* 목록형 카드 = 세로 중앙(아래 빈 공백 방지) */
+.abcard .abtag{font:600 15px var(--fm);letter-spacing:.1em;color:var(--mute);margin-bottom:-8px}
+.abcard .abdef{font:500 var(--fs-sub)/1.5 var(--fb);color:var(--accent);background:var(--tint);border-radius:var(--r-sm);padding:12px 18px}
+.abcard .abr{display:flex;align-items:flex-start;gap:14px;border-top:1px solid var(--line);padding-top:16px}
+.abcard .abr .rl2{font:700 15px var(--fm);letter-spacing:.1em;color:#fff;background:var(--accent);border-radius:999px;padding:7px 14px;flex:0 0 auto}
+.abcard .abr.bad .rl2{background:var(--mute)}
+.abcard .abr p{font:500 var(--fs-card-body)/1.5 var(--fb);color:var(--text)}
+.judge .abcard.lose{opacity:.38!important}
+.abcard.dim{opacity:.62!important}
+.judge .abcard.win{border-color:var(--accent);box-shadow:inset 6px 0 0 var(--accent);background:var(--bg)}
+.judge .abcard.win .abl{background:var(--accent);border-color:var(--accent);color:#fff}
 
-  .quote{flex:1;display:flex;flex-direction:column;justify-content:center;gap:22px}
-  .qbox{border-left:4px solid var(--accent);background:var(--surface);border-radius:0 14px 14px 0;padding:24px 30px}
-  .qorig{font:600 22px var(--fd);color:var(--text);line-height:1.4}
-  .qtr{font-size:17px;color:var(--text-sub);margin-top:10px}
-  .qnote{display:flex;flex-direction:column;gap:8px}
-  .qnote span{font-size:16px;color:var(--text);padding-left:14px;border-left:2px solid var(--line)}
+/* ---- BP7 캡처 프레임(shot) ---- */
+.g-shot{display:grid;grid-template-columns:1.02fr .98fr;gap:40px;align-items:stretch}
+.shot{border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;background:var(--bg);
+  display:flex;flex-direction:column;min-height:0;
+  box-shadow:0 24px 60px -32px rgba(122,32,48,.3),0 6px 18px -10px rgba(20,20,20,.12);
+  transition:border-color var(--d-move) var(--ease-std),box-shadow var(--d-move) var(--ease-std)}
+.shot.hot{border-color:var(--accent);box-shadow:0 0 0 3px var(--tint2),0 30px 70px -28px rgba(122,32,48,.45)}
+.shot .bar{display:flex;align-items:center;gap:8px;background:#f1f0ee;border-bottom:1px solid var(--line);padding:11px 18px;flex:0 0 auto}
+.shot .dot2{width:11px;height:11px;border-radius:999px;background:#d3d2cf}
+.shot .url{margin-left:10px;font:500 14px var(--fm);color:var(--sub);background:#fff;border:1px solid var(--line);border-radius:8px;padding:4px 14px}
+.shot .sview{flex:1;min-height:0;overflow:hidden;display:flex}
+.shot img{display:block;width:100%;height:100%;object-fit:cover;object-position:top center}
+.scap{margin-top:12px;font:500 var(--fs-sub)/1.4 var(--fb);color:var(--mute);text-align:center}
 
-  .tslide{justify-content:center;padding:60px 72px}
-  .tslide .big{font:800 82px/1.06 var(--fd);letter-spacing:-.03em;color:var(--text)}
-  .tslide .accbar{width:64px;height:4px;background:var(--accent);margin:24px 0 6px}
-  .tslide .sub{font:600 21px var(--fb);color:var(--text-sub);margin-top:18px}
-  .tslide .badge{align-self:flex-start;margin-top:26px;border:1px solid var(--line);border-radius:999px;padding:10px 20px;font-size:15px;color:var(--dark)}
+/* ---- 다크 실행 로그 (프롬프트·코드 패널) ---- */
+.term{background:var(--dark);border-radius:var(--r-lg);padding:34px 40px;display:flex;flex-direction:column;
+  gap:18px;justify-content:center;min-height:0}
+.term .tdots{display:flex;gap:9px;margin-bottom:8px}
+.term .tdots i{width:12px;height:12px;border-radius:999px;background:#3a3a3a;display:block}
+.term .tln{font:500 25px/1.35 var(--fm);color:#f4f2f1;display:flex;gap:20px;align-items:baseline}
+.term .tln i{font-style:normal;color:#8a8a86;width:132px;flex:0 0 auto}
+.term .tln b{color:var(--dm);font-weight:600}
+.term .tcap{margin-top:10px;font:400 var(--fs-sub)/1.45 var(--fb);color:#b9b4b0}
 
-  /* 표지 = 세미나 목록 썸네일(/img/세미나/cover-s*.png)과 같은 서식. 1280×720 = 커버 1600×900의 0.8배 환산.
-     서식을 고치면 scripts/export-seminar-cover.mjs도 같이 고친다(두 곳이 한 벌). */
-  .cover{justify-content:center;padding:0 80px;overflow:hidden} /* position은 .slide(absolute)를 유지 — 덮어쓰면 배치가 깨진다 */
-  .cover .blob{position:absolute;right:-120px;bottom:-208px;width:608px;height:608px;border-radius:999px;background:var(--tint)}
-  .cover .cdot{position:absolute;right:173px;bottom:120px;width:11px;height:11px;border-radius:999px;background:var(--accent)}
-  .cover .ctop{position:absolute;top:59px;left:80px;right:80px;display:flex;justify-content:space-between;align-items:center}
-  .cover .cpill{background:var(--dark);color:#fff;font:700 16px var(--fb);letter-spacing:.1em;padding:9px 21px;border-radius:999px}
-  .cover .ckind{font:700 18px var(--fb);color:var(--accent)}
-  .cover .accbar{position:relative;width:77px;height:5px;background:var(--accent);margin:0 0 27px}
-  .cover .big{position:relative;font:800 93px/1.06 var(--fd);letter-spacing:-.03em;color:var(--text);word-break:keep-all}
-  .cover .sub{position:relative;font:600 26px var(--fb);color:var(--text-sub);margin-top:24px}
-  .cover .cfoot{position:absolute;bottom:56px;left:80px;right:80px;display:flex;justify-content:space-between;
-                align-items:flex-end;border-top:1px solid var(--line);padding-top:21px}
-  .cover .cbrand{font:800 24px var(--fd);color:var(--text)}
-  .cover .corg{font:500 15px var(--fb);color:var(--text-sub);margin-top:6px}
-  .cover .ccount{font:700 17px var(--fb);color:var(--text-sub)}
-  .tlinks{display:flex;flex-direction:column;gap:12px;margin-top:26px;font-size:18px;color:var(--text)}
-  .tlinks b{font-family:var(--fd)}
-  .tlinks u{text-decoration:none;border-bottom:2px solid var(--accent);padding-bottom:2px}
+/* ---- 포인트 행(헤어라인 목록) ---- */
+.pts{display:flex;flex-direction:column}
+.pts.fill{height:100%}
+.pts.fill .ptr{flex:1;align-items:center}
+.ptr{display:flex;gap:20px;align-items:flex-start;padding:20px 2px;border-bottom:1px solid var(--line)}
+.ptr:first-child{border-top:1px solid var(--line)}
+.ptr .pnum{width:var(--num-circle);height:var(--num-circle);border-radius:999px;background:var(--tint);
+  color:var(--accent);font:600 20px var(--fm);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.ptr h4{margin:0;font:700 30px/1.25 var(--fd);letter-spacing:-.02em;word-break:keep-all}
+.ptr h4 em{font-style:normal;color:var(--accent)}
+.ptr p{margin:7px 0 0;font:400 var(--fs-card-body)/1.45 var(--fb);color:var(--sub);word-break:keep-all}
 
-  /* figures */
-  .fig{width:100%;max-width:760px;height:auto;margin:0 auto;display:block}
-  .fnote{text-align:center;font-size:12px;color:var(--text-sub);margin-top:8px}
+/* ---- 면 분할 패널 / 카드 그리드 (BP8) ---- */
+.split{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);display:grid;overflow:hidden}
+.split.cols{grid-auto-flow:column;grid-auto-columns:1fr}
+.split.cols>*{padding:28px 30px}
+.split.cols>*+*{border-left:1px solid var(--line)}
+.split.rows>*{padding:20px 32px}
+.split.rows>*+*{border-top:1px solid var(--line)}
+.split.quad{grid-template-columns:1fr 1fr}
+.split.quad>*{padding:30px 36px;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.split.quad>*:nth-child(-n+2){border-top:0}
+.split.quad>*:nth-child(odd){border-left:0}
+.split.six{grid-template-columns:1fr 1fr}
+.split.six>*{padding:22px 34px;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.split.six>*:nth-child(-n+2){border-top:0}
+.split.six>*:nth-child(odd){border-left:0}
+.spt{font:700 32px/1.25 var(--fd);letter-spacing:-.02em;word-break:keep-all}
+.spt em{font-style:normal;color:var(--accent)}
+.sps{margin:8px 0 0;font:400 var(--fs-card-body)/1.45 var(--fb);color:var(--sub);word-break:keep-all}
+.sps em{font-style:normal;color:var(--accent);font-weight:600}
+.sps b{color:var(--text)}
+.spl{font:600 15px var(--fm);letter-spacing:.12em;color:var(--mute);display:block;margin-bottom:10px}
+.gg{display:grid;gap:26px}
+.gg.g3{grid-template-columns:repeat(3,1fr)}
+.gg.g4{grid-template-columns:repeat(4,1fr)}
+/* 4카드 장 = 카드가 본문 높이를 채우되 내용은 세로 중앙(빈 아래 공백 방지) */
+.gg.g4 .gcard{justify-content:center;gap:20px}
+.gg.g4 .gcard h3{font-size:38px}
+.gg.g4 .gcard p{font-size:27px}
+.gcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:28px 30px;display:flex;flex-direction:column;gap:14px;
+  transition:border-color var(--d-move) var(--ease-std),background var(--d-move) var(--ease-std)}
+.gcard.hot{border-color:var(--accent);box-shadow:inset 6px 0 0 var(--accent);background:var(--bg)}
+.gcard .gl{font:600 15px var(--fm);letter-spacing:.12em;color:var(--mute)}
+.gcard h3{margin:0;font:700 var(--fs-card-title)/1.25 var(--fd);letter-spacing:-.02em;word-break:keep-all}
+.gcard p{margin:0;font:400 var(--fs-card-body)/1.5 var(--fb);color:var(--sub);word-break:keep-all}
+.gcard p b{color:var(--text)}
+.gcard .gfix{margin-top:auto;border-top:1px solid var(--line);padding-top:14px;
+  font:600 var(--fs-sub)/1.45 var(--fb);color:var(--accent);word-break:keep-all}
+.chips{display:flex;gap:12px;flex-wrap:wrap}
+.chip{font:600 var(--fs-label) var(--fb);color:var(--accent);border:1.5px solid var(--tint-line);
+  background:var(--tint);border-radius:999px;padding:9px 20px}
+.chip.mute{color:var(--sub);border-color:var(--line);background:var(--bg)}
+.defbox{font:500 var(--fs-card-body)/1.5 var(--fb);color:var(--accent);background:var(--tint);
+  border-radius:var(--r-md);padding:16px 26px;word-break:keep-all}
+.formula{font:500 30px/1.5 var(--fm);color:var(--sub);background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r-md);padding:24px 30px;text-align:center;word-break:keep-all}
+.formula em{font-style:normal;color:var(--accent);font-weight:600}
 
-  /* stack (layers) */
-  .stack{display:flex;flex-direction:column;gap:9px;width:70%;margin:0 auto}
-  .layer{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 22px;display:flex;justify-content:space-between;align-items:center}
-  .layer .ln{font:700 16px var(--fd);color:var(--text)}
-  .layer .ld{font-size:13px;color:var(--text-sub)}
-  .layer.top{border-left:3px solid var(--accent)}
+/* ---- 확률 막대 (수치 도판 · 제로베이스) ---- */
+.tbars{display:flex;flex-direction:column;gap:30px}
+.tbar{display:grid;grid-template-columns:130px 1fr 100px;align-items:center;gap:24px}
+.tbar .tl{font:700 32px var(--fd);letter-spacing:-.02em;color:var(--sub)}
+.tbar .trk{height:44px;border-radius:999px;background:#efe9ea;overflow:hidden}
+.tbar .kfill{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#bfbdb9,#d6d4d0);
+  transform:scaleX(0);transform-origin:left}
+.tbar .kfill.in{transform:scaleX(1);transition:transform var(--d-hero) var(--ease-in) .2s}
+.tbar.top .tl{color:var(--text)}
+.tbar.top .kfill{background:linear-gradient(90deg,var(--accent),#a04a58)}
+.tbar .tv{font:600 28px var(--fm);color:var(--mute);text-align:right}
+.tbar.top .tv{color:var(--accent)}
+.figcap{margin-top:16px;font:400 var(--fs-sub)/1.4 var(--fb);color:var(--mute)}
 
-  /* two-column limit list */
-  .rows{display:flex;flex-direction:column;gap:14px;width:88%;margin:0 auto}
-  .row{display:grid;grid-template-columns:200px 1fr;gap:22px;align-items:center;padding:14px 18px;background:var(--surface);border:1px solid var(--line);border-radius:14px}
-  .row .rl{font:700 16px var(--fd);color:var(--text)}
-  .row .rr{font-size:15px;color:var(--text-sub)}
-  .row.mark{border-left:3px solid var(--accent)}
+/* ---- BP9 선언 ---- */
+.decl{text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px}
+.decl .dtxt{font:800 76px/1.3 var(--fd);letter-spacing:-.035em;word-break:keep-all;max-width:1440px}
+.decl .dtxt em{font-style:normal;color:var(--accent);
+  background-image:linear-gradient(var(--tint2),var(--tint2));background-repeat:no-repeat;
+  background-size:0 16px;background-position:0 92%;
+  transition:background-size var(--d-hero) var(--ease-in)}
+.decl.hot .dtxt em{background-size:100% 16px}
+.decl .dnote{font:500 var(--fs-card-body)/1.5 var(--fb);color:var(--sub)}
+.decl .dnote b{color:var(--text)}
 
-  #counter{position:fixed;right:18px;bottom:14px;z-index:30;font:600 14px var(--fb);color:#fff;background:rgba(22,22,22,.78);padding:5px 13px;border-radius:999px}
+/* ---- 타임라인 (BP5 변형) ---- */
+.tl5{display:grid;grid-template-columns:repeat(5,1fr);gap:20px;align-items:stretch}
+.tlseg{display:flex;flex-direction:column;gap:12px;justify-content:flex-start}
+.tlseg .per{font:600 20px var(--fm);letter-spacing:.04em;color:var(--mute)}
+.tlseg .rail{height:12px;border-radius:999px;background:var(--tint2)}
+.tlseg.cur .per{color:var(--accent)}
+.tlseg.cur .rail{background:var(--accent)}
+.tlseg h3{margin:6px 0 0;font:700 34px/1.2 var(--fd);letter-spacing:-.02em}
+.tlseg.cur h3{color:var(--accent)}
+.tlseg p{margin:0;font:400 var(--fs-card-body)/1.45 var(--fb);color:var(--sub);word-break:keep-all}
 
-  @media print{
-    body{background:#fff;overflow:visible}
-    #deck{position:static;display:block;height:auto}
-    #stage{transform:none!important;width:1280px;height:auto;box-shadow:none;display:block}
-    .slide{position:relative;display:flex!important;width:1280px;height:720px;page-break-after:always;box-shadow:none}
-    #counter{display:none}
-  }
+/* ---- 출처 목록 ---- */
+.srcg{display:grid;grid-template-columns:1fr 1fr;gap:0 56px}
+.srcr{display:flex;gap:16px;align-items:flex-start;padding:13px 2px;border-bottom:1px solid var(--line)}
+.srcr:nth-child(-n+2){border-top:1px solid var(--line)}
+.srcr .sn{font:600 21px var(--fm);color:var(--accent);flex:0 0 auto;width:32px;line-height:1.5}
+.srcr .st2{font:600 24px/1.35 var(--fb);color:var(--text);word-break:keep-all}
+.srcr .sd{display:block;margin-top:3px;font:400 19px/1.35 var(--fb);color:var(--mute);word-break:keep-all}
+
+/* ---- 리빌·수동 인터랙션 ---- */
+.rv{opacity:.42!important;transition:opacity var(--d-move) var(--ease-std)}
+.rv.on{opacity:1!important}
+.uibar{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.uib{font:600 var(--fs-label) var(--fb);border:1.5px solid var(--line);background:var(--bg);
+  border-radius:999px;padding:11px 24px;cursor:pointer;color:var(--sub);
+  transition:background var(--d-fast) var(--ease-std),color var(--d-fast) var(--ease-std),border-color var(--d-fast) var(--ease-std)}
+.uib:hover{border-color:var(--tint-line);background:var(--tint)}
+.uib.cur{background:var(--accent);border-color:var(--accent);color:#fff}
+.uihint{font:500 var(--fs-label) var(--fb);color:var(--mute)}
+
+/* ---- 모션 공통 (모션-시각화 §4) ---- */
+.an{opacity:0}
+.an.in{animation:rise var(--d-enter) var(--ease-in) forwards;animation-delay:var(--ad,0s)}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.draw{stroke-dasharray:1;stroke-dashoffset:1}
+#counter{position:fixed;right:20px;bottom:16px;z-index:30;font:600 15px var(--fm);color:#fff;
+  background:rgba(22,22,22,.78);padding:6px 15px;border-radius:999px}
+
+@media (prefers-reduced-motion: reduce){
+  .slide{transition:none}
+  .an,.an.in{opacity:1!important;animation:none!important;transform:none!important}
+  .kfill,.kfill.in{transform:scaleX(1)!important;transition:none!important}
+  .draw{stroke-dashoffset:0!important}
+  .dark{opacity:1!important;transform:none!important;transition:none}
+  .rv{opacity:1!important}
+}
+@page{size:1920px 1080px;margin:0}
+@media print{
+  html,body{background:#fff;overflow:visible;height:auto}
+  #deck{position:static;display:block;height:auto}
+  #stage{transform:none!important;width:1920px;height:auto;box-shadow:none;display:block;overflow:visible}
+  .slide{position:relative!important;display:flex!important;opacity:1!important;width:1920px;height:1080px;page-break-after:always}
+  #counter{display:none!important}
+  .an,.an.in{opacity:1!important;animation:none!important;transform:none!important}
+  .kfill{transform:scaleX(1)!important}.draw{stroke-dashoffset:0!important}
+  .dark{opacity:1!important;transform:none!important}
+  /* print = 최종 상태 강제 (모션-시각화 §7) */
+  .rv{opacity:1!important}
+  .uibar{display:none!important}
+  .ring-wrap{border-color:var(--accent)!important}
+  .pnode.res .ic{transform:scale(1.08)!important}
+  .cover .cstep:first-child .ic{background:var(--accent)!important}
+  .cover .cstep:first-child .ic svg{stroke:#fff!important}
+  .cover .cstep:first-child b{color:var(--accent)!important}
+  .divider .dnum{transform:scale(1.06)!important}
+  .decl .dtxt em{background-size:100% 16px!important}
+  .shot[data-hero]{border-color:var(--accent)!important;box-shadow:0 0 0 3px var(--tint2)!important}
+  .gcard[data-hero]{border-color:var(--accent)!important;box-shadow:inset 6px 0 0 var(--accent)!important;background:var(--bg)!important}
+  .judge .abcard[data-side=b]{border-color:var(--accent)!important;box-shadow:inset 6px 0 0 var(--accent)!important;background:var(--bg)!important}
+  .judge .abcard[data-side=b] .abl{background:var(--accent)!important;border-color:var(--accent)!important;color:#fff!important}
+  .judge .abcard[data-side=a]{opacity:.38!important}
+}
 </style>
 </head>
 <body>
 <div id="deck">
-  <div id="stage">
+<div id="stage">
 
-  <!-- 1 -->
-  <section class="slide cover" aria-label="1. 질문에서 위임으로">
-    <div class="blob"></div><div class="cdot"></div>
-    <div class="ctop"><span class="cpill">SPECIAL</span><span class="ckind">인지</span></div>
-    <div class="accbar"></div>
-    <div class="big">질문에서<br>위임으로</div>
-    <div class="sub">AI 활용 구조 3단 · Prompt · Context · Harness</div>
-    <div class="cfoot">
-      <div><div class="cbrand">AIM</div><div class="corg">광운대학교 경영학부 ERP연구회 · MIS·AI 스터디</div></div>
-      <div class="ccount">발표자료 45장</div>
-    </div>
-  </section>
-
-  <!-- 2 -->
-  <section class="slide" aria-label="2. 오늘의 지도">
-    <div class="top"><span class="pill">OPENING</span><span class="pnum">02</span></div>
-    <div class="head"><h1>오늘의 지도</h1><p class="emph">개념에서 위임의 구조까지 4칸</p></div>
-    <div class="body">
-      <div class="steps">
-        <div class="step"><div class="circ">1</div><div class="st">개념</div><div class="ss">토큰·환각·용어</div></div>
-        <div class="arr">→</div>
-        <div class="step"><div class="circ">2</div><div class="st">Prompt</div><div class="ss">좋은 질문</div></div>
-        <div class="arr">→</div>
-        <div class="step"><div class="circ">3</div><div class="st">Context</div><div class="ss">좋은 맥락</div></div>
-        <div class="arr">→</div>
-        <div class="step cur"><div class="circ">4</div><div class="st">Harness · 위임</div><div class="ss">좋은 환경</div></div>
+<!-- ===== #1 · BP1 표지 (A) ===== -->
+<section class="slide cover" aria-label="1. 표지">
+  <svg class="wave" style="left:0;top:0;width:1150px;height:320px" viewBox="0 0 1150 320" fill="none">
+    <path d="M0 0 H1150 C 940 40 850 210 620 190 C 430 175 330 60 0 110 Z" fill="var(--tint2)"/>
+    <path d="M0 0 H900 C 760 30 640 150 460 140 C 300 132 210 40 0 78 Z" fill="var(--tint)"/>
+    <path class="draw" d="M1150 12 C 930 55 845 222 615 202 C 425 186 330 72 0 122" stroke="var(--accent)" stroke-width="1.5"/>
+  </svg>
+  <svg class="wave" style="right:0;bottom:0;width:1300px;height:380px" viewBox="0 0 1300 380" fill="none">
+    <path d="M1300 380 H0 C 240 330 380 160 640 200 C 880 236 1010 350 1300 270 Z" fill="var(--tint)"/>
+    <path d="M1300 380 H420 C 640 330 780 240 980 262 C 1120 277 1210 330 1300 300 Z" fill="var(--tint2)"/>
+  </svg>
+  <span class="dot" style="width:46px;height:46px;right:120px;top:126px;background:var(--tint2)"></span>
+  <span class="dot" style="width:18px;height:18px;right:86px;top:214px;background:var(--accent)"></span>
+  <div class="cwm">SP</div>
+  <div class="cwrap">
+    <div>
+      <div class="eyebrow an">광운대학교 ERP연구회 · MIS×AI 스터디 · 특강</div>
+      <h1 class="hero an">질문에서<br/><em>위임</em>으로</h1>
+      <p class="csub an">AI 활용 구조 3단</p>
+      <div class="csteps">
+        <div class="cstep an" data-hero><span class="ic"><svg viewBox="0 0 34 34"><circle cx="17" cy="17" r="12"/><path d="M17 11 v6 l4 3"/></svg></span><b>모델<br/>작동 원리</b></div>
+        <span class="carr an">→</span>
+        <div class="cstep an"><span class="ic"><svg viewBox="0 0 34 34"><circle cx="15" cy="15" r="10"/><line x1="23" y1="23" x2="30" y2="30"/></svg></span><b>1단<br/>질문</b></div>
+        <span class="carr an">→</span>
+        <div class="cstep an"><span class="ic"><svg viewBox="0 0 34 34"><rect x="5" y="6" width="24" height="22" rx="3"/><line x1="10" y1="13" x2="24" y2="13"/><line x1="10" y1="20" x2="20" y2="20"/></svg></span><b>2단<br/>맥락</b></div>
+        <span class="carr an">→</span>
+        <div class="cstep an"><span class="ic"><svg viewBox="0 0 34 34"><circle cx="17" cy="17" r="6"/><path d="M17 4 v5 M17 25 v5 M4 17 h5 M25 17 h5 M8 8 l3.5 3.5 M22.5 22.5 L26 26 M26 8 l-3.5 3.5 M11.5 22.5 L8 26"/></svg></span><b>3단<br/>환경</b></div>
+        <span class="carr an">→</span>
+        <div class="cstep an"><span class="ic"><svg viewBox="0 0 34 34"><rect x="6" y="4" width="22" height="26" rx="3"/><polyline points="11,17 15,21 23,12"/></svg></span><b>데이터<br/>마무리</b></div>
       </div>
+      <p class="cnote an">60분 · 정규 차시 전 <b>예습용</b> · 도구 소개 아님</p>
     </div>
-    <div class="key">개념 구분에서 위임의 구조까지</div>
-    <div class="foot"><span>출처: 세미나 목차</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 3 -->
-  <section class="slide" aria-label="3. 어디까지 써봤나">
-    <div class="top"><span class="pill">OPENING</span><span class="pnum">03</span></div>
-    <div class="head"><h1>어디까지 써봤나</h1><p class="emph">활용 단계 자가진단</p></div>
-    <div class="body">
-      <div class="steps">
-        <div class="step"><div class="circ">1</div><div class="st">CHAT</div><div class="ss">질문·요약</div></div>
-        <div class="arr">→</div>
-        <div class="step"><div class="circ">2</div><div class="st">COPILOT</div><div class="ss">문서·코딩</div></div>
-        <div class="arr">→</div>
-        <div class="step"><div class="circ">3</div><div class="st">AGENT</div><div class="ss">파일·도구 실행</div></div>
-        <div class="arr">→</div>
-        <div class="step"><div class="circ">4</div><div class="st">WORKFLOW</div><div class="ss">반복 자동화</div></div>
-      </div>
+    <div class="stk">
+      <div class="sl3 an"><span class="ic"><svg viewBox="0 0 34 34"><circle cx="15" cy="15" r="10"/><line x1="23" y1="23" x2="30" y2="30"/></svg></span>
+        <span><span class="n3">STEP 1 · PROMPT</span><h4>무엇을 시킬지</h4><p>작업 지시문 5요소</p></span></div>
+      <div class="sarr an">↓</div>
+      <div class="sl3 an"><span class="ic"><svg viewBox="0 0 34 34"><rect x="5" y="6" width="24" height="22" rx="3"/><line x1="10" y1="13" x2="24" y2="13"/><line x1="10" y1="20" x2="20" y2="20"/></svg></span>
+        <span><span class="n3">STEP 2 · CONTEXT</span><h4>무엇을 보게 할지</h4><p>컨텍스트 윈도·근거 선별</p></span></div>
+      <div class="sarr an">↓</div>
+      <div class="sl3 on an"><span class="ic ic--solid"><svg viewBox="0 0 34 34"><circle cx="17" cy="17" r="6"/><path d="M17 4 v5 M17 25 v5 M4 17 h5 M25 17 h5 M8 8 l3.5 3.5 M22.5 22.5 L26 26 M26 8 l-3.5 3.5 M11.5 22.5 L8 26"/></svg></span>
+        <span><span class="n3">STEP 3 · HARNESS</span><h4>어떤 환경에서 일하게 할지</h4><p>도구·권한·완료 조건</p></span></div>
+      <p class="scap an">세 단을 통과한 상태 = 위임</p>
     </div>
-    <div class="key">출발점 무관 — 다음 단계는 작은 위임 + 검증</div>
-    <div class="foot"><span>출처: 발표 구성</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 4 -->
-  <section class="slide" aria-label="4. AI Enabler vs AI Native">
-    <div class="top"><span class="pill">OPENING</span><span class="pnum">04</span></div>
-    <div class="head"><h1>AI Enabler vs AI Native</h1></div>
-    <div class="body">
-      <div class="grid2">
-        <div class="card"><div class="ctag">AI Enabler</div><h3>기존 일을 AI로 빠르게</h3>
-          <ul><li>요약</li><li>번역</li><li>초안 작성</li></ul></div>
-        <div class="card hl"><div class="ctag">AI Native</div><h3>일의 구조를 AI와 재설계</h3>
-          <ul><li>목표 정의</li><li>자료 선별</li><li>도구 연결</li><li>검증 설계</li></ul></div>
-      </div>
-    </div>
-    <div class="key">도구 사용에서 일하는 구조 설계로</div>
-    <div class="foot"><span>출처: HBS Online · Forbes 논의</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 5 -->
-  <section class="slide" aria-label="5. 한국 직장인의 현재">
-    <div class="top"><span class="pill">OPENING</span><span class="pnum">05</span></div>
-    <div class="head"><h1>한국 직장인의 현재</h1><p class="emph">생성형 AI 업무 활용 실태</p></div>
-    <div class="body">
-      <div class="stats">
-        <div class="stat"><div class="snum u">51.8%</div><div class="stxt"><div class="slab">업무 목적 활용</div><div class="ssub">미국의 약 2배</div></div></div>
-        <div class="stat"><div class="snum">5~7h</div><div class="stxt"><div class="slab">주당 사용 시간</div><div class="ssub">활용 근로자 기준</div></div></div>
-        <div class="stat"><div class="snum">3.8%</div><div class="stxt"><div class="slab">업무시간 단축</div><div class="ssub">평균 절감폭</div></div></div>
-      </div>
-    </div>
-    <div class="foot"><span>출처: 한국은행 이슈노트 2025-22 · bok.or.kr</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 6 -->
-  <section class="slide" aria-label="6. 시험장을 탈출한 AI">
-    <div class="top"><span class="pill">CASE</span><span class="pnum">06</span></div>
-    <div class="head"><h1>시험장을 탈출한 AI</h1><p class="emph">OpenAI 내부 평가 5스텝</p></div>
-    <div class="body">
-      <div class="steps">
-        <div class="step"><div class="circ">1</div><div class="st">평가 목표</div></div>
-        <div class="arr">→</div>
-        <div class="step"><div class="circ">2</div><div class="st">제로데이 악용</div></div>
-        <div class="arr">→</div>
-        <div class="step"><div class="circ">3</div><div class="st">샌드박스 탈출</div></div>
-        <div class="arr">→</div>
-        <div class="step"><div class="circ">4</div><div class="st">HF 침해</div></div>
-        <div class="arr">→</div>
-        <div class="step cur"><div class="circ">5</div><div class="st">정답 확보</div></div>
-      </div>
-    </div>
-    <div class="key">해킹 지시 없이 — 좁은 목표의 극단 최적화</div>
-    <div class="foot"><span>출처: openai.com 공식 공시</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 7 -->
-  <section class="slide" aria-label="7. 사건이 남긴 질문">
-    <div class="top"><span class="pill">CASE</span><span class="pnum">07</span></div>
-    <div class="head"><h1>사건이 남긴 질문</h1></div>
-    <div class="body">
-      <div class="grid2">
-        <div class="card"><div class="ctag">문제</div><h3>통제권은 누구에게</h3>
-          <ul><li>사고 시 로그 확보</li><li>모델·환경 접근권</li><li>중단 가능 여부</li></ul></div>
-        <div class="card hl"><div class="ctag">대응</div><h3>오픈웨이트 내부 실행</h3>
-          <ul><li>내부에서 포렌식</li><li>통제권 회복</li></ul></div>
-      </div>
-    </div>
-    <div class="key">성능보다 통제 — 멈출 수 있는가</div>
-    <div class="foot"><span>출처: openai.com 공식 공시</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 8 -->
-  <section class="slide" aria-label="8. LLM은 다음 토큰 예측">
-    <div class="top"><span class="pill">MODEL</span><span class="pnum">08</span></div>
-    <div class="head"><h1>LLM = 다음 토큰 예측</h1></div>
-    <div class="body" style="flex-direction:row;gap:34px;align-items:center">
-      <ul style="flex:0 0 300px;margin:0;padding-left:18px;font-size:15px;line-height:1.7;color:var(--text)">
-        <li>토큰화 — 최소 단위 분해</li>
-        <li>맥락 — 앞선 토큰 참조</li>
-        <li>확률 — 다음 후보 분포</li>
-        <li>연결 — 반복해 문장 생성</li>
-      </ul>
-      <div style="flex:1">
-        <svg class="fig" viewBox="0 0 560 210" role="img" aria-label="다음 토큰 후보 확률 막대">
-          <text x="0" y="14" font-family="Pretendard" font-size="12" fill="#55606c">"광운대 경영학부 ___" · 다음 토큰 후보</text>
-          <g font-family="Pretendard" font-size="14" fill="#141414">
-            <text x="0" y="55">학생</text><rect x="70" y="41" width="360" height="20" rx="4" fill="#7a2030"/><text x="440" y="55" fill="#55606c">0.41</text>
-            <text x="0" y="95">학회</text><rect x="70" y="81" width="170" height="20" rx="4" fill="#e7e7e5"/><text x="250" y="95" fill="#55606c">0.19</text>
-            <text x="0" y="135">과제</text><rect x="70" y="121" width="115" height="20" rx="4" fill="#e7e7e5"/><text x="195" y="135" fill="#55606c">0.13</text>
-            <text x="0" y="175">취업</text><rect x="70" y="161" width="80" height="20" rx="4" fill="#e7e7e5"/><text x="160" y="175" fill="#55606c">0.09</text>
-          </g>
-        </svg>
-        <div class="fnote">후보·확률은 개념 예시</div>
-      </div>
-    </div>
-    <div class="foot"><span>출처: Vaswani 2017 · Brown 2020</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 9 -->
-  <section class="slide" aria-label="9. 환각은 구조의 귀결">
-    <div class="top"><span class="pill">MODEL</span><span class="pnum">09</span></div>
-    <div class="head"><h1>환각 — 구조의 귀결</h1></div>
-    <div class="body">
-      <div class="grid2">
-        <div class="card"><div class="ctag">사전학습</div><h3>통계 압력의 오류</h3>
-          <ul><li>참·거짓 구분 불가 진술</li><li>다음 토큰 예측이 오류로</li></ul></div>
-        <div class="card"><div class="ctag">평가</div><h3>추측의 최적화</h3>
-          <ul><li>"모른다" = 0점 벤치마크</li><li>자신 있는 추측을 학습</li></ul></div>
-      </div>
-    </div>
-    <div class="key">환각은 버그가 아니라 구조 — 검증이 기본기</div>
-    <div class="foot"><span>출처: OpenAI 2025 · arXiv:2509.04664</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 10 -->
-  <section class="slide" aria-label="10. 용어 10">
-    <div class="top"><span class="pill">MODEL</span><span class="pnum">10</span></div>
-    <div class="head"><h1>용어 10</h1><p class="emph">기초 개념 한 줄 정의</p></div>
-    <div class="body">
-      <div class="glosswrap">
-        <table class="tbl"><tbody>
-          <tr><td><span class="tm">LLM</span></td><td>텍스트로 학습해 생성·답변·요약하는 대규모 언어모델</td></tr>
-          <tr><td><span class="tm">토큰</span></td><td>모델이 처리하는 최소 단위 — 비용·컨텍스트 기준</td></tr>
-          <tr><td><span class="tm">컨텍스트 윈도</span></td><td>답변 직전 참조 가능한 텍스트 양 — 작업 기억</td></tr>
-          <tr><td><span class="tm">프롬프트</span></td><td>작업을 요청하는 자연어 입력</td></tr>
-          <tr><td><span class="tm">RAG</span></td><td>외부 문서를 검색해 근거 기반 답변 생성</td></tr>
-        </tbody></table>
-        <table class="tbl"><tbody>
-          <tr><td><span class="tm">에이전트</span></td><td>도구 사용·과정을 스스로 지휘하는 시스템</td></tr>
-          <tr><td><span class="tm">MCP</span></td><td>AI를 외부 시스템에 연결하는 오픈 표준</td></tr>
-          <tr><td><span class="tm">파인튜닝</span></td><td>추가 데이터로 재훈련해 도메인에 맞춤</td></tr>
-          <tr><td><span class="tm">오픈웨이트</span></td><td>가중치 공개 — 내려받아 직접 실행</td></tr>
-          <tr><td><span class="tm">환각</span></td><td>사실과 다르거나 맥락과 어긋난 출력</td></tr>
-        </tbody></table>
-      </div>
-    </div>
-    <div class="foot"><span>출처: Anthropic glossary 외 (AWS·gpt-oss)</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 11 -->
-  <section class="slide" aria-label="11. 모델이 서비스가 되기까지">
-    <div class="top"><span class="pill">MODEL</span><span class="pnum">11</span></div>
-    <div class="head"><h1>모델이 서비스가 되기까지</h1><p class="emph">5계층 스택</p></div>
-    <div class="body">
-      <div class="stack">
-        <div class="layer top"><span class="ln">EXPERIENCE</span><span class="ld">사용자가 만나는 화면</span></div>
-        <div class="layer"><span class="ln">POLICY &amp; SAFETY</span><span class="ld">권한·안전 정책</span></div>
-        <div class="layer"><span class="ln">TOOLS &amp; RUNTIME</span><span class="ld">도구·실행 공간</span></div>
-        <div class="layer"><span class="ln">CONTEXT &amp; DATA</span><span class="ld">맥락·데이터</span></div>
-        <div class="layer"><span class="ln">MODEL</span><span class="ld">언어모델 코어</span></div>
-      </div>
-    </div>
-    <div class="key">층을 쌓을수록 사용자가 만나는 서비스</div>
-    <div class="foot"><span>출처: OpenAI SDK · Anthropic</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 12 -->
-  <section class="slide" aria-label="12. Frontier vs 오픈웨이트">
-    <div class="top"><span class="pill">MODEL</span><span class="pnum">12</span></div>
-    <div class="head"><h1>Frontier vs 오픈웨이트</h1></div>
-    <div class="body">
-      <div class="grid2">
-        <div class="card"><div class="ctag">Frontier</div><h3>관리형 API</h3>
-          <ul><li>최상위 추론 성능</li><li>공급자 인프라 의존</li></ul></div>
-        <div class="card"><div class="ctag">Open-weight</div><h3>오픈웨이트</h3>
-          <ul><li>성능 격차 축소</li><li>자체 운영 가능</li><li>가격 경쟁</li></ul></div>
-      </div>
-    </div>
-    <div class="key">선택지 확대 — 기준은 업무 적합성</div>
-    <div class="foot"><span>출처: 각사 모델 문서 (2026-07 확인)</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 13 -->
-  <section class="slide" aria-label="13. MIS 계보의 다음 칸">
-    <div class="top"><span class="pill">MODEL</span><span class="pnum">13</span></div>
-    <div class="head"><h1>MIS 계보의 다음 칸</h1></div>
-    <div class="body">
-      <div class="steps">
-        <div class="step"><div class="circ">1</div><div class="st">TPS</div><div class="ss">운영</div></div>
-        <div class="arr">→</div>
-        <div class="step"><div class="circ">2</div><div class="st">MIS</div><div class="ss">관리 보고</div></div>
-        <div class="arr">→</div>
-        <div class="step"><div class="circ">3</div><div class="st">DSS</div><div class="ss">의사결정 지원</div></div>
-        <div class="arr">→</div>
-        <div class="step"><div class="circ">4</div><div class="st">BI</div><div class="ss">교과서(Laudon)</div></div>
-        <div class="arr">→</div>
-        <div class="step cur"><div class="circ">5</div><div class="st">DI · AI</div><div class="ss">연장(Gartner)</div></div>
-      </div>
-    </div>
-    <div class="key">MIS 전공자는 이 계보를 이미 배웠다</div>
-    <div class="foot"><span>출처: Laudon &amp; Laudon · Gartner</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 14 -->
-  <section class="slide" aria-label="14. 1단계 좋은 질문">
-    <div class="top"><span class="pill">PROMPT</span><span class="pnum">14</span></div>
-    <div class="head"><h1>1단계 — 좋은 질문</h1></div>
-    <div class="body">
-      <div class="bridge">
-        <div class="bigline"><em>2022</em>년 이후, 질문의 시대</div>
-        <div class="bsub"><span>한 번의 질문 품질이 결과를 가른다</span></div>
-      </div>
-    </div>
-    <div class="foot"><span>출처: 발표 구성</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 15 -->
-  <section class="slide" aria-label="15. Prompt는 작업 지시문">
-    <div class="top"><span class="pill">PROMPT</span><span class="pnum">15</span></div>
-    <div class="head"><h1>Prompt = 작업 지시문</h1></div>
-    <div class="body">
-      <div class="card" style="width:88%;margin:0 auto 22px;background:#fff">
-        <div class="lead" style="margin:0;color:#141414;font-size:16px">"[역할]로서 [맥락]을 참고해 [목표]를 [형식]으로, [제약] 안에서"</div>
-      </div>
-      <div class="chips">
-        <div class="chip">역할<span class="cs">누구로서</span></div>
-        <div class="chip">목표<span class="cs">무엇을</span></div>
-        <div class="chip">맥락<span class="cs">배경 자료</span></div>
-        <div class="chip">형식<span class="cs">출력 형태</span></div>
-        <div class="chip">제약<span class="cs">조건·범위</span></div>
-      </div>
-    </div>
-    <div class="key">길이가 아니라 구성 요소</div>
-    <div class="foot"><span>출처: OpenAI Prompt guide</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 16 -->
-  <section class="slide" aria-label="16. 나쁜 질문 vs 좋은 질문">
-    <div class="top"><span class="pill">PROMPT</span><span class="pnum">16</span></div>
-    <div class="head"><h1>나쁜 질문 vs 좋은 질문</h1></div>
-    <div class="body">
-      <div class="grid2">
-        <div class="card"><div class="ctag">나쁜 질문</div><h3>"AI 동향 정리해줘"</h3>
-          <ul><li>범위 없음</li><li>기준 없음</li></ul></div>
-        <div class="card hl"><div class="ctag">좋은 질문</div><h3>대상·기간·형식·출처 지정</h3>
-          <ul><li>대상 = AI 에이전트</li><li>기간 = 최근 3개월</li><li>형식 = 표 + 시사점 3</li><li>출처 = URL 포함</li></ul></div>
-      </div>
-    </div>
-    <div class="key">판단 기준이 보이는 요청</div>
-    <div class="foot"><span>출처: OpenAI Prompt guide</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 17 -->
-  <section class="slide" aria-label="17. 바로 답 vs 단계로">
-    <div class="top"><span class="pill">PROMPT</span><span class="pnum">17</span></div>
-    <div class="head"><h1>바로 답 vs 단계로</h1></div>
-    <div class="body">
-      <div class="grid2">
-        <div class="card"><div class="ctag">Zero-shot</div><h3>즉답 요청</h3>
-          <ul><li>한 번에 결론</li><li>중간 과정 생략</li></ul></div>
-        <div class="card hl"><div class="ctag">Step</div><h3>단계 명시</h3>
-          <ul><li>분해</li><li>계산</li><li>확인</li></ul></div>
-      </div>
-    </div>
-    <div class="key">복잡한 문제는 단계로 나눠 확인</div>
-    <div class="foot"><span>출처: Kojima 2022 · Wei 2022</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 18 -->
-  <section class="slide" aria-label="18. 질문만으론 안 되는 것">
-    <div class="top"><span class="pill">PROMPT</span><span class="pnum">18</span></div>
-    <div class="head"><h1>질문만으론 안 되는 것</h1></div>
-    <div class="body">
-      <div class="grid3">
-        <div class="card"><div class="ctag">한계 1</div><h3>최신 정보</h3><p class="lead" style="margin:0">학습 컷오프 이후 = 모름</p><ul><li>다음: 검색·맥락 주입</li></ul></div>
-        <div class="card"><div class="ctag">한계 2</div><h3>내 파일</h3><p class="lead" style="margin:0">모델은 내 문서를 못 봄</p><ul><li>다음: 문서 연결</li></ul></div>
-        <div class="card"><div class="ctag">한계 3</div><h3>실행과 검증</h3><p class="lead" style="margin:0">말은 하되 실행은 못 함</p><ul><li>다음: 도구·검증</li></ul></div>
-      </div>
-    </div>
-    <div class="key">좋은 질문의 다음은 보게 하기</div>
-    <div class="foot"><span>출처: Lewis 2020 · Schick 2023</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 19 -->
-  <section class="slide" aria-label="19. 2단계 좋은 맥락">
-    <div class="top"><span class="pill">CONTEXT</span><span class="pnum">19</span></div>
-    <div class="head"><h1>2단계 — 좋은 맥락</h1></div>
-    <div class="body">
-      <div class="bridge">
-        <div class="bigline">모델이 답하기 전에<br><em>무엇을 보게 할지</em> 설계</div>
-        <div class="bsub"><span>질문 다음의 레버 = 맥락 구성</span></div>
-      </div>
-    </div>
-    <div class="foot"><span>출처: 발표 구성</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 20 -->
-  <section class="slide" aria-label="20. 컨텍스트 윈도는 작업 기억">
-    <div class="top"><span class="pill">CONTEXT</span><span class="pnum">20</span></div>
-    <div class="head"><h1>컨텍스트 윈도 = 작업 기억</h1><p class="emph">답변 직전 참조하는 텍스트 양</p></div>
-    <div class="body">
-      <svg class="fig" viewBox="0 0 620 250" role="img" aria-label="컨텍스트 윈도 4블록">
-        <rect x="6" y="30" width="608" height="200" rx="16" fill="#fafaf9" stroke="#e7e7e5"/>
-        <text x="20" y="22" font-family="Pretendard" font-size="13" fill="#55606c">컨텍스트 윈도</text>
-        <g font-family="Pretendard">
-          <rect x="30" y="60" width="270" height="70" rx="12" fill="#fff" stroke="#e7e7e5"/><text x="48" y="92" font-size="16" font-weight="700" fill="#141414">SYSTEM</text><text x="48" y="114" font-size="12" fill="#55606c">역할·규칙 지시</text>
-          <rect x="320" y="60" width="270" height="70" rx="12" fill="#fff" stroke="#e7e7e5"/><text x="338" y="92" font-size="16" font-weight="700" fill="#141414">문서</text><text x="338" y="114" font-size="12" fill="#55606c">근거 자료</text>
-          <rect x="30" y="145" width="270" height="70" rx="12" fill="#fff" stroke="#e7e7e5"/><text x="48" y="177" font-size="16" font-weight="700" fill="#141414">질문</text><text x="48" y="199" font-size="12" fill="#55606c">현재 요청</text>
-          <rect x="320" y="145" width="270" height="70" rx="12" fill="#fff" stroke="#e7e7e5"/><text x="338" y="177" font-size="16" font-weight="700" fill="#141414">대화 기록</text><text x="338" y="199" font-size="12" fill="#55606c">앞선 맥락</text>
-        </g>
-      </svg>
-    </div>
-    <div class="key">용량보다 무엇을 넣고 뺄지</div>
-    <div class="foot"><span>출처: Anthropic Docs</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 21 -->
-  <section class="slide" aria-label="21. RAG 찾아서 답하기">
-    <div class="top"><span class="pill">CONTEXT</span><span class="pnum">21</span></div>
-    <div class="head"><h1>RAG — 찾아서 답하기</h1></div>
-    <div class="body">
-      <div class="steps">
-        <div class="step"><div class="circ">1</div><div class="st">질문</div></div>
-        <div class="arr">→</div>
-        <div class="step"><div class="circ">2</div><div class="st">검색</div></div>
-        <div class="arr">→</div>
-        <div class="step"><div class="circ">3</div><div class="st">근거 추가</div></div>
-        <div class="arr">→</div>
-        <div class="step cur"><div class="circ">4</div><div class="st">생성</div></div>
-      </div>
-      <div class="card" style="width:80%;margin:24px auto 0;background:#fafaf9;border-left:3px solid #e7e7e5">
-        <div class="lead" style="margin:0">사례 — 학회 회칙 질문 봇: 회칙·공지에서 조항 검색 → 근거와 함께 답</div>
-      </div>
-    </div>
-    <div class="key">기억에서 답하기에서 근거 찾아 답하기로</div>
-    <div class="foot"><span>출처: Lewis et al. NeurIPS 2020</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 22 -->
-  <section class="slide" aria-label="22. 많이 넣기는 잘 보이기가 아님">
-    <div class="top"><span class="pill">CONTEXT</span><span class="pnum">22</span></div>
-    <div class="head"><h1>많이 넣기 ≠ 잘 보이기</h1><p class="emph">중간 손실 — 긴 맥락의 가운데는 놓치기 쉬움</p></div>
-    <div class="body">
-      <svg class="fig" viewBox="0 0 620 210" role="img" aria-label="다수 블록에서 핵심 선별">
-        <g font-family="Pretendard">
-          <rect x="10" y="20" width="150" height="24" rx="6" fill="#e7e7e5"/>
-          <rect x="10" y="52" width="150" height="24" rx="6" fill="#e7e7e5"/>
-          <rect x="10" y="84" width="150" height="24" rx="6" fill="#e7e7e5"/>
-          <rect x="10" y="116" width="150" height="24" rx="6" fill="#e7e7e5"/>
-          <rect x="10" y="148" width="150" height="24" rx="6" fill="#e7e7e5"/>
-          <rect x="10" y="180" width="150" height="24" rx="6" fill="#e7e7e5"/>
-          <text x="10" y="14" font-size="12" fill="#55606c">다수 블록</text>
-          <path d="M180 112 L300 112" stroke="#b8b8b4" stroke-width="2"/><path d="M300 112 l-10 -6 v12 z" fill="#b8b8b4"/>
-          <text x="200" y="100" font-size="12" fill="#55606c">선별</text>
-          <rect x="330" y="86" width="200" height="52" rx="12" fill="#fff" stroke="#7a2030" stroke-width="1.5"/>
-          <text x="352" y="118" font-size="16" font-weight="700" fill="#141414">핵심 1</text>
-          <text x="330" y="72" font-size="12" fill="#55606c">주입할 근거</text>
-        </g>
-      </svg>
-    </div>
-    <div class="key">핵심은 선별 — 많이가 아니라 골라서</div>
-    <div class="foot"><span>출처: Liu et al. arXiv:2307.03172</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 23 -->
-  <section class="slide" aria-label="23. 보고 행동 확인">
-    <div class="top"><span class="pill">CONTEXT</span><span class="pnum">23</span></div>
-    <div class="head"><h1>보고 → 행동 → 확인</h1></div>
-    <div class="body">
-      <div class="steps">
-        <div class="step"><div class="circ">1</div><div class="st">SEE</div><div class="ss">맥락 확보</div></div>
-        <div class="arr">→</div>
-        <div class="step"><div class="circ">2</div><div class="st">ACT</div><div class="ss">도구 실행</div></div>
-        <div class="arr">→</div>
-        <div class="step cur"><div class="circ">3</div><div class="st">CHECK</div><div class="ss">결과 검증</div></div>
-      </div>
-    </div>
-    <div class="key">업무는 보기만으로 끝나지 않는다</div>
-    <div class="foot"><span>출처: Schick · Yao (ReAct)</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 24 -->
-  <section class="slide" aria-label="24. 3단계 좋은 환경">
-    <div class="top"><span class="pill">HARNESS</span><span class="pnum">24</span></div>
-    <div class="head"><h1>3단계 — 좋은 환경</h1></div>
-    <div class="body">
-      <div class="bridge">
-        <div class="bigline">뭐라고 물을까에서<br><em>어떤 환경</em>에서 일하게 할까로</div>
-        <div class="bsub"><span>질문의 대상이 바뀐다</span></div>
-      </div>
-    </div>
-    <div class="foot"><span>출처: Anthropic · OpenAI SDK</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 25 -->
-  <section class="slide" aria-label="25. Harness는 마구">
-    <div class="top"><span class="pill">HARNESS</span><span class="pnum">25</span></div>
-    <div class="head"><h1>Harness = 마구</h1></div>
-    <div class="body" style="flex-direction:row;gap:30px;align-items:center">
-      <ul style="flex:0 0 260px;margin:0;padding-left:18px;font-size:15px;line-height:1.75;color:var(--text)">
-        <li>능력 통제</li><li>도구 연결</li><li>방향 조절</li><li>안전 정지</li>
-      </ul>
-      <div style="flex:1">
-        <svg class="fig" viewBox="0 0 480 250" role="img" aria-label="하네스 제어 도식">
-          <circle cx="240" cy="125" r="52" fill="#fafaf9" stroke="#161616" stroke-width="1.5"/>
-          <text x="240" y="130" text-anchor="middle" font-family="Paperlogy" font-size="18" font-weight="800" fill="#141414">MODEL</text>
-          <g font-family="Pretendard" font-size="13" fill="#141414">
-            <line x1="188" y1="90" x2="90" y2="40" stroke="#e7e7e5" stroke-width="2"/><rect x="10" y="24" width="120" height="34" rx="8" fill="#fff" stroke="#e7e7e5"/><text x="24" y="46">능력 통제</text>
-            <line x1="292" y1="90" x2="390" y2="40" stroke="#e7e7e5" stroke-width="2"/><rect x="350" y="24" width="120" height="34" rx="8" fill="#fff" stroke="#e7e7e5"/><text x="366" y="46">도구 연결</text>
-            <line x1="188" y1="160" x2="90" y2="210" stroke="#e7e7e5" stroke-width="2"/><rect x="10" y="192" width="120" height="34" rx="8" fill="#fff" stroke="#e7e7e5"/><text x="24" y="214">방향 조절</text>
-            <line x1="292" y1="160" x2="390" y2="210" stroke="#7a2030" stroke-width="2"/><rect x="350" y="192" width="120" height="34" rx="8" fill="#fff" stroke="#7a2030" stroke-width="1.5"/><text x="366" y="214" fill="#7a2030" font-weight="700">안전 정지</text>
-          </g>
-        </svg>
-      </div>
-    </div>
-    <div class="key">빠른 말을 일에 연결하는 장치</div>
-    <div class="foot"><span>출처: 사전 정의 (harness)</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 26 -->
-  <section class="slide" aria-label="26. Agent는 Model 더하기 Harness">
-    <div class="top"><span class="pill">HARNESS</span><span class="pnum">26</span></div>
-    <div class="head"><h1>Agent = Model + Harness</h1></div>
-    <div class="body">
-      <svg class="fig" viewBox="0 0 620 260" role="img" aria-label="에이전트 중심과 4위성">
-        <line x1="310" y1="130" x2="140" y2="52" stroke="#e7e7e5" stroke-width="2"/>
-        <line x1="310" y1="130" x2="480" y2="52" stroke="#e7e7e5" stroke-width="2"/>
-        <line x1="310" y1="130" x2="140" y2="208" stroke="#e7e7e5" stroke-width="2"/>
-        <line x1="310" y1="130" x2="480" y2="208" stroke="#e7e7e5" stroke-width="2"/>
-        <g font-family="Pretendard" font-size="14" fill="#141414">
-          <rect x="70" y="30" width="140" height="44" rx="10" fill="#fff" stroke="#e7e7e5"/><text x="140" y="57" text-anchor="middle">목표</text>
-          <rect x="410" y="30" width="140" height="44" rx="10" fill="#fff" stroke="#e7e7e5"/><text x="480" y="57" text-anchor="middle">맥락</text>
-          <rect x="70" y="186" width="140" height="44" rx="10" fill="#fff" stroke="#e7e7e5"/><text x="140" y="213" text-anchor="middle">도구</text>
-          <rect x="410" y="186" width="140" height="44" rx="10" fill="#fff" stroke="#e7e7e5"/><text x="480" y="213" text-anchor="middle">평가 · 가드레일</text>
-        </g>
-        <circle cx="310" cy="130" r="58" fill="#fafaf9" stroke="#7a2030" stroke-width="1.5"/>
-        <text x="310" y="135" text-anchor="middle" font-family="Paperlogy" font-size="20" font-weight="800" fill="#141414">AGENT</text>
-      </svg>
-    </div>
-    <div class="key">모델·도구·루프·권한의 결합 시스템</div>
-    <div class="foot"><span>출처: OpenAI Agents SDK</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 27 -->
-  <section class="slide" aria-label="27. Tools 세상과 접촉">
-    <div class="top"><span class="pill">HARNESS</span><span class="pnum">27</span></div>
-    <div class="head"><h1>Tools — 세상과 접촉</h1></div>
-    <div class="body">
-      <div class="chips">
-        <div class="chip">검색<span class="cs">최신 정보</span></div>
-        <div class="chip">파일 / 코드<span class="cs">읽기·쓰기·실행</span></div>
-        <div class="chip">브라우저<span class="cs">웹 조작</span></div>
-        <div class="chip">API<span class="cs">외부 시스템</span></div>
-      </div>
-    </div>
-    <div class="key">답을 행동으로 바꾸는 연결 포트</div>
-    <div class="foot"><span>출처: Anthropic Tool Use</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 28 -->
-  <section class="slide" aria-label="28. MCP는 AI의 USB-C">
-    <div class="top"><span class="pill">HARNESS</span><span class="pnum">28</span></div>
-    <div class="head"><h1>MCP — AI의 USB-C</h1><p class="emph">AI를 외부 시스템에 연결하는 오픈 표준</p></div>
-    <div class="body">
-      <div class="steps">
-        <div class="step"><div class="circ">1</div><div class="st">2024-11</div><div class="ss">공개</div></div>
-        <div class="arr">→</div>
-        <div class="step"><div class="circ">2</div><div class="st">2025</div><div class="ss">OpenAI · Google 채택</div></div>
-        <div class="arr">→</div>
-        <div class="step cur"><div class="circ">3</div><div class="st">2026</div><div class="ss">사실상 표준</div></div>
-      </div>
-    </div>
-    <div class="key">연결의 표준화 — 비개발자도 수혜자</div>
-    <div class="foot"><span>출처: modelcontextprotocol.io</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 29 -->
-  <section class="slide" aria-label="29. 실행 공간과 기억">
-    <div class="top"><span class="pill">HARNESS</span><span class="pnum">29</span></div>
-    <div class="head"><h1>실행 공간과 기억</h1></div>
-    <div class="body">
-      <div class="grid2">
-        <div class="card"><div class="ctag">Runtime</div><h3>실행 공간 4단</h3>
-          <ul><li>로컬</li><li>샌드박스</li><li>컨테이너</li><li>클라우드</li></ul></div>
-        <div class="card"><div class="ctag">State</div><h3>기억 5요소</h3>
-          <ul><li>목표</li><li>남은 일</li><li>중간 저장</li><li>실패 기록</li><li>완료 표시</li></ul></div>
-      </div>
-    </div>
-    <div class="foot"><span>출처: OpenAI SDK · LangGraph</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 30 -->
-  <section class="slide" aria-label="30. 완료 조건과 가드레일">
-    <div class="top"><span class="pill">HARNESS</span><span class="pnum">30</span></div>
-    <div class="head"><h1>완료 조건과 가드레일</h1></div>
-    <div class="body">
-      <div class="grid2">
-        <div class="card"><div class="ctag">DoD 체크</div><h3>완료 조건 4</h3>
-          <ul><li>테스트 통과</li><li>린트 통과</li><li>기준 충족</li><li>사람 리뷰</li></ul></div>
-        <div class="card hl"><div class="ctag">Guardrail</div><h3>가드레일 3</h3>
-          <ul><li>권한 제한</li><li>승인 단계</li><li>위험 명령 차단</li></ul></div>
-      </div>
-      <div class="fnote" style="margin-top:14px">실사례 — 이 스터디 하네스: 위험 명령 자동 차단 스크립트</div>
-    </div>
-    <div class="key">강한 에이전트일수록 멈춤의 경계</div>
-    <div class="foot"><span>출처: OWASP · NIST AI RMF</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 31 -->
-  <section class="slide" aria-label="31. 챗 vs 에이전트">
-    <div class="top"><span class="pill">위임</span><span class="pnum">31</span></div>
-    <div class="head"><h1>챗 vs 에이전트</h1></div>
-    <div class="body">
-      <div class="grid2">
-        <div class="card"><div class="ctag">Chat</div><h3>매 단계 사람이</h3>
-          <ul><li>질문</li><li>복사</li><li>실행</li></ul></div>
-        <div class="card hl"><div class="ctag">Agent</div><h3>목표 1회 입력</h3>
-          <ul><li>계획 → 도구 → 실행</li><li>검증 → 보고</li><li>완료 조건까지 반복</li></ul></div>
-      </div>
-    </div>
-    <div class="key">차이는 답의 길이가 아니라 실행 범위와 완료 조건</div>
-    <div class="foot"><span>출처: Karpathy, No Priors 2026-05</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 32 -->
-  <section class="slide" aria-label="32. 에이전트 루프">
-    <div class="top"><span class="pill">위임</span><span class="pnum">32</span></div>
-    <div class="head"><h1>에이전트 루프</h1></div>
-    <div class="body">
-      <div class="steps">
-        <div class="step cur"><div class="circ">1</div><div class="st">계획</div></div>
-        <div class="arr">→</div>
-        <div class="step"><div class="circ">2</div><div class="st">실행</div></div>
-        <div class="arr">→</div>
-        <div class="step"><div class="circ">3</div><div class="st">관찰</div></div>
-        <div class="arr">→</div>
-        <div class="step"><div class="circ">4</div><div class="st">평가</div></div>
-        <div class="arr">→</div>
-        <div class="step"><div class="circ">5</div><div class="st">수정</div></div>
-      </div>
-      <div class="fnote" style="margin-top:16px">수정 → 다시 계획으로 순환</div>
-    </div>
-    <div class="key">한 번의 좋은 답보다 반복 구조</div>
-    <div class="foot"><span>출처: Agent workflow 패턴</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 33 -->
-  <section class="slide" aria-label="33. 실사례 1 이 사이트">
-    <div class="top"><span class="pill">위임</span><span class="pnum">33</span></div>
-    <div class="head"><h1>실사례 ① 이 사이트</h1><p class="emph">화자 — 이 스터디 운영 하네스 실로그</p></div>
-    <div class="body">
-      <svg class="fig" viewBox="0 0 660 300" role="img" aria-label="위임 실행 터미널 로그">
-        <rect x="0" y="0" width="660" height="300" rx="12" fill="#161616"/>
-        <circle cx="24" cy="24" r="6" fill="#3a3a3a"/><circle cx="44" cy="24" r="6" fill="#3a3a3a"/><circle cx="64" cy="24" r="6" fill="#3a3a3a"/>
-        <g font-family="ui-monospace,Menlo,monospace" font-size="15">
-          <text x="24" y="72" fill="#8a8a86">$ agent run</text><text x="128" y="72" fill="#ffffff">"메인 섹션 개편"</text>
-          <text x="24" y="108" fill="#8a8a86">→ scan</text><text x="120" y="108" fill="#ffffff">src/ · 대상 파일 탐색</text>
-          <text x="24" y="144" fill="#8a8a86">→ edit</text><text x="120" y="144" fill="#ffffff">App.jsx · styles 수정</text>
-          <text x="24" y="180" fill="#8a8a86">→ test</text><text x="120" y="180" fill="#d18f9a">✓ 111 passed</text>
-          <text x="24" y="216" fill="#8a8a86">→ report</text><text x="132" y="216" fill="#ffffff">변경 요약 출력</text>
-          <text x="24" y="252" fill="#8a8a86">→ deploy</text><text x="132" y="252" fill="#ffffff">배포 완료</text>
-        </g>
-      </svg>
-    </div>
-    <div class="key">위임 1회 = 탐색 → 수정 → 검증 → 보고 완결</div>
-    <div class="foot"><span>출처: 스터디 운영 기록</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 34 -->
-  <section class="slide" aria-label="34. 실사례 2 기고 파이프라인">
-    <div class="top"><span class="pill">위임</span><span class="pnum">34</span></div>
-    <div class="head"><h1>실사례 ② 기고 파이프라인</h1><p class="emph">인사이트 코너 운영 구조</p></div>
-    <div class="body">
-      <div class="steps">
-        <div class="step"><div class="circ">1</div><div class="st">자료 수집</div></div>
-        <div class="arr">→</div>
-        <div class="step"><div class="circ">2</div><div class="st">정리 · 누적</div></div>
-        <div class="arr">→</div>
-        <div class="step"><div class="circ">3</div><div class="st">출처 검증</div></div>
-        <div class="arr">→</div>
-        <div class="step cur"><div class="circ">4</div><div class="st">기고 초안</div></div>
-      </div>
-    </div>
-    <div class="key">반복 업무는 프롬프트 1개가 아니라 연결된 구조</div>
-    <div class="foot"><span>출처: 스터디 운영 기록</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 35 -->
-  <section class="slide" aria-label="35. 남길수록 쌓인다">
-    <div class="top"><span class="pill">위임</span><span class="pnum">35</span></div>
-    <div class="head"><h1>남길수록 쌓인다</h1><p class="emph">작업 산출이 시스템 자산으로 누적</p></div>
-    <div class="body">
-      <svg class="fig" viewBox="0 0 620 220" role="img" aria-label="누적 계단 막대">
-        <line x1="30" y1="190" x2="600" y2="190" stroke="#e7e7e5" stroke-width="1"/>
-        <g font-family="Pretendard" font-size="13" fill="#141414" text-anchor="middle">
-          <rect x="50" y="150" width="90" height="40" rx="6" fill="#e7e7e5"/><text x="95" y="210">경험</text>
-          <rect x="160" y="120" width="90" height="70" rx="6" fill="#e7e7e5"/><text x="205" y="210">스킬</text>
-          <rect x="270" y="90" width="90" height="100" rx="6" fill="#e7e7e5"/><text x="315" y="210">규칙</text>
-          <rect x="380" y="60" width="90" height="130" rx="6" fill="#e7e7e5"/><text x="425" y="210">테스트</text>
-          <rect x="490" y="30" width="90" height="160" rx="6" fill="#7a2030"/><text x="535" y="210">재사용</text>
-        </g>
-      </svg>
-    </div>
-    <div class="key">작업할수록 시스템 자산이 누적</div>
-    <div class="foot"><span>출처: Anthropic, Building effective agents</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 36 -->
-  <section class="slide" aria-label="36. 되는 것 2년의 변화">
-    <div class="top"><span class="pill">DATA</span><span class="pnum">36</span></div>
-    <div class="head"><h1>되는 것 — 2년의 변화</h1></div>
-    <div class="body">
-      <div class="stats">
-        <div class="stat"><div class="snum u">80%대</div><div class="stxt"><div class="slab">OSWorld — 컴퓨터 사용</div><div class="ssub">2024 최고 12% → 인간선 72% 돌파 · self-report</div></div></div>
-        <div class="stat"><div class="snum">~79%</div><div class="stxt"><div class="slab">SWE-bench Verified — 코딩</div><div class="ssub">공식 리더보드 최고 (2026-07-25 확인)</div></div></div>
-        <div class="stat"><div class="snum">~4.3mo</div><div class="stxt"><div class="slab">자율 작업 길이 배가 주기</div><div class="ssub">METR · 장시간 구간 측정 신뢰 낮음</div></div></div>
-      </div>
-    </div>
-    <div class="foot"><span>출처: osworld · swebench · METR (2026-07-25 확인)</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 37 -->
-  <section class="slide" aria-label="37. 안 되는 것 실패 모드">
-    <div class="top"><span class="pill">DATA</span><span class="pnum">37</span></div>
-    <div class="head"><h1>안 되는 것 — 실패 모드</h1></div>
-    <div class="body">
-      <div class="grid3">
-        <div class="card"><div class="ctag">실패 1</div><h3>일관성 상실</h3><ul><li>긴 작업서 목표 이탈</li><li>성급한 마무리</li></ul></div>
-        <div class="card hl"><div class="ctag">실패 2</div><h3>신뢰도 급락</h3><ul><li>다중 턴 전환 시</li><li>평균 39% 하락</li></ul></div>
-        <div class="card"><div class="ctag">실패 3</div><h3>자기평가 과대</h3><ul><li>스스로를 과신</li><li>독립 검증 필요</li></ul></div>
-      </div>
-    </div>
-    <div class="key">그래서 위임에는 완료 조건과 독립 검증</div>
-    <div class="foot"><span>출처: Anthropic 2026 · arXiv:2505.06120</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 38 -->
-  <section class="slide" aria-label="38. 두 시선">
-    <div class="top"><span class="pill">DATA</span><span class="pnum">38</span></div>
-    <div class="head"><h1>두 시선</h1></div>
-    <div class="body">
-      <div class="grid2">
-        <div class="card"><div class="ctag">동행</div><h3>"AI는 내 친구"</h3>
-          <p class="lead" style="margin:0">"어떻게 활용할지 고민" — 신진서</p></div>
-        <div class="card"><div class="ctag">격차</div><h3>"상위 랭커일수록"</h3>
-          <p class="lead" style="margin:0">"더 이해하고 활용" — 이세돌</p></div>
-      </div>
-    </div>
-    <div class="key">같은 AI, 활용 역량이 격차를 만든다</div>
-    <div class="foot"><span>출처: News1 2024 · EBS 다큐 발언</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 39 -->
-  <section class="slide" aria-label="39. 권한은 조심스럽게">
-    <div class="top"><span class="pill">DATA</span><span class="pnum">39</span></div>
-    <div class="head"><h1>권한은 조심스럽게</h1></div>
-    <div class="body">
-      <div class="steps">
-        <div class="step"><div class="circ">1</div><div class="st">요청</div></div>
-        <div class="arr">→</div>
-        <div class="step"><div class="circ">2</div><div class="st">사람 승인</div></div>
-        <div class="arr">→</div>
-        <div class="step"><div class="circ">3</div><div class="st">최소 권한 실행</div></div>
-        <div class="arr">→</div>
-        <div class="step cur"><div class="circ">4</div><div class="st">롤백</div></div>
-      </div>
-    </div>
-    <div class="key">운영 권한 ≠ 기본값</div>
-    <div class="foot"><span>출처: NIST AI RMF · OWASP</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 40 -->
-  <section class="slide" aria-label="40. 결국 사람">
-    <div class="top"><span class="pill">CLOSING</span><span class="pnum">40</span></div>
-    <div class="head"><h1>결국 사람</h1></div>
-    <div class="body">
-      <div class="grid3">
-        <div class="card"><div class="ctag">Define</div><h3>문제 정의</h3><p class="lead" style="margin:0">원하는 결과를 언어로</p></div>
-        <div class="card"><div class="ctag">Context</div><h3>맥락 제공</h3><p class="lead" style="margin:0">배경·제약·예시 선별</p></div>
-        <div class="card hl"><div class="ctag">Verify</div><h3>검증</h3><p class="lead" style="margin:0">읽고 짚고 다시 지시</p></div>
-      </div>
-    </div>
-    <div class="key">기술 공부 + 사람 경험 + 문제 해결</div>
-    <div class="foot"><span>출처: 발표 구성</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 41 -->
-  <section class="slide" aria-label="41. 언어의 한계">
-    <div class="top"><span class="pill">CLOSING</span><span class="pnum">41</span></div>
-    <div class="head"><h1>언어의 한계</h1></div>
-    <div class="body">
-      <div class="quote">
-        <div class="qbox">
-          <div class="qorig">"Die Grenzen meiner Sprache bedeuten die Grenzen meiner Welt."</div>
-          <div class="qtr">내 언어의 한계가 내 세계의 한계 — Wittgenstein</div>
-        </div>
-        <div class="qnote">
-          <span>질문이 모호하면 답도 흐림</span>
-          <span>기준을 언어로 구성하는 능력</span>
-        </div>
-      </div>
-    </div>
-    <div class="key">AI에게 건네는 언어가 결과의 한계</div>
-    <div class="foot"><span>출처: Wittgenstein 1922</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 42 -->
-  <section class="slide" aria-label="42. 다음 직접 맡겨보기">
-    <div class="top"><span class="pill">CLOSING</span><span class="pnum">42</span></div>
-    <div class="head"><h1>다음 — 직접 맡겨보기</h1><p class="emph">2회차 예고 · 실습</p></div>
-    <div class="body">
-      <div class="grid2">
-        <div class="card hl"><div class="ctag">실습</div><h3>과업 1개 위임</h3>
-          <ul><li>각자 실제 과업 선정</li><li>에이전트에 위임</li><li>한계 직접 확인</li></ul></div>
-        <div class="card"><div class="ctag">준비물</div><h3>3종</h3>
-          <ul><li>준비물 3종 — 2회차 공지</li></ul></div>
-      </div>
-    </div>
-    <div class="key">아는 단계에서 굴려보는 단계로</div>
-    <div class="foot"><span>출처: 세미나 2회차 계획</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 43 -->
-  <section class="slide" aria-label="43. 무료로 시작하기">
-    <div class="top"><span class="pill">APPENDIX</span><span class="pnum">43</span></div>
-    <div class="head"><h1>무료로 시작하기</h1><p class="emph">확인 시점 2026-07-25</p></div>
-    <div class="body">
-      <table class="tbl">
-        <thead><tr><th style="width:150px">도구</th><th>무료로 되는 것</th><th style="width:230px">제한</th></tr></thead>
-        <tbody>
-          <tr><td><span class="tm">ChatGPT</span></td><td>채팅 · 웹 검색 · 이미지 · 파일 업로드</td><td>상위 모델 시간당 제한</td></tr>
-          <tr><td><span class="tm">Claude</span></td><td>채팅 · 웹 검색 · 파일 · 코드 · MCP</td><td>유료 대비 사용량 축소</td></tr>
-          <tr><td><span class="tm">Gemini</span></td><td>Flash + Pro 제한 · 이미지 · Deep Research</td><td>유료 대비 한도 낮음</td></tr>
-          <tr><td><span class="tm">NotebookLM</span></td><td>소스 기반 질의 · Audio Overview</td><td>노트북당 소스 50 · 상한은 유료</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="foot"><span>출처: 각사 공식 pricing (2026-07-25 확인)</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 44 -->
-  <section class="slide" aria-label="44. 직무별 활용 예">
-    <div class="top"><span class="pill">APPENDIX</span><span class="pnum">44</span></div>
-    <div class="head"><h1>직무별 활용 예</h1></div>
-    <div class="body">
-      <table class="tbl">
-        <thead><tr><th style="width:230px">업무</th><th>대표 사례</th></tr></thead>
-        <tbody>
-          <tr><td><span class="tm">메일 정리</span></td><td>받은 편지 요약 · 회신 초안</td></tr>
-          <tr><td><span class="tm">회의 브리핑</span></td><td>기록 요약 · 결정·할 일 추출</td></tr>
-          <tr><td><span class="tm">표 데이터 질의</span></td><td>스프레드시트 자연어 질문</td></tr>
-          <tr><td><span class="tm">슬라이드 생성</span></td><td>개요에서 초안 구성</td></tr>
-          <tr><td><span class="tm">리서치 메모</span></td><td>조사 → 의사결정 메모</td></tr>
-          <tr><td><span class="tm">재무모델 갱신</span></td><td>수치 반영 · 초안 검토</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="foot"><span>출처: OpenAI · Anthropic 공식 사례</span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
-  <!-- 45 -->
-  <section class="slide tslide" aria-label="45. 마침">
-    <div class="top" style="position:absolute;top:44px;left:60px;right:60px"><span class="pill">CLOSING</span><span class="pnum">45</span></div>
-    <div class="big">마침</div>
-    <div class="accbar"></div>
-    <div class="sub">질문과 대화로 이어가기</div>
-    <div class="tlinks">
-      <div><b>허브</b> · <u>kwu-erpclub.github.io</u></div>
-      <div><b>GitHub</b> · github.com/KWU-ERPCLUB</div>
-      <div><b>문의</b> · 사이트 ABOUT</div>
-    </div>
-    <div class="foot" style="position:absolute;bottom:32px;left:60px;right:60px"><span></span><span class="r">KWU ERP연구회 · AIM 특강</span></div>
-  </section>
-
   </div>
+  <div class="cfoot">
+    <div><div class="cbrand">AIM</div><div class="corg">광운대학교 경영학부 ERP연구회 · MIS·AI 스터디</div></div>
+    <span class="cpill">SPECIAL</span>
+  </div>
+</section>
+
+<!-- ===== #2 · BP2 목차 (C) ===== -->
+<section class="slide" data-pname="오늘의 구성" aria-label="2. 오늘의 구성">
+  <svg class="wave" style="left:0;top:0;width:620px;height:175px" viewBox="0 0 620 175" fill="none">
+    <path d="M0 0 H620 C 430 40 340 150 130 118 C 60 107 30 60 0 78 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 특강 · 오늘의 구성</span><span class="hpage">02 <i>/ 30</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>오늘 = <em>3단 구조</em>로 위임까지 · 5파트 60분</h1>
+      <p class="sub">파트 대표 아이콘 = 각 파트 디바이더에서 재등장 · 도입 3장은 파트 밖 4분</p></div>
+    <div class="toc grow-1">
+      <div class="tocr an"><span class="tn">1</span>
+        <span class="ic"><svg viewBox="0 0 34 34"><circle cx="17" cy="17" r="12"/><path d="M17 11 v6 l4 3"/></svg></span>
+        <span class="tw"><span class="tt">모델의 작동 원리</span><span class="td">다음 토큰 예측, <b>환각의 구조적 원인</b>, 기초 용어, MIS 계보 안 위치</span></span>
+        <span class="tm">4장 · 12분</span></div>
+      <div class="tocr an"><span class="tn">2</span>
+        <span class="ic"><svg viewBox="0 0 34 34"><circle cx="15" cy="15" r="10"/><line x1="23" y1="23" x2="30" y2="30"/></svg></span>
+        <span class="tw"><span class="tt">1단 <em>Prompt</em></span><span class="td">작업 지시문 5요소, 조건 지정의 결과 차이, 질문의 한계 3</span></span>
+        <span class="tm">3장 · 10분</span></div>
+      <div class="tocr an"><span class="tn">3</span>
+        <span class="ic"><svg viewBox="0 0 34 34"><rect x="5" y="6" width="24" height="22" rx="3"/><line x1="10" y1="13" x2="24" y2="13"/><line x1="10" y1="20" x2="20" y2="20"/></svg></span>
+        <span class="tw"><span class="tt">2단 <em>Context</em></span><span class="td">컨텍스트 윈도 구성, 근거 검색(RAG), 분량 대신 선별</span></span>
+        <span class="tm">3장 · 10분</span></div>
+      <div class="tocr an"><span class="tn">4</span>
+        <span class="ic"><svg viewBox="0 0 34 34"><circle cx="17" cy="17" r="6"/><path d="M17 4 v5 M17 25 v5 M4 17 h5 M25 17 h5 M8 8 l3.5 3.5 M22.5 22.5 L26 26 M26 8 l-3.5 3.5 M11.5 22.5 L8 26"/></svg></span>
+        <span class="tw"><span class="tt">3단 <em>Harness</em>와 위임</span><span class="td">제어 장치 4, 에이전트 구성, 실행 루프, 운영 기록 1건</span></span>
+        <span class="tm">5장 · 16분</span></div>
+      <div class="tocr an"><span class="tn">5</span>
+        <span class="ic"><svg viewBox="0 0 34 34"><rect x="6" y="4" width="22" height="26" rx="3"/><polyline points="11,17 15,21 23,12"/></svg></span>
+        <span class="tw"><span class="tt">데이터와 사람의 몫</span><span class="td">되는 것, 안 되는 것, 사람이 남는 자리 3</span></span>
+        <span class="tm">5장 · 8분</span></div>
+    </div>
+    <div class="dark" data-hero>오늘의 결론 = 위임 성립 조건 = <b>완료 조건</b> + <b>독립 검증</b>
+      <span class="dsub">도입 3장에서 먼저 제시하고 파트 1~5가 근거를 채운다</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">SPECIAL · 2026-07-25</span></div>
+</section>
+
+<!-- ===== #3 · BP5 도입 상황 (B) ===== -->
+<section class="slide" data-pname="도입" aria-label="3. 활용 단계 자가진단">
+  <svg class="wave" style="left:0;bottom:0;width:640px;height:180px" viewBox="0 0 640 180" fill="none">
+    <path d="M0 180 H640 C 470 150 380 40 180 76 C 80 94 40 150 0 130 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 특강 · 도입</span><span class="hpage">03 <i>/ 30</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>출발선 = 전원 <em>챗 경험</em> · 다음 칸은 각자 다름</h1>
+      <p class="sub">활용 단계 4칸 자가진단 · 지금 내 위치 1칸 표시</p></div>
+    <div class="grow-1" style="display:flex;align-items:center">
+    <div class="pipe" style="flex:1">
+      <div class="pnode an"><span class="pl">STEP 1</span><span class="ic"><svg viewBox="0 0 34 34"><path d="M5 8 a3 3 0 0 1 3 -3 h18 a3 3 0 0 1 3 3 v12 a3 3 0 0 1 -3 3 H14 l-6 6 v-6 H8 a3 3 0 0 1 -3 -3 Z"/></svg></span>
+        <span class="pt">CHAT</span><span class="ps">질문·요약을 대화창에서 처리</span></div>
+      <svg class="plink" width="74" height="26"><line class="draw" x1="4" y1="13" x2="60" y2="13"/><polyline class="draw" points="52,5 62,13 52,21"/></svg>
+      <div class="pnode an"><span class="pl">STEP 2</span><span class="ic"><svg viewBox="0 0 34 34"><rect x="6" y="4" width="22" height="26" rx="3"/><line x1="11" y1="13" x2="23" y2="13"/><line x1="11" y1="20" x2="19" y2="20"/></svg></span>
+        <span class="pt">COPILOT</span><span class="ps">문서·코드 작성 중 옆에서 보조</span></div>
+      <svg class="plink" width="74" height="26"><line class="draw" x1="4" y1="13" x2="60" y2="13"/><polyline class="draw" points="52,5 62,13 52,21"/></svg>
+      <div class="pnode an"><span class="pl">STEP 3</span><span class="ic"><svg viewBox="0 0 34 34"><path d="M13 21 a6 6 0 1 1 8 -8 l6 -6 M25 13 l3 3"/><circle cx="12" cy="22" r="5"/></svg></span>
+        <span class="pt">AGENT</span><span class="ps">파일·도구를 직접 실행</span></div>
+      <svg class="plink" width="74" height="26"><line class="draw" x1="4" y1="13" x2="60" y2="13"/><polyline class="draw" points="52,5 62,13 52,21"/></svg>
+      <div class="pnode res an" data-hero><span class="pl">STEP 4</span><span class="ic ic--solid"><svg viewBox="0 0 34 34"><path d="M6 12 a11 11 0 0 1 19 -4 M28 22 a11 11 0 0 1 -19 4"/><polyline points="6,5 6,12 13,12"/><polyline points="28,29 28,22 21,22"/></svg></span>
+        <span class="pt">WORKFLOW</span><span class="ps">반복 작업을 자동 실행으로 고정</span></div>
+    </div>
+    </div>
+    <div class="band an">자가진단 = 지금 내 위치 <span>1칸</span> · 다음 칸 = <span>작은 위임 1건</span>과 검증
+      <span class="band-sub">출발 위치는 변별 항목 아님 · 이동 방법이 오늘의 내용</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">INTRO · 상황</span></div>
+</section>
+
+<!-- ===== #4 · BP4 도입 문제 (B) ===== -->
+<section class="slide" data-pname="도입" aria-label="4. 사용률과 절감의 간극">
+  <svg class="wave" style="right:0;top:0;width:520px;height:170px" viewBox="0 0 520 170" fill="none">
+    <path d="M520 0 H0 C 170 30 260 140 520 96 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 특강 · 도입</span><span class="hpage">04 <i>/ 30</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>사용률은 절반 이상, 절감은 <em>3.8%</em></h1>
+      <p class="sub">국내 근로자 생성형 AI 업무 활용 실태 3건<span class="fnum">①</span></p></div>
+    <div class="g-kpi grow-1">
+      <div class="ring-wrap an" data-hero>
+        <div class="ring-box">
+          <svg viewBox="0 0 340 340">
+            <circle class="ring-bg" cx="170" cy="170" r="148"/>
+            <circle class="ring-fg" cx="170" cy="170" r="148" data-ring="51.8"/>
+          </svg>
+          <div class="ring-val"><span class="num"><span class="count" data-target="51.8">51.8</span><span class="unit">%</span></span></div>
+        </div>
+        <div class="ring-lab">업무 목적 활용 비율</div>
+        <div class="ring-note">국내 근로자 응답 · 미국의 약 2배</div>
+      </div>
+      <div class="kside">
+        <div class="krow an">
+          <div class="kh"><span class="kt">주당 사용 시간</span>
+            <span class="kv"><span class="count" data-target="7">7</span><span class="unit">h</span></span></div>
+          <div class="kbar"><span class="kfill" style="width:58%"></span></div>
+          <div class="kn">활용 근로자 기준 5~7시간 · 접촉 빈도는 이미 높음</div>
+        </div>
+        <div class="krow an">
+          <div class="kh"><span class="kt">업무시간 <b>절감폭</b></span>
+            <span class="kv"><span class="count" data-target="3.8">3.8</span><span class="unit">%</span></span></div>
+          <div class="kbar"><span class="kfill" style="width:8%;background:linear-gradient(90deg,#8a8f96,#b9bdc2)"></span></div>
+          <div class="kn">평균 절감폭 · 사용 시간 대비 성과 낮음</div>
+        </div>
+        <div class="krow an">
+          <div class="kh"><span class="kt">도구 보유 = 전제</span></div>
+          <div class="kn">계정·기본 조작은 변별 항목에서 제외. <b>출발선이 이미 동일.</b></div>
+        </div>
+      </div>
+    </div>
+    <div class="band an">문제 = <span>사용량</span>과 <span>성과</span>의 간극
+      <span class="band-sub">간극을 만드는 변수는 무엇인가 · 이 질문의 답이 오늘의 결론</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">INTRO · 문제</span></div>
+</section>
+
+<!-- ===== #5 · BP9 도입 질문의 답 = 덱 메시지 (A) ===== -->
+<section class="slide" data-pname="도입" aria-label="5. 격차 변수 선언">
+  <svg class="wave" style="left:0;top:0;width:900px;height:230px" viewBox="0 0 900 230" fill="none">
+    <path d="M0 0 H900 C 720 40 620 200 400 170 C 240 148 160 62 0 96 Z" fill="var(--tint2)"/>
+    <path d="M0 0 H700 C 570 30 480 150 330 138 C 210 128 140 48 0 76 Z" fill="var(--tint)"/>
+  </svg>
+  <svg class="wave" style="right:0;bottom:0;width:900px;height:230px" viewBox="0 0 900 230" fill="none">
+    <path d="M900 230 H0 C 200 190 330 46 570 86 C 720 111 810 190 900 160 Z" fill="var(--tint)"/>
+  </svg>
+  <span class="dot" style="width:24px;height:24px;right:210px;top:190px;background:var(--accent)"></span>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 특강 · 도입</span><span class="hpage">05 <i>/ 30</i></span></div>
+  <div class="sbody">
+    <div class="grow-1 decl" data-hero>
+      <p class="dtxt" style="margin:0"><span class="an">간극의 변수 = 도구 등급이 아니라 </span><span class="an"><em>질문·맥락·환경</em></span></p>
+      <p class="dnote an" style="margin:0">같은 도구·같은 시간에도 결과가 갈리는 지점 = <b>세 단의 설계 여부</b></p>
+      <div class="chips an" style="justify-content:center;gap:16px">
+        <span class="chip" style="font-size:24px;padding:16px 32px">1단 질문 = Prompt</span>
+        <span class="chip" style="font-size:24px;padding:16px 32px">2단 맥락 = Context</span>
+        <span class="chip" style="font-size:24px;padding:16px 32px">3단 환경 = Harness</span>
+      </div>
+      <p class="dnote an" style="margin:0;color:var(--mute)">세 단을 통과한 상태 = 위임 · 도착점 확인 지점 = 완료 조건과 독립 검증</p>
+    </div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">INTRO · 질문</span></div>
+</section>
+
+<!-- ===== #6 · BP3 파트 1 디바이더 (A) ===== -->
+<section class="slide divider" aria-label="6. 파트 1 디바이더">
+  <svg class="wave" style="right:0;top:0;width:900px;height:1080px" viewBox="0 0 900 1080" fill="none">
+    <path d="M900 0 V1080 H560 C 700 880 590 690 700 520 C 800 365 760 160 900 0 Z" fill="var(--tint)"/>
+    <path d="M900 0 V1080 H700 C 815 900 720 700 815 540 C 880 430 860 180 900 60 Z" fill="var(--tint2)"/>
+  </svg>
+  <span class="dot" style="width:38px;height:38px;right:760px;top:180px;background:var(--tint2)"></span>
+  <span class="dot" style="width:16px;height:16px;right:520px;bottom:200px;background:var(--accent)"></span>
+  <div class="dwm">1</div>
+  <div style="margin-top:auto;margin-bottom:auto;position:relative;z-index:3">
+    <div class="drow">
+      <div class="dnum an" data-hero>01</div>
+      <div>
+        <div class="dtitle an">모델의 작동 원리</div>
+        <p class="dline an">이 파트에서 얻는 것 = <b>검증이 기본기</b>인 구조적 이유</p>
+      </div>
+    </div>
+    <div class="dprev">
+      <div class="ph an">PART 1 구성</div>
+      <div class="pv an"><span class="pn">1</span><span class="pvt">출력 = 다음 토큰 <em>확률의 연결</em></span><span class="pvs">확률 막대</span></div>
+      <div class="pv an"><span class="pn">2</span><span class="pvt">환각 = 버그가 아니라 <em>구조의 귀결</em></span><span class="pvs">원인 2종 비교</span></div>
+      <div class="pv an"><span class="pn">3</span><span class="pvt">용어 6 = 비용·기억·근거를 가르는 말</span><span class="pvs">면 분할 6칸</span></div>
+      <div class="pv an"><span class="pn">4</span><span class="pvt">AI = MIS 계보의 <em>다음 칸</em></span><span class="pvs">5단 타임라인</span></div>
+    </div>
+  </div>
+  <div class="tracker">
+    <span class="tp cur an">1 원리</span><span class="tp an">2 질문</span><span class="tp an">3 맥락</span><span class="tp an">4 환경·위임</span><span class="tp an">5 데이터·사람</span>
+  </div>
+</section>
+
+<!-- ===== #7 · BP4 변형 확률 막대 (B) ===== -->
+<section class="slide" data-pname="모델의 작동 원리" aria-label="7. 다음 토큰 확률 예측">
+  <svg class="wave" style="right:0;bottom:0;width:560px;height:160px" viewBox="0 0 560 160" fill="none">
+    <path d="M560 160 H0 C 150 130 260 30 420 66 C 500 84 530 130 560 112 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 특강 · 모델의 작동 원리</span><span class="hpage">07 <i>/ 30</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>출력 = 다음 토큰 <em>확률의 연결</em></h1>
+      <p class="sub">토큰 = 모델이 처리하는 최소 단위 · 비용과 기억 용량의 기준</p></div>
+    <div class="grow-1" style="display:grid;grid-template-columns:.82fr 1.18fr;gap:56px;align-items:center">
+      <div class="pts fill">
+        <div class="ptr an"><span class="pnum">1</span><div><h4>토큰화</h4><p>입력을 최소 단위로 분해</p></div></div>
+        <div class="ptr an"><span class="pnum">2</span><div><h4>맥락 참조</h4><p>앞선 토큰 전체를 조건으로 사용</p></div></div>
+        <div class="ptr an"><span class="pnum">3</span><div><h4>확률 분포</h4><p>다음 후보마다 확률 산출</p></div></div>
+        <div class="ptr an"><span class="pnum">4</span><div><h4>반복 연결</h4><p>선택과 산출을 문장 끝까지 반복</p></div></div>
+      </div>
+      <div style="height:100%;display:flex;flex-direction:column;justify-content:space-evenly">
+        <p class="an" style="margin:0;font:600 26px var(--fm);color:var(--sub)">"광운대 경영학부 ___" · 다음 토큰 후보</p>
+        <div class="tbars">
+          <div class="tbar top an"><span class="tl">학생</span><span class="trk"><span class="kfill" style="width:82%"></span></span><span class="tv">0.41</span></div>
+          <div class="tbar an"><span class="tl">학회</span><span class="trk"><span class="kfill" style="width:38%"></span></span><span class="tv">0.19</span></div>
+          <div class="tbar an"><span class="tl">과제</span><span class="trk"><span class="kfill" style="width:26%"></span></span><span class="tv">0.13</span></div>
+          <div class="tbar an"><span class="tl">취업</span><span class="trk"><span class="kfill" style="width:18%"></span></span><span class="tv">0.09</span></div>
+        </div>
+        <p class="figcap an">후보·확률 = 원리 설명용 예시값 · 실제 분포 아님</p>
+      </div>
+    </div>
+    <div class="band an">모델 내부에 <span>사실 판정 절차</span> 없음 · 판정 = <span>사람과 도구</span>의 몫
+      <span class="band-sub">이 구조가 다음 장 환각의 원인</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 1 · 모델의 작동 원리</span></div>
+</section>
+
+<!-- ===== #8 · BP6 환각 원인 2종 (B) ===== -->
+<section class="slide" data-pname="모델의 작동 원리" aria-label="8. 환각의 구조적 원인">
+  <svg class="wave" style="left:0;bottom:0;width:600px;height:170px" viewBox="0 0 600 170" fill="none">
+    <path d="M0 170 H600 C 440 142 360 36 170 72 C 76 90 38 142 0 122 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 특강 · 모델의 작동 원리</span><span class="hpage">08 <i>/ 30</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>환각 = 버그가 아니라 <em>구조의 귀결</em></h1>
+      <p class="sub">환각 = 사실과 다르거나 맥락에 어긋난 출력 · 발생 지점 2곳<span class="fnum">②</span></p></div>
+    <div class="ab grow-1">
+      <div class="abcard an mid">
+        <div class="abh"><span class="ic" style="width:56px;height:56px"><svg viewBox="0 0 34 34"><path d="M5 26 V14 M13 26 V8 M21 26 V17 M29 26 V5"/></svg></span>
+          <span class="abl">원인 A</span><h3>사전학습의 통계 압력</h3></div>
+        <ul class="an">
+          <li>참·거짓 구분이 불가능한 진술도 <b>확률 최댓값</b>으로 생성</li>
+          <li>학습 데이터에 희소한 사실일수록 오류 확률 상승</li>
+        </ul>
+        <div class="abr bad"><span class="rl2">결과</span><p>형식은 정상, 내용은 <b>사실과 불일치</b></p></div>
+      </div>
+      <div class="abcard an mid">
+        <div class="abh"><span class="ic" style="width:56px;height:56px"><svg viewBox="0 0 34 34"><rect x="6" y="4" width="22" height="26" rx="3"/><polyline points="11,17 15,21 23,12"/></svg></span>
+          <span class="abl">원인 B</span><h3>평가 방식의 추측 최적화</h3></div>
+        <ul class="an">
+          <li>"모른다" 응답 = <b>0점</b> 처리하는 채점 기준</li>
+          <li>확신 어투의 추측이 점수에서 유리</li>
+        </ul>
+        <div class="abr bad"><span class="rl2">결과</span><p>불확실한 답도 <b>확신 어투</b>로 출력</p></div>
+      </div>
+    </div>
+    <div class="dark" data-hero>대응 = 모델 교체가 아니라 <b>검증 절차</b>
+      <span class="dsub">출처 대조·재질문·독립 확인 3동작이 뒤 파트의 위임 조건으로 이어진다</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 1 · 모델의 작동 원리</span></div>
+</section>
+
+<!-- ===== #9 · BP8 용어 6 (C) ===== -->
+<section class="slide" data-pname="모델의 작동 원리" aria-label="9. 기초 용어 6">
+  <svg class="wave" style="right:0;top:0;width:520px;height:170px" viewBox="0 0 520 170" fill="none">
+    <path d="M520 0 H0 C 170 30 260 140 520 96 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 특강 · 모델의 작동 원리</span><span class="hpage">09 <i>/ 30</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>용어 6 = <em>비용·기억·근거</em>를 가르는 말</h1>
+      <p class="sub">오늘 덱 전체에서 같은 뜻으로 사용 · 뒤 장에서 재등장</p></div>
+    <div class="split six grow-1">
+      <div class="an"><span class="spl">TOKEN</span><div class="spt">토큰</div><p class="sps">모델이 처리하는 최소 단위 · <b>비용과 용량의 계산 기준</b></p></div>
+      <div class="an"><span class="spl">CONTEXT WINDOW</span><div class="spt">컨텍스트 윈도</div><p class="sps">답변 직전 참조 가능한 텍스트 총량 · 작업 기억</p></div>
+      <div class="an"><span class="spl">PROMPT</span><div class="spt">프롬프트</div><p class="sps">작업을 요청하는 자연어 입력 · 지시문</p></div>
+      <div class="an"><span class="spl">RAG</span><div class="spt">RAG</div><p class="sps">외부 문서를 검색해 <em>근거와 함께</em> 답을 생성하는 구성</p></div>
+      <div class="an"><span class="spl">AGENT</span><div class="spt">에이전트</div><p class="sps">도구 사용과 진행 순서를 스스로 정하는 실행 시스템</p></div>
+      <div class="an"><span class="spl">MCP</span><div class="spt">MCP</div><p class="sps">AI를 외부 시스템에 연결하는 공개 표준</p></div>
+    </div>
+    <div class="dark" data-hero>오늘 쓰는 축 3 = <b>토큰</b> · <b>컨텍스트 윈도</b> · <b>에이전트</b>
+      <span class="dsub">나머지 3개는 각 단계 장에서 정의와 함께 재등장</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 1 · 모델의 작동 원리</span></div>
+</section>
+
+<!-- ===== #10 · BP5 타임라인 MIS 계보 (B) ===== -->
+<section class="slide" data-pname="모델의 작동 원리" aria-label="10. MIS 계보 안 위치">
+  <svg class="wave" style="left:0;bottom:0;width:640px;height:180px" viewBox="0 0 640 180" fill="none">
+    <path d="M0 180 H640 C 470 150 380 40 180 76 C 80 94 40 150 0 130 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 특강 · 모델의 작동 원리</span><span class="hpage">10 <i>/ 30</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>AI = 신규 분야가 아니라 MIS 계보의 <em>다음 칸</em></h1>
+      <p class="sub">정보시스템 발전 5단 · 앞 4칸은 전공 교과 범위<span class="fnum">③</span></p></div>
+    <div class="grow-1" style="display:flex;align-items:center">
+      <div class="tl5" style="width:100%">
+        <div class="tlseg an"><span class="per">TPS</span><span class="rail"></span><h3>거래 처리</h3><p>운영 기록의 전산화</p></div>
+        <div class="tlseg an"><span class="per">MIS</span><span class="rail"></span><h3>관리 보고</h3><p>집계와 정기 보고서</p></div>
+        <div class="tlseg an"><span class="per">DSS</span><span class="rail"></span><h3>의사결정 지원</h3><p>모형 기반 분석</p></div>
+        <div class="tlseg an"><span class="per">BI</span><span class="rail"></span><h3>분석·시각화</h3><p>지표 대시보드</p></div>
+        <div class="tlseg cur an" data-hero><span class="per">AI · 현재</span><span class="rail"></span><h3>실행과 위임</h3><p>판단 보조에서 작업 수행으로</p></div>
+      </div>
+    </div>
+    <div class="band an">MIS 전공자의 위치 = <span>계보를 이미 배운 사람</span> · 추가 학습 대상 = <span>시키는 방식</span>
+      <span class="band-sub">업무 구조 이해가 선행 자산 · 도구 조작은 후행</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 1 · 모델의 작동 원리</span></div>
+</section>
+
+<!-- ===== #11 · BP3 파트 2 디바이더 (A) ===== -->
+<section class="slide divider" aria-label="11. 파트 2 디바이더">
+  <svg class="wave" style="right:0;top:0;width:900px;height:1080px" viewBox="0 0 900 1080" fill="none">
+    <path d="M900 0 V1080 H560 C 700 880 590 690 700 520 C 800 365 760 160 900 0 Z" fill="var(--tint)"/>
+    <path d="M900 0 V1080 H700 C 815 900 720 700 815 540 C 880 430 860 180 900 60 Z" fill="var(--tint2)"/>
+  </svg>
+  <span class="dot" style="width:38px;height:38px;right:760px;top:200px;background:var(--tint2)"></span>
+  <div class="dwm">2</div>
+  <div style="margin-top:auto;margin-bottom:auto;position:relative;z-index:3">
+    <div class="drow">
+      <div class="dnum an" data-hero>02</div>
+      <div>
+        <div class="dtitle an">1단 Prompt · 좋은 질문</div>
+        <p class="dline an">이 파트에서 얻는 것 = 결과를 가르는 <b>지시문 구성 5요소</b></p>
+      </div>
+    </div>
+    <div class="dprev">
+      <div class="ph an">PART 2 구성</div>
+      <div class="pv an"><span class="pn">1</span><span class="pvt">품질 변수 = 길이가 아니라 <em>구성 요소 5</em></span><span class="pvs">면 분할 5칸</span></div>
+      <div class="pv an"><span class="pn">2</span><span class="pvt">조건 4종 지정이 <em>검토 가능한 초안</em>을 만든다</span><span class="pvs">A/B 비교</span></div>
+      <div class="pv an"><span class="pn">3</span><span class="pvt">질문만으로 못 넘는 한계 3</span><span class="pvs">카드 3</span></div>
+    </div>
+  </div>
+  <div class="tracker">
+    <span class="tp an">1 원리</span><span class="tp cur an">2 질문</span><span class="tp an">3 맥락</span><span class="tp an">4 환경·위임</span><span class="tp an">5 데이터·사람</span>
+  </div>
+</section>
+
+<!-- ===== #12 · BP8 지시문 5요소 (B) ===== -->
+<section class="slide" data-pname="1단 Prompt" aria-label="12. 작업 지시문 5요소">
+  <svg class="wave" style="right:0;bottom:0;width:560px;height:160px" viewBox="0 0 560 160" fill="none">
+    <path d="M560 160 H0 C 150 130 260 30 420 66 C 500 84 530 130 560 112 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 특강 · 1단 Prompt</span><span class="hpage">12 <i>/ 30</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>품질 변수 = 길이가 아니라 <em>구성 요소 5</em></h1>
+      <p class="sub">프롬프트 = 작업 지시문 · 다섯 칸이 비면 모델이 임의로 채운다</p></div>
+    <div class="grow-1" style="display:flex;flex-direction:column;justify-content:center;gap:34px">
+      <p class="formula an" style="margin:0">"<em>[역할]</em>로서 <em>[맥락]</em>을 참고해 <em>[목표]</em>를 <em>[형식]</em>으로, <em>[제약]</em> 안에서"</p>
+      <div class="split cols an">
+        <div><span class="spl">01 ROLE</span><div class="spt">역할</div><p class="sps">누구의 관점으로 쓸 것인가</p></div>
+        <div><span class="spl">02 GOAL</span><div class="spt">목표</div><p class="sps">끝났을 때 손에 남는 것</p></div>
+        <div><span class="spl">03 CONTEXT</span><div class="spt">맥락</div><p class="sps">참고할 배경·원자료</p></div>
+        <div><span class="spl">04 FORMAT</span><div class="spt">형식</div><p class="sps">표·개요·초안 등 출력 형태</p></div>
+        <div><span class="spl">05 LIMIT</span><div class="spt">제약</div><p class="sps">분량·기간·금지 조건</p></div>
+      </div>
+    </div>
+    <div class="dark" data-hero>빈 칸 = <b>모델의 임의 판단</b> 영역 · 채운 칸 = <b>내가 통제한</b> 영역
+      <span class="dsub">다섯 칸을 채운 요청 = 다음 장의 방식 B</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 2 · 1단 Prompt</span></div>
+</section>
+
+<!-- ===== #13 · BP6 한 줄 질문 vs 조건 지정 (B) ===== -->
+<section class="slide" data-pname="1단 Prompt" aria-label="13. 조건 지정의 결과 차이">
+  <svg class="wave" style="left:0;bottom:0;width:600px;height:170px" viewBox="0 0 600 170" fill="none">
+    <path d="M0 170 H600 C 440 142 360 36 170 72 C 76 90 38 142 0 122 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 특강 · 1단 Prompt</span><span class="hpage">13 <i>/ 30</i></span></div>
+  <div class="sbody judge" data-judge>
+    <div class="htitle an"><h1>조건 4종 지정 = <em>검토 가능한 초안</em></h1>
+      <p class="sub">같은 도구·같은 주제(AI 동향 정리)를 <b>두 방식으로 요청</b>한 결과 비교</p></div>
+    <div class="ab grow-1">
+      <div class="abcard an" data-side="a">
+        <div class="abh"><span class="ic ic--mute" style="width:56px;height:56px"><svg viewBox="0 0 34 34"><circle cx="15" cy="15" r="10"/><line x1="23" y1="23" x2="30" y2="30"/></svg></span>
+          <span class="abl">방식 A</span><h3>한 줄 질문</h3></div>
+        <div class="abtag">입력</div>
+        <div class="abq">"AI 동향 정리해줘"</div>
+        <div class="abr bad"><span class="rl2">결과</span><p>범위·기준 없는 <b>일반 나열</b> · 다시 시키는 왕복 반복</p></div>
+      </div>
+      <div class="abcard an" data-side="b">
+        <div class="abh"><span class="ic" style="width:56px;height:56px"><svg viewBox="0 0 34 34"><rect x="5" y="5" width="10" height="10" rx="2"/><rect x="19" y="5" width="10" height="10" rx="2"/><rect x="5" y="19" width="10" height="10" rx="2"/><rect x="19" y="19" width="10" height="10" rx="2"/></svg></span>
+          <span class="abl">방식 B</span><h3>조건 4종 지정</h3></div>
+        <div class="abtag">입력</div>
+        <div class="abq">대상 = AI 에이전트<br/>기간 = 최근 3개월<br/>형식 = 표 + 시사점 3<br/>출처 = URL 포함</div>
+        <div class="abr"><span class="rl2">결과</span><p>범위가 고정된 <b>검토 가능한 초안</b> · 수정 지점 특정 가능</p></div>
+      </div>
+    </div>
+    <div class="uibar an" data-ui>
+      <button type="button" class="uib" data-ab="a">방식 A 보기</button>
+      <button type="button" class="uib" data-ab="b">방식 B 보기</button>
+      <button type="button" class="uib" data-ab="judge">판정</button>
+      <span class="uihint">비활성 쪽 = 감쇠 표시 · 내용은 계속 노출</span>
+    </div>
+    <div class="dark" data-hero>판정 기준 = <b>그대로 검토에 들어갈 수 있는 쪽</b>
+      <span class="dsub">변수 = 도구 등급이 아니라 조건 4종의 명시 여부</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 2 · 1단 Prompt</span></div>
+</section>
+
+<!-- ===== #14 · BP8 질문의 한계 3 (C) ===== -->
+<section class="slide" data-pname="1단 Prompt" aria-label="14. 질문의 한계 3">
+  <svg class="wave" style="right:0;top:0;width:520px;height:170px" viewBox="0 0 520 170" fill="none">
+    <path d="M520 0 H0 C 170 30 260 140 520 96 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 특강 · 1단 Prompt</span><span class="hpage">14 <i>/ 30</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>질문 품질만으로 못 넘는 한계 <em>3</em></h1>
+      <p class="sub">각 한계의 처방 = 2단 맥락과 3단 환경 · 파트 3·4의 근거</p></div>
+    <div class="gg g3 grow-1">
+      <div class="gcard an"><span class="gl">한계 01</span><h3>최신 정보</h3>
+        <p>학습 시점 이후 사실 = <b>미보유</b> · 모르는 채로 문장 생성</p>
+        <p class="gfix">처방 = 검색·자료 주입 (2단)</p></div>
+      <div class="gcard an"><span class="gl">한계 02</span><h3>내 파일</h3>
+        <p>내 문서·데이터는 <b>모델이 볼 수 없음</b> · 요약 요청 불가</p>
+        <p class="gfix">처방 = 문서 연결 (2단)</p></div>
+      <div class="gcard an"><span class="gl">한계 03</span><h3>실행과 확인</h3>
+        <p>절차 서술은 가능, <b>실행과 결과 확인은 불가</b></p>
+        <p class="gfix">처방 = 도구·검증 절차 (3단)</p></div>
+    </div>
+    <div class="dark" data-hero>다음 레버 = 무엇을 물을지에서 <b>무엇을 보게 할지</b>로
+      <span class="dsub">질문 품질은 상한이 있고, 상한을 올리는 것은 맥락 구성</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 2 · 1단 Prompt</span></div>
+</section>
+
+<!-- ===== #15 · BP3 파트 3 디바이더 (A) ===== -->
+<section class="slide divider" aria-label="15. 파트 3 디바이더">
+  <svg class="wave" style="right:0;top:0;width:900px;height:1080px" viewBox="0 0 900 1080" fill="none">
+    <path d="M900 0 V1080 H560 C 700 880 590 690 700 520 C 800 365 760 160 900 0 Z" fill="var(--tint)"/>
+    <path d="M900 0 V1080 H700 C 815 900 720 700 815 540 C 880 430 860 180 900 60 Z" fill="var(--tint2)"/>
+  </svg>
+  <span class="dot" style="width:16px;height:16px;right:520px;bottom:210px;background:var(--accent)"></span>
+  <div class="dwm">3</div>
+  <div style="margin-top:auto;margin-bottom:auto;position:relative;z-index:3">
+    <div class="drow">
+      <div class="dnum an" data-hero>03</div>
+      <div>
+        <div class="dtitle an">2단 Context · 좋은 맥락</div>
+        <p class="dline an">이 파트에서 얻는 것 = 답변 직전 <b>무엇을 보게 할지</b>의 설계</p>
+      </div>
+    </div>
+    <div class="dprev">
+      <div class="ph an">PART 3 구성</div>
+      <div class="pv an"><span class="pn">1</span><span class="pvt">컨텍스트 윈도 = <em>작업 기억</em> 4블록</span><span class="pvs">면 분할 4칸</span></div>
+      <div class="pv an"><span class="pn">2</span><span class="pvt">RAG = 기억 대신 <em>검색된 근거</em>로 답하기</span><span class="pvs">4단 파이프</span></div>
+      <div class="pv an"><span class="pn">3</span><span class="pvt">기준 = 분량이 아니라 <em>선별</em></span><span class="pvs">A/B 비교</span></div>
+    </div>
+  </div>
+  <div class="tracker">
+    <span class="tp an">1 원리</span><span class="tp an">2 질문</span><span class="tp cur an">3 맥락</span><span class="tp an">4 환경·위임</span><span class="tp an">5 데이터·사람</span>
+  </div>
+</section>
+
+<!-- ===== #16 · BP8 컨텍스트 윈도 4블록 (C) ===== -->
+<section class="slide" data-pname="2단 Context" aria-label="16. 컨텍스트 윈도 구성">
+  <svg class="wave" style="left:0;bottom:0;width:600px;height:170px" viewBox="0 0 600 170" fill="none">
+    <path d="M0 170 H600 C 440 142 360 36 170 72 C 76 90 38 142 0 122 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 특강 · 2단 Context</span><span class="hpage">16 <i>/ 30</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>컨텍스트 윈도 = 답변 직전의 <em>작업 기억</em></h1>
+      <p class="sub">한 번의 답변에 들어가는 텍스트 총량 · 이 안에 없는 것은 모델이 못 본다</p></div>
+    <div class="split quad grow-1">
+      <div class="an"><span class="spl">BLOCK 01 · SYSTEM</span><div class="spt">역할·규칙</div><p class="sps">응답 방식과 금지 조건 · 대화 내내 유지</p></div>
+      <div class="an"><span class="spl">BLOCK 02 · DOCS</span><div class="spt">근거 자료</div><p class="sps">붙여 넣은 문서·검색 결과 · <b>사실 판정의 원천</b></p></div>
+      <div class="an"><span class="spl">BLOCK 03 · QUERY</span><div class="spt">현재 요청</div><p class="sps">이번 차례에 시키는 작업 지시문</p></div>
+      <div class="an"><span class="spl">BLOCK 04 · HISTORY</span><div class="spt">대화 기록</div><p class="sps">앞선 차례의 입력과 출력 · 길수록 <b>자리 경쟁</b></p></div>
+    </div>
+    <div class="dark" data-hero>관리 대상 = <b>용량</b>이 아니라 <b>구성</b>
+      <span class="dsub">무엇을 넣고 무엇을 뺄지가 답변 품질을 결정</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 3 · 2단 Context</span></div>
+</section>
+
+<!-- ===== #17 · BP5 RAG 4단 (B) ===== -->
+<section class="slide" data-pname="2단 Context" aria-label="17. 근거 검색 후 생성">
+  <svg class="wave" style="right:0;bottom:0;width:560px;height:160px" viewBox="0 0 560 160" fill="none">
+    <path d="M560 160 H0 C 150 130 260 30 420 66 C 500 84 530 130 560 112 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 특강 · 2단 Context</span><span class="hpage">17 <i>/ 30</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>RAG = 기억 대신 <em>검색된 원문</em>으로 답하기</h1>
+      <p class="sub">RAG = 외부 문서를 검색해 근거와 함께 답을 생성하는 구성<span class="fnum">④</span></p></div>
+    <div class="grow-1" style="display:flex;flex-direction:column;justify-content:center;gap:26px">
+    <div class="pipe" style="padding-top:0">
+      <div class="pnode an"><span class="pl">STEP 1</span><span class="ic"><svg viewBox="0 0 34 34"><circle cx="15" cy="15" r="10"/><line x1="23" y1="23" x2="30" y2="30"/></svg></span>
+        <span class="pt">질문 수신</span><span class="ps">요청을 검색어로 변환</span></div>
+      <svg class="plink" width="74" height="26"><line class="draw" x1="4" y1="13" x2="60" y2="13"/><polyline class="draw" points="52,5 62,13 52,21"/></svg>
+      <div class="pnode an"><span class="pl">STEP 2</span><span class="ic"><svg viewBox="0 0 34 34"><rect x="5" y="6" width="24" height="22" rx="3"/><line x1="10" y1="13" x2="24" y2="13"/><line x1="10" y1="20" x2="20" y2="20"/></svg></span>
+        <span class="pt">문서 검색</span><span class="ps">지정한 자료 안에서 관련 조각 추출</span></div>
+      <svg class="plink" width="74" height="26"><line class="draw" x1="4" y1="13" x2="60" y2="13"/><polyline class="draw" points="52,5 62,13 52,21"/></svg>
+      <div class="pnode an"><span class="pl">STEP 3</span><span class="ic"><svg viewBox="0 0 34 34"><path d="M17 6 v22 M6 17 h22"/></svg></span>
+        <span class="pt">근거 주입</span><span class="ps">원문을 컨텍스트 윈도에 추가</span></div>
+      <svg class="plink" width="74" height="26"><line class="draw" x1="4" y1="13" x2="60" y2="13"/><polyline class="draw" points="52,5 62,13 52,21"/></svg>
+      <div class="pnode res an" data-hero><span class="pl">RESULT</span><span class="ic ic--solid"><svg viewBox="0 0 34 34"><rect x="6" y="4" width="22" height="26" rx="3"/><polyline points="11,17 15,21 23,12"/></svg></span>
+        <span class="pt">근거 표시<br/>답변</span><span class="ps">인용 위치를 함께 출력</span></div>
+    </div>
+    <p class="defbox an" style="margin:0;align-self:center">적용 예 = 학회 회칙 질문 봇 · 회칙·공지에서 조항을 찾아 조항 번호와 함께 응답</p>
+    </div>
+    <div class="band an">확인 지점 = 답변 옆의 <span>인용 원문</span> · 대조 없는 문장은 <span>미검증</span>
+      <span class="band-sub">환각 대응의 실무 형태 = 근거 위치를 강제하는 구성</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 3 · 2단 Context</span></div>
+</section>
+
+<!-- ===== #18 · BP6 분량 vs 선별 (B) ===== -->
+<section class="slide" data-pname="2단 Context" aria-label="18. 분량 대신 선별">
+  <svg class="wave" style="left:0;bottom:0;width:600px;height:170px" viewBox="0 0 600 170" fill="none">
+    <path d="M0 170 H600 C 440 142 360 36 170 72 C 76 90 38 142 0 122 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 특강 · 2단 Context</span><span class="hpage">18 <i>/ 30</i></span></div>
+  <div class="sbody judge" data-judge>
+    <div class="htitle an"><h1>기준 = 분량이 아니라 <em>선별</em></h1>
+      <p class="sub">긴 맥락에서 가운데 배치된 근거는 반영률이 떨어진다<span class="fnum">⑤</span></p></div>
+    <div class="ab grow-1">
+      <div class="abcard an" data-side="a">
+        <div class="abh"><span class="ic ic--mute" style="width:56px;height:56px"><svg viewBox="0 0 34 34"><rect x="5" y="5" width="24" height="5" rx="2"/><rect x="5" y="13" width="24" height="5" rx="2"/><rect x="5" y="21" width="24" height="5" rx="2"/></svg></span>
+          <span class="abl">투입 A</span><h3>자료 전량 붙여넣기</h3></div>
+        <div class="abtag">입력</div>
+        <div class="abq">문서 12건 전문 + 질문 1줄</div>
+        <div class="abr bad"><span class="rl2">결과</span><p>가운데 구간 근거 <b>누락</b> · 토큰 비용 상승</p></div>
+      </div>
+      <div class="abcard an" data-side="b">
+        <div class="abh"><span class="ic" style="width:56px;height:56px"><svg viewBox="0 0 34 34"><path d="M4 6 h26 l-10 12 v10 l-6 3 v-13 Z"/></svg></span>
+          <span class="abl">투입 B</span><h3>관련 조각만 선별</h3></div>
+        <div class="abtag">입력</div>
+        <div class="abq">관련 문단 3건 + 출처 표기 + 질문 1줄</div>
+        <div class="abr"><span class="rl2">결과</span><p>인용 정확도 상승 · <b>검토 지점 특정 가능</b></p></div>
+      </div>
+    </div>
+    <div class="uibar an" data-ui>
+      <button type="button" class="uib" data-ab="a">투입 A 보기</button>
+      <button type="button" class="uib" data-ab="b">투입 B 보기</button>
+      <button type="button" class="uib" data-ab="judge">판정</button>
+      <span class="uihint">두 카드 모두 유지 · 선택 쪽만 강조</span>
+    </div>
+    <div class="dark" data-hero>맥락 설계의 작업 = <b>고르기</b>와 <b>배치</b>
+      <span class="dsub">넣을 수 있는 최대치가 아니라 판단에 필요한 최소치가 기준</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 3 · 2단 Context</span></div>
+</section>
+
+<!-- ===== #19 · BP3 파트 4 디바이더 (A) ===== -->
+<section class="slide divider" aria-label="19. 파트 4 디바이더">
+  <svg class="wave" style="right:0;top:0;width:900px;height:1080px" viewBox="0 0 900 1080" fill="none">
+    <path d="M900 0 V1080 H560 C 700 880 590 690 700 520 C 800 365 760 160 900 0 Z" fill="var(--tint)"/>
+    <path d="M900 0 V1080 H700 C 815 900 720 700 815 540 C 880 430 860 180 900 60 Z" fill="var(--tint2)"/>
+  </svg>
+  <span class="dot" style="width:38px;height:38px;right:770px;top:220px;background:var(--tint2)"></span>
+  <span class="dot" style="width:16px;height:16px;right:520px;bottom:190px;background:var(--accent)"></span>
+  <div class="dwm">4</div>
+  <div style="margin-top:auto;margin-bottom:auto;position:relative;z-index:3">
+    <div class="drow">
+      <div class="dnum an" data-hero>04</div>
+      <div>
+        <div class="dtitle an">3단 Harness · 위임</div>
+        <p class="dline an">이 파트에서 얻는 것 = 위임의 <b>완료 조건</b>과 멈춤 장치</p>
+      </div>
+    </div>
+    <div class="dprev">
+      <div class="ph an">PART 4 구성</div>
+      <div class="pv an"><span class="pn">1</span><span class="pvt">하네스 = 도구·권한·정지의 <em>제어 장치 4</em></span><span class="pvs">카드 4</span></div>
+      <div class="pv an"><span class="pn">2</span><span class="pvt">에이전트 = 모델 + <em>하네스</em></span><span class="pvs">구조 도식</span></div>
+      <div class="pv an"><span class="pn">3</span><span class="pvt">챗과의 차이 = <em>실행 범위와 완료 조건</em></span><span class="pvs">A/B 비교</span></div>
+      <div class="pv an"><span class="pn">4</span><span class="pvt">성과 변수 = 한 번의 답이 아니라 <em>반복 구조</em></span><span class="pvs">5단 루프</span></div>
+      <div class="pv an"><span class="pn">5</span><span class="pvt">운영 기록 = 위임 1회의 <em>실행 로그</em></span><span class="pvs">로그·화면</span></div>
+    </div>
+  </div>
+  <div class="tracker">
+    <span class="tp an">1 원리</span><span class="tp an">2 질문</span><span class="tp an">3 맥락</span><span class="tp cur an">4 환경·위임</span><span class="tp an">5 데이터·사람</span>
+  </div>
+</section>
+
+<!-- ===== #20 · BP8 제어 장치 4 (C) ===== -->
+<section class="slide" data-pname="3단 Harness" aria-label="20. 하네스 제어 장치 4">
+  <svg class="wave" style="right:0;top:0;width:520px;height:170px" viewBox="0 0 520 170" fill="none">
+    <path d="M520 0 H0 C 170 30 260 140 520 96 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 특강 · 3단 Harness</span><span class="hpage">20 <i>/ 30</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>하네스 = 도구·권한·정지의 <em>제어 장치 4</em></h1>
+      <p class="sub">하네스 = 모델에 도구와 권한, 멈춤 규칙을 붙인 실행 환경<span class="fnum">⑥</span></p></div>
+    <div class="gg g4 grow-1">
+      <div class="gcard an"><span class="ic" style="width:72px;height:72px"><svg viewBox="0 0 34 34"><path d="M13 21 a6 6 0 1 1 8 -8 l6 -6 M25 13 l3 3"/><circle cx="12" cy="22" r="5"/></svg></span>
+        <h3>도구 연결</h3><p>검색·파일·브라우저·API를 실행 가능한 동작으로 연결</p></div>
+      <div class="gcard an"><span class="ic" style="width:72px;height:72px"><svg viewBox="0 0 34 34"><rect x="7" y="15" width="20" height="14" rx="3"/><path d="M12 15 v-4 a5 5 0 0 1 10 0 v4"/></svg></span>
+        <h3>권한 제한</h3><p>접근 범위를 작업에 필요한 최소로 고정</p></div>
+      <div class="gcard an"><span class="ic" style="width:72px;height:72px"><svg viewBox="0 0 34 34"><path d="M6 12 a11 11 0 0 1 19 -4 M28 22 a11 11 0 0 1 -19 4"/><polyline points="6,5 6,12 13,12"/><polyline points="28,29 28,22 21,22"/></svg></span>
+        <h3>방향 조절</h3><p>중간 산출을 보고 재지시 · 목표 이탈 교정</p></div>
+      <div class="gcard an" data-hero><span class="ic ic--solid" style="width:72px;height:72px"><svg viewBox="0 0 34 34"><circle cx="17" cy="17" r="12"/><rect x="12" y="12" width="10" height="10" rx="2"/></svg></span>
+        <h3>안전 정지</h3><p>위험 명령 차단과 사람 승인 단계 · <b>되돌릴 수 없는 동작 앞에서 멈춤</b></p></div>
+    </div>
+    <p class="an" style="margin:0;font:600 30px/1.5 var(--fb);color:var(--sub);text-align:center">
+      강한 실행 권한일수록 필요한 것 = <b style="color:var(--accent)">멈춤의 경계</b> · 운영 권한은 기본값이 아니라 <b style="color:var(--text)">승인 대상</b><span class="fnum">⑫</span></p>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 4 · 3단 Harness</span></div>
+</section>
+
+<!-- ===== #21 · 구조 도식 에이전트 구성 (B) ===== -->
+<section class="slide" data-pname="3단 Harness" aria-label="21. 에이전트 구성">
+  <svg class="wave" style="left:0;bottom:0;width:600px;height:170px" viewBox="0 0 600 170" fill="none">
+    <path d="M0 170 H600 C 440 142 360 36 170 72 C 76 90 38 142 0 122 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 특강 · 3단 Harness</span><span class="hpage">21 <i>/ 30</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>에이전트 = 모델에 <em>목표·맥락·도구·검증</em>을 붙인 구성</h1>
+      <p class="sub">모델 단독 = 문장 생성 · 네 요소 결합 = 작업 수행</p></div>
+    <div class="grow-1 an" style="display:flex;align-items:center;justify-content:center">
+      <svg viewBox="0 0 1560 470" style="width:100%;height:100%" role="img" aria-label="에이전트 중심과 네 구성 요소">
+        <g>
+          <line class="draw" x1="780" y1="235" x2="430" y2="96" stroke="#c9c9c6" stroke-width="2"/>
+          <line class="draw" x1="780" y1="235" x2="1130" y2="96" stroke="#c9c9c6" stroke-width="2"/>
+          <line class="draw" x1="780" y1="235" x2="430" y2="374" stroke="#c9c9c6" stroke-width="2"/>
+          <line class="draw" x1="780" y1="235" x2="1130" y2="374" stroke="var(--accent)" stroke-width="2"/>
+        </g>
+        <g font-family="Pretendard Variable,Pretendard,sans-serif">
+          <rect x="200" y="52" width="300" height="88" rx="16" fill="#fafaf9" stroke="#e7e7e5"/>
+          <text x="230" y="98" font-size="26" font-weight="700" fill="#141414">목표</text>
+          <text x="230" y="126" font-size="20" fill="#55606c">끝 상태와 완료 조건</text>
+          <rect x="1060" y="52" width="330" height="88" rx="16" fill="#fafaf9" stroke="#e7e7e5"/>
+          <text x="1090" y="98" font-size="26" font-weight="700" fill="#141414">맥락</text>
+          <text x="1090" y="126" font-size="20" fill="#55606c">참조할 자료와 규칙</text>
+          <rect x="200" y="330" width="300" height="88" rx="16" fill="#fafaf9" stroke="#e7e7e5"/>
+          <text x="230" y="376" font-size="26" font-weight="700" fill="#141414">도구</text>
+          <text x="230" y="404" font-size="20" fill="#55606c">검색·파일·실행 권한</text>
+          <rect x="1060" y="330" width="330" height="88" rx="16" fill="#ffffff" stroke="#7a2030" stroke-width="2"/>
+          <text x="1090" y="376" font-size="26" font-weight="700" fill="#7a2030">검증·가드레일</text>
+          <text x="1090" y="404" font-size="20" fill="#55606c">통과 기준과 정지 규칙</text>
+          <circle cx="780" cy="235" r="118" fill="#f6edef" stroke="#7a2030" stroke-width="2"/>
+          <text x="780" y="228" text-anchor="middle" font-family="Paperlogy,Pretendard Variable,sans-serif" font-size="42" font-weight="800" fill="#141414">AGENT</text>
+          <text x="780" y="266" text-anchor="middle" font-size="21" fill="#55606c">모델 + 하네스</text>
+        </g>
+      </svg>
+    </div>
+    <div class="dark" data-hero>챗과의 차이 = <b>실행 범위</b>와 <b>완료 조건</b>
+      <span class="dsub">네 요소 중 검증이 빠지면 위임이 아니라 방치</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 4 · 3단 Harness</span></div>
+</section>
+
+<!-- ===== #22 · BP6 챗 vs 에이전트 (C) ===== -->
+<section class="slide" data-pname="3단 Harness" aria-label="22. 챗과 에이전트의 차이">
+  <svg class="wave" style="right:0;top:0;width:520px;height:170px" viewBox="0 0 520 170" fill="none">
+    <path d="M520 0 H0 C 170 30 260 140 520 96 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 특강 · 3단 Harness</span><span class="hpage">22 <i>/ 30</i></span></div>
+  <div class="sbody judge" data-judge>
+    <div class="htitle an"><h1>위임 성립 조건 = <em>완료 조건</em>과 <em>독립 검증</em></h1>
+      <p class="sub">같은 모델을 쓰는 두 사용 방식 비교 · 차이는 답의 길이가 아님</p></div>
+    <div class="ab grow-1">
+      <div class="abcard an mid" data-side="a">
+        <div class="abh"><span class="ic ic--mute" style="width:56px;height:56px"><svg viewBox="0 0 34 34"><path d="M5 8 a3 3 0 0 1 3 -3 h18 a3 3 0 0 1 3 3 v12 a3 3 0 0 1 -3 3 H14 l-6 6 v-6 H8 a3 3 0 0 1 -3 -3 Z"/></svg></span>
+          <span class="abl">방식 A · CHAT</span><h3>매 단계 사람이 진행</h3></div>
+        <ul class="an">
+          <li>질문 · 복사 · 실행을 <b>차례마다 사람이</b> 수행</li>
+          <li>완료 판단 = 사람의 눈대중</li>
+          <li>중단 지점 = 대화창 안</li>
+        </ul>
+        <div class="abr bad"><span class="rl2">범위</span><p>한 번의 답변까지</p></div>
+      </div>
+      <div class="abcard an mid" data-side="b">
+        <div class="abh"><span class="ic" style="width:56px;height:56px"><svg viewBox="0 0 34 34"><path d="M13 21 a6 6 0 1 1 8 -8 l6 -6 M25 13 l3 3"/><circle cx="12" cy="22" r="5"/></svg></span>
+          <span class="abl">방식 B · AGENT</span><h3>목표 1회 입력</h3></div>
+        <ul class="an">
+          <li>계획 · 도구 실행 · 검증 · 보고를 <b>연속 수행</b></li>
+          <li>완료 판단 = 사전에 정한 <b>완료 조건</b></li>
+          <li>중단 지점 = 승인 단계와 정지 규칙</li>
+        </ul>
+        <div class="abr"><span class="rl2">범위</span><p>완료 조건 충족까지</p></div>
+      </div>
+    </div>
+    <div class="uibar an" data-ui>
+      <button type="button" class="uib" data-ab="a">챗 보기</button>
+      <button type="button" class="uib" data-ab="b">에이전트 보기</button>
+      <button type="button" class="uib" data-ab="judge">판정</button>
+      <span class="uihint">두 방식 병행 사용 · 판정 = 이 작업에 완료 조건을 쓸 수 있는가</span>
+    </div>
+    <div class="dark" data-hero>위임 조건 = <b>완료 조건 명시</b> + <b>사람의 독립 검증</b>
+      <span class="dsub">둘 중 하나가 없으면 자동화가 아니라 방치</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 4 · 3단 Harness</span></div>
+</section>
+
+<!-- ===== #23 · BP5 실행 루프 (B) ===== -->
+<section class="slide" data-pname="3단 Harness" aria-label="23. 실행 루프 5단">
+  <svg class="wave" style="left:0;bottom:0;width:640px;height:180px" viewBox="0 0 640 180" fill="none">
+    <path d="M0 180 H640 C 470 150 380 40 180 76 C 80 94 40 150 0 130 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 특강 · 3단 Harness</span><span class="hpage">23 <i>/ 30</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>성과 변수 = 한 번의 답이 아니라 <em>반복 구조</em></h1>
+      <p class="sub">실행 루프 5단 · 완료 조건 충족까지 순환<span class="fnum">⑦</span></p></div>
+    <div class="grow-1" style="display:flex;flex-direction:column;justify-content:center">
+    <div class="pipe" style="padding-top:0">
+      <div class="pnode an"><span class="pl">STEP 1</span><span class="ic"><svg viewBox="0 0 34 34"><rect x="6" y="4" width="22" height="26" rx="3"/><line x1="11" y1="13" x2="23" y2="13"/><line x1="11" y1="20" x2="19" y2="20"/></svg></span>
+        <span class="pt">계획</span><span class="ps">목표를 단계로 분해</span></div>
+      <svg class="plink" width="74" height="26"><line class="draw" x1="4" y1="13" x2="60" y2="13"/><polyline class="draw" points="52,5 62,13 52,21"/></svg>
+      <div class="pnode an"><span class="pl">STEP 2</span><span class="ic"><svg viewBox="0 0 34 34"><polyline points="8,7 20,17 8,27"/><line x1="20" y1="27" x2="28" y2="27"/></svg></span>
+        <span class="pt">실행</span><span class="ps">도구로 실제 동작 수행</span></div>
+      <svg class="plink" width="74" height="26"><line class="draw" x1="4" y1="13" x2="60" y2="13"/><polyline class="draw" points="52,5 62,13 52,21"/></svg>
+      <div class="pnode an"><span class="pl">STEP 3</span><span class="ic"><svg viewBox="0 0 34 34"><path d="M3 17 c5 -8 11 -12 14 -12 s9 4 14 12 c-5 8 -11 12 -14 12 s-9 -4 -14 -12 Z"/><circle cx="17" cy="17" r="4"/></svg></span>
+        <span class="pt">관찰</span><span class="ps">출력과 오류를 그대로 읽기</span></div>
+      <svg class="plink" width="74" height="26"><line class="draw" x1="4" y1="13" x2="60" y2="13"/><polyline class="draw" points="52,5 62,13 52,21"/></svg>
+      <div class="pnode an"><span class="pl">STEP 4</span><span class="ic"><svg viewBox="0 0 34 34"><rect x="6" y="4" width="22" height="26" rx="3"/><polyline points="11,17 15,21 23,12"/></svg></span>
+        <span class="pt">평가</span><span class="ps">완료 조건과 대조</span></div>
+      <svg class="plink" width="74" height="26"><line class="draw" x1="4" y1="13" x2="60" y2="13"/><polyline class="draw" points="52,5 62,13 52,21"/></svg>
+      <div class="pnode res an" data-hero><span class="pl">STEP 5</span><span class="ic ic--solid"><svg viewBox="0 0 34 34"><path d="M6 12 a11 11 0 0 1 19 -4 M28 22 a11 11 0 0 1 -19 4"/><polyline points="6,5 6,12 13,12"/><polyline points="28,29 28,22 21,22"/></svg></span>
+        <span class="pt">수정·재위임</span><span class="ps">틀린 지점을 지목해 다시 지시</span></div>
+    </div>
+    <p class="loopnote an">STEP 5 → STEP 1 <b>순환</b> · 종료 조건 = 완료 조건 충족 또는 사람의 중단</p>
+    </div>
+    <div class="band an">사람이 남는 자리 = <span>완료 조건 작성</span>과 <span>수정 지점 지목</span>
+      <span class="band-sub">반복은 도구의 몫, 기준은 사람의 몫</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 4 · 3단 Harness</span></div>
+</section>
+
+<!-- ===== #24 · BP7 운영 기록 (B) ===== -->
+<section class="slide" data-pname="3단 Harness" aria-label="24. 위임 1회 운영 기록">
+  <svg class="wave" style="right:0;top:0;width:520px;height:170px" viewBox="0 0 520 170" fill="none">
+    <path d="M520 0 H0 C 170 30 260 140 520 96 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 특강 · 3단 Harness</span><span class="hpage">24 <i>/ 30</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>위임 1회 = <em>탐색·수정·검증·보고</em>까지 완결</h1>
+      <p class="sub">이 스터디 허브 운영 기록 · 지시 1줄에서 화면 반영까지의 실행 로그</p></div>
+    <div class="g-shot grow-1">
+      <div class="term an">
+        <span class="tdots"><i></i><i></i><i></i></span>
+        <span class="tln"><i>입력</i>"메인 섹션 개편"</span>
+        <span class="tln"><i>→ 탐색</i>대상 파일 목록 수집</span>
+        <span class="tln"><i>→ 수정</i>화면 구성·스타일 변경</span>
+        <span class="tln"><i>→ 검증</i><b>테스트 111건 통과</b></span>
+        <span class="tln"><i>→ 보고</i>변경 요약 출력</span>
+        <span class="tln"><i>→ 배포</i>공개 사이트 반영</span>
+        <span class="tcap">사람이 한 것 = 목표 1줄 입력과 결과 검토 · 나머지 = 실행 환경 안에서 순환</span>
+      </div>
+      <div style="display:flex;flex-direction:column;min-height:0">
+        <div class="shot" data-hero style="flex:1">
+          <div class="bar"><span class="dot2"></span><span class="dot2"></span><span class="dot2"></span><span class="url">kwu-erpclub.github.io/insights/</span></div>
+          <div class="sview"><img src="../ws/pub-insights.png" alt="허브 인사이트 목록 화면" /></div>
+        </div>
+        <p class="scap an">같은 방식으로 운영 중인 기고 파이프라인 = 자료 수집 · 정리 · 출처 확인 · 초안</p>
+      </div>
+    </div>
+    <p class="an" style="margin:0;font:600 28px/1.5 var(--fb);color:var(--sub);text-align:center">
+      반복 업무의 형태 = 프롬프트 1개가 아니라 <b style="color:var(--accent)">연결된 실행 구조</b></p>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 4 · 3단 Harness</span></div>
+</section>
+
+<!-- ===== #25 · BP3 파트 5 디바이더 (A) ===== -->
+<section class="slide divider" aria-label="25. 파트 5 디바이더">
+  <svg class="wave" style="right:0;top:0;width:900px;height:1080px" viewBox="0 0 900 1080" fill="none">
+    <path d="M900 0 V1080 H560 C 700 880 590 690 700 520 C 800 365 760 160 900 0 Z" fill="var(--tint)"/>
+    <path d="M900 0 V1080 H700 C 815 900 720 700 815 540 C 880 430 860 180 900 60 Z" fill="var(--tint2)"/>
+  </svg>
+  <span class="dot" style="width:38px;height:38px;right:750px;top:210px;background:var(--tint2)"></span>
+  <div class="dwm">5</div>
+  <div style="margin-top:auto;margin-bottom:auto;position:relative;z-index:3">
+    <div class="drow">
+      <div class="dnum an" data-hero>05</div>
+      <div>
+        <div class="dtitle an">데이터와 사람의 몫</div>
+        <p class="dline an">이 파트에서 얻는 것 = <b>지금 되는 범위</b>와 사람이 남는 자리</p>
+      </div>
+    </div>
+    <div class="dprev">
+      <div class="ph an">PART 5 구성</div>
+      <div class="pv an"><span class="pn">1</span><span class="pvt">되는 것 = <em>2년 사이 통과율</em> 변화</span><span class="pvs">수치 3건</span></div>
+      <div class="pv an"><span class="pn">2</span><span class="pvt">안 되는 것 = <em>실패 3형</em></span><span class="pvs">카드 3</span></div>
+      <div class="pv an"><span class="pn">3</span><span class="pvt">사람이 남는 자리 = <em>정의·맥락·검증</em></span><span class="pvs">3단 파이프</span></div>
+      <div class="pv an"><span class="pn">4</span><span class="pvt">마침 = 오늘의 결론 반복과 다음 확인 지점</span><span class="pvs">선언</span></div>
+    </div>
+  </div>
+  <div class="tracker">
+    <span class="tp an">1 원리</span><span class="tp an">2 질문</span><span class="tp an">3 맥락</span><span class="tp an">4 환경·위임</span><span class="tp cur an">5 데이터·사람</span>
+  </div>
+</section>
+
+<!-- ===== #26 · BP4 되는 것 (B) ===== -->
+<section class="slide" data-pname="데이터와 사람의 몫" aria-label="26. 되는 것">
+  <svg class="wave" style="right:0;top:0;width:520px;height:170px" viewBox="0 0 520 170" fill="none">
+    <path d="M520 0 H0 C 170 30 260 140 520 96 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 특강 · 데이터와 사람의 몫</span><span class="hpage">26 <i>/ 30</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>되는 것 = <em>2년 사이</em> 통과율 급변</h1>
+      <p class="sub">공개 벤치마크 3종 · 확인 시점 2026-07-25</p></div>
+    <div class="g-kpi grow-1">
+      <div class="ring-wrap an" data-hero>
+        <div class="ring-box">
+          <svg viewBox="0 0 340 340">
+            <circle class="ring-bg" cx="170" cy="170" r="148"/>
+            <circle class="ring-fg" cx="170" cy="170" r="148" data-ring="80"/>
+          </svg>
+          <div class="ring-val"><span class="num"><span class="count" data-target="80">80</span><span class="unit">%</span></span></div>
+        </div>
+        <div class="ring-lab">컴퓨터 사용 과제 통과율</div>
+        <div class="ring-note">2024년 최고 12% → 인간 기준선 72% 상회<span class="fnum">⑧</span></div>
+      </div>
+      <div class="kside">
+        <div class="krow an">
+          <div class="kh"><span class="kt">코딩 과제 해결률</span>
+            <span class="kv"><span class="count" data-target="79">79</span><span class="unit">%</span></span></div>
+          <div class="kbar"><span class="kfill" style="width:79%"></span></div>
+          <div class="kn">공개 리더보드 최고 기록<span class="fnum">⑨</span></div>
+        </div>
+        <div class="krow an">
+          <div class="kh"><span class="kt">자율 작업 길이 <b>배가 주기</b></span>
+            <span class="kv"><span class="count" data-target="4.3">4.3</span><span class="unit">개월</span></span></div>
+          <div class="kbar"><span class="kfill" style="width:36%"></span></div>
+          <div class="kn">혼자 이어가는 작업 시간이 두 배가 되는 간격<span class="fnum">⑩</span></div>
+        </div>
+        <div class="krow an">
+          <div class="kh"><span class="kt">판독 단서</span></div>
+          <div class="kn">상위 점수 다수 = <b>각 팀 자체 보고</b> · 장시간 구간 측정 신뢰 낮음</div>
+        </div>
+      </div>
+    </div>
+    <div class="band an">판독 기준 = <span>절대 순위</span>가 아니라 <span>변화 속도</span>
+      <span class="band-sub">작년 기준으로 판단하면 현재 범위를 놓친다</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 5 · 데이터와 사람의 몫</span></div>
+</section>
+
+<!-- ===== #27 · BP8 실패 3형 (C) ===== -->
+<section class="slide" data-pname="데이터와 사람의 몫" aria-label="27. 안 되는 것">
+  <svg class="wave" style="left:0;bottom:0;width:600px;height:170px" viewBox="0 0 600 170" fill="none">
+    <path d="M0 170 H600 C 440 142 360 36 170 72 C 76 90 38 142 0 122 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 특강 · 데이터와 사람의 몫</span><span class="hpage">27 <i>/ 30</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>안 되는 것 = <em>실패 3형</em>이 반복 관측</h1>
+      <p class="sub">긴 작업일수록 발생률 상승 · 각 유형에 대응 동작이 붙는다</p></div>
+    <div class="gg g3 grow-1">
+      <div class="gcard an"><span class="gl">실패 01</span><h3>일관성 상실</h3>
+        <p>긴 작업에서 <b>목표 이탈</b> · 남은 단계를 건너뛰고 조기 종료</p>
+        <p class="gfix">대응 = 단계 분할과 중간 확인</p></div>
+      <div class="gcard an"><span class="gl">실패 02</span><h3>신뢰도 하락</h3>
+        <p>대화 도중 주제 전환 시 정확도 <b>평균 39% 하락</b><span class="fnum">⑪</span></p>
+        <p class="gfix">대응 = 작업당 대화 분리</p></div>
+      <div class="gcard an"><span class="gl">실패 03</span><h3>자기평가 과대</h3>
+        <p>스스로 <b>통과 판정</b> · 미완성 산출물을 완료로 보고</p>
+        <p class="gfix">대응 = 사람의 독립 검증</p></div>
+    </div>
+    <div class="dark" data-hero>그래서 위임에 필요한 것 = <b>완료 조건</b>과 <b>독립 검증</b>
+      <span class="dsub">실패 3형 모두 사람의 확인 단계에서 걸러진다<span class="fnum">⑫</span></span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 5 · 데이터와 사람의 몫</span></div>
+</section>
+
+<!-- ===== #28 · BP5 사람의 몫 3 (B) ===== -->
+<section class="slide" data-pname="데이터와 사람의 몫" aria-label="28. 사람이 남는 자리">
+  <svg class="wave" style="right:0;bottom:0;width:560px;height:160px" viewBox="0 0 560 160" fill="none">
+    <path d="M560 160 H0 C 150 130 260 30 420 66 C 500 84 530 130 560 112 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 특강 · 데이터와 사람의 몫</span><span class="hpage">28 <i>/ 30</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>사람이 남는 자리 = <em>정의·맥락·검증</em></h1>
+      <p class="sub">실행이 넘어갈수록 앞뒤 두 지점의 비중 상승</p></div>
+    <div class="grow-1" style="display:flex;align-items:center">
+    <div class="pipe" style="flex:1;padding-top:0">
+      <div class="pnode an"><span class="pl">ROLE 1</span><span class="ic"><svg viewBox="0 0 34 34"><circle cx="17" cy="17" r="12"/><circle cx="17" cy="17" r="5"/></svg></span>
+        <span class="pt">문제 정의</span><span class="ps">원하는 결과를 완료 조건까지 언어로 고정</span></div>
+      <svg class="plink" width="74" height="26"><line class="draw" x1="4" y1="13" x2="60" y2="13"/><polyline class="draw" points="52,5 62,13 52,21"/></svg>
+      <div class="pnode an"><span class="pl">ROLE 2</span><span class="ic"><svg viewBox="0 0 34 34"><rect x="5" y="6" width="24" height="22" rx="3"/><line x1="10" y1="13" x2="24" y2="13"/><line x1="10" y1="20" x2="20" y2="20"/></svg></span>
+        <span class="pt">맥락 제공</span><span class="ps">배경·제약·예시를 골라 넣기</span></div>
+      <svg class="plink" width="74" height="26"><line class="draw" x1="4" y1="13" x2="60" y2="13"/><polyline class="draw" points="52,5 62,13 52,21"/></svg>
+      <div class="pnode res an" data-hero><span class="pl">ROLE 3</span><span class="ic ic--solid"><svg viewBox="0 0 34 34"><rect x="6" y="4" width="22" height="26" rx="3"/><polyline points="11,17 15,21 23,12"/></svg></span>
+        <span class="pt">검증</span><span class="ps">원자료와 대조하고 틀린 지점을 지목</span></div>
+    </div>
+    </div>
+    <div class="band an">지시 언어의 정밀도 = <span>결과의 상한</span>
+      <span class="band-sub">"내 언어의 한계가 내 세계의 한계" · 비트겐슈타인 1922</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 5 · 데이터와 사람의 몫</span></div>
+</section>
+
+<!-- ===== #29 · BP10 마침 (A) ===== -->
+<section class="slide" data-pname="데이터와 사람의 몫" aria-label="29. 마침">
+  <svg class="wave" style="left:0;top:0;width:900px;height:230px" viewBox="0 0 900 230" fill="none">
+    <path d="M0 0 H900 C 720 40 620 200 400 170 C 240 148 160 62 0 96 Z" fill="var(--tint2)"/>
+    <path d="M0 0 H700 C 570 30 480 150 330 138 C 210 128 140 48 0 76 Z" fill="var(--tint)"/>
+  </svg>
+  <svg class="wave" style="right:0;bottom:0;width:900px;height:230px" viewBox="0 0 900 230" fill="none">
+    <path d="M900 230 H0 C 200 190 330 46 570 86 C 720 111 810 190 900 160 Z" fill="var(--tint)"/>
+  </svg>
+  <span class="dot" style="width:24px;height:24px;right:210px;top:190px;background:var(--accent)"></span>
+  <span class="dot" style="width:44px;height:44px;right:270px;top:240px;background:var(--tint2)"></span>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 특강 · 마무리</span><span class="hpage">29 <i>/ 30</i></span></div>
+  <div class="sbody">
+    <div class="grow-1 decl" data-hero>
+      <p class="dtxt" style="margin:0"><span class="an">위임 = </span><span class="an"><em>완료 조건</em></span><span class="an"> + </span><span class="an"><em>독립 검증</em></span></p>
+      <p class="dnote an" style="margin:0">간극의 변수 = 질문 · 맥락 · 환경 <b>세 단의 설계</b> · 도구 등급 아님</p>
+      <div class="chips an" style="justify-content:center;gap:16px">
+        <span class="chip" style="font-size:24px;padding:16px 32px">다음 = 정규 차시 1 · OT</span>
+        <span class="chip" style="font-size:24px;padding:16px 32px">이 자료 = 차시 전 예습본</span>
+        <span class="chip mute" style="font-size:24px;padding:16px 32px">자료 위치 = 허브 세미나</span>
+      </div>
+      <p class="dnote an" style="margin:0;color:var(--mute)">확인 지점 = 내 작업 1건에 완료 조건 문장 1줄 붙여 보기</p>
+    </div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 5 · 마무리</span></div>
+</section>
+
+<!-- ===== #30 · BP10 출처 (C) ===== -->
+<section class="slide" data-pname="데이터와 사람의 몫" aria-label="30. 출처">
+  <svg class="wave" style="right:0;bottom:0;width:520px;height:150px" viewBox="0 0 520 150" fill="none">
+    <path d="M520 150 H0 C 140 124 240 26 390 62 C 466 79 494 122 520 105 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 특강 · 마무리</span><span class="hpage">30 <i>/ 30</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>출처 = 본문 각주 <em>①~⑫</em> 일괄</h1>
+      <p class="sub">본문 장에는 각주 번호만 표기 · 수치 확인 시점 2026-07-25</p></div>
+    <div class="grow-1" style="display:flex;align-items:center">
+      <div class="srcg" style="width:100%">
+        <div class="srcr an"><span class="sn">①</span><span><span class="st2">한국은행 이슈노트 2025-22</span><span class="sd">업무 활용 51.8% · 주당 5~7시간 · 절감 3.8%</span></span></div>
+        <div class="srcr an"><span class="sn">②</span><span><span class="st2">OpenAI, Why Language Models Hallucinate (2025)</span><span class="sd">환각의 구조적 원인 2종 · Anthropic 환각 저감 문서 병행</span></span></div>
+        <div class="srcr an"><span class="sn">③</span><span><span class="st2">Laudon &amp; Laudon 경영정보시스템 · Gartner</span><span class="sd">정보시스템 발전 5단</span></span></div>
+        <div class="srcr an"><span class="sn">④</span><span><span class="st2">Lewis et al., Retrieval-Augmented Generation (NeurIPS 2020)</span><span class="sd">근거 검색 후 생성 구성</span></span></div>
+        <div class="srcr an"><span class="sn">⑤</span><span><span class="st2">Liu et al., Lost in the Middle (2023)</span><span class="sd">긴 맥락 중간 구간 반영률 저하</span></span></div>
+        <div class="srcr an"><span class="sn">⑥</span><span><span class="st2">Model Context Protocol 공식 문서</span><span class="sd">외부 시스템 연결 공개 표준</span></span></div>
+        <div class="srcr an"><span class="sn">⑦</span><span><span class="st2">Anthropic, Building effective agents</span><span class="sd">실행 루프와 위임 구성</span></span></div>
+        <div class="srcr an"><span class="sn">⑧</span><span><span class="st2">OSWorld 벤치마크·리더보드</span><span class="sd">컴퓨터 사용 과제 통과율</span></span></div>
+        <div class="srcr an"><span class="sn">⑨</span><span><span class="st2">SWE-bench Verified 리더보드</span><span class="sd">코딩 과제 해결률</span></span></div>
+        <div class="srcr an"><span class="sn">⑩</span><span><span class="st2">METR, Time Horizon 1.1 (2026)</span><span class="sd">자율 작업 길이 배가 주기</span></span></div>
+        <div class="srcr an"><span class="sn">⑪</span><span><span class="st2">Laban et al., Multi-Turn Conversation (2025)</span><span class="sd">주제 전환 시 정확도 하락폭</span></span></div>
+        <div class="srcr an"><span class="sn">⑫</span><span><span class="st2">OWASP Top 10 for LLM Applications · NIST AI RMF</span><span class="sd">권한·가드레일 기준</span></span></div>
+      </div>
+    </div>
+    <div class="dark" data-hero>수치 표기 = <b>원문 기준</b> · 재확인 시점 = <b>2026-07-25</b>
+      <span class="dsub">벤치마크 상위 점수 다수 = 각 팀 자체 보고 성격 · 방향성 참고 지표</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 5 · 마무리</span></div>
+</section>
+
 </div>
-<div id="counter">1 / 45</div>
+</div>
+<div id="counter">1 / 30</div>
 
 <script>
+/* 표준 스크립트 = g1 골든 샘플 계승 — 규격 §1 네비 + 모션-시각화 §4·§5-1(크로스페이드·스태거 40ms·활성화 스텝)
+   확장분 = 수동 인터랙션(A/B 토글 — 장당 ≤1종 · 비활성 = 감쇠) */
 (function(){
-  var stage=document.getElementById('stage');
-  var slides=Array.prototype.slice.call(document.querySelectorAll('.slide'));
-  var counter=document.getElementById('counter');
-  var i=0, N=slides.length;
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var stage=document.getElementById('stage'), counter=document.getElementById('counter');
+  var cur=0;
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  function fit(){
-    var s=Math.min(window.innerWidth/1280, window.innerHeight/720);
-    stage.style.transform='scale('+s+')';
+  function fit(){ var s=Math.min(innerWidth/1920,innerHeight/1080); stage.style.transform='scale('+s+')'; }
+  addEventListener('resize',fit); fit();
+
+  function countUp(el,delay){
+    var t=parseFloat(el.getAttribute('data-target')); if(isNaN(t))return;
+    var dec=(el.getAttribute('data-target').split('.')[1]||'').length;
+    function fmt(v){ return dec?v.toFixed(dec):String(Math.round(v)); }
+    if(reduce){ el.textContent=fmt(t); return; }
+    var dur=700,t0=null; el.textContent=fmt(0);
+    function step(ts){ if(t0===null)t0=ts; var p=Math.min(1,(ts-t0)/dur), e=1-Math.pow(1-p,3);
+      el.textContent=fmt(t*e); if(p<1)requestAnimationFrame(step); else el.textContent=fmt(t); }
+    setTimeout(function(){ requestAnimationFrame(step); },delay);
+    /* 안전망: 프레임 콜백이 돌지 않는 환경(인쇄·헤드리스 캡처)에서도 최종값 보장 */
+    setTimeout(function(){ el.textContent=fmt(t); },delay+dur+60);
   }
+
+  function applyJudge(sl,mode){
+    var jd=sl.querySelector('[data-judge]'); if(!jd)return;
+    var a=jd.querySelector('[data-side=a]'), b=jd.querySelector('[data-side=b]');
+    [a,b].forEach(function(c){ if(c) c.classList.remove('win','lose'); });
+    if(mode==='a'){ if(a)a.classList.add('win'); if(b)b.classList.add('lose'); }
+    else if(mode==='b'||mode==='judge'){ if(b)b.classList.add('win'); if(a)a.classList.add('lose'); }
+    [].forEach.call(sl.querySelectorAll('[data-ab]'),function(btn){ btn.classList.toggle('cur',btn.getAttribute('data-ab')===mode); });
+  }
+
+  function play(sl){
+    var els=[].slice.call(sl.querySelectorAll('.an'));
+    els.forEach(function(el){ el.classList.remove('in'); el.style.removeProperty('--ad'); });
+    var fills=[].slice.call(sl.querySelectorAll('.kfill'));
+    fills.forEach(function(el){ el.classList.remove('in'); });
+    var draws=[].slice.call(sl.querySelectorAll('.draw'));
+    draws.forEach(function(el){ var L=0; try{L=el.getTotalLength();}catch(e){L=300;}
+      el.style.transition='none'; el.style.strokeDasharray=L; el.style.strokeDashoffset=reduce?0:L; });
+    var rings=[].slice.call(sl.querySelectorAll('[data-ring]'));
+    rings.forEach(function(el){ var C=2*Math.PI*148; el.style.transition='none';
+      el.style.strokeDasharray=C; el.style.strokeDashoffset=C; });
+    [].forEach.call(sl.querySelectorAll('.hot'),function(el){ el.classList.remove('hot'); });
+    [].forEach.call(sl.querySelectorAll('.rv'),function(el){ el.classList.remove('on'); });
+    var rv0=sl.querySelector('.rv'); if(rv0) rv0.classList.add('on');
+    [].forEach.call(sl.querySelectorAll('.uib'),function(el){ el.classList.remove('cur'); });
+    applyJudge(sl,null);
+    void sl.offsetWidth;
+    els.forEach(function(el,k){ el.style.setProperty('--ad',(k*0.04).toFixed(3)+'s'); el.classList.add('in'); }); /* 스태거 40ms */
+    fills.forEach(function(el){ el.classList.add('in'); });
+    if(!reduce){
+      draws.forEach(function(el,k){ el.style.transition='stroke-dashoffset .7s cubic-bezier(0,0,.38,.9) '+(0.15+k*0.08)+'s'; el.style.strokeDashoffset=0; });
+      rings.forEach(function(el){ var C=2*Math.PI*148, v=parseFloat(el.getAttribute('data-ring'))/100;
+        el.style.transition='stroke-dashoffset .7s cubic-bezier(0,0,.38,.9) .2s'; el.style.strokeDashoffset=C*(1-v); });
+    } else {
+      rings.forEach(function(el){ var C=2*Math.PI*148, v=parseFloat(el.getAttribute('data-ring'))/100; el.style.strokeDashoffset=C*(1-v); });
+    }
+    [].forEach.call(sl.querySelectorAll('.count'),function(el,k){ countUp(el,200+k*100); });
+    /* 활성화 스텝: 진입 완료 +300ms 뒤 히어로 점등 (§5-1) */
+    var hero=sl.querySelector('[data-hero]');
+    if(hero){ setTimeout(function(){ hero.classList.add('hot');
+      if(sl.querySelector('[data-judge]') && !sl.querySelector('[data-ab].cur')) applyJudge(sl,'judge');
+    }, reduce?0:1100); }
+  }
+
+  /* ---- 수동 인터랙션 (모션-시각화 §5·§6 — 비활성 = 감쇠, 은닉 없음) ---- */
+  document.addEventListener('click',function(e){
+    var ab=e.target.closest && e.target.closest('[data-ab]');
+    if(ab){ applyJudge(slides[cur],ab.getAttribute('data-ab')); return; }
+  },true);
+
   function show(n){
-    i=Math.max(0,Math.min(N-1,n));
-    for(var k=0;k<N;k++){ slides[k].classList.toggle('active',k===i); }
-    counter.textContent=(i+1)+' / '+N;
-    if(('#'+(i+1))!==location.hash){ history.replaceState(null,'','#'+(i+1)); }
-  }
-  function fromHash(){
-    var m=(location.hash||'').replace('#','');
-    var n=parseInt(m,10);
-    if(!isNaN(n)&&n>=1&&n<=N){ show(n-1); } else { show(0); }
+    n=Math.max(0,Math.min(slides.length-1,n));
+    var prev=slides[cur]; cur=n;
+    slides.forEach(function(sl,i){ if(i!==cur && sl!==prev){ sl.classList.remove('active','shown'); } });
+    var next=slides[cur];
+    next.classList.add('active'); void next.offsetWidth;
+    if(prev && prev!==next){ prev.classList.remove('shown');
+      setTimeout(function(){ if(slides[cur]!==prev) prev.classList.remove('active'); },260); }
+    next.classList.add('shown');
+    counter.textContent=(cur+1)+' / '+slides.length;
+    location.hash='#'+(cur+1);
+    play(next);
   }
 
-  window.addEventListener('resize',fit);
-  window.addEventListener('keydown',function(e){
-    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){ e.preventDefault(); show(i+1); }
-    else if(e.key==='ArrowLeft'||e.key==='PageUp'){ e.preventDefault(); show(i-1); }
-    else if(e.key==='Home'){ show(0); }
-    else if(e.key==='End'){ show(N-1); }
+  addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key===' ') show(cur+1);
+    else if(e.key==='ArrowLeft') show(cur-1);
+    else if(e.key==='Home') show(0);
+    else if(e.key==='End') show(slides.length-1);
+    else if(e.key==='r'||e.key==='R') play(slides[cur]);
   });
-  document.getElementById('deck').addEventListener('click',function(e){
-    if(e.clientX < window.innerWidth*0.32){ show(i-1); } else { show(i+1); }
+  addEventListener('click',function(e){
+    if(e.target.closest && e.target.closest('[data-ui]')) return; /* 조작 영역 클릭 = 장 전환 제외 */
+    show(e.clientX < innerWidth*0.32 ? cur-1 : cur+1);
   });
-  window.addEventListener('hashchange',fromHash);
 
-  fit(); fromHash();
+  var h=parseInt((location.hash||'').replace('#',''),10);
+  show(isNaN(h)?0:h-1);
 })();
 </script>
 </body>

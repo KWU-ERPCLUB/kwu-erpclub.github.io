@@ -7,6 +7,7 @@ date: 2026-07-25
 주제: 에이전트
 슬라이드: https://kwu-erpclub.github.io/slides/sp1/
 썸네일: [/img/세미나/cover-sp1.png]
+pdf: /pdf/세미나/2026-07-25-bapzzi-question-to-delegation.pdf
 요점: [챗과 에이전트의 차이 = 실행 범위와 완료 조건, Prompt → Context → Harness — 활용 구조 3단, 환각은 구조의 귀결 — 검증이 기본기, 위임에는 완료 조건과 독립 검증]
 ---
 
