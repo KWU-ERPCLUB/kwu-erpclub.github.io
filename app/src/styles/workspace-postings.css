@@ -1,21 +1,83 @@
 /* 공고 탭(2026-08-07 신설) — 카드형 보드 + 종류 배지 + 파생 상태. workspace.css 분할 파일(300줄 규격),
    workspace-entry에서만 import. 토큰은 global.css 재사용. 공고 색 계열(#1f5c37)은 캘린더 칩(.post)과 동일. */
 
-.ws-post-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+/* 1열 행 목록(오너 2026-08-19) — 카드 4줄 → 행 1줄. 2열은 카드 높이가 제각각이라 시선이 지그재그로
+   튀고, 카드 자체도 세로가 커 한 화면에 4~5건뿐이었다. 한 줄 = 한 공고 + 클릭 시 펼침.
+   행끼리는 간격 0 — 경계선 1줄이 나누고, 밀도가 목록의 목적이다. */
+.ws-post-grid { display: block; border-top: 1px solid var(--line); }
 
-.ws-posting {
-  display: block; background: #fff; border: 1px solid var(--line); border-radius: 14px;
-  padding: 0.95rem 1.1rem;
-  transition: transform 150ms ease-out, box-shadow 150ms ease-out;
+/* 우선순위 섹션(★ 내 관심 → 전체 → 상시 모집) */
+.ws-post-sec + .ws-post-sec { margin-top: 1.4rem; }
+.ws-post-sec-h {
+  display: flex; align-items: center; gap: 0.5rem;
+  margin: 0 0 0.6rem; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.02em;
+  color: var(--text-sub); text-transform: none;
 }
-@media (hover: hover) { .ws-posting:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(20, 20, 20, 0.07); } }
-@media (prefers-reduced-motion: reduce) { .ws-posting { transition: none; } .ws-posting:hover { transform: none; } }
-.ws-posting.pinned { border-color: var(--dark); }
-.ws-posting.closed { opacity: 0.55; }
+.ws-post-sec-h::after {
+  content: ''; flex: 1; height: 1px; background: var(--line); order: 3;
+}
+.ws-post-sec-h span {
+  order: 2; font-size: 0.72rem; font-weight: 700; color: var(--text-sub);
+  background: var(--surface); border-radius: var(--radius-pill); padding: 0.06rem 0.5rem;
+}
 
-.ws-posting .ws-row-top { display: flex; gap: 0.45rem; align-items: center; margin-bottom: 0.45rem; }
+/* 행 — 링크 본체와 ★를 나란히. ★는 링크 안에 넣을 수 없다(중첩 인터랙티브). */
+.ws-prow {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center;
+  border-bottom: 1px solid var(--line); background: #fff;
+}
+.ws-prow.closed { opacity: 0.5; }
+@media (hover: hover) { .ws-prow:hover { background: var(--surface); } }
 
-/* 종류 배지 — POSTING_KINDS 순서(k-0 공모전 · k-1 채용 · k-2 자격증 · k-3 대외활동) */
+/* 행 전체가 원문 링크(2026-08-19 2차) — 이 보드는 링크 모음판이고, 목적지는 늘 원문 사이트다.
+   높이 = 40px(패딩 0.5rem + 본문 1.25rem) */
+.ws-prow-link {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto auto;
+  gap: 0.6rem; align-items: center; min-width: 0;
+  padding: 0.5rem 0.2rem 0.5rem 0.1rem; text-decoration: none; color: inherit;
+}
+.ws-prow-link:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+@media (hover: hover) { .ws-prow-link:hover .ws-prow-title { text-decoration: underline; } }
+
+.ws-prow-title {
+  font-size: 0.9rem; font-weight: 600; color: var(--text);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+/* 출처 배지 — 어느 사이트에서 온 링크인가(링커리어·잡코리아·광운대…). 값 없음 = 운영진 직접 등록 */
+.ws-prow-src {
+  font-size: 0.7rem; font-weight: 600; color: var(--text-sub);
+  border: 1px solid var(--line); border-radius: var(--radius-pill); padding: 0.06rem 0.45rem;
+  white-space: nowrap;
+}
+.ws-prow-due { font-size: 0.8rem; color: var(--text-sub); font-variant-numeric: tabular-nums; }
+
+/* 검색(2026-08-19 2차) — 링크가 수백 건이면 칩 필터만으로 못 찾는다 */
+.ws-psearch {
+  display: flex; align-items: center; gap: 0.45rem;
+  border: 1px solid var(--line); border-radius: var(--radius-pill);
+  padding: 0.36rem 0.85rem; margin: 0 0 0.9rem; max-width: 22rem;
+  color: var(--text-sub); background: #fff;
+}
+.ws-psearch:focus-within { border-color: var(--accent); }
+.ws-psearch svg { flex: none; }
+.ws-psearch input {
+  flex: 1; min-width: 0; border: 0; outline: none; background: none;
+  font-family: inherit; font-size: 0.88rem; color: var(--text);
+}
+.ws-psearch input::-webkit-search-cancel-button { display: none; }
+.ws-psearch-x {
+  flex: none; border: 0; background: none; cursor: pointer; color: var(--text-sub);
+  font-size: 0.85rem; line-height: 1; padding: 0.2rem;
+}
+.ws-psearch-x:hover { color: var(--text); }
+/* D-n = 폭 고정 → 세로로 자릿수가 맞아 목록이 표처럼 읽힌다.
+   폭은 가장 긴 문구("D-54 시작")에 맞춘다 — 좁히면 옆 날짜와 붙는다. */
+.ws-prow .ws-post-status {
+  margin-left: 0; min-width: 5.4rem; text-align: right; font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* 종류 배지 — POSTING_KINDS 순서(k-0 공모전 · k-1 채용 · k-2 자격증 · k-3 교내활동) */
 .ws-post-kind {
   font-size: 0.72rem; font-weight: 700; border-radius: var(--radius-pill); padding: 0.14rem 0.62rem;
 }
@@ -24,19 +86,17 @@
 .ws-post-kind.k-2 { background: #e2efe6; color: #1f5c37; }
 .ws-post-kind.k-3 { background: #ececec; color: #333; }
 
-.ws-post-pin {
-  font-size: 0.72rem; font-weight: 700; border-radius: var(--radius-pill); padding: 0.14rem 0.62rem;
-  background: var(--dark); color: #fff;
-}
+/* 종류 배지 = 행에서 폭 고정 — 글자 수가 2~4자로 달라 좌측 정렬이 흐트러진다 */
+.ws-prow .ws-post-kind { min-width: 3.9rem; text-align: center; padding: 0.1rem 0.4rem; }
 
 .ws-post-status { margin-left: auto; font-size: 0.78rem; font-weight: 600; color: var(--text-sub); }
 
 /* 관심 ★(2026-08-14) — 체크한 공고는 내정보 "관심 공고"에 모인다.
-   패딩 확장 + 음수 마진 = 터치 타깃 44px·시각 크기 유지(2026-08-14 검수) */
+   행에서는 44px 타깃을 패딩으로 직접 확보한다(음수 마진 없음 — 행 높이를 밀어내지 않는다). */
 .ws-post-star {
   border: 0; background: none; cursor: pointer;
-  padding: 0.85rem 0.8rem; margin: -0.85rem -0.7rem -0.85rem -0.7rem;
-  font-size: 1.05rem; line-height: 1; color: #d3d2cf;
+  padding: 0.55rem 0.6rem;
+  font-size: 1rem; line-height: 1; color: #d3d2cf;
   transition: color 150ms ease-out, transform 150ms ease-out;
 }
 .ws-post-star:hover { color: var(--accent); transform: scale(1.12); }
@@ -52,23 +112,8 @@
 .ws-post-status.s-예정 { color: #1f5c37; }     /* 접수 없는 시험·행사 — 시험 D-n */
 .ws-post-status.s-마감 { color: var(--text-sub); }
 
-.ws-post-title {
-  display: block; color: var(--text); font-size: 0.95rem; font-weight: 700; text-decoration: none;
-  margin-bottom: 0.3rem;
-}
-.ws-post-title:hover { text-decoration: underline; }
-.ws-post-title:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-
-.ws-post-comment { margin: 0.4rem 0 0; font-size: 0.84rem; color: var(--text-sub); line-height: 1.5; }
-
-/* 카드 본문 메타 — 공용 .ws-mark-meta의 margin-left:auto(행 우측 정렬용)를 해제하고 줄바꿈 허용 */
-.ws-posting > .ws-mark-meta { display: block; margin: 0; line-height: 1.5; overflow-wrap: anywhere; }
-
-/* 세부 분류 배지(2026-08-18) — 종류 배지 옆 보조(값 있을 때만) */
-.ws-post-sub {
-  font-size: 0.72rem; font-weight: 600; border-radius: var(--radius-pill); padding: 0.14rem 0.55rem;
-  border: 1px solid var(--line); color: var(--text-sub); background: #fff;
-}
+/* 코멘트 = 운영 탭 폼에만 남는다(2026-08-19 2차 — 목록은 제목·출처·마감만) */
+.ws-post-comment { margin: 0.35rem 0 0; font-size: 0.86rem; color: var(--text); line-height: 1.55; }
 
 /* 세부 분류 칩 2줄차(2026-08-18) — 대분류 아래 작은 칩 줄 */
 .ws-subbar2 { margin-top: -0.35rem; }
@@ -101,10 +146,6 @@
   margin: 0.2rem 0 0.4rem;
 }
 
-@media (max-width: 900px) {
-  .ws-post-grid { grid-template-columns: 1fr; }
-}
-
 /* 폰(모바일 spec §3-3) — 필터 칩 = 가로 스크롤 한 줄(줄바꿈 누적 방지, Priority+ 계열) + 터치 타깃 M1 */
 @media (max-width: 760px) {
   .ws-postings .ws-tabbar {
@@ -113,6 +154,10 @@
   }
   .ws-postings .ws-tabbtn { flex: none; min-height: 44px; }
   .ws-sub-toggle { min-height: 44px; }
-  /* 코멘트("왜 유효한가") = 2줄 클램프 — 전문은 원문 링크·운영 탭이 담당 */
-  .ws-post-comment { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+  /* 행(393px) — 마감 날짜·출처 배지를 빼고 D-n만 남긴다. 다 넣으면 제목이 3~4글자로 잘린다 */
+  .ws-prow-due, .ws-prow-src { display: none; }
+  .ws-prow .ws-post-kind { min-width: 0; }
+  .ws-prow-link { padding: 0.6rem 0.1rem; gap: 0.45rem; }
+  .ws-post-star { padding: 0.72rem 0.7rem; }
+  .ws-psearch { max-width: none; padding: 0.5rem 0.85rem; }
 }

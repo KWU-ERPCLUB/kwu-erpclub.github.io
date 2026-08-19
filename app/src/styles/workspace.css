@@ -18,6 +18,8 @@
   padding: 2rem 1.75rem;
 }
 .ws-note { margin: 1.1rem 0 0; font-size: 0.9rem; line-height: 1.6; color: var(--text-sub); }
+/* 로그인 카드 맨 아래 한 줄(2026-08-19 오너) — 안내가 아니라 표찰이므로 가운데·작게 */
+.ws-login-foot { margin-top: 1.3rem; text-align: center; font-size: 0.84rem; }
 .ws-note code, .ws-steps code {
   font-size: 0.8rem;
   background: #fff;
@@ -258,11 +260,34 @@
   .ws-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
 }
 
-/* ══ 공지 탭(2026-08-18 오너 — 전용 탭 승격, 홈 레일은 제목만) — 한 공지 = 한 카드 + 본문 서식 ══ */
-.ws-notices { display: grid; gap: 0.9rem; max-width: 760px; }
-.ws-notice { margin: 0; background: var(--surface); border-radius: 14px; padding: 1.15rem 1.35rem 1.25rem; }
-.ws-notice-title { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; letter-spacing: -0.01em; word-break: keep-all; }
-.ws-notice-body { margin-top: 0.6rem; font-size: 0.94rem; line-height: 1.7; color: var(--text); word-break: keep-all; }
+/* ══ 공지 탭(2026-08-19 오너 개편) — 한 공지 = 접힌 한 줄. 카드로 전문을 펼쳐 두면 쌓일수록 안 읽힌다.
+   최신 1건만 열린 채 시작하고, 나머지는 제목·날짜 목록으로 남는다(문법 = 공고 탭 행과 동일) ══ */
+.ws-notices { max-width: 760px; }
+.ws-notice-list { border-top: 1px solid var(--line); }
+.ws-notice-row { border-bottom: 1px solid var(--line); }
+.ws-notice-sum {
+  display: flex; align-items: baseline; gap: 0.7rem;
+  padding: 0.72rem 0.2rem; cursor: pointer; list-style: none;
+}
+.ws-notice-sum::-webkit-details-marker { display: none; }
+/* 펼침 표식 = 제목 앞 삼각형(회전) — 클릭 가능하다는 신호가 없으면 그냥 목록으로 읽힌다 */
+.ws-notice-sum::before {
+  content: '▸'; flex: none; color: var(--text-sub); font-size: 0.8rem;
+  transition: transform 150ms ease-out;
+}
+.ws-notice-row details[open] .ws-notice-sum::before { transform: rotate(90deg); }
+@media (prefers-reduced-motion: reduce) { .ws-notice-sum::before { transition: none; } }
+.ws-notice-sum:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+@media (hover: hover) { .ws-notice-sum:hover { background: var(--surface); } }
+.ws-notice-title {
+  margin: 0; flex: 1; min-width: 0;
+  font-family: var(--font-display); font-weight: 800; font-size: 1rem; letter-spacing: -0.01em; word-break: keep-all;
+}
+.ws-notice-when { flex: none; font-size: 0.78rem; color: var(--text-sub); font-variant-numeric: tabular-nums; }
+.ws-notice-body {
+  margin-top: 0.2rem; padding: 0 0.2rem 1rem 1.25rem;
+  font-size: 0.94rem; line-height: 1.7; color: var(--text); word-break: keep-all;
+}
 .ws-notice-body p { margin: 0.55rem 0; }
 .ws-notice-body ul, .ws-notice-body ol { margin: 0.55rem 0; padding-left: 1.25rem; }
 .ws-notice-body li { margin: 0.3rem 0; list-style: disc; }

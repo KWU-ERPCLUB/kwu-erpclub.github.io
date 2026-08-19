@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'
 import { SiteNav, SiteFooter, PageHead } from '../shared.jsx'
 import { getRepositories, isBackendConfigured } from '../data/index.js'
-import { CONTACT, CONTACT_MAILTO } from '../data/recruit.js'
 import Contribute from './Contribute.jsx'
 import MyPage from './MyPage.jsx'
 import Home from './Home.jsx'
@@ -110,9 +109,9 @@ export function LoginForm({ onSubmit, error, busy }) {
         {(local || error) && <p className="ws-error" role="alert">{local || error}</p>}
         <button type="submit" className="ws-submit" disabled={busy}>{busy ? '확인 중' : '로그인'}</button>
       </form>
-      <p className="ws-note">
-        계정 발급 = 운영진 초대 생성(자가입 없음). 문의 = <a href={CONTACT_MAILTO}>{CONTACT.email}</a>.
-      </p>
+      {/* 오너 2026-08-19: 계정 발급 절차·문의처 안내 삭제 — 여기 올 사람은 이미 계정을 받은 사람이다.
+          남기는 것은 "여기가 어디인가" 한 줄뿐. */}
+      <p className="ws-note ws-login-foot">AIM 스터디원 전용입니다.</p>
     </section>
   )
 }
@@ -236,9 +235,9 @@ export default function Workspace({ repos, configured }) {
     setUser(null)
   }
 
-  const sub = ready
-    ? '스터디 일정·업무 한눈에 + 기고 제출 — 스터디원 전용.'
-    : '백엔드 연결 전 — 로그인 기능 대기 상태.'
+  // 정상 상태의 부제는 없다(오너 2026-08-19) — 로그인 화면에서 기능을 설명할 이유가 없다.
+  // 백엔드 미연결일 때만 "왜 로그인이 안 되는가"를 알려 준다.
+  const sub = ready ? undefined : '백엔드 연결 전 — 로그인 기능 대기 상태.'
   const app = ready && Boolean(user)
 
   // 로그인 전 = 문서형(히어로 헤드 + 좁은 패널) 유지 / 로그인 후 = 앱형 전폭(히어로·패널·푸터 제거).

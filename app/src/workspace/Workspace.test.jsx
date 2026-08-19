@@ -28,7 +28,9 @@ test('설정됨·비로그인 = 학번·비밀번호 폼(이메일 입력 아님
   expect(html).not.toContain('type="email"')
   expect(html).not.toContain('이메일')
   expect(html).toContain('type="password"')
-  expect(html).toContain('운영진 초대 생성')
+  // 2026-08-19 오너: 계정 발급 절차·문의처 안내 삭제 → 카드 맨 아래 표찰 한 줄만 남긴다
+  expect(html).toContain('AIM 스터디원 전용입니다.')
+  expect(html).not.toContain('운영진 초대 생성')
   // 회원가입·비밀번호 재설정 등 자가입 경로 미노출
   expect(html).not.toContain('회원가입')
 })
@@ -209,10 +211,15 @@ test('ItemPopup = 종류·제목·날짜·설명 + 공고면 원문 링크, item
 })
 
 // ── 경어체 금지(디자인규칙 §0-1 개조식 전면) ──
-test('카피 = 개조식(경어체 종결 0건)', () => {
+// 예외 1건 = 로그인 카드 맨 아래 표찰(오너가 문구를 직접 지정, 2026-08-19).
+// 예외를 규칙 전체로 넓히지 않기 위해 **그 문장만** 빼고 검사한다 — 다른 곳의 경어체는 계속 잡힌다.
+const LOGIN_FOOT = 'AIM 스터디원 전용입니다.'
+
+test('카피 = 개조식(경어체 종결 0건 — 로그인 표찰 1줄 제외)', () => {
   const html = flat(<Workspace repos={createMockRepositories()} configured />)
     + flat(<NotConfigured />)
     + flat(<Shell member={{ 이름: 'ㄱ', role: '스터디원' }} store={createMockRepositories({ user: 'mock-member' })} search="" />)
-  const text = html.replace(/<[^>]+>/g, ' ')
+  expect(html).toContain(LOGIN_FOOT)
+  const text = html.replace(/<[^>]+>/g, ' ').split(LOGIN_FOOT).join(' ')
   for (const bad of ['합니다', '입니다', '됩니다', '하세요', '주세요']) expect(text).not.toContain(bad)
 })

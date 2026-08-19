@@ -104,7 +104,10 @@ export function NoticeTitles({ store, onOpen }) {
   )
 }
 
-// 공지 탭 본문 — 한 공지 = 한 카드(제목 크게 + 날짜 + 본문 서식).
+// 공지 탭 본문(2026-08-19 오너 개편) — 한 공지 = 접힌 한 줄. 제목·날짜만 보이고 클릭하면 본문이 펼쳐진다.
+// 이유: 카드로 전문을 펼쳐 두면 공지가 쌓일수록 무엇이 있는지 한눈에 안 들어온다.
+// 최신 1건만 기본 펼침 — 새 공지는 읽히라고 올리는 것이고, 나머지는 목록으로 남는다.
+// 문법은 공고 탭의 행과 같다(details) — 접힘 상태에서도 본문이 DOM에 있어 브라우저 검색이 된다.
 export default function Notices({ store }) {
   const { rows, status, error } = useNotices(store)
   return (
@@ -112,17 +115,23 @@ export default function Notices({ store }) {
       {status === 'loading' && <div className="ws-skel" aria-label="불러오는 중"><span /><span /></div>}
       {error && <p className="ws-error" role="alert">{error}</p>}
       {status === 'ready' && rows.length === 0 && <p className="ws-note">공지 0건.</p>}
-      {rows.map((n) => (
-        <article key={n.id} className="ws-block ws-notice">
-          <div className="ws-row-top">
-            <h2 className="ws-notice-title">{n['제목']}</h2>
-            <span className="ws-mark-meta">{ymd(n.created_at)}</span>
-          </div>
-          <div className="ws-notice-body">
-            <Markdown body={n['본문'] || ''} />
-          </div>
-        </article>
-      ))}
+      {rows.length > 0 && (
+        <ul className="ws-list ws-notice-list">
+          {rows.map((n, i) => (
+            <li key={n.id} className="ws-notice-row">
+              <details open={i === 0}>
+                <summary className="ws-notice-sum">
+                  <span className="ws-notice-title">{n['제목']}</span>
+                  <span className="ws-notice-when">{ymd(n.created_at)}</span>
+                </summary>
+                <div className="ws-notice-body">
+                  <Markdown body={n['본문'] || ''} />
+                </div>
+              </details>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   )
 }

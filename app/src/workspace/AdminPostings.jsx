@@ -1,4 +1,4 @@
-// 운영 > 공고(0009) — 공고 탭 보드에 뜨는 외부 기회(공모전·채용·자격증·대외활동) 등록·삭제(운영진 전용, RLS postings_write_staff).
+// 운영 > 공고(0009) — 공고 탭 보드에 뜨는 링크(공모전·채용·자격증·교내활동) 등록·삭제(운영진 전용, RLS postings_write_staff).
 // 코멘트 = 필수(오너 확정 2026-08-07) — 빈 값은 폼에서 차단. 테이블 미적용(마이그레이션 0009 전)이면 오류를 그대로 보여준다.
 import { useCallback, useEffect, useState } from 'react'
 import { POSTING_KINDS } from './postings-logic.js'

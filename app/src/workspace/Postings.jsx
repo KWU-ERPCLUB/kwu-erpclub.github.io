@@ -1,47 +1,49 @@
-// 공고 탭(2026-08-07 신설 → 2026-08-18 구독 개인화) — 공모전·채용·자격증·대외활동 스크랩 + 학사·AIM 일정 열람.
+// 공고 탭(2026-08-07 신설 → 2026-08-19 링크 모음판) — 공모전·채용·자격증·교내활동 링크 + 학사·AIM 일정 열람.
 // 개인 스크랩(내정보 > 북마크)과 별개. 등록·삭제 = 운영 탭(운영진 전용). 마감·시험일은 홈 캘린더에 합류.
 // 구독(0014) = 카테고리·세부 단위 캘린더 필터 — 여기 필터 칩 자리에서 바로 토글(오너 확정 2026-08-18).
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { toKey, dday } from './calendar-logic.js'
-import { POSTING_KINDS, postingStatus, groupPostings, filterPostings } from './postings-logic.js'
+import { POSTING_KINDS, postingStatus, groupPostings, filterPostings, sectionPostings, searchPostings } from './postings-logic.js'
 import { taxonomyOptions, effectiveSubs, hasSubRow, eventCategory, planToggle, SUBS_CHANGED } from './postings-taxonomy.js'
 
-// 카드 1장 — 종류·세부 분류 배지 + 제목(원문 링크) + 주최 + 접수·시험 일정 + 큐레이션 코멘트(필수 필드).
-// 관심 ★(0013) — 체크한 공고는 내정보 상단 "관심 공고"에 모인다(구독과 별개: ★=모음, 구독=캘린더).
+// 마감·시험일 짧은 표기(09-07) — 행이 한 줄이라 연도를 뺀다.
+const short = (d) => (d ? d.slice(5) : '')
+
+// 행 1줄(오너 2026-08-19 2차) — **행 전체가 원문 링크**다. 클릭하면 바로 그 사이트로 간다.
+// 이 보드의 목적 = 링커리어·잡코리아처럼 여러 곳에 흩어진 공고 링크를 한 곳에 모아 바로 연결해 주는 것.
+// 그래서 펼침(코멘트·주최 상세)을 없앴다 — 우리 화면에서 읽히는 것은 제목·출처·마감뿐이고,
+// 나머지는 원문이 더 잘 보여 준다. 코멘트는 데이터로는 남지만 목록에 쓰지 않는다.
+// 관심 ★(0013) — 체크한 공고는 내정보 상단 "관심 공고"에 모인다(★ = 개인 모음, 구독 = 캘린더).
 export function PostingCard({ row, todayKey, interested = false, onToggleInterest }) {
   const status = postingStatus(row, todayKey)
   const closed = status === '마감'
+  // 행에 찍는 날짜 = 지금 알아야 할 날짜 하나. 접수 전이면 마감이 아니라 **시작일**이 그 하나다
+  // (마감만 띄우면 아직 열지도 않은 창을 놓친 것처럼 읽힌다). 상시는 날짜 칸을 비운다 — 상태가 이미 '상시'.
+  const keyDate = status === '접수전' ? row['접수시작'] : (row['접수마감'] || row['시험일'])
   return (
-    <li className={`ws-posting${closed ? ' closed' : ''}${row['고정'] ? ' pinned' : ''}`}>
-      <div className="ws-row-top">
+    <li className={`ws-prow${closed ? ' closed' : ''}`}>
+      <a className="ws-prow-link" href={row.url} target="_blank" rel="noreferrer">
         <span className={`ws-post-kind k-${POSTING_KINDS.indexOf(row['종류'])}`}>{row['종류']}</span>
-        {row['분류'] && <span className="ws-post-sub">{row['분류']}</span>}
-        {row['고정'] && !closed && <span className="ws-post-pin">고정</span>}
+        <span className="ws-prow-title">{row['제목']}</span>
+        {row['출처'] && <span className="ws-prow-src">{row['출처']}</span>}
+        <span className="ws-prow-due">{short(keyDate)}</span>
         <span className={`ws-post-status s-${status}`}>
-          {status === '접수중' && `접수중 · ${dday(todayKey, row['접수마감'])}`}
+          {status === '접수중' && dday(todayKey, row['접수마감'])}
+          {status === '접수전' && `${dday(todayKey, row['접수시작'])} 시작`}
           {status === '예정' && `시험 ${dday(todayKey, row['시험일'])}`}
-          {status !== '접수중' && status !== '예정' && status}
+          {status !== '접수중' && status !== '접수전' && status !== '예정' && status}
         </span>
-        {onToggleInterest && (
-          <button
-            type="button" className={`ws-post-star${interested ? ' on' : ''}`}
-            aria-pressed={interested} aria-label={interested ? '관심 해제' : '관심 공고로 체크'}
-            title={interested ? '관심 해제' : '관심 공고로 체크 — 내정보에 모이고 이 공고만 홈 캘린더에도 뜬다'}
-            onClick={() => onToggleInterest(row.id, !interested)}
-          >
-            ★
-          </button>
-        )}
-      </div>
-      <a className="ws-post-title" href={row.url} target="_blank" rel="noreferrer">{row['제목']}</a>
-      <p className="ws-mark-meta">
-        {[
-          row['주최'],
-          row['접수마감'] ? `접수 ${row['접수시작'] ? `${row['접수시작']} ~ ` : '~ '}${row['접수마감']}` : (!row['시험일'] && '상시'),
-          row['시험일'] && `시험일 ${row['시험일']}`,
-        ].filter(Boolean).join(' · ')}
-      </p>
-      <p className="ws-post-comment">{row['코멘트']}</p>
+      </a>
+      {onToggleInterest && (
+        <button
+          type="button" className={`ws-post-star${interested ? ' on' : ''}`}
+          aria-pressed={interested} aria-label={interested ? '관심 해제' : '관심 공고로 체크'}
+          title={interested ? '관심 해제' : '관심 공고로 체크 — 내정보에 모이고 이 공고만 홈 캘린더에도 뜬다'}
+          onClick={() => onToggleInterest(row.id, !interested)}
+        >
+          ★
+        </button>
+      )}
     </li>
   )
 }
@@ -84,6 +86,7 @@ export default function Postings({ store }) {
   const [note, setNote] = useState('')            // ★·구독 저장 실패 한 줄 안내(3초 후 소거)
   const [kind, setKind] = useState('전체')
   const [sub, setSub] = useState('전체')
+  const [q, setQ] = useState('')                  // 검색어(2026-08-19 2차 — 링크가 수백 건 쌓이면 칩만으로 못 찾는다)
 
   const load = useCallback(() => Promise.all([
     store.postings.list(), store.events.list(), store.postings.listInterests(), store.postings.listSubscriptions(),
@@ -135,11 +138,17 @@ export default function Postings({ store }) {
   const subOptions = !isEventCat && kind !== '전체' ? taxonomyOptions(kind) : []
   const selSub = sub === '전체' ? '' : sub
   // 마감 묶음(closed)은 화면에서 제외(2026-08-18 오너 — 쌓이면 너무 많음. 데이터는 DB에 그대로).
+  // 검색(q)은 종류·분류 필터 다음에 건다 — 칩으로 좁힌 뒤 낱말로 다시 좁히는 순서.
   const { active, always } = useMemo(
-    () => groupPostings(filterPostings(rows, isEventCat ? '전체' : kind, selSub), todayKey),
-    [rows, kind, selSub, todayKey, isEventCat],
+    () => groupPostings(
+      searchPostings(filterPostings(rows, isEventCat ? '전체' : kind, selSub), q),
+      todayKey, interests,
+    ),
+    [rows, kind, selSub, q, todayKey, isEventCat, interests],
   )
-  const open = active.concat(always)
+  // 2단 섹션(★ 관심 → 전체) + 상시. 빈 묶음은 sectionPostings가 이미 뺀다.
+  const sections = useMemo(() => sectionPostings(active, always, interests), [active, always, interests])
+  const openCount = active.length + always.length
   const catEvents = useMemo(
     () => events.filter((e) => eventCategory(e) === kind).sort((a, b) => (a['날짜'] < b['날짜'] ? -1 : 1)),
     [events, kind],
@@ -176,6 +185,20 @@ export default function Postings({ store }) {
               ))}
             </nav>
           )}
+          {!isEventCat && (
+            <div className="ws-psearch">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+                <circle cx="10.5" cy="10.5" r="6.5" /><path d="m15.5 15.5 4 4" />
+              </svg>
+              <input
+                type="search" value={q} onChange={(e) => setQ(e.target.value)}
+                placeholder="제목·주최·출처로 찾기" aria-label="공고 검색"
+              />
+              {q && (
+                <button type="button" className="ws-psearch-x" onClick={() => setQ('')} aria-label="검색어 지우기">✕</button>
+              )}
+            </div>
+          )}
           {kind !== '전체' && subs !== null && (
             <div className="ws-subline">
               <button
@@ -196,14 +219,19 @@ export default function Postings({ store }) {
           {isEventCat && status === 'ready' && <EventList rows={catEvents} todayKey={todayKey} />}
           {!isEventCat && (
             <>
-              {status === 'ready' && open.length === 0 && (
-                <p className="ws-empty">진행 중 공고 0건</p>
+              {status === 'ready' && openCount === 0 && (
+                <p className="ws-empty">{q ? `'${q}' 검색 결과 0건` : '진행 중 공고 0건'}</p>
               )}
-              <ul className="ws-list ws-post-grid">
-                {open.map((r) => (
-                  <PostingCard key={r.id} row={r} todayKey={todayKey} interested={interests.includes(r.id)} onToggleInterest={toggleInterest} />
-                ))}
-              </ul>
+              {sections.map((sec) => (
+                <div key={sec.key} className="ws-post-sec">
+                  <h3 className="ws-post-sec-h">{sec.label}<span>{sec.items.length}</span></h3>
+                  <ul className="ws-list ws-post-grid">
+                    {sec.items.map((r) => (
+                      <PostingCard key={r.id} row={r} todayKey={todayKey} interested={interests.includes(r.id)} onToggleInterest={toggleInterest} />
+                    ))}
+                  </ul>
+                </div>
+              ))}
             </>
           )}
         </section>

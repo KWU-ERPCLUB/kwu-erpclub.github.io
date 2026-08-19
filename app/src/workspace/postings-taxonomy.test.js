@@ -6,12 +6,12 @@ import {
 import { postingAgendaItems, filterPostings } from './postings-logic.js'
 
 test('레지스트리 — 공고 4종 전부 세부 목록 보유, 옵션은 은퇴 값 제외', () => {
-  for (const kind of ['공모전', '채용', '자격증', '대외활동']) {
+  for (const kind of ['공모전', '채용', '자격증', '교내활동']) {
     expect(TAXONOMY[kind].length).toBeGreaterThan(0)
     expect(taxonomyOptions(kind)).toContain('기타')
   }
   expect(taxonomyOptions('학사')).toEqual([])   // 일정 카테고리 = 세부 없음
-  expect(CAL_CATEGORIES).toEqual(['공모전', '채용', '자격증', '대외활동', '학사', 'AIM'])
+  expect(CAL_CATEGORIES).toEqual(['공모전', '채용', '자격증', '교내활동', '학사', 'AIM'])
 })
 
 test('기본 구독 해석 — 행 0건 = 학사+AIM / null(0014 미적용) = null 그대로', () => {

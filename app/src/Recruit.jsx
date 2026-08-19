@@ -121,7 +121,7 @@ export default function Recruit() {
             <PageHead
               label="RECRUIT"
               title={<>{RECRUIT.study} <em>{RECRUIT.cohort}</em> 모집</>}
-              sub={`경영학부 중심·전공 무관. 2026 ${RECRUIT.term} 첫 기수를 모집합니다.`}
+              sub={`경영학부 중심, 비전공자도 환영합니다. 2026 ${RECRUIT.term} 첫 기수를 모집합니다.`}
             >
               {/* 오너 2026-08-07: 세로 배치 — 대형 CTA 정중앙, 접수기간은 버튼 아래 줄 */}
               <div className="rc-head-cta">
@@ -199,11 +199,11 @@ export default function Recruit() {
           </div>
         </section>
 
-        {/* 이런 분을 찾습니다(오너 2026-08-07 2차 — 영문 반려: 한국 모집공고의 자격 요건 체크리스트 형태) */}
+        {/* 참여 조건(2026-08-19 오너 톤 완화) — 구 "이런 분을 찾습니다" = 선발 문법이라 문턱이 높게 읽혔다 */}
         <section className="rc-secs" aria-labelledby="rc-fit-h">
           <div className="rc-band-in">
             <div className="rc-body">
-              <h2 className="rc-h2" id="rc-fit-h">이런 분을 찾습니다</h2>
+              <h2 className="rc-h2" id="rc-fit-h">이 정도면 충분합니다</h2>
               <ul className="rc-who">
                 {RECRUIT_FIT.map(([title, desc]) => (
                   <li key={title}>

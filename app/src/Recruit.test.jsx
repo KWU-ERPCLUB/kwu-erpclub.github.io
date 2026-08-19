@@ -31,7 +31,7 @@ test('요강 = 확정값만 게재(오너 개정 2026-08-05) — 기간·인원 
   expect(html).toContain('추후 확정')
   expect(html).not.toContain('6~10명')
   expect(html).toContain('<strong>경영학부 중심</strong>')
-  expect(html).toContain('전공 무관')
+  expect(html).toContain('비전공자도 환영')   // 구 '전공 무관' = 배제 어휘(오너 2026-08-19 톤 완화)
   expect(html).toContain('매주 대면 60분')
   expect(html).toContain('요일 추후 확정')
   expect(html).toContain('참가비 없음')
@@ -169,15 +169,20 @@ test('타임라인 섹션 삭제(오너 2026-08-07) + 미정 선발 단계 날�
   }
 })
 
-test('E2 이런 분을 찾습니다 = 자격 요건 체크리스트 4행(오너 2026-08-07 2차 — 영문 키워드 반려)', () => {
+// 2026-08-19 오너: "톤이 너무 빡빡하다" — 선발 문법("이런 분을 찾습니다"·요건 어휘)을 문턱 낮은 서술로.
+// 심사 없이 받는 스터디라 요건을 세우면 사실과도 어긋난다. 체크리스트 형태(rc-who)는 유지.
+test('E2 참여 조건 = 문턱 낮은 체크리스트 4행 — 선발 어휘 금지', () => {
   const html = flat(<Recruit />)
   expect(html).toContain('rc-who')
-  expect(html).toContain('rc-who-check') // ✓ 버건디 체크 — 모집공고 자격 요건 문법
-  expect(html).toContain('이런 분을 찾습니다')
+  expect(html).toContain('rc-who-check')
+  expect(html).toContain('이 정도면 충분합니다')
   expect(html).not.toContain('WHO SHOULD APPLY')
-  for (const t of ['전공 무관', '코딩 경험 무관', '주 1회 참여 가능', '직접 만들어 볼 의지']) {
+  expect(html).not.toContain('이런 분을 찾습니다')
+  for (const t of ['비전공자 환영', '코딩 몰라도 됨', '주 1회 참여', '직접 해보고 싶은 마음']) {
     expect(html).toContain(t)
   }
+  // '전공 무관' = 배제 어휘로 읽힌다(오너) → 페이지 전역에서 '비전공자 환영' 계열로 통일
+  expect(html).not.toContain('전공 무관')
 })
 
 test('E3 순서 = WHAT WE DO가 요강 직후(구 운영 증빙 자리) — 전체 섹션 순서 고정', () => {
