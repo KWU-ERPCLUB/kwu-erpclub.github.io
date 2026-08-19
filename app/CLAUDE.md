@@ -20,7 +20,7 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
   new page = new dir + `src/*-entry.jsx` + input entry. 나브 = INSIGHTS·SEMINARS·PROJECTS·RECRUIT(+로그인 시 WORKSPACE).
   (insights 페이지 컴포넌트 파일명 = `pages/Articles.jsx`·`styles/articles.css` 유지 — 내부명, URL만 insights)
 - **모집 카피 규칙(SPEC §4 개정 2026-07-27)**: 사실 서술 허용(요강·기간·참여 방법 — 개조식) / 마케팅 어투 금지
-  grep {지금 바로, 놓치지, 마지막 기회, 서두르, 얼른} = 0. 모집 밴드 국면 전환 = `home-logic.js recruitPhase`(창 = RECRUIT_WINDOW 유일 원천).
+  grep {지금 바로, 놓치지, 마지막 기회, 서두르, 얼른} = 0. 모집 밴드 국면 전환 = `home-logic.js recruitPhase`(창 = `data/recruit.js`의 `RECRUIT.window` 유일 원천).
   [미정] 값(요일·회차 세부주제·주제 풀) 게재 금지 — 원천 = workspace `erp-club/docs/specs/2026-07-27-aim-운영틀.md`.
 - **labs·reports·join 페이지 제거**(IA 2차 2026-07-23). **about·log 제거**(IA 4차 2026-08-05 — about 증빙→recruit 하단,
   log 데이터 `src/data/log.js`→워크스페이스 공지 탭 '운영 기록'(OpsLog) 읽기 전용 내부화). 재도입 = 오너 재승인.
@@ -31,7 +31,7 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
   RLS = 익명 insert만·열람 = 운영진(migration 0006). env 미설정 = 폼 대신 제출 불가 안내(목 폴백 성공 연출 금지).
 
 ## Content contract & CI (SPEC §5·§6)
-- 기고 = `content/<종류>/YYYY-MM-DD-<작성자id>-<슬러그>.md` (종류=**기사·세미나** — 실습 폐지). frontmatter 규칙의
+- 기고 = `content/<종류>/YYYY-MM-DD-<작성자id>-<슬러그>.md` (종류 enum = **기사·세미나·프로젝트**). frontmatter 규칙의
   **유일 원천 = `src/content/schema.js`**(검증기 CLI·앱 로더 공용). 기사=source_url·source_name·성격·주제·`설명`(필수 — 카드는 본문 발췌 대신 설명만 표시, 2026-07-27)+`태그`(선택 0~5·표시 전용 #해시태그·필터 없음), 세미나=회차·유형(+선택 발원기사)·**유형=실습이면 본문 필수 헤딩 {## 준비, ## 진행, ## 재현 가이드}**.
 - 로더 = `src/content/loader.js`(글롭 로드). 앱·CLI가 같은 스키마를 소비.
 - **시리즈(2026-08-05)** = 정기 연재 묶음. 레지스트리 단일원천 = `src/content/series.js`(id·표시명·설명·주기·고정 커버·슬러그키).
@@ -43,6 +43,9 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
   매핑 단일원천 = `src/content/db-map.js`(toDbRow/fromDbRow). 파일 읽기 공용 = `scripts/content-files.mjs`(validate와 공유).
   로컬 확인 = `node scripts/sync-content-db.mjs --dry`(네트워크 0). 실행 env = `SUPABASE_URL`·`SUPABASE_SERVICE_KEY`(**repo 금지·secret만**).
   CI 잡 = deploy.yml `sync-content`(main push·build 이후·deploy 비차단).
+- **공고 JSON→DB 동기화(2026-08-18)** = 같은 `sync-content` 잡의 2번째 스텝 `node scripts/sync-postings-db.mjs`:
+  `supabase/postings.json`(원천 — 주간 루틴이 갱신·push) → `postings`·`events` upsert(충돌 키 = `"키"`, **삭제 없음**).
+  운영 탭 수기 등록 행은 키 null이라 공존. 사전 조건 = migration 0014~0016. 로컬 확인 = `--dry`(네트워크 0).
 - CI = `.github/workflows/deploy.yml`: **validate + test + build 게이트** 통과해야 배포(PR·dev push에서도 build 실행, deploy는 `main` push만 — `github.ref` 조건). `guard-shared-paths` 잡 = 비오너(bapzzi 외) 변경은 `app/content`만 허용.
 - **권한 구조(2026-07-25 하드 격리)**: GitHub 룰셋(id 19734261) — main 직접 push = repo 관리자만(오너·오너 자격 Claude). 멤버 = 브랜치→PR 필수. `app/content`만 고친 PR = 체크(build) 통과 시 셀프 머지(승인 0) / 공용 영역 터치 = CODEOWNERS(오너) 승인 필수. 룰셋 관리 = repo Settings > Rules.
 - **주간 트렌드 자동화**: 클라우드 루틴 `trig_0118sfWk88m1uYZMfcYUTik4`(매주 월 09:00 KST, sonnet-5, 멱등 스킵 규칙 내장) — 관리 = claude.ai/code/routines. 수동 실행 = 로컬 스킬 `weekly-trend`.
@@ -53,7 +56,7 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
 - **앱형 셸(2026-08-06 재구성)**: 로그인 후 = 문서형(히어로 헤드·ws-panel·푸터) 제거 → 전폭 앱 레이아웃(`.ws-main.ws-app`,
   max 1760px). 사이드바 232px sticky + 하단 계정 블록(`.ws-side-me`), 홈 외 탭 = 소형 헤더(`.ws-content-head`).
   로그인 전 화면만 문서형(PageHead+패널) 유지. 근거 리서치(Notion·Slack·Classroom·Canvas 문법) = roadmap 2026-08-06 항.
-- **탭(2026-08-14 재편) = 좌측 사이드바 6종: 홈·로드맵(구 스터디 흐름)·공고·인사이트 기고·내정보 + 운영(운영진만)**.
+- **탭 = 좌측 사이드바 7종: 홈·공지·로드맵(구 스터디 흐름)·공고·인사이트 기고·내정보 + 운영(운영진만)**(공지 = 2026-08-18 전용 탭 승격).
   북마크 = 단독 탭 폐지 → 내정보 안 섹션(정사각 카드 그리드 = 인사이트 축소판, `Collections.jsx`를 MyPage가 렌더).
   탭 설명 문구 폐지 — 아이콘(`TAB_ICONS`)이 대신. 원천 = `Workspace.jsx`의 `WS_TABS`·`visibleTabs()`. 구 탭명 딥링크 = `LEGACY_TAB_MAP`.
   **내정보 구성(2026-08-14)**: 상단 = 내 북마크·**관심 공고**(공고 카드 ★ 체크 — `posting_interests`, migration **0013**·미적용 = 빈 목록 강등) /
@@ -65,8 +68,8 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
   캘린더 원천 = 운영 일정(`events`, **0007 적용됨**) + 과제 마감 자동 + 세션 날짜 자동 + 공고 마감·시험일(0009). 주간 기고 반복 핀 = `WEEKLY_CONTRIB.dueDay`(현재 null=[미정] — 오너 확정 시 값 1개).
   **다가오는 업무 = ★ 지정만**(오너 2026-08-07 — 전량 노출은 소음): `events.중요`(**0010**)·`postings.고정` 겸용, `upcoming()`이 필터. 캘린더는 전 항목 유지.
   흐름(`Flow.jsx`) = 주차별 스터디 흐름(지난·이번 주·예정 — `weekStatus` 순수), 원천 = `flow_weeks`(**0008**), 운영진 인라인 CRUD.
-  공고(`Postings.jsx`, 2026-08-07) = 공모전·채용·자격시험·대외활동 스크랩 보드(개인 스크랩과 별개 — 운영진 등록·전원 열람).
-  원천 = `postings`(**0009**), 등록·삭제 = 운영 탭 > 공고(`AdminPostings.jsx`), **코멘트("왜 유효한가" 한 줄) 필수**(DB check+폼).
+  공고(`Postings.jsx`, 2026-08-07) = 공모전·채용·**자격증**(0015 개명)·**교내활동**(0019 개명) 링크 모음판(개인 스크랩과 별개 — 운영진·자동 루틴 등록·전원 열람).
+  원천 = `postings`(**0009**), 등록·삭제 = 운영 탭 > 공고(`AdminPostings.jsx`). **코멘트 = 선택**(0018 — 링크 모음판 전환으로 필수 해제. 자동 수집분은 미기재) + `출처` 배지.
   상태(접수중·접수전·상시·마감) = 저장 안 함 — `postings-logic.js` 파생(마감 = 접힘·흐림). 접수마감·시험일 = 홈 캘린더 합류(`postingAgendaItems`).
   기고(`Contribute.jsx`) = **투트랙**: 기본(키트+폼, `형식='md'`) / 자유(단일 HTML 붙여넣기, `형식='html'`(0008) — 공개 상세가 `sandbox=""` iframe(srcdoc)으로 렌더, 스크립트 차단. 분기 = `ArticleDetail.jsx`).
   북마크(`Collections.jsx`) = **북마크한 인사이트 모음만**(링크 스크랩 UI 폐지 2026-08-07 — collections 데이터 계층은 유지) / 내정보(`MyPage.jsx`) = 프로필 수정 + 활동내역 + 비밀번호 변경.
@@ -96,10 +99,12 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
   실측 고정 수치(버건디 화이트리스트·빈도 상한·버튼 3단 위계·인터랙션 4상태·§2 타이포 실값 표). UI 작업 전 필독. 위반=재작업.
 - **PageHead 강제(3차, 4차 개정)**: 페이지 헤드 = `src/shared.jsx` `PageHead` 1개(**중앙 정렬** — 눈썹 + h1 + 서브 + children,
   갱신 메타 = 인사이트만). 페이지별 head CSS 신설 금지. (구 좌 라벨 레일·`--rail-w` 토큰 = 4차 폐지·제거됨.)
-- CSS 20개(`src/styles/`): global(토큰·nav·PageHead·푸터·버튼) · home · home-sections ·
+- CSS 24개(`src/styles/`): global(토큰·nav·PageHead·푸터·버튼) · home · home-sections ·
   pages(공용 셸) · hub-md(도판 브레이크아웃) · articles · insights-detail · seminars · projects ·
   project-adsp + project-adsp-viz(ADsP 인터랙티브 상세) ·
-  project-site + project-site-roadmap(허브 사이트 인터랙티브 상세 — 세로 지그재그 로드맵) · recruit · workspace ·
+  project-site + project-site-roadmap(허브 사이트 인터랙티브 상세 — 세로 지그재그 로드맵) ·
+  project-reveal(전용 상세 2종 공용 리빌 — 2026-08-20 통합) ·
+  recruit + recruit-form + recruit-motion(모집 — 2026-08-20 300줄 분할, motion은 recruit 엔트리만 로드) · workspace ·
   workspace-home(사이드바·앱 셸 — 2026-08-06 분할) + workspace-calendar(홈 캘린더·팝업·범례 — 2026-08-14 분할) ·
   **workspace-kinds(분류 색 단일원천 — 캘린더 칩·점·범례 + 공고 종류 배지 공용, 2026-08-19. 분류 매핑 = `workspace/kind-colors.js`)** ·
   workspace-postings(공고 보드 — 2026-08-07 분할) ·
