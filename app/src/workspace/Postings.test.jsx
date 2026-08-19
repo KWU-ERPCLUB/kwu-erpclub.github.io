@@ -9,7 +9,7 @@ const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
 // SSR = 초기(로딩) 상태만 그린다 — 페치 후 목록·정렬은 순수 로직 테스트(postings-logic.test.js)가 담당.
 test('공고 탭 골격 = 종류 필터 + 접수 임박 레일 + 보드 안내', () => {
   const html = flat(<Postings store={createMockRepositories({ user: 'mock-member' })} />)
-  for (const k of ['전체', '공모전', '채용', '자격증', '대외활동']) expect(html).toContain(k)
+  for (const k of ['전체', '공모전', '채용', '자격증', '교내활동']) expect(html).toContain(k)
   expect(html).toContain('접수 임박')
   expect(html).toContain('왜 유효한가')
   expect(html).toContain('불러오는 중')

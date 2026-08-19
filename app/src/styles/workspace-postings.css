@@ -77,7 +77,7 @@
   white-space: nowrap;
 }
 
-/* 종류 배지 — POSTING_KINDS 순서(k-0 공모전 · k-1 채용 · k-2 자격증 · k-3 대외활동) */
+/* 종류 배지 — POSTING_KINDS 순서(k-0 공모전 · k-1 채용 · k-2 자격증 · k-3 교내활동) */
 .ws-post-kind {
   font-size: 0.72rem; font-weight: 700; border-radius: var(--radius-pill); padding: 0.14rem 0.62rem;
 }

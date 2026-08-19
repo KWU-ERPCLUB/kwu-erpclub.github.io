@@ -43,7 +43,7 @@ test('종류 필터 — 전체=통과, 그 외=일치만', () => {
   const rows = [row({ id: 'a', 종류: '채용' }), row({ id: 'b', 종류: '자격증' })]
   expect(filterPostings(rows, '전체')).toHaveLength(2)
   expect(filterPostings(rows, '채용').map((r) => r.id)).toEqual(['a'])
-  expect(POSTING_KINDS).toEqual(['공모전', '채용', '자격증', '대외활동'])
+  expect(POSTING_KINDS).toEqual(['공모전', '채용', '자격증', '교내활동'])
 })
 
 test('캘린더 합류 — 접수마감·시험일이 종류 "공고" 항목으로 변환(없는 날짜는 생략)', () => {
