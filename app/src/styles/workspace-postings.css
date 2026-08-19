@@ -1,5 +1,6 @@
 /* 공고 탭(2026-08-07 신설) — 카드형 보드 + 종류 배지 + 파생 상태. workspace.css 분할 파일(300줄 규격),
-   workspace-entry에서만 import. 토큰은 global.css 재사용. 공고 색 계열(#1f5c37)은 캘린더 칩(.post)과 동일. */
+   workspace-entry에서만 import. 토큰은 global.css 재사용.
+   분류 색(종류 배지)은 workspace-kinds.css 단일원천 — 홈 캘린더 칩·점과 같은 값(2026-08-19). */
 
 /* 1열 행 목록(오너 2026-08-19) — 카드 4줄 → 행 1줄. 2열은 카드 높이가 제각각이라 시선이 지그재그로
    튀고, 카드 자체도 세로가 커 한 화면에 4~5건뿐이었다. 한 줄 = 한 공고 + 클릭 시 펼침.
@@ -85,17 +86,17 @@
   white-space: nowrap;
 }
 
-/* 종류 배지 — POSTING_KINDS 순서(k-0 공모전 · k-1 채용 · k-2 자격증 · k-3 교내활동) */
+/* 종류 배지 — 색 = workspace-kinds.css 단일원천(.k-contest·.k-job·.k-cert·.k-campus, 폴백 .k-etc).
+   캘린더 칩·점이 같은 클래스를 쓴다(분류 매핑 = src/workspace/kind-colors.js). 여기는 형태만. */
 .ws-post-kind {
   font-size: 0.72rem; font-weight: 700; border-radius: var(--radius-pill); padding: 0.14rem 0.62rem;
 }
-.ws-post-kind.k-0 { background: #e3e9f0; color: #2c4058; }
-.ws-post-kind.k-1 { background: #f5ecd9; color: #6b4e0e; }
-.ws-post-kind.k-2 { background: #e2efe6; color: #1f5c37; }
-.ws-post-kind.k-3 { background: #ececec; color: #333; }
 
 /* 종류 배지 = 행에서 폭 고정 — 글자 수가 2~4자로 달라 좌측 정렬이 흐트러진다 */
 .ws-prow .ws-post-kind { min-width: 3.9rem; text-align: center; padding: 0.1rem 0.4rem; }
+
+/* 학사·AIM 일정 목록의 분류 점 — 제목 앞 인라인(2026-08-19) */
+.ws-row-title .ws-cal-dot { margin-right: 0.4rem; vertical-align: 1px; }
 
 .ws-post-status { margin-left: auto; font-size: 0.78rem; font-weight: 600; color: var(--text-sub); }
 

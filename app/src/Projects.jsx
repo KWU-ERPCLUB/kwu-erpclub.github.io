@@ -12,7 +12,10 @@ const STATUS_CLASS = { '운영 중': 'live', '진행 중': 'prep', '보관': 'pl
 
 // 인터랙티브 전용 페이지로 승격된 프로젝트(파일럿 — spec 2026-08-12). 카드·구 ?p= 딥링크 = 새 페이지로.
 // md 원문은 콘텐츠 계약·DB 검증 대상으로 보존(목록 카드 메타의 원천).
-export const INTERACTIVE_PAGES = { '2026-07-24-bapzzi-adsp-board': '/projects/adsp/' }
+export const INTERACTIVE_PAGES = {
+  '2026-07-24-bapzzi-adsp-board': '/projects/adsp/',
+  '2026-07-24-bapzzi-erpclub-site': '/projects/site/',
+}
 
 // 본문을 소개(intro)와 `## <헤딩>` 로그 섹션들로 분할. 순수 함수 — 테스트 대상.
 export function splitProjectBody(body) {

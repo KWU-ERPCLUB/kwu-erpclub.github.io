@@ -74,7 +74,8 @@ const DATA_CONSUMERS = {
 // 백엔드와 무관한 정적 상수 모듈(모집 창·FAQ 원천 — faq는 E4 공용화 2026-08-05) — 경계 규칙의 대상이 아니다.
 // (log.js는 워크스페이스 공지 탭 전용으로 내부화 — 공개면 소비 금지, IA 4차 2026-08-05)
 // project-adsp-data = ADsP 인터랙티브 상세의 실측 수치 상수(2026-08-12 파일럿 — 네트워크 0).
-const STATIC_DATA = ['recruit', 'faq', 'project-adsp-data']
+// project-site-data·project-site-roadmap-data = 허브 사이트 인터랙티브 상세의 정적 상수(2026-08-19 — 네트워크 0).
+const STATIC_DATA = ['recruit', 'faq', 'project-adsp-data', 'project-site-data', 'project-site-roadmap-data']
 test('P4 — 공개 페이지가 쓰는 data/ 모듈 = 화이트리스트 2쌍뿐', () => {
   const workspaceDir = path.join(SRC_DIR, 'workspace')
   const offenders = []

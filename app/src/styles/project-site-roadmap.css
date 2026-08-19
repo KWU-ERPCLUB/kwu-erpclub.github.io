@@ -1,0 +1,95 @@
+/* 세로 지그재그 로드맵 — 허브 사이트 상세 전용(구 가로 스크롤 '여정' 대체 2026-08-19).
+   중앙 축 + 좌우 교대 카드. 큰 전환점(major) = 큰 점 + 굵은 카드 + 라벨.
+   모바일(≤860px) = 축이 왼쪽으로 이동하고 카드는 전부 오른쪽 1열. */
+
+.ps-rm { position: relative; max-width: 1080px; margin-left: auto; margin-right: auto; padding: 0.5rem 0 1rem; }
+
+/* 축 — 회색 선 위에 진행 채움(버건디)이 얹힌다 */
+.ps-rm-spine { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; transform: translateX(-50%); background: var(--line); }
+.ps-rm-spine-fill { display: block; width: 100%; background: var(--accent); transition: height 120ms linear; }
+
+.ps-rm-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
+
+/* 노드 — 좌/우 교대. 카드는 축에서 한 칸 떨어져 붙는다.
+   맞물림: 이웃 노드는 반대쪽에 놓이므로 위로 당겨도 가로로 겹치지 않는다.
+   같은 쪽 이웃(i, i+2) 간격 = 사이 카드 높이 - 2×당김. 당김 4rem은 최소 카드 높이의 절반 미만이라 안전. */
+.ps-rm-node { position: relative; display: grid; grid-template-columns: 1fr 1fr; }
+.ps-rm-node + .ps-rm-node { margin-top: -4rem; }
+.ps-rm-node.left .ps-rm-card { grid-column: 1; margin-right: 2.4rem; }
+.ps-rm-node.right .ps-rm-card { grid-column: 2; margin-left: 2.4rem; }
+/* 점과 카드를 잇는 가로 연결선 */
+.ps-rm-card::after {
+  content: ''; position: absolute; top: 1.5rem; width: 2.4rem; height: 1px; background: var(--line);
+}
+.ps-rm-node.left .ps-rm-card::after { right: -2.4rem; }
+.ps-rm-node.right .ps-rm-card::after { left: -2.4rem; }
+
+/* 점 — 축 위에 정확히. major = 확대 + 버건디 채움 */
+.ps-rm-dot {
+  position: absolute; left: 50%; top: 1.5rem; z-index: 1;
+  width: 11px; height: 11px; border-radius: 50%;
+  background: #fff; border: 2px solid var(--text-sub);
+  transform: translate(-50%, -50%);
+}
+.ps-rm-node.major .ps-rm-dot {
+  width: 21px; height: 21px; background: var(--accent); border-color: var(--accent);
+  box-shadow: 0 0 0 5px rgba(122, 32, 48, 0.12);
+}
+
+/* 카드 */
+.ps-rm-card {
+  position: relative; background: #fff; border: 1px solid var(--line); border-radius: var(--radius-card);
+  padding: 1.15rem 1.3rem; min-width: 0;
+}
+.ps-ch-wash .ps-rm-card { background: #fff; }
+.ps-rm-node.major .ps-rm-card { border-color: var(--dark); border-width: 2px; box-shadow: 0 14px 34px rgba(20, 20, 20, 0.09); }
+
+.ps-rm-top { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.35rem; }
+.ps-rm-date { font-size: 0.75rem; font-weight: 800; letter-spacing: 0.1em; color: var(--accent); }
+.ps-rm-flag {
+  font-size: 0.66rem; font-weight: 700; color: #fff; background: var(--dark);
+  border-radius: var(--radius-pill); padding: 0.1rem 0.55rem;
+}
+.ps-rm-title {
+  font-family: var(--font-display); font-weight: 800; font-size: 1.08rem; line-height: 1.35;
+  margin: 0 0 0.55rem; text-wrap: pretty;
+}
+.ps-rm-node.major .ps-rm-title { font-size: 1.24rem; font-weight: 900; }
+
+/* 바뀐 면 칩 */
+.ps-rm-tags { list-style: none; margin: 0 0 0.6rem; padding: 0; display: flex; flex-wrap: wrap; gap: 0.3rem; }
+.ps-rm-tags li {
+  font-size: 0.7rem; font-weight: 700; color: var(--text-sub);
+  border: 1px solid var(--line); border-radius: var(--radius-pill); padding: 0.08rem 0.5rem;
+  background: var(--surface);
+}
+
+.ps-rm-decide { margin: 0; font-size: 0.9rem; color: var(--text-sub); line-height: 1.75; text-wrap: pretty; }
+
+/* AI 활용 — 로드맵의 핵심 축이라 별도 표기 */
+.ps-rm-ai {
+  margin: 0.7rem 0 0; padding: 0.6rem 0.75rem;
+  background: var(--surface); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0;
+  font-size: 0.85rem; color: var(--text-sub); line-height: 1.7; text-wrap: pretty;
+}
+.ps-rm-ai-label {
+  display: inline-block; margin-right: 0.45rem;
+  font-size: 0.68rem; font-weight: 800; letter-spacing: 0.08em; color: var(--accent);
+}
+
+/* before → after */
+.ps-rm-shift { margin: 0.7rem 0 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.4rem; font-size: 0.82rem; }
+.ps-rm-before { color: var(--text-sub); text-decoration: line-through; text-decoration-color: var(--line); }
+.ps-rm-to { color: var(--text-sub); }
+.ps-rm-after { font-weight: 800; }
+
+/* ── 반응형 — 축 왼쪽 고정 1열 ── */
+@media (max-width: 860px) {
+  .ps-rm-spine { left: 9px; transform: none; }
+  .ps-rm-node { grid-template-columns: 1fr; }
+  .ps-rm-node + .ps-rm-node { margin-top: 0; }
+  .ps-rm-node.left .ps-rm-card,
+  .ps-rm-node.right .ps-rm-card { grid-column: 1; margin-left: 2.1rem; margin-right: 0; }
+  .ps-rm-dot { left: 10px; }
+  .ps-rm-card::after { display: none; }
+}

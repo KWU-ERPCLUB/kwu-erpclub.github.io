@@ -14,7 +14,9 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
 ## Stack & gotchas
 - Vite 5 + React 18 (NOT 19 — older than other apps, don't bump casually), plain CSS (no Tailwind)
 - MPA: static entries in vite.config rollupOptions.input = main(하이브리드: v3 소개+**모집 밴드**) +
-  insights/seminars + **recruit**(AIM 기수 안내 + **운영 증빙** — 구 about Proof 이관) + projects + workspace.
+  insights/seminars + **recruit**(AIM 기수 안내 + **운영 증빙** — 구 about Proof 이관) + projects + workspace
+  + **전용 프로젝트 상세 2종**(`projects/adsp/`·`projects/site/` — md 계약에서 떼어낸 인터랙티브 페이지.
+  목록 카드·구 `?p=` 딥링크는 `Projects.jsx INTERACTIVE_PAGES`가 전용 URL로 보냄).
   new page = new dir + `src/*-entry.jsx` + input entry. 나브 = INSIGHTS·SEMINARS·PROJECTS·RECRUIT(+로그인 시 WORKSPACE).
   (insights 페이지 컴포넌트 파일명 = `pages/Articles.jsx`·`styles/articles.css` 유지 — 내부명, URL만 insights)
 - **모집 카피 규칙(SPEC §4 개정 2026-07-27)**: 사실 서술 허용(요강·기간·참여 방법 — 개조식) / 마케팅 어투 금지
@@ -94,10 +96,12 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
   실측 고정 수치(버건디 화이트리스트·빈도 상한·버튼 3단 위계·인터랙션 4상태·§2 타이포 실값 표). UI 작업 전 필독. 위반=재작업.
 - **PageHead 강제(3차, 4차 개정)**: 페이지 헤드 = `src/shared.jsx` `PageHead` 1개(**중앙 정렬** — 눈썹 + h1 + 서브 + children,
   갱신 메타 = 인사이트만). 페이지별 head CSS 신설 금지. (구 좌 라벨 레일·`--rail-w` 토큰 = 4차 폐지·제거됨.)
-- CSS 18개(`src/styles/`): global(토큰·nav·PageHead·푸터·버튼) · home · home-sections ·
+- CSS 20개(`src/styles/`): global(토큰·nav·PageHead·푸터·버튼) · home · home-sections ·
   pages(공용 셸) · hub-md(도판 브레이크아웃) · articles · insights-detail · seminars · projects ·
-  project-adsp + project-adsp-viz(ADsP 인터랙티브 상세) · recruit · workspace ·
+  project-adsp + project-adsp-viz(ADsP 인터랙티브 상세) ·
+  project-site + project-site-roadmap(허브 사이트 인터랙티브 상세 — 세로 지그재그 로드맵) · recruit · workspace ·
   workspace-home(사이드바·앱 셸 — 2026-08-06 분할) + workspace-calendar(홈 캘린더·팝업·범례 — 2026-08-14 분할) ·
+  **workspace-kinds(분류 색 단일원천 — 캘린더 칩·점·범례 + 공고 종류 배지 공용, 2026-08-19. 분류 매핑 = `workspace/kind-colors.js`)** ·
   workspace-postings(공고 보드 — 2026-08-07 분할) ·
   workspace-mypage + workspace-roadmap(내정보·로드맵 탭 — 2026-08-14 분할).
   (`doc.css` = 2026-07-25 폐지 — 내부형 doc 셸·DocSide와 함께 제거됨.)

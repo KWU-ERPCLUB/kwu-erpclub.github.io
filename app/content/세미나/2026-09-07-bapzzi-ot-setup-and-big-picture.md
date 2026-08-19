@@ -6,8 +6,7 @@ date: 2026-09-07
 유형: 인지
 주제: 워크플로·자동화
 일정미정: true
-공개: false
-슬라이드: https://kwu-erpclub.github.io/slides/s1/
+슬라이드: /slides/s1/
 썸네일: [/img/세미나/cover-s1.png]
 pdf: /pdf/세미나/2026-09-07-bapzzi-ot-setup-and-big-picture.pdf
 요점: [한 줄 질문과 브리프의 결과 차이를 내 눈으로 확인, 학기 지도 = 1차 개인 효율화·2차 팀 MIS MVP, 도구 방침 = 무료 표준(유료 = 개인 자유), 시작 설문 = 학기말과 비교할 기준선]

@@ -39,6 +39,20 @@ test('특강 = 회차 번호 대신 특강 라벨 (상세 눈썹 + 목록 노드
   expect(row).toContain('특강') // 번호 자리 라벨
 })
 
+// 특강 실물 레코드(2026-08-19) — 공개 목록에 남고, 상세에서 덱(표지 클릭)과 PDF(헤더 버튼) 두 진입이 모두 살아 있어야 한다.
+test('특강 실물 — 공개 목록 노출 + 덱 링크 + PDF 링크', async () => {
+  const { loadContent } = await import('../content/loader.js')
+  const { publicOnly } = await import('./seminars-logic.js')
+  const sp = publicOnly(loadContent('세미나')).find((s) => s['특강'] === true)
+  expect(sp).toBeTruthy()                       // 공개(공개:false 아님) → 목록에 남음
+  expect(sp['슬라이드']).toContain('/slides/sp1/')
+  expect(sp.pdf).toContain('/pdf/세미나/')
+  expect(sp['썸네일'][0]).toContain('cover-sp1')
+  const html = flat(<SeminarDetail s={sp} onBack={() => {}} />)
+  expect(html).toContain(sp['슬라이드'])        // 표지 클릭 = 웹 덱
+  expect(html).toContain(sp.pdf)                // 헤더 'PDF 받기'
+})
+
 test('SeminarDetail 인지 — 목차 없이 리드 + 본문 + 다크 밴드', () => {
   const cog = { slug: 'y', title: '개념', author: '김', date: '2026-10-01', 회차: '4', 유형: '인지', body: '개론 리드.\n\n본문 이어짐.' }
   const html = flat(<SeminarDetail s={cog} onBack={() => {}} />)

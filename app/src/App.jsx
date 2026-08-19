@@ -16,7 +16,7 @@ import { SectionHead, HomeInsights } from './home-parts.jsx'
 // export = 슬러그 존재 여부를 테스트가 콘텐츠 글롭과 대조하기 위함.
 export const PROJECTS = [
   ['ADsP 스터디 1기', '/img/projects/adsp-board.png', '/projects/?p=2026-07-24-bapzzi-adsp-board', '1기 완주'],
-  ['KWU ERP Club Site', '/img/projects/erpclub-site.png', '/projects/?p=2026-07-24-bapzzi-erpclub-site', '운영 중'],
+  ['AIM 허브 사이트', '/img/projects/hub/cover.jpg', '/projects/?p=2026-07-24-bapzzi-erpclub-site', '운영 중'],
 ]
 
 // ROADMAP — 브랜치 계보(오너 2026-08-07: "지그재그보다 브랜치 형태로").

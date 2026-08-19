@@ -15,6 +15,7 @@ const PUB = join(APP, 'public')
 const OUT = join(PUB, 'pdf', '세미나')
 // 덱 → 세미나 슬러그 매핑(발표자료가 덱으로 존재하는 회차만 등록)
 const DECKS = {
+  sp1: '2026-07-25-bapzzi-question-to-delegation',
   s1: '2026-09-07-bapzzi-ot-setup-and-big-picture',
   s2: '2026-09-14-bapzzi-contribute-and-first-delegation',
   s3: '2026-09-21-bapzzi-build-sprint',
