@@ -17,10 +17,11 @@ export function postingStatus(row, todayKey) {
   return '접수중'
 }
 
-// 우선순위 3단(오너 2026-08-19): ★ 내 관심 → 📌 운영진 고정 → 일반. 같은 단 안에서는 임박순.
+// 우선순위 2단(오너 2026-08-19 재판정): ★ 내 관심 → 전체. 같은 단 안에서는 임박순.
 // interestIds = 로그인 사용자가 ★ 체크한 공고 id(posting_interests). 개인별로 달라지는 유일한 축.
-export const postingRank = (row, interestIds = []) =>
-  (interestIds.includes(row.id) ? 0 : row['고정'] ? 1 : 2)
+// `고정`은 정렬에서 쓰지 않는다 — 오너가 설정한 적 없는 값이라 위계로 세우면 근거 없는 순서가 된다.
+// 데이터·홈 캘린더 '다가오는 업무' 플래그로는 그대로 살아 있다(postingAgendaItems의 중요).
+export const postingRank = (row, interestIds = []) => (interestIds.includes(row.id) ? 0 : 1)
 
 // 목록 정렬 — 활성(접수중·접수전: 3단 우선순위 → 마감 임박순) → 상시(3단) → 마감(최근 마감 먼저).
 // 반환 = { active, always, closed } 세 묶음(화면이 마감 묶음을 접어 렌더).
@@ -42,12 +43,12 @@ export function groupPostings(rows, todayKey, interestIds = []) {
   return { active, always, closed }
 }
 
-// 섹션 분할(오너 2026-08-19) — 정렬된 목록을 3단 라벨 묶음으로. 빈 묶음은 화면이 숨긴다.
+// 섹션 분할(오너 2026-08-19) — 정렬된 목록을 라벨 묶음으로. 빈 묶음은 화면이 숨긴다.
 // 상시 공고는 접수일이 없어 임박 정렬이 무의미 → 활성 묶음 뒤에 '상시' 한 섹션으로 붙인다.
-export const SECTION_LABELS = ['★ 내 관심', '📌 운영진 추천', '전체']
+export const SECTION_LABELS = ['★ 내 관심', '전체']
 
 export function sectionPostings(active, always, interestIds = []) {
-  const buckets = [[], [], []]
+  const buckets = [[], []]
   for (const r of active) buckets[postingRank(r, interestIds)].push(r)
   const sections = buckets
     .map((items, i) => ({ key: SECTION_LABELS[i], label: SECTION_LABELS[i], items }))

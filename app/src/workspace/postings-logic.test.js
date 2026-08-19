@@ -24,7 +24,7 @@ test('접수 없는 시험 공지 — 시험일 전=예정, 지나면=마감 (�
   expect(active.map((r) => r.id)).toEqual(['b', 'a'])
 })
 
-test('묶음 분리·정렬 — 활성(고정→마감 임박순) / 상시 / 마감(최근 먼저)', () => {
+test('묶음 분리·정렬 — 활성(마감 임박순) / 상시 / 마감(최근 먼저)', () => {
   const rows = [
     row({ id: 'a', 접수마감: '2026-09-25' }),
     row({ id: 'b', 접수마감: '2026-09-10' }),
@@ -34,7 +34,7 @@ test('묶음 분리·정렬 — 활성(고정→마감 임박순) / 상시 / 마
     row({ id: 'f', 접수마감: '2026-08-20' }),
   ]
   const { active, always, closed } = groupPostings(rows, TODAY)
-  expect(active.map((r) => r.id)).toEqual(['c', 'b', 'a'])   // 고정 먼저, 나머지 마감 임박순
+  expect(active.map((r) => r.id)).toEqual(['b', 'a', 'c'])   // 관심 지정 없음 = 순수 마감 임박순
   expect(always.map((r) => r.id)).toEqual(['d'])
   expect(closed.map((r) => r.id)).toEqual(['e', 'f'])        // 최근 마감 먼저
 })
@@ -56,7 +56,8 @@ test('캘린더 합류 — 접수마감·시험일이 종류 "공고" 항목으�
   expect(items[1]).toMatchObject({ date: '2026-10-11', 제목: '시험일 — ADsP 51회', 종류: '공고' })
 })
 
-test('우선순위 3단(2026-08-19) — ★ 관심 → 고정 → 일반, 같은 단은 임박순', () => {
+// 2단(2026-08-19 오너 재판정) — 고정은 정렬에서 빠진다(오너가 설정한 적 없는 값이라 위계 근거가 없음).
+test('우선순위 2단 — ★ 관심이 먼저, 나머지는 고정 여부와 무관하게 임박순', () => {
   const rows = [
     row({ id: 'plain-late', 접수마감: '2026-09-30' }),
     row({ id: 'pin', 접수마감: '2026-09-25', 고정: true }),
@@ -64,10 +65,10 @@ test('우선순위 3단(2026-08-19) — ★ 관심 → 고정 → 일반, 같은
     row({ id: 'plain-soon', 접수마감: '2026-09-10' }),
   ]
   const { active } = groupPostings(rows, TODAY, ['star'])
-  expect(active.map((r) => r.id)).toEqual(['star', 'pin', 'plain-soon', 'plain-late'])
+  expect(active.map((r) => r.id)).toEqual(['star', 'plain-soon', 'pin', 'plain-late'])
   expect(postingRank(rows[2], ['star'])).toBe(0)
-  expect(postingRank(rows[1], ['star'])).toBe(1)
-  expect(postingRank(rows[0], ['star'])).toBe(2)
+  expect(postingRank(rows[1], ['star'])).toBe(1)   // 고정이어도 관심이 아니면 같은 단
+  expect(postingRank(rows[0], ['star'])).toBe(1)
 })
 
 test('섹션 분할 — 빈 묶음은 빠지고, 상시는 맨 뒤 한 섹션', () => {

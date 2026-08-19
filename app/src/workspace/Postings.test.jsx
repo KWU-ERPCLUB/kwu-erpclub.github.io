@@ -15,14 +15,17 @@ test('공고 탭 골격 = 종류 필터 + 접수 임박 레일 + 보드 안내',
   expect(html).toContain('불러오는 중')
 })
 
-test('카드 = 종류 배지·원문 링크·코멘트·상태(마감=흐림) 렌더', () => {
+// 행 1줄 + 펼침(2026-08-19) — 요약줄 = 배지·제목·마감(MM-DD)·D-n / 펼침 = 주최·기간·코멘트·원문 링크.
+// details라 접힘 상태에서도 펼침 내용이 DOM에 있다(SSR·브라우저 검색 가능).
+test('행 = 종류 배지·제목·D-n 요약 + 펼침에 원문 링크·코멘트(마감=흐림)', () => {
   const active = flat(<PostingCard todayKey="2026-09-08" row={{ id: 'p', 제목: 'ADsP 51회 접수', 종류: '자격증', 주최: 'Kdata', url: 'https://example.com/x', 접수시작: '2026-09-05', 접수마감: '2026-09-09', 시험일: '2026-10-11', 코멘트: '접수창 5일 주의', 고정: true }} />)
   expect(active).toContain('href="https://example.com/x"')
   expect(active).toContain('자격증')
   expect(active).toContain('접수창 5일 주의')
-  expect(active).toContain('접수중 · D-1')
-  expect(active).toContain('고정')
+  expect(active).toContain('D-1')
+  expect(active).toContain('09-09')            // 요약줄 마감 = 연도 없는 짧은 표기
   expect(active).toContain('시험일 2026-10-11')
+  expect(active).not.toContain('고정')          // 고정 배지 폐지 — 오너가 설정한 적 없는 값(2026-08-19)
 
   const closed = flat(<PostingCard todayKey="2026-09-08" row={{ id: 'q', 제목: '지난 공모전', 종류: '공모전', url: 'https://example.com/y', 접수마감: '2026-09-01', 코멘트: 'c' }} />)
   expect(closed).toContain('closed')

@@ -6,42 +6,55 @@ import { toKey, dday } from './calendar-logic.js'
 import { POSTING_KINDS, postingStatus, groupPostings, filterPostings, sectionPostings } from './postings-logic.js'
 import { taxonomyOptions, effectiveSubs, hasSubRow, eventCategory, planToggle, SUBS_CHANGED } from './postings-taxonomy.js'
 
-// 카드 1장 — 종류·세부 분류 배지 + 제목(원문 링크) + 주최 + 접수·시험 일정 + 큐레이션 코멘트(필수 필드).
+// 마감·시험일 짧은 표기(09-07) — 행이 한 줄이라 연도를 뺀다. 연도 전체는 펼침 안에 그대로 있다.
+const short = (d) => (d ? d.slice(5) : '')
+
+// 행 1줄(오너 2026-08-19 — 카드 4줄 → 행 1줄) — [종류] 제목 … 마감 D-n ★.
+// 클릭하면 주최·접수 기간·코멘트·원문 링크가 아래로 펼쳐진다(details = 접힘 상태도 DOM에 남아 검색·SSR 가능).
 // 관심 ★(0013) — 체크한 공고는 내정보 상단 "관심 공고"에 모인다(구독과 별개: ★=모음, 구독=캘린더).
 export function PostingCard({ row, todayKey, interested = false, onToggleInterest }) {
   const status = postingStatus(row, todayKey)
   const closed = status === '마감'
+  // 요약줄 날짜 = 지금 알아야 할 날짜 하나. 접수 전이면 마감이 아니라 **시작일**이 그 하나다
+  // (마감만 띄우면 아직 열지도 않은 창을 놓친 것처럼 읽힌다). 상시는 날짜 칸을 비운다 — 상태가 이미 '상시'.
+  const keyDate = status === '접수전' ? row['접수시작'] : (row['접수마감'] || row['시험일'])
   return (
-    <li className={`ws-posting${closed ? ' closed' : ''}${row['고정'] ? ' pinned' : ''}`}>
-      <div className="ws-row-top">
-        <span className={`ws-post-kind k-${POSTING_KINDS.indexOf(row['종류'])}`}>{row['종류']}</span>
-        {row['분류'] && <span className="ws-post-sub">{row['분류']}</span>}
-        {row['고정'] && !closed && <span className="ws-post-pin">고정</span>}
-        <span className={`ws-post-status s-${status}`}>
-          {status === '접수중' && `접수중 · ${dday(todayKey, row['접수마감'])}`}
-          {status === '예정' && `시험 ${dday(todayKey, row['시험일'])}`}
-          {status !== '접수중' && status !== '예정' && status}
-        </span>
-        {onToggleInterest && (
-          <button
-            type="button" className={`ws-post-star${interested ? ' on' : ''}`}
-            aria-pressed={interested} aria-label={interested ? '관심 해제' : '관심 공고로 체크'}
-            title={interested ? '관심 해제' : '관심 공고로 체크 — 내정보에 모이고 이 공고만 홈 캘린더에도 뜬다'}
-            onClick={() => onToggleInterest(row.id, !interested)}
-          >
-            ★
-          </button>
-        )}
-      </div>
-      <a className="ws-post-title" href={row.url} target="_blank" rel="noreferrer">{row['제목']}</a>
-      <p className="ws-mark-meta">
-        {[
-          row['주최'],
-          row['접수마감'] ? `접수 ${row['접수시작'] ? `${row['접수시작']} ~ ` : '~ '}${row['접수마감']}` : (!row['시험일'] && '상시'),
-          row['시험일'] && `시험일 ${row['시험일']}`,
-        ].filter(Boolean).join(' · ')}
-      </p>
-      <p className="ws-post-comment">{row['코멘트']}</p>
+    <li className={`ws-prow${closed ? ' closed' : ''}`}>
+      <details className="ws-prow-d">
+        <summary className="ws-prow-sum">
+          <span className={`ws-post-kind k-${POSTING_KINDS.indexOf(row['종류'])}`}>{row['종류']}</span>
+          <span className="ws-prow-title">{row['제목']}</span>
+          <span className="ws-prow-due">{short(keyDate)}</span>
+          <span className={`ws-post-status s-${status}`}>
+            {status === '접수중' && dday(todayKey, row['접수마감'])}
+            {status === '접수전' && `${dday(todayKey, row['접수시작'])} 시작`}
+            {status === '예정' && `시험 ${dday(todayKey, row['시험일'])}`}
+            {status !== '접수중' && status !== '접수전' && status !== '예정' && status}
+          </span>
+        </summary>
+        <div className="ws-prow-body">
+          <p className="ws-mark-meta">
+            {[
+              row['주최'],
+              row['분류'],
+              row['접수마감'] ? `접수 ${row['접수시작'] ? `${row['접수시작']} ~ ` : '~ '}${row['접수마감']}` : (!row['시험일'] && '상시 모집'),
+              row['시험일'] && `시험일 ${row['시험일']}`,
+            ].filter(Boolean).join(' · ')}
+          </p>
+          <p className="ws-post-comment">{row['코멘트']}</p>
+          <a className="ws-post-link" href={row.url} target="_blank" rel="noreferrer">원문 보기 ↗</a>
+        </div>
+      </details>
+      {onToggleInterest && (
+        <button
+          type="button" className={`ws-post-star${interested ? ' on' : ''}`}
+          aria-pressed={interested} aria-label={interested ? '관심 해제' : '관심 공고로 체크'}
+          title={interested ? '관심 해제' : '관심 공고로 체크 — 내정보에 모이고 이 공고만 홈 캘린더에도 뜬다'}
+          onClick={() => onToggleInterest(row.id, !interested)}
+        >
+          ★
+        </button>
+      )}
     </li>
   )
 }
