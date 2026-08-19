@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { toKey, dday } from './calendar-logic.js'
 import { POSTING_KINDS, postingStatus, groupPostings, filterPostings, sectionPostings, searchPostings } from './postings-logic.js'
 import { taxonomyOptions, effectiveSubs, hasSubRow, eventCategory, planToggle, SUBS_CHANGED } from './postings-taxonomy.js'
+import { kindClass, categoryLabel } from './kind-colors.js'
 
 // 마감·시험일 짧은 표기(09-07) — 행이 한 줄이라 연도를 뺀다.
 const short = (d) => (d ? d.slice(5) : '')
@@ -23,7 +24,7 @@ export function PostingCard({ row, todayKey, interested = false, onToggleInteres
   return (
     <li className={`ws-prow${closed ? ' closed' : ''}`}>
       <a className="ws-prow-link" href={row.url} target="_blank" rel="noreferrer">
-        <span className={`ws-post-kind k-${POSTING_KINDS.indexOf(row['종류'])}`}>{row['종류']}</span>
+        <span className={`ws-post-kind ${kindClass(row['종류'])}`}>{row['종류']}</span>
         <span className="ws-prow-title">{row['제목']}</span>
         {row['출처'] && <span className="ws-prow-src">{row['출처']}</span>}
         <span className="ws-prow-due">{short(keyDate)}</span>
@@ -54,7 +55,10 @@ export function EventList({ rows, todayKey }) {
   const past = rows.filter((r) => r['날짜'] < todayKey).reverse()
   const line = (r) => (
     <li key={r.id} className="ws-mark">
-      <span className="ws-row-title">{r['제목']}</span>
+      <span className="ws-row-title">
+        <span className={`ws-cal-dot ${kindClass(eventCategory(r))}`} aria-hidden="true" />
+        {r['제목']}
+      </span>
       <span className="ws-mark-meta">{r['날짜']}{r['시간'] ? ` ${r['시간']}` : ''}{r['설명'] ? ` · ${r['설명']}` : ''}</span>
     </li>
   )
@@ -72,8 +76,7 @@ export function EventList({ rows, todayKey }) {
   )
 }
 
-// 일정 카테고리(학사·AIM) 표시명 — 필터 칩 라벨(카테고리 키는 짧은 값 유지).
-const CAT_LABEL = { 학사: '학사일정', AIM: 'AIM 일정' }
+// 일정 카테고리(학사·AIM) 표시명 원천 = kind-colors CATEGORY_LABEL(캘린더 범례와 같은 표기).
 
 export default function Postings({ store }) {
   const todayKey = useMemo(() => toKey(new Date()), [])
@@ -169,7 +172,7 @@ export default function Postings({ store }) {
                 key={k} type="button" aria-pressed={kind === k}
                 className={`ws-tabbtn${kind === k ? ' on' : ''}`} onClick={() => { setKind(k); setSub('전체') }}
               >
-                {CAT_LABEL[k] || k}
+                {categoryLabel(k)}
               </button>
             ))}
           </nav>
@@ -209,7 +212,7 @@ export default function Postings({ store }) {
                   <rect x="3" y="4.5" width="18" height="16" rx="2.5" /><path d="M3 9.5h18M8 2.5v4M16 2.5v4" />
                   {subbed && <path d="m8.5 14.5 2.5 2.5 4.5-4.5" />}
                 </svg>
-                {subbed ? '캘린더에 등록됨' : `${selSub || CAT_LABEL[kind] || kind} 캘린더에 등록`}
+                {subbed ? '캘린더에 등록됨' : `${selSub || categoryLabel(kind)} 캘린더에 등록`}
               </button>
             </div>
           )}

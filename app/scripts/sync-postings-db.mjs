@@ -11,7 +11,8 @@ import { taxonomyOptions } from '../src/workspace/postings-taxonomy.js'
 
 const dry = process.argv.includes('--dry')
 const SRC = fileURLToPath(new URL('../../supabase/postings.json', import.meta.url))
-const EVENT_KINDS = ['일정', '세미나', '모집', '마감', '학사']
+// 'AIM' = 세부 구분이 필요 없는 AIM 일정(2026-08-19 캘린더 색 개편 — DB 정합 = migration 0020)
+const EVENT_KINDS = ['일정', '세미나', '모집', '마감', '학사', 'AIM']
 const DATE = /^\d{4}-\d{2}-\d{2}$/
 
 const data = JSON.parse(readFileSync(SRC, 'utf-8'))

@@ -4,10 +4,10 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { monthGrid, buildAgenda, itemsOn, upcoming, dday, daysBetween, toKey, weeklyContribItems } from './calendar-logic.js'
 import { postingAgendaItems } from './postings-logic.js'
 import { filterAgendaBySubs, SUBS_CHANGED } from './postings-taxonomy.js'
+import { itemClass, itemLabel, kindClass, categoryLabel, LEGEND_CATEGORIES } from './kind-colors.js'
 import Assignments from './Assignments.jsx'
 import { NoticeTitles } from './Notices.jsx'
 
-const KIND_CLASS = { 일정: 'ev', 세미나: 'sem', 모집: 'rec', 마감: 'due', 과제: 'due', 세션: 'sem', 공고: 'post', 학사: 'ac' }
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토']
 
 // 항목 세부 팝업(2026-08-07 오너) — 새 창 대신 작은 둥근 팝업. 캘린더 칩·선택일 목록 어디서든 연다.
@@ -35,8 +35,8 @@ export function ItemPopup({ item, onClose }) {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="ws-row-top">
-          <span className={`ws-cal-dot ${KIND_CLASS[item['종류']] || 'ev'}`} aria-hidden="true" />
-          <span className="ws-mark-meta">{item['종류']}</span>
+          <span className={`ws-cal-dot ${itemClass(item)}`} aria-hidden="true" />
+          <span className="ws-mark-meta">{itemLabel(item)}</span>
           <button type="button" ref={closeRef} className="ws-modal-x" onClick={onClose} aria-label="닫기">×</button>
         </div>
         <h3 className="ws-modal-title">{item['제목']}</h3>
@@ -65,10 +65,10 @@ export function MonthCalendar({ year, month, items, todayKey, selected, onSelect
           <button type="button" onClick={() => onMove(1)} aria-label="다음 달">›</button>
         </div>
       </div>
-      {/* 범례(2026-08-14 검수) — 점 색이 곧 종류: 기존 ws-cal-dot 색 재사용 */}
+      {/* 범례(2026-08-19 개편) — 점 색 = 분류. 목록 원천 = kind-colors LEGEND_CATEGORIES(구독 카테고리와 같은 축) */}
       <ul className="ws-cal-legend">
-        {[['ev', '일정'], ['sem', '세미나'], ['rec', '모집'], ['due', '마감'], ['post', '공고'], ['ac', '학사']].map(([c, label]) => (
-          <li key={c}><span className={`ws-cal-dot ${c}`} aria-hidden="true" />{label}</li>
+        {LEGEND_CATEGORIES.map((cat) => (
+          <li key={cat}><span className={`ws-cal-dot ${kindClass(cat)}`} aria-hidden="true" />{categoryLabel(cat)}</li>
         ))}
       </ul>
       {/* role=grid 제거(2026-08-14 검수) — grid 키보드 규약 미구현 상태의 거짓 선언 대신 단순 div */}
@@ -96,14 +96,14 @@ export function MonthCalendar({ year, month, items, todayKey, selected, onSelect
               {dayItems.length > 0 && (
                 <span className="ws-cal-dots" aria-hidden="true">
                   {dayItems.slice(0, 3).map((it) => (
-                    <i key={`d-${it.source}-${it.id}`} className={`ws-cal-dot ${KIND_CLASS[it['종류']] || 'ev'}`} />
+                    <i key={`d-${it.source}-${it.id}`} className={`ws-cal-dot ${itemClass(it)}`} />
                   ))}
                 </span>
               )}
               {dayItems.slice(0, 3).map((it) => (
                 <button
                   type="button" key={`${it.source}-${it.id}`}
-                  className={`ws-cal-chip ${KIND_CLASS[it['종류']] || 'ev'}`}
+                  className={`ws-cal-chip ${itemClass(it)}`}
                   title={it['제목']}
                   onClick={(e) => { e.stopPropagation(); onSelect(cell.key); onOpenItem?.(it) }}
                 >
@@ -133,7 +133,7 @@ export function UpcomingTasks({ items, todayKey, onSelect }) {
         {rows.map((it) => (
           <li key={`${it.source}-${it.id}`}>
             <button type="button" className="ws-up-item" onClick={() => onSelect(it.date)}>
-              <span className={`ws-cal-dot ${KIND_CLASS[it['종류']] || 'ev'}`} aria-hidden="true" />
+              <span className={`ws-cal-dot ${itemClass(it)}`} aria-hidden="true" />
               <span className="ws-up-title">{it['중요'] ? '★ ' : ''}{it['제목']}</span>
               <span className="ws-up-when">{it.date.slice(5).replace('-', '/')}</span>
               <span className={`ws-up-dday${daysBetween(todayKey, it.date) <= 7 ? ' soon' : ''}`}>{dday(todayKey, it.date)}</span>
@@ -162,9 +162,9 @@ export function DayDetail({ items, selected, onOpenItem }) {
         {rows.map((it) => (
           <li key={`${it.source}-${it.id}`}>
             <button type="button" className="ws-up-item" onClick={() => onOpenItem?.(it)}>
-              <span className={`ws-cal-dot ${KIND_CLASS[it['종류']] || 'ev'}`} aria-hidden="true" />
+              <span className={`ws-cal-dot ${itemClass(it)}`} aria-hidden="true" />
               <span className="ws-up-title">{it['제목']}</span>
-              <span className="ws-up-when">{it['종류']}{it['시간'] ? ` · ${it['시간']}` : ''}</span>
+              <span className="ws-up-when">{itemLabel(it)}{it['시간'] ? ` · ${it['시간']}` : ''}</span>
             </button>
           </li>
         ))}

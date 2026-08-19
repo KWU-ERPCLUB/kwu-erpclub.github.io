@@ -3,8 +3,10 @@
 // 카피 = "캘린더에 등록"(오너 2026-08-18 2차 — '구독'·'담기' 모두 비직관 판정). 변경은 SUBS_CHANGED로 홈에 즉시 반영.
 import { useCallback, useEffect, useState } from 'react'
 import { effectiveSubs, planToggle, SUBS_CHANGED } from './postings-taxonomy.js'
+import { kindClass, categoryLabel, CATEGORY_LABEL } from './kind-colors.js'
 
-const label = (s) => (s['분류'] ? `${s['종류']} · ${s['분류']}` : s['종류'] === '학사' ? '학사일정' : s['종류'] === 'AIM' ? 'AIM 일정' : `${s['종류']} 전체`)
+// 표시명 원천 = kind-colors(캘린더 범례·공고 탭 칩과 같은 표기). 세부 분류가 있으면 '종류 · 분류'.
+const label = (s) => (s['분류'] ? `${s['종류']} · ${s['분류']}` : CATEGORY_LABEL[s['종류']] ? categoryLabel(s['종류']) : `${s['종류']} 전체`)
 
 export default function MySubscriptions({ store }) {
   const [subs, setSubs] = useState(null)
@@ -48,6 +50,7 @@ export default function MySubscriptions({ store }) {
           <ul className="ws-sub-chips">
             {eff.map((s) => (
               <li key={`${s['종류']}-${s['분류']}`} className="ws-sub-chip">
+                <span className={`ws-cal-dot ${kindClass(s['종류'])}`} aria-hidden="true" />
                 {label(s)}
                 <button type="button" aria-label={`${label(s)} 등록 해제`} title="등록 해제" onClick={() => remove(s)}>×</button>
               </li>
