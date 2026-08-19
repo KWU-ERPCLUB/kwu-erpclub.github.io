@@ -40,7 +40,7 @@ export default function AdminPostings({ store }) {
     e.preventDefault()
     if (!form['제목'].trim()) { setError('제목 필수'); return }
     if (!isUrl(form.url)) { setError('원문 링크 = http(s) 주소 필수'); return }
-    if (!form['코멘트'].trim()) { setError('코멘트 필수 — 우리에게 왜 유효한지 한 줄'); return }
+    // 코멘트 = 선택(2026-08-19 오너 — 보드가 링크 모음판이 되면서 DB 제약도 풀었다, migration 0018)
     setBusy(true)
     setError('')
     try {
@@ -99,8 +99,8 @@ export default function AdminPostings({ store }) {
           <label className="ws-field"><span>시험일(선택)</span><input type="date" value={form['시험일']} onChange={set('시험일')} /></label>
         </div>
         <label className="ws-field">
-          <span>코멘트 — 우리에게 왜 유효한가</span>
-          <input value={form['코멘트']} placeholder="예: 물류·생산 과목이 전공 수업과 겹쳐 준비 비용이 낮다" onChange={set('코멘트')} />
+          <span>코멘트(선택)</span>
+          <input value={form['코멘트']} placeholder="남길 판단 재료가 있으면 한 줄. 없으면 비워 둔다" onChange={set('코멘트')} />
         </label>
         <label className="ws-check">
           <input type="checkbox" checked={form['고정']} onChange={set('고정')} /> ★ 고정 — 보드 상단 + 다가오는 업무에 표시
