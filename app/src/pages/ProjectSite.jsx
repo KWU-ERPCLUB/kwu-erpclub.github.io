@@ -12,7 +12,7 @@ import { META } from '../data/project-site-data.js'
 import { MILESTONES } from '../data/project-site-roadmap-data.js'
 
 const CHAPTERS = [
-  { id: 'screens', label: '화면' },
+  { id: 'screens', label: '페이지' },
   { id: 'roadmap', label: '로드맵' },
   { id: 'next', label: '남은 것' },
 ]
@@ -76,27 +76,27 @@ export default function ProjectSite() {
           <HeroMosaic />
         </header>
 
-        {/* 1 화면 — 면마다 실물 캡처 + 왜 이렇게 생겼나 */}
+        {/* 1 페이지 — 페이지마다 실물 캡처 + 왜 이렇게 만들었나 */}
         <section className="ps-ch ps-ch-wash" id="screens">
           <header className="ps-ch-head ps-rv">
-            <span className="ps-ch-eyebrow">SCREENS</span>
-            <h2 className="ps-ch-title">면마다 왜 이렇게 생겼나</h2>
+            <span className="ps-ch-eyebrow">PAGES</span>
+            <h2 className="ps-ch-title">각 페이지를 왜 이렇게 만들었나</h2>
             <p className="ps-ch-lead">
-              면은 있으면 좋아서 생긴 것이 아님. 막힌 것을 풀려고 하나씩 생김.
-              아래는 지금 버전 실물과, 그 모습을 만든 결정.
+              페이지는 필요할 때마다 하나씩 늘었다.
+              지금 버전의 실제 화면과 함께, 그렇게 만든 이유를 페이지별로 정리했다.
             </p>
           </header>
           <PageShowcase />
         </section>
 
-        {/* 2 로드맵 — 세로 지그재그. 날짜별로 어느 면이 어떻게 정합됐는지 */}
+        {/* 2 로드맵 — 세로 지그재그. 날짜별로 어느 페이지가 어떻게 바뀌었는지 */}
         <section className="ps-ch" id="roadmap">
           <header className="ps-ch-head ps-rv">
             <span className="ps-ch-eyebrow">ROADMAP</span>
-            <h2 className="ps-ch-title">{MILESTONES.length}개의 분기</h2>
+            <h2 className="ps-ch-title">만들면서 내린 결정 {MILESTONES.length}개</h2>
             <p className="ps-ch-lead">
-              사이트의 면이 실제로 바뀐 결정만 골랐음. 각 칸은 무엇을 판단했고 AI를 어디에 썼는지까지.
-              큰 점은 방향이 바뀐 자리.
+              화면이 실제로 바뀐 결정만 골라 시간순으로 적었다.
+              각 항목에는 무엇을 판단했고 AI를 어디에 썼는지를 담았다. 큰 점은 방향이 바뀐 지점이다.
             </p>
           </header>
           <RoadmapZigzag />
@@ -106,15 +106,15 @@ export default function ProjectSite() {
         <section className="ps-ch ps-ch-wash" id="next">
           <header className="ps-ch-head ps-rv">
             <span className="ps-ch-eyebrow">NEXT</span>
-            <h2 className="ps-ch-title">아직 만들어가는 중</h2>
+            <h2 className="ps-ch-title">아직 만들어가는 중이다</h2>
             <p className="ps-ch-lead">
-              1기가 실제로 돌기 시작하는 날 정식 버전을 붙일 예정. 지금은 베타.
+              1기가 실제로 시작되는 날 정식 버전을 붙일 예정이다. 지금은 베타다.
             </p>
           </header>
           <NextList />
           <div className="ps-cta ps-rv">
-            <h3 className="ps-cta-title">이 사이트 위에서 <em>1기</em>가 굴러감</h3>
-            <p>기고·세미나·모집이 전부 여기서 돌아감. 만드는 방식은 기획이 사람, 구현이 AI.</p>
+            <h3 className="ps-cta-title">이 사이트에서 <em>AIM 1기</em>가 진행된다</h3>
+            <p>기고, 세미나, 모집이 전부 여기서 이뤄진다. 기획은 사람이, 구현은 AI가 맡았다.</p>
             <div className="ps-cta-row">
               <a className="btn-dark" href="/recruit/">AIM 1기 모집 보기 <Arrow /></a>
               <a className="btn-2nd" href="/projects/">다른 프로젝트 <Arrow /></a>

@@ -7,7 +7,7 @@ date: 2026-09-14
 주제: 워크플로·자동화
 일정미정: true
 공개: false
-슬라이드: https://kwu-erpclub.github.io/slides/s2/
+슬라이드: /slides/s2/
 썸네일: [/img/세미나/cover-s2.png]
 pdf: /pdf/세미나/2026-09-14-bapzzi-contribute-and-first-delegation.pdf
 요점: [브리프 4블록(소스·무엇을·기준·확인법)으로 초안을 시키고 검수로 마감, 같은 프롬프트라도 결과는 다르다 — 최종본은 검수가 만든다, 소재 카드 4문항 = 학기 내내 쓸 반복 작업을 거르는 판정 장치, 미니 PRD 5칸과 완성 기준 T/F — 챗봇 첫 위임까지]

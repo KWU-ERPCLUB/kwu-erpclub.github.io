@@ -20,12 +20,15 @@ export const FALLBACK_CLASS = 'k-etc'
 export const kindClass = (category) => KIND_CLASS[category] || FALLBACK_CLASS
 
 // 캘린더 항목 → 분류.
-// 공고 항목 = 공고종류(공모전·채용·자격증·교내활동) / events '학사' = 학사 / 그 외 전부 = AIM.
-// (과제·세션·주간 기고도 AIM 활동 — 종류 글자는 제목·메타가 계속 알려 준다.)
+// 공고 항목 = 공고종류(공모전·채용·자격증·교내활동) / events = 종류가 분류표에 있으면 그대로(학사·자격증 등),
+// 옛 값 '일정'은 학사로 편입(중간고사 등 기존 학사 항목의 종류 — 오너 2026-08-19), 나머지 전부 = AIM.
+// (세미나·모집·마감·과제·세션·주간 기고 = AIM 활동. 종류 글자는 제목·메타가 계속 알려 준다.)
 export function itemCategory(item) {
   if (!item) return ''
   if (item.source === 'posting') return item['공고종류'] || ''
-  if (item['종류'] === '학사') return '학사'
+  const kind = item['종류']
+  if (kind === '일정') return '학사'
+  if (kind !== 'AIM' && KIND_CLASS[kind]) return kind
   return 'AIM'
 }
 

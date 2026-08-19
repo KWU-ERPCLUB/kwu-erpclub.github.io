@@ -37,9 +37,11 @@ describe('캘린더 항목 → 분류', () => {
     expect(itemClass({ source: 'posting', 종류: '공고' })).toBe(FALLBACK_CLASS)
   })
 
-  it('학사만 학사, 나머지 운영 일정·과제·세션은 전부 AIM', () => {
+  it('학사(옛 값 일정 포함)·자격증은 제 분류, 나머지 운영 일정·과제·세션은 전부 AIM', () => {
     expect(itemCategory({ source: 'event', 종류: '학사' })).toBe('학사')
-    for (const k of ['일정', '세미나', '모집', '마감', 'AIM']) {
+    expect(itemCategory({ source: 'event', 종류: '일정' })).toBe('학사')   // 중간고사 등 기존 학사 항목의 옛 종류 값
+    expect(itemCategory({ source: 'event', 종류: '자격증' })).toBe('자격증')
+    for (const k of ['세미나', '모집', '마감', 'AIM']) {
       expect(itemCategory({ source: 'event', 종류: k })).toBe('AIM')
     }
     expect(itemCategory({ source: 'assignment', 종류: '과제' })).toBe('AIM')
