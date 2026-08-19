@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { MARQUEE_KEYWORDS, marqueeTrack, parseStat, easeOutCubic, countupFrame, localYmd, recruitPhase } from './home-logic.js'
+import { parseStat, easeOutCubic, countupFrame, localYmd, recruitPhase } from './home-logic.js'
 import { RECRUIT } from './data/recruit.js'
 
 // ── 모집 국면(경계일 포함·기간 밖 전환 — SPEC §4) ──
@@ -25,13 +25,6 @@ test('recruitPhase — 창 주입 가능(모집 데이터가 유일 원천)', ()
 test('localYmd — YYYY-MM-DD 0패딩', () => {
   expect(localYmd(new Date(2026, 0, 5))).toBe('2026-01-05')
   expect(localYmd(new Date(2026, 11, 31))).toBe('2026-12-31')
-})
-
-// ── 마퀴 트랙(이음매 없는 순환 = 2배 복제) ──
-test('marqueeTrack — 트랙을 2배 복제(translateX -50% 순환용)', () => {
-  expect(marqueeTrack(['a', 'b'])).toEqual(['a', 'b', 'a', 'b'])
-  expect(marqueeTrack(MARQUEE_KEYWORDS).length).toBe(MARQUEE_KEYWORDS.length * 2)
-  expect(marqueeTrack([])).toEqual([])
 })
 
 // ── 스탯 파싱(접두·값·소수자릿수·접미) ──

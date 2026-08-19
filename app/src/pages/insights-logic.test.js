@@ -1,7 +1,7 @@
 import { expect, test } from 'vitest'
 import {
   excerpt, filterArticles, pinnedFirst, neighbors, extractMonths,
-  stateFromSearch, searchFromState, natureKey, authorInitial, HUB_TAB,
+  stateFromSearch, searchFromState, natureKey, HUB_TAB,
   splitFeature, pageSlice, FEATURE_COUNT,
 } from './insights-logic.js'
 import { wrapTitle } from './insights-cover.jsx'
@@ -88,12 +88,6 @@ test('natureKey — ascii 키(타일 클래스·URL), 미지 성격 = 안전 fal
   expect(natureKey('도구·프롬프트')).toBe('tools')
   expect(natureKey('없는성격')).toBe('analysis')
 })
-test('authorInitial — 첫 글자 대문자, 빈 값 = ?', () => {
-  expect(authorInitial('bapzzi')).toBe('B')
-  expect(authorInitial('김민준')).toBe('김')
-  expect(authorInitial('')).toBe('?')
-})
-
 // ── 고정 우선 분리(그리드 정렬) ──
 test('pinnedFirst — 고정(true) 먼저 + 나머지, 각 입력 순서(역시간순) 유지', () => {
   const all = [ // 역시간순 가정

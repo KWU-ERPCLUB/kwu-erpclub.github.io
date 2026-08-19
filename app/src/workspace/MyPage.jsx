@@ -244,6 +244,10 @@ export default function MyPage({ store, member, onProfileSaved }) {
             <summary>비밀번호 변경</summary>
             <PasswordChange store={store} />
           </details>
+          {/* 사용법 안내(2026-08-20) — /guide/ 정적 페이지 입구. 지금까지 링크가 어디에도 없어 들어갈 길이 없었다 */}
+          <p className="ws-note">
+            <a href="/guide/" target="_blank" rel="noreferrer">사용법 안내 — 허브 화면별 사용법</a>
+          </p>
         </section>
       </div>
       <aside className="ws-crail">

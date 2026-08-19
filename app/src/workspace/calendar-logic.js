@@ -4,6 +4,10 @@
 const pad = (n) => String(n).padStart(2, '0')
 export const toKey = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
 
+// 해금(0011·0012) — 공개일이 미래면 잠금. 자료·회차 본문 공용(2026-08-20 Sessions.jsx 폐지로 이관).
+// 멤버에겐 RLS가 미래 행을 걸러내므로, 미래 공개일 행이 보인다 = 운영진 화면 → 잠금 표시.
+export const isLockedMaterial = (m, today = toKey(new Date())) => Boolean(m['공개일'] && m['공개일'] > today)
+
 // 달력 격자 — 일요일 시작, 앞뒤 이웃달 채움 포함 5~6주. 셀 = { key, day, inMonth }
 export function monthGrid(year, month /* 1~12 */) {
   const first = new Date(year, month - 1, 1)

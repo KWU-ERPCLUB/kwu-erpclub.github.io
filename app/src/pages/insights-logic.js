@@ -13,8 +13,7 @@ const KEY_TO_NATURE = Object.fromEntries(Object.entries(NATURE_KEY).map(([n, k])
 
 export function natureKey(nature) { return NATURE_KEY[nature] || 'analysis' }
 
-// 저자 이니셜(아바타 1자) — 첫 글자 대문자.
-export function authorInitial(author) { return (author || '?').trim().charAt(0).toUpperCase() || '?' }
+// (구 authorInitial 아바타 1자 = 2026-08-20 삭제 — 카드 배지가 이름 3글자 타원으로 바뀐 뒤 참조 0.)
 
 // 대시 표기 폐지(오너 2026-08-15) — 제목·설명의 ' — '는 화면에서 줄바꿈이 대신한다.
 // 문장이 끊기는 지점에서 줄을 넘겨 의미 단위로 읽히게 한다. 원문(md·상세 h1)은 그대로 두고 표시만 분할.
@@ -127,8 +126,6 @@ export function pageSlice(list, shown) {
 //      분리 노출(상단 밴드·전용 아카이브)은 폐지(오너 재판정: "필터 하나면 된다").
 //      유일한 시리즈 전용 장치 = ⑴ 필터 칩(아래 seriesOptions) ⑵ 고정 커버(thumb-resolver ⓪).
 export function seriesIdOfArticle(a) { return seriesIdOf(a) }
-
-export function isSeriesArticle(a) { return seriesIdOfArticle(a) !== null }
 
 // 시리즈 필터 칩 소재 — 레지스트리 순서. list에 소속 글이 1건도 없는 시리즈는 칩을 만들지 않는다.
 // 반환 = [{ id, label, count }]. 새 시리즈(분기 등) 등록 = 레지스트리 1줄 → 칩 자동 증가.

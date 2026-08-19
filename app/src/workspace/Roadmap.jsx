@@ -4,11 +4,10 @@
 // 원천 = data/aim-roadmap.js AIM_TIMELINE(2026-08-14 일원화 — /recruit 로드맵과 공유. 로드맵 개정 = 그 파일 1곳).
 // 게재 규칙: 미확정 값은 '추후 확정/추후 공지' 표기. 내부 설계(지표·게이트 세부)는 게재하지 않는다.
 import { useEffect, useMemo, useState } from 'react'
-import { weekStatus } from './calendar-logic.js'
+import { weekStatus, isLockedMaterial } from './calendar-logic.js'
 import { loadContent } from '../content/loader.js'
 import { AIM_TIMELINE } from '../data/aim-roadmap.js'
 import Markdown from '../pages/Markdown.jsx'
-import { isLockedMaterial } from './Sessions.jsx'
 
 export const STATUS_CLASS = { '이번 주': 'now', 지난: 'past', 예정: 'next' }
 

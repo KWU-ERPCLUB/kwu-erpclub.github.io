@@ -5,7 +5,7 @@ import { ArticleHero } from './ArticleDetail.jsx'
 import { ArticleRow } from './insights-parts.jsx'
 import { resolveThumb, resolveHero } from './thumb-resolver.js'
 import {
-  stateFromSearch, searchFromState, isSeriesArticle, seriesOptions, filterArticles,
+  stateFromSearch, searchFromState, seriesIdOfArticle, seriesOptions, filterArticles,
 } from './insights-logic.js'
 
 const noop = () => {}
@@ -25,10 +25,11 @@ test('URL — ?series=weekly 왕복 · 미지의 id 무시 · 기존 계약 불�
 })
 
 // ── 귀속 판정 ──
+// 필터·칩이 쓰는 실제 판정 함수 = seriesIdOfArticle(소속 시리즈 id 또는 null).
 test('시리즈 판정 — frontmatter · 슬러그 자동 인식 · 비시리즈', () => {
-  expect(isSeriesArticle(wk('w1'))).toBe(true)
-  expect(isSeriesArticle(art('2026-08-10-bapzzi-weekly-trend-w32'))).toBe(true) // 슬러그 인식
-  expect(isSeriesArticle(art('a'))).toBe(false)
+  expect(seriesIdOfArticle(wk('w1'))).toBe('weekly')
+  expect(seriesIdOfArticle(art('2026-08-10-bapzzi-weekly-trend-w32'))).toBe('weekly') // 슬러그 인식
+  expect(seriesIdOfArticle(art('a'))).toBe(null)
 })
 
 // ── 필터 소재(레지스트리 기반 칩) ──

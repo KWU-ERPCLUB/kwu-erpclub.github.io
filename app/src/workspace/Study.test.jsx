@@ -1,19 +1,12 @@
 // 세션·과제·공지(스터디원 화면) — 골격 + 저장소 계약.
 import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
-import Sessions from './Sessions.jsx'
 import Assignments, { dueLabel } from './Assignments.jsx'
 import Notices, { NoticeTitles } from './Notices.jsx'
 import { createMockRepositories } from '../data/mock.js'
 
 const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
 const member = () => createMockRepositories({ user: 'mock-member' })
-
-test('세션 탭 골격 = 제목 + 로딩 안내(자료는 링크 기반)', () => {
-  const html = flat(<Sessions store={member()} />)
-  expect(html).toContain('세션')
-  expect(html).toContain('불러오는 중')
-})
 
 test('과제 탭 골격 = 제목 + 링크 제출 입력', () => {
   const html = flat(<Assignments store={member()} />)

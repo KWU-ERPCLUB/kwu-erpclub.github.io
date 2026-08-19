@@ -2,11 +2,12 @@
 // 2026-08-15 신설: 구 표지 3종은 png만 반입돼 재현 불가였다(다크 톤 판정 착오의 원인) → 생성 소스를 repo에 고정.
 // 톤 = 오너 픽 C안(2026-08-15) — 순백 면 + 검정 타이포 + 버건디 틴트 원(화이트리스트 ⑬ 틴트, 버건디 면 아님).
 // 사용: node scripts/export-seminar-cover.mjs [덱 ...] (인자 없으면 COVERS 전 건). 빌드 불필요.
-import { writeFileSync, existsSync, mkdirSync } from 'node:fs'
+import { writeFileSync, mkdirSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { tmpdir } from 'node:os'
 import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
+import { requireChrome } from './chrome.mjs'
 
 const run = promisify(execFile)
 
@@ -22,13 +23,7 @@ const COVERS = {
   s3: { pill: 'SEMINAR 03', kind: '실습', l1: '제작', l2: '스프린트', sub: '위임 · 확인 · 재위임으로 내 소재 1회 돌리기', count: 23 },
 }
 
-const CHROME = [
-  'C:/Program Files/Google/Chrome/Application/chrome.exe',
-  'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe',
-  '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-].find(existsSync)
-
-if (!CHROME) { console.error('Chrome 실행 파일을 찾지 못함'); process.exit(1) }
+const CHROME = requireChrome()
 
 const html = (c) => `<!doctype html><meta charset="utf-8" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />

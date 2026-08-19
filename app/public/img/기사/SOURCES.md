@@ -10,10 +10,9 @@
 | 파일 | 쓰는 기사 | 내용 | 수치 출처 |
 |---|---|---|---|
 | h1-2026-funding.svg | 2026-07-27 2026 상반기 AI — 신입용 여섯 축 정리 | 조달·투자·인수 금액 비교 | CNBC · NPR · TechCrunch |
-| agent-adoption-gap.svg | 2026-07-25 에이전트 도입 다음 병목 — 거버넌스 갭 | 도입 79 → 확장 23 비율 축소 | McKinsey State of AI · PwC |
-| ai-film-awards-prizes.svg | 2026-07-30 AI 영화제·공모전 수상작 지도 | 해외 영화제 상금 규모 비교 | Google 블로그 · Runway AIF · Chroma |
-| ai-video-pipeline.svg | 2026-07-30 AI 영상 제작 현업 파이프라인 | 8단계 표준 도구 흐름도 | 본문 파이프라인 표 |
-| si-growth-split.svg | 2026-08-05 국내 SI 빅3의 무게중심 이동 | 삼성SDS 2분기 부문별 증가율 | 삼성SDS·LG CNS 실적발표 · ZDNet |
+
+<!-- 2026-08-20: 어느 기사 본문도 참조하지 않던 도판 4종(agent-adoption-gap·ai-film-awards-prizes·
+     ai-video-pipeline·si-growth-split) 파일과 표 행을 함께 삭제. 다시 쓰려면 git 이력에서 복원. -->
 
 ## 추가할 때
 

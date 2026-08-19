@@ -96,7 +96,7 @@ export const RECRUIT_SHOWCASE = [
     name: 'AIM 허브 사이트',
     core: '인사이트·워크스페이스가 도는 지면',
     sub: '기고부터 모집까지 이 위에서 처리',
-    href: '/',
+    href: '/projects/site/',   // 2026-08-20: 증빙 링크 = 홈(/)이 아니라 제작 기록 상세
     img: '/img/projects/hub/cover.jpg',
   },
   {

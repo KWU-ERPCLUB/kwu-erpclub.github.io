@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
-import Projects, { splitProjectBody, ProjectCard, ProjectGrid, ProjectDetail } from './Projects.jsx'
+import Projects, { ProjectCard, ProjectGrid, INTERACTIVE_PAGES } from './Projects.jsx'
 
 const noop = () => {}
 const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
@@ -12,18 +12,9 @@ const P = {
   body: '- 진도·성취도 관리\n- React + Supabase\n\n## 프롬프트 로그\n\n프로젝트 진행 프롬프트 기록 — 이후 회차부터 축적.',
 }
 
-// ── 본문 분할(순수) ──
-test('splitProjectBody — 소개 intro + 프롬프트 로그 섹션 분할', () => {
-  const { intro, logs } = splitProjectBody(P.body)
-  expect(intro).toContain('진도·성취도 관리')
-  expect(logs).toHaveLength(1)
-  expect(logs[0].heading).toBe('프롬프트 로그')
-  expect(logs[0].body).toContain('이후 회차부터 축적')
-})
-test('splitProjectBody — 헤딩 없으면 intro만·logs 빈배열', () => {
-  const { intro, logs } = splitProjectBody('그냥 소개 한 줄')
-  expect(intro).toBe('그냥 소개 한 줄')
-  expect(logs).toEqual([])
+// ── 상세 = 전용 페이지만(2026-08-20 md 본문 상세 폐지) ──
+test('전용 상세 매핑 — 등재 프로젝트는 전용 페이지 URL을 가진다', () => {
+  expect(INTERACTIVE_PAGES[P.slug]).toBe('/projects/adsp/')
 })
 
 // ── 그리드/카드/오버레이 ──
@@ -67,17 +58,9 @@ test('ProjectCard — idx 전달 시 쇼케이스 번호(01), 미전달 시 미�
   expect(flat(<ProjectCard p={P} onOpen={noop} />)).not.toContain('pj-card-idx')
 })
 
-// ── 상세(커버 배너 → 제목·설명·상태·링크 → 소개 → 프롬프트 로그) ──
-test('ProjectDetail — 배너·제목·설명·상태·링크·소개·프롬프트 로그 렌더', () => {
-  const html = flat(<ProjectDetail p={P} onBack={noop} />)
-  expect(html).toContain('pj-detail-banner')
-  expect(html).toContain('pj-detail-cover')
-  expect(html).toContain('ADsP Study Board')
-  expect(html).toContain('진도·성취도 웹앱')
-  expect(html).toContain('status live')
-  expect(html).toContain('https://erpstudy.vercel.app') // Web 링크
-  expect(html).toContain('React + Supabase') // 소개 본문(Markdown)
-  expect(html).toContain('pj-log-title') // 프롬프트 로그 섹션 제목
-  expect(html).toContain('프롬프트 로그')
-  expect(html).toContain('이후 회차부터 축적') // 로그 본문
+// 목록 페이지에 md 본문 상세 흔적이 남지 않는다(전용 페이지로 일원화)
+test('목록 — md 본문 상세(.pj-detail) 렌더 경로 부재', () => {
+  const html = flat(<Projects />)
+  expect(html).not.toContain('pj-detail')
+  expect(html).not.toContain('pj-log-title')
 })
