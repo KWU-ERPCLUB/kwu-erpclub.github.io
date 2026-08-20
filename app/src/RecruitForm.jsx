@@ -6,7 +6,7 @@
 // env 미설정 = 폼 미표시 + 제출 불가 안내(목 폴백으로 성공하는 척 금지 — 오너 확정).
 import { useState } from 'react'
 import {
-  EMPTY_APPLICATION, APPLY_NOTE, applyPhase, isBackendReady, REASON_MAX, isValidHakbeon,
+  EMPTY_APPLICATION, APPLY_NOTE, applyPhase, isBackendReady, REASON_MAX, isValidHakbeon, formatPhone,
   validateApplication, submitApplication, composeAiText, composeTopicText, composeMajorText,
 } from './pages/apply-source.js'
 import { localYmd } from './home-logic.js'
@@ -213,9 +213,10 @@ export default function RecruitForm({ configured, repos, today = localYmd() }) {
 
       <p className="rc-field">
         <label htmlFor="ap-전화번호">전화번호 <Req /></label>
-        <span className="rc-desc">하이픈 포함 (예: 010-1234-5678)</span>
+        <span className="rc-desc">숫자만 입력 — 하이픈 자동 (예: 010-1234-5678)</span>
         <input
-          id="ap-전화번호" type="tel" value={form['전화번호']} onChange={set('전화번호')}
+          id="ap-전화번호" type="tel" inputMode="numeric" value={form['전화번호']}
+          onChange={(e) => setForm((f) => ({ ...f, 전화번호: formatPhone(e.target.value) }))}
           aria-invalid={Boolean(errors['전화번호'])}
         />
         {errors['전화번호'] && <span className="rc-field-error" role="alert">{errors['전화번호']}</span>}

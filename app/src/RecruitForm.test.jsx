@@ -5,7 +5,7 @@ import { renderToString } from 'react-dom/server'
 import RecruitForm from './RecruitForm.jsx'
 import {
   validateApplication, submitApplication, EMPTY_APPLICATION, applyPhase,
-  composeAiText, composeTopicText, composeMajorText, isValidHakbeon,
+  composeAiText, composeTopicText, composeMajorText, isValidHakbeon, formatPhone,
 } from './pages/apply-source.js'
 
 const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
@@ -88,6 +88,25 @@ test('접수 국면 — 폼 공개일부터 open, 마감 다음 날 after', () =
 // 로컬 폼 점검용 탈출구 — 프로덕션엔 미설정(창 밖에서도 열리는 유일한 경로)
 test('개발 오버라이드 VITE_APPLY_FORCE_OPEN=1 = 창 무관 open', () => {
   expect(applyPhase('2026-01-01', { VITE_APPLY_FORCE_OPEN: '1' })).toBe('open')
+})
+
+// 자동 하이픈(2026-08-20) — 모바일 숫자 키패드에 하이픈이 없어 숫자만 들어오던 문제.
+test('전화번호 자동 하이픈 — 숫자만 입력해도 자리수대로 하이픈 삽입', () => {
+  expect(formatPhone('01012345678')).toBe('010-1234-5678')  // 휴대폰 11자리 = 3-4-4
+  expect(formatPhone('0101234567')).toBe('010-123-4567')    // 10자리 = 3-3-4
+  expect(formatPhone('0212345678')).toBe('02-1234-5678')    // 서울 국번
+  expect(formatPhone('021234567')).toBe('02-123-4567')
+  // 입력 중(진행형) — 커서가 뒤로 밀리지 않게 앞자리부터 고정
+  expect(formatPhone('010')).toBe('010')
+  expect(formatPhone('0101')).toBe('010-1')
+  expect(formatPhone('01012345')).toBe('010-123-45')
+  // 이미 하이픈 포함·잡문자 = 숫자만 남겨 재조립, 12자리 이상 = 11자리에서 자름
+  expect(formatPhone('010-1234-5678')).toBe('010-1234-5678')
+  expect(formatPhone('010 1234 5678')).toBe('010-1234-5678')
+  expect(formatPhone('010123456789')).toBe('010-1234-5678')
+  expect(formatPhone('')).toBe('')
+  // 포맷 결과는 그대로 검증 통과
+  expect(validateApplication({ ...VALID, 전화번호: formatPhone('01012345678') })['전화번호']).toBeUndefined()
 })
 
 test('필수 검증 — 빈 폼은 4필드 전부 오류, 유효 폼은 통과', () => {
