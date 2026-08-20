@@ -59,6 +59,22 @@ export function composeTopicText(checks = [], free = '') {
 
 // 전화번호 = 느슨한 형식(오너 확정): 숫자·하이픈만 + 숫자 9~11자리.
 const PHONE_CHARS = /^[0-9-]+$/
+
+// 전화번호 자동 하이픈(오너 2026-08-20) — 모바일 숫자 키패드엔 하이픈이 없어 숫자만 적혀 들어오던 문제.
+// 숫자 외 전부 제거 후 자리수로 삽입: 휴대폰 11자리 = 3-4-4 / 10자리 이하 = 3-3-4(입력 중 진행형) / 서울 02 = 2-x-4.
+export function formatPhone(v) {
+  const d = String(v || '').replace(/\D/g, '').slice(0, 11)
+  if (d.startsWith('02')) {
+    if (d.length <= 2) return d
+    if (d.length <= 5) return `${d.slice(0, 2)}-${d.slice(2)}`
+    if (d.length <= 9) return `${d.slice(0, 2)}-${d.slice(2, 5)}-${d.slice(5)}`
+    return `${d.slice(0, 2)}-${d.slice(2, 6)}-${d.slice(6, 10)}`
+  }
+  if (d.length <= 3) return d
+  if (d.length <= 7) return `${d.slice(0, 3)}-${d.slice(3)}`
+  if (d.length <= 10) return `${d.slice(0, 3)}-${d.slice(3, 6)}-${d.slice(6)}`
+  return `${d.slice(0, 3)}-${d.slice(3, 7)}-${d.slice(7)}`
+}
 // 학번 = 정확히 숫자 10자리(오너 2026-08-18 — 로그인 규칙 4~12보다 엄격, 폼 전용).
 // 화면 문구에는 형식 설명·예시 미게재(오너 2차) — 입력 즉시 빨간 표시(라이브)로만 알린다.
 const HAKBEON_10 = /^[0-9]{10}$/
