@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { sortSeminars, extractTopics, filterByTopic, isUpcoming, todayString, splitSeminarBody, splitLead, parseBullets, parseSources } from './seminars-logic.js'
+import { sortSeminars, isUpcoming, todayString, splitSeminarBody, splitLead, parseBullets, parseSources } from './seminars-logic.js'
 
 const S = (slug, date, extra = {}) => ({ slug, date, title: slug, 회차: slug, 유형: '인지', body: '', ...extra })
 const list = [S('a', '2026-06-01'), S('b', '2026-09-05'), S('c', '2026-08-20'), S('d', '2026-07-24')]
@@ -18,25 +18,6 @@ test('sortSeminars — 원본 불변(순수)·빈 입력 안전', () => {
   expect(list.map((s) => s.slug)).toEqual(copy.map((s) => s.slug))
   expect(sortSeminars([])).toEqual([])
   expect(sortSeminars(undefined)).toEqual([])
-})
-
-test('extractTopics — 등장 주제만·TOPICS enum 순서로 안정 정렬·중복 제거', () => {
-  const withTopics = [
-    S('a', '2026-06-01', { 주제: '워크플로·자동화' }),
-    S('b', '2026-07-01', { 주제: '에이전트' }),
-    S('c', '2026-08-01', { 주제: '에이전트' }), // 중복
-    S('d', '2026-09-01' /* 주제 없음 */),
-  ]
-  // enum 순서 = [에이전트, 모델·플랫폼, 워크플로·자동화, ...] → 에이전트가 워크플로보다 앞
-  expect(extractTopics(withTopics)).toEqual(['에이전트', '워크플로·자동화'])
-  expect(extractTopics([])).toEqual([])
-})
-
-test('filterByTopic — null=전체·일치만 통과', () => {
-  const data = [S('a', '2026-06-01', { 주제: '에이전트' }), S('b', '2026-07-01', { 주제: '거버넌스·리스크' })]
-  expect(filterByTopic(data, null).map((s) => s.slug)).toEqual(['a', 'b'])
-  expect(filterByTopic(data, '에이전트').map((s) => s.slug)).toEqual(['a'])
-  expect(filterByTopic(data, '없는주제')).toEqual([])
 })
 
 test('isUpcoming — date>today만 예정(경계=오늘은 예정 아님)', () => {

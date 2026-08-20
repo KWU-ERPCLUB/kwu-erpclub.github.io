@@ -78,6 +78,18 @@ test('관심 저장소 — 본인 행만 켜고 끈다(목 = 0013 RLS 동형), �
   await expect(anon.postings.toggleInterest('mock-p1', true)).rejects.toThrow('로그인 필요')
 })
 
+// 열람 표시(2026-08-20 오너) — 새 공고 = N 배지, 열람한 행 = seen 클래스(제목 흐림). 판정은 posting-seen.test.js.
+test('카드 열람 표시 — fresh = N 배지, seen = 흐림 클래스, 기본 = 둘 다 없음', () => {
+  const row = { id: 'p', 제목: 't', 종류: '채용', url: 'https://e.com', 접수마감: null, 코멘트: 'c' }
+  const fresh = flat(<PostingCard todayKey="2026-09-08" row={row} fresh onSee={() => {}} />)
+  expect(fresh).toContain('ws-prow-new')
+  const seenHtml = flat(<PostingCard todayKey="2026-09-08" row={row} seen />)
+  expect(seenHtml).toContain('ws-prow seen')
+  const plain = flat(<PostingCard todayKey="2026-09-08" row={row} />)
+  expect(plain).not.toContain('ws-prow-new')
+  expect(plain).not.toContain('ws-prow seen')
+})
+
 test('운영 폼 골격 = 전 필드 + 코멘트는 선택', () => {
   const html = flat(<AdminPostings store={createMockRepositories({ user: 'mock-staff' })} />)
   for (const label of ['제목', '종류', '주최(선택)', '원문 링크', '접수시작(선택)', '접수마감(선택)', '시험일(선택)', '다가오는 업무에 표시']) {

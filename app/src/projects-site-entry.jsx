@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import ProjectSite from './pages/ProjectSite.jsx'
 import './styles/global.css'
+import './styles/project-reveal.css' // 인터랙티브 상세 2종 공용 리빌(2026-08-20 통합)
 import './styles/project-site.css' // 허브 사이트 인터랙티브 상세 전용
 import './styles/project-site-roadmap.css' // 세로 지그재그 로드맵
 

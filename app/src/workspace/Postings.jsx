@@ -6,6 +6,7 @@ import { toKey, dday } from './calendar-logic.js'
 import { POSTING_KINDS, postingStatus, groupPostings, filterPostings, sectionPostings, searchPostings } from './postings-logic.js'
 import { taxonomyOptions, effectiveSubs, hasSubRow, eventCategory, planToggle, SUBS_CHANGED } from './postings-taxonomy.js'
 import { kindClass, categoryLabel } from './kind-colors.js'
+import { loadSeen, markSeen, isNewPosting } from './posting-seen.js'
 
 // 마감·시험일 짧은 표기(09-07) — 행이 한 줄이라 연도를 뺀다.
 const short = (d) => (d ? d.slice(5) : '')
@@ -15,17 +16,21 @@ const short = (d) => (d ? d.slice(5) : '')
 // 그래서 펼침(코멘트·주최 상세)을 없앴다 — 우리 화면에서 읽히는 것은 제목·출처·마감뿐이고,
 // 나머지는 원문이 더 잘 보여 준다. 코멘트는 데이터로는 남지만 목록에 쓰지 않는다.
 // 관심 ★(0013) — 체크한 공고는 내정보 상단 "관심 공고"에 모인다(★ = 개인 모음, 구독 = 캘린더).
-export function PostingCard({ row, todayKey, interested = false, onToggleInterest }) {
+// 열람 표시(2026-08-20 오너) — 원문을 연 공고는 제목 흐림, 등록 7일 내 미열람은 N(인사이트 배지 동형·기기 로컬).
+export function PostingCard({ row, todayKey, interested = false, onToggleInterest, fresh = false, seen = false, onSee }) {
   const status = postingStatus(row, todayKey)
   const closed = status === '마감'
   // 행에 찍는 날짜 = 지금 알아야 할 날짜 하나. 접수 전이면 마감이 아니라 **시작일**이 그 하나다
   // (마감만 띄우면 아직 열지도 않은 창을 놓친 것처럼 읽힌다). 상시는 날짜 칸을 비운다 — 상태가 이미 '상시'.
   const keyDate = status === '접수전' ? row['접수시작'] : (row['접수마감'] || row['시험일'])
   return (
-    <li className={`ws-prow${closed ? ' closed' : ''}`}>
-      <a className="ws-prow-link" href={row.url} target="_blank" rel="noreferrer">
+    <li className={`ws-prow${closed ? ' closed' : ''}${seen ? ' seen' : ''}`}>
+      <a className="ws-prow-link" href={row.url} target="_blank" rel="noreferrer" onClick={onSee ? () => onSee(row.id) : undefined}>
         <span className={`ws-post-kind ${kindClass(row['종류'])}`}>{row['종류']}</span>
-        <span className="ws-prow-title">{row['제목']}</span>
+        <span className="ws-prow-title">
+          {fresh && <span className="ws-prow-new" aria-label="새 공고">N</span>}
+          {row['제목']}
+        </span>
         {row['출처'] && <span className="ws-prow-src">{row['출처']}</span>}
         <span className="ws-prow-due">{short(keyDate)}</span>
         <span className={`ws-post-status s-${status}`}>
@@ -90,6 +95,7 @@ export default function Postings({ store }) {
   const [kind, setKind] = useState('전체')
   const [sub, setSub] = useState('전체')
   const [q, setQ] = useState('')                  // 검색어(2026-08-19 2차 — 링크가 수백 건 쌓이면 칩만으로 못 찾는다)
+  const [seen, setSeen] = useState(() => loadSeen())   // 열람 기록(기기 로컬) — 원문 클릭 시 적립
 
   const load = useCallback(() => Promise.all([
     store.postings.list(), store.events.list(), store.postings.listInterests(), store.postings.listSubscriptions(),
@@ -107,6 +113,9 @@ export default function Postings({ store }) {
   }, [store])
 
   const flash = (msg) => { setNote(msg); setTimeout(() => setNote(''), 3000) }
+
+  // 원문 클릭 = 열람 — 새 탭이 열리는 사이 이쪽 행이 즉시 흐려진다(저장 실패해도 이동은 방해 없음).
+  const seeRow = useCallback((id) => setSeen(new Set(markSeen(id))), [])
 
   // 낙관적 토글 — 실패 시 원복(0013 미적용 환경 포함) + 한 줄 안내(무언 원복은 유령 동작으로 보임).
   // 성공 시 SUBS_CHANGED — ★ 공고는 개별로 홈 캘린더에 합류하므로(2026-08-18) 홈이 즉시 다시 읽어야 한다.
@@ -230,7 +239,11 @@ export default function Postings({ store }) {
                   <h3 className="ws-post-sec-h">{sec.label}<span>{sec.items.length}</span></h3>
                   <ul className="ws-list ws-post-grid">
                     {sec.items.map((r) => (
-                      <PostingCard key={r.id} row={r} todayKey={todayKey} interested={interests.includes(r.id)} onToggleInterest={toggleInterest} />
+                      <PostingCard
+                        key={r.id} row={r} todayKey={todayKey}
+                        interested={interests.includes(r.id)} onToggleInterest={toggleInterest}
+                        fresh={isNewPosting(r, seen, todayKey)} seen={seen.has(r.id)} onSee={seeRow}
+                      />
                     ))}
                   </ul>
                 </div>
@@ -249,7 +262,7 @@ export default function Postings({ store }) {
               const due = r['접수마감'] || r['시험일']   // 예정(접수 없는 시험) = 시험일 기준
               return (
                 <li key={r.id} className="ws-mark">
-                  <a href={r.url} target="_blank" rel="noreferrer">{r['제목']}</a>
+                  <a href={r.url} target="_blank" rel="noreferrer" onClick={() => seeRow(r.id)}>{r['제목']}</a>
                   <span className="ws-mark-meta">{due.slice(5).replace('-', '/')} · {dday(todayKey, due)}</span>
                 </li>
               )
@@ -260,7 +273,7 @@ export default function Postings({ store }) {
         <section className="ws-block">
           <h2 className="ws-h2">보드 안내</h2>
           <ul className="ws-guide">
-            <li>줄을 누르면 원문 사이트로 이동</li>
+            <li>줄을 누르면 원문 사이트로 이동(누른 공고는 흐려짐)</li>
             <li>★ = 내 관심. 내정보에 모인다</li>
             <li>「캘린더에 등록」한 분류만 홈 캘린더에 뜬다</li>
           </ul>

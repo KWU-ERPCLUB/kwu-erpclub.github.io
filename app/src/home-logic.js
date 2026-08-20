@@ -1,18 +1,7 @@
-// 메인(/) 순수 로직 — 마퀴 트랙·스탯 파싱·카운트업 프레임. 부수효과 0(테스트 대상).
+// 메인(/) 순수 로직 — 스탯 파싱·카운트업 프레임·모집 국면. 부수효과 0(테스트 대상).
 // UI(App.jsx)가 IntersectionObserver·rAF로 이 순수 함수를 구동. reduced-motion = 즉시 최종값.
+// (구 히어로 키워드 마퀴 MARQUEE_KEYWORDS·marqueeTrack = 2026-08-20 삭제 — 화면에서 걷힌 뒤 참조 0으로 남아 있던 잔재.)
 import { RECRUIT } from './data/recruit.js'
-
-// 히어로 하단 키워드 마퀴 띠 — 다루는 주제(현업 용어=영문 정책 승계, 한글 주제 병기).
-export const MARQUEE_KEYWORDS = [
-  'AI 에이전트', '업무 자동화', 'MIS', '경영 데이터',
-  '프롬프트', '노코드', '데이터 분석', '생성형 AI',
-  'LLM', 'RAG', 'ADsP', 'SQLD', 'ERP', 'SAP',
-]
-
-// 무한 마퀴 = 트랙을 2배 복제해 이음매 없이 순환(CSS translateX -50%로 되돌아와 반복).
-export function marqueeTrack(items) {
-  return [...items, ...items]
-}
 
 // 스탯 문자열 파싱 — '69.2%' → { prefix:'', value:69.2, decimals:1, suffix:'%' }.
 // 숫자 앞뒤 텍스트(접두·접미)와 소수 자릿수를 분리해 카운트업이 형식을 보존.

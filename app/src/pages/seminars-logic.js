@@ -1,8 +1,8 @@
 // 세미나(SEMINARS) 순수 로직 — v3 타임라인 아카이브(2026-07-25). 전부 순수 함수(부수효과 0)·테스트 대상.
 // date 비교는 today 문자열('YYYY-MM-DD')을 인자로 받아 시계에 비의존(컴포넌트가 today 주입).
 // 구 splitByDate·nextSeminar(예정/과거 이분)는 v3에서 폐지 — 목록 = 단일 시간순 타임라인. 이력은 git.
-import { TOPICS } from '../content/schema.js'
-export { excerpt } from './insights-logic.js'
+// (구 extractTopics·filterByTopic 주제 필터 + excerpt 재수출 = 2026-08-20 삭제 — 화면에서 걷힌 뒤 참조 0.
+//  발췌가 다시 필요하면 insights-logic.js의 excerpt를 직접 import 한다.)
 
 // 로컬 날짜 'YYYY-MM-DD'. Date 인자를 받아(기본 = 지금) 테스트 시 고정 시각 주입 가능.
 export function todayString(d = new Date()) {
@@ -18,19 +18,6 @@ export function sortSeminars(all, order = 'newest') {
   const dir = order === 'oldest' ? 1 : -1
   list.sort((a, b) => dir * (a.date || '').localeCompare(b.date || ''))
   return list
-}
-
-// 필터 축 = 콘텐츠에 실제 등장하는 주제만(TOPICS enum 순서로 안정 정렬 — 필터 탭 생성용).
-export function extractTopics(all) {
-  const seen = new Set()
-  for (const s of all || []) if (s['주제']) seen.add(s['주제'])
-  return TOPICS.filter((t) => seen.has(t))
-}
-
-// topic=null|'' → 전체(필터 없음), 아니면 주제 일치만.
-export function filterByTopic(all, topic) {
-  if (!topic) return [...(all || [])]
-  return (all || []).filter((s) => s['주제'] === topic)
 }
 
 // 첫 문장만 잘라낸다(오너 2026-08-15: 상세 헤더 리드가 4줄이라 핵심이 안 보인다).

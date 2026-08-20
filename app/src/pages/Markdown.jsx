@@ -1,6 +1,6 @@
 import { marked } from 'marked'
 
-// ::: 요약 / 수치 / 용어 / 출처 컨테이너 — 기고 마크다운 전용 블록(문법 안내 = repo CONTRIBUTING.md)
+// ::: 요약 / 수치 / 용어 / 출처 / 로드맵 / 결정 컨테이너 — 기고 마크다운 전용 블록(문법 안내 = repo CONTRIBUTING.md)
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 const rows = (text) => text.split('\n').filter((l) => l.trim()).map((line) => line.split('|').map((s) => (s || '').trim()))
 
@@ -12,7 +12,7 @@ const container = {
     return m ? m.index + (m[1] ? 1 : 0) : undefined
   },
   tokenizer(src) {
-    const m = /^:::\s*(요약|수치|용어|출처|로드맵|결정|비교|분기점)\s*\n([\s\S]*?)\n:::\s*(?:\n+|$)/.exec(src)
+    const m = /^:::\s*(요약|수치|용어|출처|로드맵|결정)\s*\n([\s\S]*?)\n:::\s*(?:\n+|$)/.exec(src)
     if (!m) return
     const token = { type: 'container', raw: m[0], kind: m[1], text: m[2], tokens: [] }
     if (m[1] === '요약') this.lexer.blockTokens(m[2], token.tokens)
@@ -44,23 +44,8 @@ const container = {
         `<div class="md-decision"><p class="md-dc-flow"><span class="md-dc-q">${esc(q)}</span><span class="md-dc-arrow" aria-hidden="true">→</span><strong class="md-dc-a">${esc(a || '')}</strong></p>${why ? `<p class="md-dc-why">${esc(why)}</p>` : ''}${dropped ? `<p class="md-dc-dropped">폐기 — <s>${esc(dropped)}</s></p>` : ''}</div>`).join('')
       return `<div class="md-decisions">${items}</div>`
     }
-    if (token.kind === '분기점') {
-      // 행 형식: 5행 고정 라벨(문제·따진 대안·결정·버린 것·결과) | 내용 — 대형 분기점 보록(wide).
-      // 라벨 순서 고정, 누락 행은 미표시. 라벨 밖 행은 무시(오타 안전).
-      const ORDER = ['문제', '따진 대안', '결정', '버린 것', '결과']
-      const map = new Map(rows(token.text).map(([label, body]) => [(label || '').trim(), body || '']))
-      const items = ORDER.filter((l) => map.get(l)).map((l) =>
-        `<div class="md-br-row${l === '결정' ? ' md-br-key' : ''}"><span class="md-br-label">${esc(l)}</span><span class="md-br-body">${esc(map.get(l))}</span></div>`).join('')
-      return `<aside class="md-branch"><span class="md-block-label">분기점</span>${items}</aside>`
-    }
-    if (token.kind === '비교') {
-      // 행 형식: 이미지경로 | 캡션 — 2열 나란히(변경 전→후). 경로는 사이트 내부(/) 한정
-      const items = rows(token.text).map(([src, cap]) => {
-        const safe = (src || '').startsWith('/') ? src : ''
-        return safe ? `<figure class="md-cmp-item"><img src="${esc(safe)}" alt="${esc(cap || '')}" loading="lazy"><figcaption>${esc(cap || '')}</figcaption></figure>` : ''
-      }).join('')
-      return `<div class="md-compare">${items}</div>`
-    }
+    // (구 `비교`·`분기점` 블록 = 2026-08-20 삭제 — 프로젝트 md 상세 폐지로 사용처 0.
+    //  기사가 쓰는 블록은 요약·수치·용어·출처·로드맵·결정 6종.)
     if (token.kind === '용어') {
       // 행 형식: 용어 | 설명 — 본문 ¹⁾²⁾ 각주 마커와 순번 대응(글 하단 작은 글씨)
       const items = rows(token.text).map(([term, def]) =>

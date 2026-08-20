@@ -1,0 +1,13 @@
+/* 인터랙티브 프로젝트 상세(/projects/adsp/·/projects/site/)의 진입 리빌 — 공용 단일 정의(2026-08-20 통합).
+   구조: project-adsp.css와 project-site.css에 값까지 같은 블록이 각각 있었다(.pa-rv / .ps-rv). 한 곳으로 올리고
+   두 접두사를 한 블록에 병기한다 — 클래스 이름은 그대로라 화면 변화 0.
+   계약: 초기 은닉은 JS 게이트(html.pa-js / html.ps-js) 뒤에만. 게이트 클래스는 각 페이지 훅이 런타임에 부여하므로
+   no-JS = 전부 즉시 선명, reduced-motion = 전환 해제. transform·opacity만 사용. */
+.pa-js .pa-rv,
+.ps-js .ps-rv { opacity: 0.001; transform: translateY(18px); transition: opacity 900ms ease, transform 900ms ease; }
+.pa-js .pa-rv.in,
+.ps-js .ps-rv.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .pa-js .pa-rv,
+  .ps-js .ps-rv { transition: none; opacity: 1; transform: none; }
+}

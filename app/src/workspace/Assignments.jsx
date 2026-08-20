@@ -1,5 +1,6 @@
 // 과제 섹션(홈 탭 조립부 — 2026-08-06 홈 개편) — 과제 목록(마감 표시) + 링크 제출(§0-7). 본인 제출은 수정 가능(과제×멤버 1건).
 import { useCallback, useEffect, useState } from 'react'
+import { toKey } from './calendar-logic.js'
 
 const isUrl = (v) => /^https?:\/\/\S+$/.test(String(v || '').trim())
 
@@ -10,7 +11,7 @@ export function dueLabel(due, now = new Date()) {
   const at = new Date(due)
   if (Number.isNaN(at.getTime())) return '마감 없음'
   const p = (n) => String(n).padStart(2, '0')
-  const text = `${at.getFullYear()}-${p(at.getMonth() + 1)}-${p(at.getDate())} ${p(at.getHours())}:${p(at.getMinutes())}`
+  const text = `${toKey(at)} ${p(at.getHours())}:${p(at.getMinutes())}`   // 날짜 부분 = calendar-logic toKey 단일원천
   return at < now ? `마감됨 ${text}` : `마감 ${text}`
 }
 

@@ -63,14 +63,6 @@ describe('Markdown 서식 확장', () => {
     expect(html).toContain('&lt;b&gt;x')
   })
 
-  it('::: 비교 블록 = 2열 figure 렌더, 외부/비루트 경로는 제외', () => {
-    const html = renderToString(<Markdown body={'::: 비교\n/img/a.png | 개편 전\n/img/b.png | 개편 후\nhttps://evil.com/x.png | 외부\n:::'} />)
-    expect(html).toContain('md-compare')
-    expect(html).toContain('src="/img/a.png"')
-    expect(html).toContain('개편 후')
-    expect(html).not.toContain('evil.com')
-  })
-
   it('::: 결정 4번째 칸(폐기한 대안) = 선택 렌더, 3칸 기존 형식은 무변경(하위호환)', () => {
     const four = renderToString(<Markdown body={'::: 결정\n두 벌 운영인가 | 제자리 UPDATE | 표기만 바뀜 | 개정판 별도 시드\n:::'} />)
     expect(four).toContain('md-dc-dropped')
@@ -86,20 +78,12 @@ describe('Markdown 서식 확장', () => {
     expect(html).not.toContain('⭐콘텐츠')
   })
 
-  it('::: 분기점 블록 = 5행 고정 라벨 카드, 누락 행 미표시 + 이스케이프', () => {
-    const html = renderToString(<Markdown body={'::: 분기점\n문제 | 강의 자료가 정리 내용과 어긋남\n따진 대안 | 부분 수정 유지\n결정 | 전량 폐기·원천 재구축\n버린 것 | 1·2과목 정리본 전부\n결과 | 919문항 전부 출처 표기\n:::'} />)
-    expect(html).toContain('md-branch')
-    expect(html).toContain('전량 폐기·원천 재구축')
-    expect(html).toContain('919문항 전부 출처 표기')
-    const partial = renderToString(<Markdown body={'::: 분기점\n문제 | <b>x\n결정 | y\n:::'} />)
-    expect(partial).toContain('&lt;b&gt;x')
-    expect(partial).not.toContain('버린 것')
-  })
-
-  it('::: 비교 4항목 = 4개 figure 전부 렌더(2×2 갤러리 재사용)', () => {
-    const html = renderToString(<Markdown body={'::: 비교\n/img/1.svg | 상자그림\n/img/2.svg | 혼동행렬\n/img/3.svg | ROC\n/img/4.svg | 덴드로그램\n:::'} />)
-    expect((html.match(/md-cmp-item/g) || []).length).toBe(4)
-    expect(html).toContain('덴드로그램')
+  // 폐지된 블록(2026-08-20 — 프로젝트 md 상세와 함께 삭제): 미지의 kind는 렌더러를 타지 않고 평문으로 남는다.
+  it('폐지 블록(비교·분기점) = 전용 렌더 없음', () => {
+    const cmp = renderToString(<Markdown body={'::: 비교\n/img/a.png | 개편 전\n:::'} />)
+    expect(cmp).not.toContain('md-compare')
+    const br = renderToString(<Markdown body={'::: 분기점\n문제 | x\n결정 | y\n:::'} />)
+    expect(br).not.toContain('md-branch')
   })
 
   it('GFM 표 = table 렌더', () => {

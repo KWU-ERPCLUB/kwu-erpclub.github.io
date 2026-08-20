@@ -1,11 +1,12 @@
 // 외부 공개 페이지: 프로젝트(/projects/) — v3.1 NEXTERS 실측 문법(2026-08-05, 디자인규칙 §6-2a):
 // B2 좌 고정 라벨 컬럼(버건디 ■+PROJECTS, 폰=상하 적층) + B1 블랙 통계 밴드(실측 수치만·출처 각주)
 // + N4 쇼케이스 카드(1열 대형 커버 — 카드 2장 현실에서 캐러셀은 억지라 기각, 대형 커버 우선).
-// 유지 = ?p= 딥링크·상세 진입·호버 오버레이(GitHub·Web)·프롬프트 로그. 데이터 = content/프로젝트/ 로더.
-import { useCallback, useEffect, useMemo, useState } from 'react'
+// 유지 = 목록 쇼케이스·호버 오버레이(GitHub·Web)·구 ?p= 딥링크. 데이터 = content/프로젝트/ 로더.
+// 2026-08-20: md 본문 상세(ProjectDetail·splitProjectBody) 폐지 — 전 프로젝트가 전용 인터랙티브 페이지로 이동해
+// 본문 렌더 경로가 죽은 코드로 남아 있었다. md는 목록 카드 메타(frontmatter + 3줄)만 담는다.
+import { useCallback, useEffect, useMemo } from 'react'
 import { Arrow, SiteNav, SiteFooter, PageHead } from './shared.jsx'
 import { loadContent } from './content/loader.js'
-import Markdown from './pages/Markdown.jsx'
 
 // 상태 칩 클래스 매핑(global.css .status 재사용 — 버건디 면 금지 준수).
 const STATUS_CLASS = { '운영 중': 'live', '진행 중': 'prep', '보관': 'planned' }
@@ -15,19 +16,6 @@ const STATUS_CLASS = { '운영 중': 'live', '진행 중': 'prep', '보관': 'pl
 export const INTERACTIVE_PAGES = {
   '2026-07-24-bapzzi-adsp-board': '/projects/adsp/',
   '2026-07-24-bapzzi-erpclub-site': '/projects/site/',
-}
-
-// 본문을 소개(intro)와 `## <헤딩>` 로그 섹션들로 분할. 순수 함수 — 테스트 대상.
-export function splitProjectBody(body) {
-  const t = (body || '').trim()
-  const idx = t.search(/^##\s+/m)
-  if (idx === -1) return { intro: t, logs: [] }
-  const intro = t.slice(0, idx).trim()
-  const logs = t.slice(idx).split(/^##\s+/m).filter((p) => p.trim()).map((p) => {
-    const nl = p.indexOf('\n')
-    return { heading: (nl === -1 ? p : p.slice(0, nl)).trim(), body: nl === -1 ? '' : p.slice(nl + 1).trim() }
-  })
-  return { intro, logs }
 }
 
 function initial(s) {
@@ -105,71 +93,19 @@ export function ProjectGrid({ list, onOpen }) {
   )
 }
 
-// 상세 — 커버 배너 → 제목·설명·상태·링크 → 소개 본문 → 프롬프트 로그(## 섹션). export = 단위 테스트용.
-export function ProjectDetail({ p, onBack }) {
-  const { intro, logs } = splitProjectBody(p.body)
-  return (
-    <article className="pj-detail">
-      <button type="button" className="hub-back" onClick={onBack}>← 목록</button>
-      <div className="pj-detail-banner">
-        <Cover p={p} className="pj-detail-cover" />
-      </div>
-      <h1 className="pj-detail-title">{p.title}</h1>
-      <p className="pj-detail-desc">{p['설명']}</p>
-      <div className="pj-detail-bar">
-        <span className={`status ${STATUS_CLASS[p['상태']] || 'planned'}`}>{p['상태']}</span>
-        <span className="pj-detail-links"><ProjectLinks p={p} variant="detail" /></span>
-      </div>
-      {intro && <Markdown body={intro} />}
-      {logs.map((l) => (
-        <section className="pj-log-block" key={l.heading}>
-          <h2 className="pj-log-title">{l.heading}</h2>
-          <div className="pj-log-body"><Markdown body={l.body} /></div>
-        </section>
-      ))}
-    </article>
-  )
-}
-
 export default function Projects() {
   const all = useMemo(() => loadContent('프로젝트'), [])
 
-  const paramP = () => (typeof window === 'undefined' ? null : new URLSearchParams(window.location.search).get('p'))
-  const [sel, setSel] = useState(paramP)
-
-  // 뒤로가기·앞으로가기(popstate) → URL에서 상세 슬러그 복원(세미나 패턴 동일).
-  useEffect(() => {
-    const onPop = () => setSel(paramP())
-    window.addEventListener('popstate', onPop)
-    return () => window.removeEventListener('popstate', onPop)
-  }, [])
-
+  // 카드 클릭 = 전용 상세 페이지로 이동. 전용 페이지가 없는 프로젝트는 이동하지 않는다(md 본문 상세 폐지).
   const open = useCallback((slug) => {
-    // 인터랙티브 승격 프로젝트 = 전용 페이지로 이동(모달·?p= 상세 대신)
-    if (slug && INTERACTIVE_PAGES[slug]) { window.location.href = INTERACTIVE_PAGES[slug]; return }
-    if (typeof window !== 'undefined') window.history.pushState({ slug }, '', slug ? `?p=${slug}` : window.location.pathname)
-    setSel(slug)
+    if (slug && INTERACTIVE_PAGES[slug]) window.location.href = INTERACTIVE_PAGES[slug]
   }, [])
-  const back = useCallback(() => open(null), [open])
 
-  // 구 ?p= 딥링크(공유·북마크)도 새 페이지로 — URL 유지 처치 = 리다이렉트
+  // 구 ?p= 딥링크(공유·북마크) = 전용 페이지로 리다이렉트(URL 유지 처치)
   useEffect(() => {
-    if (sel && INTERACTIVE_PAGES[sel]) window.location.replace(INTERACTIVE_PAGES[sel])
-  }, [sel])
-
-  const cur = all.find((p) => p.slug === sel && !INTERACTIVE_PAGES[p.slug])
-
-  if (cur) {
-    return (
-      <>
-        <SiteNav />
-        <main id="main" className="hub-page hub-page--wide">
-          <ProjectDetail p={cur} onBack={back} />
-        </main>
-        <SiteFooter />
-      </>
-    )
-  }
+    const slug = new URLSearchParams(window.location.search).get('p')
+    if (slug && INTERACTIVE_PAGES[slug]) window.location.replace(INTERACTIVE_PAGES[slug])
+  }, [])
 
   // 골격(4차 2026-08-06) = 공용 PageHead(중앙) → 쇼케이스 2열 그리드(스탯 밴드 삭제).
   return (

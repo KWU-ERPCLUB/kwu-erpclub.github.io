@@ -18,10 +18,8 @@
 .hub-md > * { grid-column: text; }
 .hub-md > .md-stats,
 .hub-md > .md-roadmap,
-.hub-md > .md-decisions,
-.hub-md > .md-branch { grid-column: wide; }
+.hub-md > .md-decisions { grid-column: wide; }
 /* full 계층 — 대형 모니터 업스케일 방지 1400px 상한 + 중앙 */
-.hub-md > .md-compare,
 .hub-md > p:has(> img:only-child) { grid-column: full; width: 100%; max-width: 1400px; justify-self: center; }
 
 /* ── 기본 타이포 ── */
@@ -86,12 +84,7 @@
   .hub-md .md-rm-body { font-size: 0.88rem; }
 }
 
-/* ── ::: 비교 — 전→후 2열·4항목=2×2 갤러리(모바일 1열) ── */
-.hub-md .md-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; margin: 0 0 1.9rem; }
-@media (max-width: 700px) { .hub-md .md-compare { grid-template-columns: 1fr; } }
-.hub-md .md-cmp-item { margin: 0; }
-.hub-md .md-cmp-item img { display: block; width: 100%; height: auto; margin: 0; border: 1px solid var(--line); border-radius: 10px; }
-.hub-md .md-cmp-item figcaption { margin-top: 0.4rem; font-size: 0.78rem; color: var(--text-sub); line-height: 1.4; word-break: keep-all; }
+/* (구 ::: 비교 = 2026-08-20 삭제 — 렌더러와 함께 폐지) */
 
 /* ── ::: 결정 — 의사결정 로직 카드(문제 → 결정 / 근거 / 폐기 대안) ── */
 .hub-md .md-decisions { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin: 0 0 1.9rem; }
@@ -104,15 +97,7 @@
 .hub-md .md-dc-dropped { margin: 0.2rem 0 0; font-size: 0.8rem; color: var(--text-sub); line-height: 1.5; word-break: keep-all; }
 .hub-md .md-dc-dropped s { text-decoration-color: var(--text-sub); }
 
-/* ── ::: 분기점 — 대형 분기점 보록(5행 고정: 문제·따진 대안·결정·버린 것·결과) ── */
-.hub-md .md-branch { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0; padding: 1.1rem 1.3rem 0.6rem; margin: 0 0 1.9rem; } /* 좌보더(⑩) */
-.hub-md .md-branch .md-block-label { margin-bottom: 0.3rem; }
-.hub-md .md-br-row { display: grid; grid-template-columns: 5.2rem 1fr; gap: 0.7rem; padding: 0.5rem 0; border-top: 1px solid var(--line); }
-.hub-md .md-branch .md-block-label + .md-br-row { border-top: none; }
-.hub-md .md-br-label { font-size: 0.78rem; font-weight: 700; color: var(--text-sub); padding-top: 0.18rem; }
-.hub-md .md-br-body { font-size: 0.92rem; line-height: 1.55; word-break: keep-all; }
-.hub-md .md-br-key .md-br-body { font-weight: 700; }
-@media (max-width: 700px) { .hub-md .md-br-row { grid-template-columns: 1fr; gap: 0.15rem; } }
+/* (구 ::: 분기점 = 2026-08-20 삭제 — 렌더러와 함께 폐지) */
 
 /* ── ::: 용어 / ::: 출처 ── */
 .hub-md .md-terms { margin: 1.4rem 0 0; padding: 0.8rem 1.1rem; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; font-size: 0.8rem; color: var(--text-sub); line-height: 1.6; }

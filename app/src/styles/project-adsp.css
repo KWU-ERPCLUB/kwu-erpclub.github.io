@@ -185,13 +185,7 @@
 .pa-cta-block > p { margin: 0 auto 1.4rem; max-width: 50ch; color: var(--text-sub); text-wrap: pretty; }
 .pa-cta-row { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; }
 
-/* 리빌 — 초기 은닉은 JS 게이트(html.pa-js) 뒤에만(리빌 계약 2026-08-05와 동일 문법).
-   no-JS·reduced-motion = 게이트 미부여 → 전부 즉시 선명. */
-.pa-js .pa-rv { opacity: 0.001; transform: translateY(18px); transition: opacity 900ms ease, transform 900ms ease; }
-.pa-js .pa-rv.in { opacity: 1; transform: none; }
-@media (prefers-reduced-motion: reduce) {
-  .pa-js .pa-rv { transition: none; opacity: 1; transform: none; }
-}
+/* 리빌(.pa-js .pa-rv) = project-reveal.css 공용 정의로 이관(2026-08-20 — project-site.css와 값까지 동일했음) */
 
 /* 반응형 */
 @media (max-width: 760px) {
