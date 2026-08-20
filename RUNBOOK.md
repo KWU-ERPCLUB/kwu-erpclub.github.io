@@ -87,6 +87,9 @@ main 직행이 허용되는 예외 3종 (이 목록에 없으면 전부 dev):
 5. Actions 배포 완료(초록) 확인 → 라이브 URL 확인
 6. `git checkout dev` → `git merge main` → push (백머지)
 
+⚠순서 5를 건너뛰고 6의 push를 먼저 하면 **main 배포 런이 취소된다**(같은 배포 슬롯을 두 push가 다퉈
+나중 것이 앞 것을 밀어냄 — 실사고 2회). 취소됐으면 Actions > Run workflow로 재실행하면 된다.
+
 ## 6. 배포가 실패했을 때
 
 Actions 빨간 런을 열어 **어느 스텝에서 죽었는지**부터 본다.
