@@ -51,6 +51,18 @@ export function composeMajorText(main, subType = '', sub = '') {
   if (!m) return ''
   return subType && s ? `${m} (${subType}: ${s})` : m
 }
+// AI 활용 수준 합성(오너 2026-08-21) — DB 스키마 무변경 원칙 유지: 새 컬럼 대신 기존 써본ai(text)에
+// 세 조각을 구분자로 붙인다. '도구 목록 / 빈도: X / 해본 것: A, B'. 빈 조각은 통째로 생략(빈 라벨 금지).
+export function composeAiProfile(toolsText = '', level = '', skills = []) {
+  const parts = []
+  const t = String(toolsText || '').trim()
+  const lv = String(level || '').trim()
+  if (t) parts.push(t)
+  if (lv) parts.push(`빈도: ${lv}`)
+  if (skills.length > 0) parts.push(`해본 것: ${skills.join(', ')}`)
+  return parts.join(' / ')
+}
+
 export function composeTopicText(checks = [], free = '') {
   const t = String(free || '').trim()
   const c = checks.join(', ')

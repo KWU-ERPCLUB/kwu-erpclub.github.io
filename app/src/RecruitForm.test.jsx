@@ -5,8 +5,9 @@ import { renderToString } from 'react-dom/server'
 import RecruitForm from './RecruitForm.jsx'
 import {
   validateApplication, submitApplication, EMPTY_APPLICATION, applyPhase,
-  composeAiText, composeTopicText, composeMajorText, isValidHakbeon, formatPhone,
+  composeAiText, composeTopicText, composeMajorText, isValidHakbeon, formatPhone, composeAiProfile,
 } from './pages/apply-source.js'
+import { AI_USAGE_LEVELS, AI_SKILLS } from './data/recruit.js'
 
 const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
 
@@ -17,7 +18,7 @@ const OPEN_DAY = '2026-09-01' // 모집 창 안(RECRUIT.window ~ 09-08)
 // 2026-08-18 개편(+같은 날 2차) — 세로 1열·빨간 *·체크 그룹 2벌(기타 내장)·지원 계기·설명 = 제목 아래 블록.
 test('모집 창 안 + 백엔드 연결 시 = 필수 4필드(*) + 체크 그룹 2벌 + 지원 계기 + 개인정보 문구 렌더', () => {
   const html = flat(<RecruitForm configured={true} today={OPEN_DAY} />)
-  for (const label of ['이름', '학번', '학부/전공', '전화번호', '지금까지 써본 AI', '관심 있는 주제', '지원 계기']) {
+  for (const label of ['이름', '학번', '학부/전공', '전화번호', '지금까지 써본 AI', '관심 있는 주제', 'AI를 왜 배우고 싶으신가요']) {
     expect(html).toContain(label)
   }
   expect(html).toContain('rc-req')                    // 필수 = * 표기
@@ -44,6 +45,30 @@ test('모집 창 안 + 백엔드 연결 시 = 필수 4필드(*) + 체크 그룹 
   expect(html).toContain('최대 500자')                 // 지원 계기 상한 안내
   expect(html).toContain('모집 연락·기수 운영')      // 개인정보 용도 1줄
   expect(html).toContain('신청 제출')
+})
+
+// AI 활용 수준 설문(2026-08-21 신설) — 빈도 단일 + 해본 것 다중, 둘 다 선택 항목.
+test('AI 활용 수준 = 빈도 라디오 3택 + 해본 것 체크 5종 렌더(용어 병기 없음·필수 표시 없음)', () => {
+  const html = flat(<RecruitForm configured={true} today={OPEN_DAY} />)
+  expect(html).toContain('AI를 얼마나 쓰시나요')
+  expect(html).toContain('type="radio"')
+  for (const lv of AI_USAGE_LEVELS) expect(html).toContain(lv)
+  expect(html).toContain('이 중 해본 것')
+  expect(html).toContain('하나도 안 골라도 됩니다')
+  for (const [, label] of AI_SKILLS) expect(html).toContain(label)
+  expect(html).toContain('rc-checks-stack')            // 문장형 = 세로 리스트(375px 넘침 방지)
+  // 오너 2026-08-21: 전문 용어 병기 금지 — 화면엔 행동 서술만(저장 키는 화면 밖).
+  for (const term of ['프롬프트 엔지니어링', '컨텍스트 엔지니어링', 'RAG', '에이전틱', '하네스', 'MCP']) {
+    expect(html).not.toContain(term)
+  }
+})
+
+test('AI 프로필 합성 — 도구·빈도·해본 것을 써본ai 한 칸에(빈 조각은 통째 생략)', () => {
+  expect(composeAiProfile('ChatGPT, Claude', '거의 매일 쓴다', ['프롬프트설계', '위임실행']))
+    .toBe('ChatGPT, Claude / 빈도: 거의 매일 쓴다 / 해본 것: 프롬프트설계, 위임실행')
+  expect(composeAiProfile('ChatGPT', '', [])).toBe('ChatGPT')      // 설문 미응답 = 도구 목록만(기존 저장 모양 유지)
+  expect(composeAiProfile('', '가끔 쓴다', [])).toBe('빈도: 가끔 쓴다')
+  expect(composeAiProfile('', '', [])).toBe('')
 })
 
 test('전공 합성 — 주전공 단독 / 부·복수전공 병기 / 주전공 없으면 빈 값(검증에 걸림)', () => {

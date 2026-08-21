@@ -62,6 +62,11 @@
    아이콘 없는 이 버튼은 텍스트가 우로 치우침 → 대칭 패딩으로 재정의(오너 2026-08-18 4차) */
 .rc-form-submit { font-family: var(--font-display); padding: 1.15rem 2.2rem; }
 /* 써본 AI 분류 라벨(4차 — LLM 챗봇/코딩 에이전트/검색·리서치 틀로 구분) */
+/* 문장형 선택지(AI 활용 수준·해본 것, 2026-08-21) — pill 가로 배치는 한 줄짜리 단어용이라
+   긴 문장은 세로 리스트로 쌓는다(375px 넘침 방지 + 읽는 순서 = 위→아래). */
+.rc-checks-stack { flex-direction: column; align-items: stretch; gap: 0.4rem; }
+.rc-checks-stack .rc-check { justify-content: flex-start; border-radius: 12px; text-align: left; line-height: 1.45; }
+
 .rc-check-cat { display: block; margin: 0.6rem 0 0.45rem; font-size: 0.76rem; font-weight: 700; letter-spacing: 0.05em; color: var(--text-sub); }
 .rc-check-cat:first-of-type { margin-top: 0.1rem; }
 .rc-form-done {
