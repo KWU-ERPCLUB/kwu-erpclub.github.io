@@ -129,8 +129,8 @@ const FAIL_TONE = { 수리됨: 'ok', '절반 성공': 'half', '설계 한계': '
 export function FailCards() {
   return (
     <div className="pa-fails">
-      {FAILS.map((f, i) => (
-        <div className="pa-fail pa-rv" key={f.title} style={{ '--i': i }}>
+      {FAILS.map((f) => (
+        <div className="pa-fail pa-rv" key={f.title}>
           <span className={`pa-fail-tag ${FAIL_TONE[f.label]}`}>{f.label}</span>
           <h3>{f.title}</h3>
           <p>{f.cause}</p>

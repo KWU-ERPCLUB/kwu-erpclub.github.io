@@ -1,65 +1,78 @@
-/* ADsP 인터랙티브 — 고도화 조각(코드 스탯·지표 톤 칩·before/after 토글·도트 필드 V4·실패 카드). v7 스케일 = --t-*. */
+/* ADsP 인터랙티브 고도화 조각(2026-08-13 오너 픽 — 레퍼런스 5종 복합) 전용 스타일.
+   기본 골격·챕터 공통은 project-adsp.css. 규칙 동일: light-only·버건디 화이트리스트·transform/opacity만. */
 
+/* 중앙정렬 — .pa-rv 래퍼 안 조각은 margin auto 필수(치우침 교훈 2026-08-13) */
 .pa-cstats, .pa-toggle { margin-left: auto; margin-right: auto; }
 
-/* ── 투입 규모 스탯 행 ── */
+/* ── 투입 규모 스탯 행(P-C) ── */
 .pa-cstats { max-width: 760px; display: flex; justify-content: center; gap: clamp(1.5rem, 5vw, 3.5rem); flex-wrap: wrap; margin: 0.4rem auto 2.4rem; }
 .pa-cstat { display: flex; flex-direction: column; align-items: center; }
 .pa-cstat-num { font-family: var(--font-display); font-weight: 800; font-size: 1.9rem; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
-.pa-cstat-label { font-size: var(--t-sm); font-weight: 700; }
-.pa-cstat-src { font-size: var(--t-xs); color: var(--text-sub); margin-top: 0.1rem; }
+.pa-cstat-label { font-size: 0.85rem; font-weight: 700; }
+.pa-cstat-src { font-size: 0.72rem; color: var(--text-sub); margin-top: 0.1rem; }
 
-/* ── 지표 톤 칩(회색 농도 3단 + 실전 = 버건디 데이터 잉크) ── */
+/* ── 지표 톤 칩(E5 — 회색 농도 3단 + 실전 = 버건디) ── */
 .pa-tone { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 0.5rem; vertical-align: baseline; }
 .pa-tone.g1 { background: #c9c5bd; }
 .pa-tone.g2 { background: #8f8a81; }
 .pa-tone.g3 { background: var(--dark); }
-.pa-tone.hot { background: var(--accent); }
+.pa-tone.hot { background: var(--accent); } /* 화이트리스트 — 실전점수(실력과 가장 가까운 지표) */
 
-/* ── before/after 토글(프레임 16/10 통일) ── */
+/* ── before/after 토글(E2) ── */
 .pa-toggle { max-width: 880px; }
-.pa-tg-frame { position: relative; aspect-ratio: 16 / 10; border-radius: var(--radius-card); overflow: hidden; border: 1px solid var(--line); background: #fff; }
+.pa-tg-frame { position: relative; aspect-ratio: 16 / 9.4; border-radius: var(--radius-card); overflow: hidden; border: 1px solid var(--line); background: #fff; }
 .pa-tg-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; opacity: 0; transition: opacity 350ms ease; }
 .pa-tg-img.on { opacity: 1; }
 .pa-tg-bar { display: flex; align-items: center; gap: 1rem; margin-top: 0.7rem; flex-wrap: wrap; }
 .pa-tg-btns { display: inline-flex; border: 1px solid var(--line); border-radius: var(--radius-pill); overflow: hidden; background: #fff; }
-.pa-tg-btn { border: 0; background: transparent; cursor: pointer; padding: 0.45rem 1rem; font-size: var(--t-xs); font-weight: 700; color: var(--text-sub); transition: background-color 150ms ease-out, color 150ms ease-out; }
+.pa-tg-btn { border: 0; background: transparent; cursor: pointer; padding: 0.45rem 1rem; font-size: 0.82rem; font-weight: 700; color: var(--text-sub); transition: background-color 150ms ease-out, color 150ms ease-out; }
 .pa-tg-btn.on { background: var(--dark); color: #fff; }
 .pa-tg-btn:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
-.pa-toggle figcaption { font-size: var(--t-sm); color: var(--text-sub); }
+.pa-toggle figcaption { font-size: 0.85rem; color: var(--text-sub); }
 
-/* ── 도트 필드 V4(좌 스텝 텍스트 + 우 고정 시각화) ── */
+/* ── 개선 로그 레일(E1 — Linear 날짜 스파인) ── */
+.pa-lograil { list-style: none; margin: 0; padding: 0; }
+.pa-log { position: relative; display: grid; grid-template-columns: 18px 64px 1fr; gap: 0.8rem; padding: 0.55rem 0; }
+.pa-log-rail { position: relative; }
+.pa-log-rail::before { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 2px; background: var(--line); }
+.pa-log:first-child .pa-log-rail::before { top: 50%; }
+.pa-log:last-child .pa-log-rail::before { bottom: 50%; }
+.pa-log-rail i { position: absolute; left: 4px; top: 50%; transform: translateY(-50%); width: 10px; height: 10px; border-radius: 50%; background: var(--dark); }
+.pa-log-date { font-size: 0.78rem; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; align-self: center; }
+.pa-log p { margin: 0; font-size: 0.9rem; color: var(--text-sub); line-height: 1.65; align-self: center; }
+
+/* ── 도트 필드(E4 — 좌 스텝 텍스트 + 우 고정 시각화) ── */
 .pa-dotwrap { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 2rem; max-width: 1080px; margin: 1rem auto 2.5rem; }
 .pa-dot-steps { display: flex; flex-direction: column; }
 .pa-dot-step { min-height: 62vh; display: flex; flex-direction: column; justify-content: center; padding: 1rem 0; }
-.pa-dot-step h3 { font-family: var(--font-display); font-weight: 900; font-size: var(--t-lg); margin: 0 0 0.5rem; letter-spacing: -0.02em; }
-.pa-dot-step p { margin: 0; font-size: var(--t-base); color: var(--text-sub); line-height: 1.75; max-width: 34ch; text-wrap: pretty; }
+.pa-dot-step h3 { font-family: var(--font-display); font-weight: 900; font-size: clamp(1.25rem, 2.4vw, 1.7rem); margin: 0 0 0.5rem; letter-spacing: -0.02em; }
+.pa-dot-step p { margin: 0; font-size: 0.98rem; color: var(--text-sub); line-height: 1.75; max-width: 34ch; text-wrap: pretty; }
 .pa-dot-sticky { position: sticky; top: 130px; align-self: start; }
 .pa-dot-sticky svg { width: 100%; height: auto; display: block; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-card); }
 .pa-ch-wash .pa-dot-sticky svg { background: #fff; }
-.pa-fdot { fill: var(--dark); opacity: 0.75; transition: transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1); }
-.pa-fdot.hot { fill: var(--accent); opacity: 1; }
+.pa-fdot { fill: var(--dark); opacity: 0.75; transition: transform 700ms ease; }
+.pa-fdot.hot { fill: var(--accent); opacity: 1; } /* 화이트리스트 — 시험주 데이터 잉크 */
 .pa-fdot-week { font-size: 11px; fill: var(--text-sub); }
 .pa-fdot-label { font-family: var(--font-display); font-size: 26px; font-weight: 800; fill: var(--accent); }
-.pa-dot-cap { text-align: center; font-size: var(--t-xs); color: var(--text-sub); margin: 0.7rem 0 0; }
+.pa-dot-cap { text-align: center; font-size: 0.8rem; color: var(--text-sub); margin: 0.7rem 0 0; }
 @media (prefers-reduced-motion: reduce) { .pa-fdot { transition: none; } }
 
-/* ── 실패 카드(수리됨 = 초록 태그 · 절반 = 차콜 · 설계 한계 = 버건디 외곽) ── */
+/* ── 실패 카드(P-A — rauno 그리드) ── */
 .pa-fails { max-width: 980px; display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
 .pa-fail { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-card); padding: 1.4rem 1.5rem; text-align: center; }
-.pa-ch:not(.pa-ch-wash) .pa-fail { background: var(--surface); }
-.pa-fail-tag { display: inline-flex; align-items: center; height: 22px; padding: 0 0.6rem; border-radius: var(--radius-pill); font-size: var(--t-xs); font-weight: 700; margin-bottom: 0.7rem; }
+.pa-fail-tag { display: inline-flex; align-items: center; height: 22px; padding: 0 0.6rem; border-radius: var(--radius-pill); font-size: 0.68rem; font-weight: 700; margin-bottom: 0.7rem; }
 .pa-fail-tag.ok { background: var(--pa-ok); color: #fff; }
 .pa-fail-tag.half { background: var(--dark); color: #fff; }
-.pa-fail-tag.limit { background: var(--tint-accent); border: 1px solid var(--accent); color: var(--accent); }
-.pa-fail h3 { margin: 0 0 0.5rem; font-size: var(--t-md); font-weight: 800; line-height: 1.4; }
-.pa-fail p { margin: 0; font-size: var(--t-sm); color: var(--text-sub); line-height: 1.65; }
-.pa-fail-fix { margin-top: 0.6rem !important; font-weight: 700; color: var(--text) !important; }
+.pa-fail-tag.limit { background: var(--tint-accent); border: 1px solid var(--accent); color: var(--accent); } /* 화이트리스트 — 미해결 한계 표시 */
+.pa-fail h3 { margin: 0 0 0.5rem; font-size: 1.02rem; font-weight: 800; line-height: 1.4; }
+.pa-fail p { margin: 0; font-size: 0.88rem; color: var(--text-sub); line-height: 1.65; }
+.pa-fail-fix { margin-top: 0.6rem !important; font-weight: 700; color: var(--pa-ok) !important; }
 
 /* ── 반응형 ── */
 @media (max-width: 860px) {
   .pa-fails { grid-template-columns: 1fr; }
   .pa-dotwrap { grid-template-columns: 1fr; gap: 0; }
+  /* 모바일: 시각화가 위에 고정, 스텝 텍스트가 아래로 지나감 */
   .pa-dot-sticky { order: -1; top: 116px; z-index: 1; }
   .pa-dot-step { min-height: 46vh; align-items: center; text-align: center; }
   .pa-dot-step p { max-width: none; }

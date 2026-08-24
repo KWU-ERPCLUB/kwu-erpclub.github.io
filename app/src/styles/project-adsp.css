@@ -1,10 +1,10 @@
-/* ADsP 인터랙티브 상세 — 골격·챕터 공통(v7 spec 2026-08-24). 규칙: light-only · 타입 스케일 6단(--t-* =
-   project-adsp-objects.css) · 버건디 = 데이터 잉크+결정+히어로 em+나브 활성 · 카드·이미지 hover 이동 0(D7) · keep-all. */
+/* ADsP 인터랙티브 상세(파일럿) — spec 2026-08-12. 규칙: light-only·버건디 화이트리스트(텍스트 em·
+   강조 막대=데이터 잉크·pill 테두리)·면 교대(.pa-ch-wash)·keep-all + balance/pretty(§4 줄바꿈). */
 
 .pa-main { overflow-x: clip; }
 .pa-main, .pa-nav { word-break: keep-all; }
 
-/* ── 스티키 로컬 나브 ── */
+/* ── 스티키 로컬 나브(A2) — 사이트 나브 아래 2단 ── */
 .pa-nav {
   position: sticky; top: 60px; z-index: 9;
   background: rgba(255, 255, 255, 0.85);
@@ -15,45 +15,55 @@
   max-width: var(--maxw); margin: 0 auto; height: 46px; padding: 0 1.5rem;
   display: flex; align-items: center; gap: 1rem;
 }
-.pa-nav-title { font-family: var(--font-display); font-weight: 800; font-size: var(--t-base); white-space: nowrap; }
+.pa-nav-title { font-family: var(--font-display); font-weight: 800; font-size: 0.95rem; white-space: nowrap; }
 .pa-nav-links { display: flex; gap: 1.1rem; margin: 0 auto; overflow-x: auto; scrollbar-width: none; }
 .pa-nav-links::-webkit-scrollbar { display: none; }
 .pa-nav-links a {
-  font-size: var(--t-xs); font-weight: 600; color: var(--text-sub); text-decoration: none;
+  font-size: 0.8rem; font-weight: 600; color: var(--text-sub); text-decoration: none;
   padding: 0.2rem 0; border-bottom: 2px solid transparent; white-space: nowrap;
   transition: color 150ms ease-out, border-color 150ms ease-out;
 }
 .pa-nav-links a:hover { color: var(--text); }
-.pa-nav-links a.on { color: var(--text); font-weight: 800; border-bottom-color: var(--accent); }
+.pa-nav-links a.on { color: var(--text); font-weight: 800; border-bottom-color: var(--accent); } /* 화이트리스트 ⑥ */
+/* (나브 보드 CTA = 오너 2026-08-13 제거 — 로그인 불가로 눌러도 확인 불가) */
 
-/* ── 히어로(G1) — 아이소타입 주인공, 캡처 상단이 첫 화면 하단에 걸침(D3) ── */
+/* ── 히어로 ── */
 .pa-hero {
   max-width: var(--maxw); margin: 0 auto; padding: 0 1.5rem 3rem;
   display: flex; flex-direction: column; align-items: center; text-align: center;
 }
-/* 첫 화면 = 프로젝트 설명 전용(오너 확정 v4·v6, 검수 D3의 82svh·캡처 걸침은 이 결정과 충돌해 기각 — 2026-08-24 재검수) */
+/* 첫 화면 = 프로젝트 설명만(오너 v4·v6 — 배경 캡처는 번잡해 기각, 스크린샷은 아래 원본 노출) */
 .pa-hero-core {
   min-height: calc(100svh - 106px); display: flex; flex-direction: column;
-  align-items: center; justify-content: center; width: 100%; padding: 2.5rem 0 2rem;
+  align-items: center; justify-content: center; width: 100%;
 }
-.pa-hero-label { font-size: var(--t-xs); font-weight: 700; letter-spacing: 0.16em; color: var(--text-sub); text-transform: uppercase; }
+.pa-hero-label {
+  font-size: 0.78rem; font-weight: 700; letter-spacing: 0.16em; color: var(--text-sub); text-transform: uppercase;
+}
 .pa-hero-title {
   font-family: var(--font-display); font-weight: 900;
-  font-size: var(--t-xl); line-height: 1.06; letter-spacing: -0.03em;
+  font-size: clamp(2.7rem, 7.5vw, 5.2rem); line-height: 1.06; letter-spacing: -0.03em;
   margin: 0.9rem 0 1.1rem; text-wrap: balance;
 }
-.pa-hero-title em { font-style: normal; color: var(--accent); }
-.pa-hero-sub { margin: 0 auto; max-width: 46ch; color: var(--text-sub); font-size: var(--t-md); line-height: 1.85; text-wrap: pretty; }
-.pa-hero-stats { display: flex; gap: clamp(2rem, 6vw, 5rem); flex-wrap: wrap; justify-content: center; margin: 2rem 0 0; }
-/* 스탯 = 카드(오너 v5 "요소 키우고 서식 강하게" 복원). hover 이동 없음(D7) */
+.pa-hero-title em { font-style: normal; color: var(--accent); } /* 화이트리스트 ① */
+.pa-hero-sub { margin: 0 auto; max-width: 46ch; color: var(--text-sub); font-size: 1.12rem; line-height: 1.85; text-wrap: pretty; }
+.pa-hero-stats {
+  display: flex; gap: clamp(1.5rem, 5vw, 4rem); flex-wrap: wrap; justify-content: center;
+  margin: 2.2rem 0 2.6rem;
+}
+/* 스탯 = 카드 승격(오너 v5 "요소 키우고 서식 강하게") — 3번째(합격률) = 버건디 강조 */
 .pa-hstat {
   display: flex; flex-direction: column; align-items: center;
   background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-card);
-  padding: 1.2rem 2rem 1rem; min-width: 172px;
+  padding: 1.3rem 2rem 1.1rem; min-width: 172px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
-.pa-hstat .stat-num { font-size: clamp(2.4rem, 5vw, 3.4rem); margin-bottom: 0.2rem; }
-.pa-hstat-label { font-weight: 800; font-size: var(--t-base); }
-.pa-hstat-src { font-size: var(--t-xs); color: var(--text-sub); margin-top: 0.15rem; }
+.pa-hstat:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(20, 20, 20, 0.08); }
+.pa-hstat:last-child { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); background: color-mix(in srgb, var(--tint-accent) 70%, #fff); }
+.pa-hstat:last-child .stat-num { color: var(--accent); }
+.pa-hstat .stat-num { font-size: clamp(2.6rem, 5.5vw, 3.8rem); margin-bottom: 0.3rem; }
+.pa-hstat-label { font-weight: 800; font-size: 0.95rem; }
+.pa-hstat-src { font-size: 0.75rem; color: var(--text-sub); margin-top: 0.2rem; }
 .pa-hero-shot {
   width: min(100%, 880px); border-radius: var(--radius-card);
   border: 1px solid var(--line); box-shadow: 0 24px 60px rgba(20, 20, 20, 0.12);
@@ -64,128 +74,141 @@
 .pa-ch-wash { background: var(--surface); }
 .pa-ch > * { max-width: var(--maxw); margin-left: auto; margin-right: auto; }
 .pa-ch-head { text-align: center; margin-bottom: 2.2rem; }
-.pa-ch-date { font-size: var(--t-xs); font-weight: 700; letter-spacing: 0.14em; color: var(--text-sub); text-transform: uppercase; }
+.pa-ch-date {
+  font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; color: var(--accent); text-transform: uppercase;
+}
 .pa-ch-title {
   font-family: var(--font-display); font-weight: 900;
-  font-size: var(--t-lg); letter-spacing: -0.02em; line-height: 1.15;
+  font-size: clamp(1.7rem, 4vw, 2.6rem); letter-spacing: -0.02em; line-height: 1.15;
   margin: 0.5rem 0 0; text-wrap: balance;
 }
 
-/* 본문 문법 — 회색 바탕 문장 + 핵심구만 검정 굵게 */
-.pa-lead { font-size: var(--t-md); line-height: 1.8; color: var(--text-sub); text-wrap: balance; margin: 0; }
+/* 본문 문법(A5) — 회색 바탕 문장 + 핵심구만 검정 굵게 */
+.pa-lead { font-size: 1.08rem; line-height: 1.8; color: var(--text-sub); text-wrap: balance; margin: 0; }
 .pa-lead strong { color: var(--text); font-weight: 800; }
 .pa-center { text-align: center; max-width: 58ch; margin: 0 auto 2rem; }
-.pa-sub-h { text-align: center; font-size: var(--t-md); font-weight: 800; margin: 0 0 1.2rem; }
-.pa-block { margin-top: 2.8rem; }
-.pa-gap-l { margin-top: 5.5rem; }
 
-/* ── 결정 무테(기획) — 문제 → 결정(틴트) → 결과 ── */
-.pa-dflow { max-width: 920px; display: grid; grid-template-columns: 1fr auto 1.3fr auto 1fr; gap: 1rem; align-items: center; text-align: center; }
-.pa-dlabel { display: block; font-size: var(--t-xs); font-weight: 800; letter-spacing: 0.12em; color: var(--text-sub); margin-bottom: 0.4rem; }
-.pa-dstep p { margin: 0; font-size: var(--t-sm); color: var(--text-sub); line-height: 1.7; text-wrap: pretty; }
-.pa-dstep.main { background: var(--tint-accent); border-radius: 14px; padding: 1.1rem 1.3rem; }
-.pa-dstep.main .pa-dlabel { color: var(--accent); }
-.pa-dstep.main p { color: var(--text); font-weight: 700; font-size: var(--t-base); }
-.pa-darrow { color: var(--text-sub); font-weight: 700; }
+/* 결정 카드 — 문제 → 결정 → 결과 3칸(집중 조명 공통 골격, 중앙 축) */
+.pa-dgrid { display: grid; grid-template-columns: 1fr 1.2fr 1fr; gap: 1rem; max-width: 920px; }
+.pa-dcell { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-card); padding: 1.25rem 1.35rem; text-align: center; }
+.pa-ch:not(.pa-ch-wash) .pa-dcell { background: var(--surface); }
+.pa-dcell.main { border-color: var(--dark); }
+.pa-dcell-label { display: block; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.12em; color: var(--text-sub); margin-bottom: 0.45rem; }
+.pa-dcell.main .pa-dcell-label { color: var(--accent); }
+.pa-dcell p { margin: 0; font-size: 0.92rem; color: var(--text-sub); line-height: 1.7; text-wrap: pretty; }
+.pa-dcell.main p { color: var(--text); font-weight: 600; }
 
-/* ── 사실 목록(회고 판정·피드백) — 무테, 번호/인용 칩 + 제목 + 한 줄 ── */
-.pa-facts { list-style: none; margin: 0 auto; padding: 0; max-width: 980px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem 2.4rem; }
-.pa-fact { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.7rem; }
-.pa-fact-chip { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; background: var(--dark); color: #fff; font-weight: 800; font-size: var(--t-xs); }
-.pa-facts.quote .pa-fact-chip { background: var(--surface); border: 1px solid var(--line); color: var(--text); font-family: var(--font-display); font-size: var(--t-md); }
-.pa-fact h3 { margin: 0 0 0.4rem; font-size: var(--t-md); font-weight: 800; }
-.pa-fact p { margin: 0; font-size: var(--t-sm); color: var(--text-sub); line-height: 1.7; text-wrap: pretty; }
+/* (구 pa-pair 정적 2열 = E2 토글 비교로 대체 2026-08-13 — 스타일 제거) */
 
-/* ── 제작 원칙 4 — 무테 2열 번호 리스트 ── */
-.pa-prin { list-style: none; margin: 0 auto; padding: 0; max-width: 920px; display: grid; grid-template-columns: 1fr 1fr; gap: 1.8rem 2.4rem; }
-.pa-prin-item { display: flex; flex-direction: column; align-items: center; gap: 0.6rem; text-align: center; } /* 가운데 정렬 = 오너 상시 규칙(텍스트 골격은 D1 해제 대상 아님) */
-.pa-prin-no { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; background: var(--dark); color: #fff; font-weight: 800; font-size: var(--t-xs); }
-.pa-prin-item h3 { margin: 0.2rem 0 0.4rem; font-size: var(--t-md); font-weight: 800; }
-.pa-prin-item p { margin: 0; font-size: var(--t-sm); color: var(--text-sub); line-height: 1.7; }
-.pa-feat-src { display: block; margin-top: 0.5rem; font-size: var(--t-xs); font-weight: 700; color: var(--text-sub); }
+/* 개선 로그 컨테이너 — 목록 본체 = 레일(project-adsp-viz.css .pa-lograil) */
+.pa-minors { max-width: 720px; margin-top: 3rem; margin-bottom: 3rem; }
 
-/* 중앙정렬 — 리빌 래퍼(.pa-rv) 안 조각은 .pa-ch > * 규칙을 못 받으므로 margin auto */
+/* 운영 피처 그리드(A7) */
+.pa-feat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; margin-bottom: 2.6rem; }
+.pa-feat-grid.cols3 { grid-template-columns: repeat(3, 1fr); } /* 회고·피드백 3장 (2026-08-24 개편) */
+.pa-feat { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-card); padding: 1.4rem 1.5rem; }
+.pa-ch:not(.pa-ch-wash) .pa-feat { background: var(--surface); }
+.pa-feat h3 { margin: 0 0 0.5rem; font-size: 1.02rem; font-weight: 800; }
+.pa-feat p { margin: 0; font-size: 0.92rem; color: var(--text-sub); line-height: 1.7; }
+.pa-sub-h { text-align: center; font-size: 1.05rem; font-weight: 800; margin: 0 0 1.2rem; }
+/* 위임 원칙 4칸(제작 챕터) — 피처 카드 승계 + 근거 각주 줄 */
+.pa-prin { margin-bottom: 1rem; }
+.pa-feat-src { display: block; margin-top: 0.7rem; font-size: 0.74rem; font-weight: 700; color: var(--accent); } /* 화이트리스트 — 근거 표기 */
+
+/* (비교 슬라이더 = 오너 기각 2026-08-12 · 지표 4탭 = 오너 기각 2026-08-13 — 스타일 제거) */
+
+/* ⚠중앙정렬 일괄 보정(오너 2026-08-13 "왼쪽 치우침") — 리빌 래퍼(.pa-rv) 안의 조각은
+   .pa-ch > * 중앙 규칙을 못 받으므로 각자 margin-inline auto 필수. */
 .pa-carousel, .pa-mtable-wrap, .pa-loop, .pa-evi, .pa-prompt { margin-left: auto; margin-right: auto; }
 
-/* ── 지표 4종 표 ── */
+/* 지표 4종 압축 표 */
 .pa-mtable-wrap { max-width: 860px; overflow-x: auto; margin-top: 1.6rem; }
-.pa-mtable { width: 100%; border-collapse: collapse; font-size: var(--t-sm); background: #fff; border: 1px solid var(--line); border-radius: var(--radius-card); }
+.pa-mtable { width: 100%; border-collapse: collapse; font-size: 0.9rem; background: #fff; border: 1px solid var(--line); border-radius: var(--radius-card); }
 .pa-mtable th, .pa-mtable td { padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
-.pa-mtable thead th { font-size: var(--t-xs); letter-spacing: 0.1em; color: var(--text-sub); text-transform: uppercase; }
+.pa-mtable thead th { font-size: 0.74rem; letter-spacing: 0.1em; color: var(--text-sub); text-transform: uppercase; }
 .pa-mtable tbody tr:last-child th, .pa-mtable tbody tr:last-child td { border-bottom: 0; }
 .pa-mtable tbody th { font-weight: 800; white-space: nowrap; }
 .pa-mtable td { color: var(--text-sub); }
-.pa-mtable code { font-size: var(--t-xs); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 0.15rem 0.45rem; white-space: nowrap; }
+.pa-mtable code { font-size: 0.82rem; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 0.15rem 0.45rem; white-space: nowrap; }
 .pa-mtable td strong { color: var(--text); }
-.pa-mtable-src { font-size: var(--t-xs); }
+.pa-mtable-src { font-size: 0.76rem; }
 
-/* ── 제작 루프 — 단계 4칸(카드) + 순환 캡션 ── */
+/* 제작 루프 — 단계 4칸 + 화살표(모바일 = 세로 적층) */
 .pa-loop { max-width: 920px; margin-bottom: 2rem; }
-.pa-loop-row { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.9rem; }
+.pa-loop-row { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.9rem; counter-reset: none; }
 .pa-loop-step { position: relative; text-align: center; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-card); padding: 1.1rem 1.2rem; }
 .pa-ch-wash .pa-loop-step { background: #fff; }
-.pa-loop-step:not(:last-child)::after { content: '→'; position: absolute; right: -0.85rem; top: 50%; transform: translateY(-50%); color: var(--text-sub); font-weight: 800; z-index: 1; }
-.pa-loop-no { display: inline-flex; width: 22px; height: 22px; align-items: center; justify-content: center; border-radius: 50%; background: var(--dark); color: #fff; font-size: var(--t-xs); font-weight: 800; margin-bottom: 0.5rem; }
-.pa-loop-k { display: block; font-weight: 800; font-size: var(--t-base); }
-.pa-loop-who { display: block; font-size: var(--t-xs); font-weight: 700; color: var(--text-sub); margin: 0.15rem 0 0.4rem; }
-.pa-loop-step p { margin: 0; font-size: var(--t-sm); color: var(--text-sub); line-height: 1.6; }
-.pa-loop-cap { text-align: center; font-size: var(--t-sm); color: var(--text-sub); margin: 0.9rem 0 0; }
+.pa-loop-step:not(:last-child)::after {
+  content: '→'; position: absolute; right: -0.85rem; top: 50%; transform: translateY(-50%);
+  color: var(--text-sub); font-weight: 800; z-index: 1;
+}
+.pa-loop-no { display: inline-flex; width: 22px; height: 22px; align-items: center; justify-content: center; border-radius: 50%; background: var(--dark); color: #fff; font-size: 0.72rem; font-weight: 800; margin-bottom: 0.5rem; }
+.pa-loop-k { display: block; font-weight: 800; font-size: 0.98rem; }
+.pa-loop-who { display: block; font-size: 0.74rem; font-weight: 700; color: var(--accent); margin: 0.15rem 0 0.4rem; } /* 화이트리스트 — 역할 강조 */
+.pa-loop-step p { margin: 0; font-size: 0.84rem; color: var(--text-sub); line-height: 1.6; }
+.pa-loop-cap { text-align: center; font-size: 0.85rem; color: var(--text-sub); margin: 0.9rem 0 0; }
 
-/* ── 실물 발췌 2종 — spec 카드 + 커밋 로그 터미널(다크 면 스크롤바 금지 = pre-wrap) ── */
+/* 실물 발췌 2종 — spec 문서 카드 + 커밋 로그 터미널 */
 .pa-evi { max-width: 920px; display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-top: 2rem; }
 .pa-evi-head { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.7rem; }
-.pa-evi-head code { font-size: var(--t-xs); color: var(--text-sub); }
-.pa-evi-tag { display: inline-flex; align-items: center; height: 22px; padding: 0 0.6rem; border-radius: var(--radius-pill); background: var(--dark); color: #fff; font-size: var(--t-xs); font-weight: 700; white-space: nowrap; }
-.pa-evi-tag.alt { background: #fff; border: 1px solid var(--accent); color: var(--accent); }
+.pa-evi-head code { font-size: 0.72rem; color: var(--text-sub); }
+.pa-evi-tag {
+  display: inline-flex; align-items: center; height: 22px; padding: 0 0.6rem; border-radius: var(--radius-pill);
+  background: var(--dark); color: #fff; font-size: 0.68rem; font-weight: 700; white-space: nowrap;
+}
+.pa-evi-tag.alt { background: #fff; border: 1px solid var(--accent); color: var(--accent); } /* 재구성 예시 = 실물과 구분(prep 배지 문법 — 버건디 채움 금지 §1) */
 .pa-doc, .pa-term { border-radius: var(--radius-card); padding: 1.2rem 1.3rem; min-width: 0; }
 .pa-doc { background: #fff; border: 1px solid var(--line); }
 .pa-ch:not(.pa-ch-wash) .pa-doc { background: var(--surface); }
-.pa-doc pre, .pa-term pre { margin: 0; font-size: var(--t-xs); line-height: 1.7; white-space: pre-wrap; word-break: break-all; font-family: ui-monospace, 'Cascadia Code', Consolas, monospace; }
+.pa-doc pre, .pa-term pre {
+  margin: 0; font-size: 0.78rem; line-height: 1.7; overflow-x: auto;
+  font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+}
 .pa-term { background: #1c1c1e; }
 .pa-term .pa-evi-head code { color: rgba(255, 255, 255, 0.55); }
 .pa-term pre { color: #e8e8e6; }
-.pa-evi-note { margin: 0.8rem 0 0; font-size: var(--t-xs); color: var(--text-sub); }
+.pa-evi-note { margin: 0.8rem 0 0; font-size: 0.8rem; color: var(--text-sub); }
 .pa-term .pa-evi-note { color: rgba(255, 255, 255, 0.6); }
 
-/* ── AI 명령 카드 — 재구성 예시 라벨 필수 ── */
-.pa-prompt { max-width: 760px; border-left: 3px solid var(--dark); padding: 0.4rem 0 0.4rem 1.3rem; margin-top: 1.6rem; text-align: left; } /* 무테 인용(카드 아님) */
+/* AI 명령 카드 — 재구성 예시 라벨 필수 */
+.pa-prompt { max-width: 760px; background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: var(--radius-card); padding: 1.2rem 1.4rem; margin-top: 1.6rem; }
+.pa-ch-wash .pa-prompt { box-shadow: 0 6px 18px rgba(20, 20, 20, 0.05); }
 .pa-prompt-head { display: flex; align-items: center; gap: 0.7rem; flex-wrap: wrap; margin-bottom: 0.6rem; }
-.pa-prompt-ctx { font-size: var(--t-xs); font-weight: 700; color: var(--text-sub); }
-.pa-prompt p { margin: 0; font-size: var(--t-base); line-height: 1.8; color: var(--text); text-wrap: pretty; }
+.pa-prompt-ctx { font-size: 0.78rem; font-weight: 700; color: var(--text-sub); }
+.pa-prompt p { margin: 0; font-size: 0.95rem; line-height: 1.8; color: var(--text); text-wrap: pretty; }
 
-/* ── 캐러셀(프레임 16/10 통일) ── */
+/* (구 주별 막대 차트 = DotField 도트 필드로 대체 2026-08-13 — 스타일 제거) */
+
+/* 캐러셀 */
 .pa-carousel { max-width: 880px; }
-.pa-car-frame { position: relative; aspect-ratio: 16 / 10; border-radius: var(--radius-card); overflow: hidden; border: 1px solid var(--line); background: #fff; }
+.pa-car-frame { position: relative; aspect-ratio: 16 / 9.6; border-radius: var(--radius-card); overflow: hidden; border: 1px solid var(--line); background: #fff; }
 .pa-car-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; opacity: 0; transition: opacity 600ms ease; }
 .pa-car-img.on { opacity: 1; }
 .pa-car-bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 0.7rem; }
-.pa-car-cap { margin: 0; font-size: var(--t-sm); font-weight: 700; }
+.pa-car-cap { margin: 0; font-size: 0.88rem; font-weight: 700; }
 .pa-car-dots { display: flex; align-items: center; gap: 0.45rem; }
+/* 도트 = 시각 9px 유지 + 탭 영역 확장(히트 25px: 패딩 8px 사방 + 음수 마진 = 레이아웃 불변, background-clip으로 점만 칠함) */
 .pa-dot { box-sizing: content-box; width: 9px; height: 9px; border-radius: 50%; border: 0; padding: 8px; margin: -8px; background: var(--line); background-clip: content-box; cursor: pointer; transition: background-color 150ms ease-out, transform 150ms ease-out; }
-.pa-dot.on { background-color: var(--accent); transform: scale(1.15); }
+.pa-dot.on { background-color: var(--accent); transform: scale(1.15); } /* background 축약형은 clip 리셋(왕점 버그) — color만 변경 */
 .pa-dot:focus-visible, .pa-car-pause:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .pa-car-pause { border: 1px solid var(--line); background: #fff; border-radius: var(--radius-pill); font-size: 0.62rem; padding: 0.3rem 0.6rem; cursor: pointer; margin-left: 0.4rem; }
 
-/* ── CTA 밴드 — 차콜 면 교대(별도 section) ── */
-.pa-cta-band { background: var(--dark); color: #fff; padding: clamp(4rem, 10vh, 6rem) 1.5rem; }
-.pa-cta-block { max-width: var(--maxw); margin: 0 auto; text-align: center; }
-.pa-cta-title { font-family: var(--font-display); font-weight: 900; font-size: var(--t-lg); margin: 0 0 0.8rem; color: #fff; }
-.pa-cta-title em { font-style: normal; color: var(--accent-on-dark); }
-.pa-cta-block > p { margin: 0 auto 1.6rem; max-width: 50ch; color: rgba(255, 255, 255, 0.72); text-wrap: pretty; }
+/* 마감 챕터 */
+.pa-cta-block { text-align: center; padding-top: 1rem; }
+.pa-cta-title { font-family: var(--font-display); font-weight: 900; font-size: clamp(1.5rem, 3.4vw, 2.1rem); margin: 0 0 0.6rem; }
+.pa-cta-title em { font-style: normal; color: var(--accent); }
+.pa-cta-block > p { margin: 0 auto 1.4rem; max-width: 50ch; color: var(--text-sub); text-wrap: pretty; }
 .pa-cta-row { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; }
-.btn-light { display: inline-flex; align-items: center; gap: 0.5rem; background: #fff; color: var(--dark); border-radius: var(--radius-pill); padding: 0.75rem 1.4rem; font-weight: 800; text-decoration: none; transition: background-color 150ms ease-out; }
-.btn-light:hover { background: #f0f0ee; }
-.btn-light:focus-visible { outline: 3px solid var(--focus-on-dark); outline-offset: 3px; }
 
-/* ── 반응형 ── */
+/* 리빌(.pa-js .pa-rv) = project-reveal.css 공용 정의로 이관(2026-08-20 — project-site.css와 값까지 동일했음) */
+
+/* 반응형 */
 @media (max-width: 760px) {
-  .pa-dflow { grid-template-columns: 1fr; }
-  .pa-darrow { transform: rotate(90deg); }
-  .pa-facts, .pa-prin, .pa-evi { grid-template-columns: 1fr; }
+  .pa-feat-grid, .pa-feat-grid.cols3, .pa-dgrid, .pa-evi { grid-template-columns: 1fr; }
   .pa-loop-row { grid-template-columns: 1fr; }
   .pa-loop-step:not(:last-child)::after { content: '↓'; right: auto; left: 50%; top: auto; bottom: -1.05rem; transform: translateX(-50%); }
   .pa-nav-title { display: none; }
-  .pa-hero-core { min-height: auto; }
+  .pa-hero-stats { gap: 1.4rem 2rem; }
 }
 @media (max-width: 480px) {
   .pa-car-bar { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
