@@ -64,9 +64,9 @@
 .pa-road-act p { margin: 0; font-size: var(--t-base); font-weight: 700; color: var(--text); line-height: 1.6; word-break: keep-all; text-wrap: balance; }
 .pa-road-out .pa-road-tag { background: var(--pa-ok-tint); border-color: var(--pa-ok-tint); color: var(--pa-ok); }
 /* 카드 본문 — 미디어가 있으면 데스크톱 2열(좌 결정 프로세스 / 우 미디어)로 높이 절반(검수 A4) */
-.pa-road-body.has-media { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 1.4rem; align-items: center; text-align: center; } /* D1(좌정렬 해제) 제외 — 가운데 정렬 = 오너 확정 */
-.pa-road-body.has-media .pa-road-steps { align-items: center; }
-.pa-road-body.has-media .pa-road-why, .pa-road-body.has-media .pa-road-out, .pa-road-body.has-media .pa-road-act p { text-align: center; text-wrap: balance; }
+.pa-road-body.has-media { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 1.4rem; align-items: center; text-align: left; }
+.pa-road-body.has-media .pa-road-steps { align-items: flex-start; }
+.pa-road-body.has-media .pa-road-why, .pa-road-body.has-media .pa-road-out, .pa-road-body.has-media .pa-road-act p { text-align: left; text-wrap: pretty; }
 .pa-road-media { min-width: 0; }
 .pa-road-media > * + * { margin-top: 0.9rem; }
 .pa-road-media .pa-toggle, .pa-road-media .pa-carousel, .pa-road-media .pa-mtable-wrap, .pa-road-media .pa-prompt { max-width: none; margin-top: 0; }
