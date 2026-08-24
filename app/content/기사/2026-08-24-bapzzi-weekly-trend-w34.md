@@ -2,14 +2,14 @@
 title: 주간 AI 트렌드 — 8월 4주
 author: bapzzi
 date: 2026-08-24
-시각: 09:35
+시각: 23:40
 source_url: https://www.bloomberg.com/news/articles/2026-08-20/anthropic-expects-to-match-spacex-s-record-ipo-size-or-top-it
 source_name: Bloomberg · Anthropic · Nvidia 외
 성격: 트렌드
 주제: 시장·생태계
 시리즈: weekly
 설명: 매주 월요일 발행하는 주간 AI 트렌드. 8/17–8/23 소식.
-태그: [앤트로픽, 엔비디아, 클링, 오픈AI, IPO]
+태그: [앤트로픽, 엔비디아, 클링, 채용, 에이전트]
 ---
 
 ::: 요약
@@ -29,19 +29,38 @@ source_name: Bloomberg · Anthropic · Nvidia 외
 런레이트(run rate) | 최근 분기 실적을 1년 치로 환산했을 때 예상되는 연간 매출 규모
 :::
 
-## 한 줄 브리핑
+## 키워드 브리핑
 
-- **8/18** — 오픈AI, 청소년 전용 'ChatGPT for Teens' 출시 — 만 13~17세로 판단되면 자동 전환, 학습 모드·보호자 통제 기능 포함 ([OpenAI 공식](https://openai.com/index/chatgpt-for-teens/))
-- **8/19** — xAI 그록 4.6, 아마존 베드락에 정식 출시 — 컨텍스트 **50만** 토큰, 전 리전 지원 ([AWS 공식](https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-bedrock-grok-4-6/))
-- **8/19** — 국내 반도체 스타트업 iHW, 초저전력 AI 반도체로 **520억원** 시리즈A 유치 — 산업은행 등 13개 기관 참여 ([이코노미스트](https://economist.co.kr/article/view/ecn202608190042))
-- **8/20** — 앤트로픽, 무료 AI 교육 플랫폼 '클로드 아카데미' 출시 — 입문부터 API 개발까지 4단계 학습 경로 제공 ([Anthropic 공식](https://claude.com/blog/anthropics-approach-to-teaching-and-learning-ai))
-- **8/21** — 오픈AI, GPT-5.6 Sol API 가격 **20%** 넘게 인하 — 11월 21일까지 한시 적용, 앤트로픽·중국 모델과의 경쟁이 배경 (로이터, [Investing.com](https://www.investing.com/news/stock-market-news/openai-cuts-developer-pricing-for-frontier-gpt56-sol-model-by-more-than-20-4872186))
-- **8/23** — 국회, AI·빅데이터 기반 '지능형 제품안전 관리시스템' 구축법 발의 — 상시감시·플랫폼 차단 의무 포함 ([뉴스핌](https://www.newspim.com/news/view/20260823000091))
+### 취업·채용
+
+- **SK하이닉스 AI 채용 접수** — 8/20 자소서를 없애고 'AI 활용 역량' 기술 서식·반나절 심층면접으로 개편한 신입 수시채용의 서류 접수 시작(8/20–8/26, 제도 발표는 7/30) ([전자신문](https://www.etnews.com/20260730000120))
+
+### 도구·워크플로
+
+- **Claude Code /design** — 8/17 주간 업데이트(v2.1.234–239): 아이디어·스크린샷을 편집 가능한 디자인 아트보드로 바꾸는 /design 리서치 프리뷰, 결과부터 말하는 Concise 출력 스타일 ([Claude Code 공식 What's new](https://code.claude.com/docs/en/whats-new))
+- **Codex CLI 0.148** — 8/18 세션 포킹·실시간 비용 표시·아마존 베드락 프로바이더 내장 릴리스로 소개됨(커뮤니티) ([Digital Applied](https://www.digitalapplied.com/blog/claude-code-codex-cli-agent-operator-changes-august))
+- **에이전트 '마인드 바이러스'** — 앤트로픽·EPFL 연구진 프리프린트(8/10 공개, 8/18 보도로 확산): 자기전파 페이로드가 에이전트의 메모리 파일을 타고 다른 에이전트로 퍼지는 것을 모의 협업에서 시연 — 시스템 프롬프트 경고 한 문단으로 확산이 거의 0으로 줄었고, 실제 환경 확산 증거는 없다고 알려짐 ([The Hacker News](https://thehackernews.com/2026/08/ai-mind-viruses-can-spread-between.html))
+
+### 모델·공식 발표
+
+- **ChatGPT for Teens** — 8/18 오픈AI, 청소년 전용 챗GPT 출시 — 만 13~17세로 판단되면 자동 전환, 학습 모드·보호자 통제 포함 ([OpenAI 공식](https://openai.com/index/chatgpt-for-teens/))
+- **그록 4.6 베드락 출시** — 8/19 xAI 그록 4.6, 아마존 베드락 정식 출시 — 컨텍스트 **50만** 토큰, 전 리전 지원 ([AWS 공식](https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-bedrock-grok-4-6/))
+- **클로드 아카데미** — 8/20 앤트로픽, 무료 AI 교육 플랫폼 출시 — 입문부터 API 개발까지 4단계 학습 경로 ([Anthropic 공식](https://claude.com/blog/anthropics-approach-to-teaching-and-learning-ai))
+- **GPT-5.6 Sol 가격 인하** — 8/21 오픈AI, API 가격 **20%** 넘게 인하 — 11월 21일까지 한시 적용, 앤트로픽·중국 모델과의 경쟁이 배경 (로이터, [Investing.com](https://www.investing.com/news/stock-market-news/openai-cuts-developer-pricing-for-frontier-gpt56-sol-model-by-more-than-20-4872186))
+
+### 국내
+
+- **iHW 520억 시리즈A** — 8/19 국내 반도체 스타트업 iHW, 초저전력 AI 반도체로 시리즈A 유치 — 산업은행 등 13개 기관 참여 ([이코노미스트](https://economist.co.kr/article/view/ecn202608190042))
+- **제품안전 AI 법안** — 8/23 국회, AI·빅데이터 기반 '지능형 제품안전 관리시스템' 구축법 발의 — 상시감시·플랫폼 차단 의무 포함 ([뉴스핌](https://www.newspim.com/news/view/20260823000091))
 
 ::: 출처
 Bloomberg — 앤트로픽 IPO 규모 (8/20) | https://www.bloomberg.com/news/articles/2026-08-20/anthropic-expects-to-match-spacex-s-record-ipo-size-or-top-it | TOP1 IPO 규모·매출 수치
 Bloomberg — 엔비디아·풀사이드 라이선스 (8/20) | https://www.bloomberg.com/news/articles/2026-08-20/nvidia-to-pay-ai-startup-poolside-a-6-billion-license-newcomer-says | TOP2 라이선스·투자 수치
 Kuaishou Technology 공식 — 2026년 2분기 실적발표 (8/19) | https://ir.kuaishou.com/news-releases/news-release-details/kuaishou-technology-announces-second-quarter-and-interim-2026 | TOP3 클링 매출 수치
+전자신문 — SK하이닉스 신입 채용 개편·접수 일정 (7/30) | https://www.etnews.com/20260730000120 | 접수 8/20–8/26
+Claude Code 공식 What's new — Week 34 (8/17–8/21) | https://code.claude.com/docs/en/whats-new | /design 리서치 프리뷰
+Digital Applied — Codex CLI 0.148 소개 (8월) | https://www.digitalapplied.com/blog/claude-code-codex-cli-agent-operator-changes-august | 커뮤니티 블로그 — 비단정 인용
+The Hacker News — 에이전트 자기전파 연구 보도 (8/18) | https://thehackernews.com/2026/08/ai-mind-viruses-can-spread-between.html | 프리프린트 8/10 공개
 OpenAI 공식 — ChatGPT for Teens (8/18) | https://openai.com/index/chatgpt-for-teens/
 AWS 공식 — 베드락 그록 4.6 지원 (8/19) | https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-bedrock-grok-4-6/
 이코노미스트 — iHW 520억원 시리즈A (8/19) | https://economist.co.kr/article/view/ecn202608190042
