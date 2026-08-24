@@ -1,0 +1,73 @@
+/* ADsP 상세 — 시각 오브젝트(V1 아이소타입 · V2 팀 리듬 · V3 시간축 · V5 지표 간극) + 페이지 타입 스케일 토큰.
+   spec 2026-08-24 §3·§5. 모션 = .on 이후에만(마운트 = 최종 상태). transform/opacity/SVG attr만. */
+
+/* ── 타입 스케일 6단(페이지 로컬) ── */
+.pa-main, .pa-nav {
+  --t-xs: 0.74rem; --t-sm: 0.86rem; --t-base: 0.98rem; --t-md: 1.1rem;
+  --t-lg: clamp(1.7rem, 4vw, 2.6rem); --t-xl: clamp(2.7rem, 7.5vw, 5.2rem);
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* ── V1 합격 아이소타입 ── */
+.pa-iso { margin: 2rem auto 0; display: flex; flex-direction: column; align-items: center; gap: 0.9rem; }
+.pa-iso-row { display: flex; gap: 0.6rem; }
+.pa-iso-u {
+  width: clamp(26px, 4vw, 40px); height: clamp(26px, 4vw, 40px); border-radius: 50%;
+  border: 2px solid var(--dark); background: transparent; position: relative;
+}
+.pa-iso-u.pass { border-color: var(--accent); }
+.pa-iso-u.pass::after {
+  content: ''; position: absolute; inset: 3px; border-radius: 50%; background: var(--accent);
+  transform: scale(0); transition: transform 420ms var(--ease-out); transition-delay: calc(var(--i) * 70ms + 120ms);
+}
+.pa-iso.on .pa-iso-u.pass::after { transform: scale(1); }
+.pa-iso figcaption { display: flex; flex-direction: column; align-items: center; gap: 0.15rem; font-size: var(--t-sm); color: var(--text-sub); }
+.pa-iso-rate { font-family: var(--font-display); font-weight: 900; font-size: clamp(2.4rem, 5vw, 3.6rem); color: var(--accent); letter-spacing: -0.03em; line-height: 1; }
+
+/* ── V2 팀 리듬 격자 ── */
+.pa-tr { max-width: 880px; margin: 0 auto 2rem; }
+.pa-tr svg { width: 100%; height: auto; display: block; }
+.pa-tr-week, .pa-tr-day { font-size: 11px; fill: var(--text-sub); font-weight: 600; }
+.pa-tr-name { font-size: 12px; font-weight: 800; fill: var(--text); }
+.pa-tr-bg { fill: var(--line); opacity: 0.55; }
+.pa-tr-row.hot .pa-tr-dot { fill: var(--accent); }
+.pa-tr-row.dark .pa-tr-dot { fill: var(--dark); }
+.pa-tr-dot { opacity: 0; transform: scale(0.6); transform-box: fill-box; transform-origin: center; transition: opacity 260ms var(--ease-out), transform 260ms var(--ease-out); transition-delay: calc(var(--i) * 14ms); }
+.pa-tr.on .pa-tr-dot { opacity: 1; transform: scale(1); }
+.pa-tr figcaption { margin-top: 0.9rem; text-align: center; font-size: var(--t-sm); color: var(--text-sub); text-wrap: pretty; }
+@media (prefers-reduced-motion: reduce) { .pa-tr-dot, .pa-iso-u.pass::after { transition: none; } }
+
+/* ── V3 로드맵 시간축(스티키) ── */
+.pa-road-wrap { max-width: 980px; margin: 0 auto; display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 1.5rem; align-items: start; }
+.pa-axis { position: sticky; top: 130px; }
+.pa-axis-line { stroke: var(--line); stroke-width: 2; }
+.pa-axis-tick { stroke: var(--line); stroke-width: 2; }
+.pa-axis-week { font-size: 11px; fill: var(--text-sub); font-weight: 700; font-variant-numeric: tabular-nums; }
+.pa-axis-node { fill: #fff; stroke: var(--dark); stroke-width: 2; transition: r 200ms var(--ease-out), fill 200ms, stroke 200ms; }
+.pa-axis-node.minor { fill: var(--text-sub); stroke: none; }
+.pa-axis-node.cur { fill: var(--accent); stroke: var(--accent); }
+@media (max-width: 860px) {
+  .pa-road-wrap { grid-template-columns: 1fr; }
+  .pa-axis { display: none; }
+}
+
+/* ── V5 지표 간극 ── */
+.pa-gap { max-width: 760px; margin: 2rem auto 0; }
+.pa-gap-scale { position: relative; height: 96px; margin: 0 2.5rem; border-bottom: 2px solid var(--line); }
+.pa-gap-tick { position: absolute; bottom: -1.5rem; transform: translateX(-50%); font-size: var(--t-xs); color: var(--text-sub); font-variant-numeric: tabular-nums; }
+.pa-gap-shade { position: absolute; bottom: 0; height: 34px; background: var(--tint-accent); border-left: 1px dashed var(--accent); border-right: 1px dashed var(--accent); }
+.pa-gap-mark { position: absolute; bottom: 0; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.3rem; font-size: var(--t-xs); font-weight: 800; white-space: nowrap; }
+.pa-gap-mark i { display: block; width: 14px; height: 14px; border-radius: 50%; order: 2; }
+.pa-gap-mark.quiz { color: var(--text-sub); bottom: 40px; }
+.pa-gap-mark.quiz i { background: #8f8a81; }
+.pa-gap-mark.real { color: var(--accent); left: var(--to); }
+.pa-gap-mark.real i { background: var(--accent); }
+.pa-gap-num { position: absolute; bottom: 8px; transform: translateX(-50%); font-family: var(--font-display); font-weight: 900; font-size: var(--t-md); color: var(--accent); }
+.pa-gap figcaption { margin-top: 2.4rem; text-align: center; font-size: var(--t-sm); color: var(--text-sub); text-wrap: pretty; }
+/* 모션: 실전 마커가 정답률 위치(--from)에서 제자리(--to)로 — 진입 후 재생 */
+@media (prefers-reduced-motion: no-preference) {
+  .pa-gap:not(.on) .pa-gap-mark.real { left: var(--from); }
+  .pa-gap:not(.on) .pa-gap-shade, .pa-gap:not(.on) .pa-gap-num { opacity: 0; }
+  .pa-gap-mark.real { transition: left 700ms var(--ease-out) 150ms; }
+  .pa-gap-shade, .pa-gap-num { transition: opacity 400ms ease 650ms; }
+}

@@ -7,6 +7,7 @@ import ProjectAdsp from './ProjectAdsp.jsx'
 import { MetricTable, ToolCarousel, BuildLoop, BuildEvidence, BuildPrinciples, CodeStats } from './project-adsp-parts.jsx'
 import { DotField, ToggleCompare, FailCards, VerdictSplit, dotLayouts } from './project-adsp-viz.jsx'
 import { FlowChain, RoadmapRail, TeamSplit } from './project-adsp-road.jsx'
+import { teamCells, axisPos } from './project-adsp-objects.jsx'
 import { ROADMAP, ROADMAP_MAJORS, ROADMAP_MINORS } from '../data/project-adsp-roadmap.js'
 import {
   HERO_STATS, WEEKLY_ANSWERS, METRICS, CHAPTERS, TOOL_SLIDES, BUILD_STEPS,
@@ -168,6 +169,38 @@ test('수치 수위(오너 확정 08-24) — 완주↔합격 교차 수치·문�
   expect(page, '교차 수치 금지').not.toContain('완주 5명')
   expect(page, '문항 총계 비게재(저작권 룰)').not.toContain('1,010')
   expect(page, '문항 총계 비게재').not.toContain('1010문항')
+})
+
+test('v7 시각 오브젝트 V1~V5 — 페이지 렌더 + 수량 = 데이터 계산(spec 2026-08-24 §3·§7)', () => {
+  // V1 아이소타입: 유닛 10, 합격 5
+  expect((page.match(/pa-iso-u[ "]/g) || []).length).toBe(10)
+  expect((page.match(/pa-iso-u pass/g) || []).length).toBe(5)
+  expect(page).toContain('합격률 50%')
+  // V2 팀 리듬: 셀 = 주 × 7, 1팀 점 = 주 × 5, 2팀 점 = 주
+  const { daily, weekly } = teamCells(WEEKLY_ANSWERS.length)
+  expect(daily.length).toBe(WEEKLY_ANSWERS.length * 5)
+  expect(weekly.length).toBe(WEEKLY_ANSWERS.length)
+  expect((page.match(/pa-tr-dot/g) || []).length).toBe(daily.length + weekly.length)
+  // V3 시간축: 노드 = ROADMAP 전량, 날짜 위치 0~1
+  expect((page.match(/pa-axis-node/g) || []).length).toBe(ROADMAP.length)
+  expect(axisPos('06-26')).toBe(0)
+  expect(axisPos('08-08 ~ 10')).toBeLessThan(1)
+  expect(axisPos('07-24')).toBeGreaterThan(0.5)
+  // V4 도트 필드: 페이지에 포함(dead code 재발 방지 — 검수 A3)
+  expect(page).toContain('pa-dotwrap')
+  expect(page).toContain('52.7%')
+  // V5 지표 간극: 두 지표 + 차이
+  expect(page).toContain('pa-gap-scale')
+  expect(page).toContain('11.5p')
+})
+
+test('v7 골격 규격 — 카드 박스 ≤ 30 · 리빌 스태거 인덱스 존재 · 커밋 로그 = 다크 면(스크롤바 금지는 CSS pre-wrap)', () => {
+  const cards = (page.match(/class="(pa-fail|pa-flow-step|pa-loop-step|pa-split-col|pa-road-card|pa-doc|pa-term)[ "]/g) || []).length // pa-prompt = 무테 인용
+  expect(cards, `카드 박스 수 ${cards}`).toBeLessThanOrEqual(30)
+  expect(page).not.toContain('pa-feat ') // 구 테두리 카드 그리드 폐지
+  expect(page).not.toContain('pa-dcell')
+  expect((page.match(/--i:/g) || []).length).toBeGreaterThanOrEqual(20)
+  expect(page).toContain('git log --oneline')
 })
 
 test('v3 카피 규칙 — 대시(—) 금지: 데이터 문안 0건(실물 인용 SPEC·COMMIT_LOG 제외)', () => {
