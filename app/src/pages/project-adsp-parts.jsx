@@ -4,8 +4,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { prefersReduced } from '../home-motion.jsx'
 import {
-  METRICS, TOOL_SLIDES, BUILD_STEPS, BUILD_STACK, BUILD_TILES, BUILD_PRINCIPLES,
-  CODE_STATS, MINOR_ITEMS, SPEC_EXCERPT, COMMIT_LOG, PROMPTS,
+  METRICS, TOOL_SLIDES, BUILD_STEPS, BUILD_STACK, BUILD_PRINCIPLES,
+  CODE_STATS, SPEC_EXCERPT, COMMIT_LOG, PROMPTS,
 } from '../data/project-adsp-data.js'
 
 // ── 지표 4종 압축 표 — E5 색코딩: 톤 칩(차콜 농도 3단 + 실전 = 버건디)으로 지표 식별 고정 ──
@@ -31,20 +31,7 @@ export function MetricTable() {
   )
 }
 
-// ── 도구 타일 그리드(E3 — Comeau 스택 그리드) — 텍스트 타일(외부 로고 자산 0) ──
-export function ToolTiles() {
-  return (
-    <div className="pa-tiles">
-      {BUILD_TILES.map((t) => (
-        <div className="pa-tile" key={t.name}>
-          <span className="pa-tile-name">{t.name}</span>
-          <span className="pa-tile-sub">{t.sub}</span>
-          <p>{t.role}</p>
-        </div>
-      ))}
-    </div>
-  )
-}
+// (구 ToolTiles 도구 타일 = v2에서 FlowChain(STACK_FLOW)로 대체 — project-adsp-road.jsx)
 
 // ── 투입 규모 스탯 행(P-C) — 전부 git·docs 실측, 시간 추정치 게재 안 함 ──
 export function CodeStats() {
@@ -61,20 +48,7 @@ export function CodeStats() {
   )
 }
 
-// ── 개선 로그 레일(E1 — Linear 날짜 스파인): 날짜 도트 레일 + 우측 카드 ──
-export function LogRail() {
-  return (
-    <ol className="pa-lograil">
-      {MINOR_ITEMS.map((m) => (
-        <li className="pa-log pa-rv" key={m.text}>
-          <span className="pa-log-rail" aria-hidden="true"><i /></span>
-          <span className="pa-log-date">{m.date}</span>
-          <p>{m.text}</p>
-        </li>
-      ))}
-    </ol>
-  )
-}
+// (구 LogRail 개선 스트립 = v2 개편에서 RoadmapRail minor 노드로 대체 — project-adsp-road.jsx)
 
 // ── 제작 루프 — 단계 4칸 + 순환 캡션(모바일 = 세로 적층) ───────────────────
 export function BuildLoop() {

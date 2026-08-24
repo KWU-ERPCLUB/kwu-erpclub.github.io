@@ -1,0 +1,60 @@
+/* ADsP 인터랙티브 상세 v2 — 로드맵 레일·플로우 체인 (2026-08-24 개편, 오너 지시: 시각화·정렬·모션 적극) */
+
+/* ── 플로우 체인 — 번호 단계 + 화살표. 5단(학습 설계)·3단(제작 스택) 공용 ── */
+.pa-flow { max-width: 980px; margin: 0 auto 2.6rem; padding: 0; list-style: none; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 1.9rem; }
+.pa-flow-step { position: relative; background: #fff; border: 1px solid var(--line); border-radius: var(--radius-card); padding: 1.05rem 1.1rem 1rem; transition: transform 0.25s ease, box-shadow 0.25s ease; }
+.pa-ch:not(.pa-ch-wash) .pa-flow-step { background: var(--surface); }
+.pa-flow-step:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(20, 20, 20, 0.07); }
+.pa-flow-step:not(:last-child)::after { content: '→'; position: absolute; right: -1.45rem; top: 50%; transform: translateY(-50%); color: var(--text-sub); font-weight: 700; }
+.pa-flow-no { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--dark); color: #fff; font-size: 0.74rem; font-weight: 800; margin-bottom: 0.55rem; }
+.pa-flow.hot .pa-flow-no { background: var(--accent); }
+.pa-flow-k { display: block; font-family: var(--font-display); font-weight: 800; font-size: 0.98rem; letter-spacing: -0.01em; }
+.pa-flow-name { display: inline-flex; margin-top: 0.3rem; padding: 0.1rem 0.55rem; border-radius: var(--radius-pill); background: var(--tint-accent); color: var(--accent); font-size: 0.72rem; font-weight: 800; }
+.pa-flow-step p { margin: 0.5rem 0 0; font-size: 0.85rem; line-height: 1.55; color: var(--text-sub); word-break: keep-all; }
+.pa-flow-who { display: block; margin-top: 0.55rem; font-size: 0.72rem; font-weight: 700; color: var(--text-sub); letter-spacing: 0.04em; }
+
+/* ── 교재 소개 — 표지 + 재구성 원칙(저작권 프레이밍) 2단 ── */
+.pa-book { max-width: 880px; margin: 0 auto 2.6rem; display: grid; grid-template-columns: 200px 1fr; gap: 1.6rem; align-items: center; }
+.pa-book-cover { width: 100%; border-radius: 12px; border: 1px solid var(--line); box-shadow: 0 14px 30px rgba(20, 20, 20, 0.12); transition: transform 0.3s ease; }
+.pa-book-cover:hover { transform: rotate(-1deg) scale(1.02); }
+.pa-book-txt figcaption { font-size: 0.8rem; color: var(--text-sub); margin-bottom: 0.6rem; }
+.pa-book-txt p { margin: 0; font-size: 0.98rem; line-height: 1.75; word-break: keep-all; }
+.pa-book-txt strong { font-weight: 800; }
+
+/* ── 로드맵 레일 — 세로 스파인 + major 카드 / minor 한 줄 ── */
+.pa-road { position: relative; max-width: 880px; margin: 0 auto; padding: 0.4rem 0 0.4rem 2.1rem; list-style: none; }
+.pa-road::before { content: ''; position: absolute; left: 9px; top: 0; bottom: 0; width: 2px; background: linear-gradient(var(--line) 0%, var(--accent) 55%, var(--line) 100%); border-radius: 2px; }
+.pa-road-node { position: relative; margin-bottom: 1.5rem; }
+.pa-road-node:last-child { margin-bottom: 0; }
+.pa-road-dot { position: absolute; left: -2.1rem; top: 0.5rem; width: 20px; height: 20px; border-radius: 50%; background: var(--accent); border: 4px solid var(--bg); box-shadow: 0 0 0 2px var(--accent); }
+.pa-ch-wash .pa-road-dot { border-color: var(--surface); }
+.pa-road-dot.sm { width: 12px; height: 12px; left: calc(-2.1rem + 4px); top: 0.45rem; background: var(--text-sub); box-shadow: 0 0 0 2px var(--line); }
+.pa-road-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-card); padding: 1.4rem 1.55rem 1.5rem; transition: box-shadow 0.25s ease; }
+.pa-road-card:hover { box-shadow: 0 12px 28px rgba(20, 20, 20, 0.08); }
+.pa-road-date { display: inline-flex; padding: 0.12rem 0.6rem; border-radius: var(--radius-pill); background: var(--dark); color: #fff; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.05em; }
+.pa-road-card h3 { margin: 0.65rem 0 0.9rem; font-family: var(--font-display); font-size: 1.18rem; font-weight: 800; letter-spacing: -0.01em; word-break: keep-all; }
+.pa-road-tri { display: grid; grid-template-columns: 1fr 1.2fr 1fr; gap: 0.8rem; }
+.pa-road-cell { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 0.85rem 0.95rem; }
+.pa-road-cell.main { border-color: var(--dark); background: #fff; }
+.pa-road-label { display: block; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.12em; color: var(--text-sub); margin-bottom: 0.4rem; }
+.pa-road-cell.main .pa-road-label { color: var(--accent); }
+.pa-road-cell p { margin: 0; font-size: 0.86rem; line-height: 1.6; color: var(--text-sub); word-break: keep-all; }
+.pa-road-cell.main p { color: var(--text); font-weight: 600; }
+.pa-road-media { margin-top: 1.2rem; }
+.pa-road-media > * + * { margin-top: 1.1rem; }
+.pa-road-mini { display: flex; align-items: baseline; gap: 0.75rem; padding: 0.15rem 0.2rem; }
+.pa-road-mini .pa-road-date { background: transparent; color: var(--text-sub); padding: 0; border-radius: 0; font-size: 0.74rem; flex-shrink: 0; }
+.pa-road-mini p { margin: 0; font-size: 0.88rem; line-height: 1.6; color: var(--text-sub); word-break: keep-all; }
+
+/* ── 모바일 ── */
+@media (max-width: 760px) {
+  .pa-flow { grid-auto-flow: row; grid-auto-columns: unset; gap: 1.7rem; }
+  .pa-flow-step:not(:last-child)::after { content: '↓'; right: auto; left: 50%; top: auto; bottom: -1.45rem; transform: translateX(-50%); }
+  .pa-book { grid-template-columns: 1fr; justify-items: center; text-align: left; }
+  .pa-book-cover { max-width: 220px; }
+  .pa-road { padding-left: 1.7rem; }
+  .pa-road-dot { left: -1.7rem; }
+  .pa-road-dot.sm { left: calc(-1.7rem + 4px); }
+  .pa-road-tri { grid-template-columns: 1fr; }
+  .pa-road-mini { flex-direction: column; gap: 0.15rem; }
+}

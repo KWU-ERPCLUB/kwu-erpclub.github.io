@@ -1,19 +1,19 @@
-// ADsP 스터디 1기 — 인터랙티브 상세. 구 spec 압축 = erp-club/docs/아카이브.md · 여정 = erp-club/roadmap.md §62·§64
-// 2026-08-24 대체 개편(오너 확정): 시계열 10챕터 → 4축 흐름(운영 / 도구 / AI 활용 / 의사결정) + 실패·결과·다음 기수.
-// 원천 = adsp/1기-회고.md. 수치 수위 = 합격률 50%만 게재(완주↔합격 교차는 서술만, 오너 픽 08-24).
-// 시각 부품(도트·토글·실패 카드·판정·타일)은 08-13 고도화분 전부 재사용 — 신규 CSS는 cols3 한 줄.
-// 텍스트 규칙: 정보형 제목·챕터당 문단 ≤2·핵심구만 볼드·keep-all. 수치 = data/project-adsp-data.js 단일원천.
+// ADsP 스터디 1기 — 인터랙티브 상세 v2. 여정 = erp-club/roadmap.md §62·§64 · 원천 = adsp/1기-회고.md.
+// v2 개편(2026-08-24, 오너 문안 정합 후 구현): 서사 = 기획(베타 취지) → 구조(1팀 온라인/2팀 오프라인 →
+// 대시보드 결정) → 학습 설계(교재 재정리 — 저작권 프레이밍) → 제작(비개발자용 시각화) → 고도화 로드맵
+// (핵심 결정 + 자잘한 결정 교차 레일) → 실패 → 회고(합격률 50%·보류 프레임·피드백·다음 기수 노트).
+// 수치 수위 = 합격률만(완주↔합격 교차·문항 총계 미게재, 테스트 강제). 챕터당 문단 ≤2·정보형 제목·keep-all.
 import { useEffect } from 'react'
 import { SiteNav, SiteFooter, Arrow } from '../shared.jsx'
 import { CountUp, useItemReveal, prefersReduced } from '../home-motion.jsx'
 import {
-  MetricTable, ToolCarousel, BuildLoop, BuildPrinciples, BuildEvidence, PromptCard,
-  ToolTiles, CodeStats, LogRail,
+  MetricTable, ToolCarousel, BuildLoop, BuildPrinciples, BuildEvidence, PromptCard, CodeStats,
 } from './project-adsp-parts.jsx'
 import { DotField, ToggleCompare, FailCards, VerdictSplit } from './project-adsp-viz.jsx'
+import { FlowChain, RoadmapRail } from './project-adsp-road.jsx'
 import {
-  HERO_STATS, CHAPTERS, OPS_FACTS, RESULT, RETRO_POINTS,
-  FEEDBACK_DESIGN, FEEDBACK_POINTS, NEXT_KEEP, NEXT_CHANGE,
+  HERO_STATS, CHAPTERS, TEAM_FACTS, TEXTBOOK, STUDY_FLOW, STACK_FLOW,
+  RESULT, RETRO_POINTS, FEEDBACK_DESIGN, FEEDBACK_POINTS, NEXT_KEEP, NEXT_CHANGE,
 } from '../data/project-adsp-data.js'
 
 // 챕터 스파이 — 뷰포트 중앙이 속한 챕터를 로컬 나브에 반영(recruit useRoadmapFlow 문법).
@@ -51,7 +51,7 @@ function ChapterHead({ date, title }) {
   )
 }
 
-// 결정 카드 — 문제 → 결정 → 결과 3칸(집중 조명 포인트의 공통 골격).
+// 결정 카드 — 문제 → 결정 → 결과 3칸.
 function Decision({ problem, decision, result }) {
   return (
     <div className="pa-dgrid pa-rv">
@@ -62,7 +62,7 @@ function Decision({ problem, decision, result }) {
   )
 }
 
-// 카드 그리드 — {k, desc} 목록 공용(운영 팩트·회고·피드백). 기존 pa-feat 스킨 재사용.
+// 카드 그리드 — {k, desc} 목록 공용(팀 구조·회고·피드백).
 function FactGrid({ items, cols3 = false }) {
   return (
     <div className={`pa-feat-grid${cols3 ? ' cols3' : ''}`}>
@@ -97,14 +97,14 @@ export default function ProjectAdsp() {
       </nav>
 
       <main id="main" className="pa-main">
-        {/* 히어로 — 스터디 1기가 주어. AIM의 방식 예제이자, 다음 ADsP 기수의 운영 참조 */}
+        {/* 히어로 — 베타 스터디가 주어 */}
         <section className="pa-hero">
           <span className="pa-hero-label">PROJECT · 2026-06-26 ~ 08-08</span>
           <h1 className="pa-hero-title">ADsP 스터디 <em>1기</em></h1>
           <p className="pa-hero-sub">
-            자격시험을 준비하는 8명의 진도·자료·퀴즈·기출을 한 화면에 모은 학습 보드를
-            직접 만들어 6주를 운영했습니다. 기획은 사람이, 구현은 AI가.
-            어떻게 운영했고, 무엇으로 만들었고, 어떤 결정을 했고, 결과가 어땠는지의 기록입니다.
+            ERP연구회가 자격증 스터디를 계속 열 수 있는지 확인하기 위해 만든 첫 베타 스터디입니다.
+            8명이 6주를 달렸고, 관리를 위해 학습 대시보드를 직접 만들었습니다.
+            어떻게 기획하고, 만들고, 운영했고, 무엇을 배웠는지의 기록입니다.
           </p>
           <div className="pa-hero-stats">
             {HERO_STATS.map((s) => (
@@ -119,107 +119,101 @@ export default function ProjectAdsp() {
             alt="ADsP 진도 보드 대시보드 실측 화면" />
         </section>
 
-        {/* 1 운영 — 스터디가 어떻게 돌아갔나(다음 기수 참조의 본체) */}
-        <section className="pa-ch pa-ch-wash" id="ops">
-          <ChapterHead date="06-26 ~ 08-08" title="운영 방식 — 예습 기반 주 1회, 데이터로 조정하는 6주" />
+        {/* 1 기획 — 왜 이 스터디인가 */}
+        <section className="pa-ch pa-ch-wash" id="plan">
+          <ChapterHead date="06-26" title="기획 — 자격증 스터디가 지속 가능한지 시험하는 베타" />
           <p className="pa-lead pa-center pa-rv">
-            모임은 주 1회뿐이다. 대신 <strong>예습은 보드가, 조정은 데이터가</strong> 맡았다.
-            평일에는 각자 정리본을 읽고 절 퀴즈를 풀고, 모임에서는 막힌 곳만 다루고,
-            매주 리포트로 다음 주를 정하는 구조 — 아래 네 가지가 1기 운영의 뼈대다.
-          </p>
-          <FactGrid items={OPS_FACTS} />
-          <p className="pa-lead pa-center pa-rv">
-            계획은 고정하지 않았다. 4주 차에 한 팀의 진도가 계획 대비 밀린 것이
-            데이터로 확인되자 <strong>남은 2주를 재설계</strong>했다.
+            이 스터디는 ADsP 합격만을 위한 모임이 아니었다. ERP연구회 산하에서 ADsP·SQLD 같은
+            <strong> 자격증 스터디가 정상적으로, 지속적으로 운영될 수 있는지 시험하는 베타</strong> —
+            1기의 목표는 합격과 함께 &lsquo;다음 기수를 열 수 있는 운영 방식&rsquo;을 찾는 것이었다.
           </p>
           <Decision
-            problem="한 팀의 진도가 계획 대비 밀림 — 남은 2주에 전 범위는 불가"
-            decision="속성 세션으로 1·2과목 마감, 3과목은 기출 해설로 병행 (배점이 근거)"
-            result="강독 없이 진단 문항 → 오답 범위 복습의 인출 중심 세션" />
+            problem="자격증 스터디는 흔히 의욕으로 시작해 카톡방만 남고 끝난다"
+            decision="1기를 베타로 규정 — 운영 데이터를 남겨 지속 가능성 자체를 검증 대상으로"
+            result="6주 완주와 운영 기록 — 이 페이지 끝의 다음 기수 노트가 그 산출물" />
         </section>
 
-        {/* 2 도구 — 무엇으로 만들었나 */}
-        <section className="pa-ch" id="tools">
-          <ChapterHead date="6주 공통" title="무엇으로 — 서버 비용 0원 스택, 2일 만의 첫 배포" />
+        {/* 2 구조 — 모집·팀 구성, 그리고 대시보드가 태어난 이유 */}
+        <section className="pa-ch" id="team">
+          <ChapterHead date="06-26" title="구조 — 8명 두 팀, 서로 다른 두 방식" />
           <p className="pa-lead pa-center pa-rv">
-            도구는 네 가지가 전부다. 전부 만들고 시작하는 대신
-            <strong> 진도 체크와 현황판 두 기능만 담아 2일 만에 배포</strong>했고,
-            가입 절차도 뺐다(이름+PIN 입장) — 8명에게 가입을 요구하면 그 자체가 이탈 지점이 된다.
+            총 8명을 모집해 <strong>1팀 4명은 매일 온라인, 2팀 4명은 주 1회 오프라인</strong>으로
+            나눠 진행했다. 팀이 갈리고 대면 기회가 적으니 카톡만으로는 진도 확인과 점검이
+            어렵겠다고 판단했고 — <strong>여기서 학습 대시보드 신설이 결정</strong>됐다.
           </p>
-          <div className="pa-rv"><ToolTiles /></div>
-          <div className="pa-rv"><CodeStats /></div>
+          <FactGrid items={TEAM_FACTS} />
         </section>
 
-        {/* 3 AI 활용 — 어떻게 일을 시켰나 */}
-        <section className="pa-ch pa-ch-wash" id="ai">
-          <ChapterHead date="6주 공통" title="AI 활용 — 기획·검수는 사람, 구현은 Claude Code" />
+        {/* 3 학습 설계 — 교재 하나를 대시보드로(재정리 프레이밍 = 오너 확정) */}
+        <section className="pa-ch pa-ch-wash" id="study">
+          <ChapterHead date="06-30 ~" title="학습 설계 — 교재 없이도 합격이 가능한 구조" />
           <p className="pa-lead pa-center pa-rv">
-            코드는 <strong>Claude Code(Opus 5 모델)가 작성</strong>하고, 무엇을 왜 만들지 정하는
-            <strong> 기획·검수는 사람</strong>이 맡았다. 요구사항을 spec 문서로 확정하면
-            AI가 구현하고, main에 올리면 자동 배포 — 이 루프를 6주간 반복했다.
+            진도를 재려면 기준이 필요하다. 주 교재의 목차(절 29개)로 25일 학습 계획을 짜고,
+            학생들이 공부하기 편하도록 내용을 개편해 — <strong>교재가 없어도 대시보드의
+            정리본·퀴즈·모의고사만 따라가면 합격이 가능하도록</strong> 구조를 잡았다.
           </p>
+          <figure className="pa-book pa-rv">
+            <img className="pa-book-cover" src={TEXTBOOK.img} alt={TEXTBOOK.alt} loading="lazy" />
+            <div className="pa-book-txt">
+              <figcaption>{TEXTBOOK.caption}</figcaption>
+              <p><strong>원문을 옮겨 싣지 않았다.</strong> {TEXTBOOK.note}</p>
+            </div>
+          </figure>
+          <FlowChain items={STUDY_FLOW} ariaLabel="학습 콘텐츠 구조" tone="hot" />
+        </section>
+
+        {/* 4 제작 — 비개발자용 구조 + AI 활용 */}
+        <section className="pa-ch" id="build">
+          <ChapterHead date="6주 공통" title="제작 — 세 개의 층, 그리고 코드를 쓴 AI" />
+          <p className="pa-lead pa-center pa-rv">
+            대시보드는 세 개의 층으로 되어 있다 — 보이는 화면, 기록이 쌓이는 저장소,
+            코드를 올리면 알아서 갱신되는 배포. 서버 비용은 0원이고,
+            <strong> 이 세 층의 코드는 전부 Claude Code(Opus 5 모델)가 작성</strong>했다.
+            사람은 무엇을 왜 만들지 정하고 결과를 검수했다.
+          </p>
+          <FlowChain items={STACK_FLOW} ariaLabel="대시보드 구성 요소" />
           <div className="pa-rv"><BuildLoop /></div>
+          <div className="pa-rv"><CodeStats /></div>
           <p className="pa-lead pa-center pa-rv">
             도구보다 중요한 건 <strong>일을 시키는 방식</strong>이었다.
-            이 프로젝트에서 지킨 원칙 4개 — 각각 아래 실제 사례에 근거가 있다.
+            이 프로젝트에서 지킨 원칙 4개 — 각각 실제 사례에 근거가 있다.
           </p>
           <BuildPrinciples />
-          <div className="pa-rv"><PromptCard idx={0} /></div>
           <div className="pa-rv"><BuildEvidence /></div>
         </section>
 
-        {/* 4 의사결정 — 대시보드와 운영을 움직인 결정들 */}
-        <section className="pa-ch" id="decide">
-          <ChapterHead date="06-26 ~ 07-30" title="의사결정 — 대시보드와 운영을 움직인 결정들" />
+        {/* 5 로드맵 — 핵심 결정 + 자잘한 결정의 시간순 레일 */}
+        <section className="pa-ch pa-ch-wash" id="roadmap">
+          <ChapterHead date="06-28 ~ 08-10" title="고도화 로드맵 — 어떤 결정으로 여기까지 왔나" />
           <p className="pa-lead pa-center pa-rv">
-            6주의 커밋 248개는 결국 몇 개의 결정으로 요약된다.
-            진도 단위를 임의 20일 배분에서 <strong>교재 체계 그대로의 절(節) 29개</strong>로
-            재정의했고, 지표는 하나의 &lsquo;성취도&rsquo;로 뭉치지 않고 4종으로 분리했다.
+            6주간 커밋 248개는 결국 결정의 연속이다. 굵은 카드가 방향을 바꾼 결정,
+            사이의 한 줄들이 그 사이의 자잘한 결정 — 각 카드는
+            <strong> 문제 → 결정 → 결과</strong>로 읽으면 된다. AI에게 실제로 내린 지시는
+            해당 지점에 함께 붙였다.
           </p>
-          <Decision
-            problem="'성취도 82%' 하나로는 진도가 부족한지 정확도가 부족한지 구분되지 않았다"
-            decision="정답률·진행도·실전점수·종합준비도로 분리하고 화면에서 혼용을 금지"
-            result="누가 어디서 막혔는지가 숫자로 바로 보임 — 운영 조정(속성 세션)의 근거가 됐다" />
-          <div className="pa-rv"><PromptCard idx={1} /></div>
-          <div className="pa-rv"><MetricTable /></div>
-
-          <p className="pa-lead pa-center pa-rv">
-            만드는 것과 <strong>쓰게 만드는 것</strong>은 다른 문제였다. 배포 다음 날
-            숫자 나열을 시각화로 교체했고, &ldquo;한눈에 안 들어온다&rdquo;는 피드백에는
-            기능을 붙이지 않고 덜어냈다 — 첫 화면을 &lsquo;오늘 할 진도&rsquo;로.
-          </p>
-          <div className="pa-rv">
-            <ToggleCompare
-              a={{ img: '/img/projects/adsp/v1-0-dashboard.png', label: 'v1.0 이전', alt: 'v1.0 대시보드 — 숫자 나열 현황' }}
-              b={{ img: '/img/projects/adsp/v1-1-dashboard.png', label: 'v1.1 개선 후', alt: 'v1.1 대시보드 — 비교 막대·과목별 진척' }}
-              caption="같은 데이터, 하루 차이 — 숫자 나열에서 비교·추이 시각화로" />
-          </div>
-
-          <p className="pa-lead pa-center pa-rv">
-            시험 2주 전에는 표기가 무너진 문항들을 고쳐야 했는데,
-            <strong> 답안 기록 2,425건이 이미 쌓여 있어</strong> 문항을 갈아끼울 수 없었다.
-          </p>
-          <Decision
-            problem="표기를 고쳐야 하는데 기존 응시 기록이 깨지면 안 된다"
-            decision="개정판 두 벌 대신 같은 문항을 제자리 수정 — 선택지 순서·정답 불변을 하드룰로, 위반 시 스크립트가 중단"
-            result="전 문항 전수 대조로 정답·선택지 변경 0건 — 기록 손실 없이 표기만 교체" />
-          <div className="pa-rv">
-            <ToggleCompare
-              a={{ img: '/img/projects/adsp/shot-question-before.png', label: '수리 전', alt: '문항 화면 — 표 정렬이 무너진 상태' }}
-              b={{ img: '/img/projects/adsp/shot-question-after.png', label: '수리 후', alt: '문항 화면 — 표·코드 정렬 수리 후' }}
-              caption="같은 문항의 제자리 수정 — 정답·선택지 순서는 하드룰로 불변" />
-          </div>
-          <div className="pa-rv"><PromptCard idx={2} /></div>
-
-          <div className="pa-minors">
-            <h3 className="pa-sub-h pa-rv">그 사이의 개선들</h3>
-            <LogRail />
-          </div>
-          <div className="pa-rv"><ToolCarousel /></div>
+          <RoadmapRail media={{
+            viz: (
+              <ToggleCompare
+                a={{ img: '/img/projects/adsp/v1-0-dashboard.png', label: 'v1.0 이전', alt: 'v1.0 대시보드 — 숫자 나열 현황' }}
+                b={{ img: '/img/projects/adsp/v1-1-dashboard.png', label: 'v1.1 개선 후', alt: 'v1.1 대시보드 — 비교 막대·과목별 진척' }}
+                caption="같은 데이터, 하루 차이 — 숫자 나열에서 비교·추이 시각화로" />
+            ),
+            metrics: (<><PromptCard idx={0} /><MetricTable /><PromptCard idx={1} /></>),
+            fix: (
+              <>
+                <ToggleCompare
+                  a={{ img: '/img/projects/adsp/shot-question-before.png', label: '수리 전', alt: '문항 화면 — 표 정렬이 무너진 상태' }}
+                  b={{ img: '/img/projects/adsp/shot-question-after.png', label: '수리 후', alt: '문항 화면 — 표·코드 정렬 수리 후' }}
+                  caption="같은 문항의 제자리 수정 — 정답·선택지 순서는 하드룰로 불변" />
+                <PromptCard idx={2} />
+              </>
+            ),
+            close: (<ToolCarousel />),
+          }} />
         </section>
 
-        {/* 5 실패 — 안 됐던 것들(원인 분석 동반 — 열거 금지) */}
-        <section className="pa-ch pa-ch-wash" id="fail">
+        {/* 6 실패 — 안 됐던 것들(원인 분석 동반) */}
+        <section className="pa-ch" id="fail">
           <ChapterHead date="6주 공통" title="안 됐던 것들 — 실패와 한계" />
           <p className="pa-lead pa-center pa-rv">
             성공만 남기면 기록이 아니라 광고가 된다. 6주 동안 <strong>실제로 틀렸던 것</strong>과
@@ -228,9 +222,9 @@ export default function ProjectAdsp() {
           <FailCards />
         </section>
 
-        {/* 6 결과·회고 — 합격률(수위 = 오너 확정)·원인 판정·피드백 */}
-        <section className="pa-ch" id="result">
-          <ChapterHead date="08-08 ~ 08-24" title={`결과 — ${RESULT.headline}, 평균 대비 평가는 보류`} />
+        {/* 7 회고 — 합격률·원인·피드백·다음 기수 노트 */}
+        <section className="pa-ch pa-ch-wash" id="retro">
+          <ChapterHead date="08-08 ~ 08-24" title={`회고 — ${RESULT.headline}, 그리고 남긴 숙제`} />
           <p className="pa-lead pa-center pa-rv">
             제50회 시험 결과, <strong>{RESULT.headline}({RESULT.rate})</strong>. {RESULT.frame}
           </p>
@@ -244,15 +238,8 @@ export default function ProjectAdsp() {
           <h3 className="pa-sub-h pa-rv">익명 피드백이 가리킨 곳</h3>
           <p className="pa-lead pa-center pa-rv">{FEEDBACK_DESIGN}</p>
           <FactGrid items={FEEDBACK_POINTS} cols3 />
-        </section>
 
-        {/* 7 다음 기수 노트 — 유지/변경 + 방식 판정 + CTA */}
-        <section className="pa-ch pa-ch-wash" id="next">
-          <ChapterHead date="참조 노트" title="다음 기수 노트 — 유지할 것과 바꿀 것" />
-          <p className="pa-lead pa-center pa-rv">
-            1기의 결론을 다음 ADsP 기수가 바로 쓸 수 있는 운영 원칙으로 남긴다.
-            회고에서 나온 교훈이 <strong>그대로 다음 판의 백로그</strong>다.
-          </p>
+          <h3 className="pa-sub-h pa-rv">다음 기수 노트 — 유지할 것과 바꿀 것</h3>
           <div className="pa-verdict pa-rv">
             <div className="pa-vd-col">
               <h3>다음 기수에도 유지</h3>
@@ -263,12 +250,10 @@ export default function ProjectAdsp() {
               <ul>{NEXT_CHANGE.map((t) => <li key={t}>{t}</li>)}</ul>
             </div>
           </div>
-
-          <h3 className="pa-sub-h pa-rv">이 방식 자체의 판정</h3>
           <div className="pa-rv"><VerdictSplit /></div>
 
           <div className="pa-cta-block pa-rv">
-            {/* 권유형 카피('이 과정을 당신의 프로젝트로') = 오너 삭제 2026-08-15 → 운영 사실 서술로 교체. 대시 표기도 폐지. */}
+            {/* 권유형 카피 = 오너 삭제 2026-08-15 → 운영 사실 서술 유지 */}
             <h3 className="pa-cta-title">AIM 1기도 <em>같은 방식</em>으로 굴립니다.</h3>
             <p>기획은 사람이 쓰고 구현은 AI에 맡기는 방식으로, 필요한 도구를 직접 만들어 운영합니다.</p>
             <div className="pa-cta-row">
