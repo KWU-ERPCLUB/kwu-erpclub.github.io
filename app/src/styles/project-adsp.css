@@ -91,6 +91,7 @@
 
 /* 운영 피처 그리드(A7) */
 .pa-feat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; margin-bottom: 2.6rem; }
+.pa-feat-grid.cols3 { grid-template-columns: repeat(3, 1fr); } /* 회고·피드백 3장 (2026-08-24 개편) */
 .pa-feat { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-card); padding: 1.4rem 1.5rem; }
 .pa-ch:not(.pa-ch-wash) .pa-feat { background: var(--surface); }
 .pa-feat h3 { margin: 0 0 0.5rem; font-size: 1.02rem; font-weight: 800; }
@@ -189,7 +190,7 @@
 
 /* 반응형 */
 @media (max-width: 760px) {
-  .pa-feat-grid, .pa-dgrid, .pa-evi { grid-template-columns: 1fr; }
+  .pa-feat-grid, .pa-feat-grid.cols3, .pa-dgrid, .pa-evi { grid-template-columns: 1fr; }
   .pa-loop-row { grid-template-columns: 1fr; }
   .pa-loop-step:not(:last-child)::after { content: '↓'; right: auto; left: 50%; top: auto; bottom: -1.05rem; transform: translateX(-50%); }
   .pa-nav-title { display: none; }

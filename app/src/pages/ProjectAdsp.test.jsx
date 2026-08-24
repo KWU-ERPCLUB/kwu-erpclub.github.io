@@ -9,6 +9,7 @@ import { DotField, ToggleCompare, FailCards, VerdictSplit, dotLayouts } from './
 import {
   HERO_STATS, WEEKLY_ANSWERS, METRICS, CHAPTERS, TOOL_SLIDES, BUILD_STEPS, BUILD_TILES,
   BUILD_PRINCIPLES, CODE_STATS, MINOR_ITEMS, PROMPTS, FAILS, VERDICT, DOT_SCALE,
+  OPS_FACTS, RESULT, RETRO_POINTS, FEEDBACK_POINTS, NEXT_KEEP, NEXT_CHANGE,
 } from '../data/project-adsp-data.js'
 import { INTERACTIVE_PAGES } from '../Projects.jsx'
 
@@ -17,9 +18,10 @@ const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
   .replace(/&quot;/g, '"').replace(/&#x27;/g, "'").replace(/&amp;/g, '&')
 const page = flat(<ProjectAdsp />)
 
-test('챕터 10개(제작·실패 포함) 전부 앵커 섹션 + 로컬 나브 링크로 렌더', () => {
-  expect(CHAPTERS.map((c) => c.id)).toContain('build')
-  expect(CHAPTERS.map((c) => c.id)).toContain('fail')
+test('4축 개편 챕터(운영·도구·AI·의사결정·실패·결과·다음 기수) 전부 앵커 섹션 + 로컬 나브 링크로 렌더', () => {
+  for (const id of ['ops', 'tools', 'ai', 'decide', 'fail', 'result', 'next']) {
+    expect(CHAPTERS.map((c) => c.id), `개편 축 챕터 ${id}`).toContain(id)
+  }
   for (const c of CHAPTERS) {
     expect(page, `#${c.id} 섹션`).toContain(`id="${c.id}"`)
     expect(page, `#${c.id} 나브 링크`).toContain(`href="#${c.id}"`)
@@ -116,4 +118,23 @@ test('타인 실명 미노출(§5-4) — 렌더 마크업에 스터디원 이름
 
 test('목록 연결 — adsp 슬러그 = 전용 페이지 매핑', () => {
   expect(INTERACTIVE_PAGES['2026-07-24-bapzzi-adsp-board']).toBe('/projects/adsp/')
+})
+
+test('개편(08-24) — 운영 팩트·결과(합격률 50%만)·회고 3장·피드백 3장·다음 기수 노트 렌더', () => {
+  for (const f of OPS_FACTS) expect(page, `운영 팩트: ${f.k}`).toContain(f.k)
+  expect(page).toContain(RESULT.rate)
+  expect(page).toContain(RESULT.headline)
+  expect(page, '평가 보류 프레임').toContain('보류')
+  for (const r of RETRO_POINTS) expect(page, `회고: ${r.k}`).toContain(r.k)
+  for (const f of FEEDBACK_POINTS) expect(page, `피드백: ${f.k}`).toContain(f.k)
+  for (const t of [...NEXT_KEEP, ...NEXT_CHANGE]) expect(page).toContain(t)
+  expect(page).toContain('다음 기수에도 유지')
+  expect(page).toContain('다음 기수에는 바꾼다')
+})
+
+test('수치 수위(오너 확정 08-24) — 완주↔합격 교차 수치·문항 총계 미게재', () => {
+  expect(page, '교차 수치 금지(소그룹 유추 위험)').not.toContain('명 중 합격 1명')
+  expect(page, '교차 수치 금지').not.toContain('완주 5명')
+  expect(page, '문항 총계 비게재(저작권 룰)').not.toContain('1,010')
+  expect(page, '문항 총계 비게재').not.toContain('1010문항')
 })
