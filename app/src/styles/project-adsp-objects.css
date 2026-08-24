@@ -22,7 +22,7 @@
 }
 .pa-iso.on .pa-iso-u.pass::after { transform: scale(1); }
 .pa-iso figcaption { display: flex; flex-direction: column; align-items: center; gap: 0.15rem; font-size: var(--t-sm); color: var(--text-sub); }
-.pa-iso-rate { font-family: var(--font-display); font-weight: 900; font-size: clamp(2.4rem, 5vw, 3.6rem); color: var(--accent); letter-spacing: -0.03em; line-height: 1; }
+.pa-iso-rate { font-weight: 800; font-size: var(--t-md); color: var(--text); line-height: 1.2; } /* 50%는 자랑이 아님(오너 08-24) — 캡션 크기로 */
 
 /* ── V2 팀 리듬 격자 ── */
 .pa-tr { max-width: 880px; margin: 0 auto 2rem; }
@@ -52,22 +52,22 @@
 }
 
 /* ── V5 지표 간극 ── */
-.pa-gap { max-width: 760px; margin: 2rem auto 0; }
-.pa-gap-scale { position: relative; height: 96px; margin: 0 2.5rem; border-bottom: 2px solid var(--line); }
-.pa-gap-tick { position: absolute; bottom: -1.5rem; transform: translateX(-50%); font-size: var(--t-xs); color: var(--text-sub); font-variant-numeric: tabular-nums; }
-.pa-gap-shade { position: absolute; bottom: 0; height: 34px; background: var(--tint-accent); border-left: 1px dashed var(--accent); border-right: 1px dashed var(--accent); }
-.pa-gap-mark { position: absolute; bottom: 0; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.3rem; font-size: var(--t-xs); font-weight: 800; white-space: nowrap; }
-.pa-gap-mark i { display: block; width: 14px; height: 14px; border-radius: 50%; order: 2; }
-.pa-gap-mark.quiz { color: var(--text-sub); bottom: 40px; }
-.pa-gap-mark.quiz i { background: #8f8a81; }
-.pa-gap-mark.real { color: var(--accent); left: var(--to); }
-.pa-gap-mark.real i { background: var(--accent); }
-.pa-gap-num { position: absolute; bottom: 8px; transform: translateX(-50%); font-family: var(--font-display); font-weight: 900; font-size: var(--t-md); color: var(--accent); }
+.pa-gap { max-width: 720px; margin: 2rem auto 0; }
+.pa-gap-rows { display: grid; gap: 0.9rem; }
+.pa-gap-row { display: grid; grid-template-columns: 150px 1fr 64px; gap: 0.9rem; align-items: center; }
+.pa-gap-lab { display: flex; flex-direction: column; text-align: right; }
+.pa-gap-lab strong { font-size: var(--t-sm); font-weight: 800; }
+.pa-gap-lab small { font-size: var(--t-xs); color: var(--text-sub); }
+.pa-gap-tr { display: block; height: 22px; border-radius: 6px; background: var(--surface); border: 1px solid var(--line); overflow: hidden; }
+.pa-gap-tr i { display: block; height: 100%; width: var(--w); border-radius: 5px; transition: width 800ms var(--ease-out); }
+.pa-gap-row.quiz .pa-gap-tr i { background: #9a958c; }
+.pa-gap-row.real .pa-gap-tr i { background: var(--accent); }
+.pa-gap-val { font-family: var(--font-display); font-weight: 800; font-size: var(--t-md); font-variant-numeric: tabular-nums; }
+.pa-gap-row.real .pa-gap-val { color: var(--accent); }
+.pa-gap-diff { margin: 1.1rem 0 0; text-align: center; font-size: var(--t-sm); color: var(--text-sub); }
+.pa-gap-diff strong { color: var(--accent); font-weight: 800; }
 .pa-gap figcaption { margin-top: 2.4rem; text-align: center; font-size: var(--t-sm); color: var(--text-sub); text-wrap: pretty; }
-/* 모션: 실전 마커가 정답률 위치(--from)에서 제자리(--to)로 — 진입 후 재생 */
+/* 모션: 막대가 0에서 값까지 1회 — 진입 후 재생 */
 @media (prefers-reduced-motion: no-preference) {
-  .pa-gap:not(.on) .pa-gap-mark.real { left: var(--from); }
-  .pa-gap:not(.on) .pa-gap-shade, .pa-gap:not(.on) .pa-gap-num { opacity: 0; }
-  .pa-gap-mark.real { transition: left 700ms var(--ease-out) 150ms; }
-  .pa-gap-shade, .pa-gap-num { transition: opacity 400ms ease 650ms; }
+  .pa-gap:not(.on) .pa-gap-tr i { width: 0; }
 }

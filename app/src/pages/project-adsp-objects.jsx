@@ -134,7 +134,7 @@ export function RoadAxis({ nodes, current }) {
   )
 }
 
-// ── V5 지표 간극 — 정답률(절 퀴즈) vs 실전점수 첫 시도. 실전 마커가 정답률 위치에서 제자리로 내려온다 ──
+// ── V5 지표 간극 — 절 퀴즈 정답률 vs 실전 첫 시도, 같은 축의 막대 2개 + 차이 라벨(오너 08-24: 스케일·마커형은 불명확 → 막대) ──
 function pct(v) { return parseFloat(String(v).replace('%', '')) }
 export function MetricGap() {
   const [ref, on] = useEnter()
@@ -143,19 +143,24 @@ export function MetricGap() {
   const a = pct(quiz.value)
   const b = pct(real.value)
   const gap = Math.round((a - b) * 10) / 10
+  const rows = [
+    { k: 'quiz', label: '절 퀴즈 정답률', v: a, note: '정리본을 읽고 바로 푼 값' },
+    { k: 'real', label: '실전 첫 시도', v: b, note: '모의고사·기출 첫 응시' },
+  ]
   return (
     <figure className={`pa-gap${on ? ' on' : ''}`} ref={ref} role="img"
       aria-label={`절 퀴즈 정답률 ${a}%와 실전 첫 시도 ${b}%. 차이 ${gap}포인트는 정리본을 읽고 바로 푼 허수`}>
-      <div className="pa-gap-scale" aria-hidden="true">
-        <span className="pa-gap-shade" style={{ left: `${b}%`, width: `${a - b}%` }} />
-        <span className="pa-gap-mark quiz" style={{ left: `${a}%` }}><i />{quiz.key} {quiz.value}</span>
-        <span className="pa-gap-mark real" style={{ '--from': `${a}%`, '--to': `${b}%` }}><i />{real.key} {real.value}</span>
-        <span className="pa-gap-num" style={{ left: `${(a + b) / 2}%` }}>{gap}p</span>
-        {[0, 25, 50, 75, 100].map((t) => (
-          <span key={t} className="pa-gap-tick" style={{ left: `${t}%` }}>{t}</span>
+      <div className="pa-gap-rows" aria-hidden="true">
+        {rows.map((r) => (
+          <div className={`pa-gap-row ${r.k}`} key={r.k}>
+            <span className="pa-gap-lab"><strong>{r.label}</strong><small>{r.note}</small></span>
+            <span className="pa-gap-tr"><i style={{ '--w': `${r.v}%` }} /></span>
+            <span className="pa-gap-val">{r.v}%</span>
+          </div>
         ))}
       </div>
-      <figcaption>같은 8명의 두 숫자. 방금 읽고 푼 절 퀴즈는 실력보다 높게 나온다. 실력 판단은 실전 첫 시도만.</figcaption>
+      <p className="pa-gap-diff">차이 <strong>{gap}p</strong>는 방금 읽고 푼 퀴즈의 허수</p>
+      <figcaption>같은 8명의 두 숫자. 실력 판단은 실전 첫 시도만.</figcaption>
     </figure>
   )
 }

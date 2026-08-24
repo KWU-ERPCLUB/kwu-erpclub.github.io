@@ -1,11 +1,9 @@
 // ADsP 인터랙티브 상세 — 로드맵(좌 스티키 시간축 + 우 카드, minor 접힘 그룹)·플로우 체인·팀 블록·스플릿 리스트.
 // v7(spec 2026-08-24): 로드맵 = G2 골격, minor = 직전 major 아래 "사이 결정 N건" <details>(SSR 텍스트 포함).
 // 스타일 = project-adsp-road.css · 시간축 = project-adsp-objects.jsx RoadAxis.
-import { useEffect, useRef, useState } from 'react'
 import { ROADMAP } from '../data/project-adsp-roadmap.js'
 import { TEAMS, TEAM_EXTRAS } from '../data/project-adsp-data.js'
 import { RoadAxis } from './project-adsp-objects.jsx'
-import { prefersReduced } from '../home-motion.jsx'
 
 // ── 플로우 체인 — 번호 단계 카드 + 화살표(모바일 세로). 학습 설계(hot)·제작 스택 공용. 스태거 = --i ──
 export function FlowChain({ items, ariaLabel, tone = '' }) {
@@ -79,45 +77,16 @@ export function groupRoadmap(nodes = ROADMAP) {
   return groups
 }
 
-// 스크롤 스파이 — 뷰포트 중앙에 가장 가까운 노드 인덱스(ROADMAP 순서). 축 강조 + 카드 .cur.
-function useRoadSpy(count) {
-  const [cur, setCur] = useState(0)
-  const wrap = useRef(null)
-  useEffect(() => {
-    if (prefersReduced() || !wrap.current) return undefined
-    const els = Array.from(wrap.current.querySelectorAll('[data-road-i]'))
-    let raf = 0
-    const pick = () => {
-      raf = 0
-      const cy = window.innerHeight * 0.45
-      let best = 0
-      let bd = Infinity
-      els.forEach((el) => {
-        const r = el.getBoundingClientRect()
-        const d = Math.abs(r.top + Math.min(r.height, 240) / 2 - cy)
-        if (d < bd) { bd = d; best = Number(el.dataset.roadI) }
-      })
-      setCur(best)
-    }
-    const onScroll = () => { if (!raf) raf = requestAnimationFrame(pick) }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    pick()
-    return () => { window.removeEventListener('scroll', onScroll); if (raf) cancelAnimationFrame(raf) }
-  }, [count])
-  return [wrap, cur]
-}
-
-// ── 로드맵 — 좌 스티키 시간축(RoadAxis) + 우 major 카드(문제 1줄 → 결정 히어로 → 결과 1줄) + minor 접힘 ──
+// ── 로드맵 — 좌 스티키 시간축(정적) + 우 major 카드(문제 1줄 → 결정 히어로 → 결과 1줄) + minor 펼침 ──
+// 스크롤 연동(리빌·스파이) 없음: 오너 08-24 "스크롤할 때마다 나타나는 방식은 버그가 많다" → 카드 상시 표시.
 export function RoadmapRail({ media = {} }) {
   const groups = groupRoadmap()
-  const [wrap, cur] = useRoadSpy(ROADMAP.length)
-  const idx = (n) => ROADMAP.indexOf(n)
   return (
-    <div className="pa-road-wrap" ref={wrap}>
-      <RoadAxis nodes={ROADMAP} current={cur} />
+    <div className="pa-road-wrap">
+      <RoadAxis nodes={ROADMAP} current={-1} />
       <ol className="pa-road" aria-label="보드 고도화 로드맵">
         {groups.map(({ major: n, minors }) => (
-          <li className={`pa-road-node pa-rv${idx(n) === cur ? ' cur' : ''}`} key={n.title} data-road-i={idx(n)}>
+          <li className="pa-road-node" key={n.title}>
             <div className="pa-road-card">
               <span className="pa-road-date">{n.date}</span>
               <h3>{n.title}</h3>
@@ -135,7 +104,7 @@ export function RoadmapRail({ media = {} }) {
                 <summary>사이 결정 {minors.length}건</summary>
                 <ul>
                   {minors.map((m) => (
-                    <li key={`${m.date}-${m.text}`} data-road-i={idx(m)}>
+                    <li key={`${m.date}-${m.text}`}>
                       <span className="pa-road-mdate">{m.date}</span><p>{m.text}</p>
                     </li>
                   ))}
