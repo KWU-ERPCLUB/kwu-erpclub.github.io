@@ -215,3 +215,9 @@ test('v3 카피 규칙 — 대시(—) 금지: 데이터 문안 0건(실물 인�
   ].filter(Boolean)
   for (const t of pools) expect(t, `대시 발견: ${t}`).not.toContain('—')
 })
+
+test('재검수(08-24) — 오너 확정 결정 보존: 스탯 카드 2 · minor 결정 기본 펼침 · 원칙 리스트 가운데 정렬 클래스', () => {
+  expect((page.match(/class="pa-hstat"/g) || []).length).toBe(2) // 8명·6주 카드(합격률은 아이소타입)
+  expect(page).toContain('class="pa-road-minors" open') // 자잘한 결정 숨김 금지(오너 v2 문안 정합)
+  expect(page).toContain('pa-prin-item') // 무테 유지(v7) + CSS 가운데 정렬(오너 상시 규칙)
+})

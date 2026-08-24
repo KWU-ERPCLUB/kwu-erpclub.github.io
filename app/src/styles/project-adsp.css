@@ -31,8 +31,9 @@
   max-width: var(--maxw); margin: 0 auto; padding: 0 1.5rem 3rem;
   display: flex; flex-direction: column; align-items: center; text-align: center;
 }
+/* 첫 화면 = 프로젝트 설명 전용(오너 확정 v4·v6, 검수 D3의 82svh·캡처 걸침은 이 결정과 충돌해 기각 — 2026-08-24 재검수) */
 .pa-hero-core {
-  min-height: calc(82svh - 106px); display: flex; flex-direction: column;
+  min-height: calc(100svh - 106px); display: flex; flex-direction: column;
   align-items: center; justify-content: center; width: 100%; padding: 2.5rem 0 2rem;
 }
 .pa-hero-label { font-size: var(--t-xs); font-weight: 700; letter-spacing: 0.16em; color: var(--text-sub); text-transform: uppercase; }
@@ -44,10 +45,15 @@
 .pa-hero-title em { font-style: normal; color: var(--accent); }
 .pa-hero-sub { margin: 0 auto; max-width: 46ch; color: var(--text-sub); font-size: var(--t-md); line-height: 1.85; text-wrap: pretty; }
 .pa-hero-stats { display: flex; gap: clamp(2rem, 6vw, 5rem); flex-wrap: wrap; justify-content: center; margin: 2rem 0 0; }
-.pa-hstat { display: flex; flex-direction: column; align-items: center; }
-.pa-hstat .stat-num { font-size: clamp(2rem, 4vw, 2.8rem); margin-bottom: 0.1rem; }
-.pa-hstat-label { font-weight: 800; font-size: var(--t-sm); }
-.pa-hstat-src { font-size: var(--t-xs); color: var(--text-sub); margin-top: 0.1rem; }
+/* 스탯 = 카드(오너 v5 "요소 키우고 서식 강하게" 복원). hover 이동 없음(D7) */
+.pa-hstat {
+  display: flex; flex-direction: column; align-items: center;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-card);
+  padding: 1.2rem 2rem 1rem; min-width: 172px;
+}
+.pa-hstat .stat-num { font-size: clamp(2.4rem, 5vw, 3.4rem); margin-bottom: 0.2rem; }
+.pa-hstat-label { font-weight: 800; font-size: var(--t-base); }
+.pa-hstat-src { font-size: var(--t-xs); color: var(--text-sub); margin-top: 0.15rem; }
 .pa-hero-shot {
   width: min(100%, 880px); border-radius: var(--radius-card);
   border: 1px solid var(--line); box-shadow: 0 24px 60px rgba(20, 20, 20, 0.12);
@@ -92,7 +98,7 @@
 
 /* ── 제작 원칙 4 — 무테 2열 번호 리스트 ── */
 .pa-prin { list-style: none; margin: 0 auto; padding: 0; max-width: 920px; display: grid; grid-template-columns: 1fr 1fr; gap: 1.8rem 2.4rem; }
-.pa-prin-item { display: grid; grid-template-columns: 30px 1fr; gap: 0.9rem; align-items: start; text-align: left; }
+.pa-prin-item { display: flex; flex-direction: column; align-items: center; gap: 0.6rem; text-align: center; } /* 가운데 정렬 = 오너 상시 규칙(텍스트 골격은 D1 해제 대상 아님) */
 .pa-prin-no { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; background: var(--dark); color: #fff; font-weight: 800; font-size: var(--t-xs); }
 .pa-prin-item h3 { margin: 0.2rem 0 0.4rem; font-size: var(--t-md); font-weight: 800; }
 .pa-prin-item p { margin: 0; font-size: var(--t-sm); color: var(--text-sub); line-height: 1.7; }

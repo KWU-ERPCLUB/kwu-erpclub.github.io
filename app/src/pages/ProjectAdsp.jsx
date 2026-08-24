@@ -190,7 +190,8 @@ export default function ProjectAdsp() {
         <section className="pa-ch pa-ch-wash" id="roadmap">
           <ChapterHead date="06-28 ~ 08-10" title="어떤 결정으로 여기까지 왔나" />
           <p className="pa-lead pa-center pa-rv">
-            카드는 <strong>방향을 바꾼 결정</strong>. 사이의 자잘한 결정은 접혀 있고, AI 지시는 해당 지점에.
+            카드는 <strong>방향을 바꾼 결정</strong>.<br />
+            사이의 자잘한 결정은 카드 아래에, AI 지시는 해당 지점에.
           </p>
           <RoadmapRail media={{
             viz: (

@@ -131,7 +131,7 @@ export function RoadmapRail({ media = {} }) {
               </div>
             </div>
             {minors.length ? (
-              <details className="pa-road-minors">
+              <details className="pa-road-minors" open>  {/* 기본 펼침 — 자잘한 결정도 보이게(오너 v2 문안 정합). 접기는 가능 */}
                 <summary>사이 결정 {minors.length}건</summary>
                 <ul>
                   {minors.map((m) => (
