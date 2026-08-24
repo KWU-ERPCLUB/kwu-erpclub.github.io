@@ -120,10 +120,9 @@ export function CountUp({ value }) {
     if (!el) return
     const stat = parseStat(value)
     if (prefersReduced()) { el.textContent = value; return }
-    // 진입 전 = 최종값 유지(첫 프레임 "0명·1%" 노출 방지 — adsp 검수 B1 2026-08-24). 0 표시는 재생 시작 시점에만.
+    el.textContent = countupFrame(stat, 0) // 진입 전 0 상태
     let raf = 0
     const run = () => {
-      el.textContent = countupFrame(stat, 0)
       const dur = 2200 /* 2차: 2배 감속 */
       const t0 = performance.now()
       const tick = (now) => {

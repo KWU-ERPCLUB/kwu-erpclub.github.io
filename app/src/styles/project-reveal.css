@@ -4,11 +4,7 @@
    계약: 초기 은닉은 JS 게이트(html.pa-js / html.ps-js) 뒤에만. 게이트 클래스는 각 페이지 훅이 런타임에 부여하므로
    no-JS = 전부 즉시 선명, reduced-motion = 전환 해제. transform·opacity만 사용. */
 .pa-js .pa-rv,
-.ps-js .ps-rv {
-  opacity: 0.001; transform: translateY(12px);
-  transition: opacity 550ms cubic-bezier(0.2, 0.8, 0.2, 1), transform 550ms cubic-bezier(0.2, 0.8, 0.2, 1);
-  transition-delay: calc(var(--i, 0) * 45ms); /* 그리드 자식 스태거(--i 인라인) — adsp 검수 A5 2026-08-24 */
-}
+.ps-js .ps-rv { opacity: 0.001; transform: translateY(18px); transition: opacity 900ms ease, transform 900ms ease; }
 .pa-js .pa-rv.in,
 .ps-js .ps-rv.in { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {

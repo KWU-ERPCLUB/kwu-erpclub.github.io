@@ -55,8 +55,8 @@ export function BuildLoop() {
   return (
     <div className="pa-loop">
       <ol className="pa-loop-row">
-        {BUILD_STEPS.map((s, i) => (
-          <li className="pa-loop-step pa-rv" key={s.k} style={{ '--i': i }}>
+        {BUILD_STEPS.map((s) => (
+          <li className="pa-loop-step" key={s.k}>
             <span className="pa-loop-no">{s.no}</span>
             <span className="pa-loop-k">{s.k}</span>
             <span className="pa-loop-who">{s.who}</span>
@@ -72,18 +72,15 @@ export function BuildLoop() {
 // ── 위임 원칙 4칸 — "AI를 어떻게 이끌었나"(각 원칙 = 페이지 내 실측 사례 1:1 근거) ──
 export function BuildPrinciples() {
   return (
-    <ol className="pa-prin">
-      {BUILD_PRINCIPLES.map((p, i) => (
-        <li className="pa-prin-item pa-rv" key={p.k} style={{ '--i': i }}>
-          <span className="pa-prin-no" aria-hidden="true">{i + 1}</span>
-          <div>
-            <h3>{p.k}</h3>
-            <p>{p.how}</p>
-            <span className="pa-feat-src">근거 · {p.src}</span>
-          </div>
-        </li>
+    <div className="pa-feat-grid pa-prin">
+      {BUILD_PRINCIPLES.map((p) => (
+        <div className="pa-feat pa-rv" key={p.k}>
+          <h3>{p.k}</h3>
+          <p>{p.how}</p>
+          <span className="pa-feat-src">근거 · {p.src}</span>
+        </div>
       ))}
-    </ol>
+    </div>
   )
 }
 
