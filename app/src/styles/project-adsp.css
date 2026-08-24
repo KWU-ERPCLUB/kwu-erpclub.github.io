@@ -29,8 +29,13 @@
 
 /* ── 히어로 ── */
 .pa-hero {
-  max-width: var(--maxw); margin: 0 auto; padding: clamp(2.5rem, 7vh, 5rem) 1.5rem 3rem;
+  max-width: var(--maxw); margin: 0 auto; padding: 0 1.5rem 3rem;
   display: flex; flex-direction: column; align-items: center; text-align: center;
+}
+/* 첫 화면 = 프로젝트 설명만(오너 v4) — 타이틀·수치가 뷰포트를 채우고 스크린샷은 다음 스크롤 */
+.pa-hero-core {
+  min-height: calc(100svh - 106px); display: flex; flex-direction: column;
+  align-items: center; justify-content: center; width: 100%;
 }
 .pa-hero-label {
   font-size: 0.78rem; font-weight: 700; letter-spacing: 0.16em; color: var(--text-sub); text-transform: uppercase;
@@ -56,7 +61,7 @@
 }
 
 /* ── 챕터 공통 — 면 교대 ── */
-.pa-ch { padding: clamp(3rem, 8vh, 5.5rem) 1.5rem; }
+.pa-ch { padding: clamp(4rem, 10vh, 7rem) 1.5rem; }
 .pa-ch-wash { background: var(--surface); }
 .pa-ch > * { max-width: var(--maxw); margin-left: auto; margin-right: auto; }
 .pa-ch-head { text-align: center; margin-bottom: 2.2rem; }
@@ -70,7 +75,7 @@
 }
 
 /* 본문 문법(A5) — 회색 바탕 문장 + 핵심구만 검정 굵게 */
-.pa-lead { font-size: 1.08rem; line-height: 1.8; color: var(--text-sub); text-wrap: pretty; margin: 0; }
+.pa-lead { font-size: 1.08rem; line-height: 1.8; color: var(--text-sub); text-wrap: balance; margin: 0; }
 .pa-lead strong { color: var(--text); font-weight: 800; }
 .pa-center { text-align: center; max-width: 58ch; margin: 0 auto 2rem; }
 

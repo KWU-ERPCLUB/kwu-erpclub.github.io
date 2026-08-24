@@ -4,7 +4,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { prefersReduced } from '../home-motion.jsx'
 import {
-  METRICS, TOOL_SLIDES, BUILD_STEPS, BUILD_STACK, BUILD_PRINCIPLES,
+  METRICS, TOOL_SLIDES, BUILD_STEPS, BUILD_PRINCIPLES,
   CODE_STATS, SPEC_EXCERPT, COMMIT_LOG, PROMPTS,
 } from '../data/project-adsp-data.js'
 
@@ -64,7 +64,7 @@ export function BuildLoop() {
           </li>
         ))}
       </ol>
-      <p className="pa-loop-cap">④에서 다시 ①로 — 6주 동안 이 루프를 돌렸다. {BUILD_STACK}</p>
+      <p className="pa-loop-cap">④에서 다시 ①로. 6주 동안 이 루프를 돌렸다.</p>
     </div>
   )
 }
@@ -77,7 +77,7 @@ export function BuildPrinciples() {
         <div className="pa-feat pa-rv" key={p.k}>
           <h3>{p.k}</h3>
           <p>{p.how}</p>
-          <span className="pa-feat-src">근거 — {p.src}</span>
+          <span className="pa-feat-src">근거 · {p.src}</span>
         </div>
       ))}
     </div>
@@ -96,7 +96,7 @@ export function BuildEvidence() {
       <div className="pa-term">
         <div className="pa-evi-head"><span className="pa-evi-tag">실물 발췌 · git 커밋 로그</span><code>git log --oneline</code></div>
         <pre>{COMMIT_LOG.join('\n')}</pre>
-        <p className="pa-evi-note">6주간 커밋 248회 — 전 과정이 이력으로 남아 있다.</p>
+        <p className="pa-evi-note">6주간 커밋 248회. 전 과정이 이력으로 남아 있다.</p>
       </div>
     </div>
   )

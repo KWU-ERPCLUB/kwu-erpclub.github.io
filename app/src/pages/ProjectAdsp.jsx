@@ -101,20 +101,22 @@ export default function ProjectAdsp() {
       <main id="main" className="pa-main">
         {/* 히어로 */}
         <section className="pa-hero">
-          <span className="pa-hero-label">PROJECT · 2026-06-26 ~ 08-08</span>
-          <h1 className="pa-hero-title">ADsP 스터디 <em>1기</em></h1>
-          <p className="pa-hero-sub">
-            ERP연구회의 첫 베타 스터디입니다. 8명이 6주를 달렸고,
-            관리를 위해 <strong>학습 대시보드를 직접 만들었습니다.</strong>
-          </p>
-          <div className="pa-hero-stats">
-            {HERO_STATS.map((s) => (
-              <div className="pa-hstat" key={s.label}>
-                <CountUp value={s.value} />
-                <span className="pa-hstat-label">{s.label}</span>
-                <span className="pa-hstat-src">{s.src}</span>
-              </div>
-            ))}
+          <div className="pa-hero-core">
+            <span className="pa-hero-label">PROJECT · ERP연구회 베타 스터디</span>
+            <h1 className="pa-hero-title">ADsP 스터디 <em>1기</em></h1>
+            <p className="pa-hero-sub">
+              8명이 6주를 달렸습니다.<br />
+              관리를 위해 <strong>학습 대시보드를 직접 만들었습니다.</strong>
+            </p>
+            <div className="pa-hero-stats">
+              {HERO_STATS.map((s) => (
+                <div className="pa-hstat" key={s.label}>
+                  <CountUp value={s.value} />
+                  <span className="pa-hstat-label">{s.label}</span>
+                  <span className="pa-hstat-src">{s.src}</span>
+                </div>
+              ))}
+            </div>
           </div>
           <img className="pa-hero-shot pa-rv" src="/img/projects/adsp/home-now.png"
             alt="ADsP 진도 보드 대시보드 실측 화면" />
@@ -124,8 +126,8 @@ export default function ProjectAdsp() {
         <section className="pa-ch pa-ch-wash" id="plan">
           <ChapterHead date="06-26" title="기획, 지속 가능한지 시험하는 베타" />
           <p className="pa-lead pa-center pa-rv">
-            목표는 합격만이 아니었다. ADsP와 SQLD 같은 자격증 스터디가
-            <strong> 계속 굴러갈 수 있는지, 운영 방식 자체를 시험</strong>했다.
+            목표는 합격만이 아니었다.<br />
+            자격증 스터디가 <strong>계속 굴러갈 수 있는지, 운영 방식 자체를 시험</strong>했다.
           </p>
           <Decision
             problem="자격증 스터디는 흔히 카톡방만 남고 끝난다"
@@ -137,8 +139,8 @@ export default function ProjectAdsp() {
         <section className="pa-ch" id="team">
           <ChapterHead date="06-26" title="8명, 서로 다른 두 방식" />
           <p className="pa-lead pa-center pa-rv">
-            만나는 방식이 다른 두 팀. 그래서 <strong>진도를 한눈에 볼 공통의 화면</strong>이
-            필요했고, 여기서 대시보드가 태어났다.
+            만나는 방식이 다른 두 팀.<br />
+            <strong>진도를 한눈에 볼 공통의 화면</strong>이 필요했고, 여기서 대시보드가 태어났다.
           </p>
           <TeamSplit />
         </section>
@@ -147,8 +149,8 @@ export default function ProjectAdsp() {
         <section className="pa-ch pa-ch-wash" id="study">
           <ChapterHead date="06-30 ~" title="교재 없이도 합격이 가능한 구조" />
           <p className="pa-lead pa-center pa-rv">
-            주 교재의 목차로 25일 계획을 짜고, <strong>대시보드만 따라가면 합격이 가능하도록</strong>
-            내용을 다시 정리해 실었다.
+            주 교재의 목차로 25일 계획을 짰다.<br />
+            <strong>대시보드만 따라가면 합격이 가능하도록</strong> 내용을 다시 정리해 실었다.
           </p>
           <figure className="pa-book pa-rv">
             <img className="pa-book-cover" src={TEXTBOOK.img} alt={TEXTBOOK.alt} loading="lazy" />
@@ -164,23 +166,28 @@ export default function ProjectAdsp() {
         <section className="pa-ch" id="build">
           <ChapterHead date="6주 공통" title="세 개의 층, 코드를 쓴 AI" />
           <p className="pa-lead pa-center pa-rv">
-            서버 비용 0원의 세 층. 코드는 전부 <strong>Claude Code(Opus 5 모델)가 작성</strong>했고,
-            사람은 정하고 검수했다.
+            대시보드는 세 층으로 되어 있고, 서버 비용은 0원.<br />
+            코드는 전부 <strong>Claude Code(Opus 5 모델)가 작성</strong>했다.
           </p>
           <FlowChain items={STACK_FLOW} ariaLabel="대시보드 구성 요소" />
-          <div className="pa-block pa-rv"><BuildLoop /></div>
+          <h3 className="pa-sub-h pa-gap pa-rv">6주를 돌린 제작 루프</h3>
+          <p className="pa-lead pa-center pa-rv">
+            사람은 정하고 검수한다. <strong>구현은 AI</strong>가 한다.
+          </p>
+          <div className="pa-rv"><BuildLoop /></div>
           <div className="pa-block pa-rv"><CodeStats /></div>
           <h3 className="pa-sub-h pa-gap pa-rv">일을 시키는 방식, 원칙 4개</h3>
           <BuildPrinciples />
-          <div className="pa-block pa-rv"><BuildEvidence /></div>
+          <h3 className="pa-sub-h pa-gap pa-rv">실물 기록</h3>
+          <div className="pa-rv"><BuildEvidence /></div>
         </section>
 
         {/* 5 로드맵 */}
         <section className="pa-ch pa-ch-wash" id="roadmap">
           <ChapterHead date="06-28 ~ 08-10" title="어떤 결정으로 여기까지 왔나" />
           <p className="pa-lead pa-center pa-rv">
-            굵은 카드는 <strong>방향을 바꾼 결정</strong>, 사이의 한 줄은 자잘한 결정.
-            AI에게 내린 지시는 해당 지점에 붙였다.
+            굵은 카드는 <strong>방향을 바꾼 결정</strong>.<br />
+            사이의 한 줄은 자잘한 결정, AI 지시는 해당 지점에.
           </p>
           <RoadmapRail media={{
             viz: (

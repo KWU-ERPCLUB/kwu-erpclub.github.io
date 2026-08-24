@@ -27,7 +27,6 @@ export const BUILD_STEPS = [
   { no: '3', k: '배포', who: '자동 · Vercel', desc: 'main push = 즉시 배포, 별도 작업 없음' },
   { no: '4', k: '사용·피드백', who: '스터디원 8명', desc: '걸리는 곳 신고가 다음 spec의 재료' },
 ]
-export const BUILD_STACK = '도구 = Claude Code(Opus 5 모델) · 스택 = React(Vite) + Supabase + Vercel · 서버 비용 0원'
 
 // 투입 규모(git 실측 2026-08-13, board repo ts·tsx·js·css·sql·mjs 합산). 시간 추정치 게재 안 함.
 export const CODE_STATS = [

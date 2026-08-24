@@ -77,10 +77,12 @@ export function RoadmapRail({ media = {} }) {
           <div className="pa-road-card">
             <span className="pa-road-date">{n.date}</span>
             <h3>{n.title}</h3>
-            <div className="pa-road-tri">
-              <div className="pa-road-cell"><span className="pa-road-label">문제</span><p>{n.problem}</p></div>
-              <div className="pa-road-cell main"><span className="pa-road-label">결정</span><p>{n.decision}</p></div>
-              <div className="pa-road-cell"><span className="pa-road-label">결과</span><p>{n.result}</p></div>
+            <div className="pa-road-steps">
+              <div className="pa-road-step why"><span className="pa-road-tag">문제</span><p>{n.problem}</p></div>
+              <span className="pa-road-arrow" aria-hidden="true">↓</span>
+              <div className="pa-road-step act"><span className="pa-road-tag">결정</span><p>{n.decision}</p></div>
+              <span className="pa-road-arrow" aria-hidden="true">↓</span>
+              <div className="pa-road-step out"><span className="pa-road-tag">결과</span><p>{n.result}</p></div>
             </div>
             {n.media && media[n.media] ? <div className="pa-road-media">{media[n.media]}</div> : null}
           </div>
