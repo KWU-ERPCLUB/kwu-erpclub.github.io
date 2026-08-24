@@ -32,17 +32,10 @@
   max-width: var(--maxw); margin: 0 auto; padding: 0 1.5rem 3rem;
   display: flex; flex-direction: column; align-items: center; text-align: center;
 }
-/* 첫 화면 = 프로젝트 설명만(오너 v4) + 대시보드 캡처를 흐린 배경으로(오너 v5) */
+/* 첫 화면 = 프로젝트 설명만(오너 v4·v6 — 배경 캡처는 번잡해 기각, 스크린샷은 아래 원본 노출) */
 .pa-hero-core {
-  position: relative; isolation: isolate; min-height: calc(100svh - 106px); display: flex; flex-direction: column;
+  min-height: calc(100svh - 106px); display: flex; flex-direction: column;
   align-items: center; justify-content: center; width: 100%;
-}
-.pa-hero-core::before {
-  content: ''; position: absolute; inset: 0; z-index: -1;
-  background: url('/img/projects/adsp/home-now.png') center 22% / cover no-repeat;
-  opacity: 0.13; border-radius: var(--radius-card);
-  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 22%, #000 70%, transparent 100%);
-  mask-image: linear-gradient(180deg, transparent 0%, #000 22%, #000 70%, transparent 100%);
 }
 .pa-hero-label {
   font-size: 0.78rem; font-weight: 700; letter-spacing: 0.16em; color: var(--text-sub); text-transform: uppercase;
@@ -61,8 +54,8 @@
 /* 스탯 = 카드 승격(오너 v5 "요소 키우고 서식 강하게") — 3번째(합격률) = 버건디 강조 */
 .pa-hstat {
   display: flex; flex-direction: column; align-items: center;
-  background: rgba(255, 255, 255, 0.82); border: 1px solid var(--line); border-radius: var(--radius-card);
-  padding: 1.3rem 2rem 1.1rem; min-width: 172px; backdrop-filter: blur(3px);
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-card);
+  padding: 1.3rem 2rem 1.1rem; min-width: 172px;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 .pa-hstat:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(20, 20, 20, 0.08); }
@@ -71,6 +64,10 @@
 .pa-hstat .stat-num { font-size: clamp(2.6rem, 5.5vw, 3.8rem); margin-bottom: 0.3rem; }
 .pa-hstat-label { font-weight: 800; font-size: 0.95rem; }
 .pa-hstat-src { font-size: 0.75rem; color: var(--text-sub); margin-top: 0.2rem; }
+.pa-hero-shot {
+  width: min(100%, 880px); border-radius: var(--radius-card);
+  border: 1px solid var(--line); box-shadow: 0 24px 60px rgba(20, 20, 20, 0.12);
+}
 
 /* ── 챕터 공통 — 면 교대 ── */
 .pa-ch { padding: clamp(4rem, 10vh, 7rem) 1.5rem; }
@@ -139,7 +136,7 @@
 /* 제작 루프 — 단계 4칸 + 화살표(모바일 = 세로 적층) */
 .pa-loop { max-width: 920px; margin-bottom: 2rem; }
 .pa-loop-row { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.9rem; counter-reset: none; }
-.pa-loop-step { position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-card); padding: 1.1rem 1.2rem; }
+.pa-loop-step { position: relative; text-align: center; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-card); padding: 1.1rem 1.2rem; }
 .pa-ch-wash .pa-loop-step { background: #fff; }
 .pa-loop-step:not(:last-child)::after {
   content: '→'; position: absolute; right: -0.85rem; top: 50%; transform: translateY(-50%);

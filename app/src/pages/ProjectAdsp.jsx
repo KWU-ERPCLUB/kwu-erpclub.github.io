@@ -119,6 +119,8 @@ export default function ProjectAdsp() {
               ))}
             </div>
           </div>
+          <img className="pa-hero-shot pa-rv" src="/img/projects/adsp/home-now.png"
+            alt="ADsP 진도 보드 대시보드 실측 화면" loading="lazy" />
         </section>
 
         {/* 1 기획 */}
@@ -234,7 +236,7 @@ export default function ProjectAdsp() {
           <h3 className="pa-sub-h pa-gap pa-rv">다음 기수 노트</h3>
           <SplitList
             left={{ title: '다음 기수에도 유지', tone: 'ok', glyph: '✓', items: NEXT_KEEP }}
-            right={{ title: '다음 기수에는 바꾼다', tone: 'warn', glyph: '↻', items: NEXT_CHANGE }} />
+            right={{ title: '다음 기수에는 바꾼다', tone: 'hot', glyph: '↻', items: NEXT_CHANGE }} />
 
           <h3 className="pa-sub-h pa-gap pa-rv">이 방식 자체의 판정</h3>
           <VerdictSplit />
