@@ -3,7 +3,7 @@
 One-line: AIM(광운대 ERP연구회 산하 MIS·AI 스터디) 허브 — 주=스터디원 작업면(인사이트→세미나 파이프라인), 부=외부 증빙면.
 브랜드 표기 = **AIM 단독 + 산하 한 줄**(2026-08-05 오너) — 계보(ROADMAP ORIGIN·FAQ 관계 문항)는 유지.
 표면명 주의: 페이지 = **AI 인사이트 / INSIGHTS / `/insights/`** — 계약 내부 종류명은 `기사`(content/기사/·schema) 유지.
-Deploy: GitHub Pages, org repo `KWU-ERPCLUB/kwu-erpclub.github.io`. **Branches (2026-08-19 beta)**: `main` = release build (push → auto deploy) / `dev` = work branch (push → validate+test+build only, no deploy). Code lands on `dev`; `main` direct = content · typo/fact fix · outage fix only. Version source = `package.json` (injected as `__APP_VERSION__`, shown in footer). Release procedure = `erp-club/docs/specs/2026-08-19-릴리스-체계.md`.
+Deploy: GitHub Pages, org repo `KWU-ERPCLUB/kwu-erpclub.github.io`. **Branches (2026-08-19 beta)**: `main` = release build (push → auto deploy) / `dev` = work branch (push → validate+test+build only, no deploy). Code lands on `dev`; `main` direct = content · typo/fact fix · outage fix · `ops/*.md` routine docs (E4, 2026-08-25) only. CI concurrency group is per-branch (`pages-${{ github.ref }}`) — a dev push no longer cancels a main deploy. Version source = `package.json` (injected as `__APP_VERSION__`, shown in footer). Release procedure = `erp-club/docs/specs/2026-08-19-릴리스-체계.md`.
 Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이지는 여전히 정적).
 
 ## Commands

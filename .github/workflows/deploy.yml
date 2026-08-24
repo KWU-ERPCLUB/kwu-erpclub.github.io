@@ -20,7 +20,8 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  # 브랜치별 그룹 — dev push가 main 배포 런을 취소하던 사고(2026-08-20·08-25 재발) 원천 차단
+  group: pages-${{ github.ref }}
   cancel-in-progress: true
 
 env:
