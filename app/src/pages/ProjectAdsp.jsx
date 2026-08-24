@@ -1,5 +1,5 @@
 // ADsP 스터디 1기 — 인터랙티브 상세 v7(시각화·모션 재설계 spec 2026-08-24). 여정 = erp-club/roadmap.md §62·§64 · 원천 = adsp/1기-회고.md.
-// 서사: 기획(베타) → 구조(두 팀 리듬) → 학습 설계 → 제작 → 로드맵(시간축) → 실패 → 회고(도트 필드·지표 간극·판정).
+// 서사: 기획(베타) → 구조(두 팀 리듬) → 학습 설계 → 제작 → 로드맵(시간축) → 실패 → 회고(판정·지표 간극·피드백·노트).
 // 골격 3종 교대(G1 풀블리드 시각 / G2 좌텍스트-우스티키 / G3 카드 그리드) — 연속 동일 골격 금지.
 // 시각 오브젝트 V1~V5 = project-adsp-objects.jsx(V4 DotField = viz). 수치 수위 = 합격률만(테스트 강제).
 import { useEffect } from 'react'
@@ -9,7 +9,7 @@ import { recruitPhase, localYmd } from '../home-logic.js'
 import {
   MetricTable, ToolCarousel, BuildLoop, BuildPrinciples, BuildEvidence, PromptCard, CodeStats,
 } from './project-adsp-parts.jsx'
-import { DotField, ToggleCompare, FailCards, VerdictSplit } from './project-adsp-viz.jsx'
+import { ToggleCompare, FailCards, VerdictSplit } from './project-adsp-viz.jsx'
 import { FlowChain, RoadmapRail, TeamSplit, SplitList } from './project-adsp-road.jsx'
 import { PassIsotype, TeamRhythm, MetricGap } from './project-adsp-objects.jsx'
 import {
@@ -229,7 +229,7 @@ export default function ProjectAdsp() {
           <p className="pa-lead pa-center pa-rv">
             <strong>{RESULT.headline}({RESULT.rate}).</strong> {RESULT.frame}
           </p>
-          <DotField />
+          {/* DotField(답안 도트) = 오너 최종 제외(08-24 재확정: 회고 흐름을 깸). 부품은 viz에 보관 */}
           <h3 className="pa-sub-h pa-gap-l pa-rv">왜 그랬는가, 세 가지 판정</h3>
           <FactList items={RETRO_POINTS} variant="num" />
           <div className="pa-rv"><MetricGap /></div>

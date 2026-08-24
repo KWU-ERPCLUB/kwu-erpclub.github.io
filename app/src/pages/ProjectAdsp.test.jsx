@@ -186,9 +186,8 @@ test('v7 시각 오브젝트 V1~V5 — 페이지 렌더 + 수량 = 데이터 계
   expect(axisPos('06-26')).toBe(0)
   expect(axisPos('08-08 ~ 10')).toBeLessThan(1)
   expect(axisPos('07-24')).toBeGreaterThan(0.5)
-  // V4 도트 필드: 페이지에 포함(dead code 재발 방지 — 검수 A3)
-  expect(page).toContain('pa-dotwrap')
-  expect(page).toContain('52.7%')
+  // V4 도트 필드: 페이지 제외(오너 최종 결정 08-24 — 회고 흐름을 깸). 부품·컴포넌트 테스트만 유지
+  expect(page).not.toContain('pa-dotwrap')
   // V5 지표 간극: 두 지표 + 차이
   expect(page).toContain('pa-gap-scale')
   expect(page).toContain('11.5p')
