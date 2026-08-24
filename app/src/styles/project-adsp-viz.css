@@ -59,14 +59,14 @@
 
 /* ── 실패 카드(P-A — rauno 그리드) ── */
 .pa-fails { max-width: 980px; display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
-.pa-fail { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-card); padding: 1.3rem 1.4rem; }
+.pa-fail { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-card); padding: 1.4rem 1.5rem; text-align: center; }
 .pa-fail-tag { display: inline-flex; align-items: center; height: 22px; padding: 0 0.6rem; border-radius: var(--radius-pill); font-size: 0.68rem; font-weight: 700; margin-bottom: 0.7rem; }
-.pa-fail-tag.ok { background: var(--dark); color: #fff; }
-.pa-fail-tag.half { border: 1px solid var(--text-sub); color: var(--text-sub); }
-.pa-fail-tag.limit { border: 1px solid var(--accent); color: var(--accent); } /* 화이트리스트 — 미해결 한계 표시 */
+.pa-fail-tag.ok { background: var(--pa-ok); color: #fff; }
+.pa-fail-tag.half { background: var(--pa-warn); color: #fff; }
+.pa-fail-tag.limit { background: var(--tint-accent); border: 1px solid var(--accent); color: var(--accent); } /* 화이트리스트 — 미해결 한계 표시 */
 .pa-fail h3 { margin: 0 0 0.5rem; font-size: 1.02rem; font-weight: 800; line-height: 1.4; }
 .pa-fail p { margin: 0; font-size: 0.88rem; color: var(--text-sub); line-height: 1.65; }
-.pa-fail-fix { margin-top: 0.6rem !important; font-weight: 700; color: var(--text) !important; }
+.pa-fail-fix { margin-top: 0.6rem !important; font-weight: 700; color: var(--pa-ok) !important; }
 
 /* ── 반응형 ── */
 @media (max-width: 860px) {

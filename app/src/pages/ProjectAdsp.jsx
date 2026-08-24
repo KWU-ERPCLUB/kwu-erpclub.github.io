@@ -6,10 +6,11 @@
 import { useEffect } from 'react'
 import { SiteNav, SiteFooter, Arrow } from '../shared.jsx'
 import { CountUp, useItemReveal, prefersReduced } from '../home-motion.jsx'
+import { recruitPhase, localYmd } from '../home-logic.js'
 import {
   MetricTable, ToolCarousel, BuildLoop, BuildPrinciples, BuildEvidence, PromptCard, CodeStats,
 } from './project-adsp-parts.jsx'
-import { DotField, ToggleCompare, FailCards, VerdictSplit } from './project-adsp-viz.jsx'
+import { ToggleCompare, FailCards, VerdictSplit } from './project-adsp-viz.jsx'
 import { FlowChain, RoadmapRail, TeamSplit, SplitList } from './project-adsp-road.jsx'
 import {
   HERO_STATS, CHAPTERS, TEXTBOOK, STUDY_FLOW, STACK_FLOW,
@@ -118,8 +119,6 @@ export default function ProjectAdsp() {
               ))}
             </div>
           </div>
-          <img className="pa-hero-shot pa-rv" src="/img/projects/adsp/home-now.png"
-            alt="ADsP 진도 보드 대시보드 실측 화면" />
         </section>
 
         {/* 1 기획 */}
@@ -227,7 +226,6 @@ export default function ProjectAdsp() {
           </p>
           <h3 className="pa-sub-h pa-gap pa-rv">왜 그랬는가, 세 가지 판정</h3>
           <FactGrid items={RETRO_POINTS} cols3 variant="num" />
-          <div className="pa-block"><DotField /></div>
 
           <h3 className="pa-sub-h pa-gap pa-rv">익명 피드백이 가리킨 곳</h3>
           <p className="pa-lead pa-center pa-rv">{FEEDBACK_DESIGN}</p>
@@ -241,13 +239,17 @@ export default function ProjectAdsp() {
           <h3 className="pa-sub-h pa-gap pa-rv">이 방식 자체의 판정</h3>
           <VerdictSplit />
 
-          <div className="pa-cta-block pa-rv">
-            <h3 className="pa-cta-title">AIM 1기도 <em>같은 방식</em>으로 굴립니다.</h3>
-            <p>기획은 사람이 쓰고 구현은 AI에 맡기는 방식으로, 필요한 도구를 직접 만들어 운영합니다.</p>
-            <div className="pa-cta-row">
-              <a className="btn-dark" href="/recruit/">AIM 1기 모집 보기 <Arrow /></a>
+          {/* 모집 창(RECRUIT.window) 동안만 노출 — 종료 후 자동 숨김(오너 v5). 카피 = 웹 제작 스터디 오해 방지 */}
+          {recruitPhase(localYmd()) === 'open' ? (
+            <div className="pa-cta-block pa-rv">
+              <h3 className="pa-cta-title">이 기록은 <em>AIM</em>의 작업 방식 예시입니다.</h3>
+              <p>AIM은 광운대 경영학부의 MIS·AI 스터디입니다.
+                웹 제작이 아니라 AI를 일에 쓰는 방식을 다루고, 필요한 도구는 이렇게 직접 만들어 씁니다.</p>
+              <div className="pa-cta-row">
+                <a className="btn-dark" href="/recruit/">AIM 1기 모집 보기 <Arrow /></a>
+              </div>
             </div>
-          </div>
+          ) : null}
         </section>
       </main>
       <SiteFooter />
