@@ -2,15 +2,7 @@
    기본 골격·챕터 공통은 project-adsp.css. 규칙 동일: light-only·버건디 화이트리스트·transform/opacity만. */
 
 /* 중앙정렬 — .pa-rv 래퍼 안 조각은 margin auto 필수(치우침 교훈 2026-08-13) */
-.pa-tiles, .pa-cstats, .pa-toggle, .pa-verdict { margin-left: auto; margin-right: auto; }
-
-/* ── 도구 타일(E3) ── */
-.pa-tiles { max-width: 920px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.9rem; margin-bottom: 1.6rem; }
-.pa-tile { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-card); padding: 1.05rem 1.15rem; }
-.pa-ch-wash .pa-tile { background: #fff; }
-.pa-tile-name { display: block; font-family: var(--font-display); font-weight: 800; font-size: 1.05rem; letter-spacing: -0.01em; }
-.pa-tile-sub { display: block; font-size: 0.72rem; font-weight: 700; color: var(--accent); margin: 0.1rem 0 0.45rem; } /* 화이트리스트 — 역할 라벨 */
-.pa-tile p { margin: 0; font-size: 0.8rem; color: var(--text-sub); line-height: 1.55; }
+.pa-cstats, .pa-toggle { margin-left: auto; margin-right: auto; }
 
 /* ── 투입 규모 스탯 행(P-C) ── */
 .pa-cstats { max-width: 760px; display: flex; justify-content: center; gap: clamp(1.5rem, 5vw, 3.5rem); flex-wrap: wrap; margin: 0.4rem auto 2.4rem; }
@@ -76,20 +68,9 @@
 .pa-fail p { margin: 0; font-size: 0.88rem; color: var(--text-sub); line-height: 1.65; }
 .pa-fail-fix { margin-top: 0.6rem !important; font-weight: 700; color: var(--text) !important; }
 
-/* ── 조건부 판정(P-B) ── */
-.pa-verdict { max-width: 980px; display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; margin-top: 3rem; margin-bottom: 3rem; }
-.pa-vd-col { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-card); padding: 1.4rem 1.5rem; }
-.pa-ch-wash .pa-vd-col { background: #fff; }
-.pa-vd-col h3 { margin: 0 0 0.8rem; font-size: 1rem; font-weight: 800; }
-.pa-vd-col ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.6rem; }
-.pa-vd-col li { position: relative; padding-left: 1.3rem; font-size: 0.9rem; color: var(--text-sub); line-height: 1.65; }
-.pa-vd-col li::before { content: '✓'; position: absolute; left: 0; font-weight: 800; color: var(--text); }
-.pa-vd-col.limit li::before { content: '—'; color: var(--accent); } /* 화이트리스트 — 한계 마커 */
-
 /* ── 반응형 ── */
 @media (max-width: 860px) {
-  .pa-tiles { grid-template-columns: 1fr 1fr; }
-  .pa-fails, .pa-verdict { grid-template-columns: 1fr; }
+  .pa-fails { grid-template-columns: 1fr; }
   .pa-dotwrap { grid-template-columns: 1fr; gap: 0; }
   /* 모바일: 시각화가 위에 고정, 스텝 텍스트가 아래로 지나감 */
   .pa-dot-sticky { order: -1; top: 116px; z-index: 1; }

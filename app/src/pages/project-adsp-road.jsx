@@ -1,9 +1,10 @@
-// ADsP 인터랙티브 상세 v2 — 로드맵 레일 + 플로우 체인(학습 설계·제작 다이어그램).
-// 오너 지시(2026-08-24): 로드맵 = 핵심 결정(major) 카드 + 사이사이 자잘한 결정(minor)을 한 레일에,
-// 제작·학습 구조는 비개발자도 직관적으로 읽히는 단계 다이어그램으로. 스타일 = project-adsp-road.css.
+// ADsP 인터랙티브 상세 v2 — 로드맵 레일·플로우 체인·팀 블록·유지/변경 리스트.
+// v3(오너 피드백 2026-08-24): 텍스트 대신 시각 요소, 가운데 정렬, 컬러 포인트(ok 초록·warn 앰버·accent 버건디).
+// 스타일 = project-adsp-road.css.
 import { ROADMAP } from '../data/project-adsp-roadmap.js'
+import { TEAMS, TEAM_EXTRAS } from '../data/project-adsp-data.js'
 
-// ── 플로우 체인 — 번호 붙은 단계 카드 + 화살표(모바일 = 세로 적층). 학습 설계·제작 스택 공용 ──
+// ── 플로우 체인 — 번호 단계 카드 + 화살표(모바일 세로). 학습 설계(hot)·제작 스택 공용 ──
 export function FlowChain({ items, ariaLabel, tone = '' }) {
   return (
     <ol className={`pa-flow ${tone}`.trim()} aria-label={ariaLabel}>
@@ -20,8 +21,53 @@ export function FlowChain({ items, ariaLabel, tone = '' }) {
   )
 }
 
-// ── 로드맵 레일 — 세로 스파인 위에 major(문제→결정→결과 카드) / minor(한 줄) 시간순 교차 ──
-// media: major 노드에 끼워 넣을 시각 자료 슬롯(토글 비교·지표 표·프롬프트 카드 등) — 페이지가 주입.
+// ── 팀 블록 — 두 팀을 사람 도트로 시각화 + 공통 장치 2칩 ──
+export function TeamSplit() {
+  return (
+    <div className="pa-teams-wrap">
+      <div className="pa-teams">
+        {TEAMS.map((t, i) => (
+          <div className={`pa-team pa-rv ${i === 0 ? 'online' : 'offline'}`} key={t.name}>
+            <span className="pa-team-name">{t.name}</span>
+            <span className="pa-team-dots" aria-label={`${t.n}명`}>
+              {Array.from({ length: t.n }, (_, j) => <i key={j} />)}
+            </span>
+            <strong className="pa-team-mode">{t.mode}</strong>
+            <p>{t.desc}</p>
+          </div>
+        ))}
+      </div>
+      <div className="pa-team-extras">
+        {TEAM_EXTRAS.map((e) => (
+          <div className="pa-team-extra pa-rv" key={e.k}>
+            <strong>{e.k}</strong>
+            <span>{e.sub}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// ── 유지/변경 2열 — 글리프 마커(✓ 초록 / ↻ 앰버·! 버건디) + 키워드 + 한 줄 ──
+export function SplitList({ left, right }) {
+  const col = (c) => (
+    <div className={`pa-split-col ${c.tone}`}>
+      <h3><span className="pa-split-glyph" aria-hidden="true">{c.glyph}</span>{c.title}</h3>
+      <ul>
+        {c.items.map((it) => (
+          <li className="pa-rv" key={it.k}>
+            <strong>{it.k}</strong>
+            <span>{it.sub}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+  return <div className="pa-split">{col(left)}{col(right)}</div>
+}
+
+// ── 로드맵 레일 — 세로 스파인 위에 major(문제→결정→결과) / minor(한 줄) 시간순 교차 ──
 export function RoadmapRail({ media = {} }) {
   return (
     <ol className="pa-road" aria-label="보드 고도화 로드맵">

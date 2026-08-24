@@ -6,12 +6,12 @@ import { renderToString } from 'react-dom/server'
 import ProjectAdsp from './ProjectAdsp.jsx'
 import { MetricTable, ToolCarousel, BuildLoop, BuildEvidence, BuildPrinciples, CodeStats } from './project-adsp-parts.jsx'
 import { DotField, ToggleCompare, FailCards, VerdictSplit, dotLayouts } from './project-adsp-viz.jsx'
-import { FlowChain, RoadmapRail } from './project-adsp-road.jsx'
+import { FlowChain, RoadmapRail, TeamSplit } from './project-adsp-road.jsx'
 import { ROADMAP, ROADMAP_MAJORS, ROADMAP_MINORS } from '../data/project-adsp-roadmap.js'
 import {
   HERO_STATS, WEEKLY_ANSWERS, METRICS, CHAPTERS, TOOL_SLIDES, BUILD_STEPS,
   BUILD_PRINCIPLES, CODE_STATS, PROMPTS, FAILS, VERDICT, DOT_SCALE,
-  TEAM_FACTS, TEXTBOOK, STUDY_FLOW, STACK_FLOW, RESULT, RETRO_POINTS, FEEDBACK_POINTS, NEXT_KEEP, NEXT_CHANGE,
+  TEAMS, TEAM_EXTRAS, TEXTBOOK, STUDY_FLOW, STACK_FLOW, RESULT, RETRO_POINTS, FEEDBACK_POINTS, NEXT_KEEP, NEXT_CHANGE,
 } from '../data/project-adsp-data.js'
 import { INTERACTIVE_PAGES } from '../Projects.jsx'
 
@@ -73,7 +73,7 @@ test('실패 챕터(P-A) — 카드 4종 전부 원인·수리 동반 + 판정 2
   const v = flat(<VerdictSplit />)
   expect(v).toContain('통한 조건')
   expect(v).toContain('안 통할 조건')
-  for (const t of [...VERDICT.works, ...VERDICT.limits]) expect(v).toContain(t)
+  for (const t of [...VERDICT.works, ...VERDICT.limits]) { expect(v).toContain(t.k); expect(v).toContain(t.sub) }
 })
 
 test('제작 챕터 — 스택 플로우·루프 4단계·투입 실측(P-C)·도구 명시(Opus 5)·원칙 4·발췌·재구성 라벨', () => {
@@ -120,9 +120,14 @@ test('로드맵 레일 — major 카드(문제·결정·결과) 전부 + minor �
   for (const n of ROADMAP_MAJORS) expect(page).toContain(n.title)
 })
 
-test('기획·구조·학습 설계 — 베타 취지·팀 팩트·교재 재정리 프레이밍·학습 플로우 렌더', () => {
+test('기획·구조·학습 설계 — 베타 취지·팀 블록·교재 재정리 프레이밍·학습 플로우 렌더', () => {
   expect(page, '베타 취지').toContain('베타')
-  for (const f of TEAM_FACTS) expect(page, `팀 팩트: ${f.k}`).toContain(f.k)
+  const team = flat(<TeamSplit />)
+  for (const t of TEAMS) {
+    expect(team, `팀: ${t.name}`).toContain(t.name)
+    expect(team).toContain(t.mode)
+  }
+  for (const e of TEAM_EXTRAS) expect(page, `공통 장치: ${e.k}`).toContain(e.k)
   expect(page, '표지 이미지').toContain(TEXTBOOK.img)
   expect(page, '저작권 프레이밍(오너 확정)').toContain('원문을 옮겨 싣지 않았다')
   const sf = flat(<FlowChain items={STUDY_FLOW} ariaLabel="s" />)
@@ -153,7 +158,7 @@ test('회고 — 결과(합격률 50%만)·회고 3장·피드백 3장·다음 �
   expect(page, '평가 보류 프레임').toContain('보류')
   for (const r of RETRO_POINTS) expect(page, `회고: ${r.k}`).toContain(r.k)
   for (const f of FEEDBACK_POINTS) expect(page, `피드백: ${f.k}`).toContain(f.k)
-  for (const t of [...NEXT_KEEP, ...NEXT_CHANGE]) expect(page).toContain(t)
+  for (const t of [...NEXT_KEEP, ...NEXT_CHANGE]) { expect(page).toContain(t.k); expect(page).toContain(t.sub) }
   expect(page).toContain('다음 기수에도 유지')
   expect(page).toContain('다음 기수에는 바꾼다')
 })
@@ -163,4 +168,17 @@ test('수치 수위(오너 확정 08-24) — 완주↔합격 교차 수치·문�
   expect(page, '교차 수치 금지').not.toContain('완주 5명')
   expect(page, '문항 총계 비게재(저작권 룰)').not.toContain('1,010')
   expect(page, '문항 총계 비게재').not.toContain('1010문항')
+})
+
+test('v3 카피 규칙 — 대시(—) 금지: 데이터 문안 0건(실물 인용 SPEC·COMMIT_LOG 제외)', () => {
+  const pools = [
+    ...ROADMAP.flatMap((n) => [n.title, n.problem, n.decision, n.result, n.text]),
+    ...RETRO_POINTS.flatMap((x) => [x.k, x.desc]),
+    ...FEEDBACK_POINTS.flatMap((x) => [x.k, x.desc]),
+    ...[...NEXT_KEEP, ...NEXT_CHANGE, ...VERDICT.works, ...VERDICT.limits].flatMap((x) => [x.k, x.sub]),
+    ...TEAMS.flatMap((t) => [t.mode, t.desc]),
+    ...FAILS.flatMap((f) => [f.title, f.cause, f.fix]),
+    RESULT.frame, TEXTBOOK.note,
+  ].filter(Boolean)
+  for (const t of pools) expect(t, `대시 발견: ${t}`).not.toContain('—')
 })
