@@ -5,7 +5,7 @@ date: 2026-07-30
 시각: 16:35
 source_url: https://techcrunch.com/2026/03/26/bytedances-new-ai-video-generation-model-dreamina-seedance-2-0-comes-to-capcut/
 source_name: TechCrunch · Luma · Adobe 외
-성격: 도구·활용
+성격: 심층 분석
 주제: 크리에이티브·미디어
 설명: 상업 제작 기준 AI 영상 파이프라인 — 기획→이미지→영상 생성→편집→음성·음악 단계별 표준 도구, 코카콜라·Kalshi·삼성증권 실제 사례
 태그: [영상생성, Seedance, Kling, Higgsfield, 워크플로우]

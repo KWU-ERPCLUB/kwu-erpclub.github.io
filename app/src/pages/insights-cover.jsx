@@ -3,11 +3,10 @@
 // 비율 = 16:10 고정(다른 계층과 같은 프레임 — .art-cover가 크롭·보더를 통일).
 import { natureKey, splitTitle } from './insights-logic.js'
 
-// 성격 3색(§1 파생 — articles.css .chip-* 와 같은 값). SVG는 CSS 변수를 못 받으므로 여기서 상수 보유.
+// 성격 2색(§1 파생 — articles.css .chip-* 와 같은 값). SVG는 CSS 변수를 못 받으므로 여기서 상수 보유.
 const NATURE_COLOR = {
   news: ['#e5f0fb', '#38618c'],
   analysis: ['#faf0e1', '#6f5227'], /* AA 6.39:1 — articles.css .chip-analysis와 동일 값 */
-  tools: ['#eee9fa', '#63549e'],
 }
 
 // 한글 1 / 영숫자 0.55 로 폭을 어림해 줄을 끊는다(SVG는 자동 줄바꿈이 없다).

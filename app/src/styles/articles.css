@@ -255,7 +255,6 @@
    대비(WCAG 상대휘도): 구 #8C6A38 on #FAF0E1 = 4.40:1(AA 미달) → 신 #6F5227 on #FAF0E1 = 6.39:1, on #FFF = 7.21:1.
    나머지 3색은 이미 AA 이상 — news 5.58 · howto 4.91 · tools 5.37(각 성격 틴트 배경 기준). */
 .chip-analysis { --nbg: #faf0e1; --nfg: #6f5227; }
-.chip-tools    { --nbg: #eee9fa; --nfg: #63549e; }
 
 @media (prefers-reduced-motion: reduce) {
   .art-filter button, .ins-tab, .art-card > button, .art-feature > button, .art-more, .art-search input { transition: none; }

@@ -65,13 +65,13 @@ test('searchFromState — 허브·무값이면 빈 문자열', () => {
 test('searchFromState — 성격 탭·상세 쿼리 생성', () => {
   expect(searchFromState({ tab: '심층 분석', slug: null })).toBe('?tab=analysis')
   expect(searchFromState({ tab: HUB_TAB, slug: 'x' })).toBe('?p=x')
-  expect(searchFromState({ tab: '도구·활용', slug: 'x' })).toBe('?tab=tools&p=x')
+  expect(searchFromState({ tab: '심층 분석', slug: 'x' })).toBe('?tab=analysis&p=x')
 })
 test('URL 왕복 — state→search→state 보존(pushState/popstate 순수 로직)', () => {
   for (const s of [
     { tab: HUB_TAB, slug: null, series: null },
     { tab: '트렌드', slug: null, series: null },
-    { tab: '도구·활용', slug: '2026-08-01-hong-x', series: null },
+    { tab: '심층 분석', slug: '2026-08-01-hong-x', series: null },
     { tab: HUB_TAB, slug: 'only-detail', series: null },
     { tab: HUB_TAB, slug: null, series: 'weekly' },
     { tab: '트렌드', slug: 'x', series: 'weekly' },
@@ -84,9 +84,9 @@ test('URL 왕복 — state→search→state 보존(pushState/popstate 순수 로
 test('natureKey — ascii 키(타일 클래스·URL), 미지 성격 = 안전 fallback', () => {
   expect(natureKey('트렌드')).toBe('news')
   expect(natureKey('심층 분석')).toBe('analysis')
-  expect(natureKey('도구·활용')).toBe('tools')
   // 폐지된 성격(2026-08-25) = 미지 값과 동일하게 안전 fallback
   expect(natureKey('활용법·튜토리얼')).toBe('analysis')
+  expect(natureKey('도구·활용')).toBe('analysis')
   expect(natureKey('없는성격')).toBe('analysis')
 })
 // ── 고정 우선 분리(그리드 정렬) ──
@@ -122,13 +122,13 @@ test('3필터 — 성격·주제·지금써먹기 AND 결합', () => {
 })
 test('검색 — 제목·본문 부분일치 + 필터 AND', () => {
   const all = [
-    { slug: 'a', title: '에이전트 실전', body: '업무 자동화 사례', 성격: '도구·활용' },
+    { slug: 'a', title: '에이전트 실전', body: '업무 자동화 사례', 성격: '심층 분석' },
     { slug: 'b', title: '리서치 요약', body: '시장 동향 정리', 성격: '트렌드' },
   ]
   expect(filterArticles(all, { q: '에이전트' }).map((x) => x.slug)).toEqual(['a'])
   expect(filterArticles(all, { q: '동향' }).map((x) => x.slug)).toEqual(['b'])
   expect(filterArticles(all, { q: '없는말' })).toEqual([])
-  expect(filterArticles(all, { nature: '도구·활용', q: '리서치' })).toEqual([])
+  expect(filterArticles(all, { nature: '심층 분석', q: '리서치' })).toEqual([])
 })
 test('neighbors — 역시간순 prev=과거·next=최근, 경계 null', () => {
   const all = [{ slug: 'new' }, { slug: 'mid' }, { slug: 'old' }]
