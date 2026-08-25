@@ -3,12 +3,14 @@
 import { NATURES } from '../content/schema.js'
 import { SERIES, seriesById, seriesIdOf } from '../content/series.js'
 
-// 성격 칩 = 전체 + 성격 4종. '전체' = 성격 필터 없음(AI in Use 구조: 상단 컨트롤 바 성격 칩).
+// 성격 칩 = 전체 + 성격 2종. '전체' = 성격 필터 없음(AI in Use 구조: 상단 컨트롤 바 성격 칩).
 export const HUB_TAB = '전체'
 export const TABS = [HUB_TAB, ...NATURES]
 
 // 성격 ↔ ascii 탭키(URL·CSS 클래스 안정용). Korean URL 인코딩 회피.
-export const NATURE_KEY = { '트렌드': 'news', '심층 분석': 'analysis', '활용법·튜토리얼': 'howto', '도구·프롬프트': 'tools' }
+// 구 키 'howto'(활용법·튜토리얼)·'tools'(도구) = 2026-08-25 폐지. 기존 URL ?tab=howto·?tab=tools는
+// stateFromSearch가 미지 키 → 허브로 폴백한다(깨지지 않는다).
+export const NATURE_KEY = { '트렌드': 'news', '심층 분석': 'analysis' }
 const KEY_TO_NATURE = Object.fromEntries(Object.entries(NATURE_KEY).map(([n, k]) => [k, n]))
 
 export function natureKey(nature) { return NATURE_KEY[nature] || 'analysis' }

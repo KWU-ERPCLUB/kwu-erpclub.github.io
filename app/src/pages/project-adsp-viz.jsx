@@ -4,6 +4,7 @@
 // 규격: 외부 라이브러리 0 · transform·opacity만 · reduced-motion/no-JS = 최종 상태 정적 표시.
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { prefersReduced } from '../home-motion.jsx'
+import { SplitList } from './project-adsp-road.jsx'
 import { WEEKLY_ANSWERS, DOT_SCALE, FAILS, VERDICT } from '../data/project-adsp-data.js'
 
 // ── 도트 필드 — 점 1개 = 답안 10건. 스텝: 0 전체 흩뿌림 → 1 주차별 적층 → 2 시험주 강조 ──
@@ -140,18 +141,11 @@ export function FailCards() {
   )
 }
 
-// ── 조건부 판정(P-B) — 통한 조건 / 한계 2열. 성공 선언으로 닫지 않는다 ──
+// ── 조건부 판정(P-B) — 통한 조건 / 한계 2열(v3: SplitList 글리프·키워드+한 줄). 성공 선언으로 닫지 않는다 ──
 export function VerdictSplit() {
   return (
-    <div className="pa-verdict">
-      <div className="pa-vd-col">
-        <h3>이 방식이 통한 조건</h3>
-        <ul>{VERDICT.works.map((t) => <li key={t}>{t}</li>)}</ul>
-      </div>
-      <div className="pa-vd-col limit">
-        <h3>같은 방식이 안 통할 조건</h3>
-        <ul>{VERDICT.limits.map((t) => <li key={t}>{t}</li>)}</ul>
-      </div>
-    </div>
+    <SplitList
+      left={{ title: '이 방식이 통한 조건', tone: 'ok', glyph: '✓', items: VERDICT.works }}
+      right={{ title: '같은 방식이 안 통할 조건', tone: 'hot', glyph: '!', items: VERDICT.limits }} />
   )
 }

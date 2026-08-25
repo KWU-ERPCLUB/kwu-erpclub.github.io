@@ -4,12 +4,10 @@
 import { useCallback, useEffect, useState } from 'react'
 import { splitTitle } from '../pages/insights-logic.js'
 
-// 성격 4색(디자인규칙 §1 파생 토큰과 동일 값) — 이미지 없는 기사 폴백 타일 배경/전경.
+// 성격 2색(디자인규칙 §1 파생 토큰과 동일 값) — 이미지 없는 기사 폴백 타일 배경/전경.
 const KIND_TINT = {
   트렌드: ['#E5F0FB', '#38618C'],
   '심층 분석': ['#FAF0E1', '#6F5227'],
-  '활용법·튜토리얼': ['#E4F3E8', '#39734A'],
-  '도구·프롬프트': ['#EEE9FA', '#63549E'],
 }
 
 function MarkCard({ m }) {

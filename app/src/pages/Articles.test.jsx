@@ -29,11 +29,12 @@ const listProps = { tab: '전체', onTab: noop, topic: null, setTopic: noop, mon
 // 합성 기사(콘텐츠 비의존) — 필요한 필드만 채운다.
 const art = (slug, over = {}) => ({ slug, title: `제목 ${slug}`, author: 'A', date: '2026-07-01', 설명: `설명 ${slug}`, body: '', 성격: '트렌드', 주제: '시장·생태계', ...over })
 
-// 목록 리디자인(2026-08-05 오너 픽 A): 피처 행 + 성격 탭(5) + 검색·주제·기간 필터 + 썸네일 카드 그리드 + 더보기.
-test('목록 = 성격 탭(전체+4) + 검색 + 주제 칩 + 카운트 라인 + 썸네일 카드 그리드', () => {
+// 목록 리디자인(2026-08-05 오너 픽 A): 피처 행 + 성격 탭(3) + 검색·주제·기간 필터 + 썸네일 카드 그리드 + 더보기.
+// 성격 2값(2026-08-25) — 인사이트 = 정보성 전용(활용법·도구 성격 폐기, roadmap §95).
+test('목록 = 성격 탭(전체+2) + 검색 + 주제 칩 + 카운트 라인 + 썸네일 카드 그리드', () => {
   const html = renderToString(<Articles configured={false} />)
-  // 성격 탭 5개 상한(전체+4)
-  for (const t of ['전체', '트렌드', '심층 분석', '활용법·튜토리얼', '도구·프롬프트']) {
+  // 성격 탭 3개 상한(전체+2)
+  for (const t of ['전체', '트렌드', '심층 분석']) {
     expect(html).toContain(t)
   }
   expect(html).toContain('ins-tabs')
@@ -114,9 +115,9 @@ test('고정 카드 = 핀 배지(art-pin) 노출', () => {
   expect(html).toContain('art-pin')
 })
 
-// 4성격 → 라벨 색 토큰 매핑 무결(색면 아님).
-test('성격 4종 → 라벨 색 토큰(chip-*) 매핑', () => {
-  const cases = [['트렌드', 'news'], ['심층 분석', 'analysis'], ['활용법·튜토리얼', 'howto'], ['도구·프롬프트', 'tools']]
+// 2성격 → 라벨 색 토큰 매핑 무결(색면 아님).
+test('성격 2종 → 라벨 색 토큰(chip-*) 매핑', () => {
+  const cases = [['트렌드', 'news'], ['심층 분석', 'analysis']]
   for (const [nature, key] of cases) {
     const html = renderToString(<ArticleRow a={art(key, { 성격: nature })} onOpen={noop} />)
     expect(html).toContain(`art-label chip-${key}`)

@@ -4,11 +4,14 @@
 import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
 import ProjectAdsp from './ProjectAdsp.jsx'
-import { MetricTable, ToolCarousel, BuildLoop, BuildEvidence, BuildPrinciples, ToolTiles, CodeStats, LogRail } from './project-adsp-parts.jsx'
+import { MetricTable, ToolCarousel, BuildLoop, BuildEvidence, BuildPrinciples, CodeStats } from './project-adsp-parts.jsx'
 import { DotField, ToggleCompare, FailCards, VerdictSplit, dotLayouts } from './project-adsp-viz.jsx'
+import { FlowChain, RoadmapRail, TeamSplit } from './project-adsp-road.jsx'
+import { ROADMAP, ROADMAP_MAJORS, ROADMAP_MINORS } from '../data/project-adsp-roadmap.js'
 import {
-  HERO_STATS, WEEKLY_ANSWERS, METRICS, CHAPTERS, TOOL_SLIDES, BUILD_STEPS, BUILD_TILES,
-  BUILD_PRINCIPLES, CODE_STATS, MINOR_ITEMS, PROMPTS, FAILS, VERDICT, DOT_SCALE,
+  HERO_STATS, WEEKLY_ANSWERS, METRICS, CHAPTERS, TOOL_SLIDES, BUILD_STEPS,
+  BUILD_PRINCIPLES, CODE_STATS, PROMPTS, FAILS, VERDICT, DOT_SCALE,
+  TEAMS, TEAM_EXTRAS, TEXTBOOK, STUDY_FLOW, STACK_FLOW, RESULT, RETRO_POINTS, FEEDBACK_POINTS, NEXT_KEEP, NEXT_CHANGE,
 } from '../data/project-adsp-data.js'
 import { INTERACTIVE_PAGES } from '../Projects.jsx'
 
@@ -17,9 +20,10 @@ const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
   .replace(/&quot;/g, '"').replace(/&#x27;/g, "'").replace(/&amp;/g, '&')
 const page = flat(<ProjectAdsp />)
 
-test('챕터 10개(제작·실패 포함) 전부 앵커 섹션 + 로컬 나브 링크로 렌더', () => {
-  expect(CHAPTERS.map((c) => c.id)).toContain('build')
-  expect(CHAPTERS.map((c) => c.id)).toContain('fail')
+test('v2 서사 챕터(기획·구조·학습 설계·제작·로드맵·실패·회고) 전부 앵커 섹션 + 로컬 나브 링크로 렌더', () => {
+  for (const id of ['plan', 'team', 'study', 'build', 'roadmap', 'fail', 'retro']) {
+    expect(CHAPTERS.map((c) => c.id), `v2 챕터 ${id}`).toContain(id)
+  }
   for (const c of CHAPTERS) {
     expect(page, `#${c.id} 섹션`).toContain(`id="${c.id}"`)
     expect(page, `#${c.id} 나브 링크`).toContain(`href="#${c.id}"`)
@@ -69,12 +73,12 @@ test('실패 챕터(P-A) — 카드 4종 전부 원인·수리 동반 + 판정 2
   const v = flat(<VerdictSplit />)
   expect(v).toContain('통한 조건')
   expect(v).toContain('안 통할 조건')
-  for (const t of [...VERDICT.works, ...VERDICT.limits]) expect(v).toContain(t)
+  for (const t of [...VERDICT.works, ...VERDICT.limits]) { expect(v).toContain(t.k); expect(v).toContain(t.sub) }
 })
 
-test('제작 챕터 — 타일 4·루프 4단계·투입 실측(P-C)·도구 명시(Opus 5)·원칙 4·발췌·재구성 라벨', () => {
-  const tiles = flat(<ToolTiles />)
-  for (const t of BUILD_TILES) expect(tiles).toContain(t.name)
+test('제작 챕터 — 스택 플로우·루프 4단계·투입 실측(P-C)·도구 명시(Opus 5)·원칙 4·발췌·재구성 라벨', () => {
+  const sf = flat(<FlowChain items={STACK_FLOW} ariaLabel="t" />)
+  for (const t of STACK_FLOW) expect(sf).toContain(t.name)
   const l = flat(<BuildLoop />)
   for (const s of BUILD_STEPS) expect(l).toContain(s.k)
   const cs = flat(<CodeStats />)
@@ -91,14 +95,44 @@ test('제작 챕터 — 타일 4·루프 4단계·투입 실측(P-C)·도구 명
   expect(page.split('재구성 예시').length - 1).toBeGreaterThanOrEqual(PROMPTS.length)
 })
 
-test('지표 표 — 4종 + 톤 칩(E5) 렌더 · 개선 로그 레일(E1) = 전 항목', () => {
+test('지표 표 — 4종 + 톤 칩(E5) 렌더', () => {
   const m = flat(<MetricTable />)
   for (const x of METRICS) {
     expect(m).toContain(x.key)
     expect(m).toContain(`pa-tone ${x.tone}`)
   }
-  const r = flat(<LogRail />)
-  for (const it of MINOR_ITEMS) expect(r).toContain(it.date)
+})
+
+test('로드맵 레일 — major 카드(문제·결정·결과) 전부 + minor 한 줄 전부 + 미디어 슬롯 주입 렌더', () => {
+  expect(ROADMAP_MAJORS.length).toBeGreaterThanOrEqual(6)
+  expect(ROADMAP_MINORS.length).toBeGreaterThanOrEqual(8)
+  expect(ROADMAP.length).toBe(ROADMAP_MAJORS.length + ROADMAP_MINORS.length)
+  const r = flat(<RoadmapRail media={{ viz: <p>MEDIA-VIZ</p> }} />)
+  for (const n of ROADMAP_MAJORS) {
+    expect(r, `major: ${n.title}`).toContain(n.title)
+    expect(r, `문제 없는 major 금지: ${n.title}`).toContain(n.problem)
+    expect(r).toContain(n.decision)
+    expect(r).toContain(n.result)
+  }
+  for (const n of ROADMAP_MINORS) expect(r, `minor: ${n.date}`).toContain(n.text)
+  expect(r).toContain('MEDIA-VIZ')
+  // 페이지에서도 major 제목 전부 렌더
+  for (const n of ROADMAP_MAJORS) expect(page).toContain(n.title)
+})
+
+test('기획·구조·학습 설계 — 베타 취지·팀 블록·교재 재정리 프레이밍·학습 플로우 렌더', () => {
+  expect(page, '베타 취지').toContain('베타')
+  const team = flat(<TeamSplit />)
+  for (const t of TEAMS) {
+    expect(team, `팀: ${t.name}`).toContain(t.name)
+    expect(team).toContain(t.mode)
+  }
+  for (const e of TEAM_EXTRAS) expect(page, `공통 장치: ${e.k}`).toContain(e.k)
+  expect(page, '표지 이미지').toContain(TEXTBOOK.img)
+  expect(page, '저작권 프레이밍(오너 확정)').toContain('원문을 옮겨 싣지 않았다')
+  const sf = flat(<FlowChain items={STUDY_FLOW} ariaLabel="s" />)
+  for (const t of STUDY_FLOW) expect(sf).toContain(t.k)
+  for (const t of STUDY_FLOW) expect(page).toContain(t.k)
 })
 
 test('캐러셀 — 슬라이드 전량 + 도트 + 일시정지 버튼(aria-pressed)', () => {
@@ -116,4 +150,35 @@ test('타인 실명 미노출(§5-4) — 렌더 마크업에 스터디원 이름
 
 test('목록 연결 — adsp 슬러그 = 전용 페이지 매핑', () => {
   expect(INTERACTIVE_PAGES['2026-07-24-bapzzi-adsp-board']).toBe('/projects/adsp/')
+})
+
+test('회고 — 결과(합격률 50%만)·회고 3장·피드백 3장·다음 기수 노트 렌더', () => {
+  expect(page).toContain(RESULT.rate)
+  expect(page).toContain(RESULT.headline)
+  expect(page, '평가 보류 프레임').toContain('보류')
+  for (const r of RETRO_POINTS) expect(page, `회고: ${r.k}`).toContain(r.k)
+  for (const f of FEEDBACK_POINTS) expect(page, `피드백: ${f.k}`).toContain(f.k)
+  for (const t of [...NEXT_KEEP, ...NEXT_CHANGE]) { expect(page).toContain(t.k); expect(page).toContain(t.sub) }
+  expect(page).toContain('다음 기수에도 유지')
+  expect(page).toContain('다음 기수에는 바꾼다')
+})
+
+test('수치 수위(오너 확정 08-24) — 완주↔합격 교차 수치·문항 총계 미게재', () => {
+  expect(page, '교차 수치 금지(소그룹 유추 위험)').not.toContain('명 중 합격 1명')
+  expect(page, '교차 수치 금지').not.toContain('완주 5명')
+  expect(page, '문항 총계 비게재(저작권 룰)').not.toContain('1,010')
+  expect(page, '문항 총계 비게재').not.toContain('1010문항')
+})
+
+test('v3 카피 규칙 — 대시(—) 금지: 데이터 문안 0건(실물 인용 SPEC·COMMIT_LOG 제외)', () => {
+  const pools = [
+    ...ROADMAP.flatMap((n) => [n.title, n.problem, n.decision, n.result, n.text]),
+    ...RETRO_POINTS.flatMap((x) => [x.k, x.desc]),
+    ...FEEDBACK_POINTS.flatMap((x) => [x.k, x.desc]),
+    ...[...NEXT_KEEP, ...NEXT_CHANGE, ...VERDICT.works, ...VERDICT.limits].flatMap((x) => [x.k, x.sub]),
+    ...TEAMS.flatMap((t) => [t.mode, t.desc]),
+    ...FAILS.flatMap((f) => [f.title, f.cause, f.fix]),
+    RESULT.frame, TEXTBOOK.note,
+  ].filter(Boolean)
+  for (const t of pools) expect(t, `대시 발견: ${t}`).not.toContain('—')
 })
