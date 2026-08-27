@@ -3,7 +3,7 @@ import { renderToString } from 'react-dom/server'
 import Recruit from './Recruit.jsx'
 import {
   RECRUIT, ACADEMIC_RULE, COHORT_LABEL, AIM_ROADMAP, RECRUIT_FACTS,
-  RECRUIT_GOAL_LEAD, RECRUIT_MOAT, RECRUIT_FLOW, formatWindow,
+  RECRUIT_GOAL_LEAD, RECRUIT_GOALS, RECRUIT_FLOW, formatWindow,
 } from './data/recruit.js'
 import { FAQ, RECRUIT_FAQ } from './data/faq.js'
 
@@ -48,36 +48,33 @@ test('v3.2 운영 증빙·블랙 밴드·키비주얼 부재 — rc-black·stat-
   expect(html).not.toContain('rc-visual') // ④ 과녁/원 키비주얼(두 원+×) 완전 삭제
 })
 
-test('이 스터디의 목표(2026-08-27 5차) = 리드 + 해자 4(뒤집기 카드 앞/뒤) + 흐름 3 — 대시·AI투 0', () => {
+test('이 스터디의 목표(2026-08-27 7차) = 리드 + 목표 4(번호 카드) + 흐름 3 — 대시·AI투·현업 표기 0', () => {
   const html = flat(<Recruit />)
   expect(html).toContain('rc-do-h')
   expect(html).toContain('이 스터디의 목표')
-  expect(html).not.toContain('이 스터디가 하는 일')
   expect(html).toContain(RECRUIT_GOAL_LEAD)
-  expect(RECRUIT_MOAT.length).toBe(3)   // 3열 — 유료급 도구 카드 삭제(해자 아님, 2026-08-27 6차)
+  expect(RECRUIT_GOALS.length).toBe(4)   // 2×2
   expect(RECRUIT_FLOW.length).toBe(3)
-  for (const [t, alone, here] of RECRUIT_MOAT) {
-    expect(html, `해자 제목 부재: ${t}`).toContain(t)
-    expect(html, `앞면(혼자서는) 부재: ${t}`).toContain(alone)
-    expect(html, `뒷면(여기서는) 부재: ${t}`).toContain(here)
+  for (const [t, d] of RECRUIT_GOALS) {
+    expect(html, `목표 제목 부재: ${t}`).toContain(t)
+    expect(html, `목표 본문 부재: ${t}`).toContain(d)
+    expect(t.length, `제목이 길다: ${t}`).toBeLessThanOrEqual(14)
   }
   for (const [t, w, d] of RECRUIT_FLOW) {
     expect(html).toContain(t); expect(html).toContain(w); expect(html).toContain(d)
   }
-  expect(html).toContain('rc-moat-card')
-  expect(html).toContain('aria-pressed="false"')      // 뒤집기 = 버튼(키보드 접근)
-  expect((html.match(/rc-moat-front/g) || []).length).toBe(3)
-  expect((html.match(/rc-moat-back/g) || []).length).toBe(3)
-  for (const [t] of RECRUIT_MOAT) expect(t.length, `제목이 길다: ${t}`).toBeLessThanOrEqual(12) // 명사형·핵심만
+  expect(html).toContain('rc-goals')
   expect(html).toContain('rc-flow')
+  expect(html).not.toContain('rc-moat')        // 뒤집기 구조 폐기(7차)
+  expect(html).not.toContain('혼자서는')
   expect(html).not.toContain('rc-show-h')
   expect(html).not.toContain('주 1건 기고')
   expect(html).not.toContain('회사처럼')
   expect(html).not.toContain('AX')
-  // 카피 가드: 대시 금지 · 경어체/AI투 금지
-  const strs = [RECRUIT_GOAL_LEAD, ...RECRUIT_MOAT.flat(), ...RECRUIT_FLOW.flatMap((f) => [f[0], f[2]])]
+  // 카피 가드: 대시 금지 · 경어체/AI투 금지 · "현업"(오너 오인) 금지
+  const strs = [RECRUIT_GOAL_LEAD, ...RECRUIT_GOALS.flat(), ...RECRUIT_FLOW.flatMap((f) => [f[0], f[2]])]
   for (const s of strs) {
-    for (const banned of ['—', ' - ', '습니다', '입니다', '최고', '완벽', '혁신', '여정', '경험을 선사', '한 단계', '레벨업', '체계적으로']) {
+    for (const banned of ['—', ' - ', '습니다', '입니다', '최고', '완벽', '혁신', '여정', '경험을 선사', '한 단계', '레벨업', '체계적으로', '현업']) {
       expect(s, `금지 표현 «${banned}»: ${s}`).not.toContain(banned)
     }
   }

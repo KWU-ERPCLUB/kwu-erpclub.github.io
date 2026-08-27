@@ -1,12 +1,12 @@
 // /recruit 본문 섹션 조각 — Recruit.jsx 300줄 규격 초과로 분리(2026-08-20).
 // Recruit.jsx = 페이지 골격 + 스크롤 인터랙션 훅 / 이 파일 = 정적 데이터를 렌더하는 섹션 6종.
 // 마크업·클래스는 그대로 옮겼다(화면 변화 0). 카피·수치 = data/recruit.js·data/faq.js가 원천.
-import { useState, useRef, useEffect } from 'react'
+import { useRef, useEffect } from 'react'
 import { Arrow } from './shared.jsx'
 import {
   ACADEMIC_RULE, CONTACT, CONTACT_MAILTO, COHORT_LABEL,
   RECRUIT_FACTS, RECRUIT_FIT, AIM_ROADMAP,
-  RECRUIT_GOAL_LEAD, RECRUIT_MOAT, RECRUIT_FLOW,
+  RECRUIT_GOAL_LEAD, RECRUIT_GOALS, RECRUIT_FLOW,
 } from './data/recruit.js'
 import { RECRUIT_FAQ } from './data/faq.js'
 
@@ -44,11 +44,9 @@ export function FactsSection() {
   )
 }
 
-// 이 스터디의 목표(2026-08-27 5차) — 리드 → 해자 4(뒤집기 카드: 앞 = 혼자서는 / 뒤 = 여기서는, 클릭·키보드 토글) → 한 학기 흐름 3.
-// 인터랙션: 카드 클릭 시 뒤집힘(useState) · 스크롤 진입 시 순차 등장(IntersectionObserver → .is-in) · 모션 축소 설정 시 전부 정적.
-// SSR(테스트 flat 렌더)에서는 두 면이 모두 HTML에 존재해야 한다 — 문안 가드가 앞·뒤 문장을 전부 찾는다.
+// 이 스터디의 목표(2026-08-27 7차) — 리드 → 목표 4(번호 카드, 2×2) → 한 학기 흐름 3.
+// 인터랙션: 스크롤 진입 시 순차 등장(IntersectionObserver → .is-in) + 호버 리프트. 모션 축소 설정 시 정적. 뒤집기(5·6차) 폐기.
 export function GoalSection() {
-  const [flipped, setFlipped] = useState(() => new Set())
   const ref = useRef(null)
   useEffect(() => {
     const root = ref.current
@@ -58,34 +56,19 @@ export function GoalSection() {
     io.observe(root)
     return () => io.disconnect()
   }, [])
-  const toggle = (i) => setFlipped((prev) => { const n = new Set(prev); n.has(i) ? n.delete(i) : n.add(i); return n })
   return (
     <Section labelledBy="rc-do-h">
       <div ref={ref} className="rc-goal">
         <h2 className="rc-h2" id="rc-do-h">이 스터디의 목표</h2>
         <p className="rc-sched-rule">{RECRUIT_GOAL_LEAD}</p>
-        <p className="rc-goal-hint" aria-hidden="true">카드를 눌러 보세요</p>
-        <ul className="rc-moat">
-          {RECRUIT_MOAT.map(([title, alone, here], i) => {
-            const on = flipped.has(i)
-            return (
-              <li key={title} style={{ '--i': i }}>
-                <button type="button" className={`rc-moat-card${on ? ' is-flipped' : ''}`} aria-pressed={on} onClick={() => toggle(i)}>
-                  <span className="rc-moat-face rc-moat-front">
-                    <span className="rc-moat-tag">혼자서는</span>
-                    <strong>{title}</strong>
-                    <span className="rc-moat-body">{alone}</span>
-                    <span className="rc-moat-cta" aria-hidden="true">여기서는 <Arrow /></span>
-                  </span>
-                  <span className="rc-moat-face rc-moat-back">
-                    <span className="rc-moat-tag">여기서는</span>
-                    <strong>{title}</strong>
-                    <span className="rc-moat-body">{here}</span>
-                  </span>
-                </button>
-              </li>
-            )
-          })}
+        <ul className="rc-goals">
+          {RECRUIT_GOALS.map(([title, desc], i) => (
+            <li key={title} style={{ '--i': i }}>
+              <span className="rc-goal-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <strong>{title}</strong>
+              <p>{desc}</p>
+            </li>
+          ))}
         </ul>
         <h3 className="rc-h3">한 학기 흐름</h3>
         <ol className="rc-flow">
