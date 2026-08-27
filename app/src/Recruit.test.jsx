@@ -34,6 +34,7 @@ test('요강 = 확정값만 게재(2026-08-27 개정) — 기간·인원 00명·
   expect(html).toContain('<strong>경영학부 중심</strong>')
   expect(html).toContain('비전공자도 환영')   // 구 '전공 무관' = 배제 어휘(오너 2026-08-19 톤 완화)
   expect(html).toContain('매주 월요일 18:00 ~ 20:00 대면')
+  expect(html).not.toContain('온라인')   // 2026-08-27 2차 개정 — 온라인 회차 0
   expect(html).toContain('00명')
   expect(html).toContain('개인 노트북 필수')
   expect(html).toContain('참가비 없음')
@@ -115,7 +116,7 @@ test('AIM 1기 로드맵 = 페이즈 3 + 회차 9 — 단일원천 파생·진�
   expect(html).toContain('rc-rm')
   expect(html).toContain('rc-rm-fill') // 스크롤 진행 채움선
   expect(AIM_ROADMAP.filter((n) => n.type === 'phase').length).toBe(3) // 1차·시험기간·2차(모집 구간 = 공개면 제외)
-  expect(AIM_ROADMAP.filter((n) => n.type === 'session').length).toBe(9) // 회차 = 포인트
+  expect(AIM_ROADMAP.filter((n) => n.type === 'session').length).toBe(8) // 회차 7 + 과제 주 1(2026-08-27)
   expect(html).toContain('1차 프로젝트')
   expect(html).toContain('2차 프로젝트')
   expect(html).toContain('시험기간')               // '시험 휴지' 개명(오너 2026-08-14)
@@ -124,8 +125,8 @@ test('AIM 1기 로드맵 = 페이즈 3 + 회차 9 — 단일원천 파생·진�
   expect(html).not.toContain('후반부')
   // 날짜 = 단일원천(aim-roadmap.js — 운영틀 §2 2026-08-13 재편 값)
   expect(html).toContain('09-14 ~ 10-05')   // 월요일 확정(2026-08-27)
-  expect(html).toContain('10-07 ~ 10-26')
-  expect(html).toContain('10-28 ~ 11-23')
+  expect(html).toContain('10-07 ~ 10-25')
+  expect(html).toContain('10-26 ~ 11-16')
   expect(html).toContain(ACADEMIC_RULE) // 학사일정 연동 원칙 1줄 명기
   expect(html).not.toContain('산출물 = 본인 소유') // 요강 하단 콜아웃 = 오너 삭제 2026-08-07(폼 안내 rc-callout은 별개)
 })
@@ -139,7 +140,7 @@ test('로드맵 회차 = 번호·주제·배움·세부 전량 렌더 + OT·쇼�
     for (const d of s.세부) expect(html, `세부 부재: ${d}`).toContain(d)
   }
   expect(html).toContain('>OT<') // 1회 = OT 태그(오너 "맨 처음은 OT")
-  expect(html).toContain('쇼케이스')       // 4회 태그
+  expect(html).toContain('과제 주')        // 10/5 태그(2026-08-27 — 쇼케이스 회차 폐지)
   expect(html).toContain('최종 발표')      // 9회 태그
   expect(html).not.toContain('중간 쇼케이스') // 2026-08-13 재편 — 폐기 노드
   expect(html).not.toContain('다섯 활용 축')  // 구 커리큘럼 잔재 금지
@@ -154,7 +155,7 @@ test('2차 프로젝트 페이즈 = 버건디 포인트(rc-rm-hl)', () => {
 
 test('[미정] 게재 금지(운영틀 §8) — 최종 발표 주간·요일·인원·선발 방식 값 없음', () => {
   const html = flat(<Recruit />)
-  expect(html).toContain('추후 공지') // 예비일 세부 = 미정 표기만
+  expect(html).toContain('추후 확정') // 인원 = 미정 표기만
   expect(html).not.toContain('최종 발표 주간 · ')
   expect(html).not.toContain('12-01') // 기말 전 주간을 발표 주간으로 날조 금지
   expect(html).not.toContain('11-30')

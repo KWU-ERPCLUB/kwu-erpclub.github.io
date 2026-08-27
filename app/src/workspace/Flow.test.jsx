@@ -29,10 +29,10 @@ test('1기 로드맵 = 클릭형 세로 타임라인(회차별 주제·배울 �
   expect(html).toContain('ws-rm-toggle')           // 차시 = 토글 버튼(드롭박스 진입)
   expect(html).toContain('aria-expanded')
   expect(html).toContain('OT · 앞으로 배울 것과 세팅')  // 2026-08-27 개정
-  expect(html).toContain('1차 쇼케이스 + 팀 결성')
-  expect(html).toContain('1차 프로젝트 · 생활밀착 개인')
+  expect(html).toContain('세션 없음 · 산출물 제출')
+  expect(html).toContain('1차 프로젝트 · 개인')
   expect(html).toContain('2차 프로젝트 · 팀')
-  expect(html).toContain('추후 공지')              // 미정 값(예비일 세부)을 확정처럼 쓰지 않는다
+  expect(html).toContain('팀 기획서 확정')          // 10/26 회차(세부 '변경 가능'은 드롭박스)
   expect(html).not.toContain('중간 쇼케이스')      // 2026-08-13 재편 — 폐기 노드
   expect(html).not.toContain('서로 묻는 질문')     // 2026-08-06 오너 — 질문 블록 제거
   expect(html.indexOf('1기 로드맵')).toBeLessThan(html.indexOf('주차 기록'))  // 상단 배치(로드맵 → 주차 기록)
