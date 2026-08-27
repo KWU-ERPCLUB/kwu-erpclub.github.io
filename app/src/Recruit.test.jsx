@@ -23,18 +23,19 @@ test('page-head = 키커 RECRUIT + 헤드라인 + 문장형 서브(메타 줄 �
   expect(html).not.toContain('rc-eyebrow') // 구 4구현 잔재 금지
 })
 
-test('요강 = 확정값만 게재(오너 개정 2026-08-05) — 기간·인원 미정·대상·모임·비용', () => {
+test('요강 = 확정값만 게재(2026-08-27 개정) — 기간·인원 00명·대상·모임 월 18~20시·준비물 노트북', () => {
   const html = flat(<Recruit />)
   expect(html).toContain(formatWindow()) // 모집 기간 = 데이터 파생(하드코딩 아님)
   expect(html).toContain(RECRUIT.활동기간)
   // 값 = 핵심(strong)+부연(span) 분리 렌더(2026-08-07) — 연속 문자열 대신 두 조각으로 단언
-  expect(html).toContain('<strong>미정</strong>')     // 인원(구 6~10명 — 오너 개정)
+  expect(html).toContain('<strong>00명</strong>')     // 인원 미정 관례 표기(오너 2026-08-27)
   expect(html).toContain('추후 확정')
   expect(html).not.toContain('6~10명')
   expect(html).toContain('<strong>경영학부 중심</strong>')
   expect(html).toContain('비전공자도 환영')   // 구 '전공 무관' = 배제 어휘(오너 2026-08-19 톤 완화)
-  expect(html).toContain('매주 대면 60분')
-  expect(html).toContain('요일 추후 확정')
+  expect(html).toContain('매주 월요일 18:00 ~ 20:00 대면')
+  expect(html).toContain('00명')
+  expect(html).toContain('개인 노트북 필수')
   expect(html).toContain('참가비 없음')
 })
 
@@ -69,16 +70,16 @@ test('WHAT WE DO(2026-08-27) = 리드 + 역량 5 + 진행 순서 6 + 산출물 2
 })
 
 // SHOWCASE(2026-08-05 2차) — "챗GPT면 충분" 반론에 대한 실물 증거 3건.
-test('SHOWCASE = 실물 3건(보드·허브·세미나 자료) — 이름·핵심/보조 2단·링크·썸네일', () => {
+test('SHOWCASE = 텍스트 링크 2건(허브·특강 자료) — 썸네일 0(2026-08-27 웹디자인 오인 차단)', () => {
   const html = flat(<Recruit />)
   expect(html).toContain('rc-show-h')
-  expect(RECRUIT_SHOWCASE.length).toBe(3)
-  for (const { name, core, sub, href, img } of RECRUIT_SHOWCASE) {
+  expect(RECRUIT_SHOWCASE.length).toBe(2)
+  expect(html).not.toContain('rc-show-thumb')
+  for (const { name, core, sub, href } of RECRUIT_SHOWCASE) {
     expect(html, `실물 이름 부재: ${name}`).toContain(name)
     expect(html, `핵심 문장 부재: ${name}`).toContain(core)
     expect(html, `보조 설명 부재: ${name}`).toContain(sub)
     expect(html, `링크 부재: ${name}`).toContain(`href="${href}"`)
-    expect(html, `썸네일 부재: ${name}`).toContain(`src="${img}"`)
   }
   expect(html).toContain(SHOWCASE_LEAD)
   expect(html).toContain('rc-fit rc-show') // 카드 문법 = 기존 rc-fit 승계(새 시각 언어 0)
@@ -104,7 +105,7 @@ test('SHOWCASE 사실 가드 — 문항 총계·라이브·전부 접속 가능 
     expect(s, `'라이브 운영' 표기: ${s}`).not.toContain('라이브 운영')
     expect(s, `'접속 가능' 과장: ${s}`).not.toContain('접속 가능')
   }
-  expect(RECRUIT_SHOWCASE[0].href).toBe('/projects/adsp/')
+  expect(RECRUIT_SHOWCASE[0].href).toBe('/projects/site/')
 })
 
 // 2026-08-14 일원화 — AIM 1기 로드맵: 원천 = data/aim-roadmap.js(워크스페이스 로드맵과 완전 동일 값, 2단 재편 1차 4 + 2차 5).
@@ -122,9 +123,9 @@ test('AIM 1기 로드맵 = 페이즈 3 + 회차 9 — 단일원천 파생·진�
   expect(html).not.toContain('전반부') // 구 명명 = 대외 표기에서 제거
   expect(html).not.toContain('후반부')
   // 날짜 = 단일원천(aim-roadmap.js — 운영틀 §2 2026-08-13 재편 값)
-  expect(html).toContain('09-07 주 ~ 10-06')
+  expect(html).toContain('09-14 ~ 10-05')   // 월요일 확정(2026-08-27)
   expect(html).toContain('10-07 ~ 10-26')
-  expect(html).toContain('10-27 주 ~ 11-24')
+  expect(html).toContain('10-28 ~ 11-23')
   expect(html).toContain(ACADEMIC_RULE) // 학사일정 연동 원칙 1줄 명기
   expect(html).not.toContain('산출물 = 본인 소유') // 요강 하단 콜아웃 = 오너 삭제 2026-08-07(폼 안내 rc-callout은 별개)
 })
@@ -153,7 +154,7 @@ test('2차 프로젝트 페이즈 = 버건디 포인트(rc-rm-hl)', () => {
 
 test('[미정] 게재 금지(운영틀 §8) — 최종 발표 주간·요일·인원·선발 방식 값 없음', () => {
   const html = flat(<Recruit />)
-  expect(html).toContain('추후 확정') // 최종 발표 기간 = 미정 표기만, 날짜 없음
+  expect(html).toContain('추후 공지') // 예비일 세부 = 미정 표기만
   expect(html).not.toContain('최종 발표 주간 · ')
   expect(html).not.toContain('12-01') // 기말 전 주간을 발표 주간으로 날조 금지
   expect(html).not.toContain('11-30')
@@ -227,7 +228,7 @@ test('FAQ 잔존 증보 문항(시간·전공) 노출 + 삭제 3문항 부재', 
     expect(FAQ.some((f) => f.q.includes(gone)), `삭제 문항 잔존: ${gone}`).toBe(false)
   }
   const byQ = (needle) => FAQ.find((f) => f.q.includes(needle)).a
-  expect(byQ('주당 시간')).toContain('매주 대면 60분')   // 요강 값과 동일
+  expect(byQ('주당 시간')).toContain('매주 월요일 18:00~20:00 대면') // 요강 값과 동일
   expect(byQ('주당 시간')).toContain('기고 의무는 없습니다') // 2026-08-27 기고 의무 폐지
   expect(byQ('웹사이트를 만드는')).toContain('커리큘럼에 없습니다') // 웹 제작 오인 차단 문항
   expect(byQ('주당 시간')).toContain(ACADEMIC_RULE)      // 시험 전 활동 중지 = 공용 상수

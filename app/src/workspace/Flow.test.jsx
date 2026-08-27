@@ -28,11 +28,11 @@ test('1기 로드맵 = 클릭형 세로 타임라인(회차별 주제·배울 �
   expect(html).toContain('ws-rm')                  // 타임라인 골격
   expect(html).toContain('ws-rm-toggle')           // 차시 = 토글 버튼(드롭박스 진입)
   expect(html).toContain('aria-expanded')
-  expect(html).toContain('OT · 세팅과 큰 그림')      // 라벨 구분자 = 대시→가운뎃점(2026-08-15)
+  expect(html).toContain('OT · 앞으로 배울 것과 세팅')  // 2026-08-27 개정
   expect(html).toContain('1차 쇼케이스 + 팀 결성')
   expect(html).toContain('1차 프로젝트 · 생활밀착 개인')
   expect(html).toContain('2차 프로젝트 · 팀')
-  expect(html).toContain('추후 확정')              // 미정 값(요일)을 확정처럼 쓰지 않는다
+  expect(html).toContain('추후 공지')              // 미정 값(예비일 세부)을 확정처럼 쓰지 않는다
   expect(html).not.toContain('중간 쇼케이스')      // 2026-08-13 재편 — 폐기 노드
   expect(html).not.toContain('서로 묻는 질문')     // 2026-08-06 오너 — 질문 블록 제거
   expect(html.indexOf('1기 로드맵')).toBeLessThan(html.indexOf('주차 기록'))  // 상단 배치(로드맵 → 주차 기록)
@@ -50,7 +50,7 @@ test('회차 매칭 — 로드맵 no ↔ DB 세션·세미나 회차, 세미나 
 
 // 멤버 레일 「지금 위치」(2026-08-14 검수) — AIM_TIMELINE 정적 계산(이번 주/다음 차시).
 test('roadmapNow — 이번 주 차시·다음 차시 계산(1기=2026)', () => {
-  const kickoff = roadmapNow('2026-09-08')          // 1회차(09-07 주) 진행 중
+  const kickoff = roadmapNow('2026-09-15')          // 1회차(09-14 월) 주간 진행 중
   expect(kickoff.current?.no).toBe(1)
   expect(kickoff.next?.no).toBe(2)
   const before = roadmapNow('2026-09-01')           // 개강 전 = 다음 차시만

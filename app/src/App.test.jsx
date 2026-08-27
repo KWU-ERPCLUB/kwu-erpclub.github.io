@@ -136,7 +136,7 @@ test('모집 섹션(확대 2026-08-05) = 국면별 렌더 — 전·중=대형 �
   const open = renderToString(<RecruitBand today="2026-09-01" />)
   expect(open).toContain('모집 중')
   // 모집 종료 — 밴드 자리를 비우지 않고 "다음 기수 안내"로 교체(SPEC §4)
-  const after = renderToString(<RecruitBand today="2026-09-09" />)
+  const after = renderToString(<RecruitBand today="2026-09-12" />)
   expect(after).toContain('recruit-band')
   expect(after).toContain('다음 기수 안내')
   expect(after).toContain('모집 마감')

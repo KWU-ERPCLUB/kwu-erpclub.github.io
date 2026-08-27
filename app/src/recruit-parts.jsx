@@ -96,12 +96,9 @@ export function ShowcaseSection() {
       <h2 className="rc-h2" id="rc-show-h">운영에 쓰는 것</h2>
       <p className="rc-sched-rule">{SHOWCASE_LEAD}</p>
       <ul className="rc-fit rc-show">
-        {RECRUIT_SHOWCASE.map(({ name, core, sub, href, img }) => (
+        {RECRUIT_SHOWCASE.map(({ name, core, sub, href }) => (
           <li key={name}>
             <a className="rc-show-link" href={href}>
-              <span className="rc-show-thumb">
-                <img src={img} alt="" loading="lazy" />
-              </span>
               <h3>{name} <Arrow /></h3>
             </a>
             <p className="rc-show-core">{core}</p>
