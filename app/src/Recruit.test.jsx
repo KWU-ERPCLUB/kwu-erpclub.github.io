@@ -3,7 +3,7 @@ import { renderToString } from 'react-dom/server'
 import Recruit from './Recruit.jsx'
 import {
   RECRUIT, ACADEMIC_RULE, COHORT_LABEL, AIM_ROADMAP, RECRUIT_FACTS,
-  RECRUIT_GOAL_LEAD, RECRUIT_EXAMPLES, RECRUIT_FLOW, formatWindow,
+  RECRUIT_GOAL_LEAD, RECRUIT_GOALS, RECRUIT_FLOW, formatWindow,
 } from './data/recruit.js'
 import { FAQ, RECRUIT_FAQ } from './data/faq.js'
 
@@ -48,32 +48,36 @@ test('v3.2 운영 증빙·블랙 밴드·키비주얼 부재 — rc-black·stat-
   expect(html).not.toContain('rc-visual') // ④ 과녁/원 키비주얼(두 원+×) 완전 삭제
 })
 
-test('WHAT WE DO(2026-08-27 3차) = 리드 + 예시 5(장면·하는 일·도구) + 흐름 3 — 산출물·SHOWCASE 섹션 0', () => {
+test('이 스터디의 목표(2026-08-27 7차) = 리드 + 목표 4(번호 카드) + 흐름 3 — 대시·AI투·현업 표기 0', () => {
   const html = flat(<Recruit />)
   expect(html).toContain('rc-do-h')
-  expect(html).toContain('이 스터디가 하는 일')
+  expect(html).toContain('이 스터디의 목표')
   expect(html).toContain(RECRUIT_GOAL_LEAD)
-  expect(RECRUIT_EXAMPLES.length).toBe(5)
+  expect(RECRUIT_GOALS.length).toBe(4)   // 2×2
   expect(RECRUIT_FLOW.length).toBe(3)
-  for (const [t, d, tool] of RECRUIT_EXAMPLES) {
-    expect(html, `예시 제목 부재: ${t}`).toContain(t)
-    expect(html, `예시 설명 부재: ${t}`).toContain(d)
-    expect(html, `도구 칩 부재: ${t}`).toContain(tool)
+  for (const [t, d] of RECRUIT_GOALS) {
+    expect(html, `목표 제목 부재: ${t}`).toContain(t)
+    expect(html, `목표 본문 부재: ${t}`).toContain(d)
+    expect(t.length, `제목이 길다: ${t}`).toBeLessThanOrEqual(14)
+    expect(html).toContain('rc-goal-bar')
   }
   for (const [t, w, d] of RECRUIT_FLOW) {
     expect(html).toContain(t); expect(html).toContain(w); expect(html).toContain(d)
   }
-  expect(html).toContain('rc-ex')
+  expect(html).toContain('rc-goals')
   expect(html).toContain('rc-flow')
-  expect(html).not.toContain('rc-show-h')      // 운영에 쓰는 것 섹션 삭제(오너 2026-08-27 3차)
-  expect(html).not.toContain('산출물</h3>')     // 산출물 개인/팀 삭제
-  expect(html).not.toContain('주 1건 기고')     // 기고 의무 폐지
-  // 내부 프레임(AX 도입 시뮬레이션·"회사처럼") = 웹 비표기(오너 2026-08-27)
+  expect(html).not.toContain('rc-moat')        // 뒤집기 구조 폐기(7차)
+  expect(html).not.toContain('혼자서는')
+  expect(html).not.toContain('rc-show-h')
+  expect(html).not.toContain('주 1건 기고')
   expect(html).not.toContain('회사처럼')
   expect(html).not.toContain('AX')
-  // 예시 카피 = 개조식·과장 없음
-  for (const s of [RECRUIT_GOAL_LEAD, ...RECRUIT_EXAMPLES.flatMap((e) => [e[0], e[1]]), ...RECRUIT_FLOW.flatMap((f) => [f[0], f[2]])]) {
-    for (const banned of ['습니다', '입니다', '최고', '완벽', '혁신']) expect(s, `금지 표현 «${banned}»: ${s}`).not.toContain(banned)
+  // 카피 가드: 대시 금지 · 경어체/AI투 금지 · "현업"(오너 오인) 금지
+  const strs = [RECRUIT_GOAL_LEAD, ...RECRUIT_GOALS.flat(), ...RECRUIT_FLOW.flatMap((f) => [f[0], f[2]])]
+  for (const s of strs) {
+    for (const banned of ['—', ' - ', '습니다', '입니다', '최고', '완벽', '혁신', '여정', '경험을 선사', '한 단계', '레벨업', '체계적으로', '현업']) {
+      expect(s, `금지 표현 «${banned}»: ${s}`).not.toContain(banned)
+    }
   }
 })
 
@@ -160,7 +164,7 @@ test('E2 참여 조건 = 문턱 낮은 체크리스트 4행 — 선발 어휘 �
   expect(html).toContain('이 정도면 충분합니다')
   expect(html).not.toContain('WHO SHOULD APPLY')
   expect(html).not.toContain('이런 분을 찾습니다')
-  for (const t of ['비전공자 환영', '코딩 몰라도 됨', '주 1회 참여', '직접 해보고 싶은 마음']) {
+  for (const t of ['비전공자 환영', '코딩 몰라도 됨', '주 1회 참여', '직접 만들 의지']) {
     expect(html).toContain(t)
   }
   // '전공 무관' = 배제 어휘로 읽힌다(오너) → 페이지 전역에서 '비전공자 환영' 계열로 통일

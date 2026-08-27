@@ -1,11 +1,12 @@
 // /recruit 본문 섹션 조각 — Recruit.jsx 300줄 규격 초과로 분리(2026-08-20).
 // Recruit.jsx = 페이지 골격 + 스크롤 인터랙션 훅 / 이 파일 = 정적 데이터를 렌더하는 섹션 6종.
 // 마크업·클래스는 그대로 옮겼다(화면 변화 0). 카피·수치 = data/recruit.js·data/faq.js가 원천.
+import { useRef, useEffect } from 'react'
 import { Arrow } from './shared.jsx'
 import {
   ACADEMIC_RULE, CONTACT, CONTACT_MAILTO, COHORT_LABEL,
   RECRUIT_FACTS, RECRUIT_FIT, AIM_ROADMAP,
-  RECRUIT_GOAL_LEAD, RECRUIT_EXAMPLES, RECRUIT_FLOW,
+  RECRUIT_GOAL_LEAD, RECRUIT_GOALS, RECRUIT_FLOW,
 } from './data/recruit.js'
 import { RECRUIT_FAQ } from './data/faq.js'
 
@@ -43,35 +44,46 @@ export function FactsSection() {
   )
 }
 
-// WHAT WE DO(2026-08-27 3차) — 리드 → 예시 5(카드 = 장면·하는 일·도구) → 한 학기 흐름 3(번호). 전부 가운데 정렬.
-// 구 4카드(8/5)·역량 5+순서 6+산출물 2(8/27 2차)·SHOWCASE 섹션 = 폐지(오너: 두루뭉술·모집요강에 불필요).
-export function DoSection() {
+// 이 스터디의 목표(2026-08-27 7차) — 리드 → 목표 4(번호 카드, 2×2) → 한 학기 흐름 3.
+// 인터랙션: 스크롤 진입 시 순차 등장(IntersectionObserver → .is-in) + 호버 리프트. 모션 축소 설정 시 정적. 뒤집기(5·6차) 폐기.
+export function GoalSection() {
+  const ref = useRef(null)
+  useEffect(() => {
+    const root = ref.current
+    if (!root || typeof IntersectionObserver === 'undefined') { root?.classList.add('is-in'); return }
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) { root.classList.add('is-in'); return }
+    const io = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) { root.classList.add('is-in'); io.disconnect() } }, { threshold: 0.2 })
+    io.observe(root)
+    return () => io.disconnect()
+  }, [])
   return (
     <Section labelledBy="rc-do-h">
-      <h2 className="rc-h2" id="rc-do-h">이 스터디가 하는 일</h2>
-      <p className="rc-sched-rule">{RECRUIT_GOAL_LEAD}</p>
-      <h3 className="rc-h3">예를 들면</h3>
-      <ul className="rc-fit rc-ex">
-        {RECRUIT_EXAMPLES.map(([title, desc, tool]) => (
-          <li key={title}>
-            <h3>{title}</h3>
-            <p>{desc}</p>
-            <span className="rc-ex-tool">{tool}</span>
-          </li>
-        ))}
-      </ul>
-      <h3 className="rc-h3">한 학기 흐름</h3>
-      <ol className="rc-flow">
-        {RECRUIT_FLOW.map(([title, when, desc], i) => (
-          <li key={title}>
-            <span className="rc-flow-n" aria-hidden="true">{i + 1}</span>
-            <div>
-              <h4>{title} <em>{when}</em></h4>
+      <div ref={ref} className="rc-goal">
+        <h2 className="rc-h2" id="rc-do-h">이 스터디의 목표</h2>
+        <p className="rc-sched-rule">{RECRUIT_GOAL_LEAD}</p>
+        <ul className="rc-goals">
+          {RECRUIT_GOALS.map(([title, desc], i) => (
+            <li key={title} style={{ '--i': i }}>
+              <span className="rc-goal-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <strong>{title}</strong>
+              <span className="rc-goal-bar" aria-hidden="true" />
               <p>{desc}</p>
-            </div>
-          </li>
-        ))}
-      </ol>
+            </li>
+          ))}
+        </ul>
+        <h3 className="rc-h3">한 학기 흐름</h3>
+        <ol className="rc-flow">
+          {RECRUIT_FLOW.map(([title, when, desc], i) => (
+            <li key={title} style={{ '--i': i + 4 }}>
+              <span className="rc-flow-n" aria-hidden="true">{i + 1}</span>
+              <div>
+                <h4>{title} <em>{when}</em></h4>
+                <p>{desc}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
     </Section>
   )
 }
