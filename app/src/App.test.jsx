@@ -136,7 +136,7 @@ test('모집 섹션(확대 2026-08-05) = 국면별 렌더 — 전·중=대형 �
   const open = renderToString(<RecruitBand today="2026-09-01" />)
   expect(open).toContain('모집 중')
   // 모집 종료 — 밴드 자리를 비우지 않고 "다음 기수 안내"로 교체(SPEC §4)
-  const after = renderToString(<RecruitBand today="2026-09-09" />)
+  const after = renderToString(<RecruitBand today="2026-09-12" />)
   expect(after).toContain('recruit-band')
   expect(after).toContain('다음 기수 안내')
   expect(after).toContain('모집 마감')
@@ -147,7 +147,7 @@ test('모집 섹션(확대 2026-08-05) = 국면별 렌더 — 전·중=대형 �
 // E4 공용화(2026-08-05) 회귀 가드 — 메인 FAQ = data/faq.js 전체 렌더(서브셋 아님·문항 유실 없음)
 test('메인 FAQ = data/faq.js 원천 전량 렌더', () => {
   const html = renderToString(<App />)
-  expect(FAQ.length).toBe(7) // 오너 삭제 3문항(ERP연구회 관계·학점·개인정보) 반영 2026-08-07
+  expect(FAQ.length).toBe(8) // 7(2026-08-07 삭제 3 반영) + 웹사이트 오인 문항 1(2026-08-27)
   for (const { q } of FAQ) expect(html).toContain(q)
 })
 

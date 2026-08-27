@@ -13,7 +13,7 @@ const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
 
 const VALID = { 이름: '가나다', 학번: '2024000004', 전공: '경영학부', 전화번호: '010-1234-5678', 써본ai: ' ChatGPT ', 관심주제: '' }
 
-const OPEN_DAY = '2026-09-01' // 모집 창 안(RECRUIT.window ~ 09-08)
+const OPEN_DAY = '2026-09-01' // 모집 창 안(RECRUIT.window ~ 09-11)
 
 // 2026-08-18 개편(+같은 날 2차) — 세로 1열·빨간 *·체크 그룹 2벌(기타 내장)·지원 계기·설명 = 제목 아래 블록.
 test('모집 창 안 + 백엔드 연결 시 = 필수 4필드(*) + 체크 그룹 2벌 + 지원 계기 + 개인정보 문구 렌더', () => {
@@ -98,8 +98,8 @@ test('백엔드 미연결 시 = 폼 대신 제출 불가 안내(조용한 목 �
 test('접수 국면 — 폼 공개일부터 open, 마감 다음 날 after', () => {
   expect(applyPhase('2026-08-18', {})).toBe('open')   // 폼 공개일 = 접수 시작
   expect(applyPhase('2026-08-25', {})).toBe('open')
-  expect(applyPhase('2026-09-08', {})).toBe('open')   // 마감일 포함
-  expect(applyPhase('2026-09-09', {})).toBe('after')
+  expect(applyPhase('2026-09-11', {})).toBe('open')   // 마감일 포함
+  expect(applyPhase('2026-09-12', {})).toBe('after')
 
   const open = flat(<RecruitForm configured={true} today={OPEN_DAY} />)
   expect(open).toContain('<input')
