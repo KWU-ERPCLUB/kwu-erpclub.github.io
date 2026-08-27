@@ -66,6 +66,7 @@ export function GoalSection() {
             <li key={title} style={{ '--i': i }}>
               <span className="rc-goal-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
               <strong>{title}</strong>
+              <span className="rc-goal-bar" aria-hidden="true" />
               <p>{desc}</p>
             </li>
           ))}

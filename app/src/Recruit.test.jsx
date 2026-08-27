@@ -59,6 +59,7 @@ test('이 스터디의 목표(2026-08-27 7차) = 리드 + 목표 4(번호 카드
     expect(html, `목표 제목 부재: ${t}`).toContain(t)
     expect(html, `목표 본문 부재: ${t}`).toContain(d)
     expect(t.length, `제목이 길다: ${t}`).toBeLessThanOrEqual(14)
+    expect(html).toContain('rc-goal-bar')
   }
   for (const [t, w, d] of RECRUIT_FLOW) {
     expect(html).toContain(t); expect(html).toContain(w); expect(html).toContain(d)
@@ -163,7 +164,7 @@ test('E2 참여 조건 = 문턱 낮은 체크리스트 4행 — 선발 어휘 �
   expect(html).toContain('이 정도면 충분합니다')
   expect(html).not.toContain('WHO SHOULD APPLY')
   expect(html).not.toContain('이런 분을 찾습니다')
-  for (const t of ['비전공자 환영', '코딩 몰라도 됨', '주 1회 참여', '직접 해보고 싶은 마음']) {
+  for (const t of ['비전공자 환영', '코딩 몰라도 됨', '주 1회 참여', '직접 만들 의지']) {
     expect(html).toContain(t)
   }
   // '전공 무관' = 배제 어휘로 읽힌다(오너) → 페이지 전역에서 '비전공자 환영' 계열로 통일

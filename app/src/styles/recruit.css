@@ -216,29 +216,34 @@
 .rc-who-d { grid-column: 2; font-size: 0.88rem; font-weight: 500; line-height: 1.6; color: var(--text-sub); }
 @media (prefers-reduced-motion: reduce) { .rc-who li { transition: none; } .rc-who li:hover { transform: none; } }
 
-/* ══ 이 스터디의 목표(2026-08-27 7차) — 목표 4 = 번호 카드 2×2 + 스크롤 순차 등장 + 호버 리프트. 흐름 = 번호 리스트 */
-.rc-h3 { font-family: var(--font-display); font-weight: 800; font-size: 0.82rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-sub); text-align: center; margin: clamp(1.8rem, 4vh, 2.8rem) 0 0.8rem; }
+/* ══ 이 스터디의 목표(2026-08-27 8차) — 목표 4 = 번호 배지·강조선 카드(전부 가운데) + 순차 등장·호버 리프트. 흐름 = 번호 리스트 */
+.rc-h3 { font-family: var(--font-display); font-weight: 800; font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-sub); text-align: center; margin: clamp(2rem, 4.5vh, 3rem) 0 0.9rem; }
 #rc-do-h + .rc-sched-rule { max-width: 640px; margin-left: auto; margin-right: auto; text-wrap: pretty; word-break: keep-all; }
-.rc-goals { list-style: none; max-width: 880px; margin: clamp(1.4rem, 3vh, 2rem) auto 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.9rem; }
-@media (max-width: 700px) { .rc-goals { grid-template-columns: 1fr; } }
-.rc-goals li { display: flex; flex-direction: column; gap: 0.55rem; padding: 1.4rem 1.6rem 1.5rem; border: 1px solid var(--line); border-radius: 18px; background: var(--bg); text-align: left; word-break: keep-all; text-wrap: pretty; transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.55s ease; }
-.rc-goals li:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgba(0, 0, 0, 0.07); }
-.rc-goal-n { display: inline-grid; place-items: center; width: 2rem; height: 2rem; border-radius: 999px; background: var(--text); color: var(--bg); font-family: var(--font-display); font-weight: 800; font-size: 0.78rem; }
-.rc-goals strong { font-family: var(--font-display); font-weight: 800; font-size: 1.12rem; letter-spacing: -0.01em; line-height: 1.35; }
-.rc-goals p { margin: 0; font-size: 0.92rem; line-height: 1.65; color: var(--text-sub); }
-/* 스크롤 진입 순차 등장 — .rc-goal.is-in 이 붙기 전엔 살짝 아래·투명 */
+.rc-goals { list-style: none; max-width: 880px; margin: clamp(1.6rem, 3.5vh, 2.4rem) auto 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+@media (max-width: 700px) { .rc-goals { grid-template-columns: 1fr; max-width: 520px; } }
+.rc-goals li { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.55rem; padding: 1.7rem 1.7rem 1.75rem; border: 1px solid var(--line); border-radius: 20px; background: var(--bg); word-break: keep-all; text-wrap: pretty; transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, opacity 0.55s ease; }
+.rc-goals li:hover { transform: translateY(-4px); box-shadow: 0 16px 34px rgba(0, 0, 0, 0.08); border-color: rgba(122, 32, 48, 0.35); }
+.rc-goal-n { display: inline-grid; place-items: center; width: 2.4rem; height: 2.4rem; border-radius: 999px; background: var(--text); color: var(--bg); font-family: var(--font-display); font-weight: 800; font-size: 0.86rem; letter-spacing: 0.02em; margin-bottom: 0.35rem; }
+.rc-goals strong { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.12rem, 1.6vw, 1.24rem); letter-spacing: -0.015em; line-height: 1.3; color: var(--text); }
+.rc-goal-bar { display: block; width: 2.2rem; height: 3px; border-radius: 999px; background: var(--accent); transform-origin: center; transition: width 0.3s ease; }
+.rc-goals li:hover .rc-goal-bar { width: 3.2rem; }
+.rc-goals p { margin: 0.15rem 0 0; max-width: 34ch; font-size: 0.93rem; line-height: 1.7; color: var(--text-sub); }
+/* 스크롤 진입 순차 등장 — .rc-goal.is-in 이 붙기 전엔 살짝 아래·투명. 배지는 살짝 커지며 등장 */
 .rc-goal .rc-goals li, .rc-goal .rc-flow li { opacity: 0; transform: translateY(14px); transition-delay: calc(var(--i, 0) * 90ms); }
 .rc-goal .rc-flow li { transition: opacity 0.55s ease, transform 0.55s ease; }
+.rc-goal .rc-goal-n { transform: scale(0.7); transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1.2); transition-delay: calc(var(--i, 0) * 90ms + 120ms); }
 .rc-goal.is-in .rc-goals li, .rc-goal.is-in .rc-flow li { opacity: 1; transform: none; transition-delay: calc(var(--i, 0) * 90ms); }
+.rc-goal.is-in .rc-goal-n { transform: none; }
 .rc-goal.is-in .rc-goals li:hover { transform: translateY(-4px); transition-delay: 0s; }
 @media (prefers-reduced-motion: reduce) {
-  .rc-goal .rc-goals li, .rc-goal .rc-flow li { transition: none; opacity: 1; transform: none; }
+  .rc-goal .rc-goals li, .rc-goal .rc-flow li, .rc-goal .rc-goal-n, .rc-goal-bar { transition: none; opacity: 1; transform: none; }
   .rc-goals li:hover { transform: none; box-shadow: none; }
 }
 .rc-flow { list-style: none; max-width: 640px; margin: 0.4rem auto 0; padding: 0; display: grid; gap: 0.7rem; }
-.rc-flow li { display: grid; grid-template-columns: 2rem 1fr; gap: 0.9rem; align-items: center; padding: 1rem 1.2rem; border: 1px solid var(--line); border-radius: 14px; background: var(--bg); text-align: left; }
-.rc-flow-n { display: inline-grid; place-items: center; width: 2rem; height: 2rem; border-radius: 999px; background: var(--text); color: var(--bg); font-family: var(--font-display); font-weight: 800; font-size: 0.9rem; }
-.rc-flow h4 { margin: 0 0 0.25rem; font-family: var(--font-display); font-weight: 800; font-size: 1rem; letter-spacing: -0.01em; }
+.rc-flow li { display: grid; grid-template-columns: 2.4rem 1fr; gap: 1rem; align-items: center; padding: 1.1rem 1.4rem; border: 1px solid var(--line); border-radius: 16px; background: var(--bg); text-align: left; transition: border-color 0.3s ease; }
+.rc-flow li:hover { border-color: rgba(122, 32, 48, 0.35); }
+.rc-flow-n { display: inline-grid; place-items: center; width: 2.4rem; height: 2.4rem; border-radius: 999px; background: var(--text); color: var(--bg); font-family: var(--font-display); font-weight: 800; font-size: 0.9rem; }
+.rc-flow h4 { margin: 0 0 0.25rem; font-family: var(--font-display); font-weight: 800; font-size: 1.06rem; letter-spacing: -0.01em; }
 .rc-flow h4 em { font-style: normal; font-weight: 600; font-size: 0.78rem; color: var(--text-sub); margin-left: 0.45rem; }
 .rc-flow p { margin: 0; font-size: 0.88rem; line-height: 1.6; color: var(--text-sub); word-break: keep-all; }
 
