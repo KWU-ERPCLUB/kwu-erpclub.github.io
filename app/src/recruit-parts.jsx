@@ -5,7 +5,7 @@ import { Arrow } from './shared.jsx'
 import {
   ACADEMIC_RULE, CONTACT, CONTACT_MAILTO, COHORT_LABEL,
   RECRUIT_FACTS, RECRUIT_FIT, AIM_ROADMAP,
-  RECRUIT_GOAL_LEAD, RECRUIT_EXAMPLES, RECRUIT_FLOW,
+  RECRUIT_GOAL_LEAD, RECRUIT_METHODS, RECRUIT_FLOW,
 } from './data/recruit.js'
 import { RECRUIT_FAQ } from './data/faq.js'
 
@@ -43,20 +43,20 @@ export function FactsSection() {
   )
 }
 
-// WHAT WE DO(2026-08-27 3차) — 리드 → 예시 5(카드 = 장면·하는 일·도구) → 한 학기 흐름 3(번호). 전부 가운데 정렬.
+// WHAT WE DO(2026-08-27 4차) — 리드 → 방식 4(2×2 카드, 번호+언제 메타, 본문 왼쪽 정렬) → 한 학기 흐름 3. 섹션 제목·리드만 가운데.
 // 구 4카드(8/5)·역량 5+순서 6+산출물 2(8/27 2차)·SHOWCASE 섹션 = 폐지(오너: 두루뭉술·모집요강에 불필요).
 export function DoSection() {
   return (
     <Section labelledBy="rc-do-h">
       <h2 className="rc-h2" id="rc-do-h">이 스터디가 하는 일</h2>
       <p className="rc-sched-rule">{RECRUIT_GOAL_LEAD}</p>
-      <h3 className="rc-h3">예를 들면</h3>
+      <h3 className="rc-h3">이렇게 키운다</h3>
       <ul className="rc-fit rc-ex">
-        {RECRUIT_EXAMPLES.map(([title, desc, tool]) => (
+        {RECRUIT_METHODS.map(([title, desc, when], i) => (
           <li key={title}>
+            <span className="rc-ex-meta"><b>{String(i + 1).padStart(2, '0')}</b>{when}</span>
             <h3>{title}</h3>
             <p>{desc}</p>
-            <span className="rc-ex-tool">{tool}</span>
           </li>
         ))}
       </ul>

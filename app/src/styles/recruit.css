@@ -216,15 +216,16 @@
 .rc-who-d { grid-column: 2; font-size: 0.88rem; font-weight: 500; line-height: 1.6; color: var(--text-sub); }
 @media (prefers-reduced-motion: reduce) { .rc-who li { transition: none; } .rc-who li:hover { transform: none; } }
 
-/* ══ WHAT WE DO(2026-08-27 3차) — 전부 가운데 정렬. 예시 = rc-fit 카드 승계 + 도구 칩, 흐름 = 번호 리스트 */
+/* ══ WHAT WE DO(2026-08-27 4차) — 전부 가운데 정렬. 예시 = rc-fit 카드 승계 + 도구 칩, 흐름 = 번호 리스트 */
 .rc-h3 { font-family: var(--font-display); font-weight: 800; font-size: 0.82rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-sub); text-align: center; margin: clamp(1.8rem, 4vh, 2.8rem) 0 0.8rem; }
+#rc-do-h + .rc-sched-rule { max-width: 640px; margin-left: auto; margin-right: auto; text-wrap: pretty; word-break: keep-all; }
 .rc-ex { max-width: 880px; margin-left: auto; margin-right: auto; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 @media (max-width: 700px) { .rc-ex { grid-template-columns: 1fr; } }
-.rc-ex li { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.45rem; padding: 1.35rem 1.4rem 1.25rem; }
-.rc-ex li:last-child:nth-child(odd) { grid-column: 1 / -1; max-width: 430px; width: 100%; justify-self: center; }
-.rc-ex h3 { margin: 0; }
-.rc-ex p { margin: 0; }
-.rc-ex-tool { display: inline-block; margin-top: 0.35rem; padding: 0.22rem 0.7rem; border-radius: 999px; background: rgba(122, 32, 48, 0.08); color: var(--accent, #7a2030); font-family: var(--font-display); font-weight: 700; font-size: 0.74rem; letter-spacing: 0.02em; }
+.rc-ex li { text-align: left; display: flex; flex-direction: column; align-items: flex-start; gap: 0.5rem; padding: 1.35rem 1.5rem 1.4rem; }
+.rc-ex-meta { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--font-display); font-weight: 700; font-size: 0.74rem; letter-spacing: 0.04em; color: var(--text-sub); }
+.rc-ex-meta b { display: inline-grid; place-items: center; min-width: 1.7rem; height: 1.7rem; padding: 0 0.4rem; border-radius: 999px; background: var(--text); color: var(--bg); font-weight: 800; font-size: 0.74rem; letter-spacing: 0; }
+.rc-ex h3 { margin: 0; text-align: left; }
+.rc-ex p { margin: 0; text-align: left; word-break: keep-all; text-wrap: pretty; }
 .rc-flow { list-style: none; max-width: 640px; margin: 0.4rem auto 0; padding: 0; display: grid; gap: 0.7rem; }
 .rc-flow li { display: grid; grid-template-columns: 2rem 1fr; gap: 0.9rem; align-items: center; padding: 1rem 1.2rem; border: 1px solid var(--line); border-radius: 14px; background: var(--bg); text-align: left; }
 .rc-flow-n { display: inline-grid; place-items: center; width: 2rem; height: 2rem; border-radius: 999px; background: var(--text); color: var(--bg); font-family: var(--font-display); font-weight: 800; font-size: 0.9rem; }
