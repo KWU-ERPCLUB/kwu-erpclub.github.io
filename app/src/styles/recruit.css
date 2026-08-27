@@ -216,6 +216,15 @@
 .rc-who-d { grid-column: 2; font-size: 0.88rem; font-weight: 500; line-height: 1.6; color: var(--text-sub); }
 @media (prefers-reduced-motion: reduce) { .rc-who li { transition: none; } .rc-who li:hover { transform: none; } }
 
+/* ══ WHAT WE DO(2026-08-27) — 소제목 + 번호 흐름. 체크리스트·카드는 rc-who·rc-fit 승계(새 시각 언어 최소) */
+.rc-h3 { font-family: var(--font-display); font-weight: 800; font-size: 0.82rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-sub); text-align: center; margin: clamp(1.8rem, 4vh, 2.8rem) 0 0.6rem; }
+.rc-skills { margin-top: 0.4rem; }
+.rc-flow { list-style: none; max-width: 640px; margin: 0.4rem auto 0; padding: 0; display: grid; gap: 0.7rem; counter-reset: none; }
+.rc-flow li { display: grid; grid-template-columns: 2rem 1fr; gap: 0.8rem; align-items: start; padding: 0.9rem 1.1rem; border: 1px solid var(--line); border-radius: 14px; background: var(--bg); }
+.rc-flow-n { display: inline-grid; place-items: center; width: 2rem; height: 2rem; border-radius: 999px; background: var(--text); color: var(--bg); font-family: var(--font-display); font-weight: 800; font-size: 0.9rem; }
+.rc-flow h4 { margin: 0.2rem 0 0.25rem; font-family: var(--font-display); font-weight: 800; font-size: 1rem; letter-spacing: -0.01em; }
+.rc-flow p { margin: 0; font-size: 0.88rem; line-height: 1.6; color: var(--text-sub); word-break: keep-all; }
+
 /* ══ SHOWCASE(2026-08-05 2차) — 실물 3건. .rc-fit 카드 문법 승계(보더·radius·타이포 동일),
    차이 = 3열 + 상단 썸네일 프레임(16:10 고정 크롭·헤어라인). 새 시각 언어 없음·버건디 0(화살표 = 기존 Arrow). ══ */
 .rc-show { grid-template-columns: repeat(3, minmax(0, 1fr)); }

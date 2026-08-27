@@ -2,7 +2,8 @@ import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
 import Recruit from './Recruit.jsx'
 import {
-  RECRUIT, ACADEMIC_RULE, COHORT_LABEL, RECRUIT_DO, AIM_ROADMAP,
+  RECRUIT, ACADEMIC_RULE, COHORT_LABEL, AIM_ROADMAP,
+  RECRUIT_GOAL_LEAD, RECRUIT_SKILLS, RECRUIT_FLOW, RECRUIT_OUTPUT,
   RECRUIT_SHOWCASE, SHOWCASE_LEAD, formatWindow,
 } from './data/recruit.js'
 import { FAQ, RECRUIT_FAQ } from './data/faq.js'
@@ -46,15 +47,25 @@ test('v3.2 운영 증빙·블랙 밴드·키비주얼 부재 — rc-black·stat-
   expect(html).not.toContain('rc-visual') // ④ 과녁/원 키비주얼(두 원+×) 완전 삭제
 })
 
-test('WHAT WE DO = 이 스터디가 하는 일 — 활동 4카드(과제 도구·시키는 법·팀 케이스·세미나), 기고 의무 0', () => {
+test('WHAT WE DO(2026-08-27) = 리드 + 역량 5 + 진행 순서 6 + 산출물 2 — 활동 4카드·기고 의무 0', () => {
   const html = flat(<Recruit />)
   expect(html).toContain('rc-do-h')
   expect(html).toContain('이 스터디가 하는 일')
-  expect(RECRUIT_DO.length).toBe(4)
-  for (const [t] of RECRUIT_DO) expect(html, `활동 카드 부재: ${t}`).toContain(t)
-  expect(html).not.toContain('주 1건 기고')   // 2026-08-27 기고 의무 폐지
-  expect(html).toContain('세미나')
+  expect(html).toContain(RECRUIT_GOAL_LEAD)
+  expect(RECRUIT_SKILLS.length).toBe(5)
+  expect(RECRUIT_FLOW.length).toBe(6)
+  expect(RECRUIT_OUTPUT.length).toBe(2)
+  for (const [t, d] of [...RECRUIT_SKILLS, ...RECRUIT_FLOW, ...RECRUIT_OUTPUT]) {
+    expect(html, `제목 부재: ${t}`).toContain(t)
+    expect(html, `설명 부재: ${t}`).toContain(d)
+  }
+  expect(html).toContain('rc-skills')
+  expect(html).toContain('rc-flow')
+  expect(html).not.toContain('주 1건 기고')   // 기고 의무 폐지
   expect(html).toContain('사이트 제작은 커리큘럼에 없다') // 웹 제작 오인 차단(SHOWCASE 리드)
+  // 내부 프레임(AX 도입 시뮬레이션·"회사처럼") = 웹 비표기(오너 2026-08-27)
+  expect(html).not.toContain('회사처럼')
+  expect(html).not.toContain('AX')
 })
 
 // SHOWCASE(2026-08-05 2차) — "챗GPT면 충분" 반론에 대한 실물 증거 3건.
