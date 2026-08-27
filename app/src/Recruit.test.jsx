@@ -2,7 +2,7 @@ import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
 import Recruit from './Recruit.jsx'
 import {
-  RECRUIT, ACADEMIC_RULE, COHORT_LABEL, AIM_ROADMAP,
+  RECRUIT, ACADEMIC_RULE, COHORT_LABEL, AIM_ROADMAP, RECRUIT_FACTS,
   RECRUIT_GOAL_LEAD, RECRUIT_SKILLS, RECRUIT_FLOW, RECRUIT_OUTPUT,
   RECRUIT_SHOWCASE, SHOWCASE_LEAD, formatWindow,
 } from './data/recruit.js'
@@ -34,7 +34,7 @@ test('요강 = 확정값만 게재(2026-08-27 개정) — 기간·인원 00명·
   expect(html).toContain('<strong>경영학부 중심</strong>')
   expect(html).toContain('비전공자도 환영')   // 구 '전공 무관' = 배제 어휘(오너 2026-08-19 톤 완화)
   expect(html).toContain('매주 월요일 18:00 ~ 20:00 대면')
-  expect(html).not.toContain('온라인')   // 2026-08-27 2차 개정 — 온라인 회차 0
+  for (const [, v] of RECRUIT_FACTS) expect(v, `요강에 온라인 표기: ${v}`).not.toContain('온라인') // 2026-08-27 — 온라인 회차 0(요강 값만 — 폼 미설정 안내문의 '온라인 접수'는 별개)
   expect(html).toContain('00명')
   expect(html).toContain('개인 노트북 필수')
   expect(html).toContain('참가비 없음')
