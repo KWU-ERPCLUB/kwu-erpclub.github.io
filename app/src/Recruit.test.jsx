@@ -46,14 +46,15 @@ test('v3.2 운영 증빙·블랙 밴드·키비주얼 부재 — rc-black·stat-
   expect(html).not.toContain('rc-visual') // ④ 과녁/원 키비주얼(두 원+×) 완전 삭제
 })
 
-test('v3.2 WHAT WE DO = 이 스터디가 하는 일 — 활동 4카드(기고·세미나·효율화 산출물·팀 프로젝트)', () => {
+test('WHAT WE DO = 이 스터디가 하는 일 — 활동 4카드(과제 도구·시키는 법·팀 케이스·세미나), 기고 의무 0', () => {
   const html = flat(<Recruit />)
   expect(html).toContain('rc-do-h')
   expect(html).toContain('이 스터디가 하는 일')
   expect(RECRUIT_DO.length).toBe(4)
   for (const [t] of RECRUIT_DO) expect(html, `활동 카드 부재: ${t}`).toContain(t)
-  expect(html).toContain('주 1건 기고')
+  expect(html).not.toContain('주 1건 기고')   // 2026-08-27 기고 의무 폐지
   expect(html).toContain('세미나')
+  expect(html).toContain('사이트 제작은 커리큘럼에 없다') // 웹 제작 오인 차단(SHOWCASE 리드)
 })
 
 // SHOWCASE(2026-08-05 2차) — "챗GPT면 충분" 반론에 대한 실물 증거 3건.
@@ -216,7 +217,8 @@ test('FAQ 잔존 증보 문항(시간·전공) 노출 + 삭제 3문항 부재', 
   }
   const byQ = (needle) => FAQ.find((f) => f.q.includes(needle)).a
   expect(byQ('주당 시간')).toContain('매주 대면 60분')   // 요강 값과 동일
-  expect(byQ('주당 시간')).toContain('주 1건 기고')      // WHAT WE DO 값과 동일
+  expect(byQ('주당 시간')).toContain('기고 의무는 없습니다') // 2026-08-27 기고 의무 폐지
+  expect(byQ('웹사이트를 만드는')).toContain('커리큘럼에 없습니다') // 웹 제작 오인 차단 문항
   expect(byQ('주당 시간')).toContain(ACADEMIC_RULE)      // 시험 전 활동 중지 = 공용 상수
   expect(byQ('전공 제한')).toContain('경영학부 중심')
 })

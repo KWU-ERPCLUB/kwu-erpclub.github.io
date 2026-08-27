@@ -60,11 +60,11 @@ export function DoSection() {
   )
 }
 
-// SHOWCASE(2026-08-05 2차) — 실물 3건. 라벨 "만든 것"(검수 2026-08-14 — 세미나 자료 포함 목록).
+// SHOWCASE(2026-08-05 2차) — 실물 3건. 라벨 "운영에 쓰는 것"(2026-08-27 — 구 "만든 것"은 웹 제작이 목표로 읽혀 교체).
 export function ShowcaseSection() {
   return (
     <Section labelledBy="rc-show-h">
-      <h2 className="rc-h2" id="rc-show-h">만든 것</h2>
+      <h2 className="rc-h2" id="rc-show-h">운영에 쓰는 것</h2>
       <p className="rc-sched-rule">{SHOWCASE_LEAD}</p>
       <ul className="rc-fit rc-show">
         {RECRUIT_SHOWCASE.map(({ name, core, sub, href, img }) => (
