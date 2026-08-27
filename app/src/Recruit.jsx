@@ -18,7 +18,7 @@ import { useEffect } from 'react'
 import { SiteNav, SiteFooter, PageHead, REPO_URL, Arrow } from './shared.jsx'
 import { RECRUIT, formatWindow } from './data/recruit.js'
 import {
-  Section, FactsSection, DoSection, FitSection, RoadmapSection, FaqSection, ContactSection,
+  Section, FactsSection, GoalSection, FitSection, RoadmapSection, FaqSection, ContactSection,
 } from './recruit-parts.jsx'
 import RecruitForm from './RecruitForm.jsx'
 
@@ -132,7 +132,7 @@ export default function Recruit() {
         </div>
 
         <FactsSection />
-        <DoSection />
+        <GoalSection />
         <FitSection />
 
         <RoadmapSection />

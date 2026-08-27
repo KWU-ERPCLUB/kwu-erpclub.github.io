@@ -216,16 +216,35 @@
 .rc-who-d { grid-column: 2; font-size: 0.88rem; font-weight: 500; line-height: 1.6; color: var(--text-sub); }
 @media (prefers-reduced-motion: reduce) { .rc-who li { transition: none; } .rc-who li:hover { transform: none; } }
 
-/* ══ WHAT WE DO(2026-08-27 4차) — 전부 가운데 정렬. 예시 = rc-fit 카드 승계 + 도구 칩, 흐름 = 번호 리스트 */
+/* ══ 이 스터디의 목표(2026-08-27 5차) — 해자 4 = 뒤집기 카드(앞 혼자서는 / 뒤 여기서는) + 스크롤 순차 등장. 흐름 = 번호 리스트 */
 .rc-h3 { font-family: var(--font-display); font-weight: 800; font-size: 0.82rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-sub); text-align: center; margin: clamp(1.8rem, 4vh, 2.8rem) 0 0.8rem; }
 #rc-do-h + .rc-sched-rule { max-width: 640px; margin-left: auto; margin-right: auto; text-wrap: pretty; word-break: keep-all; }
-.rc-ex { max-width: 880px; margin-left: auto; margin-right: auto; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-@media (max-width: 700px) { .rc-ex { grid-template-columns: 1fr; } }
-.rc-ex li { text-align: left; display: flex; flex-direction: column; align-items: flex-start; gap: 0.5rem; padding: 1.35rem 1.5rem 1.4rem; }
-.rc-ex-meta { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--font-display); font-weight: 700; font-size: 0.74rem; letter-spacing: 0.04em; color: var(--text-sub); }
-.rc-ex-meta b { display: inline-grid; place-items: center; min-width: 1.7rem; height: 1.7rem; padding: 0 0.4rem; border-radius: 999px; background: var(--text); color: var(--bg); font-weight: 800; font-size: 0.74rem; letter-spacing: 0; }
-.rc-ex h3 { margin: 0; text-align: left; }
-.rc-ex p { margin: 0; text-align: left; word-break: keep-all; text-wrap: pretty; }
+.rc-goal-hint { text-align: center; margin: 0.9rem 0 0; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.04em; color: var(--text-sub); }
+.rc-moat { list-style: none; max-width: 880px; margin: 1rem auto 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.9rem; }
+@media (max-width: 700px) { .rc-moat { grid-template-columns: 1fr; } }
+.rc-moat li { perspective: 1200px; }
+.rc-moat-card { position: relative; display: block; width: 100%; min-height: 196px; padding: 0; border: 0; background: none; cursor: pointer; text-align: left; font: inherit; color: inherit; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.rc-moat-card.is-flipped { transform: rotateY(180deg); }
+.rc-moat-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 18px; }
+.rc-moat-face { position: absolute; inset: 0; display: flex; flex-direction: column; gap: 0.5rem; padding: 1.3rem 1.5rem 1.35rem; border: 1px solid var(--line); border-radius: 18px; background: var(--bg); backface-visibility: hidden; -webkit-backface-visibility: hidden; word-break: keep-all; text-wrap: pretty; }
+.rc-moat-back { transform: rotateY(180deg); background: var(--text); color: var(--bg); border-color: var(--text); }
+.rc-moat-tag { font-family: var(--font-display); font-weight: 800; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+.rc-moat-back .rc-moat-tag { color: var(--accent-on-dark, #d18f9a); }
+.rc-moat-face strong { font-family: var(--font-display); font-weight: 800; font-size: 1.08rem; letter-spacing: -0.01em; line-height: 1.35; }
+.rc-moat-body { font-size: 0.9rem; line-height: 1.65; color: var(--text-sub); }
+.rc-moat-back .rc-moat-body { color: rgba(255, 255, 255, 0.82); }
+.rc-moat-cta { margin-top: auto; display: inline-flex; align-items: center; gap: 0.3rem; font-family: var(--font-display); font-weight: 700; font-size: 0.8rem; color: var(--text); }
+.rc-moat-cta svg { width: 12px; height: 12px; transition: transform 0.25s; }
+.rc-moat-card:hover .rc-moat-cta svg { transform: translate(2px, -2px); }
+.rc-moat-card:hover:not(.is-flipped) { transform: rotateY(-6deg); }
+/* 스크롤 진입 순차 등장 — .rc-goal.is-in 이 붙기 전엔 살짝 아래·투명 */
+.rc-goal .rc-moat li, .rc-goal .rc-flow li { opacity: 0; transform: translateY(14px); transition: opacity 0.55s ease, transform 0.55s ease; transition-delay: calc(var(--i, 0) * 90ms); }
+.rc-goal.is-in .rc-moat li, .rc-goal.is-in .rc-flow li { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .rc-moat-card, .rc-moat-cta svg, .rc-goal .rc-moat li, .rc-goal .rc-flow li { transition: none; }
+  .rc-goal .rc-moat li, .rc-goal .rc-flow li { opacity: 1; transform: none; }
+  .rc-moat-card:hover:not(.is-flipped) { transform: none; }
+}
 .rc-flow { list-style: none; max-width: 640px; margin: 0.4rem auto 0; padding: 0; display: grid; gap: 0.7rem; }
 .rc-flow li { display: grid; grid-template-columns: 2rem 1fr; gap: 0.9rem; align-items: center; padding: 1rem 1.2rem; border: 1px solid var(--line); border-radius: 14px; background: var(--bg); text-align: left; }
 .rc-flow-n { display: inline-grid; place-items: center; width: 2rem; height: 2rem; border-radius: 999px; background: var(--text); color: var(--bg); font-family: var(--font-display); font-weight: 800; font-size: 0.9rem; }
