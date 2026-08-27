@@ -216,36 +216,21 @@
 .rc-who-d { grid-column: 2; font-size: 0.88rem; font-weight: 500; line-height: 1.6; color: var(--text-sub); }
 @media (prefers-reduced-motion: reduce) { .rc-who li { transition: none; } .rc-who li:hover { transform: none; } }
 
-/* ══ WHAT WE DO(2026-08-27) — 소제목 + 번호 흐름. 체크리스트·카드는 rc-who·rc-fit 승계(새 시각 언어 최소) */
-.rc-h3 { font-family: var(--font-display); font-weight: 800; font-size: 0.82rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-sub); text-align: center; margin: clamp(1.8rem, 4vh, 2.8rem) 0 0.6rem; }
-.rc-skills { margin-top: 0.4rem; }
-.rc-flow { list-style: none; max-width: 640px; margin: 0.4rem auto 0; padding: 0; display: grid; gap: 0.7rem; counter-reset: none; }
-.rc-flow li { display: grid; grid-template-columns: 2rem 1fr; gap: 0.8rem; align-items: start; padding: 0.9rem 1.1rem; border: 1px solid var(--line); border-radius: 14px; background: var(--bg); }
+/* ══ WHAT WE DO(2026-08-27 3차) — 전부 가운데 정렬. 예시 = rc-fit 카드 승계 + 도구 칩, 흐름 = 번호 리스트 */
+.rc-h3 { font-family: var(--font-display); font-weight: 800; font-size: 0.82rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-sub); text-align: center; margin: clamp(1.8rem, 4vh, 2.8rem) 0 0.8rem; }
+.rc-ex { max-width: 880px; margin-left: auto; margin-right: auto; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 700px) { .rc-ex { grid-template-columns: 1fr; } }
+.rc-ex li { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.45rem; padding: 1.35rem 1.4rem 1.25rem; }
+.rc-ex li:last-child:nth-child(odd) { grid-column: 1 / -1; max-width: 430px; width: 100%; justify-self: center; }
+.rc-ex h3 { margin: 0; }
+.rc-ex p { margin: 0; }
+.rc-ex-tool { display: inline-block; margin-top: 0.35rem; padding: 0.22rem 0.7rem; border-radius: 999px; background: rgba(122, 32, 48, 0.08); color: var(--accent, #7a2030); font-family: var(--font-display); font-weight: 700; font-size: 0.74rem; letter-spacing: 0.02em; }
+.rc-flow { list-style: none; max-width: 640px; margin: 0.4rem auto 0; padding: 0; display: grid; gap: 0.7rem; }
+.rc-flow li { display: grid; grid-template-columns: 2rem 1fr; gap: 0.9rem; align-items: center; padding: 1rem 1.2rem; border: 1px solid var(--line); border-radius: 14px; background: var(--bg); text-align: left; }
 .rc-flow-n { display: inline-grid; place-items: center; width: 2rem; height: 2rem; border-radius: 999px; background: var(--text); color: var(--bg); font-family: var(--font-display); font-weight: 800; font-size: 0.9rem; }
-.rc-flow h4 { margin: 0.2rem 0 0.25rem; font-family: var(--font-display); font-weight: 800; font-size: 1rem; letter-spacing: -0.01em; }
+.rc-flow h4 { margin: 0 0 0.25rem; font-family: var(--font-display); font-weight: 800; font-size: 1rem; letter-spacing: -0.01em; }
+.rc-flow h4 em { font-style: normal; font-weight: 600; font-size: 0.78rem; color: var(--text-sub); margin-left: 0.45rem; }
 .rc-flow p { margin: 0; font-size: 0.88rem; line-height: 1.6; color: var(--text-sub); word-break: keep-all; }
-
-/* ══ SHOWCASE(2026-08-05 2차) — 실물 3건. .rc-fit 카드 문법 승계(보더·radius·타이포 동일),
-   차이 = 3열 + 상단 썸네일 프레임(16:10 고정 크롭·헤어라인). 새 시각 언어 없음·버건디 0(화살표 = 기존 Arrow). ══ */
-.rc-show { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-@media (max-width: 900px) { .rc-show { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 700px) { .rc-show { grid-template-columns: 1fr; } }
-.rc-show li { padding: 1rem 1rem 1.15rem; }
-.rc-show-link { display: block; text-decoration: none; color: inherit; }
-.rc-show-link:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 12px; }
-.rc-show-thumb {
-  display: block; aspect-ratio: 16 / 10; overflow: hidden;
-  border: 1px solid var(--line); border-radius: 12px; background: var(--surface);
-}
-.rc-show-thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
-/* 오너 2026-08-07: 제목 가운데 + 문안 2단(핵심 볼드 / 회색 보조) — 줄바꿈은 어절 유지(keep-all + balance) */
-.rc-show li { text-align: center; }
-.rc-show-link h3 { display: flex; align-items: center; justify-content: center; gap: 0.45rem; margin: 0.85rem 0 0.4rem; }
-.rc-show-link h3 svg { width: 14px; height: 14px; flex: none; color: var(--text-sub); }
-.rc-show-link:hover h3 { text-decoration: underline; text-underline-offset: 3px; }
-.rc-show li p { margin: 0; word-break: keep-all; text-wrap: balance; }
-.rc-show-core { font-size: 0.95rem; font-weight: 750; color: var(--text); line-height: 1.5; }
-.rc-show-sub { margin-top: 0.25rem !important; font-size: 0.85rem; font-weight: 500; color: var(--text-sub); }
 
 /* ══ FAQ 서브셋(E4) — 4차: 가로줄 폐지 → 카드 면 아코디언(홈 FAQ 동형) ══ */
 .rc-faq { margin-top: clamp(1.5rem, 3.5vh, 2.25rem); display: grid; gap: 0.7rem; }

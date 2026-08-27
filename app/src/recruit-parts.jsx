@@ -5,8 +5,7 @@ import { Arrow } from './shared.jsx'
 import {
   ACADEMIC_RULE, CONTACT, CONTACT_MAILTO, COHORT_LABEL,
   RECRUIT_FACTS, RECRUIT_FIT, AIM_ROADMAP,
-  RECRUIT_GOAL_LEAD, RECRUIT_SKILLS, RECRUIT_FLOW, RECRUIT_OUTPUT,
-  RECRUIT_SHOWCASE, SHOWCASE_LEAD,
+  RECRUIT_GOAL_LEAD, RECRUIT_EXAMPLES, RECRUIT_FLOW,
 } from './data/recruit.js'
 import { RECRUIT_FAQ } from './data/faq.js'
 
@@ -44,68 +43,35 @@ export function FactsSection() {
   )
 }
 
-// WHAT WE DO(2026-08-27 개정) — 구 활동 4카드 폐지. 리드 → 역량 5(rc-who 체크) → 하는 일 6(rc-flow 번호) → 산출물 2(rc-fit).
+// WHAT WE DO(2026-08-27 3차) — 리드 → 예시 5(카드 = 장면·하는 일·도구) → 한 학기 흐름 3(번호). 전부 가운데 정렬.
+// 구 4카드(8/5)·역량 5+순서 6+산출물 2(8/27 2차)·SHOWCASE 섹션 = 폐지(오너: 두루뭉술·모집요강에 불필요).
 export function DoSection() {
   return (
     <Section labelledBy="rc-do-h">
       <h2 className="rc-h2" id="rc-do-h">이 스터디가 하는 일</h2>
       <p className="rc-sched-rule">{RECRUIT_GOAL_LEAD}</p>
-      <h3 className="rc-h3">만드는 역량 5</h3>
-      <ul className="rc-who rc-skills">
-        {RECRUIT_SKILLS.map(([title, desc]) => (
+      <h3 className="rc-h3">예를 들면</h3>
+      <ul className="rc-fit rc-ex">
+        {RECRUIT_EXAMPLES.map(([title, desc, tool]) => (
           <li key={title}>
-            <span className="rc-who-check" aria-hidden="true">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                <path d="M2 6.5L4.8 9.3L10 3.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </span>
-            <span className="rc-who-t">{title}</span>
-            <span className="rc-who-d">{desc}</span>
+            <h3>{title}</h3>
+            <p>{desc}</p>
+            <span className="rc-ex-tool">{tool}</span>
           </li>
         ))}
       </ul>
-      <h3 className="rc-h3">진행 순서</h3>
+      <h3 className="rc-h3">한 학기 흐름</h3>
       <ol className="rc-flow">
-        {RECRUIT_FLOW.map(([title, desc], i) => (
+        {RECRUIT_FLOW.map(([title, when, desc], i) => (
           <li key={title}>
             <span className="rc-flow-n" aria-hidden="true">{i + 1}</span>
             <div>
-              <h4>{title}</h4>
+              <h4>{title} <em>{when}</em></h4>
               <p>{desc}</p>
             </div>
           </li>
         ))}
       </ol>
-      <h3 className="rc-h3">산출물</h3>
-      <ul className="rc-fit rc-do">
-        {RECRUIT_OUTPUT.map(([title, desc]) => (
-          <li key={title}>
-            <h3>{title}</h3>
-            <p>{desc}</p>
-          </li>
-        ))}
-      </ul>
-    </Section>
-  )
-}
-
-// SHOWCASE(2026-08-05 2차) — 실물 3건. 라벨 "운영에 쓰는 것"(2026-08-27 — 구 "만든 것"은 웹 제작이 목표로 읽혀 교체).
-export function ShowcaseSection() {
-  return (
-    <Section labelledBy="rc-show-h">
-      <h2 className="rc-h2" id="rc-show-h">운영에 쓰는 것</h2>
-      <p className="rc-sched-rule">{SHOWCASE_LEAD}</p>
-      <ul className="rc-fit rc-show">
-        {RECRUIT_SHOWCASE.map(({ name, core, sub, href }) => (
-          <li key={name}>
-            <a className="rc-show-link" href={href}>
-              <h3>{name} <Arrow /></h3>
-            </a>
-            <p className="rc-show-core">{core}</p>
-            <p className="rc-show-sub">{sub}</p>
-          </li>
-        ))}
-      </ul>
     </Section>
   )
 }
