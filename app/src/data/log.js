@@ -6,7 +6,7 @@ import { RECRUIT, COHORT_LABEL, formatWindowShort } from './recruit.js'
 export const ROADMAP = [
   ['0', '허브 사이트 구축·배포 (kwu-erpclub.github.io)', 'done', '완료'],
   ['1', `${COHORT_LABEL} 모집 — ${formatWindowShort()} · 킥오프 9월 2주`, 'prep', '모집 준비'],
-  ['2', `${COHORT_LABEL} 운영 — 전반 개인 산출물 · 후반 팀 프로젝트(${RECRUIT.term})`, 'planned', '예정'],
+  ['2', `${COHORT_LABEL} 운영 — 1차 개인 도구 · 2차 팀 케이스(${RECRUIT.term}, 9/14 ~ 11/16)`, 'planned', '예정'],
   ['3', 'SQLD 스터디', 'planned', '예정'],
   ['4', '심화 — SAP 트랙', 'planned', '예정'],
 ]
@@ -14,6 +14,10 @@ export const ROADMAP = [
 // 체인지로그 — [날짜, [[배지, 배지라벨, '제목 — 설명'], ...]]. 역시간순(최상단 = 최신 = 최종 갱신일).
 // 배지: live=신규 / prep=개선 / planned=기록 (허브 배지 문법 재사용).
 export const HISTORY = [
+  ['2026-08-27', [
+    ['prep', '개선', '1기 운영 확정 — 매주 월 18:00~20:00 대면 · 회차 7 + 과제 주 1(9/14 OT ~ 11/16 최종 발표) · 모집 마감 9/11 · 기고 의무 폐지(발행 = 운영진).'],
+    ['live', '신규', '모집 페이지 개정 — 「이 스터디의 목표」·요강·로드맵 갱신, 에브리타임 공고 게시.'],
+  ]],
   ['2026-07-27', [
     ['live', '신규', '모집 페이지(/recruit) 신설 — AIM 1기 요강·활동 구성 게재. 메인에 모집 공고 밴드 추가.'],
     ['prep', '개선', '스터디 확정 — 이름 AIM(MIS·AI 스터디) · 2학기 1기 · 매주 대면 60분 · 2단계(개인 산출물 → 팀 프로젝트).'],

@@ -50,7 +50,8 @@ test('내 글 0건 = 레일에 절차 스테퍼(초안→승인대기→게재) 
   const html = flat(<Contribute store={createMockRepositories({ user: 'mock-member' })} />)
   expect(html).toContain('승인 요청 제출')
   expect(html).toContain('운영진 승인 → 공개 인사이트')
-  expect(html).toContain('주간 기고 — 주 1건 상시 과제')
+  expect(html).toContain('기고는 선택입니다')   // 2026-08-27 기고 의무 폐지
+  expect(html).not.toContain('주 1건')
 })
 
 // M3: 승인 대기함은 기고 탭에서 빠지고 운영 탭으로 이관됐다(운영진 전용 영역 통합).

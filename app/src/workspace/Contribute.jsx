@@ -2,7 +2,6 @@
 // md 커밋 경유 없음. 게재되면 공개 인사이트가 다음 페치에서 바로 집어간다(클라이언트 페치).
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { NATURES, TOPICS } from '../content/schema.js'
-import { WEEKLY_CONTRIB } from './calendar-logic.js'
 import { buildPromptKit } from './contrib-format.js'
 import { parseContribution } from './contrib-parser.js'
 // 승인 대기함(Review)은 M3에서 운영 탭으로 이관 — 기고 화면은 작성자 관점만 담는다.
@@ -246,7 +245,7 @@ export default function Contribute({ store }) {
                 <li><span className="status prep">승인대기</span> 승인 요청 제출</li>
                 <li><span className="status done">게재</span> 운영진 승인 → 공개 인사이트</li>
               </ol>
-              <p className="ws-note">{WEEKLY_CONTRIB.label}</p>
+              <p className="ws-note">기고는 선택입니다. 인사이트 발행은 운영진이 매주 하고, 멤버 글은 승인 후 게재됩니다.</p>
             </>
           )}
         </section>
