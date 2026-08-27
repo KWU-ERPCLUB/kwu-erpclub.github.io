@@ -73,7 +73,8 @@ export function upcoming(items, todayKey, n = 12, windowDays = 14) {
 
 // 주간 기고 과제(상시 주 1건 — 기고 투트랙 spec) — 마감 요일은 오너 확정 대기([미정]).
 // dueDay(0=일~6=토)가 정해지면 그 요일마다 캘린더에 핀 — null인 동안은 상시 항목으로만 표시.
-export const WEEKLY_CONTRIB = { label: '주간 기고 — 주 1건 상시 과제', dueDay: null }
+// 2026-08-27 오너: 기고 의무 폐지(발행 = 운영진). 주간 과제 = 만든 도구 실사용 횟수 제출(주중 폼).
+export const WEEKLY_CONTRIB = { label: '주간 제출 — 만든 도구 실사용 횟수', dueDay: null }
 
 // dueDay가 정해졌을 때: 기준일 이후 n주치 반복 항목 생성. null이면 빈 배열.
 export function weeklyContribItems(todayKey, n = 4, dueDay = WEEKLY_CONTRIB.dueDay) {
