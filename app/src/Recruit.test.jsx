@@ -54,7 +54,7 @@ test('이 스터디의 목표(2026-08-27 5차) = 리드 + 해자 4(뒤집기 카
   expect(html).toContain('이 스터디의 목표')
   expect(html).not.toContain('이 스터디가 하는 일')
   expect(html).toContain(RECRUIT_GOAL_LEAD)
-  expect(RECRUIT_MOAT.length).toBe(4)   // 2×2 — 고아 카드 0
+  expect(RECRUIT_MOAT.length).toBe(3)   // 3열 — 유료급 도구 카드 삭제(해자 아님, 2026-08-27 6차)
   expect(RECRUIT_FLOW.length).toBe(3)
   for (const [t, alone, here] of RECRUIT_MOAT) {
     expect(html, `해자 제목 부재: ${t}`).toContain(t)
@@ -66,8 +66,9 @@ test('이 스터디의 목표(2026-08-27 5차) = 리드 + 해자 4(뒤집기 카
   }
   expect(html).toContain('rc-moat-card')
   expect(html).toContain('aria-pressed="false"')      // 뒤집기 = 버튼(키보드 접근)
-  expect((html.match(/rc-moat-front/g) || []).length).toBe(4)
-  expect((html.match(/rc-moat-back/g) || []).length).toBe(4)
+  expect((html.match(/rc-moat-front/g) || []).length).toBe(3)
+  expect((html.match(/rc-moat-back/g) || []).length).toBe(3)
+  for (const [t] of RECRUIT_MOAT) expect(t.length, `제목이 길다: ${t}`).toBeLessThanOrEqual(12) // 명사형·핵심만
   expect(html).toContain('rc-flow')
   expect(html).not.toContain('rc-show-h')
   expect(html).not.toContain('주 1건 기고')
