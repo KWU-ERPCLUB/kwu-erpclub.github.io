@@ -58,6 +58,13 @@
 /* 푸터 — 개인정보 문구·제출 버튼 전부 정중앙(grid justify-items — inline-flex 좌측 치우침 근절) */
 .rc-form-foot { display: grid; justify-items: center; gap: 1rem; margin-top: clamp(1.5rem, 3.5vh, 2rem); text-align: center; }
 .rc-form-privacy { margin: 0; font-size: 0.8rem; color: var(--text-sub); word-break: keep-all; }
+/* 검증 실패 요약(오너 2026-09-04) — 버튼을 보고 있는 사용자에게 어느 칸이 걸렸는지 알린다.
+   필드 옆 오류(.rc-field-error)는 화면 밖일 수 있어 그것만으로는 신호가 되지 않았다. */
+.rc-form-summary {
+  margin: 0; padding: 0.6rem 0.9rem; max-width: 32rem;
+  font-size: 0.85rem; font-weight: 600; color: var(--accent); word-break: keep-all;
+  border: 1px solid var(--accent); border-radius: 8px; background: rgba(122, 32, 48, 0.05);
+}
 /* 제출 = rc-cta-xl 승계인데 그 패딩(좌 2.4/우 1.4rem)은 우측 화살표 아이콘 전제 —
    아이콘 없는 이 버튼은 텍스트가 우로 치우침 → 대칭 패딩으로 재정의(오너 2026-08-18 4차) */
 .rc-form-submit { font-family: var(--font-display); padding: 1.15rem 2.2rem; }

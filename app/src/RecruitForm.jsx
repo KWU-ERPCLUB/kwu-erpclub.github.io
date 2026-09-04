@@ -7,6 +7,10 @@
 // 3차(오너 2026-08-21 — 진입장벽 완화): AI 활용 수준 설문 2문항 신설(빈도 단일 + 해본 것 다중, 둘 다 선택 항목,
 // 써본ai 컬럼에 합성 저장 = 스키마 무변경) + 마지막 칸 = 지원 계기 → "AI를 왜 배우고 싶은가"(형식적 지원 동기 폐기).
 // 입력 위젯 3종·선택지 상수 = recruit-form-parts.jsx(300줄 규격 분리).
+// 5차(오너 2026-09-04 — "제출이 안 된다" 신고 수리): 검증 실패가 화면 밖에서만 표시돼(학번 오류 ↔ 제출 버튼 1,876px)
+//   버튼을 눌러도 아무 일도 안 일어나는 것처럼 보였다. 수리 = ① 버튼 옆 요약(어느 칸이 걸렸는지 이름으로)
+//   ② 첫 오류 칸으로 포커스+스크롤 복귀 ③ 학번 예시 게재(2026-08-18 '예시 미게재' 규칙을 오너가 이 필드만 해제).
+//   학번 자릿수(숫자 10자리)는 유지 — 오너 확정.
 import { useState } from 'react'
 import {
   EMPTY_APPLICATION, APPLY_NOTE, applyPhase, isBackendReady, REASON_MAX, isValidHakbeon, formatPhone,
@@ -19,6 +23,28 @@ import {
   AI_USAGE_LEVELS, AI_SKILLS,
 } from './data/recruit.js'
 import { Req, ETC, AI_GROUPS, CheckGroup, RadioGroup } from './recruit-form-parts.jsx'
+
+// 검증 실패 복귀 표 — 순서 = 폼에 놓인 순서(첫 오류로 되돌아간다), 라벨 = 화면 문구와 동일,
+// 입력 id = 포커스 대상. 전공은 '기타(직접 입력)' 모드면 select가 아니라 직접 입력 칸으로 돌려보낸다.
+const FIELD_ORDER = ['이름', '학번', '전공', '전화번호', '지원계기']
+const FIELD_LABEL = { 이름: '이름', 학번: '학번', 전공: '학부/전공', 전화번호: '전화번호', 지원계기: '지원 계기' }
+const FIELD_INPUT = { 이름: 'ap-이름', 학번: 'ap-학번', 전공: 'ap-전공', 전화번호: 'ap-전화번호', 지원계기: 'ap-지원계기' }
+
+// 첫 오류 칸으로 복귀 — 오류 문구가 DOM에 붙은 뒤(setTimeout 0 = React 커밋 이후)에 움직인다.
+// 커밋 전에 움직이면 스크롤 앵커링이 이를 취소한다: 화면 위쪽 필드에 .rc-field-error가 삽입되면
+// 브라우저가 스크롤 위치를 보정하는데, 그 보정이 진행 중인 스크롤을 끊는다(2026-09-04 실측 — 1,531px 미달로 멈춤).
+// rAF 금지 — 배경 탭에서는 콜백이 아예 실행되지 않는다(같은 날 실측: 프레임 콜백 미발화로 복귀 자체가 무산).
+// behavior도 smooth(html 전역) 대신 instant — 애니메이션 도중 재보정·사용자 스크롤에 끊기지 않아야 한다.
+function focusField(key, majorEtcOn) {
+  if (typeof document === 'undefined') return
+  const id = key === '전공' && majorEtcOn ? 'ap-전공-기타' : FIELD_INPUT[key]
+  setTimeout(() => {
+    const el = document.getElementById(id)
+    if (!el) return
+    el.focus({ preventScroll: true })
+    el.scrollIntoView({ block: 'center', behavior: 'instant' })
+  }, 0)
+}
 
 // 렌더 3분기 = 모집 창 국면(before·open·after) → 창 안이면 백엔드 연결 여부.
 // today·configured = 테스트 주입구(기본 = 실제 오늘·env 판정).
@@ -38,6 +64,7 @@ export default function RecruitForm({ configured, repos, today = localYmd() }) {
   const [errors, setErrors] = useState({})
   const [phase, setPhase] = useState('idle')      // idle | busy | done
   const [failure, setFailure] = useState('')
+  const [summary, setSummary] = useState('')   // 제출 버튼 옆 요약 — 어느 칸이 걸렸는지
 
   if (window국면 !== 'open') {
     return <p className="rc-callout">{APPLY_NOTE[window국면]}</p>
@@ -84,7 +111,15 @@ export default function RecruitForm({ configured, repos, today = localYmd() }) {
     const merged = { ...form, 전공: composeMajorText(form['전공'], subType, subMajor) }
     const found = validateApplication(merged)
     setErrors(found)
-    if (Object.keys(found).length > 0) return
+    // 걸린 칸을 이름으로 알려주고(요약) 첫 칸으로 되돌려보낸다 — 예전엔 조용히 return만 해서
+    // 화면 밖 빨간 글씨 외에는 아무 신호가 없었다(오너 2026-09-04).
+    const stuck = FIELD_ORDER.filter((k) => found[k])
+    if (stuck.length > 0) {
+      setSummary(`${stuck.map((k) => FIELD_LABEL[k]).join(' · ')} — 확인이 필요합니다. 해당 칸으로 이동했습니다.`)
+      focusField(stuck[0], majorEtcOn)
+      return
+    }
+    setSummary('')
     setPhase('busy')
     setFailure('')
     try {
@@ -126,6 +161,7 @@ export default function RecruitForm({ configured, repos, today = localYmd() }) {
 
       <p className="rc-field">
         <label htmlFor="ap-학번">학번 <Req /></label>
+        <span className="rc-desc">예: 2026500000</span>
         <input
           id="ap-학번" type="text" inputMode="numeric" value={form['학번']} onChange={set('학번')}
           aria-invalid={hakbeonBad || Boolean(errors['학번'])}
@@ -143,6 +179,7 @@ export default function RecruitForm({ configured, repos, today = localYmd() }) {
         </select>
         {majorEtcOn && (
           <input
+            id="ap-전공-기타"
             className="rc-etc-input" type="text" value={form['전공']} onChange={set('전공')}
             placeholder="학부/전공 직접 입력" aria-label="학부/전공 직접 입력"
           />
@@ -219,6 +256,7 @@ export default function RecruitForm({ configured, repos, today = localYmd() }) {
 
       <div className="rc-form-foot">
         <p className="rc-form-privacy">{PRIVACY_NOTE}</p>
+        {summary && <p className="rc-form-summary" role="alert">{summary}</p>}
         {failure && <p className="rc-field-error" role="alert">{failure}</p>}
         <button className="rc-cta-xl rc-form-submit" type="submit" disabled={phase === 'busy'}>
           {phase === 'busy' ? '제출 중' : '신청 제출'}
