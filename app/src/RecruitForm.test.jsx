@@ -22,8 +22,9 @@ test('모집 창 안 + 백엔드 연결 시 = 필수 4필드(*) + 체크 그룹 
     expect(html).toContain(label)
   }
   expect(html).toContain('rc-req')                    // 필수 = * 표기
-  expect(html).not.toContain('숫자 10자리')            // 학번 = 형식 설명·예시 미게재(3차 — 라이브 빨간 표시만)
-  expect(html).not.toContain('2021508001')
+  // 학번 = 형식 '설명'은 여전히 미게재(3차 규칙 유지). 예시만 해제(오너 2026-09-04 — 21학번 같은 오입력 방지)
+  expect(html).not.toContain('숫자 10자리')
+  expect(html).toContain('예: 2026500000')            // 학번 예시(5차 신설)
   expect(html).toContain('예: 010-1234-5678')         // 전화번호 하이픈 예시
   // 전공 = 광운대 학부 토글 select(+부/복수전공)
   expect(html).toContain('<select')
@@ -181,4 +182,20 @@ test('지원계기 컬럼 미적용 시 = 관심주제 합성으로 재시도', 
   const failing = { applications: { submit: async () => { throw new Error('network down') } } }
   await expect(submitApplication({ ...VALID, 지원계기: '계기' }, { repos: failing, configured: true }))
     .rejects.toThrow('network down')
+})
+
+// 검증 실패 복귀(오너 2026-09-04) — 요약 문구와 포커스 대상 id가 실제 폼 마크업과 맞물려야 한다.
+// 이게 어긋나면 "어디가 틀렸는지"를 못 알려주고 예전 증상(아무 반응 없음)으로 되돌아간다.
+test('검증 실패 복귀 — 오류 칸 id가 폼에 실재 + 라벨은 화면 문구와 동일', () => {
+  const html = flat(<RecruitForm configured={true} today={OPEN_DAY} />)
+  // 포커스 대상 id 5종(전공 기타 칸 제외 — 기타 모드에서만 렌더)
+  for (const id of ['ap-이름', 'ap-학번', 'ap-전공', 'ap-전화번호', 'ap-지원계기']) {
+    expect(html).toContain(`id="${id}"`)
+  }
+  // 빈 폼이 걸리는 4칸 = 요약에 이 이름들로 나열된다
+  const empty = validateApplication(EMPTY_APPLICATION)
+  const stuck = ['이름', '학번', '전공', '전화번호', '지원계기'].filter((k) => empty[k])
+  expect(stuck).toEqual(['이름', '학번', '전공', '전화번호'])   // 폼에 놓인 순서 = 복귀 순서
+  const labels = { 이름: '이름', 학번: '학번', 전공: '학부/전공', 전화번호: '전화번호' }
+  for (const k of stuck) expect(html).toContain(labels[k])      // 라벨이 화면 문구와 같아야 사용자가 찾는다
 })
