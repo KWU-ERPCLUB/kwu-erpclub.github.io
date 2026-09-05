@@ -3,13 +3,17 @@
 // ③회색 배경 쓰지 마라 ④인사이트처럼 모아둔 꼴 말고 타임라인이 드러나게, 내리면 인터랙티브하게
 // ⑤썸네일·제목 키우고 텍스트는 줄여라 + 필터 제거.
 //
-// 구조 = 세로 스파인(스크롤 진행 채움) + 회차 노드 + 큰 썸네일 카드.
+// 구조 = 세로 스파인 + 회차 노드 + 큰 썸네일 카드.
 //   맨 위 1건(최신·다음) = lead 행 = 썸네일 전폭·제목 최대 / 나머지 = 썸네일 좌측 고정폭.
 // 면 = 흰색만(블랙·회색 면 0). 강조 = 버건디 선·점(화이트리스트 범위).
 // 텍스트 = 회차·날짜·유형 + 제목까지. 발췌·요점 나열은 상세로 내렸다.
+//
+// 스크롤 연동 모션 폐지(2026-09-05 오너) — 구 로직 = ①진입 리빌(IntersectionObserver가 `in` 클래스 직접 부착)
+// ②중앙 행 active ③스파인 진행 채움. ①의 클래스는 DOM 직접 조작인데 ②가 바뀔 때 React가 같은 li의
+// className을 통째로 덮어써 `in`이 날아갔다(옵저버는 unobserve 끝 → 복구 없음) → 행이 opacity:0으로
+// 영구 고정 = 스크롤하면 화면이 백지. 대체 강조 = 호버 부상 + lead 정적 강조(CSS 전담, JS 0).
 import { sortSeminars, isUpcoming, publicOnly } from './seminars-logic.js'
 import { splitTitle } from './insights-logic.js'
-import { useTimelineFlow, useRowReveal } from './seminars-motion.js'
 import { PageHead } from '../shared.jsx'
 
 function whenLabel(s) {
@@ -17,10 +21,10 @@ function whenLabel(s) {
 }
 
 // 한 행 = 노드 + 카드. lead = 맨 위 1건(크게). export = 픽스처 주입 테스트용.
-export function SeminarRow({ s, today, onOpen = () => {}, lead = false, active = false, index = 0 }) {
+export function SeminarRow({ s, today, onOpen = () => {}, lead = false, index = 0 }) {
   const upcoming = isUpcoming(s, today)
   const thumbs = Array.isArray(s['썸네일']) ? s['썸네일'].filter(Boolean) : []
-  const cls = ['sem-tl-row', lead ? 'is-lead' : '', active ? 'is-active' : ''].filter(Boolean).join(' ')
+  const cls = lead ? 'sem-tl-row is-lead' : 'sem-tl-row'
   return (
     <li className={cls} data-row={index}>
       <span className="sem-tl-node" aria-hidden="true">
@@ -61,8 +65,6 @@ export function pickFeature(items, today) {
 // 타임라인 — items(이미 정렬·공개 필터됨). 0건 = 디자인된 1줄 빈 상태.
 export function SeminarTimeline({ items, today, onOpen = () => {} }) {
   const list = items || []
-  const { ref, fill, active } = useTimelineFlow(list.length)
-  useRowReveal('.sem-tl-row', [list.length])
   if (list.length === 0) {
     return <p className="sem-tl-empty">세미나 기록 아직 없음.</p>
   }
@@ -70,15 +72,10 @@ export function SeminarTimeline({ items, today, onOpen = () => {} }) {
   const ordered = [first, ...list.filter((s) => s !== first)]
   return (
     <div className="sem-tl-wrap">
-      <ol className="sem-tl" ref={ref}>
-        <span className="sem-tl-spine" aria-hidden="true">
-          <i className="sem-tl-fill" style={{ transform: `scaleY(${fill})` }} />
-        </span>
+      <ol className="sem-tl">
+        <span className="sem-tl-spine" aria-hidden="true" />
         {ordered.map((s, i) => (
-          <SeminarRow
-            key={s.slug} s={s} today={today} onOpen={onOpen}
-            lead={i === 0} active={i === active} index={i}
-          />
+          <SeminarRow key={s.slug} s={s} today={today} onOpen={onOpen} lead={i === 0} index={i} />
         ))}
       </ol>
     </div>

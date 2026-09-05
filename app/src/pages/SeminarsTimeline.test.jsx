@@ -58,12 +58,20 @@ test('행 — 예정 배지: date>today ∨ 일정미정, 과거면 없음', () 
   expect(flat(<SeminarRow s={base({ date: '2026-06-01' })} today={TODAY} />)).not.toContain('sem-soon-badge')
 })
 
-test('행 — lead·active 클래스는 주입값 그대로 반영', () => {
+test('행 — lead 클래스는 주입값 그대로 반영', () => {
   expect(flat(<SeminarRow s={base()} today={TODAY} lead />)).toContain('is-lead')
-  expect(flat(<SeminarRow s={base()} today={TODAY} active />)).toContain('is-active')
-  const plain = flat(<SeminarRow s={base()} today={TODAY} />)
-  expect(plain).not.toContain('is-lead')
-  expect(plain).not.toContain('is-active')
+  expect(flat(<SeminarRow s={base()} today={TODAY} />)).not.toContain('is-lead')
+})
+
+// 회귀 고정(2026-09-05) — 스크롤 연동 모션 폐지. `in`(리빌)·`is-active`(중앙 행)는 React가 className을
+// 덮어쓰며 서로를 지웠고 행이 opacity:0에 갇혀 화면이 백지가 됐다. 두 클래스·스파인 채움이 다시 들어오면 FAIL.
+test('스크롤 연동 잔재 부재 — is-active·sem-tl-fill 없음', () => {
+  const items = [base({ slug: 'a', date: '2026-08-01' }), base({ slug: 'b', date: '2026-06-01' })]
+  const html = flat(<SeminarTimeline items={items} today={TODAY} onOpen={noop} />)
+  expect(html).toContain('sem-tl-spine')
+  for (const gone of ['is-active', 'sem-tl-fill', 'scaleY']) {
+    expect(html).not.toContain(gone)
+  }
 })
 
 // ── 컨테이너 ──
