@@ -3,23 +3,13 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>AIM 1기 OT · 세팅과 큰 그림 (차시 1)</title>
+<title>AIM 1기 OT · 스터디·커리큘럼·웹·트렌드 (회차 1)</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css" />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" />
 <style>
-/* ===================================================================
-   AIM 1기 OT 덱 (s1) — 31장 · 클린룸 전면 재구축 2026-08-16
-   원천 = 하네스 4부작
-     · aim-덱-규격.md v4.3        (캔버스·색·형태·타이포·톤·구조·게이트)
-     · aim-덱-카피.md v1.2        (명사형 단정·AI투 사전·grep 8패턴)
-     · aim-덱-모션-시각화.md      (모션 토큰·연출 판정표·인터랙션 배치)
-     · aim-덱-블루프린트.md       (BP1~BP10 와이어프레임)
-   시각 정답지 = public/slides/g1/index.html (오너 검수 2R 통과 골든 샘플)
-     — CSS 토큰·컴포넌트·웨이브·아이콘·모션·네비 스크립트를 계승·확장.
-     — g1의 5장 = 본편 #1(표지)·#3(디바이더)·#5(수치)·#7(흐름)·#6(대비)에 대응.
-   대본 = docs/aim-덱-01-OT-대본.md (aria-label = 대본 제목 1:1)
-   =================================================================== */
+/* AIM 1기 OT 덱 (s1 v4 — 2026-09-09 재제작, 오너 원고 기반 34장 · 파트 5분할 제작)
+   원천 = 하네스 4부작 + 대본 docs/aim-덱-01-OT-대본.md · 골격 CSS·스크립트 = s3 계승 */
 :root{
   --bg:#ffffff; --dark:#161616; --accent:#7a2030;
   --tint:#f6edef; --tint2:#ecd9de; --surface:#fafaf9;
@@ -409,6 +399,270 @@ ul{margin:0;padding:0;list-style:none}
   .judge .abcard[data-side=a]{opacity:.38!important}
 }
 </style>
+
+<style>
+/* ---- part A ---- */
+/* ===================================================================
+   AIM 1기 OT 덱 — PART A (#1~5 · #32~34)
+   원천 = 하네스 4부작 · 시각 정답지 g1 · 컴포넌트 CSS s3
+   이 블록 = 파트 A 신규 CSS만(.pa- 접두). s3 기존 클래스 재정의 없음.
+   =================================================================== */
+/* 각주 번호 (본문 장 = 수치 옆 번호만 · 출처 전문은 #34) */
+.pa-fn{font-size:.62em;font-weight:700;color:var(--accent);vertical-align:super;margin-left:3px;letter-spacing:0}
+/* #5 운영 사실 — 면 분할 패널 4행(행 = 아이콘·라벨·값·설명) */
+.pa-ops{align-content:stretch}
+.pa-ops>*{display:grid;grid-template-columns:96px 340px 1fr;align-items:center;gap:36px}
+.pa-ov{font:700 34px/1.25 var(--fd);letter-spacing:-.02em;word-break:keep-all}
+.pa-ov em{font-style:normal;color:var(--accent)}
+/* 카드 하단 부기(그리드 카드 바닥 고정) */
+.gcard p.pa-note{margin:auto 0 0;padding-top:18px;border-top:1px solid var(--line);
+  font:500 21px/1.6 var(--fb);color:var(--mute)}
+/* s3 .kfill = span(inline) → height·transform 무효로 바 미표시. display만 보정(값·색은 s3 그대로) */
+.pa-kfill{display:block}
+/* #34 출처 표 — 8행 수용 압축 */
+.srct.pa-src th{padding:0 12px 12px}
+.srct.pa-src td{padding:15px 12px;font-size:23px}
+.srct.pa-src td.n{width:64px}
+/* #33 준비물 라벨 */
+.pa-plab{font:600 15px var(--fm);letter-spacing:.12em;color:var(--mute)}
+
+/* ---- part B ---- */
+/* ===================================================================
+   OT 덱 파트 B — PART 2 커리큘럼 (#6~#13)
+   s3 클래스 재사용 · 이 블록 = 파트 B 신규분만 (.pb- 접두)
+   =================================================================== */
+
+/* ---- #7 타임라인 노드 안 구간 레일 ---- */
+.pb-pipe .ps{max-width:334px}
+.pb-rail{width:210px;height:12px;border-radius:999px;background:var(--tint2)}
+.pb-rail.cur{background:var(--accent)}
+.pb-rail.wait{background:transparent;border:2px dashed #d8d6d2}
+
+/* ---- #8 회차 표 (헤어라인 목록) ---- */
+.pb-tab{display:flex;flex-direction:column;width:100%}
+.pb-tab.fill{height:100%}
+.pb-tab.fill .pb-tr{flex:1}
+.pb-th{display:grid;grid-template-columns:60px 128px 1.02fr 1.3fr;gap:26px;align-items:center;
+  padding:0 6px 12px;border-bottom:1.5px solid var(--line)}
+.pb-th span{font:600 15px var(--fm);letter-spacing:.12em;color:var(--mute)}
+.pb-tr{display:grid;grid-template-columns:60px 128px 1.02fr 1.3fr;gap:26px;align-items:center;
+  padding:9px 6px;border-bottom:1px solid var(--line)}
+.pb-no{width:44px;height:44px;border-radius:999px;background:var(--tint);color:var(--accent);
+  font:600 20px var(--fm);display:flex;align-items:center;justify-content:center}
+.pb-dt{font:600 23px var(--fm);color:var(--sub);letter-spacing:.02em}
+.pb-ct{font:700 27px/1.25 var(--fd);letter-spacing:-.02em;word-break:keep-all}
+.pb-ct em{font-style:normal;color:var(--accent)}
+.pb-do{font:400 23px/1.3 var(--fb);color:var(--sub);word-break:keep-all}
+
+/* ---- #10 세로 단계 레일 (BP5 세로 변형) ---- */
+.pb-flow{display:flex;flex-direction:column;justify-content:center;height:100%}
+.pb-conn{margin-left:22px;overflow:visible;flex:0 0 auto}
+.pb-conn line{stroke:var(--mute);stroke-width:2}
+.pb-step{display:grid;grid-template-columns:46px 1fr;gap:24px;align-items:center;padding:6px 0}
+.pb-sn{width:46px;height:46px;border-radius:999px;background:var(--bg);border:1.5px solid var(--line);
+  color:var(--sub);font:600 19px var(--fm);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.pb-step h4{margin:0;font:700 27px/1.25 var(--fd);letter-spacing:-.02em;word-break:keep-all}
+.pb-step h4 em{font-style:normal;color:var(--accent)}
+.pb-step p{margin:4px 0 0;font:400 21px/1.35 var(--fb);color:var(--sub);word-break:keep-all}
+.pb-step p code{font:600 19px var(--fm);color:var(--accent);background:var(--tint);border-radius:6px;padding:2px 9px}
+.pb-end{background:var(--surface);border-radius:var(--r-md);box-shadow:inset 6px 0 0 var(--line);
+  padding:14px 22px 14px 16px;
+  transition:background var(--d-move) var(--ease-std),box-shadow var(--d-move) var(--ease-std)}
+.pb-end h4{font-size:30px}
+.pb-end.hot{background:var(--bg);box-shadow:inset 6px 0 0 var(--accent)}
+.pb-end.hot .pb-sn{background:var(--accent);border-color:var(--accent);color:#fff}
+.pb-end.hot h4{color:var(--accent)}
+
+/* ---- #11 강조 카드(히어로) · 하단 헤어라인 결론 행 ---- */
+.pb-card{transition:border-color var(--d-move) var(--ease-std),background var(--d-move) var(--ease-std),
+  box-shadow var(--d-move) var(--ease-std)}
+.pb-card.hot{border-color:var(--accent);box-shadow:inset 6px 0 0 var(--accent);background:var(--bg)}
+.pb-note{border-top:1.5px solid var(--line);padding:20px 2px 10px;display:flex;align-items:baseline;gap:26px}
+.pb-note b{font:700 28px/1.35 var(--fd);letter-spacing:-.02em;color:var(--text);word-break:keep-all}
+.pb-note b em{font-style:normal;color:var(--accent)}
+.pb-note span{font:400 var(--fs-sub)/1.45 var(--fb);color:var(--mute);word-break:keep-all}
+.gcard p.pb-tool,.split.cols p.pb-tool{margin:auto 0 0;padding-top:16px;border-top:1px solid var(--line);
+  font:500 20px/1.5 var(--fb);color:var(--mute);word-break:keep-all}
+
+/* ---- #9·#13 선언 장 보조 ---- */
+.pb-eyebrow{font:600 var(--fs-label) var(--fm);letter-spacing:.14em;color:var(--mute)}
+.pb-kpi{display:flex;align-items:center;gap:44px;border-top:1.5px solid var(--line);
+  border-bottom:1.5px solid var(--line);padding:24px 6px;width:1400px;text-align:left}
+.pb-kv{font:800 var(--fs-kpi)/1 var(--fd);letter-spacing:-.04em;color:var(--accent);
+  display:flex;align-items:baseline;flex:0 0 auto;font-feature-settings:'tnum'}
+.pb-ku{font:700 46px var(--fd);color:var(--accent);margin-left:4px}
+.pb-kx{display:block}
+.pb-kt{display:block;font:700 34px/1.3 var(--fd);letter-spacing:-.02em;word-break:keep-all}
+.pb-kn{display:block;margin-top:10px;font:400 24px/1.45 var(--fb);color:var(--mute);word-break:keep-all}
+
+@media (prefers-reduced-motion: reduce){
+  .pb-end,.pb-card{transition:none}
+  .pb-end{background:var(--bg);box-shadow:inset 6px 0 0 var(--accent)}
+  .pb-end .pb-sn{background:var(--accent);border-color:var(--accent);color:#fff}
+  .pb-end h4{color:var(--accent)}
+}
+@media print{
+  .pb-end[data-hero]{background:var(--bg)!important;box-shadow:inset 6px 0 0 var(--accent)!important}
+  .pb-end[data-hero] .pb-sn{background:var(--accent)!important;border-color:var(--accent)!important;color:#fff!important}
+  .pb-end[data-hero] h4{color:var(--accent)!important}
+  .pb-card[data-hero]{border-color:var(--accent)!important;box-shadow:inset 6px 0 0 var(--accent)!important;background:var(--bg)!important}
+}
+
+/* ---- part C ---- */
+/* ===================================================================
+   OT 덱 파트 C · #14 (PART 2 커리큘럼 끝) · #15~#21 (PART 3 AIM 웹)
+   새로 필요한 CSS만. s3(index.html) 정의 클래스는 재정의하지 않음.
+   접두 = .pc-
+   =================================================================== */
+
+/* #14 좌측 카드 · 익히는 질문 2행(헤어라인, 박스 아님) */
+.pc-qs{display:flex;flex-direction:column;margin-top:auto}
+.pc-q{display:flex;align-items:baseline;gap:18px;padding:18px 0;border-top:1px solid var(--line)}
+.pc-q .qn{font:600 15px var(--fm);letter-spacing:.1em;color:var(--accent);flex:0 0 auto}
+.pc-q b{font:700 27px/1.35 var(--fd);letter-spacing:-.02em;color:var(--text);word-break:keep-all}
+.pc-q i{font-style:normal;margin-left:auto;font:500 var(--fs-sub) var(--fb);color:var(--mute);flex:0 0 auto;white-space:nowrap}
+
+/* #20 제안 가능 행 · 헤어라인 위 라벨 + 칩 */
+.pc-sug{display:flex;align-items:center;gap:24px;border-top:1.5px solid var(--line);padding-top:22px}
+.pc-sug .sgl{font:700 28px/1.3 var(--fd);letter-spacing:-.02em;flex:0 0 auto}
+.pc-sug .sgn{margin-left:auto;font:500 var(--fs-sub) var(--fb);color:var(--mute);flex:0 0 auto}
+
+/* 면 분할 패널 셀 공통 세로 정렬 */
+.pc-cell{display:flex;flex-direction:column;gap:12px;justify-content:center}
+.pc-cell.top{justify-content:flex-start}
+
+/* ---- part D ---- */
+/* ===================================================================
+   OT 덱 파트 D — PART 4 · AI 트렌드 (#22~#27)
+   신규 CSS만(.pd- 접두). s3 기존 클래스는 재정의하지 않음.
+   =================================================================== */
+
+/* ---- #23 2층 도식(서비스 층 / 모델 층) ---- */
+.pd-stack{display:flex;flex-direction:column;align-items:stretch;justify-content:center;gap:0;height:100%}
+.pd-conn{display:block;margin:0 auto}
+.pd-conn path,.pd-conn polyline{stroke:var(--mute);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.pd-base{display:flex;align-items:center;gap:28px;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r-md);padding:24px 34px;box-shadow:inset 6px 0 0 var(--accent)}
+.pd-bl{display:block;font:600 15px var(--fm);letter-spacing:.12em;color:var(--mute);margin-bottom:8px}
+.pd-bt{font:700 32px/1.25 var(--fd);letter-spacing:-.02em;word-break:keep-all}
+.pd-bn{margin:0 0 0 auto;max-width:600px;text-align:right;font:400 var(--fs-sub)/1.5 var(--fb);color:var(--mute);word-break:keep-all}
+.pd-b{color:var(--text);font-weight:700}
+
+/* ---- #24 계단 3단 ---- */
+.pd-stair{display:flex;flex-direction:column;justify-content:center;gap:0;height:100%}
+.pd-srow{display:flex;align-items:center;gap:28px}
+.pd-srow .ic{width:96px;height:96px}
+.pd-srow .ic svg{width:44px;height:44px}
+.pd-sl{display:block;font:600 16px var(--fm);letter-spacing:.12em;color:var(--mute)}
+.pd-st{margin-top:7px;font:700 var(--fs-card-title)/1.25 var(--fd);letter-spacing:-.02em;word-break:keep-all}
+.pd-sd{margin:8px 0 0;font:400 var(--fs-card-body)/1.45 var(--fb);color:var(--sub);word-break:keep-all}
+.pd-srow.res .ic{width:120px;height:120px;transition:transform var(--d-move) var(--ease-std)}
+.pd-srow.res .ic svg{width:54px;height:54px}
+.pd-srow.res .pd-sl{color:var(--accent)}
+.pd-srow.res .pd-st{color:var(--accent);font-size:40px}
+.pd-srow.res.hot .ic{transform:scale(1.08)}
+.pd-sarr{display:block;overflow:visible}
+.pd-sarr polyline{stroke:var(--mute);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---- #25 뿌리 표기 ---- */
+.pd-root{margin:auto 0 0;padding-top:16px;border-top:1px solid var(--line);
+  font:500 21px/1.5 var(--fb);color:var(--mute)}
+.pd-root b{color:var(--accent);font-weight:700}
+
+/* ---- #26 선언 다크 패널 (BP9) ---- */
+.pd-decl{flex:1;display:flex;flex-direction:column;justify-content:center;gap:40px;
+  background:var(--dark);color:#f4f2f1;border-radius:var(--r-lg);padding:64px 76px}
+.pd-dl{font:600 16px var(--fm);letter-spacing:.14em;color:#8f8a86}
+.pd-dt{margin:0;font:800 82px/1.28 var(--fd);letter-spacing:-.035em;word-break:keep-all}
+.pd-em{color:var(--dm);background-image:linear-gradient(rgba(209,143,154,.26),rgba(209,143,154,.26));
+  background-repeat:no-repeat;background-size:0 16px;background-position:0 88%;
+  transition:background-size var(--d-hero) var(--ease-in)}
+.pd-decl.hot .pd-em{background-size:100% 16px}
+.pd-drows{display:flex;flex-direction:column}
+.pd-dr{display:flex;align-items:center;gap:26px;padding:22px 0;border-top:1px solid #35322f}
+.pd-dn{font:600 20px var(--fm);letter-spacing:.06em;color:var(--dm);flex:0 0 auto}
+.pd-dr p{margin:0;font:500 32px/1.4 var(--fb);color:#e6e2df;word-break:keep-all}
+
+/* ---- #27 2층 카드 내부 ---- */
+.pd-mini{display:flex;flex-direction:column;flex:1;justify-content:center}
+.pd-mr{display:flex;align-items:center;gap:24px;padding:27px 2px;border-bottom:1px solid var(--line)}
+.pd-mr:first-child{border-top:1px solid var(--line)}
+.pd-mk{font:600 16px var(--fm);letter-spacing:.12em;color:var(--mute);width:82px;flex:0 0 auto}
+.pd-mr p{margin:0;font:400 28px/1.45 var(--fb);color:var(--sub);word-break:keep-all}
+.pd-mr p b{color:var(--text);font-weight:700}
+.pd-q5{display:grid;grid-template-columns:1fr 1fr;gap:0 32px;flex:1;align-content:center}
+.pd-qi{display:flex;align-items:center;gap:16px;padding:20px 2px;border-bottom:1px solid var(--line);
+  font:600 27px/1.35 var(--fb);color:var(--text);word-break:keep-all}
+.pd-qi:nth-child(5){grid-column:1 / -1}
+.pd-qi b{font:600 17px var(--fm);color:var(--accent);flex:0 0 auto}
+
+/* ---- print·reduced-motion = 최종 상태 강제 (모션-시각화 §7 · .pd- 분만) ---- */
+@media (prefers-reduced-motion: reduce){
+  .pd-em{background-size:100% 16px!important;transition:none!important}
+  .pd-srow.res .ic{transform:scale(1.08)!important;transition:none!important}
+}
+@media print{
+  .pd-em{background-size:100% 16px!important}
+  .pd-srow.res .ic{transform:scale(1.08)!important}
+}
+
+/* ---- part E ---- */
+/* ===================================================================
+   OT 덱 PART E (#28~#31) — PART 4 · AI 트렌드 후반
+   이 파트에서 새로 필요한 CSS만. s3 클래스 재정의 없음(.pX- 접두 = .pe-)
+   =================================================================== */
+
+/* ---- #28 경계 대장 (BP8 · 헤어라인 목록 5행 + 예시 열) ---- */
+.pe-led{height:100%;grid-template-rows:auto repeat(5,1fr)}
+.pe-lh,.pe-lr{display:grid;grid-template-columns:104px 300px 1fr 1.08fr;gap:28px;align-items:center}
+.pe-lh{padding-top:15px;padding-bottom:15px}
+.pe-lc{font:600 15px var(--fm);letter-spacing:.12em;color:var(--mute)}
+.pe-lr .spt{font-size:30px}
+.pe-cd{margin:0;font:400 24px/1.4 var(--fb);color:var(--sub);word-break:keep-all}
+.pe-exv{font:600 26px/1.4 var(--fb);color:var(--text);word-break:keep-all}
+.pe-lr.pe-key{background:var(--bg);box-shadow:inset 5px 0 0 var(--accent)}
+.pe-lr.pe-key .pe-exv{color:var(--accent)}
+
+/* ---- #29 트렌드 카드 (BP8 · 히어로 카드 + 실사용 평 행) ---- */
+.pe-card.hot{border-color:var(--accent);box-shadow:inset 6px 0 0 var(--accent);background:var(--bg)}
+.pe-tg .gcard{padding:30px 34px;gap:16px}
+.pe-tg .gcard h3{font-size:36px}
+.pe-tg .gcard>p{font:400 27px/1.55 var(--fb)}
+.pe-rt{display:block;margin-bottom:2px;font:600 15px var(--fm);letter-spacing:.12em;color:var(--mute)}
+.pe-rev{margin-top:auto;display:flex;flex-direction:column;padding-top:4px}
+.pe-rw{display:flex;gap:16px;align-items:flex-start;border-top:1px solid var(--line);padding-top:14px}
+.pe-rw+.pe-rw{margin-top:13px}
+.pe-rl{flex:0 0 auto;padding-top:5px;font:600 14px var(--fm);letter-spacing:.1em;color:var(--mute)}
+.pe-rq{font:600 25px/1.4 var(--fb);color:var(--text);word-break:keep-all}
+
+/* ---- #30 인용 박스 (BP6 · 대비 2) ---- */
+.pe-q{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:48px 52px;display:flex;flex-direction:column;gap:32px;justify-content:flex-start}
+.pe-qh{display:flex;align-items:center;gap:20px}
+.pe-qm{font:800 92px/.44 var(--fd);color:var(--accent);opacity:.32}
+.pe-ql{font:600 15px var(--fm);letter-spacing:.12em;color:var(--mute)}
+.pe-q blockquote{margin:0;font:700 52px/1.38 var(--fd);letter-spacing:-.03em;word-break:keep-all}
+.pe-q blockquote em{font-style:normal;color:var(--accent)}
+.pe-ctx{margin:0;font:400 24px/1.5 var(--fb);color:var(--mute);word-break:keep-all}
+.pe-src{margin-top:auto;display:flex;align-items:baseline;gap:14px;border-top:1px solid var(--line);padding-top:24px}
+.pe-org{font:700 28px var(--fd);letter-spacing:-.02em}
+.pe-fn{font:600 20px var(--fm);color:var(--sub)}
+.pe-req{margin-left:auto;font:500 23px var(--fb);color:var(--sub);text-align:right}
+.pe-req b{color:var(--text);font-weight:700}
+
+/* ---- #31 다크 선언 패널 (BP9) ---- */
+.pe-panel{display:flex;flex-direction:column;justify-content:space-between;gap:40px;padding:56px 78px 50px}
+.pe-eb{font:600 var(--fs-label) var(--fm);letter-spacing:.16em;color:var(--dm)}
+.pe-dt{margin:0;font:800 108px/1.24 var(--fd);letter-spacing:-.038em;word-break:keep-all}
+.pe-w{font-style:normal;color:#f4f2f1}
+.pe-dt em{font-style:normal;color:var(--dm)}
+.pe-sum{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid rgba(255,255,255,.17)}
+.pe-sum>div{padding:32px 38px 0}
+.pe-sum>div+div{border-left:1px solid rgba(255,255,255,.17)}
+.pe-sl{display:block;margin-bottom:12px;font:600 16px var(--fm);letter-spacing:.14em;color:var(--dm)}
+.pe-sv{font:500 27px/1.45 var(--fb);color:#e6e2df;word-break:keep-all}
+.krow .kfill{display:block}
+</style>
 </head>
 <body>
 <div id="deck">
@@ -432,24 +686,24 @@ ul{margin:0;padding:0;list-style:none}
     <div>
       <div class="eyebrow an">광운대학교 ERP연구회 · MIS×AI 스터디</div>
       <h1 class="hero an"><em>AIM</em> 1기 OT</h1>
-      <p class="csub an">세팅과 큰 그림</p>
+      <p class="csub an">스터디 · 커리큘럼 · 웹 · 트렌드</p>
       <div class="csteps">
-        <div class="cstep an" data-hero><span class="ic"><svg viewBox="0 0 34 34"><circle cx="17" cy="17" r="12"/><path d="M17 11 v6 l4 3"/></svg></span><b>스터디<br/>소개</b></div>
+        <div class="cstep an" data-hero><span class="ic"><svg viewBox="0 0 34 34"><path d="M12 12 a5 5 0 1 1 5 5 v3"/><line x1="17" y1="26" x2="17" y2="27"/></svg></span><b>왜 이<br/>스터디인가</b></div>
         <span class="carr an">→</span>
-        <div class="cstep an"><span class="ic"><svg viewBox="0 0 34 34"><rect x="4" y="6" width="26" height="20" rx="3"/><line x1="4" y1="12" x2="30" y2="12"/></svg></span><b>허브<br/>안내</b></div>
+        <div class="cstep an"><span class="ic"><svg viewBox="0 0 34 34"><rect x="6" y="4" width="22" height="26" rx="3"/><line x1="11" y1="12" x2="23" y2="12"/><line x1="11" y1="18" x2="23" y2="18"/><line x1="11" y1="24" x2="18" y2="24"/></svg></span><b>커리큘럼</b></div>
         <span class="carr an">→</span>
-        <div class="cstep an"><span class="ic"><svg viewBox="0 0 34 34"><path d="M13 21 a6 6 0 1 1 8 -8 l6 -6 M25 13 l3 3"/><circle cx="12" cy="22" r="5"/></svg></span><b>세팅·비교<br/>실습</b></div>
+        <div class="cstep an"><span class="ic"><svg viewBox="0 0 34 34"><rect x="4" y="6" width="26" height="20" rx="3"/><line x1="4" y1="12" x2="30" y2="12"/></svg></span><b>AIM 웹</b></div>
         <span class="carr an">→</span>
-        <div class="cstep an"><span class="ic"><svg viewBox="0 0 34 34"><path d="M17 4 L20 13 L29 13 L22 19 L25 28 L17 22 L9 28 L12 19 L5 13 L14 13 Z"/></svg></span><b>학기 주제<br/>공개</b></div>
+        <div class="cstep an"><span class="ic"><svg viewBox="0 0 34 34"><polyline points="4,24 12,15 19,20 30,7"/><polyline points="22,7 30,7 30,15"/></svg></span><b>AI 트렌드</b></div>
         <span class="carr an">→</span>
-        <div class="cstep an"><span class="ic"><svg viewBox="0 0 34 34"><rect x="6" y="4" width="22" height="26" rx="3"/><polyline points="11,17 15,21 23,12"/></svg></span><b>시작<br/>설문</b></div>
+        <div class="cstep an"><span class="ic"><svg viewBox="0 0 34 34"><rect x="6" y="4" width="22" height="26" rx="3"/><polyline points="11,17 15,21 23,12"/></svg></span><b>마무리</b></div>
       </div>
-      <p class="cnote an">진도 없음 · <b>환경 세팅과 방향 정렬</b>이 오늘의 범위 · 60분</p>
+      <p class="cnote an">오늘 범위 = <b>스터디 방향과 커리큘럼 확정</b> · 진도 없음 · 60분</p>
     </div>
     <div class="cshot an">
       <div class="shotf">
         <div class="bar"><span class="dot2"></span><span class="dot2"></span><span class="dot2"></span><span class="url">kwu-erpclub.github.io</span></div>
-        <img src="../ws/ws-home.png" alt="AIM 워크스페이스 홈 화면" />
+        <img src="../ws/ws-home.png" alt="AIM 허브 워크스페이스 홈 화면" />
       </div>
       <p class="cap">오늘 로그인할 곳 = AIM 허브 워크스페이스</p>
     </div>
@@ -459,485 +713,503 @@ ul{margin:0;padding:0;list-style:none}
     <span class="cpill">SESSION 01</span>
   </div>
 </section>
-
-<!-- ===== #2 · BP2 목차 (B) ===== -->
-<section class="slide" data-pname="오늘의 구성" aria-label="2. 오늘의 흐름">
+<section class="slide" data-pname="왜 이 스터디인가" aria-label="2. 오늘의 흐름">
   <svg class="wave" style="left:0;top:0;width:620px;height:175px" viewBox="0 0 620 175" fill="none">
     <path d="M0 0 H620 C 430 40 340 150 130 118 C 60 107 30 60 0 78 Z" fill="var(--tint)"/>
   </svg>
-  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 오늘의 구성</span><span class="hpage">02 <i>/ 31</i></span></div>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 왜 이 스터디인가</span><span class="hpage">02 <i>/ 34</i></span></div>
   <div class="sbody">
-    <div class="htitle an"><h1>오늘 = 5파트 60분 · <em>진도 없음</em></h1>
-      <p class="sub">파트별 대표 아이콘 = 각 파트 디바이더에서 재등장 · 오늘의 범위 = 세팅과 방향 정렬</p></div>
+    <div class="htitle an"><h1>오늘 60분의 절반 = <em>커리큘럼</em>과 <em>AI 트렌드</em></h1>
+      <p class="sub">5부 구성 · 두 파트가 <b>38분</b> · 나머지 22분 = 배경 · 웹 사용법 · 마무리</p></div>
     <div class="toc grow-1">
       <div class="tocr an"><span class="tn">1</span>
-        <span class="ic"><svg viewBox="0 0 34 34"><circle cx="17" cy="17" r="12"/><path d="M17 11 v6 l4 3"/></svg></span>
-        <span class="tw"><span class="tt">왜 이 스터디인가</span><span class="td">시장이 평가하는 대상, 스터디의 <b>최종 목표</b>와 학기 구조</span></span>
-        <span class="tm">7장 · 15분</span></div>
+        <span class="ic"><svg viewBox="0 0 34 34"><path d="M12 12 a5 5 0 1 1 5 5 v3"/><line x1="17" y1="26" x2="17" y2="27"/></svg></span>
+        <span class="tw"><span class="tt">왜 이 스터디인가</span><span class="td">창설 배경 3열 대비 · <b>채용 기준 변화</b> 수치 · 운영 사실</span></span>
+        <span class="tm">5장 · 8분</span></div>
       <div class="tocr an"><span class="tn">2</span>
-        <span class="ic"><svg viewBox="0 0 34 34"><rect x="4" y="6" width="26" height="20" rx="3"/><line x1="4" y1="12" x2="30" y2="12"/></svg></span>
-        <span class="tw"><span class="tt">허브 안내</span><span class="td">한 학기 동안 쓸 화면 · 학번 로그인 · 기고와 승인 절차</span></span>
-        <span class="tm">6장 · 15분</span></div>
+        <span class="ic"><svg viewBox="0 0 34 34"><rect x="6" y="4" width="22" height="26" rx="3"/><line x1="11" y1="12" x2="23" y2="12"/><line x1="11" y1="18" x2="23" y2="18"/><line x1="11" y1="24" x2="18" y2="24"/></svg></span>
+        <span class="tw"><span class="tt">커리큘럼</span><span class="td">1차 <em>개인 학습 자동화</em> · 2차 <em>팀 협업 프로젝트</em> · 회차 7개</span></span>
+        <span class="tm">9장 · 18분</span></div>
       <div class="tocr an"><span class="tn">3</span>
-        <span class="ic"><svg viewBox="0 0 34 34"><path d="M13 21 a6 6 0 1 1 8 -8 l6 -6 M25 13 l3 3"/><circle cx="12" cy="22" r="5"/></svg></span>
-        <span class="tw"><span class="tt">세팅과 첫 실습</span><span class="td">도구 설치 점검, <em>한 줄 질문</em>과 <em>브리프</em>의 결과 비교</span></span>
-        <span class="tm">7장 · 15분</span></div>
+        <span class="ic"><svg viewBox="0 0 34 34"><rect x="4" y="6" width="26" height="20" rx="3"/><line x1="4" y1="12" x2="30" y2="12"/></svg></span>
+        <span class="tw"><span class="tt">AIM 웹</span><span class="td">허브 4개 화면과 워크스페이스 로그인 · 오늘 할 일 3건</span></span>
+        <span class="tm">7장 · 10분</span></div>
       <div class="tocr an"><span class="tn">4</span>
-        <span class="ic"><svg viewBox="0 0 34 34"><path d="M17 4 L20 13 L29 13 L22 19 L25 28 L17 22 L9 28 L12 19 L5 13 L14 13 Z"/></svg></span>
-        <span class="tw"><span class="tt">한 학기 주제</span><span class="td">개인 소재 조건 4문항, 팀 주제 범위와 다음 4주 완료 조건</span></span>
-        <span class="tm">5장 · 10분</span></div>
+        <span class="ic"><svg viewBox="0 0 34 34"><polyline points="4,24 12,15 19,20 30,7"/><polyline points="22,7 30,7 30,15"/></svg></span>
+        <span class="tw"><span class="tt">AI 트렌드</span><span class="td">용어 지도와 판단 기준 · 이번 주 신호와 채용이 재는 것</span></span>
+        <span class="tm">10장 · 20분</span></div>
       <div class="tocr an"><span class="tn">5</span>
         <span class="ic"><svg viewBox="0 0 34 34"><rect x="6" y="4" width="22" height="26" rx="3"/><polyline points="11,17 15,21 23,12"/></svg></span>
-        <span class="tw"><span class="tt">마무리</span><span class="td">시작 설문 제출, 다음 시간 준비물과 예습 자료</span></span>
-        <span class="tm">4장 · 5분</span></div>
+        <span class="tw"><span class="tt">마무리</span><span class="td">운영자 소개 · 다음 회차 준비물 3건 · 출처</span></span>
+        <span class="tm">3장 · 4분</span></div>
     </div>
-    <div class="dark" data-hero>오늘의 판정 2건 = <b>결과 차이 확인</b> · <b>시작 설문 제출</b>
-      <span class="dsub">두 건 완료 = 차시 1 목표 달성 · 미완료 항목은 이 시간에 해결</span></div>
-  </div>
-  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">SESSION 01 · 2026-09-07</span></div>
-</section>
-
-<!-- ===== #3 · BP3 파트 1 디바이더 (A) ===== -->
-<section class="slide divider" aria-label="3. 파트 1 디바이더">
-  <svg class="wave" style="right:0;top:0;width:900px;height:1080px" viewBox="0 0 900 1080" fill="none">
-    <path d="M900 0 V1080 H560 C 700 880 590 690 700 520 C 800 365 760 160 900 0 Z" fill="var(--tint)"/>
-    <path d="M900 0 V1080 H700 C 815 900 720 700 815 540 C 880 430 860 180 900 60 Z" fill="var(--tint2)"/>
-  </svg>
-  <span class="dot" style="width:38px;height:38px;right:760px;top:180px;background:var(--tint2)"></span>
-  <span class="dot" style="width:16px;height:16px;right:720px;bottom:260px;background:var(--accent)"></span>
-  <div class="dwm">1</div>
-  <div style="margin-top:auto;margin-bottom:auto;position:relative;z-index:3">
-    <div class="drow">
-      <div class="dnum an" data-hero>01</div>
-      <div>
-        <div class="dtitle an">왜 이 스터디인가</div>
-        <p class="dline an">이 파트에서 얻는 것 = <b>시장 기준</b>과 스터디의 <b>최종 목표</b> 한 줄</p>
-      </div>
-    </div>
-    <div class="dprev">
-      <div class="ph an">PART 1 구성</div>
-      <div class="pv an"><span class="pn">1</span><span class="pvt">창설 이유 = 시장 기준과 교육 과정의 <em>간극</em></span><span class="pvs">3단 도식</span></div>
-      <div class="pv an"><span class="pn">2</span><span class="pvt">시장의 평가 대상 = <em>시키는 방식과 검수</em></span><span class="pvs">수치 3건</span></div>
-      <div class="pv an"><span class="pn">3</span><span class="pvt">격차의 원인 = 도구가 아니라 <em>시키는 방식</em></span><span class="pvs">두 방식 비교</span></div>
-      <div class="pv an"><span class="pn">4</span><span class="pvt">최종 목표 = <em>증명 가능한 일상 활용자</em></span><span class="pvs">4단 도식</span></div>
-      <div class="pv an"><span class="pn">5</span><span class="pvt">학기 = 개인 4주 + 팀 5주 · <em>시험 2주 전 중지</em></span><span class="pvs">타임라인</span></div>
-    </div>
-  </div>
-  <div class="tracker">
-    <span class="tp cur an">1 왜</span><span class="tp an">2 허브</span><span class="tp an">3 세팅·실습</span><span class="tp an">4 주제</span><span class="tp an">5 마무리</span>
-  </div>
-</section>
-
-<!-- ===== #4 · BP5 창설 이유 (B) ===== -->
-<section class="slide" data-pname="왜 이 스터디인가" aria-label="4. 창설 배경">
-  <svg class="wave" style="left:0;bottom:0;width:640px;height:180px" viewBox="0 0 640 180" fill="none">
-    <path d="M0 180 H640 C 470 150 380 40 180 76 C 80 94 40 150 0 130 Z" fill="var(--tint)"/>
-  </svg>
-  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 왜 이 스터디인가</span><span class="hpage">04 <i>/ 31</i></span></div>
-  <div class="sbody">
-    <div class="htitle an"><h1>창설 이유 = 시장 기준과 교육 과정의 <em>간극</em></h1>
-      <p class="sub">AIM = 광운대 ERP연구회 산하 <b>MIS×AI 스터디</b> · 2026년 2학기 1기 개설</p></div>
-    <div class="grow-1" style="display:flex;align-items:center">
-    <div class="pipe" style="flex:1">
-      <div class="pnode an"><span class="pl">STEP 1</span><span class="ic"><svg viewBox="0 0 34 34"><polyline points="4,24 12,15 19,20 30,7"/><polyline points="22,7 30,7 30,15"/></svg></span>
-        <span class="pt">시장 기준</span><span class="ps">채용·업무에서 AI 활용이 <b>기본 조건</b>으로 이동</span></div>
-      <svg class="plink" width="80" height="26"><line class="draw" x1="4" y1="13" x2="66" y2="13"/><polyline class="draw" points="58,5 68,13 58,21"/></svg>
-      <div class="pnode an"><span class="pl">STEP 2</span><span class="ic"><svg viewBox="0 0 34 34"><path d="M13 5 L8 17 L13 29 M21 5 L26 17 L21 29"/><line x1="17" y1="12" x2="17" y2="22"/></svg></span>
-        <span class="pt">교육 과정의 간극</span><span class="ps">기존 전공 수업·교내 스터디에 반영이 늦은 구간</span></div>
-      <svg class="plink" width="80" height="26"><line class="draw" x1="4" y1="13" x2="66" y2="13"/><polyline class="draw" points="58,5 68,13 58,21"/></svg>
-      <div class="pnode res an" data-hero><span class="pl">RESULT</span><span class="ic ic--solid"><svg viewBox="0 0 34 34"><circle cx="17" cy="17" r="12"/><circle cx="17" cy="17" r="5"/></svg></span>
-        <span class="pt">MIS에서<br/>AI 활용 연구</span><span class="ps">IT와 가장 가까운 전공에서 활용 방식을 직접 검증</span></div>
-    </div>
-    </div>
-    <div class="band an">창설 목적 = <span>학업·진로에 적용</span> · 도구 안내가 아님
-      <span class="band-sub">다루는 대상 = 각자의 반복 작업 · 전공 과제 · 취업 준비 산출물</span></div>
+    <div class="dark" data-hero>오늘 손에 남는 것 = <b>다음 회차 준비물 3건</b>과 <b>워크스페이스 계정</b>
+      <span class="dsub">실습은 회차 2부터 · 오늘은 방향 정렬과 계정 확인까지</span></div>
   </div>
   <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 1 · 왜 이 스터디인가</span></div>
 </section>
-
-<!-- ===== #5 · BP4 시장 수치 (C) ===== -->
-<section class="slide" data-pname="왜 이 스터디인가" aria-label="5. 시장 수치 3">
+<section class="slide" data-pname="왜 이 스터디인가" aria-label="3. 창설 배경">
   <svg class="wave" style="right:0;top:0;width:520px;height:170px" viewBox="0 0 520 170" fill="none">
     <path d="M520 0 H0 C 170 30 260 140 520 96 Z" fill="var(--tint)"/>
   </svg>
-  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 왜 이 스터디인가</span><span class="hpage">05 <i>/ 31</i></span></div>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 왜 이 스터디인가</span><span class="hpage">03 <i>/ 34</i></span></div>
   <div class="sbody">
-    <div class="htitle an"><h1>시장의 평가 대상 = <em>시키는 방식과 검수</em></h1>
-      <p class="sub">사용 여부는 변별 항목이 아님 · 대표 수치 3건 <b>①②③</b></p></div>
+    <div class="htitle an"><h1>AIM = <em>SAP 편중</em>과 <em>전공자 강의</em>가 비운 자리</h1>
+      <p class="sub">기존 두 갈래의 대상과 범위 대비 · AIM의 대상 = <b>비전공 학부생</b></p></div>
+    <div class="grow-1" style="display:flex;align-items:center">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:28px;width:100%">
+        <div class="gcard an" style="gap:16px;padding:34px 36px">
+          <span class="ic" style="width:96px;height:96px"><svg viewBox="0 0 34 34" style="width:44px;height:44px"><rect x="5" y="14" width="8" height="15"/><rect x="21" y="6" width="8" height="23"/></svg></span>
+          <span class="spl">기존 ERP연구회</span>
+          <h3>SAP 자격증 편중</h3>
+          <p style="font-size:30px;line-height:1.6">ERP 도구 1종 학습에 집중 · AI 활용은 미포함</p>
+          <p class="pa-note">대상 = 자격증 준비 인원 · 범위 = 도구 조작</p>
+        </div>
+        <div class="gcard an" style="gap:16px;padding:34px 36px">
+          <span class="ic" style="width:96px;height:96px"><svg viewBox="0 0 34 34" style="width:44px;height:44px"><polyline points="12,10 6,17 12,24"/><polyline points="22,10 28,17 22,24"/></svg></span>
+          <span class="spl">시중 AI 수업</span>
+          <h3>단기 바이브코딩</h3>
+          <p style="font-size:30px;line-height:1.6">전공자 대상 강의 · 결과물 1회 제작 후 종료</p>
+          <p class="pa-note">바이브코딩 = AI에 시켜 코드를 빠르게 만드는 방식</p>
+        </div>
+        <div class="gcard an on" style="gap:16px;padding:34px 36px">
+          <span class="ic ic--solid" style="width:96px;height:96px"><svg viewBox="0 0 34 34" style="width:44px;height:44px"><circle cx="17" cy="11" r="5"/><path d="M7 28 a10 10 0 0 1 20 0"/></svg></span>
+          <span class="spl" style="color:var(--accent)">AIM</span>
+          <h3>AI 활용 연구</h3>
+          <p style="font-size:30px;line-height:1.6">문과 전공자가 자기 일에 AI를 붙이는 방법</p>
+          <p class="pa-note">대상 = 비전공 학부생 · 범위 = 취업과 그 너머의 경쟁력</p>
+        </div>
+      </div>
+    </div>
+    <div class="dark" data-hero>1기가 다루는 공통 질문 = <b>문과 전공자가 AI를 어떻게 쓰는가</b>
+      <span class="dsub">강의가 아니라 연구 · 답을 7회에 걸쳐 각자 만들고 서로 검수</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 1 · 왜 이 스터디인가</span></div>
+</section>
+<section class="slide" data-pname="왜 이 스터디인가" aria-label="4. 왜 지금인가">
+  <svg class="wave" style="left:0;bottom:0;width:640px;height:180px" viewBox="0 0 640 180" fill="none">
+    <path d="M0 180 H640 C 470 150 380 40 180 76 C 80 94 40 150 0 130 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 왜 이 스터디인가</span><span class="hpage">04 <i>/ 34</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>대기업 <em>25곳 중 8곳</em>이 AI 역량을 채용 평가에 반영</h1>
+      <p class="sub">2026년 전형 변경 진행 중 · 평가 대상은 사용량이 아니라 <b>절차</b></p></div>
     <div class="g-kpi grow-1">
       <div class="ring-wrap an" data-hero>
         <div class="ring-box">
           <svg viewBox="0 0 340 340">
             <circle class="ring-bg" cx="170" cy="170" r="148"/>
-            <circle class="ring-fg" cx="170" cy="170" r="148" data-ring="78" style="stroke-dasharray:929.91;stroke-dashoffset:204.58"/>
+            <circle class="ring-fg" cx="170" cy="170" r="148" data-ring="32"/>
           </svg>
-          <div class="ring-val"><span class="num"><span class="count" data-target="78">78</span><span class="unit">%</span></span></div>
+          <div class="ring-val"><span class="num"><span class="count" data-target="32">32</span><span class="unit">%</span></span></div>
         </div>
-        <div class="ring-lab">채용에서 AI 활용 역량 우대 ①</div>
-        <div class="ring-note">기업 응답 비율 · 2026 채용 트렌드</div>
+        <div class="ring-lab">AI 역량을 채용 평가에 반영</div>
+        <div class="ring-note">대기업 25곳 중 8곳<span class="pa-fn">①</span></div>
       </div>
       <div class="kside">
         <div class="krow an">
-          <div class="kh"><span class="kt">중요 역량 1위 = <b style="color:var(--accent)">AI 결과 검수</b> ②</span>
-            <span class="kv"><span class="count" data-target="50">50</span><span class="unit">%</span></span></div>
-          <div class="kbar"><span class="kfill" style="width:50%"></span></div>
-          <div class="kn">업무 현장 응답 · 사용 능력보다 상위</div>
+          <div class="kh"><span class="kt">평가 <b style="color:var(--accent)">고득점자</b> 사용 토큰</span>
+            <span class="kv"><span class="count" data-target="200">200</span><span class="unit">토큰</span></span></div>
+          <div class="kbar"><span class="kfill pa-kfill" style="width:2.2%"></span></div>
+          <div class="kn">증권사 AI 활용 평가<span class="pa-fn">②</span> · 절차를 먼저 정한 쪽이 짧게 끝냄</div>
         </div>
         <div class="krow an">
-          <div class="kh"><span class="kt">프롬프트 직군 공고 감소 ③</span>
-            <span class="kv"><span class="count" data-target="-40">-40</span><span class="unit">%</span></span></div>
-          <div class="kbar"><span class="kfill" style="width:40%;background:linear-gradient(90deg,#8a8f96,#b9bdc2)"></span></div>
-          <div class="kn">전년 대비 · 문구 암기형 역할 축소</div>
+          <div class="kh"><span class="kt">평가 저득점자 사용 토큰</span>
+            <span class="kv">8,966<span class="unit">토큰</span></span></div>
+          <div class="kbar"><span class="kfill pa-kfill" style="width:100%;background:linear-gradient(90deg,#8a8f96,#b9bdc2)"></span></div>
+          <div class="kn">같은 과업 · 사용량 <b style="color:var(--text)">45배</b>, 점수는 반대</div>
         </div>
         <div class="krow an">
-          <div class="kh"><span class="kt">도구 사용 = 전제</span></div>
-          <div class="kn">계정 보유·기본 조작은 변별 항목에서 제외. <b style="color:var(--text)">출발선이 이미 동일.</b></div>
+          <div class="kh"><span class="kt">채용 전형 변경 2건</span></div>
+          <div class="kn">SK하이닉스 = 자소서 폐지 후 AI 활용 서식 도입(07-30) · 기아 = 신입 전형 'AI 문제해결력' 신설(09-08)</div>
         </div>
       </div>
     </div>
-    <div class="band an">시장이 묻는 것 = <span>시키는 방식</span>과 <span>검수 능력</span>
-      <span class="band-sub">이 두 가지가 이번 학기 스터디의 축</span></div>
+    <div class="band an">재는 것 = <span>사용량</span>이 아니라 <span>문제를 푸는 절차</span>
+      <span class="band-sub">토큰을 45배 덜 쓴 쪽이 고득점 · 스터디가 다루는 것도 이 절차</span></div>
   </div>
   <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 1 · 왜 이 스터디인가</span></div>
 </section>
-
-<!-- ===== #6 · BP6 격차의 원인 (B) ===== -->
-<section class="slide" data-pname="왜 이 스터디인가" aria-label="6. 질문 vs 위임">
+<section class="slide" data-pname="왜 이 스터디인가" aria-label="5. 운영 사실">
   <svg class="wave" style="right:0;bottom:0;width:560px;height:160px" viewBox="0 0 560 160" fill="none">
     <path d="M560 160 H0 C 150 130 260 30 420 66 C 500 84 530 130 560 112 Z" fill="var(--tint)"/>
   </svg>
-  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 왜 이 스터디인가</span><span class="hpage">06 <i>/ 31</i></span></div>
-  <div class="sbody judge" data-judge>
-    <div class="htitle an"><h1>격차의 원인 = 도구가 아니라 <em>시키는 방식</em></h1>
-      <p class="sub">같은 과제(경영정보 팀과제 발표자료 준비)를 <b>두 방식으로 AI에 요청</b>한 결과 비교 · 전원 챗봇 경험자</p></div>
-    <div class="ab grow-1">
-      <div class="abcard an" data-side="a">
-        <div class="abh"><span class="ic" style="width:56px;height:56px"><svg viewBox="0 0 34 34"><circle cx="15" cy="15" r="10"/><line x1="23" y1="23" x2="30" y2="30"/></svg></span>
-          <span class="abl">방식 A</span><h3>질문 한 줄만 입력</h3></div>
-        <div class="abtag">입력</div>
-        <div class="abq">"과제 발표자료 만들어줘"</div>
-        <div class="abr bad"><span class="rl2">결과</span><p>뼈대만 있는 <b>일반 목차</b>. 과목·분량·형식 미반영이라 다시 시키는 왕복 반복.</p></div>
-      </div>
-      <div class="abcard an" data-side="b">
-        <div class="abh"><span class="ic" style="width:56px;height:56px"><svg viewBox="0 0 34 34"><rect x="5" y="5" width="10" height="10" rx="2"/><rect x="19" y="5" width="10" height="10" rx="2"/><rect x="5" y="19" width="10" height="10" rx="2"/><rect x="19" y="19" width="10" height="10" rx="2"/></svg></span>
-          <span class="abl">방식 B</span><h3>브리프 4칸을 채워 입력</h3></div>
-        <div class="abdef an">브리프 = AI에 주는 작업 지시서. 배경·목표·조건·형식 4칸이 기본형.</div>
-        <div class="abtag">입력</div>
-        <div class="abq">배경 = 경영정보 팀과제<br/>목표 = 10분 발표 골격<br/>조건 = 출처 필수 · 표 1개<br/>형식 = 슬라이드 개요 8장</div>
-        <div class="abr"><span class="rl2">결과</span><p>같은 도구·같은 시간에 <b>조건이 반영된 제출용 초안</b>.</p></div>
-      </div>
-    </div>
-    <div class="uibar an" data-ui><span class="uihint">비교 보기</span>
-      <button class="uib" data-ab="a">방식 A</button>
-      <button class="uib" data-ab="b">방식 B</button>
-      <button class="uib" data-ab="judge">판정</button></div>
-    <div class="dark" data-hero>판정 = 두 결과 중 <b>그대로 제출할 수 있는 쪽</b>은 어느 것인가
-      <span class="dsub">격차를 만든 변수 = 도구 등급이 아니라 브리프의 유무 · 브리프 작성법 = 차시 2의 내용</span></div>
-  </div>
-  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 1 · 왜 이 스터디인가</span></div>
-</section>
-
-<!-- ===== #7 · BP5 최종 목표 (A) ===== -->
-<section class="slide" data-pname="왜 이 스터디인가" aria-label="7. 최종 목표">
-  <svg class="wave" style="left:0;bottom:0;width:640px;height:180px" viewBox="0 0 640 180" fill="none">
-    <path d="M0 180 H640 C 470 150 380 40 180 76 C 80 94 40 150 0 130 Z" fill="var(--tint)"/>
-  </svg>
-  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 왜 이 스터디인가</span><span class="hpage">07 <i>/ 31</i></span></div>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 왜 이 스터디인가</span><span class="hpage">05 <i>/ 34</i></span></div>
   <div class="sbody">
-    <div class="htitle an"><h1>최종 목표 = <em>증명 가능한 일상 활용자</em></h1>
-      <p class="sub">위임 = 조건을 붙여 AI에 작업을 맡기고 <b>결과를 사람이 검수</b>하는 방식 · 4단 순서로 도달</p></div>
-    <div class="grow-1" style="display:flex;align-items:center">
-    <div class="pipe" style="flex:1">
-      <div class="pnode an"><span class="pl">STEP 1</span><span class="ic"><svg viewBox="0 0 34 34"><polyline points="4,24 12,15 19,20 30,7"/><polyline points="22,7 30,7 30,15"/></svg></span>
-        <span class="pt">트렌드 파악</span><span class="ps">주간 브리핑·인사이트로 흐름 감지</span></div>
-      <svg class="plink" width="80" height="26"><line class="draw" x1="4" y1="13" x2="66" y2="13"/><polyline class="draw" points="58,5 68,13 58,21"/></svg>
-      <div class="pnode an"><span class="pl">STEP 2</span><span class="ic"><svg viewBox="0 0 34 34"><circle cx="17" cy="17" r="12"/><circle cx="17" cy="17" r="5"/></svg></span>
-        <span class="pt">적용처 선정</span><span class="ps">본인이 실사용자인 반복 작업에서 발굴</span></div>
-      <svg class="plink" width="80" height="26"><line class="draw" x1="4" y1="13" x2="66" y2="13"/><polyline class="draw" points="58,5 68,13 58,21"/></svg>
-      <div class="pnode an"><span class="pl">STEP 3</span><span class="ic"><svg viewBox="0 0 34 34"><rect x="6" y="4" width="22" height="26" rx="3"/><line x1="11" y1="12" x2="23" y2="12"/><line x1="11" y1="18" x2="23" y2="18"/><line x1="11" y1="24" x2="18" y2="24"/></svg></span>
-        <span class="pt">기획</span><span class="ps">요구·조건을 브리프로 명세</span></div>
-      <svg class="plink" width="80" height="26"><line class="draw" x1="4" y1="13" x2="66" y2="13"/><polyline class="draw" points="58,5 68,13 58,21"/></svg>
-      <div class="pnode an"><span class="pl">STEP 4</span><span class="ic"><svg viewBox="0 0 34 34"><path d="M17 4 L20 13 L29 13 L22 19 L25 28 L17 22 L9 28 L12 19 L5 13 L14 13 Z"/></svg></span>
-        <span class="pt">AI 구현</span><span class="ps">구현·반복은 AI에 위임, 결과는 검수</span></div>
-      <span class="peq an">=</span>
-      <div class="pnode res an" data-hero><span class="pl">RESULT</span><span class="ic ic--solid"><svg viewBox="0 0 34 34"><polyline points="7,18 14,25 27,9"/></svg></span>
-        <span class="pt">증명 가능한<br/>일상 활용자</span><span class="ps">전·후 수치와 동작하는 결과물로 증명</span></div>
+    <div class="htitle an"><h1>1기 일정 = <em>월요일 18:00</em> · 휴식 3주 · 총 <em>7회</em></h1>
+      <p class="sub">휴일과 시험기간을 뺀 확정 일정 · 변경 시 <b>워크스페이스 공지</b></p></div>
+    <div class="split rows pa-ops grow-1 an">
+      <div>
+        <span class="ic" style="width:96px;height:96px"><svg viewBox="0 0 34 34" style="width:44px;height:44px"><circle cx="17" cy="17" r="12"/><path d="M17 11 v6 l4 3"/></svg></span>
+        <div><span class="spl">정기 회차</span><span class="pa-ov">월요일 <em>18:00~20:00</em></span></div>
+        <p class="sps">주 1회 · 회당 120분 · 전 회차 같은 시간대 고정</p>
+      </div>
+      <div>
+        <span class="ic" style="width:96px;height:96px"><svg viewBox="0 0 34 34" style="width:44px;height:44px"><rect x="6" y="4" width="22" height="26" rx="3"/><polyline points="11,17 15,21 23,12"/></svg></span>
+        <div><span class="spl">총 회차</span><span class="pa-ov"><em>7회</em></span></div>
+        <p class="sps">회차 1 OT ~ 회차 7 발표 · 1차 개인 학습 자동화 3회 · 2차 팀 협업 프로젝트 4회</p>
+      </div>
+      <div>
+        <span class="ic" style="width:96px;height:96px"><svg viewBox="0 0 34 34" style="width:44px;height:44px"><rect x="5" y="7" width="24" height="22" rx="3"/><line x1="5" y1="14" x2="29" y2="14"/><line x1="12" y1="4" x2="12" y2="9"/><line x1="22" y1="4" x2="22" y2="9"/></svg></span>
+        <div><span class="spl">휴일</span><span class="pa-ov">10-05 휴강</span></div>
+        <p class="sps">개천절 대체휴일 · 이 주는 팀 소통만 온라인으로 진행</p>
+      </div>
+      <div>
+        <span class="ic" style="width:96px;height:96px"><svg viewBox="0 0 34 34" style="width:44px;height:44px"><circle cx="17" cy="17" r="12"/><line x1="14" y1="12" x2="14" y2="22"/><line x1="20" y1="12" x2="20" y2="22"/></svg></span>
+        <div><span class="spl">시험 기간</span><span class="pa-ov">10-07 ~ 10-25 휴식</span></div>
+        <p class="sps">3주 공백 · 10-26 회차 4로 재개, 과제 부과 없음</p>
+      </div>
     </div>
-    </div>
-    <div class="band an">증명 = <span>전·후 수치</span> + <span>동작하는 결과물</span>
-      <span class="band-sub">확인 지점 = 학기말 쇼케이스</span></div>
+    <div class="dark" data-hero>운영자도 <b>배우는 입장</b> · 함께 고민 · 함께 성장
+      <span class="dsub">가르치는 자리가 아니라 각자 결과물을 만들고 서로 검수하는 자리</span></div>
   </div>
   <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 1 · 왜 이 스터디인가</span></div>
 </section>
-
-<!-- ===== #8 · BP5 타임라인 변형 학기 구조 (B) ===== -->
-<section class="slide" data-pname="왜 이 스터디인가" aria-label="8. 학기 구조">
-  <svg class="wave" style="right:0;top:0;width:540px;height:170px" viewBox="0 0 540 170" fill="none">
-    <path d="M540 0 H0 C 180 30 270 140 540 96 Z" fill="var(--tint)"/>
-  </svg>
-  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 왜 이 스터디인가</span><span class="hpage">08 <i>/ 31</i></span></div>
-  <div class="sbody">
-    <div class="htitle an"><h1>학기 = 개인 4주 + 팀 5주 · <em>시험 2주 전 중지</em></h1>
-      <p class="sub">주 1회 대면 60분 고정 · 요일 추후 확정 · 구간 길이 = 실제 주 수 비율</p></div>
-    <div class="grow-1" style="display:flex;align-items:center">
-      <div class="split cols an" style="width:100%;grid-template-columns:4fr 3fr 5fr">
-        <div class="tlseg cur"><span class="per">09-07 주 ~ 10-06</span><span class="rail"></span>
-          <h3>1차 개인 4주</h3>
-          <p>각자 생활·학업의 <b>반복 작업 하나</b>를 AI 루틴으로 교체하고 전·후를 숫자로 기록</p>
-          <span class="ses">차시 1 ~ 4</span></div>
-        <div class="tlseg off"><span class="per">10-07 ~ 10-26</span><span class="rail"></span>
-          <h3>시험기간</h3>
-          <p>세션 없음. 개인 산출물은 계속 사용, 팀은 자료 수집을 비동기로</p>
-          <span class="ses">세션 0회</span></div>
-        <div class="tlseg"><span class="per">10-27 주 ~ 11-24</span><span class="rail"></span>
-          <h3>2차 팀 5주</h3>
-          <p>실재 조직·업무의 <b>프로세스 하나를 재설계</b>. 기획은 사람, 구현은 AI</p>
-          <span class="ses">차시 5 ~ 9</span></div>
-      </div>
-    </div>
-    <div class="dark" data-hero>고정 규칙 = <b>주 1회 60분</b> · 중간고사·기말고사 <b>2주 전 세션 중지</b>
-      <span class="dsub">학사일정 연동 · 중지 구간에도 개인 산출물 사용과 팀 기획 초안은 비동기로 진행</span></div>
-  </div>
-  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 1 · 왜 이 스터디인가</span></div>
-</section>
-
-<!-- ===== #9 · BP7 시연 (C) ===== -->
-<section class="slide" data-pname="왜 이 스터디인가" aria-label="9. 시연">
-  <svg class="wave" style="left:0;bottom:0;width:560px;height:160px" viewBox="0 0 560 160" fill="none">
-    <path d="M0 160 H560 C 410 130 300 30 140 66 C 60 84 30 130 0 112 Z" fill="var(--tint)"/>
-  </svg>
-  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 왜 이 스터디인가</span><span class="hpage">09 <i>/ 31</i></span></div>
-  <div class="sbody">
-    <div class="htitle an"><h1>시연 = <em>위임으로 도달한 수준</em> 확인</h1>
-      <p class="sub">따라 만들기는 오늘 범위 아님 · 확인 대상 = <b>사람이 검수한 지점</b></p></div>
-    <div class="grow-1" style="display:grid;grid-template-columns:1.25fr .75fr;gap:56px;align-items:stretch">
-      <div class="an" style="display:flex;flex-direction:column;min-height:0">
-        <div class="shot" data-hero style="flex:1">
-          <div class="bar"><span class="dot2"></span><span class="dot2"></span><span class="dot2"></span><span class="url">kwu-erpclub.github.io</span></div>
-          <div class="pend"><span class="pl2">촬영 대기</span>
-            <h4>라이브 시연 화면</h4>
-            <p>이 허브 사이트의 기획·검수 지점을 실시간으로 열어 확인. 촬영본 도착 시 이 자리에 교체.</p></div>
-        </div>
-        <p class="scap">폴백 = 현장 라이브 접속</p>
-      </div>
-      <div class="pts fill">
-        <div class="ptr an"><span class="pnum">1</span><span><h4>이 사이트 = <em>같은 방식의 결과물</em></h4>
-          <p>기획·검수는 사람, 구현은 AI. 오늘 보는 화면 전부가 그 결과.</p></span></div>
-        <div class="ptr an"><span class="pnum">2</span><span><h4>오늘 범위 = 도달 수준 확인</h4>
-          <p>제작 실습은 차시 3. 오늘은 어디까지 위임 가능한지만 확인.</p></span></div>
-        <div class="ptr an"><span class="pnum">3</span><span><h4>확인 지점 = 사람이 손댄 곳</h4>
-          <p>구조 결정·사실 검수·카피 판정 3곳. 나머지는 위임 구간.</p></span></div>
-      </div>
-    </div>
-    <div class="band an">위임 가능 범위 = <span>구현·반복</span> · 사람이 남기는 것 = <span>기획과 검수</span>
-      <span class="band-sub">한 학기 뒤 각자의 산출물도 같은 구조로 제출</span></div>
-  </div>
-  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 1 · 왜 이 스터디인가</span></div>
-</section>
-
-<!-- ===== #10 · BP3 파트 2 디바이더 (A) ===== -->
-<section class="slide divider" aria-label="10. 파트 2 디바이더">
+<section class="slide divider" aria-label="6. 디바이더">
   <svg class="wave" style="right:0;top:0;width:900px;height:1080px" viewBox="0 0 900 1080" fill="none">
     <path d="M900 0 V1080 H560 C 700 880 590 690 700 520 C 800 365 760 160 900 0 Z" fill="var(--tint)"/>
     <path d="M900 0 V1080 H700 C 815 900 720 700 815 540 C 880 430 860 180 900 60 Z" fill="var(--tint2)"/>
   </svg>
   <span class="dot" style="width:38px;height:38px;right:760px;top:180px;background:var(--tint2)"></span>
-  <span class="dot" style="width:16px;height:16px;right:720px;bottom:260px;background:var(--accent)"></span>
+  <span class="dot" style="width:16px;height:16px;right:720px;bottom:250px;background:var(--accent)"></span>
   <div class="dwm">2</div>
   <div style="margin-top:auto;margin-bottom:auto;position:relative;z-index:3">
     <div class="drow">
       <div class="dnum an" data-hero>02</div>
       <div>
-        <div class="dtitle an">허브 안내</div>
-        <p class="dline an">이 파트에서 얻는 것 = <b>로그인 1회</b>와 한 학기 동안 쓸 <b>화면 위치</b></p>
+        <div class="dtitle an">커리큘럼</div>
+        <p class="dline an">이 파트에서 얻는 것 = <b>개인 자동화 1개</b> · 팀 산출물 1개 · <b>협업 룰 1벌</b></p>
       </div>
     </div>
     <div class="dprev">
       <div class="ph an">PART 2 구성</div>
-      <div class="pv an"><span class="pn">1</span><span class="pvt">허브 = <em>보이는 곳</em> + <em>내는 곳</em></span><span class="pvs">2면 구조</span></div>
-      <div class="pv an"><span class="pn">2</span><span class="pvt">인사이트 = 자동 주 3회 + 멤버 기고 <em>주 1건</em></span><span class="pvs">화면 2컷</span></div>
-      <div class="pv an"><span class="pn">3</span><span class="pvt">로그인 = <em>학번</em> · 초기 비밀번호 000000</span><span class="pvs">로그인 화면</span></div>
-      <div class="pv an"><span class="pn">4</span><span class="pvt">로드맵 탭 = 학기 구조의 <em>상세판</em></span><span class="pvs">탭 2종</span></div>
-      <div class="pv an"><span class="pn">5</span><span class="pvt">승인 = <em>형식 확인만</em> · 내용 검열 없음</span><span class="pvs">4단 흐름</span></div>
+      <div class="pv an"><span class="pn">1</span><span class="pvt">2단 구조 = 개인 자동화 뒤 <em>팀 협업</em></span><span class="pvs">타임라인</span></div>
+      <div class="pv an"><span class="pn">2</span><span class="pvt">회차 7회 = 매회 <em>그날 끝내는 일</em> 1건</span><span class="pvs">회차 표 7행</span></div>
+      <div class="pv an"><span class="pn">3</span><span class="pvt">1차 원칙 = <em>학습은 자동화되지 않는다</em></span><span class="pvs">선언</span></div>
+      <div class="pv an"><span class="pn">4</span><span class="pvt">파일을 직접 여는 도구 · 2026 학습 도구</span><span class="pvs">4갈래 2장</span></div>
+      <div class="pv an"><span class="pn">5</span><span class="pvt">2차 원칙 = <em>판단은 사람만 한다</em> · 협업 룰</span><span class="pvs">선언 · 룰 5칸</span></div>
     </div>
   </div>
   <div class="tracker">
-    <span class="tp an">1 왜</span><span class="tp cur an">2 허브</span><span class="tp an">3 세팅·실습</span><span class="tp an">4 주제</span><span class="tp an">5 마무리</span>
+    <span class="tp an">1 왜 이 스터디인가</span><span class="tp cur an">2 커리큘럼</span><span class="tp an">3 AIM 웹</span><span class="tp an">4 AI 트렌드</span><span class="tp an">5 마무리</span>
   </div>
 </section>
-
-<!-- ===== #11 · BP6 허브 구조 (B) ===== -->
-<section class="slide" data-pname="허브 안내" aria-label="11. 허브 구조">
-  <svg class="wave" style="right:0;bottom:0;width:540px;height:165px" viewBox="0 0 540 165" fill="none">
-    <path d="M540 165 H0 C 150 135 250 30 405 68 C 485 86 512 132 540 115 Z" fill="var(--tint)"/>
+<section class="slide" data-pname="커리큘럼" aria-label="7. 2단 구조">
+  <svg class="wave" style="left:0;bottom:0;width:640px;height:175px" viewBox="0 0 640 175" fill="none">
+    <path d="M0 175 H640 C 470 146 380 38 180 74 C 80 92 40 146 0 126 Z" fill="var(--tint)"/>
   </svg>
-  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 허브 안내</span><span class="hpage">11 <i>/ 31</i></span></div>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 커리큘럼</span><span class="hpage">07 <i>/ 34</i></span></div>
   <div class="sbody">
-    <div class="htitle an"><h1>허브 = <em>보이는 곳</em> + <em>내는 곳</em></h1>
-      <p class="sub">허브 = 스터디의 자료·일정·제출이 모이는 사이트 · <b>주소 1개</b>, 로그인 여부로 화면이 갈림</p></div>
-    <div class="ab grow-1">
-      <div class="abcard an">
-        <div class="abh"><span class="ic" style="width:56px;height:56px"><svg viewBox="0 0 34 34"><circle cx="17" cy="17" r="12"/><line x1="5" y1="17" x2="29" y2="17"/><path d="M17 5 a18 18 0 0 1 0 24 a18 18 0 0 1 0 -24"/></svg></span>
-          <span class="abl">로그인 없이</span><h3>공개면 = 보이는 곳</h3></div>
-        <p>외부 열람용. 스터디 결과가 쌓이는 표면.</p>
-        <div class="chips"><span class="chip mute">INSIGHTS</span><span class="chip mute">SEMINARS</span><span class="chip mute">PROJECTS</span><span class="chip mute">RECRUIT</span></div>
-        <div class="abr bad"><span class="rl2">쓰임</span><p>읽기 전용. <b>지원서에 링크로 제출 가능한 기록</b>이 남는 자리.</p></div>
-      </div>
-      <div class="abcard an">
-        <div class="abh"><span class="ic" style="width:56px;height:56px"><svg viewBox="0 0 34 34"><rect x="4" y="6" width="26" height="22" rx="3"/><line x1="12" y1="6" x2="12" y2="28"/></svg></span>
-          <span class="abl">로그인 후</span><h3>워크스페이스 = 내는 곳</h3></div>
-        <p>스터디원 작업면. 오늘 로그인할 대상.</p>
-        <div class="chips"><span class="chip">홈</span><span class="chip">로드맵</span><span class="chip">공고</span><span class="chip">인사이트 기고</span><span class="chip">내정보</span></div>
-        <div class="abr"><span class="rl2">쓰임</span><p>일정 확인·과제 제출·기고 작성. <b>탭 5종</b>이 한 학기 내내 고정.</p></div>
+    <div class="htitle an"><h1>커리큘럼 2단 = <em>개인 자동화</em>를 익힌 뒤 <em>팀 협업</em></h1>
+      <p class="sub">1차 = 개인 학습 자동화 · 2차 = 팀 협업 프로젝트 · 사이에 <b>휴일과 시험기간</b></p></div>
+    <div class="grow-1" style="display:flex;align-items:center">
+      <div class="pipe pb-pipe" style="flex:1">
+        <div class="pnode an"><span class="pl">1차 · 개인</span>
+          <span class="ic"><svg viewBox="0 0 34 34"><circle cx="17" cy="12" r="6"/><path d="M5 29 a12 12 0 0 1 24 0"/></svg></span>
+          <span class="pb-rail cur"></span>
+          <span class="pt">학습 자동화</span>
+          <span class="ps">회차 2~3 · 09-21 · 09-28</span>
+          <span class="ps">과목 분석 → 워크플로 피드백</span>
+          <span class="ps">산출물 = 내 학습 워크플로 1개</span></div>
+        <svg class="plink" width="80" height="26"><line class="draw" x1="4" y1="13" x2="66" y2="13"/><polyline class="draw" points="58,5 68,13 58,21"/></svg>
+        <div class="pnode off an"><span class="pl">휴식</span>
+          <span class="ic ic--mute"><svg viewBox="0 0 34 34"><rect x="5" y="7" width="24" height="22" rx="3"/><line x1="5" y1="14" x2="29" y2="14"/><line x1="12" y1="4" x2="12" y2="10"/><line x1="22" y1="4" x2="22" y2="10"/></svg></span>
+          <span class="pb-rail wait"></span>
+          <span class="pt">휴일 · 시험기간</span>
+          <span class="ps">10-05 대체휴일</span>
+          <span class="ps">시험기간 10-07~10-25</span>
+          <span class="ps">모임 없음 · 팀 소통 시작</span></div>
+        <svg class="plink" width="80" height="26"><line class="draw" x1="4" y1="13" x2="66" y2="13"/><polyline class="draw" points="58,5 68,13 58,21"/></svg>
+        <div class="pnode an"><span class="pl">2차 · 팀</span>
+          <span class="ic"><svg viewBox="0 0 34 34"><circle cx="12" cy="13" r="5"/><circle cx="24" cy="13" r="4"/><path d="M3 28 a9 9 0 0 1 18 0"/><path d="M23 28 a8 8 0 0 1 8 -7"/></svg></span>
+          <span class="pb-rail"></span>
+          <span class="pt">협업 프로젝트</span>
+          <span class="ps">회차 4~7 · 10-26~11-16</span>
+          <span class="ps">팀 룰 → 구현 → 상호 검수</span>
+          <span class="ps">산출물 = 팀 프로젝트 1건</span></div>
+        <span class="peq an">=</span>
+        <div class="pnode res an" data-hero><span class="pl">RESULT</span>
+          <span class="ic ic--solid"><svg viewBox="0 0 34 34"><polyline points="7,18 14,25 27,9"/></svg></span>
+          <span class="pt">발표 11-16</span>
+          <span class="ps">각자 모듈 + 검수 기록</span>
+          <span class="ps">팀 이음새 시연</span></div>
       </div>
     </div>
-    <div class="dark" data-hero>오늘 다룰 화면 = <b>워크스페이스</b> · 공개면 = 결과가 쌓이는 곳
-      <span class="dsub">두 면의 주소는 하나 · 헤더의 WORKSPACE 링크가 상시 입구</span></div>
+    <div class="band an">1차 소재 = <span>학습 자동화</span> · 요구 최다이며 지금 도움이 가장 큰 영역
+      <span class="band-sub">모듈 = 팀 산출물을 나눈 각자 담당 부분 · 2차는 모듈 단위로 분담</span></div>
   </div>
-  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 2 · 허브 안내</span></div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 2 · 커리큘럼</span></div>
 </section>
-
-<!-- ===== #12 · BP7 인사이트 (C) ===== -->
-<section class="slide" data-pname="허브 안내" aria-label="12. 인사이트">
-  <svg class="wave" style="left:0;top:0;width:520px;height:150px" viewBox="0 0 520 150" fill="none">
-    <path d="M0 0 H520 C 360 34 280 130 110 100 C 50 90 24 52 0 66 Z" fill="var(--tint)"/>
-  </svg>
-  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 허브 안내</span><span class="hpage">12 <i>/ 31</i></span></div>
-  <div class="sbody">
-    <div class="htitle an"><h1>인사이트 = 자동 주 3회 + 멤버 기고 <em>주 1건</em></h1>
-      <p class="sub">읽는 면(목록·상세)과 쓰는 면(기고)이 같은 데이터를 공유 · 기고 시작 = <b>차시 2</b></p></div>
-    <div class="grow-1" style="display:grid;grid-template-columns:1.15fr .85fr;gap:44px;align-items:stretch">
-      <div class="an" style="display:flex;flex-direction:column;min-height:0">
-        <div class="shot" style="flex:1">
-          <div class="bar"><span class="dot2"></span><span class="dot2"></span><span class="dot2"></span><span class="url">/insights/</span></div>
-          <div class="sview"><img src="../ws/pub-insights.png" alt="인사이트 목록 화면" /></div>
-        </div>
-        <p class="scap">목록 = 시리즈 필터 · 미열람 배지 · 좋아요·북마크 수</p>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:26px;min-height:0">
-        <div class="an" style="display:flex;flex-direction:column;min-height:0;flex:1">
-          <div class="shot" style="flex:1">
-            <div class="bar"><span class="dot2"></span><span class="dot2"></span><span class="dot2"></span><span class="url">/insights/…</span></div>
-            <div class="sview"><img src="../ws/pub-insight-detail.png" alt="인사이트 상세 화면" /></div>
-          </div>
-          <p class="scap">상세 = 출처 링크 · 「SO WHAT」 마무리 절</p>
-        </div>
-        <div class="pts">
-          <div class="ptr an"><span class="pnum">1</span><span><h4>자동 발행 = <em>주 3회</em></h4>
-            <p>트렌드 브리핑과 인사이트가 정해진 요일에 게재.</p></span></div>
-          <div class="ptr an"><span class="pnum">2</span><span><h4>멤버 기고 = <em>주 1건</em></h4>
-            <p>워크스페이스 기고 탭에서 작성. 과제 항목에 포함.</p></span></div>
-        </div>
-      </div>
-    </div>
-    <div class="dark" data-hero>기고 = <b>주 1건</b> · 첫 제출 = <b>차시 2</b>
-      <span class="dsub">게재된 글 = 작성자 이름과 함께 공개면에 남는 기록</span></div>
-  </div>
-  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 2 · 허브 안내</span></div>
-</section>
-
-<!-- ===== #13 · BP7 로그인 (C) ===== -->
-<section class="slide" data-pname="허브 안내" aria-label="13. 워크스페이스 홈">
-  <svg class="wave" style="right:0;bottom:0;width:520px;height:155px" viewBox="0 0 520 155" fill="none">
-    <path d="M520 155 H0 C 140 128 240 28 390 64 C 466 82 494 126 520 108 Z" fill="var(--tint)"/>
-  </svg>
-  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 허브 안내</span><span class="hpage">13 <i>/ 31</i></span></div>
-  <div class="sbody">
-    <div class="htitle an"><h1>로그인 = <em>학번</em> · 초기 비밀번호 000000</h1>
-      <p class="sub">계정은 운영진이 사전 생성 · 로그인 후 첫 화면 = <b>월 캘린더와 다가오는 업무</b></p></div>
-    <div class="grow-1" style="display:grid;grid-template-columns:1.3fr .7fr;gap:52px;align-items:stretch">
-      <div class="an" style="display:flex;flex-direction:column;min-height:0">
-        <div class="shot" data-hero style="flex:1">
-          <div class="bar"><span class="dot2"></span><span class="dot2"></span><span class="dot2"></span><span class="url">/workspace/</span></div>
-          <div class="sview"><img src="../ws/ws-login.png" alt="워크스페이스 로그인 화면" /></div>
-        </div>
-        <p class="scap">입구 = 공개 헤더의 WORKSPACE 링크</p>
-      </div>
-      <div class="pts fill">
-        <div class="ptr an"><span class="pnum">1</span><span><h4>아이디 = <em>학번</em></h4>
-          <p>이메일 주소 대신 학번을 그대로 입력.</p></span></div>
-        <div class="ptr an"><span class="pnum">2</span><span><h4>초기 비밀번호 = <em>000000</em></h4>
-          <p>0 여섯 개. 전원 동일하게 발급.</p></span></div>
-        <div class="ptr an"><span class="pnum">3</span><span><h4>변경 = 내정보 탭</h4>
-          <p>첫 로그인 직후 내정보에서 비밀번호 변경.</p></span></div>
-      </div>
-    </div>
-    <div class="band an">계정 = <span>운영진 사전 생성</span> · 가입 절차 없음
-      <span class="band-sub">로그인이 되지 않는 경우 = 이 시간에 운영진 확인</span></div>
-  </div>
-  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 2 · 허브 안내</span></div>
-</section>
-
-<!-- ===== #14 · BP8 로드맵·공고 (B) ===== -->
-<section class="slide" data-pname="허브 안내" aria-label="14. 로드맵·공고">
-  <svg class="wave" style="left:0;bottom:0;width:520px;height:155px" viewBox="0 0 520 155" fill="none">
-    <path d="M0 155 H520 C 380 128 280 28 130 64 C 54 82 26 126 0 108 Z" fill="var(--tint)"/>
-  </svg>
-  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 허브 안내</span><span class="hpage">14 <i>/ 31</i></span></div>
-  <div class="sbody">
-    <div class="htitle an"><h1>로드맵 탭 = 학기 구조의 <em>상세판</em></h1>
-      <p class="sub">앞 장의 타임라인을 차시 단위로 펼친 화면 · 갱신 = <b>운영진</b>, 열람 = 전원</p></div>
-    <div class="grow-1" style="display:grid;grid-template-columns:1.2fr .8fr;gap:48px;align-items:stretch">
-      <div class="an" style="display:flex;flex-direction:column;min-height:0">
-        <div class="shot" style="flex:1">
-          <div class="bar"><span class="dot2"></span><span class="dot2"></span><span class="dot2"></span><span class="url">/workspace/?tab=로드맵</span></div>
-          <div class="sview"><img src="../ws/ws-flow.png" alt="워크스페이스 로드맵 탭 화면" /></div>
-        </div>
-        <p class="scap">차시 클릭 = 그 회차의 주제·완료 조건 펼침</p>
-      </div>
-      <div class="split rows an" style="align-content:start">
-        <div><span class="spl">로드맵 탭</span>
-          <div class="spt">차시별 <em>완료 조건</em></div>
-          <p class="sps">회차 주제·배우는 것·세부 항목. 자료와 본문은 <b>공개일에 해금</b>.</p></div>
-        <div><span class="spl">공고 탭</span>
-          <div class="spt">공모전·채용·자격시험</div>
-          <p class="sps">운영진이 등록, 등록마다 <b>"왜 유효한가" 한 줄</b> 필수. 마감은 자동으로 흐림 처리.</p></div>
-        <div><span class="spl">연동</span>
-          <div class="spt">홈 캘린더 합류</div>
-          <p class="sps">과제 마감·차시 날짜·공고 접수마감이 <b>한 달력</b>에 모임.</p></div>
-      </div>
-    </div>
-    <div class="dark" data-hero>학기 구조의 확정본 = <b>로드맵 탭</b> · 개인 일정 확인 = <b>홈 캘린더</b>
-      <span class="dsub">덱과 로드맵 탭이 어긋나면 로드맵 탭이 기준</span></div>
-  </div>
-  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 2 · 허브 안내</span></div>
-</section>
-
-<!-- ===== #15 · BP5 기고·승인 (B) ===== -->
-<section class="slide" data-pname="허브 안내" aria-label="15. 기고 폼·제출 흐름">
+<section class="slide" data-pname="커리큘럼" aria-label="8. 회차 표">
   <svg class="wave" style="right:0;top:0;width:520px;height:160px" viewBox="0 0 520 160" fill="none">
     <path d="M520 0 H0 C 170 30 260 132 520 90 Z" fill="var(--tint)"/>
   </svg>
-  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 허브 안내</span><span class="hpage">15 <i>/ 31</i></span></div>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 커리큘럼</span><span class="hpage">08 <i>/ 34</i></span></div>
   <div class="sbody">
-    <div class="htitle an"><h1>승인 = <em>형식 확인만</em> · 내용 검열 없음</h1>
-      <p class="sub">제출부터 게재까지 4단 · 순서대로 <b>공개 버튼</b>으로 확인</p></div>
-    <div class="grow-1" style="display:flex;align-items:center">
-    <div class="pipe" style="flex:1">
-      <div class="pnode an rv"><span class="pl">STEP 1</span><span class="ic"><svg viewBox="0 0 34 34"><rect x="8" y="15" width="18" height="14" rx="3"/><path d="M12 15 v-4 a5 5 0 0 1 10 0 v4"/></svg></span>
-        <span class="pt">로그인</span><span class="ps">학번으로 워크스페이스 진입</span></div>
-      <svg class="plink" width="80" height="26"><line class="draw" x1="4" y1="13" x2="66" y2="13"/><polyline class="draw" points="58,5 68,13 58,21"/></svg>
-      <div class="pnode an rv"><span class="pl">STEP 2</span><span class="ic"><svg viewBox="0 0 34 34"><path d="M6 28 l3 -8 L23 6 l5 5 L14 25 Z"/><line x1="20" y1="9" x2="25" y2="14"/></svg></span>
-        <span class="pt">기고 작성</span><span class="ps">기본 트랙(키트+폼) 또는 자유 형식</span></div>
-      <svg class="plink" width="80" height="26"><line class="draw" x1="4" y1="13" x2="66" y2="13"/><polyline class="draw" points="58,5 68,13 58,21"/></svg>
-      <div class="pnode an rv"><span class="pl">STEP 3</span><span class="ic"><svg viewBox="0 0 34 34"><rect x="6" y="4" width="22" height="26" rx="3"/><polyline points="11,16 15,20 23,11"/><line x1="11" y1="25" x2="23" y2="25"/></svg></span>
-        <span class="pt">형식 확인</span><span class="ps">제목·출처·설명 칸 누락만 확인</span></div>
-      <svg class="plink" width="80" height="26"><line class="draw" x1="4" y1="13" x2="66" y2="13"/><polyline class="draw" points="58,5 68,13 58,21"/></svg>
-      <div class="pnode res an rv"><span class="pl">RESULT</span><span class="ic ic--solid"><svg viewBox="0 0 34 34"><circle cx="17" cy="17" r="12"/><line x1="5" y1="17" x2="29" y2="17"/><path d="M17 5 a18 18 0 0 1 0 24 a18 18 0 0 1 0 -24"/></svg></span>
-        <span class="pt">공개면 게재</span><span class="ps">작성자 이름과 함께 인사이트 목록에 노출</span></div>
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:48px">
+      <div class="htitle an"><h1>회차 7회 = 매회 <em>그날 끝내는 일</em> 1건</h1>
+        <p class="sub">월 18:00~20:00 · 휴일 10-05 = <b>팀 소통 시작</b> · 시험기간 10-07~10-25 휴식</p></div>
+      <div class="uibar an" data-ui style="flex:0 0 auto"><span class="uihint">회차 공개</span>
+        <button class="uib" data-rvnext>다음 회차</button>
+        <button class="uib" data-rvall>전체 보기</button></div>
     </div>
+    <div class="grow-1">
+      <div class="pb-tab fill an">
+        <div class="pb-th"><span>회차</span><span>날짜</span><span>내용</span><span>그날 여러분이 하는 일</span></div>
+        <div class="pb-tr rv"><span class="pb-no">1</span><span class="pb-dt">09-14</span>
+          <span class="pb-ct">OT</span><span class="pb-do">워크스페이스 로그인 · 다음 회차 준비물 확인</span></div>
+        <div class="pb-tr rv"><span class="pb-no">2</span><span class="pb-dt">09-21</span>
+          <span class="pb-ct">과목별 <em>학습 분석</em></span><span class="pb-do">과목마다 자료 형태·시험 방식 적고 자동화 지점 결정</span></div>
+        <div class="pb-tr rv"><span class="pb-no">3</span><span class="pb-dt">09-28</span>
+          <span class="pb-ct">워크플로 피드백 · 팀 편성</span><span class="pb-do">남의 워크플로를 직접 써 보고 문제 지점 지목</span></div>
+        <div class="pb-tr rv"><span class="pb-no">4</span><span class="pb-dt">10-26</span>
+          <span class="pb-ct">팀 룰 수립 · 무대 선택</span><span class="pb-do">협업 룰 5칸 확정 · 내가 맡을 모듈 정하기</span></div>
+        <div class="pb-tr rv"><span class="pb-no">5</span><span class="pb-dt">11-02</span>
+          <span class="pb-ct">모듈 구현</span><span class="pb-do">맡은 모듈 1개를 동작하는 상태까지</span></div>
+        <div class="pb-tr rv"><span class="pb-no">6</span><span class="pb-dt">11-09</span>
+          <span class="pb-ct">상호 검수 · 이음새 연결</span><span class="pb-do">남의 모듈을 검수하고 검수 기록 작성</span></div>
+        <div class="pb-tr rv"><span class="pb-no">7</span><span class="pb-dt">11-16</span>
+          <span class="pb-ct"><em>발표</em></span><span class="pb-do">내 모듈 + 검수 기록 · 팀 이음새 시연</span></div>
+      </div>
     </div>
-    <div class="uibar an" data-ui><span class="uihint">단계 공개</span>
-      <button class="uib" data-rvnext>다음 단계</button>
-      <button class="uib" data-rvall>전체 보기</button></div>
-    <div class="dark" data-hero>확인 항목 = <b>형식</b> · 주장·관점 = <b>무수정 게재</b>
-      <span class="dsub">오늘 숙제 = 허브 로그인 1회 · 기고 첫 제출 = 차시 2</span></div>
+    <div class="dark" data-hero>회차 1~3 = <b>개인 산출물</b> · 회차 4~7 = <b>팀 산출물</b>
+      <span class="dsub">오른쪽 열 = 그날 각자 완료하는 것 · 앞 회차 산출물이 다음 회차의 입력</span></div>
   </div>
-  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 2 · 허브 안내</span></div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 2 · 커리큘럼</span></div>
 </section>
-
-<!-- ===== #16 · BP3 파트 3 디바이더 (A) ===== -->
-<section class="slide divider" aria-label="16. 파트 3 디바이더">
+<section class="slide" data-pname="커리큘럼" aria-label="9. 1차 원칙">
+  <svg class="wave" style="right:0;bottom:0;width:560px;height:160px" viewBox="0 0 560 160" fill="none">
+    <path d="M560 160 H0 C 150 130 260 30 420 66 C 500 84 530 130 560 112 Z" fill="var(--tint)"/>
+  </svg>
+  <span class="dot" style="width:24px;height:24px;left:140px;top:230px;background:var(--tint2)"></span>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 커리큘럼</span><span class="hpage">09 <i>/ 34</i></span></div>
+  <div class="sbody">
+    <div class="grow-1 decl" data-hero style="gap:36px">
+      <span class="pb-eyebrow an">1차 · 개인 학습 자동화 · 원칙</span>
+      <p class="dtxt" style="margin:0;font-size:108px"><span class="an">학습은 </span><span class="an"><em>자동화되지 않는다</em></span></p>
+      <p class="dnote an" style="margin:0">판정 근거 = 운영자 실사용 · <b>도움은 되지만 학습 자체를 맡기면 남는 것이 없음</b></p>
+      <div class="split cols an" style="width:1440px">
+        <div style="padding:46px 44px;display:flex;flex-direction:column;gap:14px;text-align:left">
+          <span class="spl">남긴다</span>
+          <div class="spt" style="font-size:38px">학생이 생각하고 <em>부딪히는 부분</em></div>
+          <p class="sps" style="font-size:26px">직접 판단하고 틀려 보는 구간 · 여기가 줄면 성장도 줄어듦</p>
+          <p class="pb-tool">자동화 대상에서 제외 · 회차 2에서 과목마다 이 경계를 먼저 긋는다</p>
+        </div>
+        <div style="padding:46px 44px;display:flex;flex-direction:column;gap:14px;text-align:left">
+          <span class="spl">줄인다</span>
+          <div class="spt" style="font-size:38px">개념정리 · 반복작업 · 학습계획</div>
+          <p class="sps" style="font-size:26px">손이 많이 가지만 내 판단이 필요 없는 구간 · 1차의 자동화 대상</p>
+          <p class="pb-tool">자료 변환 · 요약 · 반복 출제 · 일정 배분이 여기에 해당</p>
+        </div>
+      </div>
+      <div class="pb-note an" style="width:1440px">
+        <b>1차 산출물 = 내 과목에 맞춘 <em>학습 워크플로 1개</em></b>
+        <span>회차 2 = 자동화 지점 결정 · 회차 3 = 서로의 워크플로를 직접 써 보고 점검</span>
+      </div>
+    </div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 2 · 커리큘럼</span></div>
+</section>
+<section class="slide" data-pname="커리큘럼" aria-label="10. 오너 구조 실물">
+  <svg class="wave" style="right:0;top:0;width:520px;height:160px" viewBox="0 0 520 160" fill="none">
+    <path d="M520 0 H0 C 170 30 260 132 520 90 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 커리큘럼</span><span class="hpage">10 <i>/ 34</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>목표 · 자료 · 판단 기준을 넣으면 <em>과목 맞춤 정리와 퀴즈</em></h1>
+      <p class="sub">운영자가 학기 내내 쓰는 구조 6단계 · 회차 2에서 같은 구조를 각자 과목으로</p></div>
+    <div class="grow-1" style="display:grid;grid-template-columns:1.04fr .96fr;gap:56px;min-height:0">
+      <div class="pb-flow an">
+        <div class="pb-step"><span class="pb-sn">1</span>
+          <span><h4>과목 폴더로 분리</h4><p>과목마다 하위 폴더 1개 · 유의사항·톤 파일을 그 안에</p></span></div>
+        <svg class="pb-conn" width="2" height="16"><line class="draw" x1="1" y1="0" x2="1" y2="16"/></svg>
+        <div class="pb-step"><span class="pb-sn">2</span>
+          <span><h4>자료 투입</h4><p>강의자료 PDF · docx를 폴더에 그대로</p></span></div>
+        <svg class="pb-conn" width="2" height="16"><line class="draw" x1="1" y1="0" x2="1" y2="16"/></svg>
+        <div class="pb-step"><span class="pb-sn">3</span>
+          <span><h4>md로 변환</h4><p>md = 서식 없는 텍스트 문서 형식 · AI가 그대로 읽는 형태</p></span></div>
+        <svg class="pb-conn" width="2" height="16"><line class="draw" x1="1" y1="0" x2="1" y2="16"/></svg>
+        <div class="pb-step"><span class="pb-sn">4</span>
+          <span><h4>AI 정리 · <em>판단 기준 3</em></h4><p>강의계획서 · 강의정보 · 족보를 기준으로 정리 범위 결정</p></span></div>
+        <svg class="pb-conn" width="2" height="16"><line class="draw" x1="1" y1="0" x2="1" y2="16"/></svg>
+        <div class="pb-step"><span class="pb-sn">5</span>
+          <span><h4>노트 앱에서 열람</h4><p>옵시디언(파일 기반 노트 앱)에서 과목별로 확인</p></span></div>
+        <svg class="pb-conn" width="2" height="16"><line class="draw" x1="1" y1="0" x2="1" y2="16"/></svg>
+        <div class="pb-step pb-end" data-hero><span class="pb-sn">6</span>
+          <span><h4>퀴즈 누적</h4><p>시험 유형에 맞춰 출제 · 출제 이력을 쌓아 반복해서 틀리는 개념 추적</p></span></div>
+      </div>
+      <div style="display:flex;flex-direction:column;min-height:0">
+        <div class="shot an" style="flex:1;min-height:0">
+          <div class="bar"><span class="dot2"></span><span class="dot2"></span><span class="dot2"></span><span class="url">과목 폴더 · AI 정리 결과</span></div>
+          <div class="sview"><div class="pend">
+            <span class="pl2">캡처 대기</span>
+            <h4>과목 폴더 구조와 AI 정리 결과 화면</h4>
+            <p>회차 2에서 같은 화면을 단계별로 시연 · 촬영본은 개인정보 가림 처리</p>
+          </div></div>
+        </div>
+        <p class="scap an">6단계가 실제로 어떻게 보이는지 = 회차 2 시연 자료</p>
+      </div>
+    </div>
+    <div class="band an">입력 = <span>학습 목표 · 자료 · 판단 기준</span> · 출력 = <span>과목 맞춤 정리와 퀴즈</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 2 · 커리큘럼</span></div>
+</section>
+<section class="slide" data-pname="커리큘럼" aria-label="11. 파일을 직접 여는 도구">
+  <svg class="wave" style="left:0;bottom:0;width:560px;height:158px" viewBox="0 0 560 158" fill="none">
+    <path d="M0 158 H560 C 410 130 300 28 140 64 C 60 82 26 128 0 110 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 커리큘럼</span><span class="hpage">11 <i>/ 34</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>복사·붙여넣기 없이 <em>AI가 내 파일을 직접 읽고 고침</em></h1>
+      <p class="sub">같은 조건을 만드는 도구 4갈래 · <b>CLI = 터미널에서 명령으로 쓰는 도구</b></p></div>
+    <div class="grow-1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:24px;min-height:0">
+      <div class="gcard pb-card an" data-hero style="gap:16px;padding:30px 30px">
+        <span class="ic" style="width:96px;height:96px"><svg viewBox="0 0 34 34" style="width:44px;height:44px"><rect x="4" y="6" width="26" height="22" rx="3"/><polyline points="10,14 15,17.5 10,21"/><line x1="18" y1="22" x2="25" y2="22"/></svg></span>
+        <h3>CLI</h3>
+        <p>터미널에 명령을 적어 폴더 전체를 열어 둔 채 작업</p>
+        <div class="chips"><span class="chip mute">Claude Code</span><span class="chip mute">Codex</span><span class="chip mute">Copilot CLI</span><span class="chip mute">Gemini CLI</span></div>
+        <p class="pb-tool">터미널 = 명령을 글자로 입력하는 창</p>
+      </div>
+      <div class="gcard an" style="gap:16px;padding:30px 30px">
+        <span class="ic" style="width:96px;height:96px"><svg viewBox="0 0 34 34" style="width:44px;height:44px"><polyline points="12,10 5,17 12,24"/><polyline points="22,10 29,17 22,24"/></svg></span>
+        <h3>IDE</h3>
+        <p>편집기 안에서 프로젝트 폴더를 열고 파일 단위로 수정</p>
+        <div class="chips"><span class="chip mute">Cursor</span><span class="chip mute">Antigravity</span><span class="chip mute">VS Code</span></div>
+        <p class="pb-tool">IDE = 코드·문서를 편집하는 프로그램</p>
+      </div>
+      <div class="gcard an" style="gap:16px;padding:30px 30px">
+        <span class="ic" style="width:96px;height:96px"><svg viewBox="0 0 34 34" style="width:44px;height:44px"><rect x="4" y="6" width="26" height="17" rx="3"/><line x1="17" y1="23" x2="17" y2="28"/><line x1="11" y1="28" x2="23" y2="28"/></svg></span>
+        <h3>데스크톱 앱</h3>
+        <p>앱에 폴더·컴퓨터 접근 권한을 주고 그대로 사용</p>
+        <div class="chips"><span class="chip mute">Claude Cowork · 폴더 연결</span><span class="chip mute">ChatGPT Work · 파일 접근</span></div>
+        <p class="pb-tool">설치 뒤 접근 범위를 직접 지정</p>
+      </div>
+      <div class="gcard an" style="gap:16px;padding:30px 30px">
+        <span class="ic" style="width:96px;height:96px"><svg viewBox="0 0 34 34" style="width:44px;height:44px"><path d="M6 6 h8 a4 4 0 0 1 3 4 v18 a3 3 0 0 0 -3 -3 H6 Z"/><path d="M28 6 h-8 a4 4 0 0 0 -3 4 v18 a3 3 0 0 1 3 -3 h8 Z"/></svg></span>
+        <h3>노트 앱 내장</h3>
+        <p>쓰던 노트 안에서 자료를 올려 두고 바로 질의</p>
+        <div class="chips"><span class="chip mute">Obsidian 플러그인</span><span class="chip mute">NotebookLM 업로드</span></div>
+        <p class="pb-tool">별도 설치 없이 노트 앱 기능으로</p>
+      </div>
+    </div>
+    <div class="pb-note an">
+      <b>4갈래 공통 = 왕복 붙여넣기 제거 · <em>같은 작업의 토큰·시간 감소</em></b>
+      <span>토큰 = AI가 처리량을 세는 단위 · 도구 지정 없음, 손에 맞는 갈래 1개면 충분</span>
+    </div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 2 · 커리큘럼</span></div>
+</section>
+<section class="slide" data-pname="커리큘럼" aria-label="12. 2026 학습 도구 업데이트">
+  <svg class="wave" style="right:0;bottom:0;width:560px;height:160px" viewBox="0 0 560 160" fill="none">
+    <path d="M560 160 H0 C 150 130 260 30 420 66 C 500 84 530 130 560 112 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 커리큘럼</span><span class="hpage">12 <i>/ 34</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>2026 학습 도구 = 정리와 퀴즈가 <em>기본 기능</em></h1>
+      <p class="sub">4종 모두 무료 범위 존재 · 자료를 올리면 <b>단계 유도 · 퀴즈 · 암기 카드</b>까지 자동</p></div>
+    <div class="split cols an grow-1" style="min-height:0">
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <span class="spl">단계 유도</span>
+        <span class="ic" style="width:88px;height:88px"><svg viewBox="0 0 34 34" style="width:40px;height:40px"><path d="M17 4 a9 9 0 0 1 5 16.5 V24 h-10 v-3.5 A9 9 0 0 1 17 4 Z"/><line x1="13" y1="29" x2="21" y2="29"/></svg></span>
+        <div class="spt" style="font-size:34px">ChatGPT Study Mode</div>
+        <p class="sps" style="font-size:25px">답을 바로 내지 않고 풀이 단계를 되묻는 방식 · 무료</p>
+        <div class="chips"><span class="chip mute">내가 넣을 것 = 과목 유의사항 · 시험 방식</span></div>
+        <p class="pb-tool">과목 정보를 주지 않으면 일반 문제로 유도</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <span class="spl">학습 모드</span>
+        <span class="ic" style="width:88px;height:88px"><svg viewBox="0 0 34 34" style="width:40px;height:40px"><circle cx="17" cy="17" r="13"/><path d="M13 13.5 a4 4 0 1 1 4 4.5 v1.5"/><line x1="17" y1="24" x2="17" y2="25.4"/></svg></span>
+        <div class="spt" style="font-size:34px">Claude Learning Mode</div>
+        <p class="sps" style="font-size:25px">같은 계열 · 결론 대신 과정을 묻는 대화로 전환</p>
+        <div class="chips"><span class="chip mute">내가 넣을 것 = 정리 기준 · 서술 톤</span></div>
+        <p class="pb-tool">대화 도중 모드 전환</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <span class="spl">자료 기반 출제</span>
+        <span class="ic" style="width:88px;height:88px"><svg viewBox="0 0 34 34" style="width:40px;height:40px"><rect x="6" y="4" width="22" height="26" rx="3"/><line x1="11" y1="12" x2="23" y2="12"/><line x1="11" y1="18" x2="23" y2="18"/><line x1="11" y1="24" x2="18" y2="24"/></svg></span>
+        <div class="spt" style="font-size:34px">NotebookLM</div>
+        <p class="sps" style="font-size:25px">올린 자료 안에서만 퀴즈 · 플래시카드 · 오디오 요약</p>
+        <div class="chips"><span class="chip mute">내가 넣을 것 = 강의자료 · 족보 원본</span></div>
+        <p class="pb-tool">자료 = 문서 · PDF · 영상 링크</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <span class="spl">암기 카드 자동화</span>
+        <span class="ic" style="width:88px;height:88px"><svg viewBox="0 0 34 34" style="width:40px;height:40px"><rect x="6" y="10" width="22" height="18" rx="3"/><line x1="11" y1="5" x2="23" y2="5"/><line x1="12" y1="19" x2="22" y2="19"/></svg></span>
+        <div class="spt" style="font-size:34px">Anki AI 플러그인</div>
+        <p class="sps" style="font-size:25px">Anki = 반복 암기 카드 앱 · PDF에서 카드 자동 생성</p>
+        <div class="chips"><span class="chip mute">내가 넣을 것 = 시험 유형에 맞춘 카드 형식</span></div>
+        <p class="pb-tool">생성 뒤 카드 내용은 본인이 검수</p>
+      </div>
+    </div>
+    <div class="dark" data-hero>정리·퀴즈 = <b>이미 제품</b> · 우리 몫 = <b>과목 컨텍스트와 판단 기준</b>
+      <span class="dsub">컨텍스트 = AI에 미리 주는 참조 자료와 기준 · 과목 유의사항·시험 방식은 제품이 모름</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 2 · 커리큘럼</span></div>
+</section>
+<section class="slide" data-pname="커리큘럼" aria-label="13. 2차 원칙">
+  <svg class="wave" style="left:0;bottom:0;width:560px;height:158px" viewBox="0 0 560 158" fill="none">
+    <path d="M0 158 H560 C 410 130 300 28 140 64 C 60 82 26 128 0 110 Z" fill="var(--tint)"/>
+  </svg>
+  <span class="dot" style="width:22px;height:22px;right:180px;top:250px;background:var(--tint2)"></span>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 커리큘럼</span><span class="hpage">13 <i>/ 34</i></span></div>
+  <div class="sbody">
+    <div class="grow-1 decl" data-hero style="gap:36px">
+      <span class="pb-eyebrow an">2차 · 팀 협업 프로젝트 · 원칙</span>
+      <p class="dtxt" style="margin:0;font-size:108px"><span class="an">판단은 </span><span class="an"><em>사람만 한다</em></span></p>
+      <p class="dnote an" style="margin:0">도메인 지식 없이 쓰면 <b>겉만 훑는 결과</b> · 도메인 지식 = 그 분야의 실무 지식과 판단 기준</p>
+      <div class="pb-kpi an">
+        <span class="pb-kv"><span class="count" data-target="-19">-19</span><span class="pb-ku">%p</span></span>
+        <span class="pb-kx">
+          <span class="pb-kt">능력 경계 밖 과업 · 초보 + AI 정답률</span>
+          <span class="pb-kn">비교 대상 = 같은 과업을 AI 없이 수행한 집단⑤</span>
+        </span>
+      </div>
+      <div class="pb-note an" style="width:1400px">
+        <b>능력 경계 = 결과가 맞았는지 <em>내가 판정할 수 있는 범위</em></b>
+        <span>경계 밖에서는 AI가 틀려도 알아채지 못함 · 2차가 팀 프로젝트인 이유</span>
+      </div>
+      <div class="chips an" style="justify-content:center">
+        <span class="chip mute">무대 선택</span><span class="chip mute">모듈 분담</span><span class="chip mute">검수 통과 판정</span>
+        <span class="chip mute">= 2차에서 사람이 쥐는 결정</span>
+      </div>
+    </div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 2 · 커리큘럼</span></div>
+</section>
+<section class="slide" data-pname="커리큘럼" aria-label="14. 2차 방식">
+  <svg class="wave" style="right:0;bottom:0;width:560px;height:160px" viewBox="0 0 560 160" fill="none">
+    <path d="M560 160 H0 C 150 130 260 30 420 66 C 500 84 530 130 560 112 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 커리큘럼</span><span class="hpage">14 <i>/ 34</i></span></div>
+  <div class="sbody judge" data-judge>
+    <div class="htitle an"><h1>2차 = 기준을 세우고 <em>통제하는 법</em>을 익히는 구간</h1>
+      <p class="sub">AI로 과제하는 팀에서 워크플로가 꼬이는 문제 · 해법 = <b>시작 전에 정하는 룰</b></p></div>
+    <div class="ab grow-1 roomy">
+      <div class="abcard an">
+        <div class="abh"><span class="ic" style="width:56px;height:56px"><svg viewBox="0 0 34 34"><circle cx="17" cy="17" r="12"/><circle cx="17" cy="17" r="5"/></svg></span>
+          <span class="abl">익히는 것</span><h3>기준 수립과 통제</h3></div>
+        <p>정답이 하나가 아닌 구간 · 좋은 결과의 기준을 팀이 세우고 AI 산출을 그 기준으로 <b>통제</b></p>
+        <div class="pc-qs">
+          <div class="pc-q"><span class="qn">Q1</span><b>기준을 어떻게 세우나</b><i>도메인 지식 · 팀 합의</i></div>
+          <div class="pc-q"><span class="qn">Q2</span><b>어떻게 통제하나</b><i>변경 · 검수 · 기록</i></div>
+        </div>
+      </div>
+      <div class="abcard an" data-side="b">
+        <div class="abh"><span class="ic" style="width:56px;height:56px"><svg viewBox="0 0 34 34"><rect x="5" y="5" width="10" height="10" rx="2"/><rect x="19" y="5" width="10" height="10" rx="2"/><rect x="5" y="19" width="10" height="10" rx="2"/><rect x="19" y="19" width="10" height="10" rx="2"/></svg></span>
+          <span class="abl">쓰는 도구</span><h3>협업 룰 5칸</h3></div>
+        <p>팀이 첫 회차에 정하는 5칸 · 꼬이는 지점을 <b>사후 수습이 아니라 사전 합의</b>로 처리</p>
+        <div class="chips">
+          <span class="chip mute">저장소</span><span class="chip mute">모듈 소유</span><span class="chip mute">변경 규칙</span><span class="chip mute">검수 규칙</span><span class="chip mute">결정 기록</span>
+        </div>
+        <div class="abdef">저장소 = GitHub · 모듈 = 산출물을 나눠 맡는 단위 · 변경과 결정이 이력으로 남는 자리</div>
+      </div>
+    </div>
+    <div class="dark" data-hero>무대 = 팀이 실제로 가진 문제 <b>또는 케이스 팩</b> · 선택 주체 = 팀
+      <span class="dsub">케이스 팩 = 팀에 실제 문제가 없을 때 쓰는 준비된 과제 세트 · 회차 4에서 선택</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 2 · 커리큘럼</span></div>
+</section>
+<section class="slide divider" aria-label="15. 디바이더">
   <svg class="wave" style="right:0;top:0;width:900px;height:1080px" viewBox="0 0 900 1080" fill="none">
     <path d="M900 0 V1080 H560 C 700 880 590 690 700 520 C 800 365 760 160 900 0 Z" fill="var(--tint)"/>
     <path d="M900 0 V1080 H700 C 815 900 720 700 815 540 C 880 430 860 180 900 60 Z" fill="var(--tint2)"/>
@@ -949,223 +1221,226 @@ ul{margin:0;padding:0;list-style:none}
     <div class="drow">
       <div class="dnum an" data-hero>03</div>
       <div>
-        <div class="dtitle an">세팅과 첫 실습</div>
-        <p class="dline an">이 파트에서 얻는 것 = <b>오늘의 판정 1</b>(결과 차이 확인)이 발생하는 구간</p>
+        <div class="dtitle an">AIM 웹</div>
+        <p class="dline an">이 파트에서 얻는 것 = <b>이 사이트를 만든 방식</b>과 한 학기 쓸 <b>화면 위치</b></p>
       </div>
     </div>
     <div class="dprev">
       <div class="ph an">PART 3 구성</div>
-      <div class="pv an"><span class="pn">1</span><span class="pvt">설치 점검 = <em>이 시간에 전원 완료</em></span><span class="pvs">체크 5항</span></div>
-      <div class="pv an"><span class="pn">2</span><span class="pvt">통과 기준 = 설치가 아니라 <em>실행 1회</em></span><span class="pvs">선언</span></div>
-      <div class="pv an"><span class="pn">3</span><span class="pvt">도구 방침 = <em>무료 표준</em> · 유료는 자유</span><span class="pvs">2열 비교</span></div>
-      <div class="pv an"><span class="pn">4</span><span class="pvt">실습 A·B = 한 줄 질문 ↔ <em>브리프 4블록</em></span><span class="pvs">실습 2장</span></div>
-      <div class="pv an"><span class="pn">5</span><span class="pvt">판정 = <em>그대로 제출할 수 있는 쪽</em></span><span class="pvs">결과 비교</span></div>
+      <div class="pv an"><span class="pn">1</span><span class="pvt">이 사이트 = <em>위임 방식</em>으로 만든 결과물</span><span class="pvs">허브 메인</span></div>
+      <div class="pv an"><span class="pn">2</span><span class="pvt">인사이트 = 매주 <em>자동 스크랩</em> · 기준은 사람</span><span class="pvs">포인트 3</span></div>
+      <div class="pv an"><span class="pn">3</span><span class="pvt">세미나 = 특강 + <em>매주 세션 자료</em></span><span class="pvs">카드 3</span></div>
+      <div class="pv an"><span class="pn">4</span><span class="pvt">프로젝트 = 개인·팀 <em>산출물 아카이브</em></span><span class="pvs">화면 1컷</span></div>
+      <div class="pv an"><span class="pn">5</span><span class="pvt">워크스페이스 로그인과 <em>오늘 할 일 3건</em></span><span class="pvs">목록 + 체크</span></div>
     </div>
   </div>
   <div class="tracker">
-    <span class="tp an">1 왜</span><span class="tp an">2 허브</span><span class="tp cur an">3 세팅·실습</span><span class="tp an">4 주제</span><span class="tp an">5 마무리</span>
+    <span class="tp an">1 왜 이 스터디인가</span><span class="tp an">2 커리큘럼</span><span class="tp cur an">3 AIM 웹</span><span class="tp an">4 AI 트렌드</span><span class="tp an">5 마무리</span>
   </div>
 </section>
-
-<!-- ===== #17 · BP8 설치 점검 (C) ===== -->
-<section class="slide" data-pname="세팅과 첫 실습" aria-label="17. 설치 체크">
-  <svg class="wave" style="right:0;top:0;width:520px;height:160px" viewBox="0 0 520 160" fill="none">
-    <path d="M520 0 H0 C 170 30 260 132 520 90 Z" fill="var(--tint)"/>
+<section class="slide" data-pname="AIM 웹" aria-label="16. 만든 방식">
+  <svg class="wave" style="left:0;bottom:0;width:560px;height:160px" viewBox="0 0 560 160" fill="none">
+    <path d="M0 160 H560 C 410 130 300 30 140 66 C 60 84 30 130 0 112 Z" fill="var(--tint)"/>
   </svg>
-  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 세팅과 첫 실습</span><span class="hpage">17 <i>/ 31</i></span></div>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · AIM 웹</span><span class="hpage">16 <i>/ 34</i></span></div>
   <div class="sbody">
-    <div class="htitle an"><h1>설치 점검 = <em>이 시간에 전원 완료</em></h1>
-      <p class="sub">항목을 눌러 체크 · 미완료 항목은 옆 사람과 확인 후 <b>이 자리에서 해결</b></p></div>
-    <div class="grow-1" style="display:flex;flex-direction:column;justify-content:center;gap:22px">
-      <div class="split rows an" data-chk>
-        <div class="chkr" data-ui><span class="box"><svg viewBox="0 0 24 24"><polyline points="5,13 10,18 19,7"/></svg></span>
-          <span class="ct">구글 계정 로그인</span><span class="cs">개인 계정 권장</span></div>
-        <div class="chkr" data-ui><span class="box"><svg viewBox="0 0 24 24"><polyline points="5,13 10,18 19,7"/></svg></span>
-          <span class="ct">AI 챗봇 무료 계정</span><span class="cs">브라우저 접속 확인</span></div>
-        <div class="chkr" data-ui><span class="box"><svg viewBox="0 0 24 24"><polyline points="5,13 10,18 19,7"/></svg></span>
-          <span class="ct">문서 생성 기능 활성화</span><span class="cs">긴 결과물을 별도 창에 출력</span></div>
-        <div class="chkr" data-ui><span class="box"><svg viewBox="0 0 24 24"><polyline points="5,13 10,18 19,7"/></svg></span>
-          <span class="ct">NotebookLM 접속</span><span class="cs">자료 기반 요약 도구</span></div>
-        <div class="chkr" data-ui><span class="box"><svg viewBox="0 0 24 24"><polyline points="5,13 10,18 19,7"/></svg></span>
-          <span class="ct">AIM 허브 로그인</span><span class="cs">학번 · 000000</span></div>
-      </div>
-      <div class="pts">
-        <div class="ptr an"><span class="pnum">!</span><span><h4>함정 = <em>학교 계정 제한</em></h4>
-          <p>기관 계정은 외부 AI 도구 접속이 차단되는 사례가 있음. 차단 시 개인 계정으로 전환.</p></span></div>
-      </div>
-    </div>
-    <div class="dark" data-hero>완료 기준 = <b>5칸 전부 체크</b> · 미완료 = 이 시간에 해결
-      <span class="dsub">다음 장부터 실습이 이어짐 · 계정 없이는 결과 비교 불가</span></div>
-  </div>
-  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 3 · 세팅과 첫 실습</span></div>
-</section>
-
-<!-- ===== #18 · BP9 통과 기준 (B) ===== -->
-<section class="slide" data-pname="세팅과 첫 실습" aria-label="18. 통과 기준">
-  <svg class="wave" style="left:0;top:0;width:900px;height:230px" viewBox="0 0 900 230" fill="none">
-    <path d="M0 0 H900 C 720 40 620 200 400 170 C 240 148 160 62 0 96 Z" fill="var(--tint)"/>
-  </svg>
-  <svg class="wave" style="right:0;bottom:0;width:820px;height:210px" viewBox="0 0 820 210" fill="none">
-    <path d="M820 210 H0 C 190 176 300 42 520 78 C 660 101 740 172 820 146 Z" fill="var(--tint)"/>
-  </svg>
-  <span class="dot" style="width:22px;height:22px;left:150px;bottom:230px;background:var(--accent)"></span>
-  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 세팅과 첫 실습</span><span class="hpage">18 <i>/ 31</i></span></div>
-  <div class="sbody">
-    <div class="grow-1 decl" data-hero>
-      <p class="dtxt" style="margin:0"><span class="an">통과 = </span><span class="an">설치 완료가 아니라 </span><span class="an"><em>프롬프트 1개 실행</em></span></p>
-      <p class="dnote an" style="margin:0">계정 생성까지만 한 상태 = 실습 참여 불가 · 판정 기준은 화면에 나온 <b>결과 1건</b></p>
-      <div class="pts" style="width:1180px">
-        <div class="ptr an"><span class="pnum">✕</span><span><h4>계정 생성만 완료</h4><p>미통과. 도구가 실제로 응답하는지 확인되지 않음.</p></span></div>
-        <div class="ptr an"><span class="pnum">✕</span><span><h4>화면 진입만 완료</h4><p>미통과. 입력 권한·지역 제한이 남아 있을 수 있음.</p></span></div>
-        <div class="ptr an"><span class="pnum">✓</span><span><h4>프롬프트 1개 입력 후 결과 확인</h4><p><b>통과.</b> 이 상태에서 다음 장 실습 A로 진행.</p></span></div>
-      </div>
-    </div>
-  </div>
-  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 3 · 세팅과 첫 실습</span></div>
-</section>
-
-<!-- ===== #19 · BP6 도구 방침 (C) ===== -->
-<section class="slide" data-pname="세팅과 첫 실습" aria-label="19. 도구 방침">
-  <svg class="wave" style="right:0;bottom:0;width:540px;height:160px" viewBox="0 0 540 160" fill="none">
-    <path d="M540 160 H0 C 145 130 250 30 405 66 C 483 84 512 130 540 112 Z" fill="var(--tint)"/>
-  </svg>
-  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 세팅과 첫 실습</span><span class="hpage">19 <i>/ 31</i></span></div>
-  <div class="sbody">
-    <div class="htitle an"><h1>도구 방침 = <em>무료 표준</em> · 유료는 자유</h1>
-      <p class="sub">스터디가 다루는 대상과 다루지 않는 대상의 경계 · <b>도구명 추천 없음</b></p></div>
-    <div class="ab grow-1 roomy">
-      <div class="abcard an dim">
-        <div class="abh"><span class="ic ic--mute" style="width:56px;height:56px"><svg viewBox="0 0 34 34"><rect x="5" y="14" width="8" height="15"/><rect x="21" y="6" width="8" height="23"/></svg></span>
-          <span class="abl">비우선</span><h3>도구 등급 비교</h3></div>
-        <p>모델 성능 순위, 유료 요금제 간 차이, 최신 출시 추적.</p>
-        <div class="abr bad"><span class="rl2">이유</span><p>등급 차이보다 <b>지시 품질의 차이가 결과를 더 크게 가른다</b>. 앞 장 비교가 근거.</p></div>
-      </div>
-      <div class="abcard an" data-hero>
-        <div class="abh"><span class="ic" style="width:56px;height:56px"><svg viewBox="0 0 34 34"><circle cx="17" cy="17" r="12"/><circle cx="17" cy="17" r="5"/></svg></span>
-          <span class="abl">우선</span><h3>활용 상황 판단</h3></div>
-        <p>어떤 작업을 어떤 조건으로 위임할지, 결과를 어디서 검수할지.</p>
-        <div class="abr"><span class="rl2">이유</span><p>도구가 바뀌어도 <b>남는 역량</b>. 학기 전 구간의 평가 대상.</p></div>
-      </div>
-    </div>
-    <div class="band an">전 과정 = <span>무료 도구 기준</span> · 유료 구독 = 개인 선택
-      <span class="band-sub">과제·판정에 유료 기능을 요구하지 않음 · 비용 0원으로 완주 가능</span></div>
-  </div>
-  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 3 · 세팅과 첫 실습</span></div>
-</section>
-
-<!-- ===== #20 · BP7 실습 A (B) ===== -->
-<section class="slide" data-pname="세팅과 첫 실습" aria-label="20. 실습 A — 한 줄 질문">
-  <svg class="wave" style="left:0;bottom:0;width:520px;height:155px" viewBox="0 0 520 155" fill="none">
-    <path d="M0 155 H520 C 380 128 280 28 130 64 C 54 82 26 126 0 108 Z" fill="var(--tint)"/>
-  </svg>
-  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 세팅과 첫 실습</span><span class="hpage">20 <i>/ 31</i></span></div>
-  <div class="sbody">
-    <div class="htitle an"><h1>실습 A = 평소처럼 <em>한 줄 질문</em></h1>
-      <p class="sub">공통 과제 = <b>경영정보 팀과제 · 10분 발표자료 준비</b> · 소요 3분</p></div>
-    <div class="grow-1" style="display:grid;grid-template-columns:.9fr 1.1fr;gap:48px;align-items:stretch">
-      <div class="split rows an" style="align-content:start">
-        <div><span class="spl">① 입력</span>
-          <div class="spt" style="font-family:var(--fm);font-size:28px;line-height:1.5;font-weight:500;color:var(--sub)">"과제 발표자료 만들어줘"</div>
-          <p class="sps">본인이 쓰던 챗봇에 <b>이 한 줄만</b> 입력. 추가 설명 없이 1회 실행.</p></div>
-        <div><span class="spl">③ 판정</span>
-          <div class="spt">결과 화면 <em>보관</em></div>
-          <p class="sps">닫지 말 것. 다음 장 실습 B 결과와 <b>나란히 비교</b>.</p></div>
-      </div>
-      <div class="an rv" style="display:flex;flex-direction:column;min-height:0">
-        <div class="shot" style="flex:1">
-          <div class="bar"><span class="dot2"></span><span class="dot2"></span><span class="dot2"></span><span class="url">② 결과</span></div>
-          <div class="pend"><span class="pl2">촬영 대기</span>
-            <h4>실습 A 입력·결과 화면</h4>
-            <p>한 줄 질문을 입력한 실제 화면. 촬영본 도착 시 이 자리에 교체.</p></div>
+    <div class="htitle an"><h1>이 사이트 = <em>위임 방식</em>으로 만든 결과물</h1>
+      <p class="sub">위임 = 목표와 기준을 정해 AI에 맡기고 <b>결과를 사람이 검수</b>하는 방식</p></div>
+    <div class="grow-1" style="display:grid;grid-template-columns:1.25fr .75fr;gap:56px;align-items:stretch">
+      <div class="an" style="display:flex;flex-direction:column;min-height:0">
+        <div class="shot" data-hero style="flex:1">
+          <div class="bar"><span class="dot2"></span><span class="dot2"></span><span class="dot2"></span><span class="url">kwu-erpclub.github.io</span></div>
+          <div class="pend"><span class="pl2">캡처 대기</span>
+            <h4>허브 메인</h4>
+            <p>AIM 허브 첫 화면. 캡처 도착 시 이 자리에 교체.</p></div>
         </div>
-        <p class="scap">현장에서는 각자 화면이 이 자리를 대신함</p>
+        <p class="scap">허브 주소 = kwu-erpclub.github.io</p>
       </div>
-    </div>
-    <div class="uibar an" data-ui><span class="uihint">결과 공개</span>
-      <button class="uib" data-rvall>결과 보기</button></div>
-    <div class="dark" data-hero>지시 = <b>평소 쓰던 방식 그대로</b> · 결과 화면 보관
-      <span class="dsub">여기서 나온 산출물이 판정의 한쪽 근거 · 다시 시키기 없이 1회만</span></div>
-  </div>
-  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 3 · 세팅과 첫 실습</span></div>
-</section>
-
-<!-- ===== #21 · BP8 실습 B (B) ===== -->
-<section class="slide" data-pname="세팅과 첫 실습" aria-label="21. 실습 B — 브리프 4블록">
-  <svg class="wave" style="right:0;top:0;width:500px;height:150px" viewBox="0 0 500 150" fill="none">
-    <path d="M500 0 H0 C 160 28 250 124 500 84 Z" fill="var(--tint)"/>
-  </svg>
-  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 세팅과 첫 실습</span><span class="hpage">21 <i>/ 31</i></span></div>
-  <div class="sbody">
-    <div class="htitle an"><h1>실습 B = 같은 과제를 <em>브리프 4블록</em>으로</h1>
-      <p class="sub">과제·도구·시간 동일, <b>입력만 교체</b> · 4칸을 채운 뒤 1회 실행 · 소요 3분</p></div>
-    <div class="grow-1" style="display:grid;grid-template-columns:1.15fr .85fr;gap:44px;align-items:stretch">
-      <div class="split rows an" style="align-content:start"><span class="spl" style="padding:0 32px;margin:20px 0 -6px">① 입력 = 브리프 4블록</span>
-        <div><div class="spt">배경 <em>=</em> 경영정보 팀과제</div>
-          <p class="sps">과목·상황·수신자. <b>누가 왜 보는가</b>를 한 줄.</p></div>
-        <div><div class="spt">목표 <em>=</em> 10분 발표 골격</div>
-          <p class="sps">끝났을 때 손에 남을 것. 분량·시간 명시.</p></div>
-        <div><div class="spt">조건 <em>=</em> 출처 필수 · 표 1개</div>
-          <p class="sps">지켜야 할 제약. <b>검수 기준</b>이 되는 칸.</p></div>
-        <div><div class="spt">형식 <em>=</em> 슬라이드 개요 8장</div>
-          <p class="sps">받고 싶은 출력 모양. 목록·표·초안 중 하나로 지정.</p></div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:18px;min-height:0">
-        <div class="an rv" style="display:flex;flex-direction:column;min-height:0;flex:1">
-          <div class="shot" style="flex:1">
-            <div class="bar"><span class="dot2"></span><span class="dot2"></span><span class="dot2"></span><span class="url">② 결과</span></div>
-            <div class="pend"><span class="pl2">촬영 대기</span>
-              <h4>실습 B 입력·결과 화면</h4>
-              <p>4블록을 채워 입력한 실제 화면. 촬영본 도착 시 이 자리에 교체.</p></div>
-          </div>
-          <p class="scap">③ 판정 = 두 결과를 다음 장에서 대조</p>
+      <div style="display:flex;flex-direction:column;gap:26px;min-height:0">
+        <div class="pts">
+          <div class="ptr an"><span class="pnum">1</span><span><h4>오늘 보는 화면 전부 = <em>같은 방식</em></h4>
+            <p>허브·인사이트·세미나·프로젝트·워크스페이스 5면 모두 이 방식으로 제작.</p></span></div>
         </div>
-        <div class="uibar an" data-ui><span class="uihint">결과 공개</span>
-          <button class="uib" data-rvall>결과 보기</button></div>
+        <div class="split rows an" style="flex:1">
+          <div class="pc-cell"><span class="spl">사람이 하는 것</span>
+            <div class="spt">기획 · 구조 결정 · <em>검수</em></div>
+            <p class="sps">무엇을 만들지와 결과 판정</p></div>
+          <div class="pc-cell"><span class="spl">AI가 하는 것</span>
+            <div class="spt">화면 구현 · 반복 작업</div>
+            <p class="sps">코드 작성과 수정 반복</p></div>
+        </div>
       </div>
     </div>
-    <div class="dark" data-hero>같은 과제 · 같은 도구 · <b>입력만 교체</b>
-      <span class="dsub">4칸 중 빈칸이 있으면 그 칸만큼 결과가 일반화됨 · 조건 칸이 검수 기준</span></div>
+    <div class="band an">기획 = <span>사람</span> · 구현 = <span>AI</span>
+      <span class="band-sub">한 학기 동안 볼 화면 전부가 이 분업의 결과 · 2차 팀 프로젝트가 목표로 하는 구조</span></div>
   </div>
-  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 3 · 세팅과 첫 실습</span></div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 3 · AIM 웹</span></div>
 </section>
-
-<!-- ===== #22 · BP6 결과 비교 (C) ===== -->
-<section class="slide" data-pname="세팅과 첫 실습" aria-label="22. 결과 비교">
+<section class="slide" data-pname="AIM 웹" aria-label="17. 인사이트">
+  <svg class="wave" style="right:0;top:0;width:520px;height:170px" viewBox="0 0 520 170" fill="none">
+    <path d="M520 0 H0 C 170 30 260 140 520 96 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · AIM 웹</span><span class="hpage">17 <i>/ 34</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>인사이트 = 매주 <em>자동 스크랩</em> · 기준은 사람이 설계</h1>
+      <p class="sub">수집·정리는 자동 · 무엇을 담을지는 <b>운영자가 판단</b></p></div>
+    <div class="grow-1" style="display:grid;grid-template-columns:1.25fr .75fr;gap:56px;align-items:stretch">
+      <div class="an" style="display:flex;flex-direction:column;min-height:0">
+        <div class="shot" data-hero style="flex:1">
+          <div class="bar"><span class="dot2"></span><span class="dot2"></span><span class="dot2"></span><span class="url">/insights</span></div>
+          <div class="pend"><span class="pl2">캡처 대기</span>
+            <h4>인사이트 목록</h4>
+            <p>주간 트렌드와 심층 분석 글이 쌓이는 화면. 캡처 도착 시 이 자리에 교체.</p></div>
+        </div>
+        <p class="scap">발행 주기 = 매주 1회</p>
+      </div>
+      <div class="pts fill">
+        <div class="ptr an"><span class="pnum">1</span><span><h4>매주 <em>자동 스크랩·정리</em></h4>
+          <p>AI·DX 소식을 모아 요약. 무엇을 수집할지의 기준은 운영자가 설계.</p></span></div>
+        <div class="ptr an"><span class="pnum">2</span><span><h4>실사용자가 적음</h4>
+          <p>읽고 검증하는 사람 수가 적은 단계. 지식의 질이 낮을 수 있음.</p></span></div>
+        <div class="ptr an"><span class="pnum">3</span><span><h4><em>원하는 정보</em>를 말하면 반영</h4>
+          <p>필요한 주제를 알려주면 다음 수집 기준에 반영. 제안이 반영되는 페이지.</p></span></div>
+      </div>
+    </div>
+    <div class="band an">질을 올리는 입력 = <span>원하는 주제 제안</span>
+      <span class="band-sub">수집 기준은 운영자가 설계 · 제안 1건이 그 기준을 바꾸는 방식</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 3 · AIM 웹</span></div>
+</section>
+<section class="slide" data-pname="AIM 웹" aria-label="18. 세미나">
+  <svg class="wave" style="left:0;bottom:0;width:560px;height:165px" viewBox="0 0 560 165" fill="none">
+    <path d="M0 165 H560 C 410 134 300 30 140 68 C 60 86 30 132 0 115 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · AIM 웹</span><span class="hpage">18 <i>/ 34</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>세미나 = 특강과 <em>매주 세션 자료</em>가 쌓이는 곳</h1>
+      <p class="sub">결석·복습 시 확인 위치 · AI 기초가 부족하면 <b>먼저 읽을 글 1건</b></p></div>
+    <div class="grow-1" style="display:flex;align-items:center">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:28px;width:100%">
+        <div class="gcard an" style="gap:18px;padding:34px 36px">
+          <span class="ic" style="width:96px;height:96px"><svg viewBox="0 0 34 34" style="width:44px;height:44px"><path d="M17 4 L20 13 L29 13 L22 19 L25 28 L17 22 L9 28 L12 19 L5 13 L14 13 Z"/></svg></span>
+          <h3>특강</h3>
+          <p style="font-size:30px;line-height:1.6">중요한 주제 = <b>별도 특강</b>으로 진행. 자료는 같은 페이지에 게시.</p>
+          <p style="margin:auto 0 0;padding-top:18px;border-top:1px solid var(--line);font:500 21px/1.6 var(--fb);color:var(--mute)">주제·일정은 공지로 안내</p>
+        </div>
+        <div class="gcard an" style="gap:18px;padding:34px 36px">
+          <span class="ic" style="width:96px;height:96px"><svg viewBox="0 0 34 34" style="width:44px;height:44px"><rect x="6" y="4" width="22" height="26" rx="3"/><line x1="11" y1="12" x2="23" y2="12"/><line x1="11" y1="18" x2="23" y2="18"/><line x1="11" y1="24" x2="18" y2="24"/></svg></span>
+          <h3>매주 세션 자료</h3>
+          <p style="font-size:30px;line-height:1.6">회차마다 <b>발표 자료와 정리 글</b> 업로드. 결석 시 이 페이지에서 확인.</p>
+          <p style="margin:auto 0 0;padding-top:18px;border-top:1px solid var(--line);font:500 21px/1.6 var(--fb);color:var(--mute)">회차 1~7 전부 같은 위치</p>
+        </div>
+        <div class="gcard an on" style="gap:18px;padding:34px 36px">
+          <span class="ic" style="width:96px;height:96px"><svg viewBox="0 0 34 34" style="width:44px;height:44px"><rect x="6" y="4" width="22" height="26" rx="3"/><polyline points="11,17 15,21 23,12"/></svg></span>
+          <h3>기초 예습 글</h3>
+          <p style="font-size:30px;line-height:1.6"><b>「질문에서 위임으로」</b> 1건. AI 활용 구조 3단 정리.</p>
+          <p style="margin:auto 0 0;padding-top:18px;border-top:1px solid var(--line);font:500 21px/1.6 var(--fb);color:var(--mute)">읽는 시점 = 회차 2 전까지</p>
+        </div>
+      </div>
+    </div>
+    <div class="dark" data-hero>AI 기초가 부족한 상태 = <b>예습 글 1건</b>부터 · 나머지는 회차마다 자료로 보충
+      <span class="dsub">사전 지식 없이도 회차 2 참여 가능 · 예습 글은 세미나 페이지에서 열람</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 3 · AIM 웹</span></div>
+</section>
+<section class="slide" data-pname="AIM 웹" aria-label="19. 프로젝트">
   <svg class="wave" style="right:0;bottom:0;width:560px;height:160px" viewBox="0 0 560 160" fill="none">
     <path d="M560 160 H0 C 150 130 260 30 420 66 C 500 84 530 130 560 112 Z" fill="var(--tint)"/>
   </svg>
-  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 세팅과 첫 실습</span><span class="hpage">22 <i>/ 31</i></span></div>
-  <div class="sbody judge" data-judge>
-    <div class="htitle an"><h1>판정 = <em>그대로 제출할 수 있는 쪽</em></h1>
-      <p class="sub">① 입력 = 같은 과제 · ② 결과 = 두 산출물 · ③ 판정 = <b>추가 작업 없이 낼 수 있는가</b></p></div>
-    <div class="ab grow-1">
-      <div class="abcard an" data-side="a">
-        <div class="abh"><span class="ic" style="width:56px;height:56px"><svg viewBox="0 0 34 34"><circle cx="15" cy="15" r="10"/><line x1="23" y1="23" x2="30" y2="30"/></svg></span>
-          <span class="abl">실습 A 결과</span><h3>한 줄 질문</h3></div>
-        <div class="abtag">확인 항목</div>
-        <div class="abq">과목 반영 = 없음<br/>분량 지정 = 없음<br/>출처 = 없음<br/>다시 시킨 횟수 = 다수</div>
-        <div class="abr bad"><span class="rl2">판정</span><p>제출 전 <b>사람이 다시 쓰는 구간</b>이 남음.</p></div>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · AIM 웹</span><span class="hpage">19 <i>/ 34</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>프로젝트 = 개인·팀 <em>산출물 아카이브</em></h1>
+      <p class="sub">한 학기 결과가 남는 곳 · 제출 단위 = <b>개인 1개 · 팀 1개</b></p></div>
+    <div class="grow-1" style="display:grid;grid-template-columns:1.25fr .75fr;gap:56px;align-items:stretch">
+      <div class="an" style="display:flex;flex-direction:column;min-height:0">
+        <div class="shot" data-hero style="flex:1">
+          <div class="bar"><span class="dot2"></span><span class="dot2"></span><span class="dot2"></span><span class="url">/projects</span></div>
+          <div class="pend"><span class="pl2">캡처 대기</span>
+            <h4>프로젝트 아카이브</h4>
+            <p>회차별 개인·팀 산출물이 카드로 쌓이는 화면. 캡처 도착 시 이 자리에 교체.</p></div>
+        </div>
+        <p class="scap">등록 시점 = 회차 3 · 회차 7</p>
       </div>
-      <div class="abcard an" data-side="b">
-        <div class="abh"><span class="ic" style="width:56px;height:56px"><svg viewBox="0 0 34 34"><rect x="5" y="5" width="10" height="10" rx="2"/><rect x="19" y="5" width="10" height="10" rx="2"/><rect x="5" y="19" width="10" height="10" rx="2"/><rect x="19" y="19" width="10" height="10" rx="2"/></svg></span>
-          <span class="abl">실습 B 결과</span><h3>브리프 4블록</h3></div>
-        <div class="abtag">확인 항목</div>
-        <div class="abq">과목 반영 = 있음<br/>분량 지정 = 8장<br/>출처 = 표기됨<br/>다시 시킨 횟수 = 0~1</div>
-        <div class="abr"><span class="rl2">판정</span><p>검수만 거치면 <b>제출 가능한 초안</b>.</p></div>
+      <div class="pts fill">
+        <div class="ptr an"><span class="pnum">1</span><span><h4>개인 = <em>학습 자동화</em> 산출물</h4>
+          <p>1차 구간(회차 2~3)에서 각자 만든 과목 학습 워크플로 1개.</p></span></div>
+        <div class="ptr an"><span class="pnum">2</span><span><h4>팀 = <em>협업 프로젝트</em> 산출물</h4>
+          <p>2차 구간(회차 4~7)에서 모듈을 나눠 만든 결과물과 검수 기록.</p></span></div>
       </div>
     </div>
-    <div class="uibar an" data-ui><span class="uihint">대조 보기</span>
-      <button class="uib" data-ab="a">A만</button>
-      <button class="uib" data-ab="b">B만</button>
-      <button class="uib" data-ab="judge">판정</button></div>
-    <div class="dark" data-hero>차이의 원인 = 도구가 아니라 <b>입력에 담긴 조건의 수</b>
-      <span class="dsub">차이가 작게 나온 경우 = 과제가 단순한 경우. 분량·조건이 늘수록 격차가 커짐</span></div>
+    <div class="band an">이번 학기 제출물 = <span>개인 1개</span> + <span>팀 1개</span>
+      <span class="band-sub">두 산출물이 이 페이지에 그대로 남음 · 발표 자료도 같은 위치</span></div>
   </div>
-  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 3 · 세팅과 첫 실습</span></div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 3 · AIM 웹</span></div>
 </section>
-
-<!-- ===== #23 · BP3 파트 4 디바이더 (A) ===== -->
-<section class="slide divider" aria-label="23. 파트 4 디바이더">
+<section class="slide" data-pname="AIM 웹" aria-label="20. 워크스페이스">
+  <svg class="wave" style="left:0;top:0;width:520px;height:150px" viewBox="0 0 520 150" fill="none">
+    <path d="M0 0 H520 C 350 26 260 124 0 84 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · AIM 웹</span><span class="hpage">20 <i>/ 34</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>워크스페이스 = 일정·공고·로드맵·공지가 <em>모이는 한 화면</em></h1>
+      <p class="sub">로그인 1회 = 한 학기 동안 쓸 위치 확보 · <b>제안도 이 화면에서</b></p></div>
+    <div class="grow-1" style="display:flex;flex-direction:column;gap:26px">
+      <div class="split cols an" style="flex:1">
+        <div class="pc-cell top"><span class="ic" style="width:64px;height:64px"><svg viewBox="0 0 34 34" style="width:30px;height:30px"><rect x="5" y="7" width="24" height="22" rx="3"/><line x1="5" y1="14" x2="29" y2="14"/><line x1="12" y1="4" x2="12" y2="9"/><line x1="22" y1="4" x2="22" y2="9"/></svg></span>
+          <div class="spt">학사·AIM 일정</div>
+          <p class="sps">학사일정과 회차 일정을 한 화면에서 확인</p>
+          <p class="sps" style="margin:auto 0 0;padding-top:16px;border-top:1px solid var(--line);font:500 20px/1.55 var(--fb);color:var(--mute)">회차 = 월 18:00~20:00</p></div>
+        <div class="pc-cell top"><span class="ic" style="width:64px;height:64px"><svg viewBox="0 0 34 34" style="width:30px;height:30px"><path d="M6 14 v6 h6 l10 6 V8 L12 14 Z"/><path d="M26 12 a7 7 0 0 1 0 10"/></svg></span>
+          <div class="spt">모집 공고</div>
+          <p class="sps">모집 일정과 지원 방법 게시</p>
+          <p class="sps" style="margin:auto 0 0;padding-top:16px;border-top:1px solid var(--line);font:500 20px/1.55 var(--fb);color:var(--mute)">계정 생성 = 모집 마감 이후</p></div>
+        <div class="pc-cell top"><span class="ic" style="width:64px;height:64px"><svg viewBox="0 0 34 34" style="width:30px;height:30px"><polyline points="4,24 12,15 19,20 30,7"/><polyline points="22,7 30,7 30,15"/></svg></span>
+          <div class="spt">로드맵</div>
+          <p class="sps">회차별 내용과 <em>자료 위치</em></p>
+          <p class="sps" style="margin:auto 0 0;padding-top:16px;border-top:1px solid var(--line);font:500 20px/1.55 var(--fb);color:var(--mute)">회차 클릭 = 자료 펼침</p></div>
+        <div class="pc-cell top"><span class="ic" style="width:64px;height:64px"><svg viewBox="0 0 34 34" style="width:30px;height:30px"><rect x="4" y="6" width="26" height="18" rx="4"/><polyline points="11,24 11,30 18,24"/></svg></span>
+          <div class="spt">공지</div>
+          <p class="sps">일정 변경·휴일 안내</p>
+          <p class="sps" style="margin:auto 0 0;padding-top:16px;border-top:1px solid var(--line);font:500 20px/1.55 var(--fb);color:var(--mute)">휴일 10-05 · 시험기간 10-07~25</p></div>
+      </div>
+      <div class="pc-sug an"><span class="sgl">제안 가능</span>
+        <div class="chips"><span class="chip">추천 리서치 방법</span><span class="chip">원하는 일정</span></div>
+        <span class="sgn">운영자 검토 뒤 반영</span></div>
+    </div>
+    <div class="dark" data-hero>로그인 = <b>학번</b> · 초기 비밀번호 <b>000000</b>
+      <span class="dsub">첫 로그인 뒤 내 정보에서 비밀번호 변경 · 계정 생성 시점 = 모집 마감 이후</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 3 · AIM 웹</span></div>
+</section>
+<section class="slide" data-pname="AIM 웹" aria-label="21. 오늘 할 일">
+  <svg class="wave" style="right:0;bottom:0;width:560px;height:160px" viewBox="0 0 560 160" fill="none">
+    <path d="M560 160 H0 C 150 130 260 30 420 66 C 500 84 530 130 560 112 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · AIM 웹</span><span class="hpage">21 <i>/ 34</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>오늘 할 일 3건 = 여기까지가 <em>회차 2 준비</em></h1>
+      <p class="sub">항목을 눌러 체크 · 3칸 모두 체크된 상태 = <b>오늘 완료</b></p></div>
+    <div class="grow-1" style="display:flex;flex-direction:column;justify-content:center;gap:26px">
+      <div class="split rows an">
+        <div class="chkr" data-ui style="padding:30px 32px"><span class="box"><svg viewBox="0 0 24 24"><polyline points="5,13 10,18 19,7"/></svg></span>
+          <span class="ct">워크스페이스 로그인 확인</span><span class="cs">학번 + 초기 비밀번호 000000</span></div>
+        <div class="chkr" data-ui style="padding:30px 32px"><span class="box"><svg viewBox="0 0 24 24"><polyline points="5,13 10,18 19,7"/></svg></span>
+          <span class="ct">세팅 가이드 열기</span><span class="cs">워크스페이스 로드맵 탭</span></div>
+        <div class="chkr" data-ui style="padding:30px 32px"><span class="box"><svg viewBox="0 0 24 24"><polyline points="5,13 10,18 19,7"/></svg></span>
+          <span class="ct">과목 목록·자료 형태·시험 방식 적어 오기</span><span class="cs">다음 주까지</span></div>
+      </div>
+      <div class="split cols an">
+        <div class="pc-cell"><span class="spl">적어 올 것 1</span><div class="spt">과목 목록</div>
+          <p class="sps">이번 학기 듣는 과목 전부</p></div>
+        <div class="pc-cell"><span class="spl">적어 올 것 2</span><div class="spt">자료 형태</div>
+          <p class="sps">PDF · 필기 · 녹화 등 과목마다 다른 형태</p></div>
+        <div class="pc-cell"><span class="spl">적어 올 것 3</span><div class="spt">시험 방식</div>
+          <p class="sps">객관식 · 서술형 · 과제 중 무엇인가</p></div>
+      </div>
+    </div>
+    <div class="dark" data-hero>회차 2 = 이 기록으로 <b>과목마다 자동화 지점 결정</b>
+      <span class="dsub">기록이 없으면 그날 분석할 대상이 없음 · 3칸은 과목당 한 줄 분량</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 3 · AIM 웹</span></div>
+</section>
+<section class="slide divider" aria-label="22. 디바이더">
   <svg class="wave" style="right:0;top:0;width:900px;height:1080px" viewBox="0 0 900 1080" fill="none">
     <path d="M900 0 V1080 H560 C 700 880 590 690 700 520 C 800 365 760 160 900 0 Z" fill="var(--tint)"/>
     <path d="M900 0 V1080 H700 C 815 900 720 700 815 540 C 880 430 860 180 900 60 Z" fill="var(--tint2)"/>
@@ -1177,214 +1452,424 @@ ul{margin:0;padding:0;list-style:none}
     <div class="drow">
       <div class="dnum an" data-hero>04</div>
       <div>
-        <div class="dtitle an">한 학기 주제</div>
-        <p class="dline an">이 파트에서 얻는 것 = <b>소재 후보 1개</b>와 팀 주제의 범위</p>
+        <div class="dtitle an">AI 트렌드</div>
+        <p class="dline an">이 파트에서 얻는 것 = <b>용어 지도</b>와 <b>판단 기준</b></p>
       </div>
     </div>
     <div class="dprev">
       <div class="ph an">PART 4 구성</div>
-      <div class="pv an"><span class="pn">1</span><span class="pvt">개인 소재 = <em>본인이 실사용자</em>인 반복 작업</span><span class="pvs">후보 5종</span></div>
-      <div class="pv an"><span class="pn">2</span><span class="pvt">소재 카드 = <em>4문항 전부 기입</em> 시 통과</span><span class="pvs">기입 양식</span></div>
-      <div class="pv an"><span class="pn">3</span><span class="pvt">팀 주제 = 기획은 <em>사람</em> · 구현은 <em>AI</em></span><span class="pvs">무대 2종</span></div>
-      <div class="pv an"><span class="pn">4</span><span class="pvt">다음 4주 = 차시별 <em>완료 조건</em> 하나씩</span><span class="pvs">단계 5칸</span></div>
+      <div class="pv an" style="padding:18px 4px"><span class="pn">1</span><span class="pvt" style="font-size:28px">같은 모델, 다른 결과 = <em>서비스 층</em>의 차이</span><span class="pvs">2층 도식</span></div>
+      <div class="pv an" style="padding:18px 4px"><span class="pn">2</span><span class="pvt" style="font-size:28px">프롬프트 → 컨텍스트 → <em>하네스</em></span><span class="pvs">계단 3단</span></div>
+      <div class="pv an" style="padding:18px 4px"><span class="pn">3</span><span class="pvt" style="font-size:28px">새 용어의 뿌리 = <em>엔지니어링 3단</em></span><span class="pvs">4카드 · 선언</span></div>
+      <div class="pv an" style="padding:18px 4px"><span class="pn">4</span><span class="pvt" style="font-size:28px">리서치·판단 기준 = <em>사람과 문서</em>로 도달</span><span class="pvs">2층 · 경계 대장</span></div>
+      <div class="pv an" style="padding:18px 4px"><span class="pn">5</span><span class="pvt" style="font-size:28px">이번 주 신호와 <em>채용이 재는 것</em></span><span class="pvs">3카드 · 인용 2</span></div>
     </div>
   </div>
   <div class="tracker">
-    <span class="tp an">1 왜</span><span class="tp an">2 허브</span><span class="tp an">3 세팅·실습</span><span class="tp cur an">4 주제</span><span class="tp an">5 마무리</span>
+    <span class="tp an">1 왜 이 스터디인가</span><span class="tp an">2 커리큘럼</span><span class="tp an">3 AIM 웹</span><span class="tp cur an">4 AI 트렌드</span><span class="tp an">5 마무리</span>
   </div>
 </section>
-
-<!-- ===== #24 · BP8 개인 소재 (C) ===== -->
-<section class="slide" data-pname="한 학기 주제" aria-label="24. 개인 소재 카탈로그">
-  <svg class="wave" style="right:0;top:0;width:520px;height:160px" viewBox="0 0 520 160" fill="none">
-    <path d="M520 0 H0 C 170 30 260 132 520 90 Z" fill="var(--tint)"/>
+<section class="slide" data-pname="AI 트렌드" aria-label="23. LLM과 LLM 서비스">
+  <svg class="wave" style="right:0;top:0;width:520px;height:170px" viewBox="0 0 520 170" fill="none">
+    <path d="M520 0 H0 C 170 30 260 140 520 96 Z" fill="var(--tint)"/>
   </svg>
-  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 한 학기 주제</span><span class="hpage">24 <i>/ 31</i></span></div>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · AI 트렌드</span><span class="hpage">23 <i>/ 34</i></span></div>
   <div class="sbody">
-    <div class="htitle an"><h1>개인 소재 = <em>본인이 실사용자</em>인 반복 작업</h1>
-      <p class="sub">1기 후보 5종 · 목록에서 고르는 방식이 아니라 <b>기준을 보여주는 예시</b></p></div>
-    <div class="grow-1" style="display:flex;align-items:center">
-      <div class="split rows tight an" style="width:100%">
-        <div class="rv"><div class="spt">학업 관리 <em>=</em> 강의 일정·과제 마감 정리</div>
-          <p class="sps">공지·강의계획서를 넣으면 주간 할 일로 정리. 주 3회 이상 반복.</p></div>
-        <div class="rv"><div class="spt">자격증 학습 <em>=</em> 오답에서 복습 문항 생성</div>
-          <p class="sps">틀린 문항 기록을 근거로 유사 문항·해설을 다시 생성.</p></div>
-        <div class="rv"><div class="spt">발표자료 준비 <em>=</em> 조사부터 초안까지</div>
-          <p class="sps">주제·분량·형식을 조건으로 넘기고 초안 구조를 받는 반복 작업.</p></div>
-        <div class="rv"><div class="spt">공고 레이더 <em>=</em> 공모전·채용 수집과 요약</div>
-          <p class="sps">관심 조건에 맞는 공고만 모아 마감일 기준으로 정리.</p></div>
-        <div class="rv"><div class="spt">주식 브리핑 <em>=</em> 관심 종목 뉴스 대조</div>
-          <p class="sps">조사·요약까지 위임하고 판단은 본인이. 검수 지점이 명확한 사례.</p></div>
+    <div class="htitle an"><h1>같은 모델, 다른 결과 = <em>서비스가 붙인 것</em>의 차이</h1>
+      <p class="sub">LLM = 대량의 글로 학습한 언어모델 · LLM 서비스 = 그 모델 위에 자료·권한·규칙을 붙인 제품</p></div>
+    <div class="grow-1">
+      <div class="pd-stack">
+        <div class="split cols an" style="width:100%">
+          <div class="an" style="display:flex;flex-direction:column;gap:14px;padding:22px 28px">
+            <span class="ic" style="width:88px;height:88px"><svg viewBox="0 0 34 34" style="width:40px;height:40px"><rect x="4" y="6" width="26" height="18" rx="4"/><polyline points="11,24 11,30 18,24"/></svg></span>
+            <span class="spl" style="margin-bottom:0">서비스 01</span>
+            <div class="spt">챗봇</div>
+            <p class="sps" style="font-size:24px">붙인 것 = <span class="pd-b">대화 이력 · 웹 검색</span></p>
+            <p class="sps" style="color:var(--mute);font-size:22px">결과 = 대화창 안에서 끝나는 답변</p>
+          </div>
+          <div class="an" style="display:flex;flex-direction:column;gap:14px;padding:22px 28px">
+            <span class="ic" style="width:88px;height:88px"><svg viewBox="0 0 34 34" style="width:40px;height:40px"><circle cx="8" cy="17" r="4"/><circle cx="26" cy="9" r="4"/><circle cx="26" cy="25" r="4"/><line x1="12" y1="15" x2="22" y2="11"/><line x1="12" y1="19" x2="22" y2="23"/></svg></span>
+            <span class="spl" style="margin-bottom:0">서비스 02</span>
+            <div class="spt">에이전트</div>
+            <p class="sps" style="font-size:24px">붙인 것 = <span class="pd-b">도구 권한 · 다단계 자동 진행</span></p>
+            <p class="sps" style="color:var(--mute);font-size:22px">결과 = 중간 개입 없이 진행되는 작업</p>
+          </div>
+          <div class="an" style="display:flex;flex-direction:column;gap:14px;padding:22px 28px">
+            <span class="ic" style="width:88px;height:88px"><svg viewBox="0 0 34 34" style="width:40px;height:40px"><polyline points="12,11 5,17 12,23"/><polyline points="22,11 29,17 22,23"/><line x1="19" y1="8" x2="15" y2="26"/></svg></span>
+            <span class="spl" style="margin-bottom:0">서비스 03</span>
+            <div class="spt">IDE · 코드 편집기</div>
+            <p class="sps" style="font-size:24px">붙인 것 = <span class="pd-b">내 파일 접근 · 실행과 수정</span></p>
+            <p class="sps" style="color:var(--mute);font-size:22px">결과 = 파일에 직접 반영되는 변경</p>
+          </div>
+        </div>
+        <svg class="pd-conn an" width="1760" height="82">
+          <path class="draw" d="M880 78 V54 H293 V16"/>
+          <path class="draw" d="M880 78 V16"/>
+          <path class="draw" d="M880 78 V54 H1467 V16"/>
+          <polyline class="draw" points="285,24 293,12 301,24"/>
+          <polyline class="draw" points="872,24 880,12 888,24"/>
+          <polyline class="draw" points="1459,24 1467,12 1475,24"/>
+        </svg>
+        <div class="pd-base an">
+          <span class="ic" style="width:88px;height:88px"><svg viewBox="0 0 34 34" style="width:40px;height:40px"><polygon points="17,4 30,11 17,18 4,11"/><polyline points="4,17 17,24 30,17"/><polyline points="4,23 17,30 30,23"/></svg></span>
+          <div>
+            <span class="pd-bl">모델 층</span>
+            <div class="pd-bt">모델 1개를 서비스 3종이 <span style="color:var(--accent)">공유</span></div>
+          </div>
+          <p class="pd-bn">모델 이름이 같아도 붙은 자료·권한·규칙이 다르면 나오는 결과가 다름</p>
+        </div>
       </div>
     </div>
-    <div class="uibar an" data-ui><span class="uihint">후보 공개</span>
-      <button class="uib" data-rvnext>다음 후보</button>
-      <button class="uib" data-rvall>전체 보기</button></div>
-    <div class="dark" data-hero>조건 = <b>본인이 실사용자</b> · <b>주 1회 이상 반복</b>
-      <span class="dsub">남이 쓸 것을 대신 만드는 소재는 제외 · 전·후 측정이 가능해야 함</span></div>
+    <div class="dark" data-hero>같은 모델이라도 <b>서비스가 무엇을 붙였는가</b>로 결과가 갈림
+      <span class="dsub">도구 선택 기준 = 모델 이름 비교가 아니라 붙어 있는 자료·권한·규칙 확인</span></div>
   </div>
-  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 4 · 한 학기 주제</span></div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 4 · AI 트렌드</span></div>
 </section>
-
-<!-- ===== #25 · BP8 소재 카드 4문항 (C) ===== -->
-<section class="slide" data-pname="한 학기 주제" aria-label="25. 소재 카드 4문항">
+<section class="slide" data-pname="AI 트렌드" aria-label="24. 엔지니어링 3단">
+  <svg class="wave" style="left:0;bottom:0;width:560px;height:165px" viewBox="0 0 560 165" fill="none">
+    <path d="M0 165 H560 C 410 134 300 30 140 68 C 60 86 30 132 0 115 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · AI 트렌드</span><span class="hpage">24 <i>/ 34</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>엔지니어링 3단 = 프롬프트 → 컨텍스트 → <em>하네스</em></h1>
+      <p class="sub">차이 = AI에 미리 주는 것의 범위 · 뒤 단계가 앞 단계를 포함</p></div>
+    <div class="grow-1" style="display:grid;grid-template-columns:1.2fr .8fr;gap:56px;align-items:stretch">
+      <div class="pd-stair">
+        <div class="pd-srow an">
+          <span class="ic"><svg viewBox="0 0 34 34"><rect x="4" y="7" width="26" height="17" rx="4"/><line x1="10" y1="13" x2="24" y2="13"/><line x1="10" y1="18" x2="19" y2="18"/></svg></span>
+          <div><span class="pd-sl">STEP 1</span>
+            <div class="pd-st">프롬프트</div>
+            <p class="pd-sd">한 번의 지시 · 그 대화 안에서 끝나는 요청</p></div>
+        </div>
+        <svg class="pd-sarr an" style="margin-left:44px" width="110" height="56">
+          <polyline class="draw" points="4,2 4,26 80,26 80,48"/>
+          <polyline class="draw" points="72,40 80,52 88,40"/>
+        </svg>
+        <div class="pd-srow an" style="padding-left:76px">
+          <span class="ic"><svg viewBox="0 0 34 34"><path d="M4 9 h9 l3 4 h14 v14 a2 2 0 0 1 -2 2 H6 a2 2 0 0 1 -2 -2 Z"/><line x1="11" y1="21" x2="23" y2="21"/></svg></span>
+          <div><span class="pd-sl">STEP 2</span>
+            <div class="pd-st">컨텍스트</div>
+            <p class="pd-sd">AI가 참조할 자료와 기준을 미리 갖춰 주기</p></div>
+        </div>
+        <svg class="pd-sarr an" style="margin-left:120px" width="120" height="56">
+          <polyline class="draw" points="4,2 4,26 92,26 92,48"/>
+          <polyline class="draw" points="84,40 92,52 100,40"/>
+        </svg>
+        <div class="pd-srow res an" data-hero style="padding-left:152px">
+          <span class="ic ic--solid"><svg viewBox="0 0 34 34"><path d="M17 4 L28 9 v9 c0 6 -5 10 -11 12 c-6 -2 -11 -6 -11 -12 V9 Z"/><polyline points="12,17 16,21 23,13"/></svg></span>
+          <div><span class="pd-sl">RESULT</span>
+            <div class="pd-st">하네스</div>
+            <p class="pd-sd">규칙·검증·기록으로 AI를 둘러싼 틀</p></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;min-height:0">
+        <div class="shot an" style="flex:1">
+          <div class="bar"><span class="dot2"></span><span class="dot2"></span><span class="dot2"></span><span class="url">작업공간 하네스</span></div>
+          <div class="sview"><div class="pend">
+            <span class="pl2">캡처 대기</span>
+            <h4>작업공간 하네스</h4>
+            <p>규칙 파일 · 검증 절차 · 결정 기록이 한 묶음으로 놓인 화면</p>
+          </div></div>
+        </div>
+        <p class="scap an">실물 = 3단의 마지막 단이 실제로 놓인 형태</p>
+      </div>
+    </div>
+    <div class="an" style="border-top:1.5px solid var(--line);padding-top:20px">
+      <div style="font:700 32px/1.4 var(--fd);letter-spacing:-.02em;word-break:keep-all">3단 = 교체가 아니라 <b style="color:var(--accent)">누적</b> · 하네스 안에도 프롬프트와 컨텍스트가 그대로 있음</div>
+      <p style="margin:8px 0 0;font:400 var(--fs-sub)/1.5 var(--fb);color:var(--sub)">프롬프트만 남은 상태 = 매번 처음부터 설명 · 하네스 = 같은 기준이 반복 적용되는 상태</p>
+    </div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 4 · AI 트렌드</span></div>
+</section>
+<section class="slide" data-pname="AI 트렌드" aria-label="25. 개념 지도">
+  <svg class="wave" style="right:0;bottom:0;width:560px;height:160px" viewBox="0 0 560 160" fill="none">
+    <path d="M560 160 H0 C 150 130 260 30 420 66 C 500 84 530 130 560 112 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · AI 트렌드</span><span class="hpage">25 <i>/ 34</i></span></div>
+  <div class="sbody">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:48px">
+      <div class="htitle an"><h1>새 용어 4종도 <em>프롬프트·컨텍스트·하네스</em>로 분류</h1>
+        <p class="sub">정의 1줄 + 뿌리 단계 표기 · 판단 기준 = 용어 자체가 아니라 <b>어느 단에 붙는가</b></p></div>
+      <div class="uibar an" data-ui style="flex:0 0 auto"><span class="uihint">용어 공개</span>
+        <button class="uib" data-rvnext>다음 용어</button>
+        <button class="uib" data-rvall>전체 보기</button></div>
+    </div>
+    <div class="grow-1" style="display:flex;align-items:center">
+      <div class="split cols an" style="width:100%">
+        <div class="rv" style="display:flex;flex-direction:column;gap:16px;padding:34px 30px">
+          <span class="ic" style="width:88px;height:88px"><svg viewBox="0 0 34 34" style="width:40px;height:40px"><circle cx="8" cy="17" r="4"/><circle cx="26" cy="9" r="4"/><circle cx="26" cy="25" r="4"/><line x1="12" y1="15" x2="22" y2="11"/><line x1="12" y1="19" x2="22" y2="23"/></svg></span>
+          <div class="spt" style="font-size:30px">에이전틱 엔지니어링</div>
+          <p class="sps">AI가 도구를 쓰며 여러 단계를 스스로 진행하도록 설계</p>
+          <p class="pd-root">뿌리 = <b>하네스</b></p>
+        </div>
+        <div class="rv" style="display:flex;flex-direction:column;gap:16px;padding:34px 30px">
+          <span class="ic" style="width:88px;height:88px"><svg viewBox="0 0 34 34" style="width:40px;height:40px"><circle cx="8" cy="9" r="3.5"/><circle cx="26" cy="12" r="3.5"/><circle cx="14" cy="26" r="3.5"/><line x1="11.5" y1="9.5" x2="22.5" y2="11.5"/><line x1="9" y1="12.5" x2="13" y2="22.5"/></svg></span>
+          <div class="spt" style="font-size:30px">그래프 엔지니어링</div>
+          <p class="sps">작업을 노드와 연결로 나눠 순서를 설계</p>
+          <p class="pd-root">뿌리 = <b>컨텍스트</b></p>
+        </div>
+        <div class="rv" style="display:flex;flex-direction:column;gap:16px;padding:34px 30px">
+          <span class="ic" style="width:88px;height:88px"><svg viewBox="0 0 34 34" style="width:40px;height:40px"><rect x="7" y="4" width="20" height="26" rx="3"/><line x1="12" y1="12" x2="22" y2="12"/><line x1="12" y1="18" x2="22" y2="18"/><line x1="12" y1="24" x2="18" y2="24"/></svg></span>
+          <div class="spt" style="font-size:30px">스킬</div>
+          <p class="sps">반복 지시를 파일 1개로 고정한 재사용 규격</p>
+          <p class="pd-root">뿌리 = <b>프롬프트</b></p>
+        </div>
+        <div class="rv" style="display:flex;flex-direction:column;gap:16px;padding:34px 30px">
+          <span class="ic" style="width:88px;height:88px"><svg viewBox="0 0 34 34" style="width:40px;height:40px"><rect x="6" y="4" width="22" height="26" rx="3"/><polyline points="11,16 15,20 23,11"/><line x1="11" y1="25" x2="23" y2="25"/></svg></span>
+          <div class="spt" style="font-size:30px">검수 · eval</div>
+          <p class="sps">결과가 기준에 닿는지 같은 방식으로 반복 판정</p>
+          <p class="pd-root">뿌리 = 하네스</p>
+        </div>
+      </div>
+    </div>
+    <div class="dark" data-hero>이름은 새로워도 뿌리는 <b>3단</b>
+      <span class="dsub">새 용어를 만났을 때 확인 순서 = 프롬프트인가 · 컨텍스트인가 · 하네스인가</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 4 · AI 트렌드</span></div>
+</section>
+<section class="slide" data-pname="AI 트렌드" aria-label="26. 핵심 주장">
+  <svg class="wave" style="left:0;top:0;width:760px;height:180px" viewBox="0 0 760 180" fill="none">
+    <path d="M0 0 H760 C 600 34 500 158 320 134 C 190 116 120 44 0 74 Z" fill="var(--tint)"/>
+  </svg>
+  <span class="dot" style="width:22px;height:22px;right:170px;top:150px;background:var(--accent)"></span>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · AI 트렌드</span><span class="hpage">26 <i>/ 34</i></span></div>
+  <div class="sbody" style="padding-bottom:14px">
+    <div class="grow-1" style="display:flex">
+      <div class="pd-decl an" data-hero>
+        <span class="pd-dl an">PART 4 · 핵심 주장</span>
+        <p class="pd-dt"><span class="an">AI 트렌드 =</span> <span class="an pd-em">AI를</span> <span class="an pd-em">얼마나</span> <span class="an pd-em">잘</span> <span class="an pd-em">통제하느냐</span></p>
+        <div class="pd-drows">
+          <div class="pd-dr an"><span class="pd-dn">01</span><p>개떡같이 말해도 찰떡같이 알아듣게 만드는 싸움</p></div>
+          <div class="pd-dr an"><span class="pd-dn">02</span><p>모델과 방법론이 좋아져도 결정은 사용자의 판단과 기획</p></div>
+          <div class="pd-dr an"><span class="pd-dn">03</span><p>싼 모델도 활용도로 역전</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 4 · AI 트렌드</span></div>
+</section>
+<section class="slide" data-pname="AI 트렌드" aria-label="27. 리서치 2층">
   <svg class="wave" style="left:0;bottom:0;width:520px;height:155px" viewBox="0 0 520 155" fill="none">
     <path d="M0 155 H520 C 380 128 280 28 130 64 C 54 82 26 126 0 108 Z" fill="var(--tint)"/>
   </svg>
-  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 한 학기 주제</span><span class="hpage">25 <i>/ 31</i></span></div>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · AI 트렌드</span><span class="hpage">27 <i>/ 34</i></span></div>
   <div class="sbody">
-    <div class="htitle an"><h1>소재 카드 = <em>4문항 전부 기입</em> 시 통과</h1>
-      <p class="sub">제출 = <b>차시 2</b> · 오늘은 후보 1개를 머릿속에 정하는 것까지</p></div>
-    <div class="grow-1" style="display:flex;align-items:center">
-      <table class="srct an" style="width:100%">
-        <thead><tr><th style="width:70px">NO</th><th style="width:430px">문항</th><th>기입 기준</th><th style="width:400px">기입 예시</th></tr></thead>
-        <tbody>
-          <tr><td class="n">01</td><td class="s">반복 작업 = 무엇을 몇 번</td><td>작업 이름과 주당 횟수</td><td>주 3회 강의 노트 정리</td></tr>
-          <tr><td class="n">02</td><td class="s">회당 소요 = 분 단위</td><td>측정값. 추정이면 근거 한 줄</td><td>40분</td></tr>
-          <tr><td class="n">03</td><td class="s">AI 위임 후 확인 지점</td><td>사람이 반드시 볼 항목</td><td>출처·수치 대조</td></tr>
-          <tr><td class="n">04</td><td class="s">결과물의 수취인·용처</td><td>누가 어디에 쓰는가</td><td>본인 · 시험 대비 복습</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="dark" data-hero>4문항 <b>전부 기입</b> = 통과 · 공란 1개 = 반려
-      <span class="dsub">02가 비면 전·후 비교가 불가 · 04가 비면 완료 판정 기준이 없음</span></div>
-  </div>
-  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 4 · 한 학기 주제</span></div>
-</section>
-
-<!-- ===== #26 · BP6 팀 주제 (B) ===== -->
-<section class="slide" data-pname="한 학기 주제" aria-label="26. 팀 주제 미리 보기">
-  <svg class="wave" style="right:0;bottom:0;width:540px;height:160px" viewBox="0 0 540 160" fill="none">
-    <path d="M540 160 H0 C 145 130 250 30 405 66 C 483 84 512 130 540 112 Z" fill="var(--tint)"/>
-  </svg>
-  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 한 학기 주제</span><span class="hpage">26 <i>/ 31</i></span></div>
-  <div class="sbody">
-    <div class="htitle an"><h1>팀 주제 = 기획은 <em>사람</em> · 구현은 <em>AI</em></h1>
-      <p class="sub">2차 프로젝트(10-27 주 ~ 11-24) 범위 · 팀 결성 = <b>차시 4</b> · 무대 2종 중 택 1</p></div>
-    <div class="ab grow-1 roomy">
+    <div class="htitle an"><h1>리서치 2층 = <em>매번 경량</em> · 새 주제 <em>1회 온보딩</em></h1>
+      <p class="sub">경량 = 반복 조회용 · 온보딩 = 낯선 분야 진입용 · 용도가 다른 두 층으로 운영</p></div>
+    <div class="ab grow-1">
       <div class="abcard an">
-        <div class="abh"><span class="ic" style="width:56px;height:56px"><svg viewBox="0 0 34 34"><circle cx="13" cy="12" r="5"/><path d="M4 28 a9 9 0 0 1 18 0"/><path d="M23 8 a5 5 0 0 1 0 9"/><path d="M24 28 a9 9 0 0 0 -3 -8"/></svg></span>
-          <span class="abl">무대 A</span><h3>조직 실운영</h3></div>
-        <p>동아리·학생회·팀 프로젝트에서 실제로 도는 반복 업무 하나.</p>
-        <div class="abr bad"><span class="rl2">산출</span><p>운영자가 <b>계속 쓰는 도구</b>. 사용 기록이 증거.</p></div>
-      </div>
-      <div class="abcard an">
-        <div class="abh"><span class="ic" style="width:56px;height:56px"><svg viewBox="0 0 34 34"><path d="M5 10 h13 M5 17 h20 M5 24 h9"/><polyline points="24,7 29,12 24,17"/></svg></span>
-          <span class="abl">무대 B</span><h3>프로세스 재설계</h3></div>
-        <p>기존 업무 절차를 다시 설계하고 그 설계대로 동작물을 만드는 방향.</p>
-        <div class="abr"><span class="rl2">산출</span><p>기획서(PRD)와 <b>동작하는 MVP</b> 한 벌.</p></div>
-      </div>
-    </div>
-    <div class="chips an"><span class="chip">공모전 = 요강을 기획서 템플릿으로 사용</span><span class="chip mute">응모 = 선택</span><span class="chip mute">팀 결성 = 차시 4</span></div>
-    <div class="dark" data-hero>역할 고정 = 기획 <b>사람</b> · 구현 <b>AI</b> · 검수 <b>사람</b>
-      <span class="dsub">평가 대상 = 기획서와 결과물의 대조 · 개정 이력</span></div>
-  </div>
-  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 4 · 한 학기 주제</span></div>
-</section>
-
-<!-- ===== #27 · BP5 다음 4주 (C) ===== -->
-<section class="slide" data-pname="한 학기 주제" aria-label="27. 다음 4주">
-  <svg class="wave" style="left:0;top:0;width:520px;height:150px" viewBox="0 0 520 150" fill="none">
-    <path d="M0 0 H520 C 360 34 280 130 110 100 C 50 90 24 52 0 66 Z" fill="var(--tint)"/>
-  </svg>
-  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 한 학기 주제</span><span class="hpage">27 <i>/ 31</i></span></div>
-  <div class="sbody">
-    <div class="htitle an"><h1>다음 4주 = 차시별 <em>완료 조건</em> 하나씩</h1>
-      <p class="sub">회차마다 판정 항목 1개 · 완료 조건 미충족 시 <b>다음 회차에 이월</b></p></div>
-    <div class="grow-1" style="display:flex;align-items:center">
-    <div class="pipe" style="flex:1">
-      <div class="pnode res an"><span class="pl">09-07 주</span><span class="ic ic--solid"><svg viewBox="0 0 34 34"><path d="M13 21 a6 6 0 1 1 8 -8 l6 -6 M25 13 l3 3"/><circle cx="12" cy="22" r="5"/></svg></span>
-        <span class="pt">차시 1<br/>오늘</span><span class="ps">세팅 완료 · 결과 차이 확인 · 시작 설문</span></div>
-      <svg class="plink" width="80" height="26"><line class="draw" x1="4" y1="13" x2="66" y2="13"/><polyline class="draw" points="58,5 68,13 58,21"/></svg>
-      <div class="pnode an"><span class="pl">09-14 주</span><span class="ic"><svg viewBox="0 0 34 34"><path d="M6 28 l3 -8 L23 6 l5 5 L14 25 Z"/><line x1="20" y1="9" x2="25" y2="14"/></svg></span>
-        <span class="pt">차시 2</span><span class="ps">기고 1건 제출 · <b>소재 카드 확정</b></span></div>
-      <svg class="plink" width="80" height="26"><line class="draw" x1="4" y1="13" x2="66" y2="13"/><polyline class="draw" points="58,5 68,13 58,21"/></svg>
-      <div class="pnode an"><span class="pl">09-21 주</span><span class="ic"><svg viewBox="0 0 34 34"><rect x="5" y="8" width="24" height="21" rx="3"/><line x1="5" y1="15" x2="29" y2="15"/><line x1="12" y1="4" x2="12" y2="11"/><line x1="22" y1="4" x2="22" y2="11"/></svg></span>
-        <span class="pt">차시 3</span><span class="ps">제작 착수 · 전·후 측정 방법 확정</span></div>
-      <svg class="plink" width="80" height="26"><line class="draw" x1="4" y1="13" x2="66" y2="13"/><polyline class="draw" points="58,5 68,13 58,21"/></svg>
-      <div class="pnode an"><span class="pl">09-28 주</span><span class="ic"><svg viewBox="0 0 34 34"><path d="M9 29 V5 h16 l-4 6 l4 6 H9"/></svg></span>
-        <span class="pt">차시 4</span><span class="ps">1인 3분 발표 · <b>팀·주제·역할 확정</b></span></div>
-      <svg class="plink" width="80" height="26"><line class="draw" x1="4" y1="13" x2="66" y2="13"/><polyline class="draw" points="58,5 68,13 58,21"/></svg>
-      <div class="pnode off an"><span class="pl">10-07 ~</span><span class="ic ic--mute"><svg viewBox="0 0 34 34"><rect x="6" y="4" width="22" height="26" rx="3"/><line x1="12" y1="13" x2="22" y2="13"/><line x1="12" y1="20" x2="22" y2="20"/></svg></span>
-        <span class="pt">시험기간</span><span class="ps">세션 없음 · 개인 산출물 사용은 계속</span></div>
-    </div>
-    </div>
-    <div class="dark" data-hero>다음 시간까지 준비물 = <b>소재 후보 1개</b>
-      <span class="dsub">완성 아이디어가 아니라 후보 1줄 · 확정은 차시 2의 소재 카드에서</span></div>
-  </div>
-  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 4 · 한 학기 주제</span></div>
-</section>
-
-<!-- ===== #28 · BP3 변형 파트 5 디바이더 겸 브릿지 (B) ===== -->
-<section class="slide divider" aria-label="28. 파트 5 디바이더 겸 브릿지">
-  <svg class="wave" style="right:0;top:0;width:900px;height:1080px" viewBox="0 0 900 1080" fill="none">
-    <path d="M900 0 V1080 H560 C 700 880 590 690 700 520 C 800 365 760 160 900 0 Z" fill="var(--tint)"/>
-    <path d="M900 0 V1080 H700 C 815 900 720 700 815 540 C 880 430 860 180 900 60 Z" fill="var(--tint2)"/>
-  </svg>
-  <span class="dot" style="width:38px;height:38px;right:760px;top:180px;background:var(--tint2)"></span>
-  <span class="dot" style="width:16px;height:16px;right:720px;bottom:260px;background:var(--accent)"></span>
-  <div class="dwm">5</div>
-  <div style="margin-top:auto;margin-bottom:auto;position:relative;z-index:3;width:1180px">
-    <div class="drow">
-      <div class="dnum an">05</div>
-      <div>
-        <div class="dtitle an">마무리 · 기록 = 증명의 원본</div>
-        <p class="dline an">증명의 재료 = <b>시작 시점의 상태</b>와 <b>학기말 상태</b>의 차이</p>
-      </div>
-    </div>
-    <div class="dark an" data-hero style="margin-top:40px">지금 기록하지 않으면 학기말에 비교할 <b>기준값</b>이 없음
-      <span class="dsub">다음 장 설문 = 전·후 비교의 출발점 · 같은 문항을 학기말에 다시 실시</span></div>
-    <div class="dprev">
-      <div class="ph an">PART 5 구성</div>
-      <div class="pv an"><span class="pn">1</span><span class="pvt">시작 설문 = <em>학기말 비교의 기준점</em></span><span class="pvs">3분</span></div>
-      <div class="pv an"><span class="pn">2</span><span class="pvt">마침 = 다음 시간 <em>기고 1건과 소재 확정</em></span><span class="pvs">준비물 3</span></div>
-      <div class="pv an"><span class="pn">3</span><span class="pvt">출처 = 본문 각주 ①②③ 일괄</span><span class="pvs">수치 3건</span></div>
-    </div>
-  </div>
-  <div class="tracker">
-    <span class="tp an">1 왜</span><span class="tp an">2 허브</span><span class="tp an">3 세팅·실습</span><span class="tp an">4 주제</span><span class="tp cur an">5 마무리</span>
-  </div>
-</section>
-
-<!-- ===== #29 · BP7 시작 설문 (A) ===== -->
-<section class="slide" data-pname="마무리" aria-label="29. 시작 설문">
-  <svg class="wave" style="left:0;top:0;width:820px;height:210px" viewBox="0 0 820 210" fill="none">
-    <path d="M0 0 H820 C 640 40 560 180 350 152 C 210 133 130 56 0 88 Z" fill="var(--tint)"/>
-  </svg>
-  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 마무리</span><span class="hpage">29 <i>/ 31</i></span></div>
-  <div class="sbody">
-    <div class="htitle an"><h1>시작 설문 = <em>학기말 비교의 기준점</em></h1>
-      <p class="sub">지금 상태를 숫자로 남기는 절차 · <b>평가 아님</b> · 이 자리에서 제출</p></div>
-    <div class="grow-1" style="display:grid;grid-template-columns:.85fr 1.15fr;gap:56px;align-items:stretch">
-      <div class="an" style="display:flex;flex-direction:column;min-height:0">
-        <div class="shot" data-hero style="flex:1">
-          <div class="bar"><span class="dot2"></span><span class="dot2"></span><span class="dot2"></span><span class="url">시작 설문</span></div>
-          <div class="pend"><span class="pl2">폼 확정 후 교체</span>
-            <h4>설문 QR 코드</h4>
-            <p>폼 주소 확정 시 이 자리에 QR 게재. 현장 대체 = 워크스페이스 공지 링크.</p></div>
+        <div class="abh"><span class="ic" style="width:56px;height:56px"><svg viewBox="0 0 34 34"><path d="M8 5 h11 l7 7 v17 a2 2 0 0 1 -2 2 H8 a2 2 0 0 1 -2 -2 V7 a2 2 0 0 1 2 -2 Z"/><polyline points="19,5 19,12 26,12"/><line x1="12" y1="20" x2="22" y2="20"/><line x1="12" y1="25" x2="19" y2="25"/></svg></span>
+          <span class="abl">경량</span><h3>브리프 1문 → 1장 산출</h3></div>
+        <div class="pd-mini">
+          <div class="pd-mr an"><span class="pd-mk">시점</span><p>주간 신호 확인 등 <b>반복 조회</b>마다</p></div>
+          <div class="pd-mr an"><span class="pd-mk">입력</span><p>목적·범위·형식을 담은 <b>브리프 1문</b></p></div>
+          <div class="pd-mr an"><span class="pd-mk">산출</span><p>원문과 대조 가능한 <b>1장 요약</b></p></div>
         </div>
-        <p class="scap">제출 확인 = 운영진이 현장에서 인원 대조</p>
       </div>
-      <div class="pts fill">
-        <div class="ptr an rv"><span class="pnum">1</span><span><h4>문항 = <em>5개</em></h4>
-          <p>현재 사용 상태를 묻는 문항. 정답 없음.</p></span></div>
-        <div class="ptr an rv"><span class="pnum">2</span><span><h4>소요 = <em>3분</em></h4>
-          <p>이 시간 안에 전원 제출. 미제출자는 종료 전 확인.</p></span></div>
-        <div class="ptr an rv"><span class="pnum">3</span><span><h4>성격 = 평가 아님</h4>
-          <p>점수·등급 없음. 학기말에 <b>같은 문항을 재실시</b>해 전·후만 대조.</p></span></div>
+      <div class="abcard an">
+        <div class="abh"><span class="ic" style="width:56px;height:56px"><svg viewBox="0 0 34 34"><circle cx="12" cy="11" r="5"/><path d="M4 27 a8 8 0 0 1 16 0"/><circle cx="25" cy="13" r="4"/><path d="M22 27 a6.5 6.5 0 0 1 8 -4.6"/></svg></span>
+          <span class="abl">도메인 온보딩</span><h3>새 주제 1회 · 전문가 지도 5문</h3></div>
+        <div class="abdef an">전문가 지도 = 낯선 분야에서 먼저 확인하는 질문 5개 묶음.</div>
+        <div class="pd-q5">
+          <span class="pd-qi an"><b>01</b>인용되는 사람 5명</span>
+          <span class="pd-qi an"><b>02</b>갈리는 쟁점</span>
+          <span class="pd-qi an"><b>03</b>읽어야 할 문서</span>
+          <span class="pd-qi an"><b>04</b>초보자 실수</span>
+          <span class="pd-qi an"><b>05</b>최근 12개월 변화</span>
+        </div>
       </div>
     </div>
-    <div class="uibar an" data-ui><span class="uihint">항목 공개</span>
-      <button class="uib" data-rvnext>다음 항목</button>
-      <button class="uib" data-rvall>전체 보기</button></div>
-    <div class="band an">오늘의 판정 2 = <span>설문 제출 완료</span>
-      <span class="band-sub">판정 1(결과 차이 확인)은 파트 3에서 완료</span></div>
+    <div class="dark" data-hero>전문가 정보 = <b>주제 검색</b>이 아니라 <b>사람·문서 유형</b>으로 도달
+      <span class="dsub">검색어를 바꾸는 대신 누가 인용되는지·무엇을 읽는지를 먼저 묻는 순서</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 4 · AI 트렌드</span></div>
+</section>
+<section class="slide" data-pname="AI 트렌드" aria-label="28. 판단 기준 세우기">
+  <svg class="wave" style="right:0;top:0;width:520px;height:160px" viewBox="0 0 520 160" fill="none">
+    <path d="M520 0 H0 C 170 30 260 132 520 90 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · AI 트렌드</span><span class="hpage">28 <i>/ 34</i></span></div>
+  <div class="sbody">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:48px">
+      <div class="htitle an"><h1>판단 기준 = AI가 <em>틀린 지점</em>의 기록</h1>
+        <p class="sub">경계 대장 = AI 답의 신뢰 범위를 5칸으로 적는 기록표 · 오른쪽 열 = 기록 1건</p></div>
+      <div class="uibar an" data-ui style="flex:0 0 auto"><span class="uihint">칸 공개</span>
+        <button class="uib" data-rvnext>다음 칸</button>
+        <button class="uib" data-rvall>전체 보기</button></div>
+    </div>
+    <div class="split rows pe-led an grow-1">
+      <div class="pe-lh"><span></span><span class="pe-lc">대장 칸</span><span class="pe-lc">적는 내용</span><span class="pe-lc">예시 기록 1건</span></div>
+      <div class="pe-lr rv">
+        <span class="spl">칸 01</span>
+        <div class="spt">과업</div>
+        <p class="pe-cd">AI에 맡긴 일 · 과목·범위·분량까지</p>
+        <div class="pe-exv">경영정보 중간 범위 요약</div>
+      </div>
+      <div class="pe-lr rv">
+        <span class="spl">칸 02</span>
+        <div class="spt">AI의 답</div>
+        <p class="pe-cd">받은 결과의 핵심 주장 1줄 · 전문 복사 금지</p>
+        <div class="pe-exv">핵심 개념 12개 · 4챕터 구성</div>
+      </div>
+      <div class="pe-lr rv">
+        <span class="spl">칸 03</span>
+        <div class="spt">무엇과 대조</div>
+        <p class="pe-cd">판정 기준이 되는 AI 바깥 자료 · 없으면 판정 불가</p>
+        <div class="pe-exv">강의계획서 · 수업 필기</div>
+      </div>
+      <div class="pe-lr rv">
+        <span class="spl">칸 04</span>
+        <div class="spt">맞았나</div>
+        <p class="pe-cd">맞음·틀림 표시가 아니라 틀린 부분 지목</p>
+        <div class="pe-exv">3챕터 누락 · 개념 2개 범위 밖</div>
+      </div>
+      <div class="pe-lr rv pe-key">
+        <span class="spl">칸 05</span>
+        <div class="spt">일반론 · 내 상황 고유</div>
+        <p class="pe-cd">맞은 것이 일반론인지, 틀린 것이 내 강의에만 있는 조건인지 구분</p>
+        <div class="pe-exv">요약 골격 = 일반론 정확 · 시험 범위 = 내 강의 고유</div>
+      </div>
+    </div>
+    <div class="dark" data-hero>경계 = <b>틀려 본 곳</b>에서만 드러남 · 주간 고정 규칙 = <b>AI가 틀린 것 1건</b> 기록
+      <span class="dsub">칸 05가 쌓인 만큼 위임 범위가 넓어짐 · 5칸 기록이 다음 위임의 조건이 됨</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 4 · AI 트렌드</span></div>
+</section>
+<section class="slide" data-pname="AI 트렌드" aria-label="29. 이번 주 트렌드">
+  <svg class="wave" style="left:0;bottom:0;width:560px;height:158px" viewBox="0 0 560 158" fill="none">
+    <path d="M0 158 H560 C 410 130 300 28 140 64 C 60 82 28 128 0 110 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · AI 트렌드</span><span class="hpage">29 <i>/ 34</i></span></div>
+  <div class="sbody">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:48px">
+      <div class="htitle an"><h1>이번 주 3건 · 판단 근거 = <em>실사용 평</em></h1>
+        <p class="sub">출시 · 가격 · 평가 3건 · 발표 수치는 참고 항목</p></div>
+      <span class="chip an" style="flex:0 0 auto">OT 전날 갱신</span>
+    </div>
+    <div class="grow-1 pe-tg" style="display:grid;grid-template-columns:repeat(3,1fr);gap:32px">
+      <div class="gcard pe-card an" data-hero>
+        <span class="ic"><svg viewBox="0 0 34 34"><path d="M17 26 V8"/><polyline points="9,16 17,8 25,16"/><line x1="8" y1="30" x2="26" y2="30"/></svg></span>
+        <span class="spl">출시 · 09-03</span>
+        <h3>GPT-6 Astra 출시</h3>
+        <p>성능 발표 직후 실사용 평이 <b>두 갈래</b>로 갈림. 같은 모델 · 같은 주에 나온 평</p>
+        <div class="pe-rev"><span class="pe-rt">실사용 평</span>
+          <div class="pe-rw"><span class="pe-rl">평 A</span><span class="pe-rq">"빠르고 직설적"</span></div>
+          <div class="pe-rw"><span class="pe-rl">평 B</span><span class="pe-rq">"한도 소진"</span></div>
+        </div>
+      </div>
+      <div class="gcard an">
+        <span class="ic"><svg viewBox="0 0 34 34"><path d="M4 4 h11 l15 15 -11 11 -15 -15 Z"/><circle cx="11" cy="11" r="2.4"/></svg></span>
+        <span class="spl">가격</span>
+        <h3>Claude Fable 5.1 캐시 가격 인하</h3>
+        <p>같은 자료를 반복 참조하는 작업의 비용이 내려감. 캐시 = 앞서 넣은 자료를 다시 읽히는 값</p>
+        <div class="pe-rev"><span class="pe-rt">확인 지점</span>
+          <div class="pe-rw"><span class="pe-rl">영향</span><span class="pe-rq">긴 자료 반복 위임에 유리</span></div>
+          <div class="pe-rw"><span class="pe-rl">확인</span><span class="pe-rq">같은 작업 재실행 비용 비교</span></div>
+        </div>
+      </div>
+      <div class="gcard an">
+        <span class="ic"><svg viewBox="0 0 34 34"><rect x="5" y="5" width="24" height="24" rx="3"/><line x1="11" y1="23" x2="11" y2="16"/><line x1="17" y1="23" x2="17" y2="11"/><line x1="23" y1="23" x2="23" y2="19"/></svg></span>
+        <span class="spl">평가</span>
+        <h3>벤치마크 불신 담론</h3>
+        <p>점수 상승과 체감 성능의 괴리 지적. 벤치마크 = 모델 성능을 공통 문제로 재는 점수표</p>
+        <div class="pe-rev"><span class="pe-rt">확인 지점</span>
+          <div class="pe-rw"><span class="pe-rl">지적</span><span class="pe-rq">점수 상위 = 내 과업 상위 아님</span></div>
+          <div class="pe-rw"><span class="pe-rl">대응</span><span class="pe-rq">내 과업 1건으로 재시험</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="band an">발표문이 아니라 <span>사용자 평</span>을 봄
+      <span class="band-sub">확인 순서 = 출시 발표문 → 실사용 평 → 내 과업 1건 시험 · 이번 주 갱신본은 인사이트 페이지</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 4 · AI 트렌드</span></div>
+</section>
+<section class="slide" data-pname="AI 트렌드" aria-label="30. 채용이 재는 것">
+  <svg class="wave" style="right:0;bottom:0;width:560px;height:160px" viewBox="0 0 560 160" fill="none">
+    <path d="M560 160 H0 C 150 130 260 30 420 66 C 500 84 530 130 560 112 Z" fill="var(--tint)"/>
+  </svg>
+  <span class="dot" style="width:22px;height:22px;right:120px;top:190px;background:var(--tint2)"></span>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · AI 트렌드</span><span class="hpage">30 <i>/ 34</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>채용이 재는 것 = 도구 능숙도가 아니라 <em>문제 정의와 설명</em></h1>
+      <p class="sub">채용 담당 발언 2건 · 회사는 다르지만 <b>판정 기준이 같음</b></p></div>
+    <div class="ab grow-1">
+      <div class="pe-q an">
+        <div class="pe-qh"><span class="pe-qm">&ldquo;</span><span class="pe-ql">발언 01 · 서식 개편</span></div>
+        <blockquote>도구 능숙도가 아니라 <em>문제를 어떻게 정의하고 해결했는가</em></blockquote>
+        <p class="pe-ctx">자소서 폐지 후 도입한 AI 활용 서식의 평가 초점</p>
+        <div class="pe-src"><span class="pe-org">SK하이닉스</span><span class="pe-fn">③</span>
+          <span class="pe-req"><b>요구</b> = 문제 정의 과정의 서술</span></div>
+      </div>
+      <div class="pe-q an">
+        <div class="pe-qh"><span class="pe-qm">&ldquo;</span><span class="pe-ql">발언 02 · 서류·면접</span></div>
+        <blockquote>AI로 다듬어도 <em>본인이 설명 못 하면</em>&nbsp;안&nbsp;됨</blockquote>
+        <p class="pe-ctx">AI 사용 자체는 제한하지 않는 전제 위에 놓인 기준</p>
+        <div class="pe-src"><span class="pe-org">한국전력공사</span><span class="pe-fn">③</span>
+          <span class="pe-req"><b>요구</b> = 결과물에 대한 본인 설명</span></div>
+      </div>
+    </div>
+    <div class="dark" data-hero>스터디 산출물 규격 = <b>던진 질문 · 검증한 방법 · 바뀐 수치</b> 3~5줄
+      <span class="dsub">결과물마다 이 3줄 첨부 · 본인이 설명 못 하는 결과물은 제출 대상에서 제외</span></div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 4 · AI 트렌드</span></div>
+</section>
+<section class="slide" data-pname="AI 트렌드" aria-label="31. 마무리 메시지">
+  <svg class="wave" style="right:0;top:0;width:500px;height:150px" viewBox="0 0 500 150" fill="none">
+    <path d="M500 0 H0 C 160 28 250 124 500 84 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · AI 트렌드</span><span class="hpage">31 <i>/ 34</i></span></div>
+  <div class="sbody">
+    <div class="dark pe-panel grow-1" data-hero>
+      <div class="pe-eb an">PART 4 정리</div>
+      <p class="pe-dt"><i class="pe-w an">바뀌는 것 = </i><i class="pe-w an">도구</i><br/><i class="pe-w an">남는 것 = </i><em class="an">판단과 기록</em></p>
+      <div class="pe-sum">
+        <div class="an"><span class="pe-sl">판단</span><div class="pe-sv">경계 대장 5칸 · 대조 자료는 AI 바깥에 둠</div></div>
+        <div class="an"><span class="pe-sl">기록</span><div class="pe-sv">던진 질문 · 검증한 방법 · 바뀐 수치</div></div>
+        <div class="an"><span class="pe-sl">갱신</span><div class="pe-sv">매주 AI가 틀린 것 1건</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 4 · AI 트렌드</span></div>
+</section>
+<section class="slide" data-pname="마무리" aria-label="32. 운영자 소개">
+  <svg class="wave" style="right:0;top:0;width:520px;height:160px" viewBox="0 0 520 160" fill="none">
+    <path d="M520 0 H0 C 170 30 260 132 520 90 Z" fill="var(--tint)"/>
+  </svg>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 마무리</span><span class="hpage">32 <i>/ 34</i></span></div>
+  <div class="sbody">
+    <div class="htitle an"><h1>운영 = <em>비전공 학부생 1인</em> · 강의자 아님</h1>
+      <p class="sub">1인 운영 · 회차 자료 · 진행 · <b>웹 허브 제작</b> 담당</p></div>
+    <div class="grow-1" style="display:flex;align-items:center">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:28px;width:100%">
+        <div class="gcard an" style="gap:16px;padding:34px 36px">
+          <span class="ic" style="width:96px;height:96px"><svg viewBox="0 0 34 34" style="width:44px;height:44px"><circle cx="17" cy="11" r="5"/><path d="M7 28 a10 10 0 0 1 20 0"/></svg></span>
+          <span class="spl">소속</span>
+          <h3>광운대 경영학부 21학번</h3>
+          <p style="font-size:30px;line-height:1.6">ERP연구회 · AIM 1기 운영</p>
+          <p class="pa-note">개발 전공 아님 · 비전공 기준으로 커리큘럼 설계</p>
+        </div>
+        <div class="gcard an on" style="gap:16px;padding:34px 36px">
+          <span class="ic ic--solid" style="width:96px;height:96px"><svg viewBox="0 0 34 34" style="width:44px;height:44px"><path d="M5 10 h13 M5 17 h20 M5 24 h9"/><polyline points="24,7 29,12 24,17"/></svg></span>
+          <span class="spl" style="color:var(--accent)">하는 일</span>
+          <h3>스터디 운영 · 자동화 설계</h3>
+          <p style="font-size:30px;line-height:1.6">인사이트 스크랩과 정리 기준을 설계</p>
+          <p class="pa-note">회차 자료 · 세미나 정리 업로드 담당</p>
+        </div>
+        <div class="gcard an" style="gap:16px;padding:34px 36px">
+          <span class="ic" style="width:96px;height:96px"><svg viewBox="0 0 34 34" style="width:44px;height:44px"><rect x="4" y="7" width="26" height="18" rx="3"/><polyline points="4,10 17,19 30,10"/></svg></span>
+          <span class="spl">연락</span>
+          <h3>워크스페이스 제안 창구</h3>
+          <p style="font-size:30px;line-height:1.6">일정 · 주제 · 리서치 방법 상시 접수</p>
+          <p class="pa-note">질문 = 회차 현장 또는 제안 창구 · 반영은 다음 회차 공지</p>
+        </div>
+      </div>
+    </div>
+    <div class="dark" data-hero>운영자 = <b>진행과 자료 담당</b> · 판단과 결과물은 참가자 몫
+      <span class="dsub">운영자도 배우는 입장 · 회차마다 같은 과제를 같이 수행</span></div>
   </div>
   <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 5 · 마무리</span></div>
 </section>
-
-<!-- ===== #30 · BP10 마침 (A) ===== -->
-<section class="slide" data-pname="마무리" aria-label="30. 마침">
+<section class="slide" data-pname="마무리" aria-label="33. 다음 주">
   <svg class="wave" style="left:0;top:0;width:900px;height:230px" viewBox="0 0 900 230" fill="none">
     <path d="M0 0 H900 C 720 40 620 200 400 170 C 240 148 160 62 0 96 Z" fill="var(--tint2)"/>
     <path d="M0 0 H700 C 570 30 480 150 330 138 C 210 128 140 48 0 76 Z" fill="var(--tint)"/>
@@ -1393,52 +1878,56 @@ ul{margin:0;padding:0;list-style:none}
     <path d="M900 230 H0 C 200 190 330 46 570 86 C 720 111 810 190 900 160 Z" fill="var(--tint)"/>
   </svg>
   <span class="dot" style="width:24px;height:24px;right:210px;top:190px;background:var(--accent)"></span>
-  <span class="dot" style="width:44px;height:44px;right:270px;top:240px;background:var(--tint2)"></span>
-  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 마무리</span><span class="hpage">30 <i>/ 31</i></span></div>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 마무리</span><span class="hpage">33 <i>/ 34</i></span></div>
   <div class="sbody">
     <div class="grow-1 decl" data-hero>
-      <p class="dtxt" style="margin:0"><span class="an">다음 시간 = </span><span class="an"><em>기고 1건</em></span><span class="an">과 </span><span class="an"><em>소재 확정</em></span></p>
-      <p class="dnote an" style="margin:0">이번 학기의 축 = <b>시키는 방식</b>과 <b>검수</b> · 도구 등급이 아님</p>
-      <div class="chips an" style="justify-content:center;gap:16px">
-        <span class="chip" style="font-size:24px;padding:16px 32px">허브 로그인 1회</span>
-        <span class="chip" style="font-size:24px;padding:16px 32px">소재 후보 1개</span>
-        <span class="chip mute" style="font-size:24px;padding:16px 32px">예습 = 특강 「질문에서 위임으로」</span>
+      <p class="dtxt" style="margin:0"><span class="an">도구는 바뀐다 · </span><span class="an">남는 것은 </span><span class="an"><em>판단과 기록</em></span></p>
+      <p class="dnote an" style="margin:0">회차 2 = <b>09-21 월 18:00</b> · 과목별 학습 분석 · 각자 과목을 자동화 지점으로 쪼개는 회차</p>
+      <div class="an" style="display:flex;flex-direction:column;align-items:center;gap:14px">
+        <span class="pa-plab">다음 회차 준비물 3</span>
+        <div class="chips" style="justify-content:center;gap:16px">
+          <span class="chip" style="font-size:24px;padding:16px 32px">워크스페이스 로그인 확인</span>
+          <span class="chip" style="font-size:24px;padding:16px 32px">세팅 가이드 열기</span>
+          <span class="chip" style="font-size:24px;padding:16px 32px">내 과목 목록 · 자료 형태 · 시험 방식</span>
+        </div>
       </div>
-      <p class="dnote an" style="margin:0;color:var(--mute)">다음 회차 = 09-14 주 · 요일 확정 시 워크스페이스 공지</p>
+      <p class="dnote an" style="margin:0;color:var(--mute)">질문 = 회차 현장 또는 워크스페이스 제안 창구 · 준비물 미비 시 회차 2 첫 10분에 작성</p>
     </div>
   </div>
   <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 5 · 마무리</span></div>
 </section>
-
-<!-- ===== #31 · BP10 출처 (C) ===== -->
-<section class="slide" data-pname="마무리" aria-label="31. 출처">
+<section class="slide" data-pname="마무리" aria-label="34. 출처">
   <svg class="wave" style="right:0;bottom:0;width:520px;height:150px" viewBox="0 0 520 150" fill="none">
     <path d="M520 150 H0 C 140 124 240 26 390 62 C 466 79 494 122 520 105 Z" fill="var(--tint)"/>
   </svg>
-  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 마무리</span><span class="hpage">31 <i>/ 31</i></span></div>
+  <div class="shead"><span class="wordmark">AIM</span><span class="hmeta">AIM 1기 OT · 마무리</span><span class="hpage">34 <i>/ 34</i></span></div>
   <div class="sbody">
-    <div class="htitle an"><h1>출처 = 본문 각주 <em>①②③</em> 일괄</h1>
-      <p class="sub">인용 수치 3건의 원문 · 본문 장에는 각주 번호만 표기</p></div>
+    <div class="htitle an"><h1>출처 8건 = <em>공개 자료</em> · 본문 장 표기 없음</h1>
+      <p class="sub">본문에서는 수치 옆 각주 번호만 표기 · 전문은 이 장에 일괄</p></div>
     <div class="grow-1" style="display:flex;align-items:center">
-      <table class="srct an" style="width:100%">
-        <thead><tr><th style="width:70px">각주</th><th style="width:520px">출처</th><th>인용 수치</th><th style="width:230px">확인일</th></tr></thead>
+      <table class="srct pa-src an" style="width:100%">
+        <thead><tr><th>NO</th><th style="width:300px">매체 · 저자</th><th style="width:440px">자료</th><th>인용 내용</th></tr></thead>
         <tbody>
-          <tr><td class="n">①</td><td class="s">한국경제 2026 채용 트렌드 조사</td><td>채용에서 AI 활용 역량 우대 78%</td><td>2026-08-16</td></tr>
-          <tr><td class="n">②</td><td class="s">Microsoft Work Trend Index 2026</td><td>중요 역량 1위 = AI 결과 검수 50%</td><td>2026-08-16</td></tr>
-          <tr><td class="n">③</td><td class="s">futurefactors.ai</td><td>프롬프트 직군 공고 전년 대비 -40%</td><td>2026-08-16</td></tr>
+          <tr><td class="n">①</td><td class="s">이데일리</td><td>대기업 25곳 채용 평가 조사</td><td>8곳이 AI 역량을 채용 평가에 반영</td></tr>
+          <tr><td class="n">②</td><td class="s">전자신문 (09-01)</td><td>증권사 AI 활용 평가</td><td>고득점자 200토큰 · 저득점자 8,966토큰</td></tr>
+          <tr><td class="n">③</td><td class="s">브랜드뉴스 (08-28)</td><td>채용설명회 담당자 발언</td><td>SK하이닉스 · 한전 · CJ올리브영 평가 기준</td></tr>
+          <tr><td class="n">④</td><td class="s">인사이트코리아 (09-08)</td><td>기아 신입 전형 개편</td><td>'AI 문제해결력' 항목 신설</td></tr>
+          <tr><td class="n">⑤</td><td class="s">Dell'Acqua et al. (2023)</td><td>Navigating the Jagged Technological Frontier</td><td>능력 경계 밖 과업에서 정답률 하락</td></tr>
+          <tr><td class="n">⑥</td><td class="s">OpenAI · Hacker News</td><td>GPT-6 Astra 출시 공지와 스레드 (09-03)</td><td>발표문과 실사용 평의 차이</td></tr>
+          <tr><td class="n">⑦</td><td class="s">latent.space</td><td>Claude Fable 5.1 캐시 인하</td><td>모델 비용 구조 변화</td></tr>
+          <tr><td class="n">⑧</td><td class="s">AIM 세미나 자료</td><td>「질문에서 위임으로」 (LG CNS 특강 정리)</td><td>AI 활용 구조 3단 · 기초 부족 시 선행 자료</td></tr>
         </tbody>
       </table>
     </div>
-    <div class="dark" data-hero>수치 표기 = <b>원문 기준</b> · 재확인 시점 = <b>2026-08-16</b>
-      <span class="dsub">원문 값이 갱신되면 이 장과 5번 장의 수치를 함께 수정</span></div>
+    <div class="dark" data-hero>인용 구성 = <b>언론 4 · 논문 1 · 공지·블로그 2 · 내부 자료 1</b>
+      <span class="dsub">수치 인용 2건 = 대기업 25곳 조사① · 증권사 토큰 평가② · 나머지는 사실 인용</span></div>
   </div>
   <div class="sfoot"><span>광운대 ERP연구회 · MIS×AI 스터디 AIM</span><span class="fr">PART 5 · 마무리</span></div>
 </section>
 
-
 </div>
 </div>
-<div id="counter">1 / 31</div>
+<div id="counter">1 / 23</div>
 
 <script>
 /* 표준 스크립트 = g1 골든 샘플 계승 — 규격 §1 네비 + 모션-시각화 §4·§5-1(크로스페이드·스태거 40ms·활성화 스텝)
