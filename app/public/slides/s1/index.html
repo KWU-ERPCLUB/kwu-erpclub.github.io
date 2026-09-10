@@ -482,9 +482,19 @@ ul{margin:0;padding:0;list-style:none}
 .pn{font-size:24px!important}
 
 /* v5.2 폰트·크기 (오너 09-10 픽: Freesentation 단일 패밀리, 요소 안 글자 한 단계 하향) */
-:root{--fd:'Freesentation','Apple SD Gothic Neo','Malgun Gothic',sans-serif;--fb:'Freesentation','Apple SD Gothic Neo','Malgun Gothic',sans-serif;--fm:'Freesentation','Consolas',monospace;
+/* 자체 호스팅 서브셋(덱에 쓰인 글자만) — 발표장 네트워크가 끊겨도 동일하게 보인다.
+   두 번째 패밀리 'Freesentation'(CDN)은 서브셋에 없는 글자를 채우는 보험. */
+@font-face{font-family:'Freesentation Deck';font-style:normal;font-weight:400;font-display:block;src:url('../../fonts/freesentation-400.woff2') format('woff2')}
+@font-face{font-family:'Freesentation Deck';font-style:normal;font-weight:500;font-display:block;src:url('../../fonts/freesentation-500.woff2') format('woff2')}
+@font-face{font-family:'Freesentation Deck';font-style:normal;font-weight:600;font-display:block;src:url('../../fonts/freesentation-600.woff2') format('woff2')}
+@font-face{font-family:'Freesentation Deck';font-style:normal;font-weight:700;font-display:block;src:url('../../fonts/freesentation-700.woff2') format('woff2')}
+@font-face{font-family:'Freesentation Deck';font-style:normal;font-weight:800;font-display:block;src:url('../../fonts/freesentation-800.woff2') format('woff2')}
+@font-face{font-family:'Freesentation Deck';font-style:normal;font-weight:900;font-display:block;src:url('../../fonts/freesentation-900.woff2') format('woff2')}
+:root{--fd:'Freesentation Deck','Freesentation','Apple SD Gothic Neo','Malgun Gothic',sans-serif;--fb:'Freesentation Deck','Freesentation','Apple SD Gothic Neo','Malgun Gothic',sans-serif;--fm:'Freesentation Deck','Freesentation','Consolas',monospace;
   --fs-card-title:34px;--fs-card-body:28px;--fs-sub:24px;--fs-label:20px}
 .band,.dark{font-size:34px}
+/* v5.3 (오너 09-10 픽): 카드 설명 문구는 Medium 이상 — 투사 시 Regular는 얇다 */
+.abcard p,.ptr p,.sps,.gcard p,.tlseg p,.pnode .ps,.roomy .abcard>p,.srct td,.shot .pend p{font-weight:500}
 .hmeta{font-size:20px}
 @media (prefers-reduced-motion: reduce){.mreveal{transition:none;clip-path:none}.cal .d.ses.an{opacity:1;transform:none}}
 @media print{.mreveal{clip-path:none!important}.dark{opacity:1!important}.cal .d.ses.an{opacity:1!important;transform:none!important}.tline .rail .fill{width:100%!important}}
@@ -1168,7 +1178,7 @@ ul{margin:0;padding:0;list-style:none}
         <span class="dot"></span>
         <span class="when">07-30</span>
         <h3>SK하이닉스</h3>
-        <p>자기소개서 폐지, AI 활용 역량 서식</p>
+        <p>자기소개서 폐지,<br>AI 활용 역량 서식</p>
         <div class="thumb pA-th"><img src="../../img/ot/news-skhynix.jpg" alt="SK하이닉스 채용 공지" /></div>
       </div>
 
@@ -1176,7 +1186,7 @@ ul{margin:0;padding:0;list-style:none}
         <span class="dot"></span>
         <span class="when">09-01</span>
         <h3>신한은행</h3>
-        <p>자기소개서 폐지, AI 협업면접 도입</p>
+        <p>자기소개서 폐지,<br>AI 협업면접 도입</p>
         <div class="thumb pA-th"><img src="../../img/ot/news-shinhan.jpg" alt="신한은행 채용 기사" /></div>
       </div>
 
@@ -1184,7 +1194,7 @@ ul{margin:0;padding:0;list-style:none}
         <span class="dot"></span>
         <span class="when">09-03</span>
         <h3>포스코그룹</h3>
-        <p>자기소개서 항목 폐지, 학내외 활동으로 대체</p>
+        <p>자기소개서 항목 폐지,<br>학내외 활동으로 대체</p>
         <div class="thumb pA-th"><img src="../../img/ot/news-posco.jpg" alt="포스코그룹 채용 기사" /></div>
       </div>
 
@@ -1192,7 +1202,7 @@ ul{margin:0;padding:0;list-style:none}
         <span class="dot"></span>
         <span class="when">09-08</span>
         <h3>기아</h3>
-        <p>AI 문제해결력 평가 신설, 30개 부문</p>
+        <p>AI 문제해결력 평가 신설,<br>30개 부문</p>
         <div class="thumb pA-th"><img src="../../img/ot/news-kia.jpg" alt="기아 신입 채용 기사" /></div>
       </div>
     </div>
@@ -1535,7 +1545,7 @@ ul{margin:0;padding:0;list-style:none}
           <div class="thumb mreveal"><img src="../../img/ot/tool-notebooklm.jpg" alt="NotebookLM 공식 화면" /><span class="cap">NotebookLM</span></div>
           <div class="thumb mreveal"><img src="../../img/ot/tool-studymode.jpg" alt="ChatGPT 학습 모드 공식 화면" /><span class="cap">ChatGPT 학습 모드</span></div>
         </div>
-        <p>올린 자료 밖을 말하지 않고, 답 대신 풀이를 유도한다. Gemini(AI Plus)와 NotebookLM</p>
+        <p>올린 자료 밖을 말하지 않고 답 대신 풀이를 유도한다<br>Gemini(AI Plus) · NotebookLM</p>
         <div class="abr"><span class="rl2">직접</span><p>자기 설명과 손으로 만든 카드</p></div>
       </div>
       <div class="abcard c6 an">
@@ -1660,7 +1670,7 @@ ul{margin:0;padding:0;list-style:none}
       <div class="abcard c5 an">
         <span class="pc-lab">2차 목표</span>
         <h3>기준을 세우고 결과를 통제한다</h3>
-        <p>전문 수준의 프로젝트에서 <b>판단 기준</b>을 만들고 지킨다. 학부 과제 수준은 넘어선다.</p>
+        <p>프로젝트에서 <b>판단 기준</b>을 만들고 지킨다<br>학부 과제 수준을 넘어선다</p>
         <div class="thumb pc-incard">
           <img src="../../img/ot/gh-skills.jpg" alt="GitHub 저장소 화면 예시" />
           <div class="cap">GitHub 저장소 · 파일과 변경 이력이 한곳에</div>
@@ -1761,9 +1771,9 @@ ul{margin:0;padding:0;list-style:none}
         <p class="scap">인사이트 목록 · 주제 필터와 기고 카드</p>
       </div>
       <div class="c4 pts fill pc-pts an">
-        <div class="ptr"><span class="pnum">01</span><div><h4>기준은 운영자가 설계</h4><p>주제 분류와 선별 기준을 먼저 정하고 매주 자동으로 모은다</p></div></div>
+        <div class="ptr"><span class="pnum">01</span><div><h4>기준은 운영자가 설계</h4><p>주제와 선별 기준은 먼저 정하고<br>수집은 매주 자동으로</p></div></div>
         <div class="ptr"><span class="pnum">02</span><div><h4>질은 아직 낮을 수 있다</h4><p>실사용자가 적어 다루는 범위가 좁다</p></div></div>
-        <div class="ptr"><span class="pnum">03</span><div><h4>요청은 기준에 반영</h4><p>더 알고 싶은 정보를 말하면 다음 수집 기준에 넣는다</p></div></div>
+        <div class="ptr"><span class="pnum">03</span><div><h4>요청은 기준에 반영</h4><p>더 알고 싶은 주제를 말하면<br>다음 수집 기준에 넣는다</p></div></div>
       </div>
     </div>
   </div>
@@ -1966,7 +1976,7 @@ ul{margin:0;padding:0;list-style:none}
         <div class="gcard c4 an">
           <span class="tag">축 01</span>
           <h3>모델 경쟁</h3>
-          <p>OpenAI · Anthropic · Google · Meta에 중국 오픈웨이트가 <b>가격</b>으로 붙는다</p>
+          <p>OpenAI · Anthropic · Google · Meta에<br>중국 오픈웨이트가 <b>가격</b>으로 붙는다</p>
           <div class="pD-foot">
             <div class="chips" style="margin-bottom:14px"><span class="chip mute">GPT-6 Astra = 이 축의 최신 사건</span></div>
             <div class="thumb pD-thS mreveal"><img src="../../img/ot/market-openrouter.jpg" alt="OpenRouter 모델 가격표" /><div class="cap">OpenRouter 모델 가격표</div></div>
@@ -2282,7 +2292,7 @@ ul{margin:0;padding:0;list-style:none}
         <span class="ic"><svg viewBox="0 0 34 34"><path d="M8 4 h12 l6 6 v20 H8 Z"/><polyline points="20,4 20,10 26,10"/><line x1="13" y1="19" x2="21" y2="19"/><line x1="13" y1="25" x2="21" y2="25"/></svg></span>
         <span class="pe-nnum">02</span>
         <h3>과목별 자료 형태</h3>
-        <p>PDF · PPT · 녹음 중 무엇으로 오는가</p>
+        <p>PDF · PPT · 녹음 중<br>무엇으로 오는가</p>
         <span class="pe-ex">자료 형태가 도구를 정함</span></div>
       <div class="c3 gcard an">
         <span class="ic"><svg viewBox="0 0 34 34"><rect x="5" y="6" width="24" height="22" rx="3"/><polyline points="11,17 15,21 23,13"/></svg></span>
