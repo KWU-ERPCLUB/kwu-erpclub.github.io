@@ -494,6 +494,10 @@ ul{margin:0;padding:0;list-style:none}
 :root{--fd:'Freesentation Deck','Freesentation','Apple SD Gothic Neo','Malgun Gothic',sans-serif;--fb:'Freesentation Deck','Freesentation','Apple SD Gothic Neo','Malgun Gothic',sans-serif;--fm:'Freesentation Deck','Freesentation','Consolas',monospace;
   --fs-card-title:34px;--fs-card-body:28px;--fs-sub:24px;--fs-label:20px}
 .band,.dark{font-size:34px}
+/* 표지 캡처 모드(?cover=1) — 세미나 썸네일 생성기가 1장을 찍을 때 카운터 숨김 */
+body.cover #counter{display:none}
+body.cover #deck{display:block}
+body.cover #stage{transform:scale(.83333)!important;transform-origin:top left;position:absolute;left:0;top:0;box-shadow:none}
 /* v5.3 (오너 09-10 픽): 카드 설명 문구는 Medium 이상 — 투사 시 Regular는 얇다 */
 .abcard p,.ptr p,.sps,.gcard p,.tlseg p,.pnode .ps,.roomy .abcard>p,.srct td,.shot .pend p{font-weight:500}
 .hmeta{font-size:20px}
@@ -2536,6 +2540,7 @@ ul{margin:0;padding:0;list-style:none}
     show(e.clientX < innerWidth*0.32 ? cur-1 : cur+1);
   });
 
+  if(/[?&]cover=1/.test(location.search)) document.body.classList.add('cover');
   var h=parseInt((location.hash||'').replace('#',''),10);
   show(isNaN(h)?0:h-1);
 })();
