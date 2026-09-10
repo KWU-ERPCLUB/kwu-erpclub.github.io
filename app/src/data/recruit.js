@@ -8,7 +8,9 @@ export const RECRUIT = {
   cohort: '1기',
   term: '2학기',
   // 접수 즉시 개방(오너 2026-08-18 — "25일부터"는 폐기, 마감만 표기): start = 폼 공개일. 표기는 formatWindow가 마감만 쓴다.
-  window: { start: '2026-08-18', end: '2026-09-11' }, // 모집 창(경계일 포함) — 2026-08-27 오너: 9/8→9/11(OT 9/14 직전 금요일)
+  // 모집 창(경계일 포함) — 2026-08-27 오너: 9/8→9/11 / 2026-09-11 오너: 9/11→9/13 20:00(주말까지 접수, OT 9/14 직전).
+  // endTime = 표기 전용(국면 판정은 날짜 단위 recruitPhase — 9/13 자정까지 폼 물리적 개방, 9/14 오너가 페이지 마감).
+  window: { start: '2026-08-18', end: '2026-09-13', endTime: '20:00' },
   활동기간: '2026-09-14 ~ 11-16 (2학기)',   /* OT 9/14 · 최종 발표 11/16(2026-08-27 확정) */
 }
 
@@ -49,7 +51,7 @@ export function shortDate(ymd) {
 // 요강 — 2026-08-27 오너 개정: 인원 00명(미정 관례 표기)·모임 월 18:00~20:00 확정·'비용'→'준비물'(개인 노트북 필수).
 // ' — ' = 화면에 찍히는 글자가 아니라 핵심/부연 분리용 구분자(Recruit.jsx가 두 줄로 나눠 렌더).
 export const RECRUIT_FACTS = [
-  ['스터디', `${RECRUIT.study} — ERP연구회 산하 MIS·AI 스터디`],
+  ['스터디', `${RECRUIT.study} — ERP연구회 산하 빅데이터분석 스터디`],   /* 2026-09-11 담당 교수 요청: 모집 페이지 표기만 'MIS·AI'→'빅데이터분석'(취지·커리큘럼 무변경) */
   ['대상', '경영학부 중심 — 비전공자도 환영'],
   ['인원', '00명 — 추후 확정'],
   ['모집 기간', formatWindow()],
@@ -99,14 +101,19 @@ export const AIM_ROADMAP = AIM_TIMELINE
     ? { type: 'phase', 라벨: n.라벨, 기간: n.기간, 설명: n.공개설명 || n.설명, hl: n.hl }
     : { type: 'session', no: String(n.no).padStart(2, '0'), 태그: n.태그, 주: n.주, 주제: n.주제, 배움: n.배움, 세부: n.세부 }))
 
-// '~ 2026-09-11' — 마감만 표기(오너 2026-08-18: 시작일 표기 폐기 — 폼은 상시 열려 있고 마감만 있다).
-export function formatWindow(win = RECRUIT.window) {
-  return `~ ${win.end}`
+// '2026-09-13 20:00' — 마감 시점 1개(시각 없으면 날짜만). 표기 문자열 중복 0의 기준점.
+export function deadlineLabel(win = RECRUIT.window) {
+  return win.endTime ? `${win.end} ${win.endTime}` : win.end
 }
 
-// '~ 09-11' — 한 줄 문구용 짧은 표기.
+// '~ 2026-09-13 20:00' — 마감만 표기(오너 2026-08-18: 시작일 표기 폐기 — 폼은 상시 열려 있고 마감만 있다).
+export function formatWindow(win = RECRUIT.window) {
+  return `~ ${deadlineLabel(win)}`
+}
+
+// '~ 09-13 20:00' — 한 줄 문구용 짧은 표기.
 export function formatWindowShort(win = RECRUIT.window) {
-  return `~ ${shortDate(win.end)}`
+  return `~ ${shortDate(win.end)}${win.endTime ? ` ${win.endTime}` : ''}`
 }
 
 // 광운대 학부/전공 목록 — 신청 폼 토글 선택(오너 2026-08-18 2차). [단과대학, [학부/학과…]].

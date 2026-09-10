@@ -5,7 +5,7 @@
 // 신규 무한루프 = 배경 블롭 CSS 1건(reduced-motion 정지) · transform·opacity만.
 import { Arrow, SiteNav, SiteFooter } from './shared.jsx'
 import { localYmd, recruitPhase, studyCell } from './home-logic.js'
-import { RECRUIT, COHORT_LABEL, AIM_HOOK, formatWindowShort } from './data/recruit.js'
+import { RECRUIT, COHORT_LABEL, AIM_HOOK, formatWindowShort, deadlineLabel } from './data/recruit.js'
 import { FAQ } from './data/faq.js'
 import { loadContent } from './content/loader.js'
 import { useSectionSpy, useParallax, useItemReveal, StaggerChars, CountUp } from './home-motion.jsx'
@@ -83,7 +83,7 @@ function Hero() {
 // [배지, 배지문구, 노트, 제목, 본문] — 값은 전부 data/recruit.js 파생(표시 문자열 중복 0).
 const RECRUIT_COPY = {
   before: ['prep', '모집 예정', `${RECRUIT.window.start} 모집 시작`, `${COHORT_LABEL} 모집`],
-  open: ['live', '모집 중', `${RECRUIT.window.end} 마감`, `${COHORT_LABEL} 모집`],
+  open: ['live', '모집 중', `${deadlineLabel()} 마감`, `${COHORT_LABEL} 모집`],
   after: ['planned', '모집 마감', `${COHORT_LABEL} 접수 종료`, '다음 기수 안내'],
 }
 
