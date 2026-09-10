@@ -2,7 +2,7 @@
 // 2026-08-15 신설: 구 표지 3종은 png만 반입돼 재현 불가였다(다크 톤 판정 착오의 원인) → 생성 소스를 repo에 고정.
 // 톤 = 오너 픽 C안(2026-08-15) — 순백 면 + 검정 타이포 + 버건디 틴트 원(화이트리스트 ⑬ 틴트, 버건디 면 아님).
 // 사용: node scripts/export-seminar-cover.mjs [덱 ...] (인자 없으면 COVERS 전 건). 빌드 불필요.
-import { writeFileSync, mkdirSync } from 'node:fs'
+import { writeFileSync, mkdirSync, existsSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { tmpdir } from 'node:os'
 import { execFile } from 'node:child_process'
@@ -72,14 +72,37 @@ mkdirSync(OUT, { recursive: true })
 const work = join(tmpdir(), 'aim-seminar-cover')
 mkdirSync(work, { recursive: true })
 
+// 덱이 있으면 표지 = 덱 1장 캡처(2026-09-10 오너: "썸네일도 덱과 같이") — 덱 v5 하네스 BP1 표지가 곧 썸네일이라
+// 템플릿을 따로 그리지 않는다. 덱 fit()이 1600×900에 정확히 맞고(16:9), reduced-motion 강제로 최종 상태를 찍는다.
+// 덱이 없는 회차(s2·s3 등 구 덱 폐기·재제작 전)는 아래 템플릿 경로를 그대로 쓴다.
+const PUB = join(APP, 'public')
+const chromeFlags = (profile) => [
+  '--headless=new', '--disable-gpu', '--no-first-run', '--no-default-browser-check', '--hide-scrollbars',
+  `--user-data-dir=${profile}`, '--window-size=1600,900', '--virtual-time-budget=9000',
+]
+async function captureDeckCover(deck, out) {
+  const { createStaticServer } = await import('./chrome.mjs')
+  const server = createStaticServer(PUB)
+  await new Promise((r) => server.listen(0, '127.0.0.1', r))
+  try {
+    await run(CHROME, [
+      ...chromeFlags(join(work, 'profile-deck')), '--force-prefers-reduced-motion',
+      `--screenshot=${out}`, `http://127.0.0.1:${server.address().port}/slides/${deck}/?cover=1#1`,
+    ], { timeout: 120000 })
+  } finally { server.close() }
+}
+
 for (const deck of decks) {
-  const src = join(work, `${deck}.html`)
   const out = join(OUT, `cover-${deck}.png`)
+  if (existsSync(join(PUB, 'slides', deck, 'index.html'))) {
+    await captureDeckCover(deck, out)
+    console.log(`cover written (덱 1장 캡처): ${out}`)
+    continue
+  }
+  const src = join(work, `${deck}.html`)
   writeFileSync(src, html(COVERS[deck]), 'utf8')
   await run(CHROME, [
-    '--headless=new', '--disable-gpu', '--no-first-run', '--no-default-browser-check', '--hide-scrollbars',
-    `--user-data-dir=${join(work, 'profile')}`,
-    '--window-size=1600,900', '--virtual-time-budget=9000',
+    ...chromeFlags(join(work, 'profile')),
     `--screenshot=${out}`, `file:///${src.replace(/\\/g, '/')}`,
   ], { timeout: 120000 })
   console.log(`cover written: ${out}`)
