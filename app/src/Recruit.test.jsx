@@ -88,7 +88,7 @@ test('AIM 1기 로드맵 = 페이즈 3 + 회차 9 — 단일원천 파생·진�
   expect(html).toContain('rc-rm')
   expect(html).toContain('rc-rm-fill') // 스크롤 진행 채움선
   expect(AIM_ROADMAP.filter((n) => n.type === 'phase').length).toBe(3) // 1차·시험기간·2차(모집 구간 = 공개면 제외)
-  expect(AIM_ROADMAP.filter((n) => n.type === 'session').length).toBe(8) // 회차 7 + 과제 주 1(2026-08-27)
+  expect(AIM_ROADMAP.filter((n) => n.type === 'session').length).toBe(8) // 회차 7 + 10/5 휴일 1(2026-09-11 — DB 회차 매칭 번호 유지)
   expect(html).toContain('1차 프로젝트')
   expect(html).toContain('2차 프로젝트')
   expect(html).toContain('시험기간')               // '시험 휴지' 개명(오너 2026-08-14)
@@ -112,7 +112,7 @@ test('로드맵 회차 = 번호·주제·배움·세부 전량 렌더 + OT·쇼�
     for (const d of s.세부) expect(html, `세부 부재: ${d}`).toContain(d)
   }
   expect(html).toContain('>OT<') // 1회 = OT 태그(오너 "맨 처음은 OT")
-  expect(html).toContain('과제 주')        // 10/5 태그(2026-08-27 — 쇼케이스 회차 폐지)
+  expect(html).toContain('대체공휴일')      // 10/5 태그(2026-09-11 — 과제 주 → 팀 소통 시작)
   expect(html).toContain('최종 발표')      // 9회 태그
   expect(html).not.toContain('중간 쇼케이스') // 2026-08-13 재편 — 폐기 노드
   expect(html).not.toContain('다섯 활용 축')  // 구 커리큘럼 잔재 금지

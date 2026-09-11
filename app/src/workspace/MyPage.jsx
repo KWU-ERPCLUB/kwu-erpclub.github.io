@@ -170,26 +170,12 @@ export function InterestedPostings({ store }) {
   )
 }
 
-// 내 기고 + 내 과제 제출 — 상태만 확인하는 읽기 목록(수정은 각 탭에서)
-function Activity({ articles, submissions, assignments }) {
+// 내 과제 제출 — 상태만 확인하는 읽기 목록(수정은 홈에서). 내 기고 목록 = 2026-09-11 기고 탭 폐지로 제거.
+function Activity({ submissions, assignments }) {
   const titleOf = (id) => assignments.find((a) => a.id === id)?.['제목'] || '(삭제된 과제)'
   return (
     <section className="ws-block">
       <h2 className="ws-h2">활동내역</h2>
-      <h3 className="ws-h3">내 기고 <span className="ws-count">{articles.length}</span></h3>
-      {articles.length === 0 && <p className="ws-note">기고 0건 — 인사이트 기고 탭에서 작성.</p>}
-      <ul className="ws-list">
-        {articles.map((a) => (
-          <li key={a.id} className="ws-scrap">
-            <div className="ws-row-top">
-              <span className="ws-row-title">{a['제목']}</span>
-              <span className={`status ${a['상태'] === '게재' ? 'done' : 'prep'}`}>{a['상태']}</span>
-              <span className="ws-mark-meta">{a['게재일'] || ''}</span>
-            </div>
-          </li>
-        ))}
-      </ul>
-
       <h3 className="ws-h3">내 과제 제출 <span className="ws-count">{submissions.length}</span></h3>
       {submissions.length === 0 && <p className="ws-note">제출 0건 — 홈의 과제 섹션에서 링크 제출.</p>}
       <ul className="ws-list">
@@ -208,17 +194,14 @@ function Activity({ articles, submissions, assignments }) {
 }
 
 export default function MyPage({ store, member, onProfileSaved }) {
-  const [articles, setArticles] = useState([])
   const [submissions, setSubmissions] = useState([])
   const [assignments, setAssignments] = useState([])
   const [error, setError] = useState('')
 
   const load = useCallback(() => Promise.all([
-    store.articles.listMine(),
     store.submissions.listMine(),
     store.assignments.list(),
-  ]).then(([a, s, h]) => {
-    setArticles(a || [])
+  ]).then(([s, h]) => {
     setSubmissions(s || [])
     setAssignments(h || [])
   }).catch((e) => setError(e?.message || '불러오기 실패')), [store])
@@ -251,7 +234,7 @@ export default function MyPage({ store, member, onProfileSaved }) {
         </section>
       </div>
       <aside className="ws-crail">
-        <Activity articles={articles} submissions={submissions} assignments={assignments} />
+        <Activity submissions={submissions} assignments={assignments} />
       </aside>
     </div>
   )

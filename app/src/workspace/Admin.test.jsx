@@ -10,10 +10,10 @@ import { createMockRepositories } from '../data/mock.js'
 const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
 const staffStore = () => createMockRepositories({ user: 'mock-staff' })
 
-test('운영 영역 = 승인대기·지원자·멤버·콘텐츠 4구획', () => {
+test('운영 영역 = 제출 현황·지원자·멤버·콘텐츠 구획 (승인대기 = 2026-09-11 폐지)', () => {
   const html = flat(<Admin store={staffStore()} member={{ id: 'mock-staff', role: '운영진' }} />)
-  for (const s of ['승인대기', '지원자', '멤버', '콘텐츠']) expect(html).toContain(s)
-  expect(html).toContain('승인 대기')      // 기본 구획 = 승인대기함(M2 화면 이관)
+  for (const s of ['제출 현황', '지원자', '멤버', '콘텐츠']) expect(html).toContain(s)
+  expect(html).not.toContain('승인대기')
 })
 
 test('지원자 열람 = 표 7열 + 읽기 전용 명시(삭제·수정 UI 없음)', () => {

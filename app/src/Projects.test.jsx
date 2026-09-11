@@ -37,11 +37,11 @@ test('ProjectCard — 링크 없으면 오버레이 미렌더, 커버=이니셜 
   expect(html).toContain('pj-cover-fallback') // 커버 없음 → 이니셜 타일
   expect(html).toContain('status planned') // 보관 → planned
 })
-test('ProjectGrid — 항목이면 그리드, 0건이면 디자인된 빈 상태(무엇이 쌓이나 + 기고 방법)', () => {
+test('ProjectGrid — 항목이면 그리드, 0건이면 디자인된 빈 상태(무엇이 쌓이나)', () => {
   expect(flat(<ProjectGrid list={[P]} onOpen={noop} />)).toContain('pj-grid')
   const empty = flat(<ProjectGrid list={[]} onOpen={noop} />)
   expect(empty).toContain('등재된 프로젝트 아직 없음')
-  expect(empty).toContain('인사이트 기고 탭') // 기고 방법 안내(2026-08-14 — 구 content/ 복사 절차 폐지, 워크스페이스 기고 탭)
+  expect(empty).not.toContain('인사이트 기고 탭') // 2026-09-11 기고 탭 폐지
 })
 
 // ── 4차 개편(2026-08-06) — 블랙 통계 밴드(.pj-stats) 삭제(피드백 "홈 내용") ──

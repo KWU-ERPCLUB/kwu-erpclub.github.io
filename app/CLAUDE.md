@@ -56,7 +56,7 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
 - **앱형 셸(2026-08-06 재구성)**: 로그인 후 = 문서형(히어로 헤드·ws-panel·푸터) 제거 → 전폭 앱 레이아웃(`.ws-main.ws-app`,
   max 1760px). 사이드바 232px sticky + 하단 계정 블록(`.ws-side-me`), 홈 외 탭 = 소형 헤더(`.ws-content-head`).
   로그인 전 화면만 문서형(PageHead+패널) 유지. 근거 리서치(Notion·Slack·Classroom·Canvas 문법) = roadmap 2026-08-06 항.
-- **탭 = 좌측 사이드바 7종: 홈·공지·로드맵(구 스터디 흐름)·공고·인사이트 기고·내정보 + 운영(운영진만)**(공지 = 2026-08-18 전용 탭 승격).
+- **탭 = 좌측 사이드바 6종: 홈·공지·로드맵(구 스터디 흐름)·공고·내정보 + 운영(운영진만)**(공지 = 2026-08-18 전용 탭 승격. **인사이트 기고 탭 = 2026-09-11 오너 폐지** — 기고는 운영진만, 발행 = md→DB 경로. 기고 폼·운영 '승인대기'·내정보 '내 기고' 동시 제거, `?tab=기고` = 홈 매핑).
   북마크 = 단독 탭 폐지 → 내정보 안 섹션(정사각 카드 그리드 = 인사이트 축소판, `Collections.jsx`를 MyPage가 렌더).
   탭 설명 문구 폐지 — 아이콘(`TAB_ICONS`)이 대신. 원천 = `Workspace.jsx`의 `WS_TABS`·`visibleTabs()`. 구 탭명 딥링크 = `LEGACY_TAB_MAP`.
   **내정보 구성(2026-08-14)**: 상단 = 내 북마크·**관심 공고**(공고 카드 ★ 체크 — `posting_interests`, migration **0013**·미적용 = 빈 목록 강등) /
@@ -71,10 +71,10 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
   공고(`Postings.jsx`, 2026-08-07) = 공모전·채용·**자격증**(0015 개명)·**교내활동**(0019 개명) 링크 모음판(개인 스크랩과 별개 — 운영진·자동 루틴 등록·전원 열람).
   원천 = `postings`(**0009**), 등록·삭제 = 운영 탭 > 공고(`AdminPostings.jsx`). **코멘트 = 선택**(0018 — 링크 모음판 전환으로 필수 해제. 자동 수집분은 미기재) + `출처` 배지.
   상태(접수중·접수전·상시·마감) = 저장 안 함 — `postings-logic.js` 파생(마감 = 접힘·흐림). 접수마감·시험일 = 홈 캘린더 합류(`postingAgendaItems`).
-  기고(`Contribute.jsx`) = **투트랙**: 기본(키트+폼, `형식='md'`) / 자유(단일 HTML 붙여넣기, `형식='html'`(0008) — 공개 상세가 `sandbox=""` iframe(srcdoc)으로 렌더, 스크립트 차단. 분기 = `ArticleDetail.jsx`).
+  (구 기고 탭 `Contribute.jsx` 투트랙 = 2026-09-11 폐지. 공개 상세의 `형식='html'` sandbox iframe 렌더 분기(`ArticleDetail.jsx`)는 기존 행 호환으로 유지.)
   북마크(`Collections.jsx`) = **북마크한 인사이트 모음만**(링크 스크랩 UI 폐지 2026-08-07 — collections 데이터 계층은 유지) / 내정보(`MyPage.jsx`) = 프로필 수정 + 활동내역 + 비밀번호 변경.
   홈 캘린더 칩·선택일 목록 클릭 = **세부 팝업**(`ItemPopup` — 둥근 카드, 공고면 원문 링크. 2026-08-07).
-  운영(`Admin.jsx`) = 승인대기(`Review.jsx`)·**제출 현황(`AdminSubmissions.jsx` — 멤버×과제 배지 매트릭스, `submissions.listAll`)**·지원자·멤버(`AdminMembers.jsx`)·콘텐츠(`AdminContent.jsx`+`AdminForm.jsx`)·**일정(`AdminEvents.jsx` — events CRUD)**·**공고(`AdminPostings.jsx` — postings CRUD)**. 삭제 화이트리스트(DELETABLE) = +events·flow_weeks·postings.
+  운영(`Admin.jsx`) = **제출 현황(`AdminSubmissions.jsx` — 멤버×과제 배지 매트릭스, `submissions.listAll`)**·지원자·멤버(`AdminMembers.jsx`)·콘텐츠(`AdminContent.jsx`+`AdminForm.jsx`)·**일정(`AdminEvents.jsx` — events CRUD)**·**공고(`AdminPostings.jsx` — postings CRUD)**. 삭제 화이트리스트(DELETABLE) = +events·flow_weeks·postings.
 - **운영 영역 이중 차단**: ①RLS(`*_write_staff`) ②화면 — 비운영진 탭 미노출 + 직접 진입(`?tab=운영`)은 `Denied` 안내.
   초대(계정 생성)는 앱에서 불가(service key 필요) → 화면엔 절차 안내만(`supabase/README.md` 3·3-1단계).
 - **공개 헤더의 워크스페이스 링크 = 상시 노출**(오너 개정 2026-08-07 — 구 세션 게이트·`data/session-flag.js` 폐지:
