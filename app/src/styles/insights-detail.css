@@ -4,7 +4,7 @@
    성격색 chip-* 토큰 정의는 articles.css(목록과 공용)에 남김 — 이 파일은 소비만. */
 
 /* ── 상세 — 통일 디자인 셸(텍스트 720px 문서형 + 도판 브레이크아웃) ── */
-.art-detail { max-width: none; }
+.art-detail { max-width: 100%; min-width: 0; } /* 넓은 표·긴 URL의 최소 폭이 셸을 밀어내지 않게(2026-09-11 375폭 실측) */
 .art-detail > :not(.hub-md) { max-width: 640px; margin-inline: auto; } /* 720→640 = 한글 한 줄 ≈40자(craft R38, 2026-09-11) */
 .art-archived { max-width: 640px; margin: 0 auto 1.2rem; padding: 0.6rem 0.9rem; font-size: 0.86rem; color: var(--text-sub); background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--text-sub); border-radius: 0 8px 8px 0; }
 .art-hero { position: relative; }
@@ -81,7 +81,10 @@
 .art-nav-link:hover { border-color: var(--text-sub); }
 .art-nav-link:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .art-nav-dir { display: block; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.03em; color: var(--text-sub); margin-bottom: 0.25rem; }
-.art-nav-title { display: block; font-size: 0.9rem; font-weight: 600; line-height: 1.4; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.art-nav-title {
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  font-size: 0.9rem; font-weight: 600; line-height: 1.4; white-space: normal; overflow-wrap: anywhere;
+} /* 구 nowrap+말줄임 = 끊을 수 없는 한 줄이 최소 폭을 키워 375폭 가로 넘침(라이브 재현) → 2줄 말줄임(2026-09-11) */
 
 /* 섹션 넘버링 — 기사 상세 한정(세미나·프로젝트 본문 제외) */
 .art-detail .hub-md { counter-reset: mdsec; }

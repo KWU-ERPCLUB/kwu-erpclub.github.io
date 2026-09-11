@@ -11,7 +11,7 @@
   grid-template-columns:
     [full-start] minmax(0, 1fr)
     [wide-start] minmax(0, 160px)
-    [text-start] min(100%, 720px) [text-end]
+    [text-start] min(100%, 640px) [text-end]   /* 720→640 = 한글 한 줄 ≈40자(craft R38, 2026-09-11) */
     minmax(0, 160px) [wide-end]
     minmax(0, 1fr) [full-end];
 }
@@ -36,7 +36,8 @@
 .hub-md pre { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 0.9rem 1.1rem; overflow-x: auto; }
 .hub-md pre code { background: none; border: none; padding: 0; }
 .hub-md blockquote { margin: 0 0 1.1rem; padding: 0.1rem 0 0.1rem 1.1rem; border-left: 3px solid var(--accent); color: var(--text-sub); } /* 콜아웃(⑩) */
-.hub-md table { width: 100%; border-collapse: collapse; font-size: 0.95rem; margin: 0 0 1.6rem; display: block; overflow-x: auto; }
+.hub-md > * { min-width: 0; } /* 넓은 표(심층 후보 표 10열)가 그리드 트랙을 밀어내지 않게 — 2026-09-11 375폭 실측 */
+.hub-md table { width: 100%; max-width: 100%; border-collapse: collapse; font-size: 0.95rem; margin: 0 0 1.6rem; display: block; overflow-x: auto; }
 .hub-md th, .hub-md td { text-align: left; padding: 0.55rem 0.8rem; border-bottom: 1px solid var(--line); line-height: 1.5; word-break: keep-all; }
 .hub-md th { background: var(--surface); font-weight: 700; font-size: 0.86rem; white-space: nowrap; }
 /* 본문 핵심구 강조 — *별표* = 버건디 굵은 글씨(이탤릭 폐지, 2026-07-25 오너 지시 — 절제 사용) */
