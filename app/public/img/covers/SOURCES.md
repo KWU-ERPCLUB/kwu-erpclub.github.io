@@ -32,6 +32,8 @@
 | modu-ai-execution-agent.jpg | 2026-09-07 결제까지 대신한다는 무료 AI — 모두의 AI | 9/4 「모두의 AI 프로젝트」 착수 간담회 단체 사진 | https://www.aitimes.com/news/articleView.html?idxno=214869 | 과학기술정보통신부 제공 / AI타임스 게재 |
 | sap-joule-procurement-ga.jpg | 2026-09-09 ERP 화면 대신 대화창 — SAP 쥴 조달 어시스턴트 6종 | SAP 제품 페이지(og:image)의 「Requisition Assistant」 공식 비주얼 | https://www.sap.com/use-cases/joule-assistant/requisition-and-buying-ai | SAP |
 | openai-agent-workdays.jpg | 2026-09-11 사람 하루당 에이전트 3.1일 — 오픈AI 내부 계측치 | 발표글(og:image)의 공식 카드 아트 | https://openai.com/index/research-acceleration-view-inside-openai/ | OpenAI |
+| kia-ai-screening.jpg | 2026-09-13 시험장에서 AI를 쓰게 한다 — 기아 AI 문제해결력 검증 | 기아 2026 하반기 집중 채용 공식 포스터(기아 제공, 더피알 게재) — 상단 차량 구역 크롭 | https://www.the-pr.co.kr/news/articleView.html?idxno=62555 | 기아 |
+| weekly-trend-w37.jpg | 2026-09-12 주간 AI 트렌드 — 9월 2주 | TOP 1 소재(기아 채용) 기사의 og:image — 현대차·기아 양재 사옥, 745px 원본 확대·중앙 크롭 | https://view.asiae.co.kr/article/2026090808485382454 | 아시아경제 |
 
 ## 추가할 때
 

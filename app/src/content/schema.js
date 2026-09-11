@@ -19,8 +19,16 @@ export const CANDIDATE_GATES = 6 // ⓪~⑤
 export const isNewRules = (data) => Boolean(data && data.date && data.date >= NEW_RULES_FROM && data['보관'] !== true)
 // 공개 목록 대상 = 보관 아님. 목록·홈·RSS·건수가 공유(북마크는 예외 — 사용자 자산).
 export const isPublicArticle = (a) => Boolean(a) && a['보관'] !== true
-// 공백 제외 글자 수(분량 상한 판정)
-export const bodyLength = (body) => String(body || '').replace(/\s/g, '').length
+// 공백 제외 글자 수(분량 상한 판정) — 독자가 읽는 글자만 센다: `::: 출처` 블록·링크 URL·표 구분선·마크다운 기호는 제외.
+export function bodyLength(body) {
+  return String(body || '')
+    .replace(/^:{3,}\s*출처[\s\S]*?^:{3,}\s*$/m, '')   // 출처 블록
+    .replace(/\]\([^)]*\)/g, ']')                        // [텍스트](url) → [텍스트]
+    .replace(/https?:\/\/\S+/g, '')                     // 남은 URL
+    .replace(/^\|[\s|:-]+\|\s*$/gm, '')                // 표 구분선
+    .replace(/[|#*`>\[\]:-]/g, '')                        // 마크다운 기호
+    .replace(/\s/g, '').length
+}
 export const SEMINAR_TYPES = ['인지', '실습']
 // 프로젝트 상태(단일·필수) — DPM 카드 상태 칩. 2026-07-24 콘텐츠화.
 export const PROJECT_STATUSES = ['운영 중', '진행 중', '보관']
