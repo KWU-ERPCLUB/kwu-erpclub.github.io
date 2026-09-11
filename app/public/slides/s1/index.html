@@ -1054,6 +1054,23 @@ body.cover #stage{transform:scale(.83333)!important;transform-origin:top left;po
 
 /* v5.4 모션: 마무리 3항 수동 리빌 조작 바 */
 .pe-ui{margin-top:26px;justify-content:flex-end}
+
+/* ===================== v5.5 (오너 09-11 승인 — craft II.2 규칙 실물 검증 반영, 뒤에 와서 이긴다) =====================
+   ① 중립색 온도 통일: 청회색 sub/mute → 틴트와 같은 온도의 웜 그레이(명도 동일)  [R14]
+   ② 36px 미만 텍스트에 --mute 금지 → --sub(6.4:1). 규격 §3-1-1 자체 조항의 실측 위반 30장 수리  [R56]
+   ③ 배경 순백 → 근백(노트북·PDF 열람용, 투사 차이 0)  [R9]
+   ④ 강조 예산 = 역할 기준: 버건디는 제목 em·히어로(밴드·KPI·활성 테두리)·기능색(번호·마커·트래커)만.
+      본문·카드 안 인라인 강조와 카드 제목·규칙명은 근흑 800으로  [R7·R8·R12] */
+:root{--sub:#5b5451;--mute:#8b817c;--bg:#fcfbfa}
+.tocr .td,.divider .tp,.divider .dprev .ph,.divider .pv .pvs,.krow .kn,.pnode .pl,.pnode .ps,
+.abcard .abl,.abcard .abtag,.scap,.spl,.tlseg .ses,.chkr .cs,.srct th,.uihint,.gcard .tag,
+.cal .dow,.thumb .cap,.cover .cshot .cap,.ring-note{color:var(--sub)}
+/* 본문 영역 안에서는 --mute 자체를 --sub로 매핑(36px 이상 mute 사용처 0 — 실측). 헤더·푸터·표지·디바이더는 위 개별 지정 */
+.sbody{--mute:var(--sub)}
+/* 본문 안 인라인 강조(b·strong·em·u·i)와 카드 제목·규칙명·강조 문장 = 근흑 800 */
+.sbody :is(b,strong,em,u,i),.pc-rt,.rv.on .pc-rt,.pe-ev,.pb-ct,.rv.on .pb-ct,.tocr .tt em{color:var(--text)!important;font-weight:800}
+/* 되살리는 버건디 = 결론 밴드·선언·제목 em·KPI 수치 (개별 컴포넌트 규칙이 더 구체적이라 !important로 고정) */
+.band :is(b,em),.dark :is(b,em),.decl em,.htitle em,.sbody .pb-kv,.sbody .pb-kv u,.sbody .pb-evv,.sbody b.pulse{color:var(--accent)!important}
 </style>
 </head>
 <body>
