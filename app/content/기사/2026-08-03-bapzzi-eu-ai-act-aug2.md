@@ -6,6 +6,7 @@ date: 2026-08-03
 source_url: https://digital-strategy.ec.europa.eu/en/faqs/transparency-obligations-under-article-50-ai-act
 source_name: European Commission · artificialintelligenceact.eu · 법률신문
 성격: 심층 분석
+보관: true
 주제: 거버넌스·리스크
 설명: 8월 2일 EU AI법의 최대 분수령이 도착했다 — 그런데 켜진 것은 챗봇·딥페이크 표시 의무이고 고위험 규제는 16개월 밀렸다. 무엇이 바뀌었고 한국 기업엔 무엇이 걸리나
 태그: [규제, EUAI법, 거버넌스, 표시의무, AI기본법]

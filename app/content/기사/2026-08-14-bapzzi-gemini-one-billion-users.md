@@ -6,6 +6,7 @@ date: 2026-08-14
 source_url: https://blog.google/innovation-and-ai/products/gemini-app/one-billion-monthly-users/
 source_name: Google Blog · TechCrunch
 성격: 트렌드
+보관: true
 주제: 시장·생태계
 설명: 8월 11일 구글이 제미나이 앱 월간 이용자 10억 명 돌파를 발표했다 — 15개월 만의 2.5배 성장, 그리고 발표에서 빠진 유료 구독자 수
 태그: [구글, 제미나이, 사용자지표, 시장]

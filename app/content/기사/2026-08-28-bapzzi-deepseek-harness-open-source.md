@@ -6,8 +6,11 @@ date: 2026-08-28
 source_url: https://github.com/deepseek-ai/deepseek-harness
 source_name: DeepSeek(GitHub) · AI타임스 · LangChain
 성격: 심층 분석
+축: AI활용
 주제: 워크플로·자동화
 설명: 8월 13일 딥시크가 에이전트 실행 계층 '하네스'를 MIT 라이선스로 공개했다 — 깃허브 최고 속도로 스타가 붙은 이유, 하네스가 무엇이고 왜 모델보다 점수를 더 흔드는가, 그리고 중국계 모델이라는 국내 관문
+이미지: /img/covers/deepseek-harness-open-source.jpg
+이미지설명: 딥시크 하네스 깃허브 저장소 공식 소셜 카드 「Everything is a Plugin」 — 8월 13일 MIT로 공개된 하네스의 설계 슬로건
 태그: [딥시크, 하네스, 에이전트, 오픈소스]
 지금써먹기: false
 ---

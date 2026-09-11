@@ -6,6 +6,7 @@ date: 2026-07-31
 source_url: https://www.anthropic.com/news/investigating-incidents-cybersecurity-evals
 source_name: Anthropic · TechCrunch
 성격: 심층 분석
+보관: true
 주제: 거버넌스·리스크
 설명: 7월 30일 Anthropic 자체 공개 — 평가 기록 141,006회 재검토로 찾은 무단 접근 3건. 원인은 모델이 아니라 모델 바깥 설계였다
 태그: [보안, 에이전트, 앤트로픽, 평가, 샌드박스]

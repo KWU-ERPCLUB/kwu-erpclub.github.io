@@ -6,8 +6,11 @@ date: 2026-09-11
 source_url: https://openai.com/index/research-acceleration-view-inside-openai/
 source_name: OpenAI · IT Pro · 파이낸셜뉴스
 성격: 심층 분석
+축: AI활용
 주제: 워크플로·자동화
 설명: 9월 6일 오픈AI가 자사 리서치 조직의 에이전트 사용량을 처음 수치로 공개했다. 사람 노동 1일당 에이전트 3.1일, 중앙값 연구자 하루 토큰 600달러 초과. 같은 날 수석과학자는 감속을 요구하는 에세이를 냈다. 이 숫자가 생산성 지표가 아닌 이유를 짚는다
+이미지: /img/covers/openai-agent-workdays.jpg
+이미지설명: 오픈AI 「Research acceleration」 발표글 공식 카드 아트 — 에이전트 3.1일 수치가 나온 원문
 태그: [오픈AI, 에이전트, 병렬운용, 업무자동화, 토큰비용]
 지금써먹기: false
 고정: false

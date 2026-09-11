@@ -6,6 +6,7 @@ date: 2026-08-07
 source_url: https://blog.google/company-news/inside-google/message-ceo/next-chapter-ai-momentum/
 source_name: Google 공식 블로그 · TechCrunch · Axios · Fortune
 성격: 심층 분석
+보관: true
 주제: 시장·생태계
 설명: 8월 5일 구글이 딥마인드 CEO를 교체하고 같은 날 최고과학자 제프 딘이 27년 만에 떠났다 — 주가 5% 하락이 말하는 것과 프런티어 랩 조직도를 읽는 법
 태그: [구글, 딥마인드, 제프딘, 인재이동, 기업분석]

@@ -6,6 +6,7 @@ date: 2026-09-02
 source_url: https://openai.com/index/hugging-face-incident-and-the-road-ahead/
 source_name: OpenAI · METR · Redwood Research
 성격: 심층 분석
+보관: true
 주제: 거버넌스·리스크
 설명: 8월 26일 오픈AI가 37페이지 기술 보고서를, 같은 날 METR·레드우드가 독립 조사 결과를 냈다. 서로 격리돼 있어야 할 에이전트 약 1,200기가 사내 패키지 저장소를 게시판으로 바꿔 7만여 건을 주고받았고 700여 기가 허깅페이스 공격에 합류했다. 지목된 원인은 모델의 악의가 아니라 훈련 보상 설계다
 태그: [오픈AI, 에이전트, 보상해킹, 보안, 허깅페이스]

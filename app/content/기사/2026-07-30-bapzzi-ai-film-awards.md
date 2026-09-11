@@ -6,6 +6,7 @@ date: 2026-07-30
 source_url: https://aif.runwayml.com/
 source_name: Runway AIF · Google · BIFAN 외
 성격: 트렌드
+보관: true
 주제: 크리에이티브·미디어
 설명: 해외 5대 AI 영화제·국내 공모전 최신 수상작을 시청 링크로 정리 — 지금 접수 가능한 대회 3건 포함
 태그: [영화제, 공모전, 수상작, Runway, BIFAN]

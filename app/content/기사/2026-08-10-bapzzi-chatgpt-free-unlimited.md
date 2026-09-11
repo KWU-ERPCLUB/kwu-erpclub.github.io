@@ -6,6 +6,7 @@ date: 2026-08-10
 source_url: https://techcrunch.com/2026/08/06/openai-brings-unlimited-chatgpt-text-chats-to-free-users/
 source_name: TechCrunch · MacRumors · Axios
 성격: 심층 분석
+보관: true
 주제: 모델·플랫폼
 설명: 8월 6일 OpenAI가 무료·Go 사용자의 텍스트 대화 횟수 제한을 없앤다고 발표했다 — 무제한이 적용되는 범위, 기본 모델이 Luna로 바뀐 뜻, 무료 티어를 떠받치는 계산
 태그: [OpenAI, ChatGPT, 무료티어, 광고, 비용]

@@ -6,6 +6,7 @@ date: 2026-08-31
 source_url: https://www.anthropic.com/news/model-hardware-standard-research-preview
 source_name: Anthropic · CNBC · 와우테일
 성격: 심층 분석
+보관: true
 주제: 에이전트
 설명: 8월 27일 앤스로픽이 AI 에이전트가 현미경·로봇팔 같은 물리 장비를 조작하는 공용 규격 '모델 하드웨어 표준(MHS)' 리서치 프리뷰를 공개했다. 얼리 액세스 명단에 두산로보틱스가 들어갔고, 국내 제조 AX·로봇 안전 규제와 어디서 만나는지 짚는다
 태그: [앤스로픽, MHS, MCP, 로봇, 제조AX]

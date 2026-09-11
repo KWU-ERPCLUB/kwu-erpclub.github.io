@@ -6,6 +6,7 @@ date: 2026-07-31
 source_url: https://www.microsoft.com/en-us/Investor/earnings/FY-2026-Q4/press-release-webcast
 source_name: Microsoft · UC Today
 성격: 트렌드
+보관: true
 주제: 시장·생태계
 설명: 7월 29일 마이크로소프트 FY26 4분기 실적 — 코파일럿 좌석·Azure 연매출 1,000억 달러 돌파, 그리고 좌석 수가 말하지 않는 것
 태그: [마이크로소프트, 코파일럿, Azure, 실적, 도입률]

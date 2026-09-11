@@ -6,8 +6,11 @@ date: 2026-08-25
 source_url: https://explainx.ai/blog/graph-engineering-ai-agents-multi-agent-organizations-2026
 source_name: explainx.ai · Eigent · JetBrains
 성격: 심층 분석
+축: AI활용
 주제: 에이전트
 설명: 6월 '루프 엔지니어링', 7월 '그래프 엔지니어링' — 커뮤니티에서 번지고 있는 에이전트 설계 용어의 계보를 해설한다. 발표된 제품이 아니라 담론이 소재다.
+이미지: /img/covers/graph-engineering.jpg
+이미지설명: explainx.ai 「Graph Engineering」 글의 히어로 아트(허브에서 뻗는 노드 그래프) — 이 글이 해설하는 그래프 엔지니어링 담론의 원문
 태그: [그래프엔지니어링, 루프엔지니어링, 에이전트, 프롬프트]
 ---
 
