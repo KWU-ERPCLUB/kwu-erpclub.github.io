@@ -3,22 +3,20 @@ import { Arrow } from '../shared.jsx'
 import { neighbors } from './insights-logic.js'
 import { TagChips, dateTimeOf } from './insights-parts.jsx'
 import { authorName } from '../content/authors.js'
-import { resolveHero } from './thumb-resolver.js'
-import SeriesCover from './SeriesCover.jsx'
+import { resolveHero, seriesBadge } from './thumb-resolver.js'
 import Markdown from './Markdown.jsx'
 import ArticleActions from './ArticleActions.jsx'
 
 // 히어로 — 기고 맨 위 이미지 + 그 이미지가 무엇인지 밝히는 캡션 줄(오너 판정 2026-08-05).
-// 명시 `이미지`가 없으면 통째로 생략(자동 커버는 목록 전용). `이미지설명`이 없으면 캡션 줄만 생략.
-// 시리즈 글 = 컴포넌트형 고정 커버(SeriesCover) + 자동 캡션.
+// 2026-09-11: 목록 카드와 같은 실제 이미지 1계층. 없으면 통째로 생략(레거시 보관 글). 주간 = 주차 배지.
 export function ArticleHero({ a }) {
   const hero = resolveHero(a)
   if (!hero) return null
+  const badge = seriesBadge(a)
   return (
     <figure className={`art-hero art-hero--fit-${hero.fit}`}>
-      {hero.cover
-        ? <SeriesCover id={hero.cover} a={a} className="art-hero-svg" />
-        : <img src={hero.src} alt={hero.caption} />}
+      <img src={hero.src} alt={hero.caption} />
+      {badge && <span className="art-cover-badge">{badge}</span>}
       {hero.caption && <figcaption className="art-hero-cap">{hero.caption}</figcaption>}
     </figure>
   )
@@ -27,9 +25,11 @@ export function ArticleHero({ a }) {
 // interactions = useInteractions() 반환값(선택). 미전달·미설정이면 상호작용 줄 자체가 렌더되지 않는다.
 export default function ArticleDetail({ cur, all, onOpen, onBack, interactions }) {
   const { prev, next } = neighbors(all, cur.slug)
-  const hasTags = Boolean(cur['성격'] || cur['주제'] || cur['지금써먹기'])
+  const hasTags = Boolean(cur['성격'] || cur['축'] || cur['주제'] || cur['지금써먹기'])
   return (
     <article className="art-detail">
+      {/* ⓪ 보관 글 안내(2026-09-11) — 목록에서는 빠졌지만 주소는 살아 있다 */}
+      {cur['보관'] === true && <p className="art-archived" role="note">보관된 글 — 현재 발행 기준 밖의 글입니다.</p>}
       {/* ① 문서 헤더 블록 — 눈썹·제목·메타·태그 */}
       <header className="art-doc-head">
         <span className="art-idx">AI INSIGHTS</span>

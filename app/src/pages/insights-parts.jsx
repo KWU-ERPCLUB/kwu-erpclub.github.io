@@ -3,10 +3,8 @@
 // 해시태그·아바타 = 카드에서 제거(데이터는 유지 — 상세에서만 표시).
 // + v3.1(§6-2a, 2026-08-05 2차) 골격 조각: SectionLabel(B2 좌 라벨 컬럼).
 //   v3.2(오너 피드백 2026-08-05): 블랙 통계 밴드(StatBand) 완전 제거 — 인사이트 디자인은 이것으로 확정.
-import { natureKey, splitTitle } from './insights-logic.js'
+import { natureKey, splitTitle, axisKey } from './insights-logic.js'
 import { resolveThumb } from './thumb-resolver.js'
-import { InsightCover } from './insights-cover.jsx'
-import SeriesCover from './SeriesCover.jsx'
 import { authorName } from '../content/authors.js'
 
 // 분할된 절을 블록 줄로 렌더(규칙 = insights-logic.splitTitle). 절이 하나면 그냥 한 줄.
@@ -16,17 +14,15 @@ export function Lines({ text, className }) {
   ))
 }
 
-// 썸네일 프레임 — 전 계층 동일 비율(16:10)·동일 보더. 사진=cover / 로고·도판=contain(+여백).
-// 4계층 해석은 thumb-resolver가 담당. SVG 컴포넌트 = 시리즈 커버(⓪ SeriesCover)·자동 커버(④ InsightCover).
-// alt = `이미지설명`(명시 이미지일 때만). 자동 폴백 이미지는 alt='' = 장식 취급(스크린리더가 건너뜀).
+// 썸네일 프레임 — 16:10 프레임 + 실제 관련 이미지 1계층(2026-09-11: 자동 커버 전부 폐지).
+// 주간 글 = 같은 프레임 + 「주간 · M월 N주」 배지 오버레이. 이미지 없음(레거시 보관 글) = 빈 면(북마크에서만 보임).
 export function Thumb({ a, big = false }) {
   const t = resolveThumb(a)
   const cls = `art-cover${big ? ' art-cover--big' : ''} art-cover--${t.kind} art-cover--fit-${t.fit}`
   return (
     <span className={cls}>
-      {t.cover ? <SeriesCover id={t.cover} a={a} />
-        : t.src ? <img src={t.src} alt={t.alt} loading="lazy" />
-          : <InsightCover a={a} />}
+      {t.src ? <img src={t.src} alt={t.alt} loading="lazy" /> : <span className="art-cover-empty" aria-hidden="true" />}
+      {t.badge && <span className="art-cover-badge">{t.badge}</span>}
     </span>
   )
 }
@@ -77,20 +73,22 @@ export function CountBadges({ counts }) {
   )
 }
 
-// 태그 칩 줄 — 성격(성격색 칩)·주제·지금써먹기. 상세 전용(카드에서는 제거, 2026-08-05).
+// 태그 칩 줄 — 성격(성격색 칩)·축(2026-09-11: 주제 대체, 레거시는 주제 표시)·지금써먹기. 상세 전용.
 export function TagChips({ a }) {
   const nk = natureKey(a['성격'])
   return (
     <span className="art-row-tags">
       {a['성격'] && <span className={`art-tag art-tag-nature chip-${nk}`}>{a['성격']}</span>}
-      {a['주제'] && <span className="art-tag">{a['주제']}</span>}
+      {a['축'] ? <span className={`art-tag art-tag-axis axis-${axisKey(a['축'])}`}>{a['축']}</span>
+        : a['주제'] ? <span className="art-tag">{a['주제']}</span> : null}
       {a['지금써먹기'] && <span className="art-tag art-tag-now">지금 써먹기</span>}
     </span>
   )
 }
 
-// 성격 컬러 라벨 — 색면 강등분(면=카드 배경 아님, 작은 라벨 1개).
+// 카드 라벨 — 축(2026-09-11: 독자가 "무슨 축의 글인가"를 먼저 본다). 축 없는 레거시 = 성격 라벨 폴백.
 export function NatureLabel({ a }) {
+  if (a['축']) return <span className={`art-label art-label-axis axis-${axisKey(a['축'])}`}>{a['축']}</span>
   if (!a['성격']) return null
   return <span className={`art-label chip-${natureKey(a['성격'])}`}>{a['성격']}</span>
 }

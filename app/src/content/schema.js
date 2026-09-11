@@ -4,7 +4,23 @@
 import { SERIES_IDS } from './series.js'
 
 export const NATURES = ['트렌드', '심층 분석'] // 성격(글 종류·단일) — 구 '뉴스·동향' = '트렌드'로 개명(2026-07-25 오너). 2026-08-25 오너: 4값→2값 — 인사이트 = 정보성 전용. 실습·도구 사용법은 세미나 특강으로 분리(도감 트랙 폐기, roadmap §95)
-export const TOPICS = ['에이전트', '모델·플랫폼', '워크플로·자동화', '거버넌스·리스크', '시장·생태계', '크리에이티브·미디어'] // 주제(AI 주제·단일) — 크리에이티브·미디어 = 영상·이미지·음성 등 생성 미디어(2026-07-30 오너 추가)
+export const TOPICS = ['에이전트', '모델·플랫폼', '워크플로·자동화', '거버넌스·리스크', '시장·생태계', '크리에이티브·미디어'] // 주제(AI 주제·단일) — 2026-09-11 개편으로 **기사에서 폐지**(레거시 통과·신규 금지). 세미나 `주제` 필터는 계속 이 값을 쓴다.
+// ── 2026-09-11 인사이트 개편(spec = erp-club/docs/specs/2026-09-11-인사이트-개편.md) ──
+// 축 = 기사 분류의 새 단일 축(주제 대체). 관문 ⓪ "AI가 소재의 중심 + 독자(경영학부 비개발자) 접점"이 앞선다 — 이름에 AI를 박은 이유.
+export const AXES = ['AI활용', 'AI×취업', 'AI×MIS']
+// 새 규칙(축 필수·주제 금지·이미지 필수·후보출처 잠금·분량 상한)이 적용되는 첫 게재일. 그 전 글 = 레거시(통과).
+export const NEW_RULES_FROM = '2026-09-12'
+// 분량 상한(공백 제외 글자 수) — 오너 2026-09-11: 요약 기고인데 읽는 것도 벅차다(심층 중앙값 5,192자였다).
+export const BODY_LIMIT = { '심층 분석': 3000, '트렌드': 2500 }
+// 후보출처 = 심층이 어느 주간 보고의 몇 번 후보인지. `요청` = 스터디원 요청 소재(관문 판정만).
+export const CANDIDATE_REF = /^weekly-trend-w\d{2}#\d+$/
+export const CANDIDATE_GATES = 6 // ⓪~⑤
+
+export const isNewRules = (data) => Boolean(data && data.date && data.date >= NEW_RULES_FROM && data['보관'] !== true)
+// 공개 목록 대상 = 보관 아님. 목록·홈·RSS·건수가 공유(북마크는 예외 — 사용자 자산).
+export const isPublicArticle = (a) => Boolean(a) && a['보관'] !== true
+// 공백 제외 글자 수(분량 상한 판정)
+export const bodyLength = (body) => String(body || '').replace(/\s/g, '').length
 export const SEMINAR_TYPES = ['인지', '실습']
 // 프로젝트 상태(단일·필수) — DPM 카드 상태 칩. 2026-07-24 콘텐츠화.
 export const PROJECT_STATUSES = ['운영 중', '진행 중', '보관']
@@ -41,9 +57,31 @@ export function validateEntry(kind, filename, data, body = '') {
     const nature = data['성격']
     if (nature === undefined || nature === null || nature === '') errs.push('성격 필수(1개)')
     else if (typeof nature !== 'string' || !NATURES.includes(nature)) errs.push(`성격 enum 밖: ${nature}`)
+    const fresh = isNewRules(data)
+    // 보관 = 선택 boolean(2026-09-11) — true = 목록·홈·RSS·건수 제외, URL 유지
+    if ('보관' in data && typeof data['보관'] !== 'boolean') errs.push('보관은 boolean(true/false)만 허용')
+    // 축 = 새 규칙 글 필수·enum. 레거시 글은 선택(있으면 enum)
+    const axis = data['축']
+    if (axis !== undefined && axis !== null && axis !== '' && (typeof axis !== 'string' || !AXES.includes(axis))) errs.push(`축 enum 밖: ${axis} (허용: ${AXES.join(', ')})`)
+    else if (fresh && !axis) errs.push(`축 필수(1개 — ${AXES.join('/')})`)
+    // 주제 = 레거시만(있으면 enum). 새 규칙 글에 있으면 FAIL(축으로 대체)
     const topic = data['주제']
-    if (topic === undefined || topic === null || topic === '') errs.push('주제 필수(1개)')
-    else if (typeof topic !== 'string' || !TOPICS.includes(topic)) errs.push(`주제 enum 밖: ${topic}`)
+    if (topic !== undefined && topic !== null && topic !== '') {
+      if (typeof topic !== 'string' || !TOPICS.includes(topic)) errs.push(`주제 enum 밖: ${topic}`)
+      if (fresh) errs.push('주제는 폐지됨(2026-09-11) — 축으로 대체')
+    } else if (!fresh && !axis) errs.push('주제 또는 축 필수(1개)')
+    // 후보출처 = 새 규칙 심층 필수(주간 보고 후보 표 잠금 — 교차 검사는 validateCandidateLock)
+    const ref = data['후보출처']
+    if (ref !== undefined && ref !== null && (typeof ref !== 'string' || !(ref === '요청' || CANDIDATE_REF.test(ref)))) errs.push('후보출처 형식: weekly-trend-wNN#k 또는 요청')
+    if (fresh && nature === '심층 분석' && !ref) errs.push('후보출처 필수(심층 = 주간 보고 후보 표 경유)')
+    // 이미지·이미지설명 = 새 규칙 글 필수(실제 관련 이미지 — 오너 2026-09-11)
+    if (fresh && !(typeof data['이미지'] === 'string' && data['이미지'].trim())) errs.push('이미지 필수(소재와 실제 관련된 이미지)')
+    if (fresh && !(typeof data['이미지설명'] === 'string' && data['이미지설명'].trim())) errs.push('이미지설명 필수(1줄)')
+    // 분량 상한 = 새 규칙 글(공백 제외)
+    if (fresh && nature && BODY_LIMIT[nature] !== undefined) {
+      const n = bodyLength(body)
+      if (n > BODY_LIMIT[nature]) errs.push(`분량 초과: ${n}자 > ${BODY_LIMIT[nature]}자(${nature})`)
+    }
     // 지금써먹기 = 선택(기본 false) — 있으면 boolean만 허용
     if ('지금써먹기' in data && typeof data['지금써먹기'] !== 'boolean') errs.push('지금써먹기는 boolean(true/false)만 허용')
     // 시각 = 선택(게재 시각 HH:MM — 카드·상세 날짜 옆 표기, 2026-07-25 오너 지시)
@@ -122,4 +160,50 @@ export function validateEntry(kind, filename, data, body = '') {
     }
   }
   return errs
+}
+
+// ── 심층 후보 표(주간 보고 `## 심층 후보` 절) 파싱 — 후보출처 잠금의 원천 ──
+// 행 서식 = `| k | 소재 | 축 | ⓪ | ① | ② | ③ | ④ | ⑤ | 링크수 |` (T/F). 표가 없으면 [].
+export function parseCandidateTable(body) {
+  const src = String(body || '')
+  const m = /^##\s+심층 후보\s*$([\s\S]*?)(?=^##\s|^:{3,}|(?![\s\S]))/m.exec(src)
+  if (!m) return []
+  const out = []
+  for (const line of m[1].split('\n')) {
+    if (!line.trim().startsWith('|')) continue
+    const cells = line.trim().slice(1, -1).split('|').map((c) => c.trim())
+    if (cells.length < 4 + CANDIDATE_GATES || !/^\d+$/.test(cells[0])) continue
+    const gates = cells.slice(3, 3 + CANDIDATE_GATES).map((c) => c.toUpperCase() === 'T')
+    out.push({ no: Number(cells[0]), 소재: cells[1], 축: cells[2], gates, links: Number(cells[3 + CANDIDATE_GATES]) || 0 })
+  }
+  return out
+}
+
+// 후보출처 잠금 — 새 규칙 심층의 `후보출처`가 가리키는 주간 보고에 그 번호 후보가 있고 ⓪~⑤ 전부 T인가.
+// entries = readEntries('기사') 결과(slug·data·body). 반환 = [{ file, errs }] (위반만).
+export function validateCandidateLock(entries) {
+  const weeklies = new Map()
+  for (const e of entries) {
+    const m = /weekly-trend-(w\d{2})/.exec(e.slug || '')
+    if (m) weeklies.set(`weekly-trend-${m[1]}`, parseCandidateTable(e.body))
+  }
+  const out = []
+  for (const e of entries) {
+    const d = e.data || {}
+    if (!isNewRules(d) || d['성격'] !== '심층 분석') continue
+    const ref = d['후보출처']
+    if (!ref || ref === '요청' || !CANDIDATE_REF.test(ref)) continue
+    const [key, k] = ref.split('#')
+    const rows = weeklies.get(key)
+    const errs = []
+    if (!rows) errs.push(`후보출처 잠금: 주간 보고 ${key} 없음`)
+    else {
+      const row = rows.find((r) => r.no === Number(k))
+      if (!row) errs.push(`후보출처 잠금: ${key} 후보 표에 #${k} 없음`)
+      else if (!row.gates.every(Boolean)) errs.push(`후보출처 잠금: ${key}#${k} 판정 ⓪~⑤ 중 F 있음`)
+      else if (row.축 && d['축'] && row.축 !== d['축']) errs.push(`후보출처 잠금: 축 불일치(후보 ${row.축} ≠ 글 ${d['축']})`)
+    }
+    if (errs.length) out.push({ file: e.file, errs })
+  }
+  return out
 }

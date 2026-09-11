@@ -23,11 +23,11 @@
 .hub-md > p:has(> img:only-child) { grid-column: full; width: 100%; max-width: 1400px; justify-self: center; }
 
 /* ── 기본 타이포 ── */
-.hub-md h2 { font-family: var(--font-display); font-weight: 800; font-size: 1.2rem; margin: 2rem 0 0.75rem; }
+.hub-md h2 { font-family: var(--font-display); font-weight: 800; font-size: 1.2rem; margin: 2.5rem 0 0.75rem; } /* 그룹 간 여백↑(craft R76, 2026-09-11) */
 .hub-md h3 { font-size: 1.05rem; font-weight: 700; margin: 1.5rem 0 0.5rem; }
-.hub-md p { margin: 0 0 1.1rem; }
+.hub-md p { margin: 0 0 1.25rem; } /* 문단 간격 1.1→1.25(2026-09-11 가독성) */
 .hub-md ul, .hub-md ol { margin: 0 0 1.1rem; padding-left: 1.3rem; }
-.hub-md li { margin-bottom: 0.35rem; }
+.hub-md li { margin-bottom: 0.5rem; }
 .hub-md img { max-width: 100%; height: auto; display: block; margin: 0.4rem 0; border-radius: 10px; }
 .hub-md a { color: var(--text); text-decoration: none; border-bottom: 2px solid var(--accent); transition: color 150ms ease-out; } /* Tertiary 밑줄(⑥) */
 .hub-md a:hover { color: var(--accent); }
@@ -36,7 +36,7 @@
 .hub-md pre { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 0.9rem 1.1rem; overflow-x: auto; }
 .hub-md pre code { background: none; border: none; padding: 0; }
 .hub-md blockquote { margin: 0 0 1.1rem; padding: 0.1rem 0 0.1rem 1.1rem; border-left: 3px solid var(--accent); color: var(--text-sub); } /* 콜아웃(⑩) */
-.hub-md table { width: 100%; border-collapse: collapse; font-size: 0.92rem; margin: 0 0 1.6rem; display: block; overflow-x: auto; }
+.hub-md table { width: 100%; border-collapse: collapse; font-size: 0.95rem; margin: 0 0 1.6rem; display: block; overflow-x: auto; }
 .hub-md th, .hub-md td { text-align: left; padding: 0.55rem 0.8rem; border-bottom: 1px solid var(--line); line-height: 1.5; word-break: keep-all; }
 .hub-md th { background: var(--surface); font-weight: 700; font-size: 0.86rem; white-space: nowrap; }
 /* 본문 핵심구 강조 — *별표* = 버건디 굵은 글씨(이탤릭 폐지, 2026-07-25 오너 지시 — 절제 사용) */

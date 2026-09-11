@@ -5,7 +5,9 @@
 
 /* ── 상세 — 통일 디자인 셸(텍스트 720px 문서형 + 도판 브레이크아웃) ── */
 .art-detail { max-width: none; }
-.art-detail > :not(.hub-md) { max-width: 720px; margin-inline: auto; }
+.art-detail > :not(.hub-md) { max-width: 640px; margin-inline: auto; } /* 720→640 = 한글 한 줄 ≈40자(craft R38, 2026-09-11) */
+.art-archived { max-width: 640px; margin: 0 auto 1.2rem; padding: 0.6rem 0.9rem; font-size: 0.86rem; color: var(--text-sub); background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--text-sub); border-radius: 0 8px 8px 0; }
+.art-hero { position: relative; }
 
 /* ① 문서 헤더 블록 — 눈썹(.art-idx 승계)·제목·메타·태그 */
 .art-doc-head { padding-bottom: 1.25rem; border-bottom: 1px solid var(--line); margin-bottom: 1.5rem; }
@@ -83,7 +85,7 @@
 
 /* 섹션 넘버링 — 기사 상세 한정(세미나·프로젝트 본문 제외) */
 .art-detail .hub-md { counter-reset: mdsec; }
-.art-detail .hub-md h2 { counter-increment: mdsec; padding-top: 1.6rem; border-top: 1px solid var(--line); margin-top: 2.4rem; }
+.art-detail .hub-md h2 { counter-increment: mdsec; padding-top: 1.6rem; border-top: 1px solid var(--line); margin-top: 2.5rem; }
 .art-detail .hub-md h2::before { content: counter(mdsec, decimal-leading-zero); display: block; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 0.4rem; } /* 섹션 인덱스(④) */
 
 /* 상세 태그 칩 — 성격색(§1 파생 4색, chip-* 토큰 = articles.css) */

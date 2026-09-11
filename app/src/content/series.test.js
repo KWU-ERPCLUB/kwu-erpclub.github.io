@@ -1,16 +1,17 @@
 import { expect, test } from 'vitest'
-import { SERIES, SERIES_IDS, seriesById, seriesFromSlug, seriesIdOf, seriesOf, seriesCaption } from './series.js'
+import { SERIES, SERIES_IDS, seriesById, seriesFromSlug, seriesIdOf, seriesOf } from './series.js'
 import { validateEntry } from './schema.js'
 import { toDbRow, fromDbRow } from './db-map.js'
 
 // 레지스트리 레코드 형태 = 새 시리즈를 1레코드로 추가할 수 있는지의 계약.
-test('레지스트리 — 레코드 5필드 + 1기 weekly 등록', () => {
+test('레지스트리 — 레코드 4필드 + 1기 weekly 등록', () => {
   expect(SERIES.length).toBeGreaterThan(0)
   for (const s of SERIES) {
     expect(typeof s.id).toBe('string')
-    // 커버 = 정적 파일 경로가 아니라 **컴포넌트 id**(v3, 2026-08-05 — 커버에 회차 주차 텍스트가 들어감)
-    for (const k of ['표시명', '설명', '주기', '커버컴포넌트']) expect(typeof s[k]).toBe('string')
+    // 커버 필드 없음(2026-09-11 — 고정 커버 폐지, 주간도 글마다 실제 이미지)
+    for (const k of ['표시명', '설명', '주기']) expect(typeof s[k]).toBe('string')
     expect(s.커버).toBe(undefined)
+    expect(s.커버컴포넌트).toBe(undefined)
   }
   expect(SERIES_IDS).toContain('weekly')
   expect(seriesById('weekly').표시명).toBe('주간 AI 트렌드')
@@ -31,11 +32,6 @@ test('귀속 우선순위 — frontmatter 시리즈 우선, enum 밖이면 슬�
   expect(seriesIdOf({ '시리즈': '오타', slug: 'x-weekly-trend-y' })).toBe('weekly')
   expect(seriesIdOf({ '시리즈': '오타', slug: '무관' })).toBe(null)
   expect(seriesOf({ slug: '무관' })).toBe(null)
-})
-
-test('상세 히어로 캡션 자동 생성 — 표시명 + 주기', () => {
-  expect(seriesCaption(seriesById('weekly'))).toBe('주간 AI 트렌드 — 매주 월요일 발행하는 시리즈')
-  expect(seriesCaption(null)).toBe('')
 })
 
 // 계약 검사 = 오타 차단(생략은 허용 — 슬러그 인식이 받는다).

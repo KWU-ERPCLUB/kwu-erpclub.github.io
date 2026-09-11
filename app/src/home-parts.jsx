@@ -3,6 +3,7 @@
 // INSIGHTS = 텍스트 리스트 → 썸네일 카드 한 줄(3건 — 피드백 "넣을 거면 썸네일형으로 짧게").
 import { Arrow } from './shared.jsx'
 import { loadContent } from './content/loader.js'
+import { isPublicArticle } from './content/schema.js'
 import { Thumb } from './pages/insights-parts.jsx'
 import { splitTitle } from './pages/insights-logic.js'
 
@@ -23,7 +24,7 @@ export const HOME_INSIGHTS_COUNT = 3
 
 // 제목 줄바꿈 규칙 = insights-parts.splitTitle 공유(메인 카드·인사이트 목록 카드가 같은 규칙).
 export function HomeInsights() {
-  const recent = loadContent('기사').slice(0, HOME_INSIGHTS_COUNT)
+  const recent = loadContent('기사').filter(isPublicArticle).slice(0, HOME_INSIGHTS_COUNT) // 보관 글 제외(2026-09-11)
   return (
     <section className="hs hs-insights page" id="insights">
       <div className="hs-in">
