@@ -8,7 +8,7 @@
 ## 현재상태 (2026-08-20 — 콘텐츠 축적 국면)
 
 - **라이브: https://kwu-erpclub.github.io/** — 소스 = `KWU-ERPCLUB/kwu-erpclub.github.io`(이 폴더 = 중첩 독립 repo). 구조·콘텐츠 계약 단일원천 = `SPEC.md`.
-- **배포판 = v0.16.11**. 브랜치 2종 = `main` 배포판 / `dev` 작업대. 릴리스 절차 = `RUNBOOK.md` §5(설계 배경 = `../docs/specs/2026-08-19-릴리스-체계.md`).
+- **배포판 = v0.16.13**(09-11 — 1기 OT 덱 v5.5 색·강조 손질, craft 규칙 실물 검증 반영). 브랜치 2종 = `main` 배포판 / `dev` 작업대. 릴리스 절차 = `RUNBOOK.md` §5(설계 배경 = `../docs/specs/2026-08-19-릴리스-체계.md`).
 - **게이트 = `npm test` 421건 전부 통과.** validate·build는 CI(deploy.yml)가 같은 게이트로 검사한다.
 - **백엔드 라이브** — Supabase `erpclub-hub`. **마이그레이션 `0001`~`0020` 전량 적용 완료**(2026-08-19). 운영·인수인계 절차 = `supabase/README.md`.
 - **공고 자동 등록 가동** — `supabase/postings.json`(원천) → `main` push → CI가 DB에 upsert. 수집 루틴 = 교내 매일 09:00 · 외부 월·목 09:30. 기준 = `ops/공고-수집-하네스.md`.
