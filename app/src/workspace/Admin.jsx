@@ -1,8 +1,8 @@
-// 운영 탭(M3 ②) — 운영진 전용 묶음: 승인대기 / 멤버 관리 / 공지·세션·자료·과제 관리.
+// 운영 탭(M3 ②) — 운영진 전용 묶음: 제출 현황 / 멤버 관리 / 공지·세션·자료·과제 관리.
 // 이중 차단: ①RLS(*_write_staff·members_manage_staff) ②화면(Workspace가 비운영진에게 탭을 그리지 않고,
 // 직접 진입(?tab=운영)해도 아래 Denied 안내만 나온다).
+// 2026-09-11 오너: 승인대기 폐지 — 스터디원 기고 경로(기고 탭)가 없어져 승인할 대상이 없다.
 import { useState } from 'react'
-import Review from './Review.jsx'
 import AdminMembers from './AdminMembers.jsx'
 import AdminContent from './AdminContent.jsx'
 import AdminApplicants from './AdminApplicants.jsx'
@@ -13,7 +13,7 @@ import { OpsLog } from './Notices.jsx'
 import { CONTACT, CONTACT_MAILTO } from '../data/recruit.js'
 
 // 운영 기록 = 2026-08-18 홈에서 이동(오너 — 스터디원 열람 불필요, 운영진 참고 자료)
-const SECTIONS = ['승인대기', '제출 현황', '지원자', '멤버', '콘텐츠', '일정', '공고', '운영 기록']
+const SECTIONS = ['제출 현황', '지원자', '멤버', '콘텐츠', '일정', '공고', '운영 기록']
 
 export function Denied() {
   return (
@@ -45,7 +45,6 @@ export default function Admin({ store, member }) {
             </button>
           ))}
         </nav>
-        {section === '승인대기' && <Review store={store} />}
         {section === '제출 현황' && <AdminSubmissions store={store} />}
         {section === '지원자' && <AdminApplicants store={store} />}
         {section === '멤버' && <AdminMembers store={store} meId={member?.id} />}

@@ -56,11 +56,13 @@ test('Shell = 멤버 이름·역할 + 좌 사이드바(기본 탭 = 홈: 캘린�
   expect(html).toContain('로그아웃')
 })
 
-test('기고 탭 = 단독 탭 승격(?tab=기고 — 키트·승인 요청 도달)', () => {
+// 2026-09-11 오너: 기고 탭 폐지(기고 = 운영진 전용). 재등장 시 FAIL.
+test('기고 탭 폐지 — 사이드바 미노출 + ?tab=기고 딥링크는 홈으로', () => {
   const html = flat(<Shell member={{ 이름: '홍길동', role: '스터디원' }} store={createMockRepositories({ user: 'mock-member' })} search="?tab=기고" />)
-  expect(html).toContain('ws-contribute')
-  expect(html).toContain('프롬프트 복사')
-  expect(html).toContain('승인 요청')
+  expect(html).not.toContain('인사이트 기고')
+  expect(html).not.toContain('ws-contribute')
+  expect(html).not.toContain('프롬프트 복사')
+  expect(WS_TABS.map(([n]) => n)).not.toContain('인사이트 기고')
 })
 
 test('내정보 탭 = 프로필·북마크·활동내역(북마크 단독 탭 폐지 — 2026-08-14 흡수)', () => {
@@ -96,12 +98,13 @@ test('직접 진입(?tab=운영) — 스터디원은 안내만, 운영진은 운
   expect(denied).not.toContain('ws-admin"')
 
   const staff = flat(<Shell member={{ 이름: 'ㄴ', role: '운영진' }} store={createMockRepositories({ user: 'mock-staff' })} search="?tab=운영" />)
-  expect(staff).toContain('승인대기')
+  expect(staff).not.toContain('승인대기')   // 2026-09-11 폐지
+  expect(staff).toContain('제출 현황')
   expect(staff).toContain('멤버')
 })
 
 // 구 탭명 딥링크 = 새 탭으로 매핑(링크 깨짐 0 — 2026-08-06 홈 개편, 2026-08-14 재편)
-test('구 탭명 딥링크 매핑 — 제출·스터디·과제·세션 → 홈 / 컬렉션·북마크 → 내정보 / 흐름 → 로드맵 / 기고 → 새 이름', () => {
+test('구 탭명 딥링크 매핑 — 제출·스터디·과제·세션 → 홈 / 컬렉션·북마크 → 내정보 / 흐름 → 로드맵 / 기고 → 홈', () => {
   expect(initialTab('?tab=제출')).toBe('홈')
   expect(initialTab('?tab=스터디')).toBe('홈')
   expect(initialTab('?tab=과제')).toBe('홈')
@@ -111,7 +114,8 @@ test('구 탭명 딥링크 매핑 — 제출·스터디·과제·세션 → 홈 
   expect(initialTab('?tab=북마크')).toBe('내정보')
   expect(initialTab('?tab=흐름')).toBe('로드맵')
   expect(initialTab('?tab=스터디 흐름')).toBe('로드맵')
-  expect(initialTab('?tab=기고')).toBe('인사이트 기고')
+  expect(initialTab('?tab=기고')).toBe('홈')              // 2026-09-11 기고 탭 폐지
+  expect(initialTab('?tab=인사이트 기고')).toBe('홈')
 })
 
 test('홈 = 과제 제출·공지 화면(구 딥링크 경유 포함) — 세션·운영 기록은 홈에서 제거(2026-08-18)', () => {
@@ -163,7 +167,7 @@ test('다가오는 업무 빈 상태 = 공고 탭 등록 안내 한 줄(역할 �
 
 // 공통 프레임(오너 확정 8/6 3차) — 전 탭 = 본문+우측 레일 단일 그리드. 탭 전환 시 열 경계 이동 0.
 test('전 탭 = 공통 프레임(ws-cols 본문+레일) — 탭별 개별 분할 금지', () => {
-  for (const tab of ['홈', '로드맵', '공고', '인사이트 기고', '내정보']) {
+  for (const tab of ['홈', '로드맵', '공고', '내정보']) {
     const html = flat(<Shell member={{ 이름: 'ㄱ', role: '스터디원' }} store={createMockRepositories({ user: 'mock-member' })} search={`?tab=${tab}`} />)
     expect(html, tab).toContain('ws-cols')
     expect(html, tab).toContain('ws-cmain')

@@ -8,7 +8,7 @@ const ME = { id: 'mock-member', 이름: '스터디원 B', role: '스터디원', 
 
 test('내정보 = 상단 북마크·관심 공고 + 하단 접힘 설정(프로필·비밀번호) + 활동내역 레일', () => {
   const html = flat(<MyPage store={createMockRepositories({ user: 'mock-member' })} member={ME} />)
-  for (const block of ['내 북마크', '관심 공고', '활동내역', '내 기고', '내 과제 제출']) {
+  for (const block of ['내 북마크', '관심 공고', '활동내역', '내 과제 제출']) {
     expect(html).toContain(block)
   }
   // 설정 = 접힘(2026-08-14 오너 — 자주 안 볼 것 숨김)
@@ -18,6 +18,7 @@ test('내정보 = 상단 북마크·관심 공고 + 하단 접힘 설정(프로�
   // 접힘이 북마크·관심 공고보다 뒤(하단 배치)
   expect(html.indexOf('내 북마크')).toBeLessThan(html.indexOf('ws-settings'))
   expect(html).not.toContain('링크 스크랩')
+  expect(html).not.toContain('내 기고')    // 2026-09-11 기고 탭 폐지
 })
 
 test('프로필 = 이름·학번·역할 표시 + 자기소개·관심사 수정 입력', () => {
@@ -39,9 +40,8 @@ test('프로필 수정 = 자기소개·관심사만 반영, 역할은 불변', a
   expect(row.role).toBe('스터디원')        // role은 본인 수정 대상 아님(RLS members_update_self와 동형)
 })
 
-test('활동내역 = 본인 기고·본인 제출만', async () => {
+test('활동내역 = 본인 제출만', async () => {
   const store = createMockRepositories({ user: 'mock-member' })
-  expect((await store.articles.listMine()).every((a) => a['작성자'] === 'mock-member')).toBe(true)
   expect((await store.submissions.listMine()).every((s) => s.member_id === 'mock-member')).toBe(true)
   const other = createMockRepositories({ user: 'mock-staff' })
   expect((await other.submissions.listMine()).some((s) => s.member_id === 'mock-member')).toBe(false)

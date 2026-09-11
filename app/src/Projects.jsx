@@ -82,7 +82,6 @@ export function ProjectGrid({ list, onOpen }) {
       <div className="hub-empty hub-empty-how">
         <p className="hub-empty-title">등재된 프로젝트 아직 없음.</p>
         <p>스터디의 프로젝트·활동 기록이 여기 쌓임 — 배포물이 아니어도 됨. 커버 캡처 + 한 줄 설명 + 상태.</p>
-        <p>기고 = 워크스페이스 &gt; 인사이트 기고 탭(스터디원).</p>
       </div>
     )
   }
