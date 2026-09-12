@@ -14,7 +14,10 @@ export function toDbRow({ slug, data, body }) {
     설명: data['설명'],
     본문: body,                       // md 원문 그대로(렌더러가 소비)
     성격: data['성격'],
-    주제: data['주제'],
+    주제: data['주제'] || null,
+    축: data['축'] || null,          // 2026-09-11 개편(마이그레이션 0023)
+    보관: data['보관'] === true,
+    후보출처: data['후보출처'] || null,
     상태: '게재',                     // md에 있다 = 이미 공개된 글(§4-3)
     작성자표기: data.author,
     게재일: data.date,
@@ -41,7 +44,10 @@ export function fromDbRow(row) {
     body: row['본문'] || '',
     '설명': row['설명'] || '',
     '성격': row['성격'],
-    '주제': row['주제'],
+    '주제': row['주제'] || undefined,
+    '축': row['축'] || undefined,
+    '보관': row['보관'] === true,
+    '후보출처': row['후보출처'] || undefined,
     '시각': row['시각'] || undefined,
     '태그': Array.isArray(row['태그']) ? row['태그'] : [],
     '지금써먹기': row['지금써먹기'] === true,

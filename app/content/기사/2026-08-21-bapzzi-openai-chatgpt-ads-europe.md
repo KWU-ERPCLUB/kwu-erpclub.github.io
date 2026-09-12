@@ -5,6 +5,7 @@ date: 2026-08-21
 source_url: https://openai.com/index/chatgpt-ads-expands-across-europe/
 source_name: OpenAI Newsroom
 성격: 심층 분석
+보관: true
 주제: 시장·생태계
 설명: 8월 18일 OpenAI가 챗지피티 광고를 8월 24일부터 유럽 31개국 무료·Go 티어에 붙인다고 발표했다 — 국내는 이미 6월 파일럿, 대화형 인터페이스가 광고면으로 굳어지는 흐름과 학부생이 지금 확인할 것
 태그: [챗지피티, 광고, 오픈AI, 프리티어]

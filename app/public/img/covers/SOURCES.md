@@ -25,6 +25,15 @@
 | qwen38-max.jpg | 2026-08-05 최상위급 모델이 처음 오픈웨이트로 | Qwen 제품군 공식 키비주얼 | https://www.alizila.com/alibaba-unveils-qwen3-8-max-most-capable-flagship-model-to-date/ | Alizila (알리바바 공식 뉴스룸) |
 | gemini-spark.jpg | 2026-08-07 제미나이 스파크 자동 브라우징 | 해당 발표글(og:image)의 공식 헤더 아트 | https://blog.google/innovation-and-ai/products/gemini-app/gemini-spark-updates-july-2026/ | Google 공식 블로그 |
 | google-ai-shakeup.jpg | 2026-08-07 구글 AI 수뇌부 개편 | 개편 공지글(og:image)의 구글 'G' 공식 아트 | https://blog.google/company-news/inside-google/message-ceo/next-chapter-ai-momentum/ | Google 공식 블로그 |
+| claude-code-auto-mode-default.jpg | 2026-08-17 승인 버튼은 통제가 아니었다 — 클로드 코드 기본값 자동 전환 | 발표글(og:image)의 클로드 코드 공식 키비주얼 | https://claude.com/blog/auto-mode-default-in-claude-code | Anthropic / Claude 블로그 |
+| graph-engineering.jpg | 2026-08-25 루프 다음은 그래프 — 에이전트 설계 용어 | 「Graph Engineering」 글의 히어로 아트(노드 그래프) | https://explainx.ai/blog/graph-engineering-ai-agents-multi-agent-organizations-2026 | explainx.ai |
+| deepseek-harness-open-source.jpg | 2026-08-28 딥시크가 하네스를 열었다 | 저장소 공식 소셜 카드 「Everything is a Plugin」(원본 2:1 → 배경색 레터박스) | https://github.com/deepseek-ai/deepseek-harness | DeepSeek (GitHub 저장소 소셜 프리뷰) |
+| hiring-ai-literacy-shift.jpg | 2026-09-04 자기소개서를 걷어낸 자리 — 하반기 공채 AI 사용 이력 | SK하이닉스 2026 하반기 신입 채용설명회 현장 사진(원문 og:image) | https://www.edaily.co.kr/News/Read?newsId=01400566645552896 | 이데일리 (촬영 조용석 기자) |
+| modu-ai-execution-agent.jpg | 2026-09-07 결제까지 대신한다는 무료 AI — 모두의 AI | 9/4 「모두의 AI 프로젝트」 착수 간담회 단체 사진 | https://www.aitimes.com/news/articleView.html?idxno=214869 | 과학기술정보통신부 제공 / AI타임스 게재 |
+| sap-joule-procurement-ga.jpg | 2026-09-09 ERP 화면 대신 대화창 — SAP 쥴 조달 어시스턴트 6종 | SAP 제품 페이지(og:image)의 「Requisition Assistant」 공식 비주얼 | https://www.sap.com/use-cases/joule-assistant/requisition-and-buying-ai | SAP |
+| openai-agent-workdays.jpg | 2026-09-11 사람 하루당 에이전트 3.1일 — 오픈AI 내부 계측치 | 발표글(og:image)의 공식 카드 아트 | https://openai.com/index/research-acceleration-view-inside-openai/ | OpenAI |
+| kia-ai-screening.jpg | 2026-09-13 시험장에서 AI를 쓰게 한다 — 기아 AI 문제해결력 검증 | 기아 2026 하반기 집중 채용 공식 포스터(기아 제공, 더피알 게재) — 상단 차량 구역 크롭 | https://www.the-pr.co.kr/news/articleView.html?idxno=62555 | 기아 |
+| weekly-trend-w37.jpg | 2026-09-12 주간 AI 트렌드 — 9월 2주 | TOP 1 소재(기아 채용) 기사의 og:image — 현대차·기아 양재 사옥, 745px 원본 확대·중앙 크롭 | https://view.asiae.co.kr/article/2026090808485382454 | 아시아경제 |
 
 ## 추가할 때
 

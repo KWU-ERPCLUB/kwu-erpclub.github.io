@@ -1,10 +1,9 @@
 import { expect, test } from 'vitest'
 import {
   excerpt, filterArticles, pinnedFirst, neighbors, extractMonths,
-  stateFromSearch, searchFromState, natureKey, HUB_TAB,
+  stateFromSearch, searchFromState, natureKey, axisKey, HUB_TAB, TABS,
   splitFeature, pageSlice, FEATURE_COUNT,
 } from './insights-logic.js'
-import { wrapTitle } from './insights-cover.jsx'
 
 // ── 목록 리디자인(2026-08-05) — 피처 분리·더보기 페이징·커버 줄바꿈 ──
 test('splitFeature — 앞 N건이 피처, 총량이 N 이하면 피처 없음', () => {
@@ -23,12 +22,11 @@ test('pageSlice — 노출 개수 절단 + 남은 건수', () => {
   expect(pageSlice([], 9)).toEqual({ visible: [], remaining: 0 })
 })
 
-test('wrapTitle — 최대 2줄, 넘치면 말줄임', () => {
-  expect(wrapTitle('짧은 제목')).toEqual(['짧은 제목'])
-  const two = wrapTitle('국내 SI 빅3의 무게중심 이동 — 2분기 실적에 찍힌 AI 인프라 전환')
-  expect(two).toHaveLength(2)
-  expect(two[1].endsWith('…')).toBe(true)
-  expect(wrapTitle('')).toEqual([''])
+// (구 wrapTitle 자동 커버 줄바꿈 = 2026-09-11 폐지 — 자동 타이포 커버 제거)
+test('TABS = 전체 + 3축 · axisKey ascii', () => {
+  expect(TABS).toEqual(['전체', 'AI활용', 'AI×취업', 'AI×MIS'])
+  expect(axisKey('AI×취업')).toBe('jobs')
+  expect(axisKey('없음')).toBe('use')
 })
 
 // ── 월 필터(2026-07-27 오너 지시 — 쌓인 월만 옵션·최신 먼저) ──
@@ -52,29 +50,30 @@ test('filterArticles — month=YYYY-MM 일치만, 다른 필터와 AND 결합', 
 test('stateFromSearch — ?p=<slug>는 상세, tab 없으면 허브', () => {
   expect(stateFromSearch('?p=2026-07-22-x')).toEqual({ tab: HUB_TAB, slug: '2026-07-22-x', series: null })
 })
-test('stateFromSearch — ?tab=<key> 복원(딥링크), 미지 키는 허브', () => {
-  expect(stateFromSearch('?tab=analysis')).toEqual({ tab: '심층 분석', slug: null, series: null })
-  expect(stateFromSearch('?tab=news&p=y')).toEqual({ tab: '트렌드', slug: 'y', series: null })
-  expect(stateFromSearch('?tab=없는키')).toEqual({ tab: HUB_TAB, slug: null, series: null })
+test('stateFromSearch — ?axis=<key> 복원(딥링크), 미지 키·구 ?tab은 허브', () => {
+  expect(stateFromSearch('?axis=mis')).toEqual({ tab: 'AI×MIS', slug: null, series: null })
+  expect(stateFromSearch('?axis=use&p=y')).toEqual({ tab: 'AI활용', slug: 'y', series: null })
+  expect(stateFromSearch('?tab=analysis')).toEqual({ tab: HUB_TAB, slug: null, series: null })
+  expect(stateFromSearch('?axis=없는키')).toEqual({ tab: HUB_TAB, slug: null, series: null })
   expect(stateFromSearch('')).toEqual({ tab: HUB_TAB, slug: null, series: null })
 })
 test('searchFromState — 허브·무값이면 빈 문자열', () => {
   expect(searchFromState({ tab: HUB_TAB, slug: null })).toBe('')
   expect(searchFromState({})).toBe('')
 })
-test('searchFromState — 성격 탭·상세 쿼리 생성', () => {
-  expect(searchFromState({ tab: '심층 분석', slug: null })).toBe('?tab=analysis')
+test('searchFromState — 축·상세 쿼리 생성', () => {
+  expect(searchFromState({ tab: 'AI×MIS', slug: null })).toBe('?axis=mis')
   expect(searchFromState({ tab: HUB_TAB, slug: 'x' })).toBe('?p=x')
-  expect(searchFromState({ tab: '심층 분석', slug: 'x' })).toBe('?tab=analysis&p=x')
+  expect(searchFromState({ tab: 'AI×MIS', slug: 'x' })).toBe('?axis=mis&p=x')
 })
 test('URL 왕복 — state→search→state 보존(pushState/popstate 순수 로직)', () => {
   for (const s of [
     { tab: HUB_TAB, slug: null, series: null },
-    { tab: '트렌드', slug: null, series: null },
-    { tab: '심층 분석', slug: '2026-08-01-hong-x', series: null },
+    { tab: 'AI활용', slug: null, series: null },
+    { tab: 'AI×취업', slug: '2026-08-01-hong-x', series: null },
     { tab: HUB_TAB, slug: 'only-detail', series: null },
     { tab: HUB_TAB, slug: null, series: 'weekly' },
-    { tab: '트렌드', slug: 'x', series: 'weekly' },
+    { tab: 'AI×MIS', slug: 'x', series: 'weekly' },
   ]) {
     expect(stateFromSearch(searchFromState(s))).toEqual(s)
   }
@@ -108,27 +107,27 @@ test('pinnedFirst — 고정 없으면 전부 rest', () => {
 })
 
 // ── 필터·그룹·이웃·발췌(기존 계약 승계) ──
-test('3필터 — 성격·주제·지금써먹기 AND 결합', () => {
+test('필터 — 축·지금써먹기 AND 결합(성격·주제 인자는 폐지 = 무시)', () => {
   const all = [
-    { slug: 'a', 성격: '심층 분석', 주제: '시장·생태계', 지금써먹기: true },
-    { slug: 'b', 성격: '트렌드', 주제: '에이전트' },
-    { slug: 'c', 성격: '심층 분석', 주제: '에이전트', 지금써먹기: true },
+    { slug: 'a', 성격: '심층 분석', 축: 'AI×취업', 지금써먹기: true },
+    { slug: 'b', 성격: '트렌드', 축: 'AI활용' },
+    { slug: 'c', 성격: '심층 분석', 축: 'AI활용', 지금써먹기: true },
   ]
   expect(filterArticles(all, {}).map((x) => x.slug)).toEqual(['a', 'b', 'c'])
-  expect(filterArticles(all, { nature: '심층 분석' }).map((x) => x.slug)).toEqual(['a', 'c'])
-  expect(filterArticles(all, { topic: '에이전트' }).map((x) => x.slug)).toEqual(['b', 'c'])
+  expect(filterArticles(all, { axis: 'AI활용' }).map((x) => x.slug)).toEqual(['b', 'c'])
   expect(filterArticles(all, { nowUse: true }).map((x) => x.slug)).toEqual(['a', 'c'])
-  expect(filterArticles(all, { nature: '심층 분석', topic: '에이전트', nowUse: true }).map((x) => x.slug)).toEqual(['c'])
+  expect(filterArticles(all, { axis: 'AI활용', nowUse: true }).map((x) => x.slug)).toEqual(['c'])
+  expect(filterArticles(all, { nature: '심층 분석', topic: '에이전트' }).length).toBe(3)
 })
 test('검색 — 제목·본문 부분일치 + 필터 AND', () => {
   const all = [
-    { slug: 'a', title: '에이전트 실전', body: '업무 자동화 사례', 성격: '심층 분석' },
-    { slug: 'b', title: '리서치 요약', body: '시장 동향 정리', 성격: '트렌드' },
+    { slug: 'a', title: '에이전트 실전', body: '업무 자동화 사례', 축: 'AI활용' },
+    { slug: 'b', title: '리서치 요약', body: '시장 동향 정리', 축: 'AI×MIS' },
   ]
   expect(filterArticles(all, { q: '에이전트' }).map((x) => x.slug)).toEqual(['a'])
   expect(filterArticles(all, { q: '동향' }).map((x) => x.slug)).toEqual(['b'])
   expect(filterArticles(all, { q: '없는말' })).toEqual([])
-  expect(filterArticles(all, { nature: '심층 분석', q: '리서치' })).toEqual([])
+  expect(filterArticles(all, { axis: 'AI활용', q: '리서치' })).toEqual([])
 })
 test('neighbors — 역시간순 prev=과거·next=최근, 경계 null', () => {
   const all = [{ slug: 'new' }, { slug: 'mid' }, { slug: 'old' }]

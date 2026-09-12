@@ -1,35 +1,57 @@
 // 인사이트 상세 셸 — 문서 헤더·히어로 이미지·출처 카드·720px 자유 본문·이전/다음 내비. 720px 문서형.
+import { useEffect } from 'react'
 import { Arrow } from '../shared.jsx'
 import { neighbors } from './insights-logic.js'
 import { TagChips, dateTimeOf } from './insights-parts.jsx'
 import { authorName } from '../content/authors.js'
-import { resolveHero } from './thumb-resolver.js'
-import SeriesCover from './SeriesCover.jsx'
+import { resolveHero, seriesBadge } from './thumb-resolver.js'
 import Markdown from './Markdown.jsx'
 import ArticleActions from './ArticleActions.jsx'
 
 // 히어로 — 기고 맨 위 이미지 + 그 이미지가 무엇인지 밝히는 캡션 줄(오너 판정 2026-08-05).
-// 명시 `이미지`가 없으면 통째로 생략(자동 커버는 목록 전용). `이미지설명`이 없으면 캡션 줄만 생략.
-// 시리즈 글 = 컴포넌트형 고정 커버(SeriesCover) + 자동 캡션.
+// 2026-09-11: 목록 카드와 같은 실제 이미지 1계층. 없으면 통째로 생략(레거시 보관 글). 주간 = 주차 배지.
 export function ArticleHero({ a }) {
   const hero = resolveHero(a)
   if (!hero) return null
+  const badge = seriesBadge(a)
   return (
     <figure className={`art-hero art-hero--fit-${hero.fit}`}>
-      {hero.cover
-        ? <SeriesCover id={hero.cover} a={a} className="art-hero-svg" />
-        : <img src={hero.src} alt={hero.caption} />}
+      <img src={hero.src} alt={hero.caption} />
+      {badge && <span className="art-cover-badge">{badge}</span>}
       {hero.caption && <figcaption className="art-hero-cap">{hero.caption}</figcaption>}
     </figure>
   )
 }
 
+// 본문 진입 리빌(2026-09-12 오너: "서식·애니메이션 요소가 덜 들어가 가독성이 떨어진다") — 블록 단위 once 리빌.
+// 규격 = 홈 리빌과 동일(transform·opacity만 · reduced-motion = 게이트 미부여 → CSS 감쇠 자체가 꺼짐 · JS 없음 = 정적 선명).
+function useArticleReveal(slug) {
+  useEffect(() => {
+    if (typeof window === 'undefined' || typeof IntersectionObserver === 'undefined') return undefined
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined
+    const root = document.documentElement
+    root.classList.add('art-js')
+    const targets = Array.from(document.querySelectorAll('.art-hero, .art-source, .hub-md > *'))
+    const io = new IntersectionObserver((entries) => {
+      for (const en of entries) if (en.isIntersecting) { en.target.classList.add('seen'); io.unobserve(en.target) }
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 })
+    targets.forEach((t) => io.observe(t))
+    // 첫 화면 위쪽에 이미 있는 블록은 즉시 표시(스크롤 없이도 보이게)
+    const vh = window.innerHeight
+    targets.forEach((t) => { if (t.getBoundingClientRect().top < vh * 0.9) t.classList.add('seen') })
+    return () => { io.disconnect(); root.classList.remove('art-js') }
+  }, [slug])
+}
+
 // interactions = useInteractions() 반환값(선택). 미전달·미설정이면 상호작용 줄 자체가 렌더되지 않는다.
 export default function ArticleDetail({ cur, all, onOpen, onBack, interactions }) {
+  useArticleReveal(cur.slug)
   const { prev, next } = neighbors(all, cur.slug)
-  const hasTags = Boolean(cur['성격'] || cur['주제'] || cur['지금써먹기'])
+  const hasTags = Boolean(cur['성격'] || cur['축'] || cur['주제'] || cur['지금써먹기'])
   return (
     <article className="art-detail">
+      {/* ⓪ 보관 글 안내(2026-09-11) — 목록에서는 빠졌지만 주소는 살아 있다 */}
+      {cur['보관'] === true && <p className="art-archived" role="note">보관된 글 — 현재 발행 기준 밖의 글입니다.</p>}
       {/* ① 문서 헤더 블록 — 눈썹·제목·메타·태그 */}
       <header className="art-doc-head">
         <span className="art-idx">AI INSIGHTS</span>

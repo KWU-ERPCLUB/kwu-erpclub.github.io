@@ -12,7 +12,7 @@ const container = {
     return m ? m.index + (m[1] ? 1 : 0) : undefined
   },
   tokenizer(src) {
-    const m = /^:::\s*(요약|수치|용어|출처|로드맵|결정)\s*\n([\s\S]*?)\n:::\s*(?:\n+|$)/.exec(src)
+    const m = /^:::\s*(요약|수치|용어|출처|로드맵|결정|탑|브리핑|질문)\s*\n([\s\S]*?)\n:::\s*(?:\n+|$)/.exec(src)
     if (!m) return
     const token = { type: 'container', raw: m[0], kind: m[1], text: m[2], tokens: [] }
     if (m[1] === '요약') this.lexer.blockTokens(m[2], token.tokens)
@@ -21,6 +21,33 @@ const container = {
   renderer(token) {
     if (token.kind === '요약') {
       return `<aside class="md-summary"><span class="md-block-label">핵심 요약</span>${this.parser.parse(token.tokens)}</aside>`
+    }
+    if (token.kind === '질문') {
+      // 심층 머리 「이 글이 답하는 질문」 — 행 = 질문 1개(3개 고정, schema가 검사). 주간이 답 못 한 질문만.
+      const items = rows(token.text).map(([q]) => `<li>${esc(q)}</li>`).join('')
+      return `<aside class="md-questions"><span class="md-block-label">이 글이 답하는 질문</span><ol>${items}</ol></aside>`
+    }
+    if (token.kind === '탑' || token.kind === '브리핑') {
+      // 주간 트렌드 카드(2026-09-12 오너: "브리핑이 너무 짧고 줄맞춤이 안 된다") — 행 형식:
+      //   탑:   번호 | 축 | 제목 | 본문(2~3문장) | URL | 출처명
+      //   브리핑: 키워드 | 축 | 본문(2~3문장) | URL | 출처명(선택)
+      // 축 라벨 색 = articles.css .axis-* (카드·필터와 같은 3색). 본문 안 **볼드**는 살린다.
+      const inline = (s) => marked.parseInline(esc(s))
+      const AXIS_KEY = { 'AI활용': 'use', 'AI×취업': 'jobs', 'AI×MIS': 'mis' }
+      const isTop = token.kind === '탑'
+      const items = rows(token.text).map((cells) => {
+        const [a, b, c, d, e, f] = cells
+        const num = isTop ? a : null
+        const axis = isTop ? b : b
+        const title = isTop ? c : a
+        const body = isTop ? d : c
+        const url = isTop ? e : d
+        const src = isTop ? f : e
+        const safe = /^https?:\/\//.test(url || '') ? url : ''
+        const link = safe ? `<a class="md-card-link" href="${esc(safe)}" target="_blank" rel="noreferrer">${esc(src || '원문')} ↗</a>` : ''
+        return `<li class="md-card${isTop ? ' md-card--top' : ''}">${num ? `<span class="md-card-num">${esc(num)}</span>` : ''}<span class="md-card-head"><span class="art-label art-label-axis axis-${AXIS_KEY[axis] || 'use'}">${esc(axis || '')}</span><strong class="md-card-title">${inline(title || '')}</strong></span><p class="md-card-body">${inline(body || '')}</p>${link}</li>`
+      }).join('')
+      return `<ol class="md-cards${isTop ? ' md-cards--top' : ''}">${items}</ol>`
     }
     if (token.kind === '수치') {
       // 행 형식: 숫자 | 설명 | 출처(선택) — 수치 카드엔 출처 표기 권장(stat-src 문법)

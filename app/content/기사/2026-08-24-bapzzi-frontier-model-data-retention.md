@@ -6,6 +6,7 @@ date: 2026-08-24
 source_url: https://www.axios.com/2026/08/19/openai-previews-zero-retention-safety-system-as-anthropic-requires-data-logs
 source_name: Axios · OpenAI · Bloomberg
 성격: 심층 분석
+보관: true
 주제: 거버넌스·리스크
 설명: 8월 19일 오픈AI가 프런티어 모델의 데이터 무보존(ZDR) 유지를 발표했고, 다음 날 블룸버그는 앤트로픽이 30일 보존 데이터를 고객 클라우드로 옮기는 방안을 준비 중이라고 보도했다. 에이전트가 길어지면서 안전 감시와 무보존 약속이 정면으로 부딪힌 결과다
 태그: [오픈AI, 앤트로픽, 데이터보존, 엔터프라이즈, 프라이버시]

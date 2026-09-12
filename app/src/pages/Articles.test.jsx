@@ -25,25 +25,24 @@ const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
 // 제목은 대시 지점에서 줄이 나뉘어 렌더된다(2026-08-15) → 통짜가 아니라 절 단위로 대조한다.
 const hasTitle = (html, title) => splitTitle(title).every((seg) => html.includes(esc(seg)))
 const noop = () => {}
-const listProps = { tab: '전체', onTab: noop, topic: null, setTopic: noop, month: null, setMonth: noop, q: '', setQ: noop, onOpen: noop }
+const listProps = { tab: '전체', onTab: noop, series: null, setSeries: noop, month: null, setMonth: noop, q: '', setQ: noop, onOpen: noop }
 // 합성 기사(콘텐츠 비의존) — 필요한 필드만 채운다.
 const art = (slug, over = {}) => ({ slug, title: `제목 ${slug}`, author: 'A', date: '2026-07-01', 설명: `설명 ${slug}`, body: '', 성격: '트렌드', 주제: '시장·생태계', ...over })
 
 // 목록 리디자인(2026-08-05 오너 픽 A): 피처 행 + 성격 탭(3) + 검색·주제·기간 필터 + 썸네일 카드 그리드 + 더보기.
 // 성격 2값(2026-08-25) — 인사이트 = 정보성 전용(활용법·도구 성격 폐기, roadmap §95).
-test('목록 = 성격 탭(전체+2) + 검색 + 주제 칩 + 카운트 라인 + 썸네일 카드 그리드', () => {
+test('목록 = 축 칩 1줄(전체+3) + 검색 + 카운트 라인 + 썸네일 카드 그리드 (2026-09-11)', () => {
   const html = renderToString(<Articles configured={false} />)
-  // 성격 탭 3개 상한(전체+2)
-  for (const t of ['전체', '트렌드', '심층 분석']) {
+  for (const t of ['전체', 'AI활용', 'AI×취업', 'AI×MIS']) {
     expect(html).toContain(t)
   }
-  expect(html).toContain('ins-tabs')
-  expect(html).toContain('role="tablist"')
+  expect(html).toContain('art-filter-axis')
   expect(html).toContain('ins-controls')
-  // 주제 칩(전체 + 5종)
-  for (const v of ['에이전트', '모델·플랫폼', '워크플로·자동화', '거버넌스·리스크', '시장·생태계']) {
-    expect(html).toContain(v)
-  }
+  // 구 3줄 필터(성격 탭·주제 칩·시리즈 칩) 폐지
+  expect(html).not.toContain('ins-tabs')
+  expect(html).not.toContain('주제 필터')
+  expect(html).not.toContain('시리즈 필터')
+  expect(html).not.toContain('모델·플랫폼')
   // 검색 인풋 + 지금써먹기 필터 폐지(2026-07-25 오너 지시)
   expect(html).toContain('placeholder="제목·요약 검색"')
   expect(html).not.toContain('지금 써먹기 필터')
@@ -165,17 +164,16 @@ test('더보기 = PAGE_SIZE 초과 시 노출 + 남은 건수 표기', () => {
 })
 
 // 성격 탭 딥링크(?tab=analysis) = 해당 성격만 그리드 + 필터 바 유지(URL 상태 복원 — 계약 불변).
-test('성격 탭 딥링크 — ?tab=analysis 복원 + 해당 성격 카드만', () => {
-  const inTab = pick((a) => a['성격'] === '심층 분석')
-  const outTab = pick((a) => a['성격'] && a['성격'] !== '심층 분석')
+test('축 딥링크 — ?axis=jobs 복원 + 해당 축 카드만', () => {
+  const inTab = pick((a) => a['축'] === 'AI×취업' && a['보관'] !== true)
+  const outTab = pick((a) => a['축'] && a['축'] !== 'AI×취업' && a['보관'] !== true)
   const prev = globalThis.window
-  globalThis.window = { location: { search: '?tab=analysis', pathname: '/insights/' } }
+  globalThis.window = { location: { search: '?axis=jobs', pathname: '/insights/' } }
   try {
     const html = flat(<Articles configured={false} />)
-    expect(html).toContain('art-grid')
-    expect(html).toContain('art-card-title')
-    if (inTab) expect(hasTitle(html, inTab.title)).toBe(true)    // 심층 분석 기고 = 표시
-    if (outTab) expect(hasTitle(html, outTab.title)).toBe(false) // 다른 성격 = 필터링됨
+    if (inTab) expect(html).toContain('art-card-title')
+    if (inTab) expect(hasTitle(html, inTab.title)).toBe(true)    // AI×취업 기고 = 표시
+    if (outTab) expect(hasTitle(html, outTab.title)).toBe(false) // 다른 축 = 필터링됨
     expect(html).toContain('placeholder="제목·요약 검색"')   // 검색박스 유지
     expect(html).not.toContain('art-month-head')             // 월별 그룹 폐지
   } finally {
@@ -193,7 +191,7 @@ test('DB 경로 — 페치 전 = 로딩 골격(role=status) + 필터 바 유지'
   expect(html).toContain('art-card--skeleton')
   expect(html).toContain('role="status"')
   expect(html).toContain('ins-controls')          // 필터 바 = 로딩 중에도 동일
-  expect(html).toContain('ins-tabs')
+  expect(html).toContain('art-filter-axis')
   expect(html).not.toContain('ins-count')         // 숫자는 확정 후에만
   expect(html).not.toContain('art-features')      // 피처 행도 확정 후에만
 })
@@ -248,14 +246,14 @@ test('상세 = 통일 셸(문서 헤더·출처 카드 승격·목록 복귀)', 
 
 // 히어로 이미지 + 캡션(오너 판정 2026-08-05) — 기고 맨 위에서 그 이미지가 무엇인지 밝힌다.
 // 합성 기사로 검증(콘텐츠 비결합): 이미지·캡션 유무 조합의 렌더 규칙을 고정한다.
-test('상세 히어로 — 이미지 있으면 캡션과 함께 렌더(로고 = contain)', () => {
-  const a = art('hero', { 이미지: '/img/logos/openai.svg', 이미지설명: 'OpenAI 로고 — 가격을 내린 개발사' })
+test('상세 히어로 — 이미지 있으면 캡션과 함께 렌더(항상 cover — 로고 contain 계층 폐지 2026-09-11)', () => {
+  const a = art('hero', { 이미지: '/img/covers/x.jpg', 이미지설명: '공식 키비주얼 — 발표 주체' })
   const html = flat(<ArticleHero a={a} />)
   expect(html).toContain('art-hero')
-  expect(html).toContain('/img/logos/openai.svg')
+  expect(html).toContain('/img/covers/x.jpg')
   expect(html).toContain('art-hero-cap')
-  expect(html).toContain(esc('OpenAI 로고 — 가격을 내린 개발사'))
-  expect(html).toContain('art-hero--fit-contain')
+  expect(html).toContain(esc('공식 키비주얼 — 발표 주체'))
+  expect(html).toContain('art-hero--fit-cover')
 })
 
 test('상세 히어로 — 이미지설명 없으면 캡션 줄만 생략(도판·사진 = cover)', () => {
@@ -270,11 +268,12 @@ test('상세 히어로 — 명시 이미지 없으면 통째로 생략(자동 �
   expect(flat(<ArticleHero a={art('h4', { title: 'Claude 정리' })} />)).toBe('')
 })
 
-test('목록 카드 alt = 이미지설명(명시 이미지) / 자동 폴백은 빈 alt', () => {
-  const withCap = flat(<ArticleRow a={art('c1', { 이미지: '/img/logos/openai.svg', 이미지설명: '오픈AI 로고 — 발표 주체' })} onOpen={noop} />)
-  expect(withCap).toContain(`alt="${esc('오픈AI 로고 — 발표 주체')}"`)
-  const auto = flat(<ArticleRow a={art('c2', { title: 'Claude 정리' })} onOpen={noop} />)
-  expect(auto).toContain('alt=""')
+test('목록 카드 alt = 이미지설명 / 이미지 없으면 빈 면(자동 폴백 없음)', () => {
+  const withCap = flat(<ArticleRow a={art('c1', { 이미지: '/img/covers/x.jpg', 이미지설명: '키비주얼 — 발표 주체' })} onOpen={noop} />)
+  expect(withCap).toContain(`alt="${esc('키비주얼 — 발표 주체')}"`)
+  const none = flat(<ArticleRow a={art('c2', { title: 'Claude 정리' })} onOpen={noop} />)
+  expect(none).toContain('art-cover-empty')
+  expect(none).not.toContain('<img')
 })
 
 // 자유 디자인 트랙(0008) — 형식 html = 샌드박스 iframe(스크립트 차단), md = 사이트 서식 렌더.

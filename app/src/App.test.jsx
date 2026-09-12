@@ -4,6 +4,7 @@ import App, { PROJECTS, RecruitBand, StatsBand, Roadmap } from './App.jsx'
 import { COHORT_LABEL, formatWindowShort } from './data/recruit.js'
 import { FAQ } from './data/faq.js'
 import { loadContent } from './content/loader.js'
+import { isPublicArticle } from './content/schema.js'
 import { HomeInsights, HOME_INSIGHTS_COUNT } from './home-parts.jsx'
 import { splitTitle } from './pages/insights-logic.js'
 
@@ -87,7 +88,7 @@ test('WHY 섹션 부재 유지 + B1 블랙 통계 밴드 1개(2×2 실측 수치
   const band = renderToString(<StatsBand today="2026-08-05" />)
   expect((band.match(/sb-cell/g) || []).length).toBe(3) // 1×3
   // 수치 = 실측만: 게재 건수 = content/ 글롭 집계와 일치(recruit 증빙과 동일 원천)
-  expect(band).toContain(`>${loadContent('기사').length}</span>`)
+  expect(band).toContain(`>${loadContent('기사').filter(isPublicArticle).length}</span>`) // 노출 건수(보관 제외, 2026-09-11)
   for (const label of ['AI Insight', '만든 실물']) expect(band).toContain(label) // 라벨 개정 2026-08-15(구 '게재 기사')
   expect((band.match(/sb-src/g) || []).length).toBe(3) // 수치엔 출처 각주 의무(디자인규칙 §6)
 })
@@ -160,17 +161,19 @@ test('FAQ 모집 답 = 확정 기간 반영(비정기 문구 폐지) — 기간�
 // 메인 하단 최근 활동(북극성 §5) — 4차: 썸네일 카드 한 줄 3건(피드백 "넣을 거면 썸네일형으로 짧게").
 test('메인 하단 INSIGHTS = 썸네일 카드 3건(제목·날짜·딥링크) + 전체 보기 링크', () => {
   const html = renderToString(<HomeInsights />)
-  const recent = loadContent('기사').slice(0, HOME_INSIGHTS_COUNT)
-  expect(recent.length).toBe(3)
-  expect((html.match(/hi-item/g) || []).length).toBe(3)
-  expect((html.match(/art-cover/g) || []).length).toBeGreaterThanOrEqual(3) // 썸네일 프레임(4계층 해석 재사용)
+  const recent = loadContent('기사').filter(isPublicArticle).slice(0, HOME_INSIGHTS_COUNT) // 보관 제외(2026-09-11)
+  // 공개 글이 3편 미만이면 있는 만큼만(2026-09-12 구 글 전량 보관 — 새 형식 2편만 공개). 0편은 섹션 자체가 비므로 하한 1.
+  const expected = Math.min(HOME_INSIGHTS_COUNT, recent.length)
+  expect(expected).toBeGreaterThanOrEqual(1)
+  expect((html.match(/hi-item/g) || []).length).toBe(expected)
+  expect((html.match(/art-cover/g) || []).length).toBeGreaterThanOrEqual(expected) // 썸네일 프레임(4계층 해석 재사용)
   // 제목 = 대시 폐지·의미 단위 줄바꿈(2026-08-15) → 원문 통짜가 아니라 분할된 절이 각각 렌더된다.
   for (const a of recent) {
     for (const line of splitTitle(a.title)) expect(html).toContain(line)
     expect(html).toContain(a.date)
     expect(html).toContain(`/insights/?p=${a.slug}`)
   }
-  expect(html).not.toContain(' — ') // 카드 표면에 대시 0건
+  expect(html.replace(/alt="[^"]*"/g, '')).not.toContain(' — ') // 카드 표면에 대시 0건(alt 속성은 화면 밖)
   expect(html).toContain('전체 보기')
   expect(html).toContain('href="/insights/"')
 })

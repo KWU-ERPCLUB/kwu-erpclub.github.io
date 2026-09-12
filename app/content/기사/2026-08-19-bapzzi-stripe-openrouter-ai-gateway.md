@@ -6,6 +6,7 @@ date: 2026-08-19
 source_url: https://techcrunch.com/2026/08/16/stripe-will-reportedly-acquire-ai-gateway-startup-openrouter-for-7b/
 source_name: TechCrunch · Bloomberg
 성격: 심층 분석
+보관: true
 주제: 시장·생태계
 설명: 8월 16일 블룸버그가 스트라이프의 오픈라우터 인수 합의(70억 달러 이상)를 보도했다 — 3개월 전 기업가치의 5배 이상. AI 게이트웨이가 무엇이고, 왜 결제 회사가 그 자리를 샀나
 태그: [스트라이프, 오픈라우터, AI게이트웨이, 모델라우팅, 인수합병]

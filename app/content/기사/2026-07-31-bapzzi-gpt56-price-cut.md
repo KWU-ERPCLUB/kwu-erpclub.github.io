@@ -6,6 +6,7 @@ date: 2026-07-31
 source_url: https://www.cnbc.com/2026/07/30/open-ai-price-cut-gpt.html
 source_name: OpenAI · CNBC · VentureBeat
 성격: 트렌드
+보관: true
 주제: 모델·플랫폼
 설명: 7월 30일 OpenAI가 Luna 80%·Terra 20% 인하 — 티어별 단가 표와 실제 업무 비용 계산, 왜 지금 내렸는지
 태그: [OpenAI, GPT, 가격, 비용, 토큰]

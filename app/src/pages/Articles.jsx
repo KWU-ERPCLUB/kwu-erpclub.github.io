@@ -9,9 +9,9 @@ import { useEffect, useState, useCallback, useMemo } from 'react'
 import { SiteNav, SiteFooter, PageHead, latestUpdated } from '../shared.jsx'
 import { useArticles, useInteractions } from './insights-source.js'
 import { loadSeen, markSeen, isNew } from './seen-store.js'
-import { TOPICS } from '../content/schema.js'
+import { isPublicArticle } from '../content/schema.js'
 import {
-  HUB_TAB, TABS, NATURE_KEY, PAGE_SIZE, SORTS, stateFromSearch, searchFromState,
+  HUB_TAB, TABS, AXIS_KEY, PAGE_SIZE, SORTS, stateFromSearch, searchFromState,
   filterArticles, pinnedFirst, extractMonths, splitFeature, pageSlice, seriesOptions, sortArticles,
 } from './insights-logic.js'
 import { ArticleRow, FeatureCard } from './insights-parts.jsx'
@@ -19,14 +19,14 @@ import ArticleDetail from './ArticleDetail.jsx'
 // v3.1 골격 분할 CSS(상세 셸 이관분 — articles.css 315줄 부채 분할). 이 JSX가 상세도 그리므로 여기서 로드.
 import '../styles/insights-detail.css'
 
-// 성격 탭 — 5개 상한(전체+4). 선택 = 언더라인 탭(칩 색면 아님 — 성격색은 카드 라벨이 담당).
-function NatureTabs({ value, onSelect }) {
+// 축 칩(2026-09-11 개편) — 전체 + 3축. 필터는 이 한 줄뿐(구 성격 탭·주제 칩·시리즈 칩 3줄 폐지).
+function AxisChips({ value, onSelect }) {
   return (
-    <div className="ins-tabs" role="tablist" aria-label="성격 탭">
+    <div className="art-filter art-filter-axis" role="group" aria-label="축 필터">
       {TABS.map((t) => (
         <button
-          key={t} type="button" role="tab" aria-selected={value === t}
-          className={`ins-tab${value === t ? ' on' : ''}${NATURE_KEY[t] ? ` chip-${NATURE_KEY[t]}` : ''}`}
+          key={t} type="button" aria-pressed={value === t}
+          className={`${value === t ? 'on' : ''}${AXIS_KEY[t] ? ` axis-${AXIS_KEY[t]}` : ''}`}
           onClick={() => onSelect(t)}
         >{t}</button>
       ))}
@@ -34,40 +34,16 @@ function NatureTabs({ value, onSelect }) {
   )
 }
 
-// 주제 칩 열 — 보조 필터(전체 + TOPICS).
-function TopicChips({ value, onSelect }) {
-  const opts = [{ val: null, label: '전체' }, ...TOPICS.map((v) => ({ val: v, label: v }))]
+// 주간만 토글 — 시리즈 필터의 축소판(시리즈 = 주간 1개뿐). 소속 글 0건이면 그리지 않는다.
+function WeeklyToggle({ options, value, onSelect }) {
+  const w = options.find((o) => o.id === 'weekly')
+  if (!w) return null
+  const on = value === 'weekly'
   return (
-    <div className="art-filter art-filter-sub" role="group" aria-label="주제 필터">
-      <span className="art-filter-label">주제</span>
-      {opts.map((o) => (
-        <button
-          key={o.label} type="button" aria-pressed={value === o.val}
-          className={value === o.val ? 'on' : ''} onClick={() => onSelect(o.val)}
-        >{o.label}</button>
-      ))}
-    </div>
-  )
-}
-
-// 시리즈 칩 열 — 정기 연재(주간·분기 등) 필터. 레지스트리 기반 = 시리즈 추가 시 칩 자동 증가.
-// 소속 글이 0건이면 열 전체를 그리지 않는다(빈 필터 금지).
-function SeriesChips({ options, value, onSelect }) {
-  if (options.length === 0) return null
-  return (
-    <div className="art-filter art-filter-sub" role="group" aria-label="시리즈 필터">
-      <span className="art-filter-label">시리즈</span>
-      <button
-        type="button" aria-pressed={value === null}
-        className={value === null ? 'on' : ''} onClick={() => onSelect(null)}
-      >전체</button>
-      {options.map((o) => (
-        <button
-          key={o.id} type="button" aria-pressed={value === o.id}
-          className={value === o.id ? 'on' : ''} onClick={() => onSelect(o.id)}
-        >{o.label} <span className="art-filter-n">{o.count}</span></button>
-      ))}
-    </div>
+    <button
+      type="button" className={`art-weekly${on ? ' on' : ''}`} aria-pressed={on}
+      onClick={() => onSelect(on ? null : 'weekly')}
+    >주간만 <span className="art-filter-n">{w.count}</span></button>
   )
 }
 
@@ -92,24 +68,24 @@ function LoadError({ onRetry }) {
 }
 
 // 목록 뷰. export = 픽스처 주입 테스트용. status/onRetry = DB 페치 상태(기본 'ready').
-export function ListView({ all, tab, onTab, topic, setTopic, series = null, setSeries = () => {}, month, setMonth, q, setQ, onOpen, status = 'ready', onRetry, countsOf = () => null, freshOf = () => false }) {
+export function ListView({ all, tab, onTab, series = null, setSeries = () => {}, month, setMonth, q, setQ, onOpen, status = 'ready', onRetry, countsOf = () => null, freshOf = () => false }) {
   const [shown, setShown] = useState(PAGE_SIZE)
   const [sort, setSort] = useState('new') // 4차: 정렬(최신·오래된순) — 피드백 "오래된 순도"
-  const nature = tab === HUB_TAB ? null : tab
+  const axis = tab === HUB_TAB ? null : tab
   const months = extractMonths(all)
   const serieses = seriesOptions(all)
-  // 시리즈 = 다른 필터와 같은 문법(AND 결합). 시리즈 글은 그리드·피처·카운트에 일반 기사와 동일하게 포함된다.
-  const filtered = sortArticles(filterArticles(all, { nature, topic, series, month, q }), sort)
+  // 축·주간만·기간·검색 AND 결합. 주간 글은 그리드·피처·카운트에 일반 기사와 동일하게 포함된다.
+  const filtered = sortArticles(filterArticles(all, { axis, series, month, q }), sort)
   const { pinned, rest } = pinnedFirst(filtered)
   const ordered = [...pinned, ...rest]
   const pinnedSlugs = new Set(pinned.map((a) => a.slug))
   // 피처 행 = 필터·검색이 하나도 없는 기본 뷰(최신순)에서만(필터 뷰 = 위계 없이 전량 그리드).
-  const isDefault = !nature && !topic && !series && !month && !q.trim() && sort === 'new'
+  const isDefault = !axis && !series && !month && !q.trim() && sort === 'new'
   const { feature, list } = isDefault ? splitFeature(ordered) : { feature: [], list: ordered }
   const { visible, remaining } = pageSlice(list, shown)
 
   // 필터 변경 = 노출 개수 초기화(더보기 상태가 조건을 넘어 남지 않게).
-  useEffect(() => { setShown(PAGE_SIZE) }, [tab, topic, series, month, q, sort])
+  useEffect(() => { setShown(PAGE_SIZE) }, [tab, series, month, q, sort])
 
   return (
     <>
@@ -126,9 +102,12 @@ export function ListView({ all, tab, onTab, topic, setTopic, series = null, setS
       {/* 전체 기고 — 필터·카운트·그리드·더보기(기능 계약 불변) */}
       <section className="ins-sec">
       <h2 className="ins-h">전체 기고</h2>
-      {/* 필터 바 — 4차 체계화: ①성격 탭 ②검색+정렬·기간(우측) ③주제·시리즈 칩(여백 확대) */}
+      {/* 필터 바(2026-09-11) = 1줄: 축 칩 + 주간만 / 우측 검색·기간·정렬 */}
       <div className="ins-controls">
-        <NatureTabs value={tab} onSelect={onTab} />
+        <div className="ins-controls-row ins-controls-axis">
+          <AxisChips value={tab} onSelect={onTab} />
+          <WeeklyToggle options={serieses} value={series} onSelect={setSeries} />
+        </div>
         <div className="ins-controls-row">
           <div className="art-search">
             <input
@@ -154,10 +133,6 @@ export function ListView({ all, tab, onTab, topic, setTopic, series = null, setS
             </select>
           </div>
         </div>
-        <div className="ins-controls-sub">
-          <TopicChips value={topic} onSelect={setTopic} />
-          <SeriesChips options={serieses} value={series} onSelect={setSeries} />
-        </div>
       </div>
 
       {/* 카운트 라인 — 4차 단순화(피드백 "전체 몇 건 이렇게만"): 기본 = 전체 N건 / 필터 중 = 일치 건수 병기 */}
@@ -171,7 +146,7 @@ export function ListView({ all, tab, onTab, topic, setTopic, series = null, setS
       {status === 'loading' ? <LoadingGrid /> : status === 'error' ? <LoadError onRetry={onRetry} /> : filtered.length === 0 ? (
         <div className="art-empty">
           <p className="art-empty-title">조건에 맞는 기고 없음.</p>
-          <p>필터·검색 해제 = 전체. 기고 = 워크스페이스 &gt; 인사이트 기고 탭(스터디원).</p>
+          <p>필터·검색을 해제하면 전체가 보입니다.</p>
         </div>
       ) : ordered.length === 0 ? null : (
         <>
@@ -205,7 +180,6 @@ export default function Articles({ repos, configured }) {
   const [tab, setTab] = useState(initial.tab)
   const [sel, setSel] = useState(initial.slug)
   const [series, setSeries] = useState(initial.series)
-  const [topic, setTopic] = useState(null)
   const [month, setMonth] = useState(null)
   const [q, setQ] = useState('')
 
@@ -238,6 +212,8 @@ export default function Articles({ repos, configured }) {
     setSeen(new Set(markSeen(slug)))
     nav({ slug })
   }, [nav])
+  // 보관 글(2026-09-11) = 목록·건수에서 제외, 상세 URL은 유지(북마크·외부 링크 안 깨짐).
+  const pub = useMemo(() => all.filter(isPublicArticle), [all])
   const cur = all.find((a) => a.slug === sel)
 
   if (cur) {
@@ -246,7 +222,7 @@ export default function Articles({ repos, configured }) {
         <SiteNav />
         <main id="main" className="art-page art-page--doc">
           <ArticleDetail
-            cur={cur} all={all} onOpen={openArticle}
+            cur={cur} all={pub} onOpen={openArticle}
             onBack={() => nav({ slug: null })} interactions={interactions}
           />
         </main>
@@ -263,11 +239,11 @@ export default function Articles({ repos, configured }) {
         <PageHead
           label="INSIGHTS"
           title={<>AI <em>인사이트</em></>}
-          meta={latestUpdated(all)}
+          meta={latestUpdated(pub)}
         />
         <ListView
-          all={all} tab={tab} onTab={(t) => nav({ tab: t, slug: null })}
-          topic={topic} setTopic={setTopic} month={month} setMonth={setMonth}
+          all={pub} tab={tab} onTab={(t) => nav({ tab: t, slug: null })}
+          month={month} setMonth={setMonth}
           series={series} setSeries={(id) => nav({ series: id })}
           q={q} setQ={setQ} onOpen={openArticle}
           status={status} onRetry={retry}

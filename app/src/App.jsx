@@ -8,6 +8,7 @@ import { localYmd, recruitPhase, studyCell } from './home-logic.js'
 import { RECRUIT, COHORT_LABEL, AIM_HOOK, formatWindowShort, deadlineLabel } from './data/recruit.js'
 import { FAQ } from './data/faq.js'
 import { loadContent } from './content/loader.js'
+import { isPublicArticle } from './content/schema.js'
 import { useSectionSpy, useParallax, useItemReveal, StaggerChars, CountUp } from './home-motion.jsx'
 import { SectionHead, HomeInsights } from './home-parts.jsx'
 
@@ -128,7 +129,7 @@ export function RecruitBand({ today = localYmd() }) {
 // 수치 = 실측만(content/ 집계 + 확인된 사실). 출처 = 셀별 소형 표기(§6 수치 출처 의무).
 // 0건 지표(세미나 등)는 싣지 않는다 — 있는 기록만, 과장·허수 0.
 export function StatsBand({ today = localYmd() }) {
-  const 기사수 = loadContent('기사').length
+  const 기사수 = loadContent('기사').filter(isPublicArticle).length // 노출 건수 기준(보관 제외, 2026-09-11)
   const cells = [
     [String(기사수), 'AI Insight', '인사이트 페이지 게재분'],
     ['2', '만든 실물', 'ADsP 스터디 보드 · AIM 웹사이트'], // 실물 이름 그대로 표기(오너 2026-08-15)

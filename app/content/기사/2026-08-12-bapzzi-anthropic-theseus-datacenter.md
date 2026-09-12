@@ -6,6 +6,7 @@ date: 2026-08-12
 source_url: https://www.macquarie.com/us/en/about/news/2026/anthropic-mam-gic-data-centre-infrastructure-partnership.html
 source_name: Macquarie Group · Bloomberg · DCD · 파이낸셜뉴스
 성격: 심층 분석
+보관: true
 주제: 시장·생태계
 설명: 8월 10일 앤트로픽이 맥쿼리자산운용·싱가포르 GIC와 데이터센터 플랫폼 '테세우스'를 세웠다 — 짓는 돈은 인프라 자본이 대고 AI 회사는 빌려 쓴다. 이 구조가 무엇이고 국내 전력권 경쟁과 어떻게 이어지나
 태그: [데이터센터, 앤트로픽, 인프라, 전력, 회계]

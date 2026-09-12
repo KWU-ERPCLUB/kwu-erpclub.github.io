@@ -6,6 +6,8 @@ date: 2026-08-26
 source_url: https://www.moel.go.kr/news/enews/report/enewsView.do?news_seq=18662
 source_name: 고용노동부·한국고용정보원
 성격: 심층 분석
+보관: true
+축: AI×취업
 주제: 시장·생태계
 설명: 2026년 1월 22일 AI 기본법이 시행되며 채용이 고영향 AI 영역에 들어갔다. 그런데 최종 판단에 사람이 개입하면 대상에서 빠지고, 사전고지의 상대도 지원자가 아니다. 500대 기업 조사 수치로 그 간극을 짚는다
 태그: [AI채용, AI기본법, 고영향AI, 채용절차법, 취업]

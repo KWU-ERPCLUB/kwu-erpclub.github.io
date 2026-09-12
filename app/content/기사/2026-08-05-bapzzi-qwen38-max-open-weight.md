@@ -6,6 +6,7 @@ date: 2026-08-05
 source_url: https://www.alibabacloud.com/en/press-room/alibaba-unveils-qwen3-8-max
 source_name: Alibaba Cloud · VentureBeat · SCMP
 성격: 심층 분석
+보관: true
 주제: 모델·플랫폼
 설명: 8월 3일 알리바바가 2.4조 파라미터 Qwen3.8-Max를 공개하고 다음 주 가중치를 푼다 — Max급 최초 오픈웨이트가 기업의 모델 선택 계산을 어떻게 바꾸나
 태그: [알리바바, Qwen, 오픈웨이트, 모델가격, 에이전트]

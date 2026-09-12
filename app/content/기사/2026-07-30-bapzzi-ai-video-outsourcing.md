@@ -6,6 +6,7 @@ date: 2026-07-30
 source_url: https://www.fortunebusinessinsights.com/ai-video-generator-market-110060
 source_name: Fortune Business Insights · Upwork 외
 성격: 심층 분석
+보관: true
 주제: 크리에이티브·미디어
 설명: AI 영상 외주 실거래 시세(해외·한국)와 거래 방식 변화, 수요가 몰리는 업계 — 광고보다 홈쇼핑이 앞서는 한국의 특이점
 태그: [외주, 광고, 홈쇼핑, 시세, 수익화]

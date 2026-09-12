@@ -6,6 +6,7 @@ date: 2026-08-07
 source_url: https://blog.google/innovation-and-ai/products/gemini-app/gemini-spark-updates-july-2026/
 source_name: Google 공식 블로그 · Engadget · 9to5Google
 성격: 심층 분석
+보관: true
 주제: 에이전트
 설명: 7월 30일 구글 제미나이 스파크가 내 PC의 크롬을 직접 조작하는 기능을 발표했다 — 저장된 로그인·비밀번호까지 쓰는 방식이 왜 지금 나왔고 무엇을 조심해야 하나
 태그: [제미나이, 브라우저에이전트, 프롬프트인젝션, 크롬, 자동화]

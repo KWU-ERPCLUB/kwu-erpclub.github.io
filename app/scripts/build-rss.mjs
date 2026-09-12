@@ -4,7 +4,7 @@ import { readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { parseFrontmatter } from '../src/content/frontmatter.js'
-import { isContentFile } from '../src/content/schema.js'
+import { isContentFile, isPublicArticle } from '../src/content/schema.js'
 
 export const SITE_URL = 'https://kwu-erpclub.github.io'
 const FEED_TITLE = 'AIM — AI 인사이트'
@@ -63,7 +63,7 @@ function loadArticles() {
   return files.map((f) => {
     const { data, body } = parseFrontmatter(readFileSync(join(root, f), 'utf8'))
     return { ...data, slug: f.replace(/\.md$/, ''), body }
-  }).sort((a, b) => (b.date || '').localeCompare(a.date || ''))
+  }).filter(isPublicArticle).sort((a, b) => (b.date || '').localeCompare(a.date || '')) // 보관 글 제외(2026-09-11)
 }
 
 // CLI 실행 시에만 파일 쓰기(테스트 import 시엔 건너뜀)

@@ -6,6 +6,7 @@ date: 2026-07-27
 source_url: https://news.sap.com/2026/05/sap-sapphire-sap-unveils-autonomous-enterprise/
 source_name: SAP News · OpenAI · CNBC 외
 성격: 심층 분석
+보관: true
 주제: 시장·생태계
 설명: 2026년 1–6월 주요 사건을 모델·에이전트·규제·기업 도입·돈·한국 여섯 축으로 정리한 온보딩 문서.
 태그: [온보딩, 모델, 에이전트, 규제, ERP]

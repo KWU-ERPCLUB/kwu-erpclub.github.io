@@ -1,19 +1,22 @@
 // 인사이트(INSIGHTS) 순수 로직 — 필터·그룹·이웃·URL 상태·허브 섹션·모노그램.
 // 전부 순수 함수(부수효과 0) — 테스트 대상. UI 컴포넌트(Articles.jsx 등)가 소비.
-import { NATURES } from '../content/schema.js'
+import { NATURES, AXES } from '../content/schema.js'
 import { SERIES, seriesById, seriesIdOf } from '../content/series.js'
 
-// 성격 칩 = 전체 + 성격 2종. '전체' = 성격 필터 없음(AI in Use 구조: 상단 컨트롤 바 성격 칩).
+// 필터 1줄(2026-09-11 개편) = 축 칩(전체 + 3축) + 주간만 토글 + 기간 + 검색·정렬.
+// 구 성격 탭·주제 칩·시리즈 칩 3줄 = 폐지. '전체' = 축 필터 없음.
 export const HUB_TAB = '전체'
-export const TABS = [HUB_TAB, ...NATURES]
+export const TABS = [HUB_TAB, ...AXES]
 
-// 성격 ↔ ascii 탭키(URL·CSS 클래스 안정용). Korean URL 인코딩 회피.
-// 구 키 'howto'(활용법·튜토리얼)·'tools'(도구) = 2026-08-25 폐지. 기존 URL ?tab=howto·?tab=tools는
-// stateFromSearch가 미지 키 → 허브로 폴백한다(깨지지 않는다).
+// 축 ↔ ascii 키(URL ?axis= · CSS 클래스). 한글 URL 인코딩 회피.
+export const AXIS_KEY = { 'AI활용': 'use', 'AI×취업': 'jobs', 'AI×MIS': 'mis' }
+const KEY_TO_AXIS = Object.fromEntries(Object.entries(AXIS_KEY).map(([n, k]) => [k, n]))
+export function axisKey(axis) { return AXIS_KEY[axis] || 'use' }
+
+// 성격 키 = 카드·상세의 성격 칩 색 클래스용으로만 남는다(필터 아님).
 export const NATURE_KEY = { '트렌드': 'news', '심층 분석': 'analysis' }
-const KEY_TO_NATURE = Object.fromEntries(Object.entries(NATURE_KEY).map(([n, k]) => [k, n]))
-
 export function natureKey(nature) { return NATURE_KEY[nature] || 'analysis' }
+export { NATURES }
 
 // (구 authorInitial 아바타 1자 = 2026-08-20 삭제 — 카드 배지가 이름 3글자 타원으로 바뀐 뒤 참조 0.)
 
@@ -24,22 +27,21 @@ export function splitTitle(text) {
   return String(text ?? '').split(/\s*[—–]\s*/).filter(Boolean)
 }
 
-// ── URL ↔ 상태 (뒤로가기·딥링크) : ?tab=<key> · ?series=<id> · ?p=<slug> ──
-// 기존 계약(?tab·?p)은 불변 — series 파라미터만 추가(2026-08-05 시리즈 체계).
-// search(location.search 문자열) → { tab, slug, series }. 미지의 tab 키 = 허브, 미지의 series = null.
+// ── URL ↔ 상태 (뒤로가기·딥링크) : ?axis=<key> · ?series=<id>(주간만) · ?p=<slug> ──
+// ?p 계약 불변. 구 ?tab=news|analysis(성격) = 2026-09-11 폐지 → 미지 키로 허브 폴백(링크 안 깨짐).
 export function stateFromSearch(search) {
   const p = new URLSearchParams(search || '')
   const slug = p.get('p') || null
-  const key = p.get('tab')
-  const tab = key && KEY_TO_NATURE[key] ? KEY_TO_NATURE[key] : HUB_TAB
+  const key = p.get('axis')
+  const tab = key && KEY_TO_AXIS[key] ? KEY_TO_AXIS[key] : HUB_TAB
   const sid = p.get('series')
   return { tab, slug, series: sid && seriesById(sid) ? sid : null }
 }
 
-// { tab, slug, series } → "?tab=..&series=..&p=..". 허브·무값이면 빈 문자열.
+// { tab, slug, series } → "?axis=..&series=..&p=..". 허브·무값이면 빈 문자열.
 export function searchFromState({ tab = HUB_TAB, slug = null, series = null } = {}) {
   const p = new URLSearchParams()
-  if (tab && tab !== HUB_TAB && NATURE_KEY[tab]) p.set('tab', NATURE_KEY[tab])
+  if (tab && tab !== HUB_TAB && AXIS_KEY[tab]) p.set('axis', AXIS_KEY[tab])
   if (series && seriesById(series)) p.set('series', series)
   if (slug) p.set('p', slug)
   const s = p.toString()
@@ -68,12 +70,12 @@ export function extractMonths(all) {
   return [...seen].sort().reverse()
 }
 
-// 성격·주제·시리즈·월·지금써먹기 필터 + 검색(제목·설명·태그·본문 부분일치) AND 결합. month='YYYY-MM'|null.
-export function filterArticles(all, { nature = null, topic = null, series = null, month = null, nowUse = false, q = '' } = {}) {
+// 축·시리즈(주간만)·월·지금써먹기 필터 + 검색(제목·설명·태그·본문 부분일치) AND 결합. month='YYYY-MM'|null.
+// (구 nature·topic 인자는 2026-09-11 폐지 — 성격 구분은 series(주간만 토글)가 담당.)
+export function filterArticles(all, { axis = null, series = null, month = null, nowUse = false, q = '' } = {}) {
   const query = q.trim().toLowerCase()
   return all.filter((a) => {
-    if (nature && a['성격'] !== nature) return false
-    if (topic && a['주제'] !== topic) return false
+    if (axis && a['축'] !== axis) return false
     if (series && seriesIdOfArticle(a) !== series) return false
     if (month && (a.date || '').slice(0, 7) !== month) return false
     if (nowUse && !a['지금써먹기']) return false

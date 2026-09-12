@@ -6,6 +6,7 @@ date: 2026-08-14
 source_url: https://research.meta.ai/blog/introducing-muse-glimmer-open-agentic-model
 source_name: Meta AI Research · VentureBeat · Artificial Analysis
 성격: 심층 분석
+보관: true
 주제: 모델·플랫폼
 설명: 8월 10일 메타가 300억 파라미터 모델 뮤즈 글리머를 아파치 2.0으로 공개했다 — 라이선스를 바꾼 이유, GPU 한 장이라는 조건, 독립 평가가 자체 발표와 갈리는 지점
 태그: [메타, 오픈웨이트, 로컬모델, 에이전트, 라이선스]

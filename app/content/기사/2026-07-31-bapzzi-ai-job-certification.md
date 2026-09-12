@@ -6,6 +6,8 @@ date: 2026-07-31
 source_url: https://www.anthropic.com/news/cognizant-anthropic
 source_name: Anthropic · Cognizant
 성격: 심층 분석
+보관: true
+축: AI×취업
 주제: 시장·생태계
 설명: 35만 명 규모 글로벌 SI Cognizant가 만든 새 직무 두 개 — 엔지니어 말고 '프론티어 비즈니스 오퍼레이터'가 왜 중요한가
 태그: [채용, 직무, 자격증, Cognizant, 클로드]

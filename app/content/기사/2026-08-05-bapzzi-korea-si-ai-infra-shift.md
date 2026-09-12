@@ -6,6 +6,8 @@ date: 2026-08-05
 source_url: https://zdnet.co.kr/view/?no=20260730111702
 source_name: 삼성SDS · LG CNS 실적발표 · ZDNet Korea · 디지털데일리
 성격: 심층 분석
+보관: true
+축: AI×MIS
 주제: 시장·생태계
 설명: 삼성SDS·LG CNS 2분기 실적에서 성장이 나온 칸은 전통 SI가 아니라 AI 인프라였다 — DBO·GPUaaS가 무엇이고 MIS 전공자의 진로 지도가 어떻게 바뀌나
 태그: [삼성SDS, LGCNS, SKAX, 데이터센터, 진로]

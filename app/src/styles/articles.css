@@ -94,6 +94,27 @@
 .art-cover--stock::after { background: linear-gradient(180deg, rgba(22, 22, 22, 0) 58%, rgba(22, 22, 22, 0.13)); }
 /* 피처용 큰 썸네일 — 같은 문법·더 넓은 비율(시각량 집중) */
 .art-cover--big { aspect-ratio: 16 / 9; }
+/* 2026-09-11 개편 — 실제 이미지 1계층. 빈 면 = 레거시 보관 글(북마크 전용) / 주간 배지 = 좌상단 오버레이 */
+.art-cover-empty { display: block; width: 100%; height: 100%; background: var(--surface); }
+.art-cover-badge, .art-hero .art-cover-badge {
+  position: absolute; top: 0.6rem; left: 0.6rem; z-index: 1;
+  font-size: 0.72rem; font-weight: 800; letter-spacing: 0.02em; color: #fff; background: var(--dark);
+  border-radius: var(--radius-pill); padding: 0.2rem 0.62rem; pointer-events: none;
+}
+/* 축 3색 — 디자인규칙 §1 저채도 계열(버건디 면 금지). 카드 라벨·상세 칩·필터 칩 공용 */
+.axis-use  { --nbg: #e5f0fb; --nfg: #38618c; }   /* AI활용 */
+.axis-jobs { --nbg: #e8f3e8; --nfg: #2f6b3a; }   /* AI×취업 */
+.axis-mis  { --nbg: #faf0e1; --nfg: #6f5227; }   /* AI×MIS */
+.art-label-axis, .art-tag-axis { color: var(--nfg); background: var(--nbg); border-color: transparent; }
+.ins-controls-axis { justify-content: center; gap: 0.6rem; }
+.art-filter-axis { margin-bottom: 0; }
+.art-weekly {
+  height: 32px; padding: 0 0.9rem; font: inherit; font-size: 0.82rem; font-weight: 600; color: var(--text-sub);
+  background: #fff; border: 1px dashed var(--line); border-radius: var(--radius-pill); cursor: pointer;
+}
+.art-weekly:hover { border-color: var(--text); color: var(--text); }
+.art-weekly.on { background: var(--dark); color: #fff; border-style: solid; border-color: var(--dark); }
+.art-weekly:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
 /* ── 최신 기고 행 — 고정+최신 2건. 4차: 콤팩트 가로형(썸네일 좌측·높이 반 — 피드백 "사이즈 줄여서") ── */
 .art-features {
