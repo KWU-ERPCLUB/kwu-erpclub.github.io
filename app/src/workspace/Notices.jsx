@@ -3,7 +3,7 @@
 // 운영 기록(OpsLog, 구 /log 내부화)은 2026-08-18 운영 탭으로 이동(오너 — 스터디원이 볼 필요 없음). export만 여기 유지.
 // notices_select_member: 내부여부=true 행은 멤버에게만 보인다.
 // 운영 기록 = 읽기 전용 렌더 — 데이터 원천 = src/data/log.js(기록 추가 = 데이터 1줄 추가).
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, useRef } from 'react'
 import Markdown from '../pages/Markdown.jsx'
 import { ROADMAP, HISTORY, STATS, STATS_BASIS } from '../data/log.js'
 
@@ -104,9 +104,38 @@ export function NoticeTitles({ store, onOpen }) {
   )
 }
 
+// 공지 본문 — 마크다운 `- [ ]` 항목을 실제 체크박스로(2026-09-12 오너: "핵심만 위쪽에 체크 가능하게").
+// 체크 상태 = 이 기기 localStorage(공지 id별 배열). 서버 저장 없음 — 개인 진행 표시용이라 계정 간 공유 불필요.
+// marked는 체크박스를 disabled로 내보내므로 마운트 후 풀고, 담는 li에 ws-task 클래스를 붙여 스타일링한다.
+function NoticeBody({ id, body }) {
+  const ref = useRef(null)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const boxes = [...el.querySelectorAll('input[type="checkbox"]')]
+    if (boxes.length === 0) return
+    const key = `ws-notice-check:${id}`
+    let saved = []
+    try { saved = JSON.parse(localStorage.getItem(key) || '[]') } catch { saved = [] }
+    const paint = () => boxes.forEach((b) => {
+      const li = b.closest('li')
+      if (li) { li.classList.add('ws-task'); li.classList.toggle('is-done', b.checked) }
+    })
+    boxes.forEach((b, i) => { b.disabled = false; b.checked = Boolean(saved[i]) })
+    paint()
+    const onChange = () => {
+      paint()
+      try { localStorage.setItem(key, JSON.stringify(boxes.map((b) => b.checked))) } catch { /* 저장 불가 = 표시만 */ }
+    }
+    boxes.forEach((b) => b.addEventListener('change', onChange))
+    return () => boxes.forEach((b) => b.removeEventListener('change', onChange))
+  }, [id, body])
+  return <div className="ws-notice-body" ref={ref}><Markdown body={body} /></div>
+}
+
 // 공지 탭 본문(2026-08-19 오너 개편) — 한 공지 = 접힌 한 줄. 제목·날짜만 보이고 클릭하면 본문이 펼쳐진다.
 // 이유: 카드로 전문을 펼쳐 두면 공지가 쌓일수록 무엇이 있는지 한눈에 안 들어온다.
-// 최신 1건만 기본 펼침 — 새 공지는 읽히라고 올리는 것이고, 나머지는 목록으로 남는다.
+// 기본 = 전부 접힘(2026-09-12 오너: 들어오자마자 펼쳐져 있으면 목록이 안 읽힌다 — 구 "최신 1건 펼침" 폐지).
 // 문법은 공고 탭의 행과 같다(details) — 접힘 상태에서도 본문이 DOM에 있어 브라우저 검색이 된다.
 export default function Notices({ store }) {
   const { rows, status, error } = useNotices(store)
@@ -117,16 +146,14 @@ export default function Notices({ store }) {
       {status === 'ready' && rows.length === 0 && <p className="ws-note">공지 0건. 운영진 안내가 여기 쌓임.</p>}
       {rows.length > 0 && (
         <ul className="ws-list ws-notice-list">
-          {rows.map((n, i) => (
+          {rows.map((n) => (
             <li key={n.id} className="ws-notice-row">
-              <details open={i === 0}>
+              <details>
                 <summary className="ws-notice-sum">
                   <span className="ws-notice-title">{n['제목']}</span>
                   <span className="ws-notice-when">{ymd(n.created_at)}</span>
                 </summary>
-                <div className="ws-notice-body">
-                  <Markdown body={n['본문'] || ''} />
-                </div>
+                <NoticeBody id={n.id} body={n['본문'] || ''} />
               </details>
             </li>
           ))}
