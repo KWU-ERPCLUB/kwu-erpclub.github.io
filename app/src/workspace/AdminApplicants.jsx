@@ -38,7 +38,7 @@ export default function AdminApplicants({ store }) {
         </table>
       </div>
       {rows.length === 0 && !error && <p className="ws-note">지원자 0건.</p>}
-      <p className="ws-note">읽기 전용 — 수정·삭제 없음. 접수 경로 = /recruit 신청 폼(익명 제출).</p>
+      <p className="ws-note">읽기 전용. 수정·삭제 없음. 접수 경로 = /recruit 신청 폼(익명 제출).</p>
     </section>
   )
 }

@@ -56,8 +56,9 @@
   box-shadow: 0 12px 30px rgba(20, 20, 20, 0.1);
 }
 .ws-rm-item.is-upnext .ws-rm-nno { background: var(--accent); border-color: var(--accent); color: #fff; }
+/* 라벨 pill = 검정(2026-09-12 전수조사 D10 · §1 「버건디 면 금지」 — 번호 원 배지는 화이트리스트 ⑰로 유지) */
 .ws-rm-next {
-  background: var(--accent); color: #fff; border-radius: var(--radius-pill); padding: 0.18rem 0.66rem;
+  background: var(--dark); color: #fff; border-radius: var(--radius-pill); padding: 0.18rem 0.66rem;
   font-size: 0.72rem; font-weight: 800; letter-spacing: 0.02em; white-space: nowrap;
 }
 /* 지난 차시 = ✓ 원 + 흐림 — 지나온 길이 한눈에 갈린다 */

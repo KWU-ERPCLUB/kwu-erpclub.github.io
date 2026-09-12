@@ -4,7 +4,7 @@
 
 /* 월 캘린더 */
 .ws-cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.7rem; }
-.ws-cal-head .ws-h2 { margin: 0; font-size: 1.3rem; }
+.ws-cal-head .ws-h2 { margin: 0; }   /* 크기 = .ws-h2와 동일(2026-09-12 전수조사 D4 — 5px 간격 3단 헤딩 정리) */
 .ws-cal-nav { display: flex; gap: 0.3rem; }
 .ws-cal-nav button {
   height: 30px; min-width: 30px; padding: 0 0.6rem; font: inherit; font-size: 0.82rem; font-weight: 600;
@@ -19,7 +19,7 @@
   border: 1px solid var(--line); border-radius: 12px; background: var(--line); overflow: hidden;
 }
 .ws-cal-cell, .ws-cal-wd { min-width: 0; }
-.ws-cal-wd { font-size: 0.72rem; font-weight: 700; color: var(--text-sub); text-align: center; padding: 0.35rem 0; background: var(--surface); }
+.ws-cal-wd { font-size: 0.78rem; font-weight: 700; color: var(--text-sub); text-align: center; padding: 0.35rem 0; background: var(--surface); }
 .ws-cal-wd.sun { color: var(--accent); }
 .ws-cal-cell {
   min-height: 92px; padding: 0.3rem 0.3rem 0.4rem;   /* 캘린더 우선(오너 8/6 4차) — 창 최대 기준 대형 셀 */
@@ -34,20 +34,20 @@
 .ws-cal-cell.sel { box-shadow: inset 0 0 0 1.5px var(--dark); border-radius: 6px; }
 .ws-cal-day {
   width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center;
-  font-size: 0.78rem; font-weight: 600; border-radius: 50%;
+  font-size: 0.86rem; font-weight: 600; border-radius: 50%;   /* 폰 하한 13px 확보(2026-09-12 전수조사 D6) */
 }
 
 /* 일정 칩 — 분류색은 workspace-kinds.css가 단일원천(.k-aim·.k-ac·.k-contest·.k-job·.k-cert·.k-campus·.k-etc).
    여기는 형태만. 2026-08-07부터 버튼(클릭 = 세부 팝업) — 셀 div 안의 유일한 실제 버튼. */
 .ws-cal-chip {
-  font-size: 0.68rem; font-weight: 600; line-height: 1.35;
+  font-size: 0.72rem; font-weight: 600; line-height: 1.35;
   padding: 0.05rem 0.3rem; border-radius: 5px;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   border: 0; font-family: inherit; text-align: left; cursor: pointer; display: block; width: 100%;
 }
 .ws-cal-chip:hover { filter: brightness(0.93); }
 .ws-cal-chip:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-.ws-cal-more { font-size: 0.68rem; color: var(--text-sub); }
+.ws-cal-more { font-size: 0.72rem; color: var(--text-sub); }
 
 /* 캘린더 범례(2026-08-14 검수) — 점 색 = 종류(ws-cal-dot 색 재사용) */
 .ws-cal-legend {
@@ -101,6 +101,7 @@
 @media (max-width: 760px) {
   .ws-cal-head .ws-h2 { font-size: 1.1rem; }   /* 폰 타이포 하향(오너 2026-08-18) */
   .ws-cal-cell { min-height: 52px; }        /* 393÷7 ≈ 53px 폭과 정합 — 터치 타깃 M1(44px+) */
+  .ws-cal-nav button { min-width: 44px; min-height: 44px; }   /* 실측 30×30(2026-09-12 전수조사 D5) */
   .ws-cal-chip { display: none; }           /* 폰 = 점만(칩은 좁아서 뭉개짐) */
   .ws-cal-cell .ws-cal-more { display: none; }
   /* 구 중립 도트 1개(has-items::after) 폐지 → 종류색 도트 최대 3개(Apple Compact 문법 — 종류 정보 보존) */

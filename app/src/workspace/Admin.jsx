@@ -19,7 +19,7 @@ export function Denied() {
   return (
     <section className="ws-block">
       <h2 className="ws-h2">운영 영역</h2>
-      <p className="ws-note">운영진 전용 — 현재 계정 권한 없음. 서버 정책(RLS)도 동일하게 거부.</p>
+      <p className="ws-note">운영진 전용. 현재 계정에는 권한이 없음.</p>
       {/* 문의 채널 = data/recruit.js CONTACT 일원화(2026-08-05 — 이메일 확정) */}
       <p className="ws-note">
         권한 문의 = <a href={CONTACT_MAILTO}>{CONTACT.email}</a>.

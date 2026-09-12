@@ -18,6 +18,8 @@
   padding: 2rem 1.75rem;
 }
 .ws-note { margin: 1.1rem 0 0; font-size: 0.9rem; line-height: 1.6; color: var(--text-sub); }
+/* 안내 줄 안의 링크(2026-09-12 전수조사 D18) — 스타일이 없어 브라우저 기본 파랑·밑줄로 떴다(팔레트 밖). §4 Tertiary */
+.ws-note a { color: var(--accent); font-weight: 700; }
 /* 로그인 카드 맨 아래 한 줄(2026-08-19 오너) — 안내가 아니라 표찰이므로 가운데·작게 */
 .ws-login-foot { margin-top: 1.3rem; text-align: center; font-size: 0.84rem; }
 .ws-note code, .ws-steps code {
@@ -119,9 +121,10 @@
   position: relative; margin: 0 0 0.85rem; padding-left: 0.7rem;
   font-family: var(--font-display); font-size: 1.42rem; font-weight: 900; letter-spacing: -0.02em;
 }
+/* 좌측 표식 = 차콜(2026-09-12 전수조사 D2) — 한 화면에 h2 바 4·건수 배지 4가 겹쳐 버건디 빈도 상한(화면 ≤4)을 넘겼다 */
 .ws-h2::before {
   content: ''; position: absolute; left: 0; top: 0.22em; bottom: 0.22em;
-  width: 3px; border-radius: 2px; background: var(--accent);
+  width: 3px; border-radius: 2px; background: var(--dark);
 }
 .ws-list { list-style: none; margin: 0.6rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.45rem; }
 .ws-mark, .ws-scrap {
@@ -170,10 +173,10 @@
 .ws-hint { display: block; margin-top: 0.35rem; font-size: 0.82rem; line-height: 1.5; color: var(--text-sub); word-break: keep-all; }
 .ws-form-acts { display: flex; gap: 0.5rem; align-items: center; }
 .ws-ok { margin: 0; font-size: 0.85rem; color: var(--text-sub); font-weight: 600; }
-/* 건수 배지 — 검은 알약 대신 버건디 테두리·글자(화이트리스트 ⑤ 범위)로 색을 넣는다. */
+/* 건수 배지 — 중립 테두리·회색 글자(2026-09-12 전수조사 D2: 버건디 빈도 회수. 숫자 자체가 정보라 색이 필요 없다). */
 .ws-count {
   display: inline-block; min-width: 22px; text-align: center; font-size: 0.82rem; font-weight: 800;
-  color: var(--accent); background: #fff; border: 1px solid var(--accent);
+  color: var(--text-sub); background: #fff; border: 1px solid var(--line);
   border-radius: var(--radius-pill); padding: 0.05rem 0.55rem; vertical-align: 3px;
 }
 
@@ -217,7 +220,7 @@
 .ws-check { display: flex; align-items: center; gap: 0.45rem; font-size: 0.85rem; font-weight: 600; }
 .ws-admin-content .ws-block { border-top: 1px solid var(--line); padding-top: 1.2rem; }
 .ws-admin-content .ws-block:first-child { border-top: 0; padding-top: 0; }
-.ws-mypage .ws-block + .ws-block { border-top: 1px solid var(--line); padding-top: 1.3rem; }
+/* 내정보 섹션 사이 가로줄 폐지(2026-09-12 전수조사 D15 · 4차-3 「의미 없는 가로줄 금지」) — 간격은 .ws-cmain 마진이 맡는다 */
 
 /* 운영 기록(구 /log 내부화 2026-08-05) — 공지 탭 하단 읽기 전용. 원천 = src/data/log.js */
 .ws-oplog { border-top: 1px solid var(--line); margin-top: 1.6rem; padding-top: 1.4rem; }
@@ -244,7 +247,7 @@
 
 /* ══ 공지 탭(2026-08-19 오너 개편) — 한 공지 = 접힌 한 줄. 카드로 전문을 펼쳐 두면 쌓일수록 안 읽힌다.
    최신 1건만 열린 채 시작하고, 나머지는 제목·날짜 목록으로 남는다(문법 = 공고 탭 행과 동일) ══ */
-.ws-notices { max-width: 760px; }
+.ws-notices { max-width: 640px; }   /* 한 줄 ~40자(2026-09-12 전수조사 D9 — 760px는 50자/줄) */
 .ws-notice-list { border-top: 1px solid var(--line); }
 .ws-notice-row { border-bottom: 1px solid var(--line); }
 .ws-notice-sum {
@@ -268,10 +271,19 @@
 .ws-notice-when { flex: none; font-size: 0.78rem; color: var(--text-sub); font-variant-numeric: tabular-nums; }
 .ws-notice-body {
   margin-top: 0.2rem; padding: 0 0.2rem 1rem 1.25rem;
-  font-size: 0.94rem; line-height: 1.7; color: var(--text); word-break: keep-all;
+  font-size: 1rem; line-height: 1.7; color: var(--text); word-break: keep-all;   /* 정독 본문 = 16px 하한(2026-09-12 전수조사 D8) */
 }
 .ws-notice-body p { margin: 0.55rem 0; }
 .ws-notice-body ul, .ws-notice-body ol { margin: 0.55rem 0; padding-left: 1.25rem; }
 .ws-notice-body li { margin: 0.3rem 0; list-style: disc; }
 .ws-notice-body a { color: var(--accent); font-weight: 700; word-break: break-all; }
 .ws-notice-body strong { font-weight: 750; }
+
+/* ══ 눌림 상태 묶음(2026-09-12 전수조사 D21 · §5 4상태 의무) — 누를 수 있는데 눌린 표시가 없던 5종.
+   .ws-marks 접두 = 북마크 카드 hover 변형(workspace-mypage.css)보다 뒤에 오게 하는 특정도 확보 ══ */
+.ws-prow-link:active, .ws-notice-sum:active, .ws-marks .ws-markcard a:active,
+.ws-cal-cell:active, .ws-rm-toggle:active { transform: scale(0.98); }
+@media (prefers-reduced-motion: reduce) {
+  .ws-prow-link:active, .ws-notice-sum:active, .ws-marks .ws-markcard a:active,
+  .ws-cal-cell:active, .ws-rm-toggle:active { transform: none; }
+}

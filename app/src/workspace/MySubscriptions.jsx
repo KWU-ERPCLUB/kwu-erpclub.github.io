@@ -33,7 +33,7 @@ export default function MySubscriptions({ store }) {
       await load()
       window.dispatchEvent(new Event(SUBS_CHANGED))   // 홈 캘린더·공고 탭 즉시 반영
     } catch {
-      setNote('해제 실패 — 잠시 후 다시')
+      setNote('해제 실패. 잠시 후 다시')
       setTimeout(() => setNote(''), 3000)
       load()
     }
@@ -44,7 +44,7 @@ export default function MySubscriptions({ store }) {
     <section className="ws-block">
       <h2 className="ws-h2">캘린더에 등록한 분류 <span className="ws-count">{eff === null ? 0 : eff.length}</span></h2>
       {note && <p className="ws-error" role="status">{note}</p>}
-      {ready && eff === null && <p className="ws-note">등록 기능 준비 전(마이그레이션 0014) — 캘린더에는 전 항목이 뜬다.</p>}
+      {ready && eff === null && <p className="ws-note">등록 기능 준비 전. 캘린더에는 전 항목이 뜬다.</p>}
       {eff !== null && (
         <>
           <ul className="ws-sub-chips">
@@ -56,7 +56,7 @@ export default function MySubscriptions({ store }) {
               </li>
             ))}
           </ul>
-          {eff.length === 0 && <p className="ws-note">등록한 분류 0건 — 캘린더에 과제·세션만 뜬다.</p>}
+          {eff.length === 0 && <p className="ws-note">등록한 분류 0건. 캘린더에 과제·세션만 뜬다.</p>}
           <p className="ws-note">등록한 분류의 마감·일정만 홈 캘린더에 뜬다. 등록은 공고 탭의 각 필터에서.</p>
         </>
       )}

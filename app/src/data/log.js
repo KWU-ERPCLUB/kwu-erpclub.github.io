@@ -5,7 +5,7 @@ import { RECRUIT, COHORT_LABEL, formatWindowShort } from './recruit.js'
 // 앞으로의 단계 — [번호, 라벨, 상태클래스, 상태라벨]. 상태 = done/prep/planned(global .status 문법).
 export const ROADMAP = [
   ['0', '허브 사이트 구축·배포 (kwu-erpclub.github.io)', 'done', '완료'],
-  ['1', `${COHORT_LABEL} 모집 — ${formatWindowShort()} · 킥오프 9월 2주`, 'prep', '모집 준비'],
+  ['1', `${COHORT_LABEL} 모집 — ${formatWindowShort()} · 킥오프 9월 2주`, 'live', '진행중'],
   ['2', `${COHORT_LABEL} 운영 — 1차 개인 도구 · 2차 팀 케이스(${RECRUIT.term}, 9/14 ~ 11/16)`, 'planned', '예정'],
   ['3', 'SQLD 스터디', 'planned', '예정'],
   ['4', '심화 — SAP 트랙', 'planned', '예정'],

@@ -7,14 +7,15 @@
 <title>허브 사용법 — AIM</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23161616'/%3E%3Ctext x='32' y='43' text-anchor='middle' font-family='system-ui,sans-serif' font-size='25' font-weight='800' fill='%23ffffff'%3EAIM%3C/text%3E%3C/svg%3E" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css" />
 <style>
-  :root { --accent: #7a2030; --dark: #161616; --text: #1d1d1f; --sub: #6b6b70; --line: #e6e2dc; --surface: #f7f5f2; }
+  :root { --accent: #7a2030; --dark: #161616; --text: #141414; --sub: #55606c; --line: #e7e7e5; --surface: #fafaf9; }
   * { box-sizing: border-box; }
   body { margin: 0; font-family: "Pretendard Variable", Pretendard, sans-serif; color: var(--text); background: #fff; line-height: 1.65; word-break: keep-all; }
   .wrap { max-width: 880px; margin: 0 auto; padding: 3.5rem 1.25rem 5rem; }
   header { text-align: center; margin-bottom: 3rem; }
   .eyebrow { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.14em; color: var(--sub); }
-  h1 { font-size: clamp(2rem, 6vw, 3rem); font-weight: 900; letter-spacing: -0.02em; margin: 0.4rem 0 0.6rem; }
+  h1 { font-family: 'Paperlogy', 'Pretendard Variable', Pretendard, sans-serif; font-size: clamp(2rem, 6vw, 3rem); font-weight: 900; letter-spacing: -0.02em; margin: 0.4rem 0 0.6rem; }
   h1 em { font-style: normal; color: var(--accent); }
   .lead { color: var(--sub); font-weight: 600; margin: 0; }
   section { margin-top: 3.25rem; }
@@ -74,7 +75,7 @@
   <p>로그인하면 홈이 먼저 뜬다.</p>
   <ul>
     <li><b>캘린더</b> = 스터디 세션, 공고 마감, 학사일정이 한 달 단위로 표시. 날짜의 항목을 누르면 세부 팝업</li>
-    <li><b>다가오는 업무</b> = 우측 상단. 챙겨야 할 핵심 일정만 추려서 표시</li>
+    <li><b>다가오는 업무</b> = 우측 상단. 2주 안의 일정·마감 전부</li>
     <li><b>공지</b> = 우측 하단. 운영진이 올린 안내</li>
   </ul>
   <figure>
@@ -88,7 +89,7 @@
   <p>1기 전체 일정이 회차 단위로 나열된다. 지금 어디까지 왔는지, 다음 세션이 무엇인지 여기서 확인한다.</p>
   <ul>
     <li>회차를 누르면 세부 내용과 자료가 열린다</li>
-    <li>자물쇠 표시 = 공개일 전. 세션이 진행되면 자동으로 열린다</li>
+    <li>공개일 전 자료는 안 보임. 세션 뒤 자동 공개</li>
   </ul>
   <figure>
     <img src="/img/guide/roadmap.jpg" alt="로드맵 탭" loading="lazy" />
@@ -126,10 +127,10 @@
 
 <section>
   <h2><span class="no">7</span>인사이트 읽기</h2>
-  <p>로그인 없이도 읽을 수 있다. 로그인 상태면 글 상세에서 <b>좋아요</b>와 <b>북마크</b>를 누를 수 있다.</p>
+  <p>로그인 없이 읽는다. 로그인하면 글 상세에서 <b>좋아요</b>·<b>북마크</b> 가능.</p>
   <ul>
     <li>카드의 빨간 <b>N</b> = 최근 7일 내 게재 + 아직 안 읽은 글</li>
-    <li>필터 칩으로 시리즈(주간 AI 트렌드 등)만 골라 볼 수 있다</li>
+    <li>필터 칩으로 축(AI활용·AI×취업·AI×MIS)이나 주간 글만 골라 본다</li>
   </ul>
   <figure>
     <img src="/img/guide/insights.jpg" alt="AI 인사이트 페이지" loading="lazy" />

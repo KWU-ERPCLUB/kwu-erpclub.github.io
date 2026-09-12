@@ -109,7 +109,7 @@ export function LoginForm({ onSubmit, error, busy }) {
       </form>
       {/* 오너 2026-08-19: 계정 발급 절차·문의처 안내 삭제 — 여기 올 사람은 이미 계정을 받은 사람이다.
           남기는 것은 "여기가 어디인가" 한 줄뿐. */}
-      <p className="ws-note ws-login-foot">AIM 스터디원 전용입니다.</p>
+      <p className="ws-note ws-login-foot">AIM 스터디원 전용.</p>
     </section>
   )
 }

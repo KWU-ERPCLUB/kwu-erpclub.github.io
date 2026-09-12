@@ -56,7 +56,8 @@ function SessionNode({ item, session, note, materials, seminar, todayKey, opened
           <div className="ws-rm-head-row">
             {isNext && <span className="ws-rm-next">다음 세션</span>}
             <span className="ws-rm-topic">{item.주제}</span>
-            {st && !isNext && <span className={`ws-flow-status ${STATUS_CLASS[st]}`}>{st}</span>}
+            {/* 「예정」은 표시 안 함(2026-09-12 전수조사 D11) — 미래 차시 전부에 붙어 정보가 0이고, 「다음 세션」 마커가 이미 구분한다 */}
+            {st && st !== '예정' && !isNext && <span className={`ws-flow-status ${STATUS_CLASS[st]}`}>{st}</span>}
             <span className="ws-rm-when">{date || item.주}</span>
             <span className="ws-rm-caret" aria-hidden="true">▾</span>
           </div>
@@ -69,23 +70,23 @@ function SessionNode({ item, session, note, materials, seminar, todayKey, opened
             </ul>
             {session?.['설명'] && <p className="ws-rm-desc">{session['설명']}</p>}
             {note && !noteLocked && <div className="ws-rm-note"><Markdown body={note['본문'] || ''} /></div>}
-            {noteLocked && <p className="ws-note">🔒 회차 내용 — {note['공개일']} 공개(운영진에게만 보임)</p>}
+            {noteLocked && <p className="ws-note">🔒 회차 내용은 {note['공개일']} 공개(운영진에게만 보임)</p>}
             {materials.length > 0 && (
               <ul className="ws-sublist">
                 {materials.map((m) => (
                   <li key={m.id}>
                     {isLockedMaterial(m)
-                      ? <span className="ws-note">🔒 {m['제목']} — {m['공개일']} 공개(운영진에게만 보임)</span>
+                      ? <span className="ws-note">🔒 {m['제목']}: {m['공개일']} 공개(운영진에게만 보임)</span>
                       : m.url
                         ? <a href={m.url} target="_blank" rel="noreferrer">{m['제목']}</a>
-                        : <span>{m['제목']} — 파일 자료(내려받기 = M4)</span>}
+                        : <span>{m['제목']}: 파일 자료(내려받기 준비 중)</span>}
                   </li>
                 ))}
               </ul>
             )}
             {seminar
               ? <a className="ws-rm-sem" href={seminarHref(seminar)}>세미나에서 이 회차 보기 →</a>
-              : !note && <p className="ws-note">회차 내용 준비 중 — 발제 글이 발행되면 세미나로 이어짐.</p>}
+              : !note && <p className="ws-note">회차 내용 준비 중. 발제 글이 발행되면 세미나로 이어짐.</p>}
           </div>
         )}
       </div>

@@ -44,7 +44,7 @@ export function PostingCard({ row, todayKey, interested = false, onToggleInteres
         <button
           type="button" className={`ws-post-star${interested ? ' on' : ''}`}
           aria-pressed={interested} aria-label={interested ? '관심 해제' : '관심 공고로 체크'}
-          title={interested ? '관심 해제' : '관심 공고로 체크 — 내정보에 모이고 이 공고만 홈 캘린더에도 뜬다'}
+          title={interested ? '관심 해제' : '관심 공고로 체크(내정보에 모이고 홈 캘린더에도 뜸)'}
           onClick={() => onToggleInterest(row.id, !interested)}
         >
           ★
@@ -125,7 +125,7 @@ export default function Postings({ store }) {
       .then(() => window.dispatchEvent(new Event(SUBS_CHANGED)))
       .catch(() => {
         setInterests((prev) => (on ? prev.filter((id) => id !== postingId) : [...prev, postingId]))
-        flash('관심 저장 실패 — 잠시 후 다시')
+        flash('관심 저장 실패. 잠시 후 다시')
       })
   }, [store])
 
@@ -141,7 +141,7 @@ export default function Postings({ store }) {
       for (const w of writes) await store.postings.toggleSubscription(w['종류'], w['분류'], w.on)
       window.dispatchEvent(new Event(SUBS_CHANGED))   // 홈 캘린더·내정보 즉시 반영
     } catch {
-      flash('저장 실패 — 마이그레이션 0014 적용 여부 확인')
+      flash('저장 실패. 잠시 후 다시')
       store.postings.listSubscriptions().then(setSubs).catch(() => {})
     }
   }, [store, subs])
@@ -254,7 +254,9 @@ export default function Postings({ store }) {
       </div>
 
       <aside className="ws-crail">
-        <section className="ws-block">
+        {/* 접수 임박(2026-09-12 전수조사 D17) — 창 최대(≥1200)에서는 본문 목록 상위 5행과 같은 내용이라 숨긴다.
+            레일이 본문 아래로 내려가는 구간(≤1199)에서만 요약으로 쓴다. */}
+        <section className="ws-block ws-post-rail">
           <h2 className="ws-h2">접수 임박</h2>
           {active.length === 0 && <p className="ws-note">접수 중 공고 0건.</p>}
           <ul className="ws-list">

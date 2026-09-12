@@ -128,7 +128,7 @@ export function UpcomingTasks({ items, todayKey, onSelect }) {
   return (
     <aside className="ws-upcoming" aria-label="다가오는 업무">
       <h2 className="ws-h2">다가오는 업무 <span className="ws-count">{rows.length}</span></h2>
-      {rows.length === 0 && <p className="ws-note">2주 내 일정 0건 — 공고 탭에서 분류를 캘린더에 등록하면 여기 모인다.</p>}
+      {rows.length === 0 && <p className="ws-note">2주 내 일정 0건. 공고 탭에서 분류를 캘린더에 등록하면 여기 모인다.</p>}
       <ul className={`ws-list ws-up-list${open ? ' open' : ''}`}>
         {rows.map((it) => (
           <li key={`${it.source}-${it.id}`}>
@@ -184,14 +184,15 @@ export function HomeSummary({ member, items, todayKey }) {
   const due = soon.filter((i) => i['종류'] === '과제' || i['종류'] === '마감').length
   return (
     <div className="ws-summary">
-      <h1 className="ws-summary-hi">{member?.['이름'] || '스터디원'}</h1>
+      {/* 이름 = h2·1.25rem(2026-09-12 전수조사 D3) — 탭 제목 h1과 같은 크기로 적층돼 위계가 없었다. 폰은 계정 줄과 중복이라 숨김 */}
+      <h2 className="ws-summary-hi">{member?.['이름'] || '스터디원'}</h2>
       <p className="ws-summary-line">
         {soon.length === 0 ? (
           <span className="ws-chip">7일 내 일정 없음</span>
         ) : (
           <>
-            <span className="ws-chip"><strong>{soon.length}</strong> 7일 내 일정</span>
-            {due > 0 && <span className="ws-chip due"><strong>{due}</strong> 마감</span>}
+            <span className="ws-chip">7일 내 일정 <strong>{soon.length}</strong></span>
+            {due > 0 && <span className="ws-chip due">마감 <strong>{due}</strong></span>}
           </>
         )}
       </p>
