@@ -8,6 +8,7 @@ import { weekStatus, isLockedMaterial } from './calendar-logic.js'
 import { loadContent } from '../content/loader.js'
 import { AIM_TIMELINE } from '../data/aim-roadmap.js'
 import Markdown from '../pages/Markdown.jsx'
+import { guideForSession, guideHref } from '../data/prep-guides.js'
 
 export const STATUS_CLASS = { '이번 주': 'now', 지난: 'past', 예정: 'next' }
 
@@ -68,6 +69,10 @@ function SessionNode({ item, session, note, materials, seminar, todayKey, opened
             <ul className="ws-rm-notes">
               {item.세부.map((n) => <li key={n}>{n}</li>)}
             </ul>
+            {/* 회차 준비물 = 공지 탭 고정 공지로 이동(2026-09-12 오너 — 원천은 data/prep-guides.js) */}
+            {guideForSession(item.no) && (
+              <a className="ws-rm-prep" href={guideHref(guideForSession(item.no))}>이 회차 준비물 보기 (공지) →</a>
+            )}
             {session?.['설명'] && <p className="ws-rm-desc">{session['설명']}</p>}
             {note && !noteLocked && <div className="ws-rm-note"><Markdown body={note['본문'] || ''} /></div>}
             {noteLocked && <p className="ws-note">🔒 회차 내용은 {note['공개일']} 공개(운영진에게만 보임)</p>}
