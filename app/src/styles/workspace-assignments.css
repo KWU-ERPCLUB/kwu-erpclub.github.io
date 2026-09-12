@@ -6,10 +6,12 @@
 .ws-assignments { max-width: none; }
 .ws-acard-list { display: grid; gap: 0.7rem; min-width: 0; }
 .ws-acard-list > li { min-width: 0; }
-.ws-acard { background: #fff; border: 1px solid var(--line); border-radius: 18px; }
+.ws-acard { background: #fff; border: 1px solid var(--line); border-left: 3px solid var(--line); border-radius: 18px; transition: border-color 200ms ease-out, background 200ms ease-out; }
+.ws-acard.s-미제출 { border-left-color: var(--accent); }
+.ws-acard.s-마감됨 { border-left-color: var(--line); }
 .ws-acard > details { padding: 0.9rem 1.15rem 0.95rem; }
 .ws-acard > details[open] { padding-bottom: 1.2rem; }
-.ws-acard.s-제출함 { background: var(--surface); }
+.ws-acard.s-제출함 { background: var(--surface); border-left-color: var(--dark); }
 .ws-acard-sum { display: block; cursor: pointer; list-style: none; border-radius: 12px; margin: -0.3rem -0.4rem; padding: 0.3rem 0.4rem; }
 .ws-acard-sum::-webkit-details-marker { display: none; }
 .ws-acard-sum:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
@@ -22,11 +24,13 @@
 
 /* 종류 라벨 = 공지 종류 라벨(ws-nkind)과 같은 모양 */
 .ws-akind { flex: none; display: inline-block; padding: 0.12rem 0.6rem; border-radius: var(--radius-pill); background: var(--dark); color: #fff; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.02em; }
+.ws-acard-sum-line { color: var(--text-sub); }
 .ws-akind.sm { padding: 0.05rem 0.5rem; font-size: 0.68rem; }
 
 /* 상태 pill = 테두리만(채움은 제출 버튼 하나) */
-.ws-astatus { flex: none; padding: 0.1rem 0.55rem; border: 1px solid var(--line); border-radius: var(--radius-pill); font-size: 0.74rem; font-weight: 700; color: var(--text-sub); }
-.ws-astatus.s-제출함 { border-color: var(--text); color: var(--text); }
+.ws-astatus { flex: none; padding: 0.1rem 0.55rem; border: 1px solid var(--line); border-radius: var(--radius-pill); font-size: 0.74rem; font-weight: 700; color: var(--text-sub); transition: background 180ms ease-out, color 180ms ease-out, border-color 180ms ease-out; }
+.ws-astatus.s-제출함 { background: var(--dark); border-color: var(--dark); color: #fff; }
+.ws-astatus.s-마감됨 { opacity: 0.55; }
 .ws-adday { flex: none; font-size: 0.78rem; font-weight: 700; color: var(--text-sub); font-variant-numeric: tabular-nums; }
 .ws-adday.soon { color: var(--accent); }
 .ws-anote { margin: 0 0 0.8rem; font-size: 0.85rem; color: var(--text-sub); }
@@ -36,34 +40,65 @@
 @media (hover: hover) { .ws-alink.quiet:hover { color: var(--accent); text-decoration-color: currentColor; } }
 
 /* ── 제출 폼 공통 ── */
-.ws-aform { display: grid; gap: 0.7rem; max-width: 560px; }
+/* 폭 상한 없음(2026-09-13 오너 "왼쪽으로 쏠렸다") — 640·560 읽기 폭은 좁은 컬럼용 값이었고,
+   1210px 카드 안에 들어가니 절반이 비었다. 체크·입력은 읽는 글이 아니라 조작 대상이라 카드 폭을 쓴다. */
+.ws-aform { display: grid; gap: 0.7rem; }
 .ws-aform .ws-submit { justify-self: start; }
-.ws-aform-acts { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.ws-aform-acts { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; grid-column: 1 / -1; }
+.ws-aform-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.9rem 1.4rem; }
 .ws-asubmitted { margin: 0 0 0.8rem; }
 .ws-afield > span { display: flex; align-items: baseline; gap: 0.45rem; }
 .ws-afield-no { font-style: normal; font-family: var(--font-display); font-size: 0.95rem; font-weight: 800; color: var(--text-sub); }
+.ws-aform input, .ws-aform textarea { transition: border-color 150ms ease-out, box-shadow 150ms ease-out; }
+.ws-aform input:focus, .ws-aform textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--tint-accent); outline: none; }
+@media (max-width: 1099px) { .ws-aform-fields { grid-template-columns: minmax(0, 1fr); } }
 
 /* ── 체크리스트형 ── */
-.ws-achecklist { max-width: 640px; }
-.ws-astep { list-style: none; margin: 0 0 0.9rem; padding: 0; display: flex; align-items: center; gap: 0; }
+.ws-achecklist { display: grid; gap: 1.1rem; }
+/* 스테퍼(좌) + 진행 막대(우) 한 줄 — 넓은 화면에서 스테퍼만 전폭으로 늘어지면 점 사이가 비어 보인다 */
+.ws-astep-wrap { display: grid; grid-template-columns: minmax(0, 1fr) 240px; align-items: center; gap: 0.7rem 2rem; }
+.ws-astep { list-style: none; margin: 0; padding: 0; display: flex; align-items: flex-start; gap: 0; }
 .ws-astep-i { position: relative; flex: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 0.25rem; padding-right: 0.8rem; }
-.ws-astep-i::before { content: ''; position: absolute; left: 14px; right: 0; top: 6px; height: 2px; background: var(--line); }
+.ws-astep-i::before { content: ''; position: absolute; left: 14px; right: 0; top: 6px; height: 2px; background: var(--line); transition: background 220ms ease-out; }
 .ws-astep-i:last-child::before { display: none; }
-.ws-astep-dot { position: relative; z-index: 1; width: 14px; height: 14px; border-radius: 50%; background: #fff; border: 2px solid var(--line); box-sizing: border-box; }
+.ws-astep-dot { position: relative; z-index: 1; width: 14px; height: 14px; border-radius: 50%; background: #fff; border: 2px solid var(--line); box-sizing: border-box; transition: background 180ms ease-out, border-color 180ms ease-out; }
 .ws-astep-i.is-part .ws-astep-dot { border-color: var(--accent); }
 .ws-astep-i.is-done .ws-astep-dot { background: var(--accent); border-color: var(--accent); }
 .ws-astep-i.is-done::before { background: var(--accent); }
 .ws-astep-label { font-size: 0.9rem; font-weight: 700; }
+.ws-astep-i.is-done .ws-astep-label { color: var(--accent); }
 .ws-astep-n { font-size: 0.78rem; color: var(--text-sub); font-variant-numeric: tabular-nums; }
-.ws-acheck-group { margin-bottom: 1.1rem; }
-.ws-acheck-glabel { margin: 0 0 0.3rem; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.04em; color: var(--text-sub); }
-.ws-acheck-list { display: grid; gap: 0.15rem; }
-.ws-acheck { display: flex; align-items: center; gap: 0.7rem; padding: 0.35rem 0.5rem; border-radius: 10px; }
-.ws-acheck label { flex: 1; min-width: 0; display: flex; align-items: center; gap: 0.6rem; cursor: pointer; }
-.ws-acheck input { width: 20px; height: 20px; flex: none; accent-color: var(--accent); cursor: pointer; }
-.ws-acheck-label { font-size: 0.95rem; line-height: 1.4; word-break: keep-all; }
+
+/* 전체 진행 막대 — 체크할 때 폭이 늘어난다(움직임 = 상태 변화만) */
+.ws-aprog { display: flex; align-items: center; gap: 0.7rem; }
+@media (max-width: 1099px) { .ws-astep-wrap { grid-template-columns: minmax(0, 1fr); } }
+.ws-aprog-bar { flex: 1; height: 6px; border-radius: 999px; background: var(--line); overflow: hidden; }
+.ws-aprog-bar i { display: block; height: 100%; background: var(--accent); border-radius: 999px; transition: width 320ms cubic-bezier(0.22, 1, 0.36, 1); }
+.ws-aprog-n { flex: none; font-size: 0.82rem; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
+.ws-aprog-n em { font-style: normal; font-weight: 500; color: var(--text-sub); }
+
+/* 묶음 = 2열 격자 카드(1100 아래 1열). 다 끝낸 묶음은 좌측 바가 포인트 색으로 켜진다 */
+.ws-acheck-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.8rem 1.1rem; align-items: start; }
+.ws-acheck-group { border: 1px solid var(--line); border-left: 3px solid var(--line); border-radius: 12px; padding: 0.7rem 0.85rem 0.75rem; background: #fff; transition: border-color 200ms ease-out, background 200ms ease-out; }
+.ws-acheck-group.is-done { border-left-color: var(--accent); background: var(--surface); }
+.ws-acheck-glabel { display: flex; align-items: center; justify-content: space-between; margin: 0 0 0.4rem; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.04em; color: var(--text-sub); }
+.ws-acheck-gn { font-variant-numeric: tabular-nums; font-weight: 700; }
+.ws-acheck-group.is-done .ws-acheck-glabel, .ws-acheck-group.is-done .ws-acheck-gn { color: var(--accent); }
+.ws-acheck-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.15rem; }
+.ws-acheck { border-radius: 8px; transition: background 160ms ease-out; }
+.ws-acheck label { display: flex; align-items: center; gap: 0.6rem; padding: 0.4rem 0.45rem; cursor: pointer; }
+.ws-acheck input { position: absolute; opacity: 0; width: 0; height: 0; }
+.ws-acheck-box { flex: none; width: 20px; height: 20px; border: 2px solid var(--line); border-radius: 6px; background: #fff; position: relative; transition: background 160ms ease-out, border-color 160ms ease-out; }
+.ws-acheck-box::after { content: ''; position: absolute; left: 5px; top: 1px; width: 5px; height: 10px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg) scale(0.4); opacity: 0; transition: opacity 160ms ease-out, transform 160ms cubic-bezier(0.22, 1, 0.36, 1); }
+.ws-acheck.is-done .ws-acheck-box { background: var(--accent); border-color: var(--accent); }
+.ws-acheck.is-done .ws-acheck-box::after { opacity: 1; transform: rotate(45deg) scale(1); }
+.ws-acheck input:focus-visible + .ws-acheck-box { outline: 3px solid var(--accent); outline-offset: 2px; }
+.ws-acheck-label { font-size: 0.95rem; line-height: 1.4; word-break: keep-all; transition: color 160ms ease-out; }
 .ws-acheck.is-done .ws-acheck-label { color: var(--text-sub); text-decoration: line-through; }
-@media (hover: hover) { .ws-acheck:hover { background: var(--surface); } }
+@media (hover: hover) { .ws-acheck:hover { background: var(--surface); } .ws-acheck-group.is-done .ws-acheck:hover { background: #fff; } }
+.ws-acheck-foot { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; padding-top: 0.7rem; border-top: 1px solid var(--line); }
+.ws-acheck-foot .ws-anote { margin: 0; }
+@media (max-width: 1099px) { .ws-acheck-cols { grid-template-columns: minmax(0, 1fr); } }
 
 /* 홈 요약 → 과제 탭 이동(전 폭에서 보인다 — 홈 ws-up-more와 다른 역할) */
 .ws-agoto { margin-top: 0.6rem; padding: 0.35rem 0; font: inherit; font-size: 0.85rem; font-weight: 700; color: var(--accent); background: none; border: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 0.2em; }
@@ -72,6 +107,9 @@
 /* ── 운영 탭 답 패널 ── */
 .ws-answers { margin-top: 1.4rem; }
 .ws-cell-done.part { color: var(--text-sub); }
+
+@media (hover: hover) { .ws-acard-sum:hover .ws-acard-title { color: var(--accent); } }
+.ws-acard-title { transition: color 150ms ease-out; }
 
 @media (max-width: 640px) {
   .ws-astep-label { font-size: 0.8rem; }
