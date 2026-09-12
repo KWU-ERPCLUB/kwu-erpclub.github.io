@@ -2,7 +2,6 @@
 // 칸 정의 = data/assignment-forms.js(코드 원천). 저장 = store.submissions.submit({ url | 답변 }).
 // 링크 표기 규칙(오너 2026-09-13): 주소를 그대로 보여 주지 않는다. 어디로 가는 링크인지를 글로 쓴다.
 import { useState } from 'react'
-import { progressOf } from './assignments-logic.js'
 
 // 「하는 법」 = 가이드 딥링크. 주소 대신 무엇이 열리는지를 쓴다.
 // 체크 행에 7번 반복되므로 기본 라벨은 두 낱말로 짧게 둔다(우측이 붐비면 항목 이름이 안 읽힌다).
@@ -104,22 +103,35 @@ export function FieldForm({ row, form, mine, onSubmit }) {
 
 // ── 체크리스트형 ─────────────────────────────────────────
 // 묶음 스테퍼 + 항목 체크. 체크할 때마다 바로 저장한다(제출 버튼 없음 — 준비물은 며칠에 걸쳐 하나씩 끝낸다).
+// 2026-09-13 2차(오너: "왼쪽으로 쏠렸다 · 하는 법이 7번 반복된다 · 서식·색·움직임이 적다"):
+//   묶음을 2열 격자로 펴서 카드 폭을 채우고, 「하는 법」은 카드당 1개로 합치고,
+//   진행은 스테퍼 선 채움 + 막대 + 묶음 완료 표시로 보여 준다(움직임 = 상태가 변할 때만, 진입 애니메이션 없음).
 export function ChecklistStepper({ form, answer }) {
+  const total = form.items.length
+  const done = form.items.filter((it) => answer[it.key] === true).length
   return (
-    <ol className="ws-astep" aria-label="진행 단계">
-      {form.groups.map((label) => {
-        const items = form.items.filter((it) => it.group === label)
-        const done = items.filter((it) => answer[it.key] === true).length
-        const cls = done === items.length ? 'is-done' : done > 0 ? 'is-part' : ''
-        return (
-          <li key={label} className={`ws-astep-i ${cls}`}>
-            <span className="ws-astep-dot" aria-hidden="true" />
-            <span className="ws-astep-label">{label}</span>
-            <span className="ws-astep-n">{done}/{items.length}</span>
-          </li>
-        )
-      })}
-    </ol>
+    <div className="ws-astep-wrap">
+      <ol className="ws-astep" aria-label="진행 단계">
+        {form.groups.map((label) => {
+          const items = form.items.filter((it) => it.group === label)
+          const n = items.filter((it) => answer[it.key] === true).length
+          const cls = n === items.length ? 'is-done' : n > 0 ? 'is-part' : ''
+          return (
+            <li key={label} className={`ws-astep-i ${cls}`}>
+              <span className="ws-astep-dot" aria-hidden="true" />
+              <span className="ws-astep-label">{label}</span>
+              <span className="ws-astep-n">{n}/{items.length}</span>
+            </li>
+          )
+        })}
+      </ol>
+      <div className="ws-aprog">
+        <span className="ws-aprog-bar" aria-hidden="true">
+          <i style={{ width: `${total ? (done / total) * 100 : 0}%` }} />
+        </span>
+        <span className="ws-aprog-n">{done}<em>/{total}</em> 완료</span>
+      </div>
+    </div>
   )
 }
 
@@ -139,29 +151,40 @@ export function ChecklistForm({ row, form, mine, onSubmit }) {
     }
   }
 
-  const { done, total } = progressOf(form, { 답변: answer })
   return (
     <div className="ws-achecklist">
       <ChecklistStepper form={form} answer={answer} />
-      <p className="ws-anote">체크하면 바로 저장된다. 하는 법은 항목마다 가이드에 있다.</p>
-      {form.groups.map((label) => (
-        <div className="ws-acheck-group" key={label}>
-          <p className="ws-acheck-glabel">{label}</p>
-          <ul className="ws-list ws-acheck-list">
-            {form.items.filter((it) => it.group === label).map((it) => (
-              <li key={it.key} className={`ws-acheck${answer[it.key] ? ' is-done' : ''}`}>
-                <label>
-                  <input type="checkbox" checked={Boolean(answer[it.key])} onChange={(e) => toggle(it.key, e.target.checked)} />
-                  <span className="ws-acheck-label">{it.label}</span>
-                </label>
-                <HowLink href={it.하는법} />
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+      {/* 묶음 = 2열 격자(1100 아래 1열). 카드가 넓어져도 한 줄이 길어지지 않는다 */}
+      <div className="ws-acheck-cols">
+        {form.groups.map((label) => {
+          const items = form.items.filter((it) => it.group === label)
+          const n = items.filter((it) => answer[it.key] === true).length
+          return (
+            <section className={`ws-acheck-group${n === items.length ? ' is-done' : ''}`} key={label}>
+              <p className="ws-acheck-glabel">
+                {label}<span className="ws-acheck-gn">{n}/{items.length}</span>
+              </p>
+              <ul className="ws-acheck-list">
+                {items.map((it) => (
+                  <li key={it.key} className={`ws-acheck${answer[it.key] ? ' is-done' : ''}`}>
+                    <label>
+                      <input type="checkbox" checked={Boolean(answer[it.key])} onChange={(e) => toggle(it.key, e.target.checked)} />
+                      <span className="ws-acheck-box" aria-hidden="true" />
+                      <span className="ws-acheck-label">{it.label}</span>
+                    </label>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )
+        })}
+      </div>
       {error && <p className="ws-error" role="alert">{error}</p>}
-      <p className="ws-anote">{done}/{total} 완료{done === total && total > 0 ? ' · 제출 끝' : ''}</p>
+      {/* 「하는 법」 = 카드당 1개(오너 2026-09-13 — 행마다 같은 글자가 7번 반복돼 소음이었다) */}
+      <div className="ws-acheck-foot">
+        <p className="ws-anote">체크하면 바로 저장된다.</p>
+        <HowLink href={form.가이드} tone="loud">하는 법 전체 보기</HowLink>
+      </div>
     </div>
   )
 }
