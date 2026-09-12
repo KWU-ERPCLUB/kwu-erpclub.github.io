@@ -1,4 +1,4 @@
-// 인사이트 상세 셸 — 문서 헤더·히어로 이미지·출처 카드·720px 자유 본문·이전/다음 내비. 720px 문서형.
+// 인사이트 상세 셸 — 문서 헤더·히어로 이미지·출처 카드·640px 자유 본문·이전/다음 내비. 640px 문서형.
 import { useEffect } from 'react'
 import { Arrow } from '../shared.jsx'
 import { neighbors } from './insights-logic.js'
@@ -51,7 +51,7 @@ export default function ArticleDetail({ cur, all, onOpen, onBack, interactions }
   return (
     <article className="art-detail">
       {/* ⓪ 보관 글 안내(2026-09-11) — 목록에서는 빠졌지만 주소는 살아 있다 */}
-      {cur['보관'] === true && <p className="art-archived" role="note">보관된 글 — 현재 발행 기준 밖의 글입니다.</p>}
+      {cur['보관'] === true && <p className="art-archived" role="note">보관 글 · 현재 발행 기준 밖</p>}
       {/* ① 문서 헤더 블록 — 눈썹·제목·메타·태그 */}
       <header className="art-doc-head">
         <span className="art-idx">AI INSIGHTS</span>

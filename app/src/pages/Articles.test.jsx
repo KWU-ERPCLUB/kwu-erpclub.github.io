@@ -44,7 +44,7 @@ test('목록 = 축 칩 1줄(전체+3) + 검색 + 카운트 라인 + 썸네일 �
   expect(html).not.toContain('시리즈 필터')
   expect(html).not.toContain('모델·플랫폼')
   // 검색 인풋 + 지금써먹기 필터 폐지(2026-07-25 오너 지시)
-  expect(html).toContain('placeholder="제목·요약 검색"')
+  expect(html).toContain('placeholder="제목·본문 검색"')
   expect(html).not.toContain('지금 써먹기 필터')
   // 카운트 라인 — 4차 단순화: "전체 N건"만(피드백 "전체 몇 건 이렇게만")
   expect(html).toContain('ins-count')
@@ -174,7 +174,7 @@ test('축 딥링크 — ?axis=jobs 복원 + 해당 축 카드만', () => {
     if (inTab) expect(html).toContain('art-card-title')
     if (inTab) expect(hasTitle(html, inTab.title)).toBe(true)    // AI×취업 기고 = 표시
     if (outTab) expect(hasTitle(html, outTab.title)).toBe(false) // 다른 축 = 필터링됨
-    expect(html).toContain('placeholder="제목·요약 검색"')   // 검색박스 유지
+    expect(html).toContain('placeholder="제목·본문 검색"')   // 검색박스 유지
     expect(html).not.toContain('art-month-head')             // 월별 그룹 폐지
   } finally {
     if (prev === undefined) delete globalThis.window

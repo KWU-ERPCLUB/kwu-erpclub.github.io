@@ -61,7 +61,7 @@ function LoadError({ onRetry }) {
   return (
     <div className="art-empty" role="alert">
       <p className="art-empty-title">인사이트를 불러오지 못함.</p>
-      <p>네트워크 또는 백엔드 일시 오류. 잠시 후 재시도.</p>
+      <p>네트워크 또는 서버 일시 오류. 잠시 후 다시 시도</p>
       <button type="button" className="art-retry" onClick={onRetry}>다시 시도</button>
     </div>
   )
@@ -112,7 +112,7 @@ export function ListView({ all, tab, onTab, series = null, setSeries = () => {},
           <div className="art-search">
             <input
               type="search" value={q} onChange={(e) => setQ(e.target.value)}
-              placeholder="제목·요약 검색" aria-label="인사이트 검색"
+              placeholder="제목·본문 검색" aria-label="인사이트 검색"
             />
           </div>
           <div className="ins-controls-right">
@@ -143,12 +143,18 @@ export function ListView({ all, tab, onTab, series = null, setSeries = () => {},
         </p>
       )}
 
-      {status === 'loading' ? <LoadingGrid /> : status === 'error' ? <LoadError onRetry={onRetry} /> : filtered.length === 0 ? (
+      {status === 'loading' ? <LoadingGrid /> : status === 'error' ? <LoadError onRetry={onRetry} /> : all.length === 0 ? (
+        /* 글 0건 = 필터 문제가 아니다(구 분기는 filtered.length===0에 가려 도달 불가였다 — 2026-09-12) */
+        <div className="art-empty">
+          <p className="art-empty-title">아직 게재된 인사이트 없음.</p>
+          <p>기고 = 운영진 md 발행</p>
+        </div>
+      ) : filtered.length === 0 ? (
         <div className="art-empty">
           <p className="art-empty-title">조건에 맞는 기고 없음.</p>
-          <p>필터·검색을 해제하면 전체가 보입니다.</p>
+          <p>필터·검색 해제 = 전체 표시</p>
         </div>
-      ) : ordered.length === 0 ? null : (
+      ) : (
         <>
           <ul className="art-grid">
             {visible.map((a) => <ArticleRow key={a.slug} a={a} onOpen={onOpen} pinned={pinnedSlugs.has(a.slug)} counts={countsOf(a.id)} fresh={freshOf(a)} />)}

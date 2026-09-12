@@ -21,8 +21,9 @@ test('resolveThumb — 이미지 없으면 none(자동 폴백 없음) · 본문 
 })
 
 test('주간 글 = 같은 이미지 계층 + 주차 배지(제목에서 파싱)', () => {
-  const w = { ...base, slug: '2026-09-14-bapzzi-weekly-trend-w37', title: '주간 AI 트렌드 — 9월 2주', 이미지: '/img/covers/w.jpg', 이미지설명: 'TOP 1 소재 이미지' }
+  const w = { ...base, slug: '2026-09-14-bapzzi-weekly-trend-w37', title: '주간 AI 트렌드 9월 2주', 이미지: '/img/covers/w.jpg', 이미지설명: 'TOP 1 소재 이미지' }
   expect(parseWeekLabel(w.title)).toBe('9월 2주')
+  expect(parseWeekLabel('주간 AI 트렌드 — 9월 2주')).toBe('9월 2주')  // 구 대시 서식(보관 7편)도 그대로 파싱
   expect(parseWeekLabel('회차 없음')).toBe(null)
   expect(seriesBadge(w)).toBe('주간 · 9월 2주')
   expect(seriesBadge({ ...w, title: '주간 AI 트렌드' })).toBe('주간')

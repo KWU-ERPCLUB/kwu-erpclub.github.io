@@ -107,6 +107,9 @@
 .hub-md .md-terms ol, .hub-md .md-sources ol { margin: 0; padding-left: 1.2rem; }
 .hub-md .md-terms li, .hub-md .md-sources li { margin-bottom: 0.3rem; }
 .hub-md .md-terms strong { color: var(--text); font-weight: 700; }
+/* 출처 블록·'그 외 한 줄' 링크 = 한 화면 16~21개라 버건디 2px 밑줄이 빈도 상한(≤4)을 넘는다(2026-09-12 실측).
+   형태는 유지하고 밀도만 회수 — 1px 헤어라인(오너 결정 2026-09-12). */
+.hub-md .md-sources a, .hub-md > ul a { border-bottom: 1px solid var(--line); }
 .hub-md .md-sources a { color: var(--text); }
 .hub-md .md-source-note { color: var(--text-sub); }
 
@@ -130,9 +133,13 @@
 .hub-md .md-card-head { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
 .hub-md .md-card-title { font-family: var(--font-display); font-size: 1.05rem; font-weight: 800; letter-spacing: -0.01em; line-height: 1.4; }
 .hub-md .md-card-body { margin: 0; font-size: 0.95rem; line-height: 1.7; color: var(--text); word-break: keep-all; }
-.hub-md .md-card-link { justify-self: start; font-size: 0.8rem; font-weight: 700; color: var(--text-sub); text-decoration: none; border-bottom: 1px solid var(--line); }
+.hub-md .md-card-link { justify-self: start; font-size: 0.8rem; font-weight: 700; color: var(--text-sub); text-decoration: none; border-bottom: 1px solid var(--line); transition: color 150ms ease-out, border-color 150ms ease-out, transform 100ms ease-out; }
 .hub-md .md-card-link:hover { color: var(--text); border-color: var(--text); }
+.hub-md .md-card-link:active { transform: scale(0.98); }
 .hub-md .md-card .art-label { flex: none; }
+/* 브리핑 카드 = 소절 h3(AI활용/AI×취업/AI×MIS)가 이미 축을 말한다 → 카드 칩 반복 제거(craft R19).
+   탑 카드는 축이 섞이므로 칩 유지. */
+.hub-md .md-cards:not(.md-cards--top) .art-label { display: none; }
 
 /* ── 본문 진입 리빌(2026-09-12) — transform·opacity만, once, reduced-motion·JS 없음 = 즉시 표시 ── */
 html.art-js .hub-md > *, html.art-js .art-hero, html.art-js .art-source {
@@ -146,4 +153,13 @@ html.art-js .hub-md .md-cards.seen > .md-card:nth-child(3) { transition-delay: 1
 html.art-js .hub-md .md-cards.seen > .md-card:nth-child(n+4) { transition-delay: 240ms; }
 @media (prefers-reduced-motion: reduce) {
   html.art-js .hub-md > *, html.art-js .art-hero, html.art-js .art-source, html.art-js .hub-md .md-cards > .md-card { transition: none; opacity: 1; transform: none; }
+  .hub-md .md-card-link { transition: none; }
+  .hub-md .md-card-link:active { transform: none; }
+}
+/* 인쇄·캡처 = IntersectionObserver가 안 도는 상황이라 리빌 게이트가 본문을 통째로 숨긴다(실측: 캡처 하단 카드 공백).
+   종이·이미지에는 애니메이션이 없으므로 게이트를 통째로 해제한다(2026-09-12). */
+@media print {
+  html.art-js .hub-md > *, html.art-js .art-hero, html.art-js .art-source, html.art-js .hub-md .md-cards > .md-card {
+    opacity: 1; transform: none; transition: none;
+  }
 }

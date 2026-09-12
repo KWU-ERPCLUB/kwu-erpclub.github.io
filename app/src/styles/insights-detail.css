@@ -1,9 +1,9 @@
 /* 인사이트 상세 셸 전용 — articles.css에서 무변경 이관(2026-08-05 v3.1 개조 시 315줄 부채 분할).
-   상세 = 통일 셸(문서헤더·출처카드·720px 본문·하단 내비) — 2026-08-05 개편 대상 아님(스타일 값 이관만).
+   상세 = 통일 셸(문서헤더·출처카드·640px 본문·하단 내비) — 2026-08-05 개편 대상 아님(스타일 값 이관만).
    로드 = pages/Articles.jsx import(목록·상세 둘 다 이 컴포넌트가 그림). 토큰=global.css · light-only.
    성격색 chip-* 토큰 정의는 articles.css(목록과 공용)에 남김 — 이 파일은 소비만. */
 
-/* ── 상세 — 통일 디자인 셸(텍스트 720px 문서형 + 도판 브레이크아웃) ── */
+/* ── 상세 — 통일 디자인 셸(텍스트 640px 문서형 + 도판 브레이크아웃) ── */
 .art-detail { max-width: 100%; min-width: 0; } /* 넓은 표·긴 URL의 최소 폭이 셸을 밀어내지 않게(2026-09-11 375폭 실측) */
 .art-detail > :not(.hub-md) { max-width: 640px; margin-inline: auto; } /* 720→640 = 한글 한 줄 ≈40자(craft R38, 2026-09-11) */
 .art-archived { max-width: 640px; margin: 0 auto 1.2rem; padding: 0.6rem 0.9rem; font-size: 0.86rem; color: var(--text-sub); background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--text-sub); border-radius: 0 8px 8px 0; }
@@ -34,7 +34,7 @@
 .art-act-note { flex-basis: 100%; margin: 0.15rem 0 0; font-size: 0.78rem; color: var(--text-sub); }
 
 /* ② 히어로 — 기고 맨 위 이미지 + 캡션 줄(오너 판정 2026-08-05: 이미지만 봐도 내용을 알게).
-   본문과 같은 720px 정렬(.art-detail > :not(.hub-md) 규칙 승계). 캡션 = 메타 톤(사진 설명). */
+   본문과 같은 640px 정렬(.art-detail > :not(.hub-md) 규칙 승계). 캡션 = 메타 톤(사진 설명). */
 .art-hero { margin: 0 auto 1.5rem; }
 .art-hero img {
   display: block; width: 100%; border: 1px solid var(--line); border-radius: var(--radius-card); background: #fff;
@@ -43,7 +43,7 @@
 .art-hero--fit-cover img { height: auto; }
 /* 시리즈 커버(컴포넌트형 SVG) = 이미지와 같은 프레임(16:10·보더·라운드) */
 .art-hero-svg { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; border: 1px solid var(--line); border-radius: var(--radius-card); }
-/* 로고 = 세로 제한 + surface 면 위 여백(작은 벡터를 720px로 늘리지 않는다) */
+/* 로고 = 세로 제한 + surface 면 위 여백(작은 벡터를 640px로 늘리지 않는다) */
 .art-hero--fit-contain img {
   height: 168px; object-fit: contain; background: var(--surface); padding: 1.6rem 1.2rem;
 }
@@ -56,9 +56,10 @@
 .art-source {
   display: flex; align-items: center; gap: 0.6rem; background: var(--surface); border: 1px solid var(--line);
   border-radius: var(--radius-card); padding: 0.85rem 1.1rem; margin-bottom: 2rem; text-decoration: none;
-  color: var(--text); transition: border-color 150ms ease-out;
+  color: var(--text); transition: border-color 150ms ease-out, transform 100ms ease-out;
 }
 .art-source:hover { border-color: var(--text-sub); }
+.art-source:active { transform: scale(0.98); }
 .art-source:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .art-source-label { flex: none; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; color: var(--text-sub); border: 1px solid var(--line); border-radius: var(--radius-pill); padding: 0.1rem 0.55rem; background: #fff; }
 .art-source-name { flex: 1; min-width: 0; font-size: 0.9rem; font-weight: 600; line-height: 1.4; white-space: normal; overflow-wrap: anywhere; } /* nowrap 폐지 — 매체 4개 병기 시 375폭 넘침(2026-09-12) */
@@ -69,16 +70,18 @@
 
 /* ⑤ 하단 — 목록 복귀 + 이전/다음 인사이트 내비 */
 .art-foot { margin-top: 2.5rem; padding-top: 1.25rem; border-top: 1px solid var(--line); }
-.art-back { background: none; border: none; padding: 0; font-size: 0.84rem; font-weight: 600; color: var(--text-sub); cursor: pointer; transition: color 150ms ease-out; }
+.art-back { background: none; border: none; padding: 0; font-size: 0.84rem; font-weight: 600; color: var(--text-sub); cursor: pointer; transition: color 150ms ease-out, transform 100ms ease-out; }
 .art-back:hover { color: var(--text); }
+.art-back:active { transform: scale(0.98); }
 .art-back:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .art-foot-nav { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.1rem; }
 .art-nav-link {
   flex: 1 1 44%; min-width: 0; display: block; text-align: left; background: none; border: 1px solid var(--line);
-  border-radius: var(--radius-card); padding: 0.75rem 0.95rem; color: inherit; font: inherit; cursor: pointer; transition: border-color 150ms ease-out;
+  border-radius: var(--radius-card); padding: 0.75rem 0.95rem; color: inherit; font: inherit; cursor: pointer; transition: border-color 150ms ease-out, transform 100ms ease-out;
 }
 .art-nav-next { text-align: right; }
 .art-nav-link:hover { border-color: var(--text-sub); }
+.art-nav-link:active { transform: scale(0.98); }
 .art-nav-link:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .art-nav-dir { display: block; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.03em; color: var(--text-sub); margin-bottom: 0.25rem; }
 .art-nav-title {
@@ -104,4 +107,5 @@
 
 @media (prefers-reduced-motion: reduce) {
   .art-back, .hub-md a, .art-source, .art-nav-link { transition: none; }
+  .art-back:active, .art-source:active, .art-nav-link:active { transform: none; }
 }

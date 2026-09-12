@@ -69,7 +69,7 @@ test('심층 구조 게이트 — 질문 3 · 필수 절 6 · 출처 5 · 대시
   const fewSrc = ok.replace('e | https://e\n', '')
   expect(validateEntry('기사', f(fresh), fresh, fewSrc)).toContainEqual(expect.stringContaining('출처 5건'))
   expect(validateEntry('기사', f(fresh), fresh, ok.replace('## 무슨 일 부제', '## 무슨 일 — 부제'))).toContainEqual(expect.stringContaining('대시(—) 금지'))
-  expect(validateEntry('기사', f(fresh), { ...fresh, title: '앞 — 뒤' }, ok)).toContainEqual('심층 제목에 대시(—) 금지')
+  expect(validateEntry('기사', f(fresh), { ...fresh, title: '앞 — 뒤' }, ok)).toContainEqual('제목에 대시(—) 금지')
   expect(blockRows(ok, '출처')).toHaveLength(5)
   expect(blockRows('없음', '출처')).toEqual([])
   // 주간(트렌드)은 구조 게이트 대상 아님(대시 금지는 적용)
