@@ -105,10 +105,11 @@ export const PREP_GUIDES = [
               'GitHub가 만든 것 **Install** 누르기',
               '오른쪽 아래 **Sign in** 알림 누르기',
               '브라우저에서 GitHub 로그인 후 **Authorize** 누르기',
-              '오른쪽 위 Copilot 아이콘 누르기 (단축키 Ctrl+Alt+I, 맥 ⌘⌃I)',
+              '오른쪽 위 Copilot 아이콘 누르기',
               '채팅창이 열리면 "안녕, 넌 뭘 할 수 있어?" 입력해 답 확인',
             ],
             tips: [
+              '채팅창 단축키는 Ctrl+Alt+I, 맥은 ⌘⌃I.',
               '한국어 메뉴를 원하면 확장 검색창에 Korean Language Pack 입력 후 Install, 오른쪽 아래 "다시 시작" 누르기.',
               '막히면 OT 때 같이 한다. 설치 파일만 받아 온다.',
             ],
