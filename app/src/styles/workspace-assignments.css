@@ -115,3 +115,12 @@
   .ws-astep-label { font-size: 0.8rem; }
   .ws-acard-title { font-size: 1rem; }
 }
+
+/* 폰 = 터치 타깃 44px(모바일 spec M1) — 2026-09-13 실측: 체크 행 label 32px · 하는 법 링크 22px.
+   시각 크기는 그대로 두고 히트 영역만 넓힌다(체크 상자 20px·글자 크기 불변). */
+@media (max-width: 760px) {
+  .ws-acheck label { min-height: 44px; padding: 0.5rem 0.45rem; }
+  .ws-alink { display: inline-flex; align-items: center; min-height: 44px; }
+  .ws-acheck-foot { align-items: center; }
+  .ws-agoto { min-height: 44px; }
+}

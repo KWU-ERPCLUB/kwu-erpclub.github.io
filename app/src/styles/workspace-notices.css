@@ -87,3 +87,8 @@
   .ws-notice-body .md-info-row:nth-child(odd) { background: var(--surface); }
   .ws-notice-body .md-links > li { max-width: none; }
 }
+
+/* 폰 = 터치 타깃 44px(모바일 spec M1) — 링크 카드는 이미 충분하나 레일 링크가 짧다 */
+@media (max-width: 760px) {
+  .ws-nrail a.ws-nrail-v { display: inline-flex; align-items: center; min-height: 44px; }
+}
