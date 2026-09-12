@@ -82,6 +82,11 @@ export function validateEntry(kind, filename, data, body = '') {
     const ref = data['후보출처']
     if (ref !== undefined && ref !== null && (typeof ref !== 'string' || !(ref === '요청' || CANDIDATE_REF.test(ref)))) errs.push('후보출처 형식: weekly-trend-wNN#k 또는 요청')
     if (fresh && nature === '심층 분석' && !ref) errs.push('후보출처 필수(심층 = 주간 보고 후보 표 경유)')
+    // 심층후보 = 주간 보고 전용(선택) — 행마다 "k | 소재 | 축 | TTTTTT | n" 서식
+    if ('심층후보' in data) {
+      const rows = data['심층후보']
+      if (!Array.isArray(rows) || rows.length !== parseCandidateTable(data).length) errs.push('심층후보 행 서식: "k | 소재 | 축 | ⓪~⑤ T/F 6자 | 링크수"')
+    }
     // 이미지·이미지설명 = 새 규칙 글 필수(실제 관련 이미지 — 오너 2026-09-11)
     if (fresh && !(typeof data['이미지'] === 'string' && data['이미지'].trim())) errs.push('이미지 필수(소재와 실제 관련된 이미지)')
     if (fresh && !(typeof data['이미지설명'] === 'string' && data['이미지설명'].trim())) errs.push('이미지설명 필수(1줄)')
@@ -170,19 +175,17 @@ export function validateEntry(kind, filename, data, body = '') {
   return errs
 }
 
-// ── 심층 후보 표(주간 보고 `## 심층 후보` 절) 파싱 — 후보출처 잠금의 원천 ──
-// 행 서식 = `| k | 소재 | 축 | ⓪ | ① | ② | ③ | ④ | ⑤ | 링크수 |` (T/F). 표가 없으면 [].
-export function parseCandidateTable(body) {
-  const src = String(body || '')
-  const m = /^##\s+심층 후보\s*$([\s\S]*?)(?=^##\s|^:{3,}|(?![\s\S]))/m.exec(src)
-  if (!m) return []
+// ── 심층 후보 표 = 주간 보고 frontmatter `심층후보` 배열(독자에게 안 보인다 — 오너 2026-09-12 "스터디원이 볼 내용이 아니다").
+// 행 = "k | 소재 | 축 | ⓪①②③④⑤(T/F 6자) | 증거 링크 수". 후보출처 잠금의 원천.
+export function parseCandidateTable(data) {
+  const src = data && Array.isArray(data['심층후보']) ? data['심층후보'] : []
   const out = []
-  for (const line of m[1].split('\n')) {
-    if (!line.trim().startsWith('|')) continue
-    const cells = line.trim().slice(1, -1).split('|').map((c) => c.trim())
-    if (cells.length < 4 + CANDIDATE_GATES || !/^\d+$/.test(cells[0])) continue
-    const gates = cells.slice(3, 3 + CANDIDATE_GATES).map((c) => c.toUpperCase() === 'T')
-    out.push({ no: Number(cells[0]), 소재: cells[1], 축: cells[2], gates, links: Number(cells[3 + CANDIDATE_GATES]) || 0 })
+  for (const row of src) {
+    const cells = String(row).split('|').map((c) => c.trim())
+    if (cells.length < 5 || !/^\d+$/.test(cells[0])) continue
+    const flags = cells[3].toUpperCase().replace(/[^TF]/g, '')
+    if (flags.length !== CANDIDATE_GATES) continue
+    out.push({ no: Number(cells[0]), 소재: cells[1], 축: cells[2], gates: [...flags].map((c) => c === 'T'), links: Number(cells[4]) || 0 })
   }
   return out
 }
@@ -193,7 +196,7 @@ export function validateCandidateLock(entries) {
   const weeklies = new Map()
   for (const e of entries) {
     const m = /weekly-trend-(w\d{2})/.exec(e.slug || '')
-    if (m) weeklies.set(`weekly-trend-${m[1]}`, parseCandidateTable(e.body))
+    if (m) weeklies.set(`weekly-trend-${m[1]}`, parseCandidateTable(e.data))
   }
   const out = []
   for (const e of entries) {

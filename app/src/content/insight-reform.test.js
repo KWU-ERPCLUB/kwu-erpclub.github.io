@@ -40,31 +40,21 @@ test('분량 상한 = 공백 제외 글자 수(심층 3,000 · 주간 2,500) —
   expect(validateEntry('기사', f(legacy), legacy, long)).toEqual([]) // 레거시 = 소급 없음
 })
 
-const weeklyBody = `::: 요약
-x
-:::
+const weeklyData = { ...fresh, 성격: '트렌드', 후보출처: undefined, 심층후보: ['1 | 자소서 폐지 | AI×취업 | TTTTTT | 3', '2 | 모델 출시 | AI활용 | TTFTFT | 1'] }
 
-## 심층 후보
-
-| # | 소재 | 축 | ⓪ | ① | ② | ③ | ④ | ⑤ | 링크 |
-|---|---|---|---|---|---|---|---|---|---|
-| 1 | 자소서 폐지 | AI×취업 | T | T | T | T | T | T | 3 |
-| 2 | 모델 출시 | AI활용 | T | T | F | T | F | T | 1 |
-
-::: 출처
-`
-
-test('parseCandidateTable — ## 심층 후보 절의 표만 파싱(번호·축·⓪~⑤·링크 수)', () => {
-  const rows = parseCandidateTable(weeklyBody)
+test('parseCandidateTable — frontmatter 심층후보 배열 파싱(번호·축·⓪~⑤·링크 수) · 서식 검증', () => {
+  const rows = parseCandidateTable(weeklyData)
   expect(rows).toHaveLength(2)
   expect(rows[0]).toEqual({ no: 1, 소재: '자소서 폐지', 축: 'AI×취업', gates: [true, true, true, true, true, true], links: 3 })
   expect(rows[1].gates).toEqual([true, true, false, true, false, true])
-  expect(parseCandidateTable('## 다른 절\n| 1 | a |')).toEqual([])
-  expect(parseCandidateTable('')).toEqual([])
+  expect(parseCandidateTable({ 심층후보: ['x | y'] })).toEqual([])
+  expect(parseCandidateTable({})).toEqual([])
+  expect(validateEntry('기사', f(weeklyData), weeklyData)).toEqual([])
+  expect(validateEntry('기사', f(weeklyData), { ...weeklyData, 심층후보: ['1 | 소재 | AI활용 | TT | 1'] })).toContainEqual(expect.stringContaining('심층후보 행 서식'))
 })
 
 test('validateCandidateLock — 후보 표에 있고 전부 T인 소재만 심층 통과', () => {
-  const weekly = { file: '2026-09-14-a-weekly-trend-w37.md', slug: '2026-09-14-a-weekly-trend-w37', data: { ...fresh, 성격: '트렌드' }, body: weeklyBody }
+  const weekly = { file: '2026-09-14-a-weekly-trend-w37.md', slug: '2026-09-14-a-weekly-trend-w37', data: weeklyData, body: '' }
   const deep = (ref, over = {}) => ({ file: `${NEW_RULES_FROM}-a-${ref.replace('#', '-')}.md`, slug: 'd', data: { ...fresh, 후보출처: ref, ...over }, body: '' })
   expect(validateCandidateLock([weekly, deep('weekly-trend-w37#1', { 축: 'AI×취업' })])).toEqual([])
   expect(validateCandidateLock([weekly, deep('weekly-trend-w37#2')])[0].errs[0]).toContain('F 있음')
