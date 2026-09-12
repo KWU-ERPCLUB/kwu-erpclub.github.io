@@ -247,7 +247,7 @@
 
 /* ══ 공지 탭(2026-08-19 오너 개편) — 한 공지 = 접힌 한 줄. 카드로 전문을 펼쳐 두면 쌓일수록 안 읽힌다.
    최신 1건만 열린 채 시작하고, 나머지는 제목·날짜 목록으로 남는다(문법 = 공고 탭 행과 동일) ══ */
-.ws-notices { max-width: 640px; }   /* 한 줄 ~40자(2026-09-12 전수조사 D9 — 760px는 50자/줄) */
+.ws-notices { max-width: 880px; }   /* 2026-09-12 오너: 640은 앱 셸 안에서 비율이 안 맞는다 → 880(본문 li는 ~50자, 단계형 안내라 허용) */
 .ws-notice-list { border-top: 1px solid var(--line); }
 .ws-notice-row { border-bottom: 1px solid var(--line); }
 .ws-notice-sum {
@@ -278,6 +278,16 @@
 .ws-notice-body li { margin: 0.3rem 0; list-style: disc; }
 .ws-notice-body a { color: var(--accent); font-weight: 700; word-break: break-all; }
 .ws-notice-body strong { font-weight: 750; }
+/* 단계형 안내 서식(2026-09-12 OT 준비물 공지) — 소제목·번호 단계·체크리스트 */
+.ws-notice-body h2 { font-size: 1.12rem; font-weight: 800; margin: 1.3rem 0 0.5rem; letter-spacing: -0.01em; }
+.ws-notice-body h3 { font-size: 1rem; font-weight: 750; margin: 1.1rem 0 0.4rem; }
+.ws-notice-body ol li { list-style: decimal; padding-left: 0.15rem; }
+.ws-notice-body blockquote { margin: 0.7rem 0; padding: 0.55rem 0.9rem; border-left: 3px solid var(--line); background: var(--surface); border-radius: 0 8px 8px 0; color: var(--text-sub); }
+.ws-notice-body blockquote p { margin: 0.2rem 0; }
+.ws-notice-body li.ws-task { list-style: none; margin-left: -1.25rem; display: flex; gap: 0.6rem; align-items: flex-start; padding: 0.3rem 0.4rem; border-radius: 8px; }
+.ws-notice-body li.ws-task input { width: 20px; height: 20px; margin: 0.1rem 0 0; flex: none; accent-color: var(--accent); cursor: pointer; }
+.ws-notice-body li.ws-task.is-done { color: var(--text-sub); text-decoration: line-through; }
+@media (hover: hover) { .ws-notice-body li.ws-task:hover { background: var(--surface); } }
 
 /* ══ 눌림 상태 묶음(2026-09-12 전수조사 D21 · §5 4상태 의무) — 누를 수 있는데 눌린 표시가 없던 5종.
    .ws-marks 접두 = 북마크 카드 hover 변형(workspace-mypage.css)보다 뒤에 오게 하는 특정도 확보 ══ */
