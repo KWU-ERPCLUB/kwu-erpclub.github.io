@@ -1,10 +1,20 @@
 // FAQ 단일원천(E4, 2026-08-05 오너 픽) — 메인(/) = 전체, /recruit = recruit:true 서브셋(코딩·비용·관계·모집 시기).
 // 원천 1곳: 문항 추가·수정 = 이 파일만. 답변 = 경어체 문장형(4차 2026-08-06 외부 피드백 —
 // "답변을 ~합니다 말투로" · 문답 UI = 어투 규칙의 공인 예외). 사실만 서술 — 과장·권유형 수사 금지 유지.
-import { RECRUIT, ACADEMIC_RULE, formatWindowShort, CONTACT } from './recruit.js'
+import { RECRUIT, ACADEMIC_RULE, deadlineLabel, shortDate, CONTACT } from './recruit.js'
+import { localYmd, recruitPhase } from '../home-logic.js'
 
 // 문의 채널 1줄 — 원천 = CONTACT 상수(이메일 확정 2026-08-05).
 const 문의채널 = `문의는 이메일(${CONTACT.email}) 또는 GitHub 저장소로 받습니다.`
+
+// 모집 문항 답 = 국면 파생(2026-09-12) — 창이 닫힌 뒤에도 "~까지 모집합니다"가 남으면 사실과 어긋난다.
+// 값 원천 = RECRUIT.window 1곳. 모듈 로드 시점(= 페이지 열 때) 평가.
+export function recruitFaqAnswer(today = localYmd()) {
+  if (recruitPhase(today) === 'after') {
+    return `${RECRUIT.cohort} 모집은 마감했습니다(${shortDate(RECRUIT.window.end)}). 다음 기수는 모집(RECRUIT) 페이지에 공지합니다. ${문의채널}`
+  }
+  return `${RECRUIT.cohort} 모집은 ${deadlineLabel()} 마감입니다(${RECRUIT.term} 운영). 요강·일정은 모집(RECRUIT) 페이지에 있습니다. ${문의채널}`
+}
 
 export const FAQ = [
   {
@@ -14,7 +24,7 @@ export const FAQ = [
   },
   {
     q: '챗GPT는 이미 쓰는데, 스터디가 왜 필요한가요?',
-    a: '챗GPT는 단발 질답이고 업무는 반복 프로세스라, 반복에 붙이는 워크플로·자동화가 별도 주제입니다. 같은 도구도 문맥 설계·자료 연결에 따라 결과가 달라지고, 도구의 무게중심도 챗GPT 밖(에이전트·업무 도구 내장)으로 이동하고 있습니다.',
+    a: '챗GPT는 한 번 묻고 답 받는 도구이고, 업무는 같은 일이 반복됩니다. 반복에 붙이는 자동화가 이 스터디의 주제입니다. 같은 도구도 지시문과 자료를 어떻게 주느냐에 따라 결과가 달라집니다.',
   },
   {
     q: '비용이 드나요?',
@@ -47,7 +57,7 @@ export const FAQ = [
   },
   {
     q: '언제 모집하나요?',
-    a: `${RECRUIT.cohort} 모집은 ${formatWindowShort()}(${RECRUIT.term} 운영)입니다. 요강·일정은 모집(RECRUIT) 페이지에 있습니다. ${문의채널}`,
+    a: recruitFaqAnswer(),
     recruit: true,
   },
 ]

@@ -66,7 +66,7 @@ export function GoalSection() {
             <li key={title} style={{ '--i': i }}>
               <span className="rc-goal-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
               <strong>{title}</strong>
-              <span className="rc-goal-bar" aria-hidden="true" />
+              {/* (제목 아래 버건디 강조 바 = 2026-09-12 삭제 — 4차에서 폐지한 언더바와 같은 형태) */}
               <p>{desc}</p>
             </li>
           ))}
@@ -89,10 +89,11 @@ export function GoalSection() {
 }
 
 // 참여 조건(2026-08-19 오너 톤 완화) — 구 "이런 분을 찾습니다" = 선발 문법이라 문턱이 높게 읽혔다.
+// 2026-09-12 오너: 경어체 h2("이 정도면 충분합니다") = 예외 3종(FAQ·PageHead sub·히어로) 밖 → 「참여 조건 4가지」.
 export function FitSection() {
   return (
     <Section labelledBy="rc-fit-h">
-      <h2 className="rc-h2" id="rc-fit-h">이 정도면 충분합니다</h2>
+      <h2 className="rc-h2" id="rc-fit-h">참여 조건 4가지</h2>
       <ul className="rc-who">
         {RECRUIT_FIT.map(([title, desc]) => (
           <li key={title}>
@@ -151,7 +152,7 @@ export function RoadmapSection() {
 export function FaqSection() {
   return (
     <Section labelledBy="rc-faq-h">
-      <h2 className="rc-h2" id="rc-faq-h">자주 묻는 질문 — 모집 관련</h2>
+      <h2 className="rc-h2" id="rc-faq-h">모집 관련 자주 묻는 질문</h2>
       <div className="rc-faq">
         {RECRUIT_FAQ.map(({ q, a }) => (
           <details className="rc-faq-item" key={q}>

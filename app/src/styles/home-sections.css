@@ -76,7 +76,7 @@
 }
 .rm-slot .rm-word { color: var(--text-sub); }
 .rm-slot .rm-card { background: transparent; box-shadow: none; } /* 빈 슬롯 = 면 없이 텍스트만 */
-.rm-desc { display: block; margin-top: 0.45rem; font-size: 0.85rem; color: var(--text-sub); }
+.rm-desc { display: block; margin-top: 0.45rem; font-size: 0.88rem; color: var(--text-sub); }
 .rm-status { display: block; margin-top: 0.6rem; } /* 상태 칩 = 별도 행(피드백 "설명과 겹쳐 애매") */
 
 /* ── 흐름 인터랙션(2026-08-07 오너 "흐름이 느껴지게") — 전부 .home-js 게이트(no-JS·reduced-motion = 정적 선명) ──
@@ -223,7 +223,7 @@
 .fx-item[open] summary::after { content: '\2212'; }
 .fx-item summary:hover { color: var(--text-sub); }
 .fx-item summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-.fx-item p { margin: 0 0 1.1rem; font-size: 0.92rem; color: var(--text-sub); max-width: 68ch; }
+.fx-item p { margin: 0 0 1.1rem; font-size: 1rem; color: var(--text-sub); max-width: 68ch; }
 
 /* ══ INSIGHTS — 썸네일 카드 한 줄(3건·피드백 "썸네일형으로 짧게") ══ */
 .hi-grid {

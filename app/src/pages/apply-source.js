@@ -21,8 +21,8 @@ export function applyPhase(today = localYmd(), env = import.meta.env) {
 
 // 국면별 안내 문구(개조식) — 창 밖에서는 폼 대신 이 문구만 렌더(깨진 접수 경로 금지).
 export const APPLY_NOTE = {
-  before: `접수 시작 ${RECRUIT.window.start} — 시작일에 이 자리에서 폼 개방.`,
-  after: '모집 마감 — 다음 기수는 메인·모집 페이지에 공지.',
+  before: `접수 시작 ${RECRUIT.window.start}. 시작일에 이 자리에서 폼 개방.`,
+  after: '모집 마감. 다음 기수는 메인·모집 페이지에 공지.',
 }
 
 // 접수 가능 = 모집 창 open ∧ 백엔드 연결. 둘은 별개 축이라 안내 문구도 각각 다르다(RecruitForm 분기).
@@ -114,7 +114,7 @@ export function validateApplication(form) {
 // (라이브 폼 무중단 — 0017 적용 뒤에는 폴백 경로 자체가 안 탄다).
 export async function submitApplication(form, { repos, configured } = {}) {
   const ready = configured === undefined ? isBackendConfigured() : configured
-  if (!ready) throw new Error('접수 서버 미연결 — 현재 제출 불가')
+  if (!ready) throw new Error('접수 서버 미연결. 현재 제출 불가')
   const store = repos || getRepositories()
   const 계기 = String(form['지원계기'] || '').trim()
   const row = {

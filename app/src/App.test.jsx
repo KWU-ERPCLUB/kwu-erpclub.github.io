@@ -1,8 +1,8 @@
 import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
 import App, { PROJECTS, RecruitBand, StatsBand, Roadmap } from './App.jsx'
-import { COHORT_LABEL, formatWindowShort } from './data/recruit.js'
-import { FAQ } from './data/faq.js'
+import { COHORT_LABEL, formatWindowShort, deadlineLabel } from './data/recruit.js'
+import { FAQ, recruitFaqAnswer } from './data/faq.js'
 import { loadContent } from './content/loader.js'
 import { isPublicArticle } from './content/schema.js'
 import { HomeInsights, HOME_INSIGHTS_COUNT } from './home-parts.jsx'
@@ -89,7 +89,7 @@ test('WHY 섹션 부재 유지 + B1 블랙 통계 밴드 1개(2×2 실측 수치
   expect((band.match(/sb-cell/g) || []).length).toBe(3) // 1×3
   // 수치 = 실측만: 게재 건수 = content/ 글롭 집계와 일치(recruit 증빙과 동일 원천)
   expect(band).toContain(`>${loadContent('기사').filter(isPublicArticle).length}</span>`) // 노출 건수(보관 제외, 2026-09-11)
-  for (const label of ['AI Insight', '만든 실물']) expect(band).toContain(label) // 라벨 개정 2026-08-15(구 '게재 기사')
+  for (const label of ['AI 인사이트', '만든 실물']) expect(band).toContain(label) // 라벨 = 페이지 표면명(2026-09-12 영문 혼용 정리)
   expect((band.match(/sb-src/g) || []).length).toBe(3) // 수치엔 출처 각주 의무(디자인규칙 §6)
 })
 
@@ -152,9 +152,13 @@ test('메인 FAQ = data/faq.js 원천 전량 렌더', () => {
   for (const { q } of FAQ) expect(html).toContain(q)
 })
 
-test('FAQ 모집 답 = 확정 기간 반영(비정기 문구 폐지) — 기간은 데이터 파생', () => {
+// 2026-09-12 — 답이 국면 파생으로 바뀌었다(창이 닫힌 뒤 "~까지 모집합니다"가 남던 문제).
+test('FAQ 모집 답 = 국면 파생(모집 중 = 마감 시각 / 마감 뒤 = 다음 기수 안내), 비정기 문구 폐지', () => {
   const html = renderToString(<App />)
-  expect(html).toContain(formatWindowShort())
+  expect(html).toContain(recruitFaqAnswer())          // 오늘 국면의 답이 그대로 렌더
+  expect(recruitFaqAnswer('2026-09-01')).toContain(deadlineLabel())
+  expect(recruitFaqAnswer('2026-09-20')).toContain('마감했습니다')
+  expect(recruitFaqAnswer('2026-09-20')).not.toContain(deadlineLabel())
   expect(html).not.toContain('모집은 비정기')
 })
 

@@ -115,7 +115,7 @@ export default function RecruitForm({ configured, repos, today = localYmd() }) {
     // 화면 밖 빨간 글씨 외에는 아무 신호가 없었다(오너 2026-09-04).
     const stuck = FIELD_ORDER.filter((k) => found[k])
     if (stuck.length > 0) {
-      setSummary(`${stuck.map((k) => FIELD_LABEL[k]).join(' · ')} — 확인이 필요합니다. 해당 칸으로 이동했습니다.`)
+      setSummary(`확인 필요: ${stuck.map((k) => FIELD_LABEL[k]).join(' · ')}. 첫 칸으로 이동했습니다.`)
       focusField(stuck[0], majorEtcOn)
       return
     }
@@ -134,7 +134,9 @@ export default function RecruitForm({ configured, repos, today = localYmd() }) {
       setPhase('done')
     } catch (err) {
       setPhase('idle')
-      setFailure(err?.message || '제출 실패 — 다시 시도')
+      // 서버 원문(PostgREST 메시지)은 화면에 올리지 않는다 — 사용자가 할 수 있는 행동만 알린다(2026-09-12).
+      console.error('[apply] 제출 실패', err)
+      setFailure('제출 실패. 잠시 뒤 다시 시도하거나 이메일로 문의')
     }
   }
 
@@ -208,7 +210,7 @@ export default function RecruitForm({ configured, repos, today = localYmd() }) {
 
       <p className="rc-field">
         <label htmlFor="ap-전화번호">전화번호 <Req /></label>
-        <span className="rc-desc">숫자만 입력 — 하이픈 자동 (예: 010-1234-5678)</span>
+        <span className="rc-desc">숫자만 입력하면 하이픈 자동 (예: 010-1234-5678)</span>
         <input
           id="ap-전화번호" type="tel" inputMode="numeric" value={form['전화번호']}
           onChange={(e) => setForm((f) => ({ ...f, 전화번호: formatPhone(e.target.value) }))}
@@ -225,12 +227,12 @@ export default function RecruitForm({ configured, repos, today = localYmd() }) {
       />
 
       <RadioGroup
-        legend="AI를 얼마나 쓰시나요" desc="선택 항목 — 수준 확인용이 아니라 진행 속도를 맞추는 데 씁니다"
+        legend="AI를 얼마나 쓰시나요" desc="선택 항목. 진행 속도를 맞추는 데 씁니다"
         options={AI_USAGE_LEVELS} value={aiLevel} onPick={setAiLevel}
       />
 
       <CheckGroup
-        legend="이 중 해본 것" desc="해당하는 것 모두 선택 — 하나도 안 골라도 됩니다"
+        legend="이 중 해본 것" desc="해당하는 것 모두 선택. 없으면 비워도 됩니다"
         options={AI_SKILLS} checked={aiSkills} onToggle={toggleOf(setAiSkills)} stack
       />
 

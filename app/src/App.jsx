@@ -72,7 +72,7 @@ function Hero() {
           광운대학교 ERP연구회 산하 MIS·AI 스터디
         </p>
         <p className="hero-desc rv" style={{ transitionDelay: '800ms' }}>
-          경영·MIS의 업무와 학업에 AI를 붙이는 법을 연구합니다.
+          과제·팀 프로젝트·업무에 AI를 적용하고 결과를 기록합니다.
         </p>
       </div>
     </section>
@@ -131,7 +131,7 @@ export function RecruitBand({ today = localYmd() }) {
 export function StatsBand({ today = localYmd() }) {
   const 기사수 = loadContent('기사').filter(isPublicArticle).length // 노출 건수 기준(보관 제외, 2026-09-11)
   const cells = [
-    [String(기사수), 'AI Insight', '인사이트 페이지 게재분'],
+    [String(기사수), 'AI 인사이트', '인사이트 페이지 게재분'],   /* 표면명 = 페이지명과 동일(2026-09-12 — 영문 혼용 정리) */
     ['2', '만든 실물', 'ADsP 스터디 보드 · AIM 웹사이트'], // 실물 이름 그대로 표기(오너 2026-08-15)
     studyCell(today),
   ]
@@ -242,9 +242,11 @@ function Faq() {
 export default function App() {
   useSectionSpy()
   useParallax()
+  // 상단바 모집 CTA = 모집 창이 열려 있을 때만(2026-09-12) — 마감 뒤에는 닫힌 폼으로 보내게 된다.
+  const 모집중 = recruitPhase(localYmd()) !== 'after'
   return (
     <>
-      <SiteNav cta />
+      <SiteNav cta={모집중} />
       <main id="main" className="home">
         <Hero />
         <StatsBand />
