@@ -280,10 +280,9 @@
 .ws-notice-body .md-links { list-style: none; margin: 0.9rem 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.55rem; max-width: 640px; min-width: 0; }
 .md-links > li { flex: 1 1 220px; min-width: 0; }   /* flex = 좁은 카드에서 줄바꿈, 뷰포트를 밀지 않는다(375 실측 540·693 재발 후 grid 폐기) */
 .ws-notice-body .md-links li { margin: 0; list-style: none; }
-.ws-notice-body .md-linkcard { display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto auto; column-gap: 0.6rem; align-items: center; padding: 0.7rem 0.9rem; border: 1px solid var(--line); border-radius: 12px; background: #fff; color: var(--text); text-decoration: none; font-weight: 700; word-break: keep-all; }
+.ws-notice-body .md-linkcard { display: grid; grid-template-columns: 1fr auto; column-gap: 0.6rem; align-items: center; padding: 0.7rem 0.9rem; border: 1px solid var(--line); border-radius: 12px; background: #fff; color: var(--text); text-decoration: none; font-weight: 700; word-break: keep-all; }
 .ws-notice-body .md-linkcard-label { grid-column: 1; }
-.ws-notice-body .md-linkcard-dom { grid-column: 1; grid-row: 2; font-size: 0.78rem; font-weight: 500; color: var(--text-sub); overflow-wrap: anywhere; }
-.ws-notice-body .md-linkcard-go { grid-column: 2; grid-row: 1 / span 2; font-size: 0.78rem; font-weight: 700; color: var(--accent); white-space: nowrap; }
+.ws-notice-body .md-linkcard-go { grid-column: 2; font-size: 0.78rem; font-weight: 700; color: var(--accent); white-space: nowrap; }
 @media (hover: hover) { .ws-notice-body a.md-linkcard:hover { background: var(--surface); } }
 .ws-notice-body .md-linkcard:active { transform: scale(0.98); }
 .ws-nrail a.ws-nrail-v { color: var(--text); text-decoration: underline; text-underline-offset: 0.18em; }

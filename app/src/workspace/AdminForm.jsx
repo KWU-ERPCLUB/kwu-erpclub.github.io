@@ -1,5 +1,6 @@
 // 운영 탭 공통 폼(M3 ②) — "목록 + 등록/수정" 한 벌. 공지·세션·자료·과제가 같은 뼈대를 쓴다.
-// 필드 정의 = [키, 타입]. 타입 = text·textarea·number·date·datetime·check·session.
+// 필드 정의 = [키, 타입, 선택지?]. 타입 = text·textarea·number·date·datetime·check·session·select.
+// select = 세 번째 원소로 [{ value, label }] 목록을 준다(2026-09-13 과제 종류·양식 선택).
 // 권한 판정은 서버 RLS(*_write_staff) — 이 컴포넌트는 운영 탭 안에서만 렌더된다(화면 차단은 Workspace).
 import { useState } from 'react'
 
@@ -22,8 +23,19 @@ function normalize(fields, draft) {
 }
 
 function Field({ spec, value, onChange, sessions }) {
-  const [key, type] = spec
+  const [key, type, options] = spec
   const set = (v) => onChange(key, v)
+  if (type === 'select') {
+    return (
+      <label className="ws-field">
+        <span>{key}</span>
+        <select value={value || ''} onChange={(e) => set(e.target.value)}>
+          <option value="">(선택 없음)</option>
+          {(options || []).map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+        </select>
+      </label>
+    )
+  }
   if (type === 'check') {
     return (
       <label className="ws-check">

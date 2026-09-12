@@ -27,7 +27,12 @@ export const SEED = {
   ],
   session_materials: [{ id: 'mock-m1', session_id: 'mock-s1', 제목: '샘플 자료', url: 'https://example.com/deck' }],
   session_notes: [{ id: 'mock-n1', session_id: 'mock-s1', 본문: '## 오늘의 목표\n- 샘플 목표', 공개일: null }],
-  assignments: [{ id: 'mock-h1', session_id: 'mock-s1', 제목: '샘플 과제', 마감: null }],
+  // 과제 3종(2026-09-13) — 백엔드 미연결 화면에서도 링크·폼·체크리스트가 다 보이게 한 건씩 둔다.
+  assignments: [
+    { id: 'mock-h1', session_id: 'mock-s1', 제목: '샘플 과제', 종류: '링크', 마감: null },
+    { id: 'mock-h2', session_id: 'mock-s1', 제목: '샘플 재료 4가지', 종류: '폼', 양식키: 'materials-4', 마감: '2026-09-21T18:00:00+09:00' },
+    { id: 'mock-h3', session_id: 'mock-s1', 제목: '샘플 준비물 7가지', 종류: '체크리스트', 양식키: 'prep-ot-prep', 마감: '2026-09-14T18:00:00+09:00' },
+  ],
   submissions: [{ id: 'mock-sub1', assignment_id: 'mock-h1', member_id: 'mock-member', url: 'https://example.com/sample', 메모: '' }],
   notices: [{ id: 'mock-n1', 제목: '샘플 공지', 본문: '목 데이터', 내부여부: true }],
   collections: [{ id: 'mock-c1', member_id: 'mock-member', url: 'https://example.com/scrap', 메모: '샘플 스크랩' }],

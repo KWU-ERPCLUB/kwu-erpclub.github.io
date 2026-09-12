@@ -13,12 +13,19 @@ test('cellOf — 멤버×과제 제출 행 판정', () => {
   expect(cellOf(subs, 'm1', 'a2')).toBeNull()
 })
 
-test('rateOf — 과제별 제출률 n/전체', () => {
+// 제출률 = "제출로 인정된" 멤버 수(2026-09-13) — 링크형 = url, 폼형 = 한 칸 이상, 체크리스트형 = 전 항목.
+test('rateOf — 과제별 제출률 n/전체, 종류별 인정 기준', () => {
   const members = [{ id: 'm1' }, { id: 'm2' }]
-  const subs = [{ member_id: 'm1', assignment_id: 'a1' }]
-  expect(rateOf(subs, members, 'a1')).toBe('1/2')
-  expect(rateOf(subs, members, 'a2')).toBe('0/2')
-  expect(rateOf([], [], 'a1')).toBe('0/0')
+  const link = { id: 'a1', 종류: '링크' }
+  const subs = [{ member_id: 'm1', assignment_id: 'a1', url: 'https://example.com/x' }]
+  expect(rateOf(subs, members, link)).toBe('1/2')
+  expect(rateOf(subs, members, { id: 'a2', 종류: '링크' })).toBe('0/2')
+  expect(rateOf([], [], link)).toBe('0/0')
+
+  // 체크리스트형 = 7가지 전부 체크해야 제출(하나라도 빠지면 미제출)
+  const check = { id: 'a3', 종류: '체크리스트', 양식키: 'prep-ot-prep' }
+  const partial = [{ member_id: 'm1', assignment_id: 'a3', 답변: { pw: true } }]
+  expect(rateOf(partial, members, check)).toBe('0/2')
 })
 
 test('골격 = 매트릭스 표(멤버 행 + 과제 열 + 제출률)', () => {

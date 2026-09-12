@@ -2,7 +2,7 @@
 // 골격 = 공개면 셸(SiteNav · PageHead · SiteFooter) + 준비물 본체(PrepGuideBody). 공지 탭·로드맵·과제에서 링크 카드로 들어온다.
 import { SiteNav, SiteFooter, PageHead } from '../shared.jsx'
 import { PrepGuideBody } from '../workspace/PrepNotice.jsx'
-import { PREP_GUIDES } from '../data/prep-guides.js'
+import { PREP_GUIDES, guideItems } from '../data/prep-guides.js'
 
 export const guideFromPath = (pathname, guides = PREP_GUIDES) => {
   const m = /\/guide\/([^/]+)\/?/.exec(pathname || '')
@@ -17,7 +17,7 @@ export default function GuidePrep({ pathname }) {
       <main id="main" className="page gp-wrap">
         {guide ? (
           <>
-            <PageHead label="GUIDE" title={<>{guide.title} <em>하는 법</em></>} sub={`${guide.회차}회차 준비물. 항목을 누르면 단계가 열리고, 완료 체크는 이 기기에 남는다.`} />
+            <PageHead label="GUIDE" title={<>{guide.title} <em>하는 법</em></>} sub={`${guide.회차}회차 준비물 ${guideItems(guide).length}가지. 계정·신청·설치·제출 순서로 한다.`} />
             <section className="gp-body"><PrepGuideBody guide={guide} /></section>
           </>
         ) : <PageHead label="GUIDE" title="가이드 없음" />}

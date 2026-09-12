@@ -56,11 +56,11 @@ const container = {
     }
     if (token.kind === '링크') {
       // 공지 링크 카드(2026-09-13) — 행 = 라벨 | 주소(내부 / 또는 http). 과제·가이드·외부 사이트를 카드 한 장씩(최대 5).
+      // 주소·도메인은 화면에 찍지 않는다(오너 2026-09-13: "링크 그대로 말고 어디로 가는 링크인지로") — 라벨이 목적지를 말한다.
       const items = rows(token.text).slice(0, 5).map(([label, url]) => {
         const safe = /^(https?:\/\/|\/)/.test(url || '') ? url : ''
         const ext = /^https?:\/\//.test(safe)
-        const dom = ext ? safe.replace(/^https?:\/\//, '').replace(/\/$/, '') : ''
-        const inner = `<span class="md-linkcard-label">${esc(label)}</span>${dom ? `<span class="md-linkcard-dom">${esc(dom)}</span>` : ''}<span class="md-linkcard-go">${ext ? '열기 ↗' : '이동 →'}</span>`
+        const inner = `<span class="md-linkcard-label">${esc(label)}</span><span class="md-linkcard-go">${ext ? '열기 ↗' : '이동 →'}</span>`
         return safe ? `<li><a class="md-linkcard" href="${esc(safe)}"${ext ? ' target="_blank" rel="noreferrer"' : ''}>${inner}</a></li>` : `<li><span class="md-linkcard">${inner}</span></li>`
       }).join('')
       return `<ul class="md-links">${items}</ul>`
