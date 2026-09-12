@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
-import PrepNotices, { PrepGuide, Inline, noticeParam, firstOpen } from './PrepNotice.jsx'
+import PrepNotices, { PrepGuide, Inline, noticeParam, firstOpen, splitSite } from './PrepNotice.jsx'
 import { PREP_GUIDES, guideForSession, guideHref, guideItems } from '../data/prep-guides.js'
 
 const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
@@ -16,12 +16,14 @@ test('준비물 원천 — 묶음 4(계정·신청·설치·제출) · 항목 7 
     expect(it.what.split(/[.]\s/).length).toBeLessThanOrEqual(3)
     expect(it.steps.length).toBeGreaterThanOrEqual(3)
     for (const s of it.steps) {
-      expect(s.replace(/https?:\/\/\S+/g, 'URL').replace(/\*\*/g, '').length).toBeLessThanOrEqual(40)
+      expect(s.replace(/https?:\/\/\S+/g, 'URL').replace(/\*\*|\[\[|\]\]|\{\{|\}\}|<<|>>|\(\(|\)\)/g, '').length).toBeLessThanOrEqual(40)
       expect(s.endsWith('.')).toBe(false)
     }
     const all = JSON.stringify(it)
     expect(all).not.toContain(' — ')
     expect(all).not.toMatch(/끝\.|성공|꼭:|지금 바로|오늘 안에/)
+    expect(it.minutes).toBeUndefined()
+    expect(it.icon).toBeTruthy()
   }
   expect(guideForSession(2)).toBeNull()
   expect(guideHref(g)).toBe('/workspace/?tab=공지&notice=ot-prep')
@@ -30,7 +32,7 @@ test('준비물 원천 — 묶음 4(계정·신청·설치·제출) · 항목 7 
 test('고정 공지 렌더 — 📌 행 · 진행 막대 · 묶음 라벨 4 · 행 7 · 기본 접힘 · ?notice= 일치 시 펼침', () => {
   const closed = flat(<PrepNotices guides={PREP_GUIDES} search="" />)
   expect(closed).toContain('id="prep-ot-prep"')
-  expect(closed).toContain('role="progressbar"')
+  expect((closed.match(/ws-prep-step-dot/g) || []).length).toBe(4)
   expect((closed.match(/ws-prep-group-label/g) || []).length).toBe(4)
   expect((closed.match(/ws-prep-rowbtn/g) || []).length).toBe(7)
   expect(closed).not.toMatch(/<details open/)
@@ -46,12 +48,24 @@ test('상세 — 첫 항목 기본 선택 · 단계 번호 열 · 끝냄 버튼 
   expect((html.match(/ws-prep-done"/g) || []).length).toBe(2)   // SSR = 좌(1열용 인라인) + 우(2열용 패널) 각 1개, CSS가 하나만 보임
   expect(html).not.toContain('ws-prep-how')
   expect(html).not.toContain('ws-prep-check-no')
+  expect(html).toContain('>완료<')
+  expect(html).not.toContain('끝냄')
 })
 
 test('firstOpen — 첫 미완료, 전부 완료면 0', () => {
   expect(firstOpen([true, false, true])).toBe(1)
   expect(firstOpen([true, true])).toBe(0)
   expect(firstOpen([false])).toBe(0)
+})
+
+test('Inline — 버튼·경로·입력·키캡 표기가 모양으로, HTML 미생성', () => {
+  const ui = flat(<p><Inline text="[[저장]] {{설정 › 비밀번호 변경}} <<학번>> ((Ctrl+Alt+I))" /></p>)
+  expect(ui).toContain('class="ws-ui-btn">저장')
+  expect((ui.match(/ws-ui-crumb/g) || []).length).toBe(2)
+  expect(ui).toContain('class="ws-ui-input">학번')
+  expect((ui.match(/<kbd>/g) || []).length).toBe(3)
+  expect(splitSite('https://docs.google.com 접속')).toEqual({ url: 'https://docs.google.com', rest: '접속' })
+  expect(splitSite('[[저장]]').url).toBeNull()
 })
 
 test('Inline — **굵게**·URL 링크만, HTML 미생성', () => {
