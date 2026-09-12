@@ -5,7 +5,7 @@
 // 운영 기록 = 읽기 전용 렌더 — 데이터 원천 = src/data/log.js(기록 추가 = 데이터 1줄 추가).
 import { useCallback, useEffect, useState, useRef } from 'react'
 import Markdown from '../pages/Markdown.jsx'
-import PrepNotices, { readChecks } from './PrepNotice.jsx'
+import { readChecks } from './PrepNotice.jsx'
 import { PREP_GUIDES, guideHref, guideItems } from '../data/prep-guides.js'
 import { loadSeen, markSeen, isNew } from '../pages/seen-store.js'
 import { toKey, dday } from './calendar-logic.js'
@@ -98,12 +98,12 @@ export function NoticeTitles({ store, onOpen }) {
       {status === 'ready' && rows.length === 0 && <p className="ws-note">공지 0건. 운영진 안내가 여기 쌓임.</p>}
       <ul className="ws-list">
         {/* 고정 공지(회차 준비물, 코드 원천) = 맨 위 — 클릭 = 그 공지로 딥링크 */}
-        {PREP_GUIDES.map((g) => (
+        {PREP_GUIDES.filter((g) => g.notice).map((g) => (
           <li key={g.id}>
-            <a className="ws-up-item" href={guideHref(g)}>
-              <span className="ws-up-title">📌 {g.title}</span>
-              <span className="ws-up-when">{g.date}</span>
-            </a>
+            <button type="button" className="ws-up-item" onClick={onOpen}>
+              <span className="ws-up-title">{g.notice.title}</span>
+              <span className="ws-up-when">{g.notice.date}</span>
+            </button>
           </li>
         ))}
         {rows.map((n) => (
@@ -119,33 +119,9 @@ export function NoticeTitles({ store, onOpen }) {
   )
 }
 
-// 공지 본문 — 마크다운 `- [ ]` 항목을 실제 체크박스로(2026-09-12 오너: "핵심만 위쪽에 체크 가능하게").
-// 체크 상태 = 이 기기 localStorage(공지 id별 배열). 서버 저장 없음 — 개인 진행 표시용이라 계정 간 공유 불필요.
-// marked는 체크박스를 disabled로 내보내므로 마운트 후 풀고, 담는 li에 ws-task 클래스를 붙여 스타일링한다.
-function NoticeBody({ id, body }) {
-  const ref = useRef(null)
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const boxes = [...el.querySelectorAll('input[type="checkbox"]')]
-    if (boxes.length === 0) return
-    const key = `ws-notice-check:${id}`
-    let saved = []
-    try { saved = JSON.parse(localStorage.getItem(key) || '[]') } catch { saved = [] }
-    const paint = () => boxes.forEach((b) => {
-      const li = b.closest('li')
-      if (li) { li.classList.add('ws-task'); li.classList.toggle('is-done', b.checked) }
-    })
-    boxes.forEach((b, i) => { b.disabled = false; b.checked = Boolean(saved[i]) })
-    paint()
-    const onChange = () => {
-      paint()
-      try { localStorage.setItem(key, JSON.stringify(boxes.map((b) => b.checked))) } catch { /* 저장 불가 = 표시만 */ }
-    }
-    boxes.forEach((b) => b.addEventListener('change', onChange))
-    return () => boxes.forEach((b) => b.removeEventListener('change', onChange))
-  }, [id, body])
-  return <div className="ws-notice-body" ref={ref}><Markdown body={body} /></div>
+// 공지 본문 — 서식 하나(2026-09-13 통일): 문단 · `::: 정보`(표) · `::: 링크`(카드). 단계·체크박스·버튼 칩은 공지에 두지 않는다(방법 = 가이드, 할 일 = 과제).
+function NoticeBody({ body }) {
+  return <div className="ws-notice-body"><Markdown body={body} /></div>
 }
 
 // 본문 첫 문단 → 카드 요약(2026-09-13 공지 탭 재설계 — "요약을 보여 주고 본문만 접는다"). 제목·목록·구분선은 건너뛰고 마크다운 기호 제거. 순수(테스트 대상).
@@ -158,22 +134,23 @@ export function firstParagraph(md, max = 110) {
 const noticeKey = (id) => `notice:${id}`
 
 // DB 공지 카드 — 종류 라벨(안내) · 제목 · 새 공지 N(7일 이내·미열람) · 날짜 · 요약 1~2줄. 누르면 본문이 카드 안에서 펼쳐진다.
-function NoticeCard({ n, seen, onSee }) {
-  const date = ymd(n.created_at)
+function NoticeCard({ n, seen, onSee, kind = '안내' }) {
+  const date = n.created_at ? ymd(n.created_at) : n.date
   const fresh = isNew({ slug: noticeKey(n.id), date }, seen, toKey(new Date()))
   return (
     <li className="ws-notice-row ws-ncard">
       <details onToggle={(e) => { if (e.currentTarget.open) onSee(noticeKey(n.id)) }}>
         <summary className="ws-notice-sum">
           <span className="ws-ncard-head">
-            <span className="ws-nkind">안내</span>
+            <span className="ws-nkind">{kind}</span>
             <span className="ws-notice-title">{n['제목']}</span>
             {fresh && <span className="ws-prow-new" aria-label="새 공지">N</span>}
             <span className="ws-notice-when">{date}</span>
           </span>
           <span className="ws-ncard-sum">{firstParagraph(n['본문'])}</span>
         </summary>
-        <NoticeBody id={n.id} body={n['본문'] || ''} />
+        <NoticeBody body={n['본문'] || ''} />
+        <p className="ws-ncard-foot">문의: 운영진 신해원</p>
       </details>
     </li>
   )
@@ -212,7 +189,7 @@ function NoticeRail({ store, todayKey }) {
             <li><span className="ws-nrail-k">과제 마감</span><span className="ws-nrail-v">{due['제목']}</span><span className="ws-nrail-d">{dueKey.slice(5)} · {dday(todayKey, dueKey)}</span></li>
           )}
           {prepDone && (
-            <li><span className="ws-nrail-k">OT 준비물</span><span className="ws-nrail-v">{prepDone.done} / {prepDone.n} 완료</span><span className="ws-nrail-bar" aria-hidden="true"><span style={{ width: `${(prepDone.done / prepDone.n) * 100}%` }} /></span></li>
+            <li><span className="ws-nrail-k">OT 준비물</span><a className="ws-nrail-v" href={guideHref(PREP_GUIDES[0])}>{prepDone.done} / {prepDone.n} 완료 · 가이드 열기</a><span className="ws-nrail-bar" aria-hidden="true"><span style={{ width: `${(prepDone.done / prepDone.n) * 100}%` }} /></span></li>
           )}
           {!nextItem && !due && !prepDone && <li className="ws-note">이번 주 항목 없음</li>}
         </ul>
@@ -221,7 +198,7 @@ function NoticeRail({ store, todayKey }) {
         <h2 className="ws-h2">읽는 법</h2>
         <ul className="ws-guide-lines">
           <li>카드를 누르면 본문이 열린다</li>
-          <li>📌 준비물은 항목별 하는 법과 완료 표시가 있다</li>
+          <li>하는 법은 가이드, 제출은 홈의 과제에서</li>
           <li>N = 7일 안에 올라온 안 읽은 공지</li>
         </ul>
       </section>
@@ -241,7 +218,7 @@ export default function Notices({ store }) {
   const todayKey = toKey(new Date())
   useEffect(() => { setSeen(loadSeen()) }, [])
   const onSee = (key) => setSeen(new Set(markSeen(key)))
-  const total = rows.length + PREP_GUIDES.length
+  const total = rows.length + PREP_GUIDES.filter((g) => g.notice).length
   const showPrep = kind === '전체' || kind === '준비물'
   const showDb = kind === '전체' || kind === '안내'
   return (
@@ -258,7 +235,9 @@ export default function Notices({ store }) {
         {status === 'ready' && total === 0 && <p className="ws-note">공지 0건. 운영진 안내가 여기 쌓임.</p>}
         {total > 0 && (
           <ul className="ws-list ws-notice-list">
-            {showPrep && <PrepNotices guides={PREP_GUIDES} />}
+            {showPrep && PREP_GUIDES.filter((g) => g.notice).map((g) => (
+              <NoticeCard key={g.id} kind={g.notice.kind} n={{ id: g.id, date: g.notice.date, 제목: g.notice.title, 본문: g.notice.body }} seen={seen} onSee={onSee} />
+            ))}
             {showDb && rows.map((n) => <NoticeCard key={n.id} n={n} seen={seen} onSee={onSee} />)}
           </ul>
         )}

@@ -12,7 +12,7 @@ const container = {
     return m ? m.index + (m[1] ? 1 : 0) : undefined
   },
   tokenizer(src) {
-    const m = /^:::\s*(요약|수치|용어|출처|로드맵|결정|탑|브리핑|질문)\s*\n([\s\S]*?)\n:::\s*(?:\n+|$)/.exec(src)
+    const m = /^:::\s*(요약|수치|용어|출처|로드맵|결정|탑|브리핑|질문|정보|링크)\s*\n([\s\S]*?)\n:::\s*(?:\n+|$)/.exec(src)
     if (!m) return
     const token = { type: 'container', raw: m[0], kind: m[1], text: m[2], tokens: [] }
     if (m[1] === '요약') this.lexer.blockTokens(m[2], token.tokens)
@@ -48,6 +48,22 @@ const container = {
         return `<li class="md-card${isTop ? ' md-card--top' : ''}">${num ? `<span class="md-card-num">${esc(num)}</span>` : ''}<span class="md-card-head"><span class="art-label art-label-axis axis-${AXIS_KEY[axis] || 'use'}">${esc(axis || '')}</span><strong class="md-card-title">${inline(title || '')}</strong></span><p class="md-card-body">${inline(body || '')}</p>${link}</li>`
       }).join('')
       return `<ol class="md-cards${isTop ? ' md-cards--top' : ''}">${items}</ol>`
+    }
+    if (token.kind === '정보') {
+      // 공지 정보 표(2026-09-13 공지 서식 통일) — 행 = 키 | 값(최대 5행). 날짜·장소·대상·마감처럼 훑어 읽는 사실만.
+      const items = rows(token.text).slice(0, 5).map(([k, v]) => `<div class="md-info-row"><dt>${esc(k)}</dt><dd>${marked.parseInline(esc(v || ''))}</dd></div>`).join('')
+      return `<dl class="md-info">${items}</dl>`
+    }
+    if (token.kind === '링크') {
+      // 공지 링크 카드(2026-09-13) — 행 = 라벨 | 주소(내부 / 또는 http). 과제·가이드·외부 사이트를 카드 한 장씩(최대 5).
+      const items = rows(token.text).slice(0, 5).map(([label, url]) => {
+        const safe = /^(https?:\/\/|\/)/.test(url || '') ? url : ''
+        const ext = /^https?:\/\//.test(safe)
+        const dom = ext ? safe.replace(/^https?:\/\//, '').replace(/\/$/, '') : ''
+        const inner = `<span class="md-linkcard-label">${esc(label)}</span>${dom ? `<span class="md-linkcard-dom">${esc(dom)}</span>` : ''}<span class="md-linkcard-go">${ext ? '열기 ↗' : '이동 →'}</span>`
+        return safe ? `<li><a class="md-linkcard" href="${esc(safe)}"${ext ? ' target="_blank" rel="noreferrer"' : ''}>${inner}</a></li>` : `<li><span class="md-linkcard">${inner}</span></li>`
+      }).join('')
+      return `<ul class="md-links">${items}</ul>`
     }
     if (token.kind === '수치') {
       // 행 형식: 숫자 | 설명 | 출처(선택) — 수치 카드엔 출처 표기 권장(stat-src 문법)

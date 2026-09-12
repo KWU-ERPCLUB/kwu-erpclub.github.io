@@ -71,7 +71,7 @@ function SessionNode({ item, session, note, materials, seminar, todayKey, opened
             </ul>
             {/* 회차 준비물 = 공지 탭 고정 공지로 이동(2026-09-12 오너 — 원천은 data/prep-guides.js) */}
             {guideForSession(item.no) && (
-              <a className="ws-rm-prep" href={guideHref(guideForSession(item.no))}>이 회차 준비물 보기 (공지) →</a>
+              <a className="ws-rm-prep" href={guideHref(guideForSession(item.no))}>이 회차 준비물 하는 법 (가이드) →</a>
             )}
             {session?.['설명'] && <p className="ws-rm-desc">{session['설명']}</p>}
             {note && !noteLocked && <div className="ws-rm-note"><Markdown body={note['본문'] || ''} /></div>}

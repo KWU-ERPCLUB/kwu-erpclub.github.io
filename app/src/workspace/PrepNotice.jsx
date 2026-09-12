@@ -1,5 +1,5 @@
-// 회차 준비물 고정 공지(2026-09-12 오너: "공지 탭 안에 만들고, 로드맵에서 열면 그 공지로 이동").
-// 원천 = data/prep-guides.js(코드) — DB 공지가 아니다. 긴 단계 안내는 코드 화면이어야 미리보기·버전·디자인이 따라온다.
+// 회차 준비물 가이드 본체(2026-09-13 역할 3분리: 공지 = 알림 · 과제 = 할 일 · 가이드 = 방법 — 오너 "공지는 서식 하나로, 해야 할 것은 과제로").
+// 원천 = data/prep-guides.js(코드). 페이지 = pages/GuidePrep.jsx(/guide/<id>/). 스타일 = styles/guide-prep.css.
 // 3차(2026-09-13 오너: "숫자 붙으면 줄 바꿔라, 시간 빼라, 텍스트만 딱딱하다, 시각화") — 화면 요소를 모양으로 그린다:
 //   [[버튼]] 버튼 칩 · {{경로 › 경로}} 경로 칩 · <<입력값>> 입력창 · ((키+키)) 키캡 · URL로 시작하는 단계 = 사이트 카드
 //   항목 아이콘(단색 선) · 4단계 스테퍼(계정→신청→설치→제출) · 준비물 칩 · 재료 카드 4장
@@ -66,7 +66,6 @@ export const readChecks = (id, n) => {
     return Array.from({ length: n }, (_, i) => Boolean(saved[i]))
   } catch { return Array.from({ length: n }, () => false) }
 }
-export const noticeParam = (search) => new URLSearchParams(search || '').get('notice')
 export const firstOpen = (checks) => { const i = checks.findIndex((c) => !c); return i === -1 ? 0 : i }
 
 // 항목 상세 — 아이콘+제목 · 뭔가요 · 준비물 칩 · 재료 카드 · 단계 · 조건 메모 · 완료 버튼(유일한 채움)
@@ -123,13 +122,13 @@ function Stepper({ groups, checks, offsets }) {
   )
 }
 
-// 한 회차 준비물 = 공지 목록의 행 1개(📌 고정). 펼침 = 리드 + 스테퍼 → 좌 묶음 목록 / 우 상세.
-export function PrepGuide({ guide, openInitially = false }) {
+// 한 회차 준비물 가이드 본체(2026-09-13 역할 3분리 — 가이드 페이지 /guide/<id>/가 그린다. 공지 탭에는 알림 카드만).
+// 상단 = 리드 + 4단계 스테퍼 → 좌 묶음 목록(체크) / 우 상세. 체크 = 기기 저장(과제 탭이 나오면 서버 저장 과제로 이관).
+export function PrepGuideBody({ guide }) {
   const items = useMemo(() => guideItems(guide), [guide])
   const offsets = useMemo(() => { let o = 0; return guide.groups.map((g) => { const s = o; o += g.items.length; return s }) }, [guide])
   const n = items.length
   const [checks, setChecks] = useState(() => Array.from({ length: n }, () => false))
-  const [open, setOpen] = useState(openInitially)
   const [sel, setSel] = useState(0)
 
   useEffect(() => { const c = readChecks(guide.id, n); setChecks(c); setSel(firstOpen(c)) }, [guide.id, n])
@@ -151,68 +150,44 @@ export function PrepGuide({ guide, openInitially = false }) {
   const anchor = `prep-${guide.id}`
 
   return (
-    <li className="ws-notice-row ws-ncard ws-prep-row" id={anchor}>
-      <details open={open} onToggle={(e) => setOpen(e.currentTarget.open)}>
-        <summary className="ws-notice-sum">
-          <span className="ws-ncard-head">
-            <span className="ws-nkind">준비물</span>
-            <span className="ws-notice-title">{guide.title}</span>
-            <span className="ws-prep-meta ws-prep-sumcount">{done}/{n} 완료</span>
-            <span className="ws-notice-when">{guide.date}</span>
-          </span>
-          <span className="ws-ncard-sum">{guide.lead}</span>
-        </summary>
-        <div className="ws-prep">
-          <header className="ws-prep-head">
-            <p className="ws-prep-lead">{guide.lead}</p>
-            <Stepper groups={guide.groups} checks={checks} offsets={offsets} />
-          </header>
+    <div className="ws-prep" id={anchor}>
+      <header className="ws-prep-head">
+        <p className="ws-prep-lead">{guide.lead} <span className="ws-prep-meta">{done}/{n} 완료</span></p>
+        <Stepper groups={guide.groups} checks={checks} offsets={offsets} />
+      </header>
 
-          <div className="ws-prep-cols">
-            <div className="ws-prep-list" role="list" aria-label="준비물 목록">
-              {guide.groups.map((g, gi) => (
-                <div className="ws-prep-group" key={g.label}>
-                  <p className="ws-prep-group-label">{g.label}</p>
-                  {g.items.map((it, k) => {
-                    const i = offsets[gi] + k
-                    const active = sel === i
-                    return (
-                      <div key={it.id} className={`ws-prep-item${active ? ' is-active' : ''}${checks[i] ? ' is-done' : ''}`} role="listitem">
-                        <div className="ws-prep-rowline">
-                          <input type="checkbox" checked={checks[i]} onChange={(e) => setCheck(i, e.target.checked)} aria-label={`${it.title} 완료`} />
-                          <button type="button" className="ws-prep-rowbtn" aria-expanded={active} aria-controls={`${anchor}-detail`} onClick={() => setSel(active && !isWide() ? -1 : i)}>
-                            <Icon name={it.icon} />
-                            <span className="ws-prep-item-title">{it.title}</span>
-                          </button>
-                        </div>
-                        {active && <div className="ws-prep-inline"><ItemDetail item={it} index={i} done={checks[i]} onDone={() => finish(i)} /></div>}
-                      </div>
-                    )
-                  })}
-                </div>
-              ))}
+      <div className="ws-prep-cols">
+        <div className="ws-prep-list" role="list" aria-label="준비물 목록">
+          {guide.groups.map((g, gi) => (
+            <div className="ws-prep-group" key={g.label}>
+              <p className="ws-prep-group-label">{g.label}</p>
+              {g.items.map((it, k) => {
+                const i = offsets[gi] + k
+                const active = sel === i
+                return (
+                  <div key={it.id} className={`ws-prep-item${active ? ' is-active' : ''}${checks[i] ? ' is-done' : ''}`} role="listitem">
+                    <div className="ws-prep-rowline">
+                      <input type="checkbox" checked={checks[i]} onChange={(e) => setCheck(i, e.target.checked)} aria-label={`${it.title} 완료`} />
+                      <button type="button" className="ws-prep-rowbtn" aria-expanded={active} aria-controls={`${anchor}-detail`} onClick={() => setSel(active && !isWide() ? -1 : i)}>
+                        <Icon name={it.icon} />
+                        <span className="ws-prep-item-title">{it.title}</span>
+                      </button>
+                    </div>
+                    {active && <div className="ws-prep-inline"><ItemDetail item={it} index={i} done={checks[i]} onDone={() => finish(i)} /></div>}
+                  </div>
+                )
+              })}
             </div>
-            <aside className="ws-prep-side" id={`${anchor}-detail`}>
-              {sel >= 0 && items[sel] && <ItemDetail item={items[sel]} index={sel} done={checks[sel]} onDone={() => finish(sel)} />}
-            </aside>
-          </div>
-
-          {guide.note && <p className="ws-prep-note"><Inline text={guide.note} /></p>}
+          ))}
         </div>
-      </details>
-    </li>
+        <aside className="ws-prep-side" id={`${anchor}-detail`}>
+          {sel >= 0 && items[sel] && <ItemDetail item={items[sel]} index={sel} done={checks[sel]} onDone={() => finish(sel)} />}
+        </aside>
+      </div>
+
+      {guide.note && <p className="ws-prep-note"><Inline text={guide.note} /></p>}
+    </div>
   )
 }
 
 const isWide = () => typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(min-width: 1100px)').matches
-
-export default function PrepNotices({ guides, search }) {
-  const target = useMemo(() => noticeParam(search ?? (typeof window !== 'undefined' ? window.location.search : '')), [search])
-  useEffect(() => {
-    if (!target || typeof document === 'undefined') return
-    const el = document.getElementById(`prep-${target}`)
-    if (el) el.scrollIntoView({ block: 'start' })
-  }, [target])
-  if (!guides || guides.length === 0) return null
-  return guides.map((g) => <PrepGuide key={g.id} guide={g} openInitially={target === g.id} />)
-}

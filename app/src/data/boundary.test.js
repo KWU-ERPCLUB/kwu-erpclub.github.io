@@ -76,7 +76,7 @@ const DATA_CONSUMERS = {
 // project-adsp-data = ADsP 인터랙티브 상세의 실측 수치 상수(2026-08-12 파일럿 — 네트워크 0).
 // project-adsp-roadmap = ADsP 고도화 로드맵 노드 상수(2026-08-24 v2 개편 — 네트워크 0).
 // project-site-data·project-site-roadmap-data = 허브 사이트 인터랙티브 상세의 정적 상수(2026-08-19 — 네트워크 0).
-const STATIC_DATA = ['recruit', 'faq', 'project-adsp-data', 'project-adsp-roadmap', 'project-site-data', 'project-site-roadmap-data']
+const STATIC_DATA = ['recruit', 'faq', 'project-adsp-data', 'project-adsp-roadmap', 'project-site-data', 'project-site-roadmap-data', 'prep-guides']   // prep-guides = 회차 준비물 정적 원천(가이드 페이지, 2026-09-13)
 test('P4 — 공개 페이지가 쓰는 data/ 모듈 = 화이트리스트 2쌍뿐', () => {
   const workspaceDir = path.join(SRC_DIR, 'workspace')
   const offenders = []

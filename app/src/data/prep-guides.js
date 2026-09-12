@@ -17,6 +17,27 @@ export const PREP_GUIDES = [
     title: 'OT 준비물 7가지',
     date: '2026-09-14',
     lead: '항목을 누르면 하는 법이 옆에 열린다. 완료 표시는 이 기기에만 남는다.',
+    // 공지 탭에 뜨는 알림(서식 = 문단 · ::: 정보 · ::: 링크 — 다른 공지와 같은 모양). 방법은 가이드, 제출은 과제.
+    notice: {
+      kind: '준비물',
+      title: 'OT 준비물 7가지 안내',
+      date: '2026-09-14',
+      body: `OT(9/14) 전에 준비할 것 7가지. 계정 1, 신청 3, 설치 2, 제출 1. 하는 법은 항목마다 가이드에 있고, 완료 체크도 가이드에서 한다.
+
+::: 정보
+언제까지 | 9/14(월) OT 전. 제출 1건만 9/21(월) 18:00
+대상 | 1기 전원
+걸리는 시간 | 약 1시간(승인 대기 제외)
+준비물 | 노트북, 학교 이메일(@kw.ac.kr), 구글 계정
+:::
+
+::: 링크
+가이드: OT 준비물 하는 법 | /guide/ot-prep/
+과제: 회차 2 재료 4가지 제출 | /workspace/?tab=홈
+:::
+
+이미 돈 내고 쓰는 도구는 그대로 쓴다. ChatGPT Plus는 파일 작업, Claude Pro는 Claude Code나 Cowork로 일을 시키는 용도, Cursor도 같은 용도. GitHub 계정은 전원 필수, 검수는 만든 것과 다른 AI로.`,
+    },
     note: '이미 돈 내고 쓰는 도구는 그대로 쓴다. ChatGPT Plus는 파일 작업, Claude Pro는 Claude Code나 Cowork로 일을 시키는 용도, Cursor도 같은 용도. GitHub 계정은 전원 필수, 검수는 만든 것과 다른 AI로.',
     groups: [
       {
@@ -171,4 +192,4 @@ export const PREP_GUIDES = [
 
 export const guideItems = (guide) => guide.groups.flatMap((g) => g.items)
 export const guideForSession = (no) => PREP_GUIDES.find((g) => g.회차 === Number(no)) || null
-export const guideHref = (guide) => `/workspace/?tab=공지&notice=${encodeURIComponent(guide.id)}`
+export const guideHref = (guide) => `/guide/${guide.id}/`

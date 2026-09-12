@@ -23,6 +23,7 @@ export default defineConfig({
         projectsAdsp: fileURLToPath(new URL('./projects/adsp/index.html', import.meta.url)),
         projectsSite: fileURLToPath(new URL('./projects/site/index.html', import.meta.url)),
         workspace: fileURLToPath(new URL('./workspace/index.html', import.meta.url)),
+        guidePrep: fileURLToPath(new URL('./guide/ot-prep/index.html', import.meta.url)),   // 가이드(2026-09-13) — public/guide/index.html(사용법 안내)과 경로가 다름
       },
     },
   },
