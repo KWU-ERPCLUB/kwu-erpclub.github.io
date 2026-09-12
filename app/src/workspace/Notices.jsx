@@ -5,6 +5,8 @@
 // 운영 기록 = 읽기 전용 렌더 — 데이터 원천 = src/data/log.js(기록 추가 = 데이터 1줄 추가).
 import { useCallback, useEffect, useState, useRef } from 'react'
 import Markdown from '../pages/Markdown.jsx'
+import PrepNotices from './PrepNotice.jsx'
+import { PREP_GUIDES, guideHref } from '../data/prep-guides.js'
 import { ROADMAP, HISTORY, STATS, STATS_BASIS } from '../data/log.js'
 
 // 구 Log.jsx splitEntry 이식 — 기록 텍스트를 '제목 — 설명' 경계(' — ')로 분리(날조 없음). 경계 없으면 전체가 제목.
@@ -86,11 +88,20 @@ export function NoticeTitles({ store, onOpen }) {
   const { rows, status, error } = useNotices(store)
   return (
     <section className="ws-block">
-      <h2 className="ws-h2">공지 <span className="ws-count">{rows.length}</span></h2>
+      <h2 className="ws-h2">공지 <span className="ws-count">{rows.length + PREP_GUIDES.length}</span></h2>
       {status === 'loading' && <div className="ws-skel" aria-label="불러오는 중"><span /><span /></div>}
       {error && <p className="ws-error" role="alert">{error}</p>}
       {status === 'ready' && rows.length === 0 && <p className="ws-note">공지 0건. 운영진 안내가 여기 쌓임.</p>}
       <ul className="ws-list">
+        {/* 고정 공지(회차 준비물, 코드 원천) = 맨 위 — 클릭 = 그 공지로 딥링크 */}
+        {PREP_GUIDES.map((g) => (
+          <li key={g.id}>
+            <a className="ws-up-item" href={guideHref(g)}>
+              <span className="ws-up-title">📌 {g.title}</span>
+              <span className="ws-up-when">{g.date}</span>
+            </a>
+          </li>
+        ))}
         {rows.map((n) => (
           <li key={n.id}>
             <button type="button" className="ws-up-item" onClick={onOpen}>
@@ -143,9 +154,10 @@ export default function Notices({ store }) {
     <div className="ws-notices">
       {status === 'loading' && <div className="ws-skel" aria-label="불러오는 중"><span /><span /></div>}
       {error && <p className="ws-error" role="alert">{error}</p>}
-      {status === 'ready' && rows.length === 0 && <p className="ws-note">공지 0건. 운영진 안내가 여기 쌓임.</p>}
-      {rows.length > 0 && (
+      {status === 'ready' && rows.length === 0 && PREP_GUIDES.length === 0 && <p className="ws-note">공지 0건. 운영진 안내가 여기 쌓임.</p>}
+      {(rows.length > 0 || PREP_GUIDES.length > 0) && (
         <ul className="ws-list ws-notice-list">
+          <PrepNotices guides={PREP_GUIDES} />
           {rows.map((n) => (
             <li key={n.id} className="ws-notice-row">
               <details>

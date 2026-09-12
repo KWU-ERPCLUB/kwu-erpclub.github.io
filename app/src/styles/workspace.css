@@ -289,6 +289,44 @@
 .ws-notice-body li.ws-task.is-done { color: var(--text-sub); text-decoration: line-through; }
 @media (hover: hover) { .ws-notice-body li.ws-task:hover { background: var(--surface); } }
 
+/* ══ 회차 준비물 고정 공지(2026-09-12, PrepNotice.jsx) — 📌 행 + 체크리스트 + 항목별 「하는 법」 ══ */
+.ws-prep-row { background: var(--surface); border-radius: 12px; border-bottom: 0; margin-bottom: 0.4rem; }
+.ws-prep-row .ws-notice-sum { padding-left: 0.6rem; padding-right: 0.6rem; }
+.ws-prep-pin { flex: none; font-size: 0.9rem; }
+.ws-prep-progress { flex: none; font-size: 0.78rem; font-weight: 700; color: var(--text-sub); font-variant-numeric: tabular-nums; border: 1px solid var(--line); border-radius: var(--radius-pill); padding: 0.05rem 0.5rem; background: #fff; }
+.ws-prep { padding-left: 0.6rem; padding-right: 0.6rem; }
+.ws-prep-list { list-style: none; margin: 0.6rem 0 0.2rem; padding: 0; display: grid; gap: 0.3rem; }
+.ws-prep-check { display: flex; align-items: center; gap: 0.5rem; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 0.45rem 0.6rem; }
+.ws-prep-check label { flex: 1; min-width: 0; display: flex; align-items: center; gap: 0.55rem; cursor: pointer; }
+.ws-prep-check input { width: 20px; height: 20px; flex: none; accent-color: var(--accent); cursor: pointer; }
+.ws-prep-check-no { flex: none; width: 1.5rem; height: 1.5rem; border-radius: 50%; background: var(--dark); color: #fff; font-size: 0.78rem; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; }
+.ws-prep-check-title { flex: 1; min-width: 0; font-weight: 700; }
+.ws-prep-min { flex: none; font-size: 0.78rem; color: var(--text-sub); }
+.ws-prep-check.is-done .ws-prep-check-title { color: var(--text-sub); text-decoration: line-through; }
+.ws-prep-check.is-done .ws-prep-check-no { background: var(--line); color: var(--text-sub); }
+.ws-prep-how { flex: none; font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--text); background: #fff; border: 1px solid var(--text); border-radius: var(--radius-pill); padding: 0.28rem 0.75rem; cursor: pointer; transition: background 150ms ease-out; }
+.ws-prep-how[aria-expanded="true"] { background: var(--dark); color: #fff; border-color: var(--dark); }
+@media (hover: hover) { .ws-prep-how:hover { background: var(--surface); } .ws-prep-how[aria-expanded="true"]:hover { background: var(--btn-hover); } }
+.ws-prep-how:active { transform: scale(0.98); }
+.ws-prep-item { margin: 0.7rem 0 0.4rem; padding: 0.9rem 1rem 0.6rem; background: #fff; border: 1px solid var(--line); border-radius: 12px; }
+.ws-prep-item-title { display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.5rem; font-size: 1.02rem; font-weight: 800; }
+.ws-prep-what, .ws-prep-need { margin: 0.4rem 0; }
+.ws-prep-what strong, .ws-prep-need strong { display: inline-block; margin-right: 0.35rem; font-size: 0.78rem; font-weight: 800; letter-spacing: 0.02em; color: var(--text-sub); border: 1px solid var(--line); border-radius: var(--radius-pill); padding: 0.02rem 0.5rem; vertical-align: 0.1rem; }
+.ws-prep-steps { margin: 0.5rem 0; padding-left: 1.3rem; }
+.ws-prep-steps li { list-style: decimal; margin: 0.35rem 0; }
+.ws-prep-tip { margin: 0.6rem 0 0.2rem; padding: 0.5rem 0.8rem; border-left: 3px solid var(--line); background: var(--surface); border-radius: 0 8px 8px 0; color: var(--text-sub); }
+.ws-prep-done-row { margin: 0.5rem 0 0; }
+.ws-prep-done-row label { display: inline-flex; align-items: center; gap: 0.45rem; cursor: pointer; font-weight: 700; }
+.ws-prep-done-row input { width: 18px; height: 18px; accent-color: var(--accent); }
+.ws-prep-note { margin: 0.8rem 0 0.2rem; font-size: 0.92rem; color: var(--text-sub); }
+.ws-rm-prep { display: inline-block; margin-top: 0.6rem; font-weight: 700; color: var(--text); text-decoration: underline; text-underline-offset: 0.2em; }
+@media (max-width: 760px) {
+  .ws-prep-check { flex-wrap: wrap; }
+  .ws-prep-check label { flex-basis: 100%; }
+  .ws-prep-how { margin-left: 2.1rem; }
+  .ws-prep-progress { display: none; }
+}
+
 /* ══ 눌림 상태 묶음(2026-09-12 전수조사 D21 · §5 4상태 의무) — 누를 수 있는데 눌린 표시가 없던 5종.
    .ws-marks 접두 = 북마크 카드 hover 변형(workspace-mypage.css)보다 뒤에 오게 하는 특정도 확보 ══ */
 .ws-prow-link:active, .ws-notice-sum:active, .ws-marks .ws-markcard a:active,
