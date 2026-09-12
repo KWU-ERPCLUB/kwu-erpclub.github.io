@@ -76,13 +76,13 @@ test('심층 구조 게이트 — 질문 3 · 필수 절 6 · 출처 5 · 대시
   expect(validateEntry('기사', f(fresh), { ...fresh, 성격: '트렌드', 후보출처: undefined }, '가'.repeat(100))).toEqual([])
 })
 
-const weeklyData = { ...fresh, 성격: '트렌드', 후보출처: undefined, 심층후보: ['1 | 자소서 폐지 | AI×취업 | TTTTTT | 3', '2 | 모델 출시 | AI활용 | TTFTFT | 1'] }
+const weeklyData = { ...fresh, 성격: '트렌드', 후보출처: undefined, 심층후보: ['1 | 자소서 폐지 | AI×취업 | TTTTTTT | 3', '2 | 모델 출시 | AI활용 | TTFTFTT | 1'] }
 
 test('parseCandidateTable — frontmatter 심층후보 배열 파싱(번호·축·⓪~⑤·링크 수) · 서식 검증', () => {
   const rows = parseCandidateTable(weeklyData)
   expect(rows).toHaveLength(2)
-  expect(rows[0]).toEqual({ no: 1, 소재: '자소서 폐지', 축: 'AI×취업', gates: [true, true, true, true, true, true], links: 3 })
-  expect(rows[1].gates).toEqual([true, true, false, true, false, true])
+  expect(rows[0]).toEqual({ no: 1, 소재: '자소서 폐지', 축: 'AI×취업', gates: [true, true, true, true, true, true, true], links: 3 })
+  expect(rows[1].gates).toEqual([true, true, false, true, false, true, true])
   expect(parseCandidateTable({ 심층후보: ['x | y'] })).toEqual([])
   expect(parseCandidateTable({})).toEqual([])
   expect(validateEntry('기사', f(weeklyData), weeklyData)).toEqual([])

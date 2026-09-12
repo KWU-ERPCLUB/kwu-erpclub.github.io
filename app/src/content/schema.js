@@ -20,7 +20,7 @@ export const DEEP_MIN_SOURCES = 5                               // ::: 출처 �
 export const DEEP_QUESTIONS = 3                                 // ::: 질문 행 수(정확히)
 // 후보출처 = 심층이 어느 주간 보고의 몇 번 후보인지. `요청` = 스터디원 요청 소재(관문 판정만).
 export const CANDIDATE_REF = /^weekly-trend-w\d{2}#\d+$/
-export const CANDIDATE_GATES = 6 // ⓪~⑤
+export const CANDIDATE_GATES = 7 // ⓪~⑥ (⑥ = 심층 6칸을 채울 근거가 보이는가 — 2026-09-12)
 
 export const isNewRules = (data) => Boolean(data && data.date && data.date >= NEW_RULES_FROM && data['보관'] !== true)
 // 공개 목록 대상 = 보관 아님. 목록·홈·RSS·건수가 공유(북마크는 예외 — 사용자 자산).
@@ -98,7 +98,7 @@ export function validateEntry(kind, filename, data, body = '') {
     // 심층후보 = 주간 보고 전용(선택) — 행마다 "k | 소재 | 축 | TTTTTT | n" 서식
     if ('심층후보' in data) {
       const rows = data['심층후보']
-      if (!Array.isArray(rows) || rows.length !== parseCandidateTable(data).length) errs.push('심층후보 행 서식: "k | 소재 | 축 | ⓪~⑤ T/F 6자 | 링크수"')
+      if (!Array.isArray(rows) || rows.length !== parseCandidateTable(data).length) errs.push('심층후보 행 서식: "k | 소재 | 축 | ⓪~⑥ T/F 7자 | 링크수"')
     }
     // 이미지·이미지설명 = 새 규칙 글 필수(실제 관련 이미지 — 오너 2026-09-11)
     if (fresh && !(typeof data['이미지'] === 'string' && data['이미지'].trim())) errs.push('이미지 필수(소재와 실제 관련된 이미지)')
@@ -204,7 +204,7 @@ export function validateEntry(kind, filename, data, body = '') {
 }
 
 // ── 심층 후보 표 = 주간 보고 frontmatter `심층후보` 배열(독자에게 안 보인다 — 오너 2026-09-12 "스터디원이 볼 내용이 아니다").
-// 행 = "k | 소재 | 축 | ⓪①②③④⑤(T/F 6자) | 증거 링크 수". 후보출처 잠금의 원천.
+// 행 = "k | 소재 | 축 | ⓪~⑥(T/F 7자) | 증거 링크 수". 후보출처 잠금의 원천.
 export function parseCandidateTable(data) {
   const src = data && Array.isArray(data['심층후보']) ? data['심층후보'] : []
   const out = []
@@ -239,7 +239,7 @@ export function validateCandidateLock(entries) {
     else {
       const row = rows.find((r) => r.no === Number(k))
       if (!row) errs.push(`후보출처 잠금: ${key} 후보 표에 #${k} 없음`)
-      else if (!row.gates.every(Boolean)) errs.push(`후보출처 잠금: ${key}#${k} 판정 ⓪~⑤ 중 F 있음`)
+      else if (!row.gates.every(Boolean)) errs.push(`후보출처 잠금: ${key}#${k} 판정 ⓪~⑥ 중 F 있음`)
       else if (row.축 && d['축'] && row.축 !== d['축']) errs.push(`후보출처 잠금: 축 불일치(후보 ${row.축} ≠ 글 ${d['축']})`)
     }
     if (errs.length) out.push({ file: e.file, errs })

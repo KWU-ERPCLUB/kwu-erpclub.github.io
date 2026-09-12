@@ -12,7 +12,7 @@ source_name: 아시아경제 · 이데일리 · GitHub 외
 태그: [기아, 채용, 영림원, ERP, 에이전트]
 이미지: /img/covers/weekly-trend-w37.jpg
 이미지설명: 서울 양재동 현대차·기아 사옥(아시아경제) — 이번 주 TOP 1, 기아 하반기 채용 발표의 주체
-심층후보: [1 | 기아 AI 문제해결력 검증 단계 | AI×취업 | TTTTTT | 2, 2 | 영림원 AI 전담조직·ERP 반영 | AI×MIS | TTTFTT | 1, 3 | KB 에이전트 116팀 실무 적용 | AI×MIS | TTTFTT | 1, 4 | 챗GPT 학습 토글 되돌림 | AI활용 | TTTFTT | 1, 5 | 답부터 말하는 스킬 | AI활용 | TTFFTT | 1]
+심층후보: [1 | 기아 AI 문제해결력 검증 단계 | AI×취업 | TTTTTTT | 2, 2 | 영림원 AI 전담조직·ERP 반영 | AI×MIS | TTTFTTF | 1, 3 | KB 에이전트 116팀 실무 적용 | AI×MIS | TTTFTTF | 1, 4 | 챗GPT 학습 토글 되돌림 | AI활용 | TTTFTTF | 1, 5 | 답부터 말하는 스킬 | AI활용 | TTFFTTF | 1]
 ---
 
 ::: 요약
