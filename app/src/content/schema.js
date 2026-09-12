@@ -12,6 +12,12 @@ export const AXES = ['AI활용', 'AI×취업', 'AI×MIS']
 export const NEW_RULES_FROM = '2026-09-12'
 // 분량 상한(공백 제외 글자 수) — 오너 2026-09-11: 요약 기고인데 읽는 것도 벅차다(심층 중앙값 5,192자였다).
 export const BODY_LIMIT = { '심층 분석': 3000, '트렌드': 2500 }
+// 심층 깊이 게이트(오너 2026-09-12 — "깊이를 매번 잡아 줄 수 없다, 룰로"): 칸 6개 + 인사이트 절을 전부 채워야 발행.
+//   심층 = 주간이 답 못 한 질문에 팩트로 답하고, 독자가 가져갈 인사이트를 준다(행동 지시 절은 두지 않는다 — 오너).
+export const DEEP_MIN = 1800                                    // 하한(공백 제외) — 요약을 늘려 쓴 글 차단
+export const DEEP_HEADINGS = ['무슨 일', '실물', '앞선 사례', '판정 기준', '확인 안 된 것', 'SO WHAT'] // `## <키>`로 시작(뒤에 부제 허용)
+export const DEEP_MIN_SOURCES = 5                               // ::: 출처 행 수 하한
+export const DEEP_QUESTIONS = 3                                 // ::: 질문 행 수(정확히)
 // 후보출처 = 심층이 어느 주간 보고의 몇 번 후보인지. `요청` = 스터디원 요청 소재(관문 판정만).
 export const CANDIDATE_REF = /^weekly-trend-w\d{2}#\d+$/
 export const CANDIDATE_GATES = 6 // ⓪~⑤
@@ -19,6 +25,13 @@ export const CANDIDATE_GATES = 6 // ⓪~⑤
 export const isNewRules = (data) => Boolean(data && data.date && data.date >= NEW_RULES_FROM && data['보관'] !== true)
 // 공개 목록 대상 = 보관 아님. 목록·홈·RSS·건수가 공유(북마크는 예외 — 사용자 자산).
 export const isPublicArticle = (a) => Boolean(a) && a['보관'] !== true
+// `::: <이름>` 블록의 비어있지 않은 행들(출처·질문 수 세기)
+export function blockRows(body, name) {
+  const m = new RegExp(`^:{3,}\\s*${name}\\s*$([\\s\\S]*?)^:{3,}\\s*$`, 'm').exec(String(body || ''))
+  if (!m) return []
+  return m[1].split('\n').map((l) => l.trim()).filter(Boolean)
+}
+
 // 공백 제외 글자 수(분량 상한 판정) — 독자가 읽는 글자만 센다: `::: 출처` 블록·링크 URL·표 구분선·마크다운 기호는 제외.
 export function bodyLength(body) {
   return String(body || '')
@@ -94,6 +107,21 @@ export function validateEntry(kind, filename, data, body = '') {
     if (fresh && nature && BODY_LIMIT[nature] !== undefined) {
       const n = bodyLength(body)
       if (n > BODY_LIMIT[nature]) errs.push(`분량 초과: ${n}자 > ${BODY_LIMIT[nature]}자(${nature})`)
+      if (nature === '심층 분석' && n < DEEP_MIN) errs.push(`심층 분량 미달: ${n}자 < ${DEEP_MIN}자`)
+    }
+    // 심층 구조 게이트(새 규칙) — 질문 3 · 필수 헤딩 6 · 출처 5+
+    if (fresh && nature === '심층 분석') {
+      for (const h of DEEP_HEADINGS) if (!new RegExp(`^##\\s+${h.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'm').test(body || '')) errs.push(`심층 필수 절 결측: ## ${h}`)
+      const q = blockRows(body, '질문')
+      if (q.length !== DEEP_QUESTIONS) errs.push(`심층 「::: 질문」 = ${DEEP_QUESTIONS}줄 필요(현재 ${q.length})`)
+      const s = blockRows(body, '출처')
+      if (s.length < DEEP_MIN_SOURCES) errs.push(`심층 출처 ${DEEP_MIN_SOURCES}건 이상 필요(현재 ${s.length})`)
+    }
+    // 대시(—) 금지(새 규칙 글, 제목·본문 — 출처 블록 제외): 오너 2026-09-12 "대시를 쓰는 등 AI 특유의 톤"
+    if (fresh) {
+      const bodyNoSrc = String(body || '').replace(/^:{3,}\s*출처[\s\S]*?^:{3,}\s*$/m, '')
+      if (/—/.test(String(data.title || '')) && nature === '심층 분석') errs.push('심층 제목에 대시(—) 금지')
+      if (/—/.test(bodyNoSrc)) errs.push('본문에 대시(—) 금지(출처 블록 제외) — 문장을 나눈다')
     }
     // 지금써먹기 = 선택(기본 false) — 있으면 boolean만 허용
     if ('지금써먹기' in data && typeof data['지금써먹기'] !== 'boolean') errs.push('지금써먹기는 boolean(true/false)만 허용')

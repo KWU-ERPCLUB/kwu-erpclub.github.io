@@ -110,6 +110,12 @@
 .hub-md .md-sources a { color: var(--text); }
 .hub-md .md-source-note { color: var(--text-sub); }
 
+/* 심층 머리 질문 3개(::: 질문) — 요약 박스와 같은 면, 번호 목록 */
+.hub-md .md-questions { background: #fff; border: 1px solid var(--line); border-left: 3px solid var(--dark); border-radius: 10px; padding: 1rem 1.3rem; margin: 0 0 1.9rem; }
+.hub-md .md-questions ol { margin: 0; padding-left: 1.3rem; }
+.hub-md .md-questions li { font-weight: 700; margin-bottom: 0.4rem; line-height: 1.55; }
+.hub-md .md-questions .md-block-label { color: var(--text-sub); }
+
 /* ── 주간 트렌드 카드(::: 탑 / ::: 브리핑) — 2026-09-12 오너: 항목 2~3줄·줄맞춤·서식 ── */
 .hub-md .md-cards { list-style: none; margin: 0.2rem 0 1.9rem; padding: 0; display: grid; gap: 0.75rem; }
 .hub-md .md-card {

@@ -1,11 +1,30 @@
 // 2026-09-11 인사이트 개편 계약 — 축·보관·후보출처 잠금·이미지 필수·분량 상한(spec = erp-club/docs/specs/2026-09-11-인사이트-개편.md)
 import { expect, test } from 'vitest'
-import { validateEntry, validateCandidateLock, parseCandidateTable, isPublicArticle, bodyLength, AXES, NEW_RULES_FROM, BODY_LIMIT } from './schema.js'
+import { validateEntry, validateCandidateLock, parseCandidateTable, isPublicArticle, bodyLength, blockRows, AXES, NEW_RULES_FROM, BODY_LIMIT, DEEP_MIN, DEEP_HEADINGS } from './schema.js'
 import { toDbRow, fromDbRow } from './db-map.js'
 
 const legacy = { title: 't', author: 'a', date: '2026-08-05', source_url: 'u', source_name: 'n', 성격: '심층 분석', 주제: '시장·생태계', 설명: 'd' }
 const fresh = { title: 't', author: 'a', date: NEW_RULES_FROM, source_url: 'u', source_name: 'n', 성격: '심층 분석', 축: 'AI활용', 설명: 'd', 이미지: '/img/covers/x.jpg', 이미지설명: 'c', 후보출처: 'weekly-trend-w37#1' }
 const f = (d) => `${d.date}-${d.author}-x.md`
+
+// 심층 구조를 전부 갖춘 최소 본문(질문 3·헤딩 6·출처 5)
+const deepBody = (fill) => `::: 질문
+q1
+q2
+q3
+:::
+
+${DEEP_HEADINGS.map((h) => `## ${h} 부제\n\n${fill}`).join('\n\n')}
+
+::: 출처
+a | https://a
+b | https://b
+c | https://c
+d | https://d
+e | https://e
+:::
+`
+
 
 test('레거시(개편일 전) = 주제만 있어도 통과 · 축 있으면 enum 검사', () => {
   expect(validateEntry('기사', f(legacy), legacy)).toEqual([])
@@ -15,7 +34,7 @@ test('레거시(개편일 전) = 주제만 있어도 통과 · 축 있으면 enu
 })
 
 test('새 규칙 글 = 축·이미지·이미지설명·후보출처(심층) 필수, 주제 금지', () => {
-  expect(validateEntry('기사', f(fresh), fresh)).toEqual([])
+  expect(validateEntry('기사', f(fresh), fresh, deepBody('가'.repeat(400)))).toEqual([])
   const errs = validateEntry('기사', f(fresh), { ...fresh, 축: undefined, 이미지: undefined, 이미지설명: undefined, 후보출처: undefined, 주제: '에이전트' })
   expect(errs).toContainEqual(expect.stringContaining('축 필수'))
   expect(errs).toContainEqual(expect.stringContaining('이미지 필수'))
@@ -28,16 +47,33 @@ test('새 규칙 글 = 축·이미지·이미지설명·후보출처(심층) 필
   expect(validateEntry('기사', f(fresh), { ...legacy, date: NEW_RULES_FROM, 보관: true })).toEqual([])
   expect(validateEntry('기사', f(fresh), { ...fresh, 보관: 'yes' })).toContainEqual(expect.stringContaining('보관은 boolean'))
   expect(validateEntry('기사', f(fresh), { ...fresh, 후보출처: 'w37-1' })).toContainEqual(expect.stringContaining('후보출처 형식'))
-  expect(validateEntry('기사', f(fresh), { ...fresh, 후보출처: '요청' })).toEqual([])
+  expect(validateEntry('기사', f(fresh), { ...fresh, 후보출처: '요청' }, deepBody('가'.repeat(400)))).toEqual([])
 })
 
-test('분량 상한 = 공백 제외 글자 수(심층 3,000 · 주간 2,500) — 새 규칙 글만', () => {
-  const long = '가'.repeat(BODY_LIMIT['심층 분석'] + 1)
+test('분량 = 심층 1,800~3,000 · 주간 ≤2,500(공백·링크·출처 제외) — 새 규칙 글만', () => {
   expect(bodyLength('가 나\n다')).toBe(3)
-  expect(validateEntry('기사', f(fresh), fresh, long)).toContainEqual(expect.stringContaining('분량 초과'))
-  expect(validateEntry('기사', f(fresh), fresh, '가'.repeat(BODY_LIMIT['심층 분석']))).toEqual([])
+  expect(validateEntry('기사', f(fresh), fresh, deepBody('가'.repeat(600)))).toContainEqual(expect.stringContaining('분량 초과'))
+  expect(validateEntry('기사', f(fresh), fresh, deepBody('가'.repeat(400)))).toEqual([])
+  expect(validateEntry('기사', f(fresh), fresh, deepBody('가'.repeat(100)))).toContainEqual(expect.stringContaining('심층 분량 미달'))
   expect(validateEntry('기사', f(fresh), { ...fresh, 성격: '트렌드', 후보출처: undefined }, '가'.repeat(2501))).toContainEqual(expect.stringContaining('> 2500자'))
-  expect(validateEntry('기사', f(legacy), legacy, long)).toEqual([]) // 레거시 = 소급 없음
+  expect(validateEntry('기사', f(legacy), legacy, '가'.repeat(5000))).toEqual([]) // 레거시 = 소급 없음
+})
+
+test('심층 구조 게이트 — 질문 3 · 필수 절 6 · 출처 5 · 대시 금지 (오너 2026-09-12)', () => {
+  const ok = deepBody('가'.repeat(400))
+  expect(validateEntry('기사', f(fresh), fresh, ok)).toEqual([])
+  const noQ = ok.replace('q3\n', '')
+  expect(validateEntry('기사', f(fresh), fresh, noQ)).toContainEqual(expect.stringContaining('::: 질문'))
+  const noH = ok.replace('## 판정 기준 부제', '## 기준')
+  expect(validateEntry('기사', f(fresh), fresh, noH)).toContainEqual('심층 필수 절 결측: ## 판정 기준')
+  const fewSrc = ok.replace('e | https://e\n', '')
+  expect(validateEntry('기사', f(fresh), fresh, fewSrc)).toContainEqual(expect.stringContaining('출처 5건'))
+  expect(validateEntry('기사', f(fresh), fresh, ok.replace('## 무슨 일 부제', '## 무슨 일 — 부제'))).toContainEqual(expect.stringContaining('대시(—) 금지'))
+  expect(validateEntry('기사', f(fresh), { ...fresh, title: '앞 — 뒤' }, ok)).toContainEqual('심층 제목에 대시(—) 금지')
+  expect(blockRows(ok, '출처')).toHaveLength(5)
+  expect(blockRows('없음', '출처')).toEqual([])
+  // 주간(트렌드)은 구조 게이트 대상 아님(대시 금지는 적용)
+  expect(validateEntry('기사', f(fresh), { ...fresh, 성격: '트렌드', 후보출처: undefined }, '가'.repeat(100))).toEqual([])
 })
 
 const weeklyData = { ...fresh, 성격: '트렌드', 후보출처: undefined, 심층후보: ['1 | 자소서 폐지 | AI×취업 | TTTTTT | 3', '2 | 모델 출시 | AI활용 | TTFTFT | 1'] }

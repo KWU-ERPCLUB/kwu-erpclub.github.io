@@ -59,11 +59,11 @@ LG CNS 검진 PoC | AI×MIS | LG CNS가 차움 검진센터의 검사 추천·�
 
 ### 그 외 한 줄
 
-- **Agents API** — 오픈AI가 코덱스 하네스를 API 한 번 호출로 여는 공개 베타 ([MarkTechPost](https://www.marktechpost.com/2026/09/10/openai-launches-the-agents-api-in-public-beta-putting-the-codex-harness-behind-one-api-call/))
-- **DeepSeek V4.1 Flash** — MIT 라이선스 공개, 입력 100만 토큰당 0.15달러 ([DataNorth](https://datanorth.ai/news/deepseek-releases-deepseek-v4-1-flash))
-- **나비에-스토크스** — 오픈AI의 "에이전트 1만 개·88시간" 풀이 주장에 미공개 연구 학습 의혹 ([MIT Technology Review](https://www.technologyreview.com/2026/09/08/1143747/what-openais-latest-controversy-tells-us-about-the-future-of-math/))
-- **Mistral 30억 유로** — 시리즈 D 투자 유치 ([mistral.ai](https://mistral.ai/news/mistral-makes-sovereign-open-weight-ai-to-frontier/))
-- **금융 ChatGPT** — 주니어 뱅커 업무를 겨냥한 'ChatGPT for Financial Services' ([CNBC](https://www.cnbc.com/2026/09/10/openai-chatgpt-for-financial-services-targets-work-of-junior-bankers.html))
+- **Agents API**: 오픈AI가 코덱스 하네스를 API 한 번 호출로 여는 공개 베타 ([MarkTechPost](https://www.marktechpost.com/2026/09/10/openai-launches-the-agents-api-in-public-beta-putting-the-codex-harness-behind-one-api-call/))
+- **DeepSeek V4.1 Flash**: MIT 라이선스 공개, 입력 100만 토큰당 0.15달러 ([DataNorth](https://datanorth.ai/news/deepseek-releases-deepseek-v4-1-flash))
+- **나비에-스토크스**: 오픈AI의 "에이전트 1만 개·88시간" 풀이 주장에 미공개 연구 학습 의혹 ([MIT Technology Review](https://www.technologyreview.com/2026/09/08/1143747/what-openais-latest-controversy-tells-us-about-the-future-of-math/))
+- **Mistral 30억 유로**: 시리즈 D 투자 유치 ([mistral.ai](https://mistral.ai/news/mistral-makes-sovereign-open-weight-ai-to-frontier/))
+- **금융 ChatGPT**: 주니어 뱅커 업무를 겨냥한 'ChatGPT for Financial Services' ([CNBC](https://www.cnbc.com/2026/09/10/openai-chatgpt-for-financial-services-targets-work-of-junior-bankers.html))
 
 ::: 출처
 아시아경제 — 기아 2026 하반기 집중 채용 | https://view.asiae.co.kr/article/2026090808485382454
