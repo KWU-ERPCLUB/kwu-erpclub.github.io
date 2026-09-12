@@ -1,33 +1,57 @@
 import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
-import PrepNotices, { PrepGuide, Inline, noticeParam } from './PrepNotice.jsx'
-import { PREP_GUIDES, guideForSession, guideHref } from '../data/prep-guides.js'
+import PrepNotices, { PrepGuide, Inline, noticeParam, firstOpen } from './PrepNotice.jsx'
+import { PREP_GUIDES, guideForSession, guideHref, guideItems } from '../data/prep-guides.js'
 
 const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
 
-test('준비물 원천 — 회차 1 안내 = 항목 7 · 각 항목에 what·steps · 대시(—) 절 잇기 0', () => {
+test('준비물 원천 — 묶음 4(계정·신청·설치·제출) · 항목 7 · 문장 규칙(대시 0 · 단계 25자 안 · 추임새 0)', () => {
   const g = guideForSession(1)
   expect(g.id).toBe('ot-prep')
-  expect(g.items.length).toBe(7)
-  for (const it of g.items) {
-    expect(it.what.length).toBeGreaterThan(10)
+  expect(g.groups.map((x) => x.label)).toEqual(['계정', '신청', '설치', '제출'])
+  const items = guideItems(g)
+  expect(items.length).toBe(7)
+  for (const it of items) {
+    expect(it.title.length).toBeLessThanOrEqual(18)   // 영문 도구명 포함 기준
+    expect(it.what.split(/[.]\s/).length).toBeLessThanOrEqual(3)
     expect(it.steps.length).toBeGreaterThanOrEqual(3)
-    expect(JSON.stringify(it)).not.toContain(' — ')
+    for (const s of it.steps) {
+      expect(s.replace(/https?:\/\/\S+/g, 'URL').replace(/\*\*/g, '').length).toBeLessThanOrEqual(40)
+      expect(s.endsWith('.')).toBe(false)
+    }
+    const all = JSON.stringify(it)
+    expect(all).not.toContain(' — ')
+    expect(all).not.toMatch(/끝\.|성공|꼭:|지금 바로|오늘 안에/)
   }
   expect(guideForSession(2)).toBeNull()
   expect(guideHref(g)).toBe('/workspace/?tab=공지&notice=ot-prep')
 })
 
-test('고정 공지 렌더 — 📌 행 + 체크박스 7 + 진행 0/7, 기본 접힘, ?notice= 일치 시 펼침', () => {
+test('고정 공지 렌더 — 📌 행 · 진행 막대 · 묶음 라벨 4 · 행 7 · 기본 접힘 · ?notice= 일치 시 펼침', () => {
   const closed = flat(<PrepNotices guides={PREP_GUIDES} search="" />)
-  expect(closed).toContain('ws-prep-row')
   expect(closed).toContain('id="prep-ot-prep"')
-  expect((closed.match(/ws-prep-check"/g) || []).length).toBe(7)
-  expect(closed).toContain('0/7')
+  expect(closed).toContain('role="progressbar"')
+  expect((closed.match(/ws-prep-group-label/g) || []).length).toBe(4)
+  expect((closed.match(/ws-prep-rowbtn/g) || []).length).toBe(7)
   expect(closed).not.toMatch(/<details open/)
   const opened = flat(<PrepNotices guides={PREP_GUIDES} search="?tab=공지&notice=ot-prep" />)
   expect(opened).toMatch(/<details open/)
   expect(noticeParam('?tab=공지&notice=ot-prep')).toBe('ot-prep')
+})
+
+test('상세 — 첫 항목 기본 선택 · 단계 번호 열 · 끝냄 버튼 1개(채움) · 검정 원·pill 버튼 없음', () => {
+  const html = flat(<PrepGuide guide={PREP_GUIDES[0]} />)
+  expect(html).toContain('is-active')
+  expect((html.match(/ws-prep-step-no/g) || []).length).toBeGreaterThanOrEqual(6)
+  expect((html.match(/ws-prep-done"/g) || []).length).toBe(2)   // SSR = 좌(1열용 인라인) + 우(2열용 패널) 각 1개, CSS가 하나만 보임
+  expect(html).not.toContain('ws-prep-how')
+  expect(html).not.toContain('ws-prep-check-no')
+})
+
+test('firstOpen — 첫 미완료, 전부 완료면 0', () => {
+  expect(firstOpen([true, false, true])).toBe(1)
+  expect(firstOpen([true, true])).toBe(0)
+  expect(firstOpen([false])).toBe(0)
 })
 
 test('Inline — **굵게**·URL 링크만, HTML 미생성', () => {
@@ -35,11 +59,4 @@ test('Inline — **굵게**·URL 링크만, HTML 미생성', () => {
   expect(html).toContain('<strong>학번</strong>')
   expect(html).toContain('href="https://kwu-erpclub.github.io/workspace/"')
   expect(html).toContain('&lt;b&gt;x&lt;/b&gt;')
-})
-
-test('PrepGuide 단독 렌더 — 항목 제목·분 표기·메모', () => {
-  const html = flat(<PrepGuide guide={PREP_GUIDES[0]} />)
-  expect(html).toContain('워크스페이스 비밀번호 바꾸기')
-  expect(html).toContain('5분')
-  expect(html).toContain('ws-prep-note')
 })
