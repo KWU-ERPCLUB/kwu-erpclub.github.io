@@ -273,5 +273,5 @@ test('signIn — Invalid login credentials = 학번·비밀번호 안내문으�
   const fakeFetch = async () => ({ ok: false, status: 400, text: async () => JSON.stringify({ error_description: 'Invalid login credentials' }) })
   const backend = createBackend({ url: 'https://x.supabase.co', key: 'anon' }, { fetch: fakeFetch, storage: null })
   await expect(createSupabaseRepositories(backend).auth.signIn('2021123456', 'x'))
-    .rejects.toThrow('학번 또는 비밀번호가 다름 — 초기 비밀번호는 운영진 안내값')
+    .rejects.toThrow('학번 또는 비밀번호가 다름. 초기 비밀번호 = 운영진 안내값')
 })

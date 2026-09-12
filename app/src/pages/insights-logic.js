@@ -23,8 +23,10 @@ export { NATURES }
 // 대시 표기 폐지(오너 2026-08-15) — 제목·설명의 ' — '는 화면에서 줄바꿈이 대신한다.
 // 문장이 끊기는 지점에서 줄을 넘겨 의미 단위로 읽히게 한다. 원문(md·상세 h1)은 그대로 두고 표시만 분할.
 // 소비처 = 메인 홈 카드 · 인사이트 목록 카드 · 자동 생성 커버 SVG(전부 같은 규칙).
+// 분할 조건 = **공백을 양쪽에 둔 대시만**(2026-09-12). 「9/7–9/12」처럼 붙여 쓴 en-dash는 범위 기호라
+// 자르면 안 된다(폰 카드에서 뒷절이 숨겨져 설명이 "9/7"만 남는 실측 결함).
 export function splitTitle(text) {
-  return String(text ?? '').split(/\s*[—–]\s*/).filter(Boolean)
+  return String(text ?? '').split(/\s+[—–]\s+/).filter(Boolean)
 }
 
 // ── URL ↔ 상태 (뒤로가기·딥링크) : ?axis=<key> · ?series=<id>(주간만) · ?p=<slug> ──

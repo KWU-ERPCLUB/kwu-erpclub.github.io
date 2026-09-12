@@ -55,7 +55,7 @@ test('AI 활용 수준 = 빈도 라디오 3택 + 해본 것 체크 5종 렌더(�
   expect(html).toContain('type="radio"')
   for (const lv of AI_USAGE_LEVELS) expect(html).toContain(lv)
   expect(html).toContain('이 중 해본 것')
-  expect(html).toContain('하나도 안 골라도 됩니다')
+  expect(html).toContain('없으면 비워도 됩니다')   // 대시 절 잇기 폐지(2026-09-12)
   for (const [, label] of AI_SKILLS) expect(html).toContain(label)
   expect(html).toContain('rc-checks-stack')            // 문장형 = 세로 리스트(375px 넘침 방지)
   // 오너 2026-08-21: 전문 용어 병기 금지 — 화면엔 행동 서술만(저장 키는 화면 밖).

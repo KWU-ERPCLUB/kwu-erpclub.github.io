@@ -48,9 +48,10 @@
   background: var(--line); border: 1px solid var(--line); border-radius: var(--radius-card); overflow: hidden;
 }
 .ps-meta-cell { background: #fff; padding: 1rem 0.9rem; }
-.ps-meta dt { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.12em; color: var(--text-sub); }
-.ps-meta dd { margin: 0.4rem 0 0; font-size: 0.92rem; font-weight: 700; line-height: 1.45; }
-.ps-meta-note { display: block; font-size: 0.76rem; font-weight: 500; color: var(--text-sub); margin-top: 0.15rem; }
+/* 히어로 크기 단계 축소(2026-09-12) — 마이크로 5종 → 0.78 하나, 보조 3종 → 0.9 하나 */
+.ps-meta dt { font-size: 0.78rem; font-weight: 800; letter-spacing: 0.12em; color: var(--text-sub); }
+.ps-meta dd { margin: 0.4rem 0 0; font-size: 0.9rem; font-weight: 700; line-height: 1.45; }
+.ps-meta-note { display: block; font-size: 0.78rem; font-weight: 500; color: var(--text-sub); margin-top: 0.15rem; }
 
 /* 스택 칩 */
 .ps-stack {
@@ -62,8 +63,8 @@
   border: 1px solid var(--line); border-radius: var(--radius-pill); background: var(--surface);
   padding: 0.35rem 0.85rem;
 }
-.ps-chip strong { font-size: 0.85rem; font-weight: 800; }
-.ps-chip span { font-size: 0.74rem; color: var(--text-sub); }
+.ps-chip strong { font-size: 0.9rem; font-weight: 800; }
+.ps-chip span { font-size: 0.78rem; color: var(--text-sub); }
 
 .ps-links { display: flex; gap: 0.7rem; justify-content: center; flex-wrap: wrap; margin-top: 1.6rem; }
 
@@ -75,31 +76,17 @@
   font-size: clamp(2.1rem, 4.4vw, 3rem); margin-bottom: 0.35rem;
 }
 .ps-hstat-label { font-weight: 700; font-size: 0.9rem; }
-.ps-hstat-src { font-size: 0.73rem; color: var(--text-sub); margin-top: 0.15rem; }
+.ps-hstat-src { font-size: 0.78rem; color: var(--text-sub); margin-top: 0.15rem; }
 
-/* 히어로 모자이크 — 면 6종 한 판 */
-.ps-mosaic {
-  margin: 2.6rem auto 0; width: 100%; max-width: 960px;
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem;
-}
-.ps-mos-cell {
-  position: relative; display: block; border-radius: 12px; overflow: hidden;
-  border: 1px solid var(--line); background: var(--surface);
-  box-shadow: 0 10px 26px rgba(20, 20, 20, 0.07);
-}
-.ps-mos-cell img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; }
-.ps-mos-name {
-  position: absolute; left: 0.5rem; bottom: 0.5rem;
-  background: var(--dark); color: #fff; border-radius: var(--radius-pill);
-  font-size: 0.68rem; font-weight: 700; padding: 0.16rem 0.55rem;
-}
+/* (구 히어로 모자이크 `.ps-mosaic`·`.ps-mos-cell`·`.ps-mos-name` = 2026-09-12 삭제 —
+   아래 쇼케이스와 같은 캡처 6장 중복. 컴포넌트 제거와 함께 스타일도 걷었다.) */
 
 /* ── 챕터 공통 — 면 교대 ── */
 .ps-ch { padding: clamp(3rem, 8vh, 5.5rem) 1.5rem; }
 .ps-ch-wash { background: var(--surface); }
 .ps-ch > * { max-width: var(--maxw); margin-left: auto; margin-right: auto; }
 .ps-ch-head { text-align: center; margin-bottom: 2.6rem; }
-.ps-ch-eyebrow { font-size: 0.76rem; font-weight: 700; letter-spacing: 0.14em; color: var(--accent); }
+.ps-ch-eyebrow { font-size: 0.76rem; font-weight: 700; letter-spacing: 0.14em; color: var(--text-sub); } /* 눈썹 = 보조 회색(§3-1, 2026-09-12 회수) */
 .ps-ch-title {
   font-family: var(--font-display); font-weight: 900;
   font-size: clamp(1.7rem, 4vw, 2.6rem); letter-spacing: -0.02em; line-height: 1.15;
@@ -165,7 +152,6 @@
 }
 @media (max-width: 760px) {
   .ps-nav-title { display: none; }
-  .ps-mosaic { grid-template-columns: repeat(2, 1fr); }
   .ps-hstats { gap: 1.4rem 2rem; }
   .ps-next-item { grid-template-columns: 1fr; gap: 0.25rem; }
 }

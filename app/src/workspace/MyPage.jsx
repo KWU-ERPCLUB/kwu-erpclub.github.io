@@ -74,12 +74,12 @@ export function PasswordChange({ store }) {
     e.preventDefault()
     setMsg('')
     if (pw.length < 6) return setError('비밀번호는 6자 이상')
-    if (pw !== pw2) return setError('두 입력이 다름 — 같은 값 입력')
+    if (pw !== pw2) return setError('두 입력이 다름. 같은 값 입력')
     setError('')
     setBusy(true)
     try {
       await store.auth.updatePassword(pw)
-      setMsg('비밀번호 변경됨 — 다음 로그인부터 새 값 사용')
+      setMsg('비밀번호 변경됨. 다음 로그인부터 새 값 사용')
       setPw('')
       setPw2('')
     } catch (err) {
@@ -146,8 +146,8 @@ export function InterestedPostings({ store }) {
   return (
     <section className="ws-block ws-interested">
       <h2 className="ws-h2">관심 공고 <span className="ws-count">{rows.length}</span></h2>
-      {failed && <p className="ws-error" role="alert">불러오기 실패 — 새로고침</p>}
-      {ready && !failed && rows.length === 0 && <p className="ws-note">관심 공고 0건 — 공고 탭에서 ★를 누르면 여기 모인다.</p>}
+      {failed && <p className="ws-error" role="alert">불러오기 실패. 새로고침</p>}
+      {ready && !failed && rows.length === 0 && <p className="ws-note">관심 공고 0건. 공고 탭에서 ★를 누르면 여기 모인다.</p>}
       <ul className="ws-list">
         {rows.map((r) => {
           const due = r['접수마감'] || r['시험일']
@@ -177,7 +177,7 @@ function Activity({ submissions, assignments }) {
     <section className="ws-block">
       <h2 className="ws-h2">활동내역</h2>
       <h3 className="ws-h3">내 과제 제출 <span className="ws-count">{submissions.length}</span></h3>
-      {submissions.length === 0 && <p className="ws-note">제출 0건 — 홈의 과제 섹션에서 링크 제출.</p>}
+      {submissions.length === 0 && <p className="ws-note">제출 0건. 홈의 과제 섹션에서 링크 제출.</p>}
       <ul className="ws-list">
         {submissions.map((s) => (
           <li key={s.id} className="ws-scrap">
@@ -229,7 +229,7 @@ export default function MyPage({ store, member, onProfileSaved }) {
           </details>
           {/* 사용법 안내(2026-08-20) — /guide/ 정적 페이지 입구. 지금까지 링크가 어디에도 없어 들어갈 길이 없었다 */}
           <p className="ws-note">
-            <a href="/guide/" target="_blank" rel="noreferrer">사용법 안내 — 허브 화면별 사용법</a>
+            <a href="/guide/" target="_blank" rel="noreferrer">사용법 안내(화면별)</a>
           </p>
         </section>
       </div>

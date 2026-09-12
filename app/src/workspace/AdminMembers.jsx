@@ -65,7 +65,7 @@ export default function AdminMembers({ store, meId }) {
         </table>
       </div>
       {rows.length === 0 && <p className="ws-note">멤버 0건.</p>}
-      <p className="ws-note">본인 역할은 변경 대상 아님 — 운영진 0명 상태를 만들지 않기 위함.</p>
+      <p className="ws-note">본인 역할은 변경 대상 아님. 운영진 0명 상태를 만들지 않기 위함.</p>
 
       <h3 className="ws-h3">계정 초대</h3>
       <ul className="ws-steps">

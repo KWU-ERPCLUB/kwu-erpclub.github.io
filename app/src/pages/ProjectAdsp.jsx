@@ -106,8 +106,8 @@ export default function ProjectAdsp() {
             <span className="pa-hero-label">PROJECT · ERP연구회 베타 스터디</span>
             <h1 className="pa-hero-title">ADsP 스터디 <em>1기</em></h1>
             <p className="pa-hero-sub">
-              8명이 6주를 달렸습니다.<br />
-              관리를 위해 <strong>학습 대시보드를 직접 만들었습니다.</strong>
+              8명이 6주간 진행했다.<br />
+              <strong>관리용 학습 대시보드를 직접 만들었다.</strong>
             </p>
             <div className="pa-hero-stats">
               {HERO_STATS.map((s) => (
@@ -141,7 +141,7 @@ export default function ProjectAdsp() {
           <ChapterHead date="06-26" title="8명, 서로 다른 두 방식" />
           <p className="pa-lead pa-center pa-rv">
             만나는 방식이 다른 두 팀.<br />
-            <strong>진도를 한눈에 볼 공통의 화면</strong>이 필요했고, 여기서 대시보드가 태어났다.
+            <strong>진도를 한눈에 볼 공통의 화면</strong>이 필요했고, 여기서 대시보드를 만들기로 했다.
           </p>
           <TeamSplit />
         </section>
@@ -244,9 +244,9 @@ export default function ProjectAdsp() {
           {/* 모집 창(RECRUIT.window) 동안만 노출 — 종료 후 자동 숨김(오너 v5). 카피 = 웹 제작 스터디 오해 방지 */}
           {recruitPhase(localYmd()) === 'open' ? (
             <div className="pa-cta-block pa-rv">
-              <h3 className="pa-cta-title">이 기록은 <em>AIM</em>의 작업 방식 예시입니다.</h3>
-              <p>AIM은 광운대 경영학부의 MIS·AI 스터디입니다.
-                웹 제작이 아니라 AI를 일에 쓰는 방식을 다루고, 필요한 도구는 이렇게 직접 만들어 씁니다.</p>
+              <h3 className="pa-cta-title">이 기록은 <em>AIM</em>의 작업 방식 예시다.</h3>
+              <p>AIM은 광운대 경영학부의 MIS·AI 스터디다.
+                AI를 일에 쓰는 방식을 다루고, 필요한 도구는 이렇게 직접 만들어 쓴다.</p>
               <div className="pa-cta-row">
                 <a className="btn-dark" href="/recruit/">AIM 1기 모집 보기 <Arrow /></a>
               </div>

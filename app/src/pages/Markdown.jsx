@@ -68,7 +68,7 @@ const container = {
     if (token.kind === '결정') {
       // 행 형식: 문제 | 결정 | 근거(선택) | 폐기한 대안(선택) — 의사결정 로직 카드
       const items = rows(token.text).map(([q, a, why, dropped]) =>
-        `<div class="md-decision"><p class="md-dc-flow"><span class="md-dc-q">${esc(q)}</span><span class="md-dc-arrow" aria-hidden="true">→</span><strong class="md-dc-a">${esc(a || '')}</strong></p>${why ? `<p class="md-dc-why">${esc(why)}</p>` : ''}${dropped ? `<p class="md-dc-dropped">폐기 — <s>${esc(dropped)}</s></p>` : ''}</div>`).join('')
+        `<div class="md-decision"><p class="md-dc-flow"><span class="md-dc-q">${esc(q)}</span><span class="md-dc-arrow" aria-hidden="true">→</span><strong class="md-dc-a">${esc(a || '')}</strong></p>${why ? `<p class="md-dc-why">${esc(why)}</p>` : ''}${dropped ? `<p class="md-dc-dropped">폐기: <s>${esc(dropped)}</s></p>` : ''}</div>`).join('')
       return `<div class="md-decisions">${items}</div>`
     }
     // (구 `비교`·`분기점` 블록 = 2026-08-20 삭제 — 프로젝트 md 상세 폐지로 사용처 0.
@@ -76,7 +76,7 @@ const container = {
     if (token.kind === '용어') {
       // 행 형식: 용어 | 설명 — 본문 ¹⁾²⁾ 각주 마커와 순번 대응(글 하단 작은 글씨)
       const items = rows(token.text).map(([term, def]) =>
-        `<li><strong>${esc(term)}</strong> — ${esc(def || '')}</li>`).join('')
+        `<li><strong>${esc(term)}</strong>: ${esc(def || '')}</li>`).join('')
       return `<aside class="md-terms"><span class="md-block-label">용어 설명</span><ol>${items}</ol></aside>`
     }
     // 출처 — 행 형식: 이름 | URL | 비고(선택). 글 하단 리서치 출처 모음.

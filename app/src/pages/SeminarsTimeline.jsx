@@ -87,7 +87,7 @@ export default function SeminarsTimeline({ all, today, onOpen }) {
   const items = sortSeminars(publicOnly(all), 'newest')
   return (
     <>
-      <PageHead label="SEMINARS" title="세미나" />
+      <PageHead label="SEMINARS" title={<em>세미나</em>} />
       <SeminarTimeline items={items} today={today} onOpen={onOpen} />
     </>
   )

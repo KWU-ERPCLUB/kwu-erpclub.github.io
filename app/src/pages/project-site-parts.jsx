@@ -9,7 +9,7 @@ import { META, STACK, HERO_STATS, PAGES, NEXT } from '../data/project-site-data.
 export function HeaderMeta() {
   const rows = [
     { k: '만든 사람', v: authorName(META.authorId), note: META.authorNote },
-    { k: '기간', v: META.period, note: META.periodNote },
+    { k: '기간', v: META.period },
     { k: '역할', v: META.roles.join(' · '), note: META.roleNote },
     { k: '상태', v: META.status, note: META.statusNote },
   ]
@@ -71,19 +71,8 @@ export function HeaderStats() {
   )
 }
 
-// 히어로 모자이크 — 면 6종의 실물 캡처를 한 판에. 아래 쇼케이스가 같은 캡처를 원본 크기로 다시 보인다.
-export function HeroMosaic() {
-  return (
-    <div className="ps-mosaic" aria-hidden="true">
-      {PAGES.map((p) => (
-        <span className="ps-mos-cell" key={p.id}>
-          <img src={p.shot} alt="" loading="lazy" />
-          <span className="ps-mos-name">{p.name}</span>
-        </span>
-      ))}
-    </div>
-  )
-}
+// (구 히어로 모자이크 = 2026-09-12 삭제 — 아래 쇼케이스와 같은 캡처 6장을 한 번 더 깔던 중복 블록.
+//  히어로 한 화면의 요소군을 8종에서 7종으로 줄인다.)
 
 // 결정 한 줄 — 물음 → 결정 + 근거. 면별 쇼케이스 안에서 반복된다.
 function DecisionRow({ d }) {

@@ -91,7 +91,7 @@ export default function Assignments({ store }) {
       {status === 'loading' && <div className="ws-skel" aria-label="불러오는 중"><span /><span /></div>}
       {error && <p className="ws-error" role="alert">{error}</p>}
       {msg && <p className="ws-ok" role="status">{msg}</p>}
-      {status === 'ready' && rows.length === 0 && <p className="ws-note">등록된 과제 0건.</p>}
+      {status === 'ready' && rows.length === 0 && <p className="ws-note">과제 0건. 운영진이 올리면 여기서 링크 제출.</p>}
       <ul className="ws-list">
         {rows.map((a) => {
           const sub = mine.find((s) => s.assignment_id === a.id) || null

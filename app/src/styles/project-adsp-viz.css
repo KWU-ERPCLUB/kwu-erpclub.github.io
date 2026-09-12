@@ -13,8 +13,8 @@
 
 /* ── 지표 톤 칩(E5 — 회색 농도 3단 + 실전 = 버건디) ── */
 .pa-tone { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 0.5rem; vertical-align: baseline; }
-.pa-tone.g1 { background: #c9c5bd; }
-.pa-tone.g2 { background: #8f8a81; }
+.pa-tone.g1 { background: var(--line); }
+.pa-tone.g2 { background: #8a8a86; } /* §1 등재 파생 회색(차트 문맥) */
 .pa-tone.g3 { background: var(--dark); }
 .pa-tone.hot { background: var(--accent); } /* 화이트리스트 — 실전점수(실력과 가장 가까운 지표) */
 
@@ -60,7 +60,7 @@
 /* ── 실패 카드(P-A — rauno 그리드) ── */
 .pa-fails { max-width: 980px; display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
 .pa-fail { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-card); padding: 1.4rem 1.5rem; text-align: center; }
-.pa-fail-tag { display: inline-flex; align-items: center; height: 22px; padding: 0 0.6rem; border-radius: var(--radius-pill); font-size: 0.68rem; font-weight: 700; margin-bottom: 0.7rem; }
+.pa-fail-tag { display: inline-flex; align-items: center; height: 22px; padding: 0 0.6rem; border-radius: var(--radius-pill); font-size: 0.72rem; font-weight: 700; margin-bottom: 0.7rem; }
 .pa-fail-tag.ok { background: var(--pa-ok); color: #fff; }
 .pa-fail-tag.half { background: var(--dark); color: #fff; }
 .pa-fail-tag.limit { background: var(--tint-accent); border: 1px solid var(--accent); color: var(--accent); } /* 화이트리스트 — 미해결 한계 표시 */

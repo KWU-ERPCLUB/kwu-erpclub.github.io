@@ -31,9 +31,9 @@ function NowCard({ todayKey }) {
       <h2 className="ws-h2">지금 위치</h2>
       {current && <p className="ws-note">이번 주 = {current.회차} · {current.주제}</p>}
       {!current && next && <p className="ws-note">다음 회차 = {next.회차} · {next.주제} ({dday(todayKey, next.startKey)})</p>}
-      {!current && !next && <p className="ws-note">1기 회차 일정 종료 — 세부는 위 로드맵에서.</p>}
+      {!current && !next && <p className="ws-note">1기 회차 일정 종료. 세부는 위 로드맵에서.</p>}
       {current && next && <p className="ws-note">다음 = {next.회차} · {dday(todayKey, next.startKey)}</p>}
-      <p className="ws-note">기록 작성 = 운영진 — 열람 전용.</p>
+      <p className="ws-note">기록 작성 = 운영진(열람 전용).</p>
     </section>
   )
 }
@@ -129,10 +129,10 @@ export default function Flow({ store, staff }) {
         <RoadmapSection store={store} todayKey={todayKey} />
         <section className="ws-block">
           <h2 className="ws-h2">주차 기록 <span className="ws-count">{rows.length}</span></h2>
-          <p className="ws-note">주 단위 진행 기록 — 지난 주에 한 것·이번 주에 하는 것·다음 주에 할 것.</p>
+          <p className="ws-note">주 단위 진행 기록(지난 주·이번 주·다음 주).</p>
           {status === 'loading' && <div className="ws-skel" aria-label="불러오는 중"><span /><span /></div>}
           {error && <p className="ws-error" role="alert">{error}</p>}
-          {status === 'ready' && rows.length === 0 && <p className="ws-note">기록 0건 — 운영진이 주차 기록을 추가하면 여기 쌓임.</p>}
+          {status === 'ready' && rows.length === 0 && <p className="ws-note">기록 0건. 운영진이 주차 기록을 추가하면 여기 쌓임.</p>}
           <ul className="ws-list ws-flow-list">
             {rows.map((r) => <WeekCard key={r.id} row={r} todayKey={todayKey} staff={staff} onRemove={remove} />)}
           </ul>

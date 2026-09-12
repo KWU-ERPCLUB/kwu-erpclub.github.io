@@ -29,7 +29,7 @@ test('설정됨·비로그인 = 학번·비밀번호 폼(이메일 입력 아님
   expect(html).not.toContain('이메일')
   expect(html).toContain('type="password"')
   // 2026-08-19 오너: 계정 발급 절차·문의처 안내 삭제 → 카드 맨 아래 표찰 한 줄만 남긴다
-  expect(html).toContain('AIM 스터디원 전용입니다.')
+  expect(html).toContain('AIM 스터디원 전용.')
   expect(html).not.toContain('운영진 초대 생성')
   // 회원가입·비밀번호 재설정 등 자가입 경로 미노출
   expect(html).not.toContain('회원가입')
@@ -217,7 +217,7 @@ test('ItemPopup = 종류·제목·날짜·설명 + 공고면 원문 링크, item
 // ── 경어체 금지(디자인규칙 §0-1 개조식 전면) ──
 // 예외 1건 = 로그인 카드 맨 아래 표찰(오너가 문구를 직접 지정, 2026-08-19).
 // 예외를 규칙 전체로 넓히지 않기 위해 **그 문장만** 빼고 검사한다 — 다른 곳의 경어체는 계속 잡힌다.
-const LOGIN_FOOT = 'AIM 스터디원 전용입니다.'
+const LOGIN_FOOT = 'AIM 스터디원 전용.'
 
 test('카피 = 개조식(경어체 종결 0건 — 로그인 표찰 1줄 제외)', () => {
   const html = flat(<Workspace repos={createMockRepositories()} configured />)

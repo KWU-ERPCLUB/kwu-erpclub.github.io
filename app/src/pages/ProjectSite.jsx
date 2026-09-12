@@ -5,7 +5,7 @@ import { useEffect } from 'react'
 import { SiteNav, SiteFooter, Arrow } from '../shared.jsx'
 import { useItemReveal, prefersReduced } from '../home-motion.jsx'
 import {
-  HeaderMeta, StackChips, HeaderLinks, HeaderStats, HeroMosaic, PageShowcase, NextList,
+  HeaderMeta, StackChips, HeaderLinks, HeaderStats, PageShowcase, NextList,
 } from './project-site-parts.jsx'
 import { RoadmapZigzag } from './project-site-roadmap.jsx'
 import { META } from '../data/project-site-data.js'
@@ -73,7 +73,7 @@ export default function ProjectSite() {
           <StackChips />
           <HeaderLinks />
           <HeaderStats />
-          <HeroMosaic />
+          {/* (구 히어로 모자이크 = 2026-09-12 삭제 — 아래 쇼케이스가 같은 캡처 6장을 원본 크기로 다시 보인다) */}
         </header>
 
         {/* 1 페이지 — 페이지마다 실물 캡처 + 왜 이렇게 만들었나 */}
@@ -108,13 +108,13 @@ export default function ProjectSite() {
             <span className="ps-ch-eyebrow">NEXT</span>
             <h2 className="ps-ch-title">아직 만들어가는 중이다</h2>
             <p className="ps-ch-lead">
-              1기가 실제로 시작되는 날 정식 버전을 붙일 예정이다. 지금은 베타다.
+              2026-09-12 정식 1.0.0을 붙였다. 1기 운영 중에도 회차마다 손본다.
             </p>
           </header>
           <NextList />
           <div className="ps-cta ps-rv">
             <h3 className="ps-cta-title">이 사이트에서 <em>AIM 1기</em>가 진행된다</h3>
-            <p>기고, 세미나, 모집이 전부 여기서 이뤄진다. 기획은 사람이, 구현은 AI가 맡았다.</p>
+            <p>인사이트, 세미나, 모집이 전부 여기서 이뤄진다. 기획은 사람이, 구현은 AI가 맡았다.</p>
             <div className="ps-cta-row">
               <a className="btn-dark" href="/recruit/">AIM 1기 모집 보기 <Arrow /></a>
               <a className="btn-2nd" href="/projects/">다른 프로젝트 <Arrow /></a>

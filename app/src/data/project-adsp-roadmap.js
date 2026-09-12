@@ -4,7 +4,7 @@
 
 export const ROADMAP = [
   {
-    kind: 'major', date: '06-26 ~ 28', title: 'MVP, 두 기능만 담아 2일 만에 배포',
+    kind: 'major', date: '06-26 ~ 28', title: 'MVP(최소 기능판), 두 기능만 담아 2일 만에 배포',
     problem: '팀이 갈리고 대면이 적어, 카톡만으로는 진도 점검이 안 된다',
     decision: '대시보드를 만들되 진도 체크와 현황판만 먼저. 가입 절차 없이 이름과 PIN으로 입장',
     result: '배포 첫날부터 실사용',
@@ -31,8 +31,8 @@ export const ROADMAP = [
   },
   { kind: 'minor', date: '07-05', text: '정리본을 끝까지 읽으면 바로 퀴즈로. 동선 한 단계 단축' },
   { kind: 'minor', date: '07-07', text: '진행도를 완료 일차 기준으로 교체. 산술은 맞았지만 체감과 어긋났다' },
-  { kind: 'minor', date: '07-11', text: 'DB 접근 31곳을 한 계층으로 격리. 고칠 곳이 한 곳이 됐다' },
-  { kind: 'minor', date: '07-16', text: '랭킹 저평가의 원인 확정. 조회 1,000행 절단을 페이지네이션으로 수리' },
+  { kind: 'minor', date: '07-11', text: '데이터를 읽고 쓰는 코드 31곳을 한 곳으로 모았다. 고칠 곳이 한 곳이 됐다' },
+  { kind: 'minor', date: '07-16', text: '랭킹 저평가의 원인 확정. 조회 1,000행 절단을 나눠 읽는 방식으로 수리' },
   { kind: 'minor', date: '07-16', text: '주차 점검 퀴즈와 연속 학습 배지. 자기 신고 대신 풀어야 완료' },
   {
     kind: 'major', date: '07-24', title: '쌓인 기록으로 남은 2주를 재계획',

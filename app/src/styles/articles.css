@@ -10,7 +10,8 @@
 .art-page { margin: 0 auto; padding: 3rem 1.5rem 5rem; }
 /* 상세 셸 폭 상한 해제(2026-07-28 도판 브레이크아웃) — 폭 책임 = .hub-md 그리드 트랙. */
 .art-page--doc { max-width: none; }
-.art-page--list { max-width: var(--maxw); }
+/* width:100% = 세로 flex(#root) 안에서 stretch가 꺼져 max-content 폭(420px)으로 줄던 빈 상태 점프 차단(2026-09-12 실측) */
+.art-page--list { max-width: var(--maxw); width: 100%; }
 /* 데스크톱 = 중앙 몰림 해소(콘텐츠 폭 1280 활용) */
 @media (min-width: 1200px) { .art-page--list { max-width: 1280px; } }
 @media (max-width: 700px) { .art-page { padding: 2.4rem 1.25rem 3.5rem; } }   /* 폰 상단 숨통(오너 2026-08-18) */
@@ -61,11 +62,14 @@
 .art-filter-sub button { height: 30px; font-size: 0.78rem; padding: 0 0.8rem; }
 .art-filter-n { margin-left: 0.3rem; font-size: 0.7rem; font-weight: 700; color: var(--text-sub); } /* 시리즈 칩 회차 수 */
 .art-filter button.on .art-filter-n { color: rgba(255, 255, 255, 0.72); }
+/* 글자 크기 = 축 칩(.art-filter button)과 같은 0.84rem — 한 줄 안 2단계 금지(2026-09-12) */
 .art-month, .art-sort {
-  height: 34px; font-size: 0.82rem; font-weight: 600; padding: 0 0.9rem; border: 1px solid var(--line);
+  height: 34px; font-size: 0.84rem; font-weight: 600; padding: 0 0.9rem; border: 1px solid var(--line);
   border-radius: var(--radius-pill); background: #fff; color: var(--text-sub); cursor: pointer;
+  transition: border-color 150ms ease-out, color 150ms ease-out, transform 100ms ease-out;
 }
 .art-month:hover, .art-sort:hover { border-color: var(--text); color: var(--text); }
+.art-month:active, .art-sort:active { transform: scale(0.98); }
 .art-month:focus-visible, .art-sort:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .art-filter button {
   font-size: 0.84rem; font-weight: 600; height: 32px; padding: 0 0.9rem; border: 1px solid var(--line);
@@ -109,10 +113,12 @@
 .ins-controls-axis { justify-content: center; gap: 0.6rem; }
 .art-filter-axis { margin-bottom: 0; }
 .art-weekly {
-  height: 32px; padding: 0 0.9rem; font: inherit; font-size: 0.82rem; font-weight: 600; color: var(--text-sub);
+  height: 32px; padding: 0 0.9rem; font: inherit; font-size: 0.84rem; font-weight: 600; color: var(--text-sub);
   background: #fff; border: 1px dashed var(--line); border-radius: var(--radius-pill); cursor: pointer;
+  transition: background-color 150ms ease-out, border-color 150ms ease-out, color 150ms ease-out, transform 100ms ease-out;
 }
 .art-weekly:hover { border-color: var(--text); color: var(--text); }
+.art-weekly:active { transform: scale(0.98); }
 .art-weekly.on { background: var(--dark); color: #fff; border-style: solid; border-color: var(--dark); }
 .art-weekly:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
@@ -278,7 +284,9 @@
 .chip-analysis { --nbg: #faf0e1; --nfg: #6f5227; }
 
 @media (prefers-reduced-motion: reduce) {
-  .art-filter button, .ins-tab, .art-card > button, .art-feature > button, .art-more, .art-search input { transition: none; }
+  .art-filter button, .ins-tab, .art-card > button, .art-feature > button, .art-more, .art-search input,
+  .art-weekly, .art-month, .art-sort { transition: none; }
+  .art-weekly:active, .art-month:active, .art-sort:active,
   .art-filter button:active, .ins-tab:active, .art-more:active,
   .art-card > button:hover, .art-card > button:active,
   .art-feature > button:hover, .art-feature > button:active { transform: none; }

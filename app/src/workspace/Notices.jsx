@@ -21,7 +21,7 @@ export function OpsLog() {
     <section className="ws-block ws-oplog">
       <h2 className="ws-h2">운영 기록</h2>
       {/* 내부 경로 안내 줄(구 /log·src/data/log.js) = 오너 삭제 2026-08-15 — 저장소 구조는 화면에 쓰지 않는다. */}
-      <p className="ws-note">지금까지의 운영 이력을 모아둔 읽기 전용 기록.</p>
+      <p className="ws-note">운영 이력 기록(읽기 전용).</p>
       {/* 아카이브 = 접힘 기본(2026-08-06 재구성 — 일상 업무 화면에서 홈 길이만 늘이던 문제) */}
       <details className="ws-fold">
       <summary>전체 기록 펼치기</summary>
@@ -89,7 +89,7 @@ export function NoticeTitles({ store, onOpen }) {
       <h2 className="ws-h2">공지 <span className="ws-count">{rows.length}</span></h2>
       {status === 'loading' && <div className="ws-skel" aria-label="불러오는 중"><span /><span /></div>}
       {error && <p className="ws-error" role="alert">{error}</p>}
-      {status === 'ready' && rows.length === 0 && <p className="ws-note">공지 0건.</p>}
+      {status === 'ready' && rows.length === 0 && <p className="ws-note">공지 0건. 운영진 안내가 여기 쌓임.</p>}
       <ul className="ws-list">
         {rows.map((n) => (
           <li key={n.id}>
@@ -114,7 +114,7 @@ export default function Notices({ store }) {
     <div className="ws-notices">
       {status === 'loading' && <div className="ws-skel" aria-label="불러오는 중"><span /><span /></div>}
       {error && <p className="ws-error" role="alert">{error}</p>}
-      {status === 'ready' && rows.length === 0 && <p className="ws-note">공지 0건.</p>}
+      {status === 'ready' && rows.length === 0 && <p className="ws-note">공지 0건. 운영진 안내가 여기 쌓임.</p>}
       {rows.length > 0 && (
         <ul className="ws-list ws-notice-list">
           {rows.map((n, i) => (

@@ -12,7 +12,8 @@ export function captionOf(a) {
   return c
 }
 
-// 제목에서 주차 파싱 — "주간 AI 트렌드 — 9월 2주" → "9월 2주". 못 찾으면 null(배지에 코너명만).
+// 제목에서 주차 파싱 — "주간 AI 트렌드 9월 2주" → "9월 2주". 대시 유무와 무관(구 서식 보관 글도 파싱).
+// 못 찾으면 null(배지에 코너명만).
 export function parseWeekLabel(title) {
   const m = /(\d{1,2})\s*월\s*(\d{1,2})\s*주/.exec(String(title || ''))
   if (!m) return null

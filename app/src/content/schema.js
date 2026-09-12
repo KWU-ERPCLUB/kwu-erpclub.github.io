@@ -120,7 +120,8 @@ export function validateEntry(kind, filename, data, body = '') {
     // 대시(—) 금지(새 규칙 글, 제목·본문 — 출처 블록 제외): 오너 2026-09-12 "대시를 쓰는 등 AI 특유의 톤"
     if (fresh) {
       const bodyNoSrc = String(body || '').replace(/^:{3,}\s*출처[\s\S]*?^:{3,}\s*$/m, '')
-      if (/—/.test(String(data.title || '')) && nature === '심층 분석') errs.push('심층 제목에 대시(—) 금지')
+      // 제목 = 성격 무관 전면 금지(2026-09-12 오너 결정 3 — 주간 서식도 「주간 AI 트렌드 M월 N주」로 통일).
+      if (/—/.test(String(data.title || ''))) errs.push('제목에 대시(—) 금지')
       if (/—/.test(bodyNoSrc)) errs.push('본문에 대시(—) 금지(출처 블록 제외) — 문장을 나눈다')
     }
     // 지금써먹기 = 선택(기본 false) — 있으면 boolean만 허용

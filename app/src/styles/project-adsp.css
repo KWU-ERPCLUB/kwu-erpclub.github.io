@@ -19,7 +19,7 @@
 .pa-nav-links { display: flex; gap: 1.1rem; margin: 0 auto; overflow-x: auto; scrollbar-width: none; }
 .pa-nav-links::-webkit-scrollbar { display: none; }
 .pa-nav-links a {
-  font-size: 0.8rem; font-weight: 600; color: var(--text-sub); text-decoration: none;
+  font-size: 0.78rem; font-weight: 600; color: var(--text-sub); text-decoration: none;
   padding: 0.2rem 0; border-bottom: 2px solid transparent; white-space: nowrap;
   transition: color 150ms ease-out, border-color 150ms ease-out;
 }
@@ -56,14 +56,14 @@
   display: flex; flex-direction: column; align-items: center;
   background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-card);
   padding: 1.3rem 2rem 1.1rem; min-width: 172px;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: transform 150ms ease-out, box-shadow 150ms ease-out; /* §5 hover 150ms */
 }
-.pa-hstat:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(20, 20, 20, 0.08); }
+.pa-hstat:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(20, 20, 20, 0.08); } /* 소형 카드 리프트 -2px */
 .pa-hstat:last-child { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); background: color-mix(in srgb, var(--tint-accent) 70%, #fff); }
 .pa-hstat:last-child .stat-num { color: var(--accent); }
 .pa-hstat .stat-num { font-size: clamp(2.6rem, 5.5vw, 3.8rem); margin-bottom: 0.3rem; }
 .pa-hstat-label { font-weight: 800; font-size: 0.95rem; }
-.pa-hstat-src { font-size: 0.75rem; color: var(--text-sub); margin-top: 0.2rem; }
+.pa-hstat-src { font-size: 0.78rem; color: var(--text-sub); margin-top: 0.2rem; } /* 히어로 마이크로 단 통일 */
 .pa-hero-shot {
   width: min(100%, 880px); border-radius: var(--radius-card);
   border: 1px solid var(--line); box-shadow: 0 24px 60px rgba(20, 20, 20, 0.12);
@@ -74,8 +74,8 @@
 .pa-ch-wash { background: var(--surface); }
 .pa-ch > * { max-width: var(--maxw); margin-left: auto; margin-right: auto; }
 .pa-ch-head { text-align: center; margin-bottom: 2.2rem; }
-.pa-ch-date {
-  font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; color: var(--accent); text-transform: uppercase;
+.pa-ch-date { /* 챕터 눈썹 = 보조 회색(§3-1) — 구 버건디는 화이트리스트 밖이라 2026-09-12 회수 */
+  font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; color: var(--text-sub); text-transform: uppercase;
 }
 .pa-ch-title {
   font-family: var(--font-display); font-weight: 900;
@@ -113,7 +113,7 @@
 .pa-sub-h { text-align: center; font-size: 1.05rem; font-weight: 800; margin: 0 0 1.2rem; }
 /* 위임 원칙 4칸(제작 챕터) — 피처 카드 승계 + 근거 각주 줄 */
 .pa-prin { margin-bottom: 1rem; }
-.pa-feat-src { display: block; margin-top: 0.7rem; font-size: 0.74rem; font-weight: 700; color: var(--accent); } /* 화이트리스트 — 근거 표기 */
+.pa-feat-src { display: block; margin-top: 0.7rem; font-size: 0.74rem; font-weight: 700; color: var(--text-sub); } /* 근거 각주 = 보조 회색(2026-09-12 회수) */
 
 /* (비교 슬라이더 = 오너 기각 2026-08-12 · 지표 4탭 = 오너 기각 2026-08-13 — 스타일 제거) */
 
@@ -144,7 +144,7 @@
 }
 .pa-loop-no { display: inline-flex; width: 22px; height: 22px; align-items: center; justify-content: center; border-radius: 50%; background: var(--dark); color: #fff; font-size: 0.72rem; font-weight: 800; margin-bottom: 0.5rem; }
 .pa-loop-k { display: block; font-weight: 800; font-size: 0.98rem; }
-.pa-loop-who { display: block; font-size: 0.74rem; font-weight: 700; color: var(--accent); margin: 0.15rem 0 0.4rem; } /* 화이트리스트 — 역할 강조 */
+.pa-loop-who { display: block; font-size: 0.74rem; font-weight: 700; color: var(--text-sub); margin: 0.15rem 0 0.4rem; } /* 역할 라벨 = 보조 회색(2026-09-12 회수) */
 .pa-loop-step p { margin: 0; font-size: 0.84rem; color: var(--text-sub); line-height: 1.6; }
 .pa-loop-cap { text-align: center; font-size: 0.85rem; color: var(--text-sub); margin: 0.9rem 0 0; }
 
@@ -154,7 +154,7 @@
 .pa-evi-head code { font-size: 0.72rem; color: var(--text-sub); }
 .pa-evi-tag {
   display: inline-flex; align-items: center; height: 22px; padding: 0 0.6rem; border-radius: var(--radius-pill);
-  background: var(--dark); color: #fff; font-size: 0.68rem; font-weight: 700; white-space: nowrap;
+  background: var(--dark); color: #fff; font-size: 0.72rem; font-weight: 700; white-space: nowrap;
 }
 .pa-evi-tag.alt { background: #fff; border: 1px solid var(--accent); color: var(--accent); } /* 재구성 예시 = 실물과 구분(prep 배지 문법 — 버건디 채움 금지 §1) */
 .pa-doc, .pa-term { border-radius: var(--radius-card); padding: 1.2rem 1.3rem; min-width: 0; }
@@ -164,9 +164,9 @@
   margin: 0; font-size: 0.78rem; line-height: 1.7; overflow-x: auto;
   font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
 }
-.pa-term { background: #1c1c1e; }
+.pa-term { background: var(--dark); } /* 팔레트 밖 하드코딩 회수(2026-09-12) */
 .pa-term .pa-evi-head code { color: rgba(255, 255, 255, 0.55); }
-.pa-term pre { color: #e8e8e6; }
+.pa-term pre { color: var(--line); }
 .pa-evi-note { margin: 0.8rem 0 0; font-size: 0.8rem; color: var(--text-sub); }
 .pa-term .pa-evi-note { color: rgba(255, 255, 255, 0.6); }
 
@@ -191,7 +191,7 @@
 .pa-dot { box-sizing: content-box; width: 9px; height: 9px; border-radius: 50%; border: 0; padding: 8px; margin: -8px; background: var(--line); background-clip: content-box; cursor: pointer; transition: background-color 150ms ease-out, transform 150ms ease-out; }
 .pa-dot.on { background-color: var(--accent); transform: scale(1.15); } /* background 축약형은 clip 리셋(왕점 버그) — color만 변경 */
 .pa-dot:focus-visible, .pa-car-pause:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-.pa-car-pause { border: 1px solid var(--line); background: #fff; border-radius: var(--radius-pill); font-size: 0.62rem; padding: 0.3rem 0.6rem; cursor: pointer; margin-left: 0.4rem; }
+.pa-car-pause { border: 1px solid var(--line); background: #fff; border-radius: var(--radius-pill); font-size: 0.72rem; padding: 0.3rem 0.6rem; cursor: pointer; margin-left: 0.4rem; }
 
 /* 마감 챕터 */
 .pa-cta-block { text-align: center; padding-top: 1rem; }

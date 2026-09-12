@@ -74,16 +74,24 @@ function useRoadmapFlow() {
 }
 
 // 플로팅 신청 CTA(오너 2026-08-07) — 우하단 고정, 폼(#apply)이 화면에 들어오면 숨김(도착했으니 역할 종료).
+// 2026-09-12: 헤드 대형 CTA(.rc-head-cta)도 관찰 대상에 추가 — 같은 라벨·같은 목적지 버튼이 첫 화면에 둘 겹쳐
+// Primary가 2개로 보였다(§4 화면당 1개). 둘 중 하나라도 보이면 부유 버튼을 숨기고, 헤드가 스크롤 아웃되면 등장.
 // IO 미지원·no-JS = 항상 표시(정적 폴백).
 function useFloatCta() {
   useEffect(() => {
     const btn = document.querySelector('.rc-float')
-    const form = document.getElementById('apply')
-    if (!btn || !form || typeof IntersectionObserver === 'undefined') return
-    const io = new IntersectionObserver(([e]) => {
-      btn.classList.toggle('rc-float-hide', e.isIntersecting)
+    if (!btn || typeof IntersectionObserver === 'undefined') return
+    const targets = [document.getElementById('apply'), document.querySelector('.rc-head-cta')].filter(Boolean)
+    if (targets.length === 0) return
+    const shown = new Set()
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) shown.add(e.target)
+        else shown.delete(e.target)
+      }
+      btn.classList.toggle('rc-float-hide', shown.size > 0)
     })
-    io.observe(form)
+    targets.forEach((t) => io.observe(t))
     return () => io.disconnect()
   }, [])
 }
