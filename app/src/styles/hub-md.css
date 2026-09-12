@@ -163,3 +163,18 @@ html.art-js .hub-md .md-cards.seen > .md-card:nth-child(n+4) { transition-delay:
     opacity: 1; transform: none; transition: none;
   }
 }
+
+/* ── 공지 서식 블록(2026-09-13 통일 — 문단 · 정보 표 · 링크 카드) ── */
+.hub-md .md-info { margin: 1rem 0; padding: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; max-width: 640px; }
+.hub-md .md-info-row { display: grid; grid-template-columns: 6.5rem 1fr; gap: 0.6rem; padding: 0.55rem 0.9rem; border-top: 1px solid var(--line); font-size: 0.95rem; line-height: 1.5; }
+.hub-md .md-info-row:first-child { border-top: 0; }
+.hub-md .md-info dt { margin: 0; font-size: 0.78rem; font-weight: 700; color: var(--text-sub); letter-spacing: 0.02em; align-self: baseline; }
+.hub-md .md-info dd { margin: 0; font-weight: 500; word-break: keep-all; }
+.hub-md .md-links { list-style: none; margin: 0.9rem 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.55rem; max-width: 640px; min-width: 0; }
+.md-links > li { flex: 1 1 220px; min-width: 0; }   /* flex = 좁은 카드에서 줄바꿈, 뷰포트를 밀지 않는다(375 실측 540·693 재발 후 grid 폐기) */
+.hub-md .md-linkcard { display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto auto; column-gap: 0.6rem; align-items: center; padding: 0.7rem 0.9rem; border: 1px solid var(--line); border-radius: 12px; background: #fff; color: var(--text); text-decoration: none; font-weight: 700; }
+.hub-md a.md-linkcard { border-bottom: 1px solid var(--line); }   /* 본문 링크 밑줄 규칙 덮어쓰기(카드 = 테두리가 경계) */
+.hub-md .md-linkcard-label { grid-column: 1; word-break: keep-all; }
+.hub-md .md-linkcard-dom { grid-column: 1; grid-row: 2; font-size: 0.78rem; font-weight: 500; color: var(--text-sub); word-break: keep-all; overflow-wrap: anywhere; }
+.hub-md .md-linkcard-go { grid-column: 2; grid-row: 1 / span 2; font-size: 0.78rem; font-weight: 700; color: var(--accent); white-space: nowrap; }
+@media (hover: hover) { .hub-md a.md-linkcard:hover { background: var(--surface); } }

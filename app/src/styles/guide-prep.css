@@ -1,0 +1,96 @@
+/* 가이드 페이지 — 회차 준비물 하는 법(/guide/ot-prep/, 2026-09-13 역할 3분리: 공지 = 알림 · 과제 = 할 일 · 가이드 = 방법).
+   구 워크스페이스 공지 안 블록을 이 파일로 이동. 클래스 접두 ws-prep-/ws-ui-는 유지(마크업 호환). 토큰 = global.css. */
+.gp-wrap { max-width: 1200px; margin: 0 auto; padding: 0 clamp(1rem, 3vw, 2.2rem) 4rem; }
+.gp-intro { max-width: 640px; margin: 0 auto 1.6rem; color: var(--text-sub); line-height: 1.7; text-align: center; }
+.gp-body { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 1.4rem clamp(1rem, 2.5vw, 2rem) 1.8rem; }
+/* ══ 본체 — craft 적용: 2열(좌 목록·우 상세) · 위계 3단 · 포인트 색 ≤3 · 채움 버튼 1개 ══ */
+.ws-prep-pin { flex: none; font-size: 0.9rem; }
+.ws-prep-meta { flex: none; font-size: 0.78rem; color: var(--text-sub); font-variant-numeric: tabular-nums; }
+.ws-prep { padding: 0.9rem 0 0.2rem; color: var(--text); word-break: keep-all; }
+.ws-prep a { color: var(--accent); font-weight: 700; text-decoration: underline; text-underline-offset: 0.18em; word-break: break-all; }
+/* 머리 — 제목은 summary 행이 담당(1.05rem 800). 리드 1줄 회색, 진행 막대 4px(포인트 색 1) */
+.ws-prep-head { max-width: 640px; margin: 0.2rem 0 1.4rem; }
+.ws-prep-lead { margin: 0 0 0.9rem; font-size: 1rem; line-height: 1.6; color: var(--text-sub); }
+/* 4단계 스테퍼 — 점 + 라벨 + n/total, 사이 선. 완료 묶음 = 채움 점(포인트 색), 일부 = 반, 전 = 테두리 */
+.ws-prep-stepper { list-style: none; margin: 0.9rem 0 0; padding: 0; display: flex; align-items: center; gap: 0; max-width: 640px; }
+.ws-prep-step { position: relative; flex: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 0.25rem; padding-right: 0.8rem; }
+.ws-prep-step::before { content: ''; position: absolute; left: 14px; right: 0; top: 6px; height: 2px; background: var(--line); }
+.ws-prep-step:last-child::before { display: none; }
+.ws-prep-step-dot { position: relative; z-index: 1; width: 14px; height: 14px; border-radius: 50%; background: #fff; border: 2px solid var(--line); box-sizing: border-box; }
+.ws-prep-step.is-part .ws-prep-step-dot { border-color: var(--accent); }
+.ws-prep-step.is-done .ws-prep-step-dot { background: var(--accent); border-color: var(--accent); }
+.ws-prep-step.is-done::before { background: var(--accent); }
+.ws-prep-step-label { font-size: 0.9rem; font-weight: 700; }
+/* 2열 — 좌 목록 380 / 우 상세(고정). 1100 아래 1열 */
+.ws-prep-cols { display: grid; grid-template-columns: minmax(280px, 340px) minmax(0, 1fr); gap: 2.4rem; align-items: start; }
+.ws-prep-side { position: sticky; top: 88px; }
+.ws-prep-inline { display: none; }
+@media (max-width: 1099px) {
+  .ws-prep-cols { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .ws-prep-side { display: none; }
+  .ws-prep-inline { display: block; margin: 0.2rem 0 0.6rem 0; }
+}
+/* 묶음 = 라벨 0.78 회색 + 행. 그룹 간 24px, 행 간 4px(R76) */
+.ws-prep-group { margin-bottom: 1.5rem; }
+.ws-prep-group-label { margin: 0 0 0.35rem 0.5rem; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.04em; color: var(--text-sub); }
+.ws-prep-item { border-radius: 10px; margin-bottom: 0.25rem; border-left: 3px solid transparent; }
+.ws-prep-item.is-active { background: var(--surface); border-left-color: var(--accent); }
+.ws-prep-rowline { display: flex; align-items: center; gap: 0.5rem; padding: 0.15rem 0.5rem 0.15rem 0.45rem; }
+.ws-prep-rowline input { width: 20px; height: 20px; flex: none; accent-color: var(--accent); cursor: pointer; }
+.ws-prep-rowbtn { flex: 1; min-width: 0; display: flex; align-items: center; gap: 0.6rem; padding: 0.5rem 0.2rem; font: inherit; text-align: left; background: none; border: 0; color: inherit; cursor: pointer; border-radius: 8px; }
+.ws-prep-ico { flex: none; color: var(--text-sub); }
+.ws-prep-item.is-active .ws-prep-ico, .ws-prep-detail-head .ws-prep-ico { color: var(--text); }
+.ws-prep-detail-head .ws-prep-ico { width: 22px; height: 22px; }
+.ws-prep-item-title { flex: 1; min-width: 0; font-size: 0.95rem; font-weight: 500; line-height: 1.4; }
+.ws-prep-item.is-active .ws-prep-item-title { font-weight: 700; }
+.ws-prep-item.is-done .ws-prep-item-title { color: var(--text-sub); text-decoration: line-through; }
+@media (hover: hover) { .ws-prep-item:not(.is-active) .ws-prep-rowbtn:hover { background: var(--surface); } }
+.ws-prep-rowbtn:active { transform: scale(0.99); }
+.ws-prep-rowbtn:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+/* 상세 — 제목 1.15 / 본문 1 / 메타 0.78. 단계 번호 = 큰 회색 숫자 열 */
+.ws-prep-detail { padding: 0.2rem 0 0; }
+.ws-prep-inline .ws-prep-detail { padding: 0.4rem 0.7rem 0.6rem 0.9rem; }
+.ws-prep-detail-head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+.ws-prep-detail-title { margin: 0; font-family: var(--font-display); font-size: 1.15rem; font-weight: 800; letter-spacing: -0.01em; }
+.ws-prep-what { margin: 0 0 0.6rem; font-size: 1rem; line-height: 1.7; max-width: 640px; }
+.ws-prep-need { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; margin: 0 0 1rem; max-width: 640px; }
+.ws-prep-need .ws-prep-meta { margin-right: 0.2rem; font-weight: 700; }
+/* 화면 요소 모양 — 버튼 칩 · 경로 칩 · 입력창 · 키캡 · 사이트 카드 · 준비물 칩 (전부 흰 바탕 + 회색 테두리, 채움 없음) */
+.ws-ui-btn, .ws-ui-crumb, .ws-ui-chip { display: inline-block; padding: 0.1rem 0.6rem; border: 1px solid var(--text); border-radius: var(--radius-pill); font-size: 0.92rem; font-weight: 700; line-height: 1.45; background: #fff; vertical-align: 0.05rem; white-space: nowrap; }
+.ws-ui-crumb { border-color: var(--line); font-weight: 600; }
+.ws-ui-chip { border-color: var(--line); font-weight: 500; color: var(--text); white-space: normal; }
+.ws-ui-path { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 0.15rem; }
+.ws-ui-sep { color: var(--text-sub); padding: 0 0.15rem; }
+.ws-ui-input { display: inline-block; padding: 0.1rem 0.6rem; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); font-size: 0.92rem; font-weight: 500; line-height: 1.45; color: var(--text); vertical-align: 0.05rem; box-shadow: inset 0 1px 0 rgba(0,0,0,0.04); }
+.ws-ui-keys kbd { display: inline-block; min-width: 1.6em; padding: 0.05rem 0.45rem; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 6px; background: #fff; font: inherit; font-size: 0.85rem; font-weight: 700; text-align: center; }
+.ws-ui-site { display: inline-flex; align-items: center; gap: 0.6rem; margin: 0.1rem 0.5rem 0.2rem 0; padding: 0.35rem 0.75rem; border: 1px solid var(--line); border-radius: 10px; background: #fff; text-decoration: none !important; color: var(--text) !important; font-weight: 700; }
+.ws-ui-site-dom { word-break: keep-all; overflow-wrap: normal; }   /* 줄바꿈은 슬래시 뒤(<wbr>)에서만 */
+.ws-ui-site { max-width: 100%; }
+.ws-ui-site-go { font-size: 0.78rem; font-weight: 700; color: var(--accent); white-space: nowrap; }
+@media (hover: hover) { .ws-ui-site:hover { background: var(--surface); } }
+.ws-prep-step-rest { display: inline; }
+/* 재료 카드 4장 — 번호 + 제목 + 예 */
+.ws-prep-cards { list-style: none; margin: 0 0 1.1rem; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem; max-width: 640px; }
+.ws-prep-cards li { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: 0.55rem; row-gap: 0.15rem; padding: 0.6rem 0.75rem; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+.ws-prep-card-no { grid-row: 1 / span 2; font-family: var(--font-display); font-size: 1.25rem; font-weight: 800; color: var(--text-sub); line-height: 1.1; }
+.ws-prep-card-title { font-weight: 700; }
+.ws-prep-card-ex { font-size: 0.85rem; color: var(--text-sub); line-height: 1.45; }
+@media (max-width: 560px) { .ws-prep-cards { grid-template-columns: 1fr; } }
+.ws-prep-steps { list-style: none; margin: 0; padding: 0; max-width: 640px; }
+.ws-prep-steps li { display: flex; gap: 0.7rem; align-items: baseline; padding: 0.55rem 0; border-top: 1px solid var(--line); }
+.ws-prep-steps li .ws-prep-step-text { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 0.35rem; }
+.ws-prep-steps li:first-child { border-top: 0; }
+.ws-prep-step-no { flex: none; width: 2rem; white-space: nowrap; font-family: var(--font-display); font-size: 1.25rem; font-weight: 800; color: var(--text-sub); font-variant-numeric: tabular-nums; line-height: 1; }
+.ws-prep-step-text { font-size: 1rem; line-height: 1.6; }
+.ws-prep-tips { margin: 1rem 0 0; padding: 0.7rem 0 0 1.1rem; border-top: 1px solid var(--line); max-width: 640px; color: var(--text-sub); font-size: 0.95rem; line-height: 1.6; }
+.ws-prep-tips li { margin: 0.25rem 0; list-style: disc; }
+.ws-prep-actions { margin-top: 1.1rem; }
+.ws-prep-done { height: 40px; padding: 0 1.3rem; font: inherit; font-weight: 700; color: #fff; background: var(--dark); border: 1px solid var(--dark); border-radius: var(--radius-pill); cursor: pointer; transition: background 150ms ease-out; }
+.ws-prep-done.is-undo { color: var(--text); background: #fff; border-color: var(--line); }
+@media (hover: hover) { .ws-prep-done:hover { background: var(--btn-hover); } .ws-prep-done.is-undo:hover { background: var(--surface); } }
+.ws-prep-done:active { transform: scale(0.98); }
+.ws-prep-done:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.ws-prep-note { margin: 1.6rem 0 0; padding-top: 0.9rem; border-top: 1px solid var(--line); max-width: 640px; font-size: 0.95rem; line-height: 1.6; color: var(--text-sub); }
+.ws-rm-prep { display: inline-block; margin-top: 0.6rem; font-weight: 700; color: var(--text); text-decoration: underline; text-underline-offset: 0.2em; }
+@media (prefers-reduced-motion: reduce) { .ws-prep-done { transition: none; } .ws-prep-rowbtn:active, .ws-prep-done:active { transform: none; } }
+
