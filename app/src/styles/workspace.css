@@ -300,9 +300,16 @@
 /* 머리 — 제목은 summary 행이 담당(1.05rem 800). 리드 1줄 회색, 진행 막대 4px(포인트 색 1) */
 .ws-prep-head { max-width: 640px; margin: 0.2rem 0 1.4rem; }
 .ws-prep-lead { margin: 0 0 0.9rem; font-size: 1rem; line-height: 1.6; color: var(--text-sub); }
-.ws-prep-progress { height: 4px; background: var(--line); border-radius: 2px; overflow: hidden; }
-.ws-prep-bar { display: block; height: 100%; background: var(--accent); border-radius: 2px; transition: width 150ms ease-out; }
-.ws-prep-count { margin: 0.4rem 0 0; }
+/* 4단계 스테퍼 — 점 + 라벨 + n/total, 사이 선. 완료 묶음 = 채움 점(포인트 색), 일부 = 반, 전 = 테두리 */
+.ws-prep-stepper { list-style: none; margin: 0.9rem 0 0; padding: 0; display: flex; align-items: center; gap: 0; max-width: 640px; }
+.ws-prep-step { position: relative; flex: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 0.25rem; padding-right: 0.8rem; }
+.ws-prep-step::before { content: ''; position: absolute; left: 14px; right: 0; top: 6px; height: 2px; background: var(--line); }
+.ws-prep-step:last-child::before { display: none; }
+.ws-prep-step-dot { position: relative; z-index: 1; width: 14px; height: 14px; border-radius: 50%; background: #fff; border: 2px solid var(--line); box-sizing: border-box; }
+.ws-prep-step.is-part .ws-prep-step-dot { border-color: var(--accent); }
+.ws-prep-step.is-done .ws-prep-step-dot { background: var(--accent); border-color: var(--accent); }
+.ws-prep-step.is-done::before { background: var(--accent); }
+.ws-prep-step-label { font-size: 0.9rem; font-weight: 700; }
 /* 2열 — 좌 목록 380 / 우 상세(고정). 1100 아래 1열 */
 .ws-prep-cols { display: grid; grid-template-columns: minmax(300px, 380px) minmax(0, 1fr); gap: 2rem; align-items: start; }
 .ws-prep-side { position: sticky; top: 88px; }
@@ -320,7 +327,9 @@
 .ws-prep-rowline { display: flex; align-items: center; gap: 0.5rem; padding: 0.15rem 0.5rem 0.15rem 0.45rem; }
 .ws-prep-rowline input { width: 20px; height: 20px; flex: none; accent-color: var(--accent); cursor: pointer; }
 .ws-prep-rowbtn { flex: 1; min-width: 0; display: flex; align-items: center; gap: 0.6rem; padding: 0.5rem 0.2rem; font: inherit; text-align: left; background: none; border: 0; color: inherit; cursor: pointer; border-radius: 8px; }
-.ws-prep-no { flex: none; width: 1.2rem; font-size: 0.78rem; color: var(--text-sub); font-variant-numeric: tabular-nums; }
+.ws-prep-ico { flex: none; color: var(--text-sub); }
+.ws-prep-item.is-active .ws-prep-ico, .ws-prep-detail-head .ws-prep-ico { color: var(--text); }
+.ws-prep-detail-head .ws-prep-ico { width: 22px; height: 22px; }
 .ws-prep-item-title { flex: 1; min-width: 0; font-size: 1rem; font-weight: 500; line-height: 1.4; }
 .ws-prep-item.is-active .ws-prep-item-title { font-weight: 700; }
 .ws-prep-item.is-done .ws-prep-item-title { color: var(--text-sub); text-decoration: line-through; }
@@ -330,13 +339,34 @@
 /* 상세 — 제목 1.15 / 본문 1 / 메타 0.78. 단계 번호 = 큰 회색 숫자 열 */
 .ws-prep-detail { padding: 0.2rem 0 0; }
 .ws-prep-inline .ws-prep-detail { padding: 0.4rem 0.7rem 0.6rem 0.9rem; }
-.ws-prep-detail-head { display: flex; align-items: baseline; gap: 0.6rem; margin-bottom: 0.5rem; }
+.ws-prep-detail-head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
 .ws-prep-detail-title { margin: 0; font-family: var(--font-display); font-size: 1.15rem; font-weight: 800; letter-spacing: -0.01em; }
 .ws-prep-what { margin: 0 0 0.6rem; font-size: 1rem; line-height: 1.7; max-width: 640px; }
-.ws-prep-need { margin: 0 0 1rem; font-size: 0.95rem; line-height: 1.6; color: var(--text-sub); max-width: 640px; }
-.ws-prep-need .ws-prep-meta { margin-right: 0.35rem; font-weight: 700; }
+.ws-prep-need { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; margin: 0 0 1rem; max-width: 640px; }
+.ws-prep-need .ws-prep-meta { margin-right: 0.2rem; font-weight: 700; }
+/* 화면 요소 모양 — 버튼 칩 · 경로 칩 · 입력창 · 키캡 · 사이트 카드 · 준비물 칩 (전부 흰 바탕 + 회색 테두리, 채움 없음) */
+.ws-ui-btn, .ws-ui-crumb, .ws-ui-chip { display: inline-block; padding: 0.1rem 0.6rem; border: 1px solid var(--text); border-radius: var(--radius-pill); font-size: 0.92rem; font-weight: 700; line-height: 1.45; background: #fff; vertical-align: 0.05rem; white-space: nowrap; }
+.ws-ui-crumb { border-color: var(--line); font-weight: 600; }
+.ws-ui-chip { border-color: var(--line); font-weight: 500; color: var(--text); white-space: normal; }
+.ws-ui-path { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 0.15rem; }
+.ws-ui-sep { color: var(--text-sub); padding: 0 0.15rem; }
+.ws-ui-input { display: inline-block; padding: 0.1rem 0.6rem; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); font-size: 0.92rem; font-weight: 500; line-height: 1.45; color: var(--text); vertical-align: 0.05rem; box-shadow: inset 0 1px 0 rgba(0,0,0,0.04); }
+.ws-ui-keys kbd { display: inline-block; min-width: 1.6em; padding: 0.05rem 0.45rem; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 6px; background: #fff; font: inherit; font-size: 0.85rem; font-weight: 700; text-align: center; }
+.ws-ui-site { display: inline-flex; align-items: center; gap: 0.6rem; margin: 0.1rem 0.5rem 0.2rem 0; padding: 0.35rem 0.75rem; border: 1px solid var(--line); border-radius: 10px; background: #fff; text-decoration: none !important; color: var(--text) !important; font-weight: 700; }
+.ws-ui-site-dom { word-break: break-all; }
+.ws-ui-site-go { font-size: 0.78rem; font-weight: 700; color: var(--accent); white-space: nowrap; }
+@media (hover: hover) { .ws-ui-site:hover { background: var(--surface); } }
+.ws-prep-step-rest { display: inline; }
+/* 재료 카드 4장 — 번호 + 제목 + 예 */
+.ws-prep-cards { list-style: none; margin: 0 0 1.1rem; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem; max-width: 640px; }
+.ws-prep-cards li { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: 0.55rem; row-gap: 0.15rem; padding: 0.6rem 0.75rem; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+.ws-prep-card-no { grid-row: 1 / span 2; font-family: var(--font-display); font-size: 1.25rem; font-weight: 800; color: var(--text-sub); line-height: 1.1; }
+.ws-prep-card-title { font-weight: 700; }
+.ws-prep-card-ex { font-size: 0.85rem; color: var(--text-sub); line-height: 1.45; }
+@media (max-width: 560px) { .ws-prep-cards { grid-template-columns: 1fr; } }
 .ws-prep-steps { list-style: none; margin: 0; padding: 0; max-width: 640px; }
-.ws-prep-steps li { display: flex; gap: 0.7rem; align-items: baseline; padding: 0.45rem 0; border-top: 1px solid var(--line); }
+.ws-prep-steps li { display: flex; gap: 0.7rem; align-items: baseline; padding: 0.55rem 0; border-top: 1px solid var(--line); }
+.ws-prep-steps li .ws-prep-step-text { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 0.35rem; }
 .ws-prep-steps li:first-child { border-top: 0; }
 .ws-prep-step-no { flex: none; width: 2rem; white-space: nowrap; font-family: var(--font-display); font-size: 1.25rem; font-weight: 800; color: var(--text-sub); font-variant-numeric: tabular-nums; line-height: 1; }
 .ws-prep-step-text { font-size: 1rem; line-height: 1.6; }
@@ -350,7 +380,7 @@
 .ws-prep-done:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .ws-prep-note { margin: 1.6rem 0 0; padding-top: 0.9rem; border-top: 1px solid var(--line); max-width: 640px; font-size: 0.95rem; line-height: 1.6; color: var(--text-sub); }
 .ws-rm-prep { display: inline-block; margin-top: 0.6rem; font-weight: 700; color: var(--text); text-decoration: underline; text-underline-offset: 0.2em; }
-@media (prefers-reduced-motion: reduce) { .ws-prep-bar, .ws-prep-done { transition: none; } .ws-prep-rowbtn:active, .ws-prep-done:active { transform: none; } }
+@media (prefers-reduced-motion: reduce) { .ws-prep-done { transition: none; } .ws-prep-rowbtn:active, .ws-prep-done:active { transform: none; } }
 
 /* ══ 눌림 상태 묶음(2026-09-12 전수조사 D21 · §5 4상태 의무) — 누를 수 있는데 눌린 표시가 없던 5종.
    .ws-marks 접두 = 북마크 카드 hover 변형(workspace-mypage.css)보다 뒤에 오게 하는 특정도 확보 ══ */
