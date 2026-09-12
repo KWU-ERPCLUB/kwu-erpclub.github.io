@@ -61,7 +61,7 @@
 .art-source:hover { border-color: var(--text-sub); }
 .art-source:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .art-source-label { flex: none; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; color: var(--text-sub); border: 1px solid var(--line); border-radius: var(--radius-pill); padding: 0.1rem 0.55rem; background: #fff; }
-.art-source-name { flex: 1; min-width: 0; font-size: 0.9rem; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.art-source-name { flex: 1; min-width: 0; font-size: 0.9rem; font-weight: 600; line-height: 1.4; white-space: normal; overflow-wrap: anywhere; } /* nowrap 폐지 — 매체 4개 병기 시 375폭 넘침(2026-09-12) */
 .art-source-go { flex: none; display: inline-flex; color: var(--text-sub); }
 .art-source:hover .art-source-go { color: var(--text); }
 
