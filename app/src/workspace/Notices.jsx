@@ -5,8 +5,12 @@
 // 운영 기록 = 읽기 전용 렌더 — 데이터 원천 = src/data/log.js(기록 추가 = 데이터 1줄 추가).
 import { useCallback, useEffect, useState, useRef } from 'react'
 import Markdown from '../pages/Markdown.jsx'
-import PrepNotices from './PrepNotice.jsx'
-import { PREP_GUIDES, guideHref } from '../data/prep-guides.js'
+import PrepNotices, { readChecks } from './PrepNotice.jsx'
+import { PREP_GUIDES, guideHref, guideItems } from '../data/prep-guides.js'
+import { loadSeen, markSeen, isNew } from '../pages/seen-store.js'
+import { toKey, dday } from './calendar-logic.js'
+import { nextSessionNo, findByNo } from './Roadmap.jsx'
+import { AIM_TIMELINE } from '../data/aim-roadmap.js'
 import { ROADMAP, HISTORY, STATS, STATS_BASIS } from '../data/log.js'
 
 // 구 Log.jsx splitEntry 이식 — 기록 텍스트를 '제목 — 설명' 경계(' — ')로 분리(날조 없음). 경계 없으면 전체가 제목.
@@ -144,33 +148,124 @@ function NoticeBody({ id, body }) {
   return <div className="ws-notice-body" ref={ref}><Markdown body={body} /></div>
 }
 
-// 공지 탭 본문(2026-08-19 오너 개편) — 한 공지 = 접힌 한 줄. 제목·날짜만 보이고 클릭하면 본문이 펼쳐진다.
-// 이유: 카드로 전문을 펼쳐 두면 공지가 쌓일수록 무엇이 있는지 한눈에 안 들어온다.
-// 기본 = 전부 접힘(2026-09-12 오너: 들어오자마자 펼쳐져 있으면 목록이 안 읽힌다 — 구 "최신 1건 펼침" 폐지).
-// 문법은 공고 탭의 행과 같다(details) — 접힘 상태에서도 본문이 DOM에 있어 브라우저 검색이 된다.
+// 본문 첫 문단 → 카드 요약(2026-09-13 공지 탭 재설계 — "요약을 보여 주고 본문만 접는다"). 제목·목록·구분선은 건너뛰고 마크다운 기호 제거. 순수(테스트 대상).
+export function firstParagraph(md, max = 110) {
+  const lines = String(md || '').split('\n').map((l) => l.trim())
+  const line = lines.find((l) => l && !/^(#|>|[-*]\s|\d+\.\s|:::|\|)/.test(l)) || lines.find((l) => l && !/^(#|:::|\|)/.test(l)) || ''
+  const plain = line.replace(/\*\*|__|`/g, '').replace(/\[([^\]]+)\]\([^)]*\)/g, '$1').replace(/^[-*>]\s*/, '').replace(/\s+/g, ' ').trim()
+  return plain.length > max ? `${plain.slice(0, max - 1).trim()}…` : plain
+}
+const noticeKey = (id) => `notice:${id}`
+
+// DB 공지 카드 — 종류 라벨(안내) · 제목 · 새 공지 N(7일 이내·미열람) · 날짜 · 요약 1~2줄. 누르면 본문이 카드 안에서 펼쳐진다.
+function NoticeCard({ n, seen, onSee }) {
+  const date = ymd(n.created_at)
+  const fresh = isNew({ slug: noticeKey(n.id), date }, seen, toKey(new Date()))
+  return (
+    <li className="ws-notice-row ws-ncard">
+      <details onToggle={(e) => { if (e.currentTarget.open) onSee(noticeKey(n.id)) }}>
+        <summary className="ws-notice-sum">
+          <span className="ws-ncard-head">
+            <span className="ws-nkind">안내</span>
+            <span className="ws-notice-title">{n['제목']}</span>
+            {fresh && <span className="ws-prow-new" aria-label="새 공지">N</span>}
+            <span className="ws-notice-when">{date}</span>
+          </span>
+          <span className="ws-ncard-sum">{firstParagraph(n['본문'])}</span>
+        </summary>
+        <NoticeBody id={n.id} body={n['본문'] || ''} />
+      </details>
+    </li>
+  )
+}
+
+// 우측 레일 — 「이번 주」(다음 회차 · 가장 가까운 과제 마감 · 준비물 진행) + 「읽는 법」. 홈과 같은 데이터, 새 입력 0.
+function NoticeRail({ store, todayKey }) {
+  const [sessions, setSessions] = useState([])
+  const [assignments, setAssignments] = useState([])
+  const [prepDone, setPrepDone] = useState(null)
+  useEffect(() => {
+    let on = true
+    Promise.all([store.sessions.list(), store.assignments.list()])
+      .then(([s, a]) => { if (on) { setSessions(s || []); setAssignments(a || []) } })
+      .catch(() => { /* 레일은 보조 — 실패 시 빈 칸 */ })
+    const g = PREP_GUIDES[0]
+    if (g) { const n = guideItems(g).length; setPrepDone({ done: readChecks(g.id, n).filter(Boolean).length, n }) }
+    return () => { on = false }
+  }, [store])
+  const nextNo = nextSessionNo(AIM_TIMELINE, sessions, todayKey)
+  const nextItem = AIM_TIMELINE.find((it) => it.type !== 'phase' && it.no === nextNo)
+  const nextSession = nextItem ? findByNo(sessions, nextItem.no) : null
+  const due = assignments
+    .filter((a) => a['마감'] && String(a['마감']).slice(0, 10) >= todayKey)
+    .sort((a, b) => (a['마감'] < b['마감'] ? -1 : 1))[0]
+  const dueKey = due ? String(due['마감']).slice(0, 10) : null
+  return (
+    <>
+      <section className="ws-block">
+        <h2 className="ws-h2">이번 주</h2>
+        <ul className="ws-list ws-nrail">
+          {nextItem && (
+            <li><span className="ws-nrail-k">다음 회차</span><span className="ws-nrail-v">{nextItem.회차} · {nextItem.주제}</span>{nextSession?.['날짜'] && <span className="ws-nrail-d">{nextSession['날짜'].slice(5)} · {dday(todayKey, nextSession['날짜'])}</span>}</li>
+          )}
+          {due && (
+            <li><span className="ws-nrail-k">과제 마감</span><span className="ws-nrail-v">{due['제목']}</span><span className="ws-nrail-d">{dueKey.slice(5)} · {dday(todayKey, dueKey)}</span></li>
+          )}
+          {prepDone && (
+            <li><span className="ws-nrail-k">OT 준비물</span><span className="ws-nrail-v">{prepDone.done} / {prepDone.n} 완료</span><span className="ws-nrail-bar" aria-hidden="true"><span style={{ width: `${(prepDone.done / prepDone.n) * 100}%` }} /></span></li>
+          )}
+          {!nextItem && !due && !prepDone && <li className="ws-note">이번 주 항목 없음</li>}
+        </ul>
+      </section>
+      <section className="ws-block">
+        <h2 className="ws-h2">읽는 법</h2>
+        <ul className="ws-guide-lines">
+          <li>카드를 누르면 본문이 열린다</li>
+          <li>📌 준비물은 항목별 하는 법과 완료 표시가 있다</li>
+          <li>N = 7일 안에 올라온 안 읽은 공지</li>
+        </ul>
+      </section>
+    </>
+  )
+}
+
+const KINDS = ['전체', '준비물', '안내']
+
+// 공지 탭(2026-09-13 재설계 — 오너: "홈·로드맵·공고에 비해 밀도가 낮고 투박하다"). 골격 = 다른 탭과 같은 2열(본문 + 레일).
+// 본문 = 종류 라벨이 붙은 카드 목록(요약 포함, 본문만 접힘) — 구 "제목 한 줄 목록"은 공지 2건에서 빈 화면이 됐다.
+// 필터 칩은 공지 5건 이상일 때만(2건에 칩은 과함). 기본 접힘 유지(오너 9/12) — 대신 요약이 보인다.
 export default function Notices({ store }) {
   const { rows, status, error } = useNotices(store)
+  const [seen, setSeen] = useState(() => new Set())
+  const [kind, setKind] = useState('전체')
+  const todayKey = toKey(new Date())
+  useEffect(() => { setSeen(loadSeen()) }, [])
+  const onSee = (key) => setSeen(new Set(markSeen(key)))
+  const total = rows.length + PREP_GUIDES.length
+  const showPrep = kind === '전체' || kind === '준비물'
+  const showDb = kind === '전체' || kind === '안내'
   return (
-    <div className="ws-notices">
-      {status === 'loading' && <div className="ws-skel" aria-label="불러오는 중"><span /><span /></div>}
-      {error && <p className="ws-error" role="alert">{error}</p>}
-      {status === 'ready' && rows.length === 0 && PREP_GUIDES.length === 0 && <p className="ws-note">공지 0건. 운영진 안내가 여기 쌓임.</p>}
-      {(rows.length > 0 || PREP_GUIDES.length > 0) && (
-        <ul className="ws-list ws-notice-list">
-          <PrepNotices guides={PREP_GUIDES} />
-          {rows.map((n) => (
-            <li key={n.id} className="ws-notice-row">
-              <details>
-                <summary className="ws-notice-sum">
-                  <span className="ws-notice-title">{n['제목']}</span>
-                  <span className="ws-notice-when">{ymd(n.created_at)}</span>
-                </summary>
-                <NoticeBody id={n.id} body={n['본문'] || ''} />
-              </details>
-            </li>
-          ))}
-        </ul>
-      )}
+    <div className="ws-notices ws-cols">
+      <div className="ws-cmain">
+        {total >= 5 && (
+          <div className="ws-chips ws-nchips" role="tablist" aria-label="공지 종류">
+            {KINDS.map((k) => <button key={k} type="button" role="tab" aria-selected={kind === k} className={`ws-chip${kind === k ? ' is-on' : ''}`} onClick={() => setKind(k)}>{k}</button>)}
+          </div>
+        )}
+        <p className="ws-count-line">전체 <span className="ws-count">{total}</span></p>
+        {status === 'loading' && <div className="ws-skel" aria-label="불러오는 중"><span /><span /></div>}
+        {error && <p className="ws-error" role="alert">{error}</p>}
+        {status === 'ready' && total === 0 && <p className="ws-note">공지 0건. 운영진 안내가 여기 쌓임.</p>}
+        {total > 0 && (
+          <ul className="ws-list ws-notice-list">
+            {showPrep && <PrepNotices guides={PREP_GUIDES} />}
+            {showDb && rows.map((n) => <NoticeCard key={n.id} n={n} seen={seen} onSee={onSee} />)}
+          </ul>
+        )}
+      </div>
+      <aside className="ws-crail">
+        <NoticeRail store={store} todayKey={todayKey} />
+      </aside>
     </div>
   )
 }
