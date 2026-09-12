@@ -2,13 +2,21 @@
 // 자료는 링크(url)만 — 파일 업로드는 M4(Storage 버킷 미생성).
 import { useCallback, useEffect, useState } from 'react'
 import AdminForm from './AdminForm.jsx'
+import { FORM_OPTIONS, KINDS } from '../data/assignment-forms.js'
+
+// 과제 양식(입력 칸)은 코드가 원천 — 여기서는 목록에서 고르기만 한다(오너 픽 2026-09-13, 0025).
+const KIND_OPTIONS = KINDS.map((k) => ({ value: k, label: k }))
+const FORM_KEY_OPTIONS = FORM_OPTIONS.map((f) => ({ value: f.key, label: `${f.이름} (${f.종류})` }))
 
 const FIELDS = {
   notices: [['제목', 'text'], ['본문', 'textarea'], ['내부여부', 'check']],
   sessions: [['회차', 'number'], ['날짜', 'date'], ['제목', 'text'], ['설명', 'text']],
   materials: [['session_id', 'session'], ['제목', 'text'], ['url', 'text'], ['공개일', 'date']],
   notes: [['session_id', 'session'], ['본문', 'textarea'], ['공개일', 'date']],
-  assignments: [['session_id', 'session'], ['제목', 'text'], ['설명', 'text'], ['마감', 'datetime']],
+  assignments: [
+    ['session_id', 'session'], ['제목', 'text'], ['설명', 'text'], ['마감', 'datetime'],
+    ['종류', 'select', KIND_OPTIONS], ['양식키', 'select', FORM_KEY_OPTIONS],
+  ],
 }
 
 export default function AdminContent({ store }) {
@@ -52,8 +60,10 @@ export default function AdminContent({ store }) {
         onSave={saver('notes')} labelOf={(n) => `${(n['본문'] || '').slice(0, 24)}… · ${n['공개일'] || '즉시 공개'}`}
       />
       <AdminForm
-        title="과제" fields={FIELDS.assignments} rows={data.assignments} sessions={data.sessions}
-        onSave={saver('assignments')} labelOf={(a) => `${a['제목']} · ${a['마감'] || '마감 없음'}`}
+        title="과제(종류 = 링크·폼·체크리스트, 양식은 코드 목록에서 선택)"
+        fields={FIELDS.assignments} rows={data.assignments} sessions={data.sessions}
+        onSave={saver('assignments')}
+        labelOf={(a) => `${a['제목']} · ${a['종류'] || '링크'} · ${a['마감'] || '마감 없음'}`}
       />
     </div>
   )

@@ -234,12 +234,17 @@ export function createSupabaseRepositories(backend) {
       // 운영진 제출 현황 매트릭스용 — RLS(submissions_select_own_or_staff)가 거른다: 스터디원이 부르면 본인 행만.
       listAll: () => backend.db.select('submissions', { order: '제출일시.desc' }),
       // 과제×멤버 1건(unique) — 기존 제출이 있으면 id를 넘겨 수정한다(본인 행만).
-      async submit({ id, assignment_id, url, 메모 = '' }) {
+      // 링크형 = url, 폼·체크리스트형 = 답변 jsonb(0025). 넘어온 것만 patch에 담는다 —
+      // 링크형 재제출이 답변을 null로 덮거나 그 반대가 되는 것을 막는다.
+      async submit({ id, assignment_id, url, 답변, 메모 = '' }) {
         const me = uid()
         if (!me) throw new Error('로그인 필요')
+        const patch = { 메모 }
+        if (url !== undefined) patch.url = url
+        if (답변 !== undefined) patch['답변'] = 답변
         const rows = id
-          ? await backend.db.update('submissions', { id, member_id: me }, { url, 메모 })
-          : await backend.db.insert('submissions', { assignment_id, member_id: me, url, 메모 })
+          ? await backend.db.update('submissions', { id, member_id: me }, patch)
+          : await backend.db.insert('submissions', { assignment_id, member_id: me, ...patch })
         return rows?.[0] || null
       },
     },

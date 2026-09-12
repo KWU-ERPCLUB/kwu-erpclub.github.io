@@ -1,0 +1,79 @@
+/* 과제 탭(2026-09-13 신설) — 공지 탭 카드(ws-ncard)·공고 행(ws-prow)과 같은 부품 언어.
+   골격 = ws-cols(본문 + 레일, workspace-home.css). 여기는 카드·상태·3종 폼만.
+   색 예산 = 포인트 색은 마감 임박·스테퍼 완료·링크 / 검정 채움 = 제출 버튼 1개. */
+
+/* ── 카드 목록 ── */
+.ws-assignments { max-width: none; }
+.ws-acard-list { display: grid; gap: 0.7rem; min-width: 0; }
+.ws-acard-list > li { min-width: 0; }
+.ws-acard { background: #fff; border: 1px solid var(--line); border-radius: 18px; }
+.ws-acard > details { padding: 0.9rem 1.15rem 0.95rem; }
+.ws-acard > details[open] { padding-bottom: 1.2rem; }
+.ws-acard.s-제출함 { background: var(--surface); }
+.ws-acard-sum { display: block; cursor: pointer; list-style: none; border-radius: 12px; margin: -0.3rem -0.4rem; padding: 0.3rem 0.4rem; }
+.ws-acard-sum::-webkit-details-marker { display: none; }
+.ws-acard-sum:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.ws-acard-head { display: flex; align-items: center; gap: 0.55rem; flex-wrap: wrap; }
+.ws-acard-title { flex: 1; min-width: 0; font-size: 1.05rem; font-weight: 800; letter-spacing: -0.01em; word-break: keep-all; }
+.ws-acard-when { flex: none; font-size: 0.78rem; color: var(--text-sub); font-variant-numeric: tabular-nums; }
+.ws-acard-sum-line { display: block; margin-top: 0.4rem; font-size: 0.92rem; line-height: 1.55; color: var(--text-sub); word-break: keep-all; }
+.ws-acard > details[open] .ws-acard-sum-line { display: none; }
+.ws-acard-body { margin-top: 1rem; padding-top: 0.9rem; border-top: 1px solid var(--line); }
+
+/* 종류 라벨 = 공지 종류 라벨(ws-nkind)과 같은 모양 */
+.ws-akind { flex: none; display: inline-block; padding: 0.12rem 0.6rem; border-radius: var(--radius-pill); background: var(--dark); color: #fff; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.02em; }
+.ws-akind.sm { padding: 0.05rem 0.5rem; font-size: 0.68rem; }
+
+/* 상태 pill = 테두리만(채움은 제출 버튼 하나) */
+.ws-astatus { flex: none; padding: 0.1rem 0.55rem; border: 1px solid var(--line); border-radius: var(--radius-pill); font-size: 0.74rem; font-weight: 700; color: var(--text-sub); }
+.ws-astatus.s-제출함 { border-color: var(--text); color: var(--text); }
+.ws-adday { flex: none; font-size: 0.78rem; font-weight: 700; color: var(--text-sub); font-variant-numeric: tabular-nums; }
+.ws-adday.soon { color: var(--accent); }
+.ws-anote { margin: 0 0 0.8rem; font-size: 0.85rem; color: var(--text-sub); }
+.ws-alink { font-size: 0.88rem; font-weight: 700; color: var(--accent); text-decoration: underline; text-underline-offset: 0.18em; white-space: nowrap; }
+/* 체크 행에 7번 반복되는 보조 링크 — 항목 이름이 주인공이라 무게를 낮춘다(색 예산은 스테퍼가 쓴다) */
+.ws-alink.quiet { font-size: 0.8rem; font-weight: 600; color: var(--text-sub); text-decoration-color: var(--line); }
+@media (hover: hover) { .ws-alink.quiet:hover { color: var(--accent); text-decoration-color: currentColor; } }
+
+/* ── 제출 폼 공통 ── */
+.ws-aform { display: grid; gap: 0.7rem; max-width: 560px; }
+.ws-aform .ws-submit { justify-self: start; }
+.ws-aform-acts { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.ws-asubmitted { margin: 0 0 0.8rem; }
+.ws-afield > span { display: flex; align-items: baseline; gap: 0.45rem; }
+.ws-afield-no { font-style: normal; font-family: var(--font-display); font-size: 0.95rem; font-weight: 800; color: var(--text-sub); }
+
+/* ── 체크리스트형 ── */
+.ws-achecklist { max-width: 640px; }
+.ws-astep { list-style: none; margin: 0 0 0.9rem; padding: 0; display: flex; align-items: center; gap: 0; }
+.ws-astep-i { position: relative; flex: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 0.25rem; padding-right: 0.8rem; }
+.ws-astep-i::before { content: ''; position: absolute; left: 14px; right: 0; top: 6px; height: 2px; background: var(--line); }
+.ws-astep-i:last-child::before { display: none; }
+.ws-astep-dot { position: relative; z-index: 1; width: 14px; height: 14px; border-radius: 50%; background: #fff; border: 2px solid var(--line); box-sizing: border-box; }
+.ws-astep-i.is-part .ws-astep-dot { border-color: var(--accent); }
+.ws-astep-i.is-done .ws-astep-dot { background: var(--accent); border-color: var(--accent); }
+.ws-astep-i.is-done::before { background: var(--accent); }
+.ws-astep-label { font-size: 0.9rem; font-weight: 700; }
+.ws-astep-n { font-size: 0.78rem; color: var(--text-sub); font-variant-numeric: tabular-nums; }
+.ws-acheck-group { margin-bottom: 1.1rem; }
+.ws-acheck-glabel { margin: 0 0 0.3rem; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.04em; color: var(--text-sub); }
+.ws-acheck-list { display: grid; gap: 0.15rem; }
+.ws-acheck { display: flex; align-items: center; gap: 0.7rem; padding: 0.35rem 0.5rem; border-radius: 10px; }
+.ws-acheck label { flex: 1; min-width: 0; display: flex; align-items: center; gap: 0.6rem; cursor: pointer; }
+.ws-acheck input { width: 20px; height: 20px; flex: none; accent-color: var(--accent); cursor: pointer; }
+.ws-acheck-label { font-size: 0.95rem; line-height: 1.4; word-break: keep-all; }
+.ws-acheck.is-done .ws-acheck-label { color: var(--text-sub); text-decoration: line-through; }
+@media (hover: hover) { .ws-acheck:hover { background: var(--surface); } }
+
+/* 홈 요약 → 과제 탭 이동(전 폭에서 보인다 — 홈 ws-up-more와 다른 역할) */
+.ws-agoto { margin-top: 0.6rem; padding: 0.35rem 0; font: inherit; font-size: 0.85rem; font-weight: 700; color: var(--accent); background: none; border: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 0.2em; }
+.ws-agoto:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* ── 운영 탭 답 패널 ── */
+.ws-answers { margin-top: 1.4rem; }
+.ws-cell-done.part { color: var(--text-sub); }
+
+@media (max-width: 640px) {
+  .ws-astep-label { font-size: 0.8rem; }
+  .ws-acard-title { font-size: 1rem; }
+}

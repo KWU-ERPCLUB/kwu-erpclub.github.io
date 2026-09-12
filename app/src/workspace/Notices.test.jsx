@@ -18,8 +18,11 @@ test('마크다운 공지 블록 — ::: 정보 = 표(dl) · ::: 링크 = 카드
   expect((html.match(/md-info-row/g) || []).length).toBe(2)
   expect(html).toContain('href="/guide/ot-prep/"')
   expect(html).toContain('이동 →')
-  expect(html).toContain('docs.google.com')
   expect(html).toContain('열기 ↗')
+  // 주소·도메인은 카드에 찍지 않는다(오너 2026-09-13) — href에만 있고 화면 글자는 라벨뿐
+  expect(html).toContain('href="https://docs.google.com"')
+  expect(html).not.toContain('md-linkcard-dom')
+  expect(html).not.toContain('>docs.google.com<')
 })
 
 test('공지 탭 = 2열 골격(본문 + 레일) · 준비물 알림 카드(같은 서식)에 종류 라벨·요약 · 읽는 법 레일 · 5건 미만이면 필터 칩 없음', () => {

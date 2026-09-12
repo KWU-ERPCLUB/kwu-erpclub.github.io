@@ -7,7 +7,9 @@
 //   · tips = 조건문 한 줄씩 · 추임새("끝", "성공", "꼭") 금지 · 대시(—) 금지
 // 화면 요소 표기(PrepNotice.jsx Inline이 모양으로 그린다 — 2026-09-13 시각화):
 //   [[버튼 이름]] = 버튼 칩 · {{메뉴 › 경로}} = 경로 칩(› 구분) · <<입력값>> = 입력창 · ((Ctrl+Alt+I)) = 키캡(+ 구분)
-//   단계 문자열이 URL로 시작하면 사이트 카드(도메인 + 열기)로 그리고 나머지 글이 옆에 붙는다.
+//   [이름](주소) = 하이퍼링크. 단계가 이걸로 시작하면 사이트 카드(이름 + 열기)가 되고 나머지 글이 옆에 붙는다.
+// ⛔링크 표기(오너 2026-09-13): 주소를 글자 그대로 쓰지 않는다 — 어디로 가는 링크인지 이름을 붙인다.
+//   맨 주소(https://…)가 남아 있으면 PrepNotice.test가 잡는다.
 // 새 회차 = 객체 1개 추가.
 
 export const PREP_GUIDES = [
@@ -16,13 +18,13 @@ export const PREP_GUIDES = [
     회차: 1,
     title: 'OT 준비물 7가지',
     date: '2026-09-14',
-    lead: '항목을 누르면 하는 법이 옆에 열린다. 완료 표시는 이 기기에만 남는다.',
+    lead: '항목을 누르면 하는 법이 옆에 열린다. 진행 체크는 워크스페이스 과제 탭에서 한다.',
     // 공지 탭에 뜨는 알림(서식 = 문단 · ::: 정보 · ::: 링크 — 다른 공지와 같은 모양). 방법은 가이드, 제출은 과제.
     notice: {
       kind: '준비물',
       title: 'OT 준비물 7가지 안내',
       date: '2026-09-14',
-      body: `OT(9/14) 전에 준비할 것 7가지. 계정 1, 신청 3, 설치 2, 제출 1. 하는 법은 항목마다 가이드에 있고, 완료 체크도 가이드에서 한다.
+      body: `OT(9/14) 전에 준비할 것 7가지. 계정 1, 신청 3, 설치 2, 제출 1. 하는 법은 항목마다 가이드에 있고, 진행 체크는 과제 탭에서 한다.
 
 ::: 정보
 언제까지 | 9/14(월) OT 전. 제출 1건만 9/21(월) 18:00
@@ -33,7 +35,7 @@ export const PREP_GUIDES = [
 
 ::: 링크
 가이드: OT 준비물 하는 법 | /guide/ot-prep/
-과제: 회차 2 재료 4가지 제출 | /workspace/?tab=홈
+과제: 준비물 7가지 체크 · 재료 4가지 제출 | /workspace/?tab=과제
 :::
 
 이미 돈 내고 쓰는 도구는 그대로 쓴다. ChatGPT Plus는 파일 작업, Claude Pro는 Claude Code나 Cowork로 일을 시키는 용도, Cursor도 같은 용도. GitHub 계정은 전원 필수, 검수는 만든 것과 다른 AI로.`,
@@ -47,7 +49,7 @@ export const PREP_GUIDES = [
             id: 'pw', icon: 'key', title: '비밀번호 바꾸기',
             what: '워크스페이스 계정은 지금 전원이 같은 초기 비밀번호(000000)다. 바꿔야 내 계정이 된다.',
             steps: [
-              'https://kwu-erpclub.github.io/workspace/ 접속',
+              '[AIM 워크스페이스](https://kwu-erpclub.github.io/workspace/)',
               '<<학번>> <<000000>> 으로 로그인',
               '{{내정보}} 누르기 (폰은 아래쪽 탭)',
               '{{설정 › 비밀번호 변경}} 펼치기',
@@ -66,7 +68,7 @@ export const PREP_GUIDES = [
             what: 'Gemini(제미나이)는 구글의 AI 챗봇이고, 유료 요금제 AI Plus를 대학생은 1년 무료로 준다. 우리는 시험 공부 정리와 자료 요약에 쓴다.',
             need: ['구글 계정', '학교 이메일(@kw.ac.kr) 또는 학생증 사진', '카드'],
             steps: [
-              'https://gemini.google/kr/students/ 접속',
+              '[Gemini 학생 혜택 페이지](https://gemini.google/kr/students/)',
               '[[학생 인증]] 누르기 (SheerID 인증 화면)',
               '<<광운대학교>> <<이름>> <<학교 이메일>> 입력',
               '학교 메일로 온 인증 링크 누르기 (또는 학생증 사진 올리기)',
@@ -74,7 +76,7 @@ export const PREP_GUIDES = [
               'Gemini 화면 왼쪽 위 "AI Plus" 표시 확인',
             ],
             tips: [
-              '카드가 없으면 5단계에서 멈추고 무료 Gemini(https://gemini.google.com)로 시작한다. 스터디 진행에는 차이 없다.',
+              '카드가 없으면 5단계에서 멈추고 [무료 Gemini](https://gemini.google.com)로 시작한다. 스터디 진행에는 차이 없다.',
               '1년 뒤 자동으로 유료가 된다. 오늘 날짜 + 1년을 폰 캘린더에 "Gemini 해지 확인"으로 적어 둔다.',
               '신청 마감 2026-12-31.',
             ],
@@ -84,13 +86,13 @@ export const PREP_GUIDES = [
             what: 'GitHub(깃허브)는 파일을 팀과 함께 올리고 누가 언제 무엇을 바꿨는지 자동으로 남는 온라인 공용 폴더다. 팀 프로젝트 공용 폴더가 여기라서 전원 필수이고, 학생 인증을 하면 유료 기능을 무료로 준다.',
             need: ['평소 쓰는 이메일', '학교 이메일(@kw.ac.kr)', '학생증 사진(요구할 때만)'],
             steps: [
-              'https://github.com/signup 접속',
+              '[GitHub 가입 페이지](https://github.com/signup)',
               '<<이메일>> <<비밀번호>> <<아이디(영문)>> 입력',
               '이메일로 온 <<인증 코드>> 입력',
               '오른쪽 위 내 사진에서 {{Settings › Emails}} 열기',
               '[[Add email address]]에 학교 이메일 추가',
               '학교 메일함의 인증 링크 누르기',
-              'https://education.github.com/pack 접속',
+              '[GitHub 학생 혜택 신청](https://education.github.com/pack)',
               '[[Sign up for Student Developer Pack]] 누르기',
               '<<Kwangwoon University>> 입력, 학교 이메일 선택',
               '학생증 사진 요구 시 올리기',
@@ -105,7 +107,7 @@ export const PREP_GUIDES = [
             what: 'Copilot(코파일럿)은 GitHub가 주는 AI 비서다. 글과 코드를 대신 쓰고 파일을 읽어 정리한다. 학생 혜택 승인 전에도 무료 버전을 바로 쓴다.',
             need: ['GitHub 로그인 상태'],
             steps: [
-              'https://github.com/features/copilot 접속',
+              '[Copilot 소개 페이지](https://github.com/features/copilot)',
               '[[Get started for free]] 누르기',
               '요금제에서 [[Free]] 선택 (카드 불필요)',
               '오른쪽 위 내 사진에서 {{Settings › Copilot}} 열기',
@@ -123,7 +125,7 @@ export const PREP_GUIDES = [
             what: 'VS Code(브이에스 코드)는 마이크로소프트가 무료로 주는 글 편집 프로그램이다. 메모장의 강한 버전이고, 우리는 여기에 Copilot을 붙여 문서 정리와 반복 작업 자동화에 쓴다. 코딩은 몰라도 된다.',
             need: ['노트북(윈도우·맥 어느 쪽이든)', 'GitHub 계정'],
             steps: [
-              'https://code.visualstudio.com/ 접속',
+              '[VS Code 내려받기 페이지](https://code.visualstudio.com/)',
               '[[Download]] 누르기 (운영체제 자동 선택)',
               '받은 파일 열어 설치, 물어보는 건 전부 기본값',
               'VS Code 실행',
@@ -146,11 +148,11 @@ export const PREP_GUIDES = [
             what: 'NotebookLM(노트북엘엠)은 구글의 공부 도구다. 내 PDF·강의 슬라이드·녹음을 올리면 그 자료만 보고 답하기 때문에 시험 공부에 맞고, 구글 계정만 있으면 무료다.',
             need: ['구글 계정'],
             steps: [
-              'https://notebooklm.google/ 접속, 구글 계정으로 로그인',
+              '[NotebookLM](https://notebooklm.google/) 열어 구글 계정으로 로그인',
               '[[새 노트북]] 만들기',
               'PDF 하나 올리기 (강의 자료가 없으면 아무 문서)',
               '채팅창에 <<이 자료를 세 줄로 요약해 줘>> 입력해 답 확인',
-              'https://claude.ai/ 또는 https://chatgpt.com/ 중 하나 무료 가입 (검수용, 이미 있으면 그대로)',
+              '검수용으로 [Claude](https://claude.ai/) 또는 [ChatGPT](https://chatgpt.com/) 무료 가입',
             ],
             tips: ['AI가 만든 결과는 다른 AI로 한 번 더 확인하는 게 스터디 규칙이다. Gemini로 만든 건 Claude나 ChatGPT로, ChatGPT로 만든 건 Gemini로 확인한다.'],
           },
@@ -169,19 +171,15 @@ export const PREP_GUIDES = [
               { title: '매주 반복하는 귀찮은 일 1개', example: '강의 슬라이드를 노션에 옮겨 적기, 조별 회의록 정리' },
             ],
             steps: [
-              'https://docs.google.com 접속',
-              '[[새 문서]] 만들기',
-              '4가지 적기',
-              '오른쪽 위 [[공유]] 누르기',
-              '"제한됨"을 {{링크가 있는 모든 사용자}}로 변경',
-              '[[링크 복사]]',
-              '워크스페이스 {{홈 › 과제 › 회차 2 재료 4가지}} 열기',
-              '링크 붙여넣고 [[제출]]',
+              '[AIM 워크스페이스](https://kwu-erpclub.github.io/workspace/)',
+              '{{과제 › 회차 2 재료 4가지}} 누르기',
+              '칸 4개에 한 줄씩 적기',
+              '[[제출]]',
             ],
             tips: [
               '마감 9/21(월) 18:00.',
-              '노션 등 다른 도구도 된다. 링크를 열었을 때 로그인 없이 보이기만 하면 된다.',
-              '링크 제출이 어려우면 당일 노트북에 열어 온다.',
+              '낸 뒤에도 마감 전까지 고칠 수 있다.',
+              '길게 쓸 것 없다. 한 줄씩이면 된다.',
             ],
           },
         ],

@@ -9,23 +9,28 @@ import Flow from './Flow.jsx'
 import Postings from './Postings.jsx'
 import Admin, { Denied } from './Admin.jsx'
 import Notices from './Notices.jsx'
+import Assignments from './Assignments.jsx'
 
 // 기능 탭 — [이름, 접근]. 접근 'staff' = 운영진에게만 노출(M3 ④).
 // 2026-08-14 재편(오너): 스터디 흐름 → 로드맵 개명 · 북마크 탭 = 내정보로 흡수 · 탭 설명 문구 폐지(아이콘 대체).
 // 2026-08-18 오너: 공지 = 홈 레일 구석에서 전용 탭 승격(홈 레일은 제목만 남긴다).
 // 2026-09-11 오너: 인사이트 기고 탭 폐지 — 기고는 운영진만 쓴다(발행 = md→DB 경로). 기고 폼·승인대기·내 기고 목록 동시 제거.
+// 2026-09-13 오너: 과제 = 전용 탭 승격(역할 3분리 — 공지 = 알림 · 과제 = 할 일 · 가이드 = 방법).
+//   홈은 마감 가까운 3건 요약만 남기고, 제출 칸은 과제 탭 한 곳에 둔다.
 export const WS_TABS = [
   ['홈'],
   ['공지'],
+  ['과제'],
   ['로드맵'],
   ['공고'],
   ['내정보'],
   ['운영', 'staff'],
 ]
 
-// 구 탭명 딥링크 호환 — 구 탭명 진입 시 새 탭으로 매핑(링크 깨짐 0). (공지 = 2026-08-18 전용 탭 승격으로 제거)
+// 구 탭명 딥링크 호환 — 구 탭명 진입 시 새 탭으로 매핑(링크 깨짐 0).
+// (공지 = 2026-08-18 · 과제 = 2026-09-13 전용 탭 승격으로 제거)
 const LEGACY_TAB_MAP = {
-  제출: '홈', 스터디: '홈', 과제: '홈', 세션: '홈',
+  제출: '과제', 스터디: '홈', 세션: '홈',
   컬렉션: '내정보', 북마크: '내정보', 흐름: '로드맵', '스터디 흐름': '로드맵', 기고: '홈', '인사이트 기고': '홈',
 }
 
@@ -39,6 +44,7 @@ const TAB_SHORT = {}
 const TAB_ICONS = {
   홈: <path d="M3.5 10.2 12 3l8.5 7.2V20a1 1 0 0 1-1 1h-5.2v-5.6H9.7V21H4.5a1 1 0 0 1-1-1z" />,
   공지: <><path d="M12 3.5a5 5 0 0 0-5 5v3.2l-1.7 3h13.4l-1.7-3V8.5a5 5 0 0 0-5-5z" /><path d="M10 18a2 2 0 0 0 4 0" /></>,
+  과제: <><path d="M6 3.5h12v17H6z" /><path d="M9.5 3.5V2.8h5v.7" /><path d="m9 11.5 2 2 4-4" /><path d="M9 16.5h6" /></>,
   로드맵: <><circle cx="5.5" cy="5.5" r="2" /><circle cx="18.5" cy="18.5" r="2" /><path d="M7.5 5.5h7a3.5 3.5 0 0 1 0 7h-5a3.5 3.5 0 0 0 0 7h7" /></>,
   공고: <><path d="M3.5 10.5v3.5l11.5 5V5l-11.5 5.5z" /><path d="M18.5 9a4.2 4.2 0 0 1 0 6.4" /></>,
   내정보: <><circle cx="12" cy="8" r="3.6" /><path d="M4.5 20.5c1.4-3.7 4.5-5.5 7.5-5.5s6.1 1.8 7.5 5.5" /></>,
@@ -138,6 +144,7 @@ export function Shell({ member, onSignOut, store, onMemberChanged, search }) {
     if (!store) return null
     if (name === '홈') return <Home store={store} member={member} onGoTab={go} />
     if (name === '공지') return <Notices store={store} />
+    if (name === '과제') return <Assignments store={store} />
     if (name === '로드맵') return <Flow store={store} staff={staff} />
     if (name === '공고') return <Postings store={store} />
     if (name === '내정보') return <MyPage store={store} member={member} onProfileSaved={onMemberChanged} />

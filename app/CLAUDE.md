@@ -57,7 +57,7 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
 - **앱형 셸(2026-08-06 재구성)**: 로그인 후 = 문서형(히어로 헤드·ws-panel·푸터) 제거 → 전폭 앱 레이아웃(`.ws-main.ws-app`,
   max 1760px). 사이드바 232px sticky + 하단 계정 블록(`.ws-side-me`), 홈 외 탭 = 소형 헤더(`.ws-content-head`).
   로그인 전 화면만 문서형(PageHead+패널) 유지. 근거 리서치(Notion·Slack·Classroom·Canvas 문법) = roadmap 2026-08-06 항.
-- **탭 = 좌측 사이드바 6종: 홈·공지·로드맵(구 스터디 흐름)·공고·내정보 + 운영(운영진만)**(공지 = 2026-08-18 전용 탭 승격. **인사이트 기고 탭 = 2026-09-11 오너 폐지** — 기고는 운영진만, 발행 = md→DB 경로. 기고 폼·운영 '승인대기'·내정보 '내 기고' 동시 제거, `?tab=기고` = 홈 매핑).
+- **탭 = 좌측 사이드바 7종: 홈·공지·과제·로드맵(구 스터디 흐름)·공고·내정보 + 운영(운영진만)**(공지 = 2026-08-18 전용 탭 승격. **인사이트 기고 탭 = 2026-09-11 오너 폐지** — 기고는 운영진만, 발행 = md→DB 경로. 기고 폼·운영 '승인대기'·내정보 '내 기고' 동시 제거, `?tab=기고` = 홈 매핑).
   북마크 = 단독 탭 폐지 → 내정보 안 섹션(정사각 카드 그리드 = 인사이트 축소판, `Collections.jsx`를 MyPage가 렌더).
   탭 설명 문구 폐지 — 아이콘(`TAB_ICONS`)이 대신. 원천 = `Workspace.jsx`의 `WS_TABS`·`visibleTabs()`. 구 탭명 딥링크 = `LEGACY_TAB_MAP`.
   **내정보 구성(2026-08-14)**: 상단 = 내 북마크·**관심 공고**(공고 카드 ★ 체크 — `posting_interests`, migration **0013**·미적용 = 빈 목록 강등) /
@@ -65,7 +65,9 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
 - **AIM 커리큘럼 로드맵 단일원천(2026-08-14) = `src/data/aim-roadmap.js`** — 워크스페이스 로드맵 탭(`workspace/Roadmap.jsx`)과
   공개 /recruit 로드맵(`data/recruit.js` AIM_ROADMAP 파생)이 이 파일 하나를 소비. **로드맵 개정 = 이 파일 1곳 수정**(표면별 하드코딩 금지).
   구간 표기 = '시험기간'(구 '시험 휴지' 폐기, 오너 2026-08-14). 로드맵 탭 CSS = `workspace-roadmap.css`(분할).
-  홈(`Home.jsx`) = 요약 헤더(이름+7일 내 일정·마감 — Classroom '할 일' 문법) + **대형 월 캘린더 + 다가오는 업무**(계산 = `calendar-logic.js` 순수 함수) + 과제 제출·공지·세션 흡수(구 탭명 딥링크는 매핑).
+  홈(`Home.jsx`) = 요약 헤더(이름+7일 내 일정·마감 — Classroom '할 일' 문법) + **대형 월 캘린더 + 다가오는 업무**(계산 = `calendar-logic.js` 순수 함수) + **과제 요약 3건**(`AssignmentSummary` — 제출 칸은 과제 탭, 2026-09-13)·공지 제목(구 탭명 딥링크는 매핑).
+  **과제(`Assignments.jsx`, 2026-09-13 전용 탭 승격)** = 3종(링크·폼·체크리스트) 카드 목록 + 레일. 종류·제출 판정 = `assignments-logic.js`(순수), 제출 폼 3종 = `AssignmentForms.jsx`, CSS = `workspace-assignments.css`.
+  **양식(입력 칸) 단일원천 = `data/assignment-forms.js`(코드)** — `assignments.양식키`(0025)가 이 표를 가리킨다. 체크리스트 항목·폼 칸은 `prep-guides.js`에서 파생(항목 이름이 두 곳으로 갈라지지 않게). 운영 탭은 목록에서 고르기만 한다(칸 편집기 = 오너 기각 2026-09-13). 0025 미적용·모르는 양식키 = 링크형 강등.
   캘린더 원천 = 운영 일정(`events`, **0007 적용됨**) + 과제 마감 자동 + 세션 날짜 자동 + 공고 마감·시험일(0009). 주간 기고 반복 핀 = `WEEKLY_CONTRIB.dueDay`(현재 null=[미정] — 오너 확정 시 값 1개).
   **다가오는 업무 = ★ 지정만**(오너 2026-08-07 — 전량 노출은 소음): `events.중요`(**0010**)·`postings.고정` 겸용, `upcoming()`이 필터. 캘린더는 전 항목 유지.
   흐름(`Flow.jsx`) = 주차별 스터디 흐름(지난·이번 주·예정 — `weekStatus` 순수), 원천 = `flow_weeks`(**0008**), 운영진 인라인 CRUD.
@@ -80,7 +82,9 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
   초대(계정 생성)는 앱에서 불가(service key 필요) → 화면엔 절차 안내만(`supabase/README.md` 3·3-1단계).
 - **공개 헤더의 워크스페이스 링크 = 상시 노출**(오너 개정 2026-08-07 — 구 세션 게이트·`data/session-flag.js` 폐지:
   링크가 없으면 로그인 화면 입구가 없다). 세션 키 상수 원천 = `data/session-key.js`(소비 = supabase.js만).
-- 세션 자료·과제 제출 = **링크 기반**. 파일 업로드(Storage 버킷) = M4.
+- 세션 자료 = **링크 기반**. 파일 업로드(Storage 버킷) = M4.
+- **과제 제출(0025)** = 링크형은 `submissions.url`, 폼·체크리스트형은 `submissions.답변`(jsonb). `submit()`은 **넘어온 칸만 patch** — 링크 재제출이 답변을 지우지 않는다. 열람 = 본인 + 운영진(기존 RLS 그대로, 새 정책 없음).
+- ⛔**링크 표기(오너 2026-09-13)**: 주소·도메인을 화면 글자로 쓰지 않는다 — `[이름](주소)`로 쓰고 이름만 보여 준다. 적용처 = 준비물 단계·팁(`Inline`·`splitSite`) · 공지 `::: 링크` 카드 · 과제 제출물(「내가 낸 문서 열기」). 맨 URL이 데이터에 남으면 `PrepNotice.test`가 잡는다.
 - **로그인 ID = 학번**(§0-4 개정). 매핑 = `src/data/login-id.js`(학번 → `s<학번>@member.erpclub`, `@` 포함 = 이메일 폴백).
 - **인사이트 카드 배지 3종(2026-08-07)**: 작성자(이름 3글자·검은 타원, 원천 = author/작성자표기) · 미열람 **N**(빨간 원 —
   게재 7일 이내 ∧ 기기 미열람, 원천 = `pages/seen-store.js` localStorage) · 좋아요·북마크 수(우하단, 0/0 = 생략).
@@ -100,7 +104,7 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
   실측 고정 수치(버건디 화이트리스트·빈도 상한·버튼 3단 위계·인터랙션 4상태·§2 타이포 실값 표). UI 작업 전 필독. 위반=재작업.
 - **PageHead 강제(3차, 4차 개정)**: 페이지 헤드 = `src/shared.jsx` `PageHead` 1개(**중앙 정렬** — 눈썹 + h1 + 서브 + children,
   갱신 메타 = 인사이트만). 페이지별 head CSS 신설 금지. (구 좌 라벨 레일·`--rail-w` 토큰 = 4차 폐지·제거됨.)
-- CSS 24개(`src/styles/`): global(토큰·nav·PageHead·푸터·버튼) · home · home-sections ·
+- CSS 26개(`src/styles/`): global(토큰·nav·PageHead·푸터·버튼) · home · home-sections ·
   pages(공용 셸) · hub-md(도판 브레이크아웃) · articles · insights-detail · seminars · projects ·
   project-adsp + project-adsp-viz(ADsP 인터랙티브 상세) ·
   project-site + project-site-roadmap(허브 사이트 인터랙티브 상세 — 세로 지그재그 로드맵) ·
@@ -108,7 +112,7 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
   recruit + recruit-form + recruit-motion(모집 — 2026-08-20 300줄 분할, motion은 recruit 엔트리만 로드) · workspace ·
   workspace-home(사이드바·앱 셸 — 2026-08-06 분할) + workspace-calendar(홈 캘린더·팝업·범례 — 2026-08-14 분할) ·
   **workspace-kinds(분류 색 단일원천 — 캘린더 칩·점·범례 + 공고 종류 배지 공용, 2026-08-19. 분류 매핑 = `workspace/kind-colors.js`)** ·
-  workspace-postings(공고 보드 — 2026-08-07 분할) ·
+  workspace-postings(공고 보드 — 2026-08-07 분할) · **workspace-assignments(과제 탭 카드·상태·3종 폼 — 2026-09-13 신설)** ·
   workspace-mypage + workspace-roadmap(내정보·로드맵 탭 — 2026-08-14 분할).
   (`doc.css` = 2026-07-25 폐지 — 내부형 doc 셸·DocSide와 함께 제거됨.)
 - 3차 신설 토큰(현행): `--tint-accent` · `--accent-on-dark` · `--focus-on-dark` · `--btn-hover`.

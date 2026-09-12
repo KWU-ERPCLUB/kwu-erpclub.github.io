@@ -1,30 +1,17 @@
 // 세션·과제·공지(스터디원 화면) — 골격 + 저장소 계약.
+// 과제 화면·마감 표시는 2026-09-13 전용 탭으로 나갔다 → Assignments.test.jsx.
 import { expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
-import Assignments, { dueLabel } from './Assignments.jsx'
 import Notices, { NoticeTitles } from './Notices.jsx'
 import { createMockRepositories } from '../data/mock.js'
 
 const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
 const member = () => createMockRepositories({ user: 'mock-member' })
 
-test('과제 탭 골격 = 제목 + 링크 제출 입력', () => {
-  const html = flat(<Assignments store={member()} />)
-  expect(html).toContain('과제')
-  expect(html).toContain('불러오는 중')
-})
-
 // 2026-08-18 공지 전용 탭 승격 — 탭 본문 = 카드 골격(제목은 셸 헤더가 담당), 홈 레일 = 제목만 목록.
 test('공지 — 탭 본문 = 카드 골격, 홈 레일 = 제목만 목록', () => {
   expect(flat(<Notices store={member()} />)).toContain('ws-notices')
   expect(flat(<NoticeTitles store={member()} />)).toContain('공지')
-})
-
-test('마감 표시 — 없음·예정·지남 3상태', () => {
-  const now = new Date('2026-09-10T00:00:00Z')
-  expect(dueLabel(null, now)).toBe('마감 없음')
-  expect(dueLabel('2026-09-20T09:00:00Z', now)).toContain('마감 2026-09-20')
-  expect(dueLabel('2026-09-01T09:00:00Z', now)).toContain('마감됨')
 })
 
 // ── 저장소 계약 ──

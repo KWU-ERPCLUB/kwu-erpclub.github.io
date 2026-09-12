@@ -103,11 +103,11 @@ test('직접 진입(?tab=운영) — 스터디원은 안내만, 운영진은 운
   expect(staff).toContain('멤버')
 })
 
-// 구 탭명 딥링크 = 새 탭으로 매핑(링크 깨짐 0 — 2026-08-06 홈 개편, 2026-08-14 재편)
-test('구 탭명 딥링크 매핑 — 제출·스터디·과제·세션 → 홈 / 컬렉션·북마크 → 내정보 / 흐름 → 로드맵 / 기고 → 홈', () => {
-  expect(initialTab('?tab=제출')).toBe('홈')
+// 구 탭명 딥링크 = 새 탭으로 매핑(링크 깨짐 0 — 2026-08-06 홈 개편, 2026-08-14 재편, 2026-09-13 과제 승격)
+test('구 탭명 딥링크 매핑 — 제출 → 과제 / 스터디·세션 → 홈 / 컬렉션·북마크 → 내정보 / 흐름 → 로드맵 / 기고 → 홈', () => {
+  expect(initialTab('?tab=제출')).toBe('과제')   // 2026-09-13 과제 전용 탭 승격
   expect(initialTab('?tab=스터디')).toBe('홈')
-  expect(initialTab('?tab=과제')).toBe('홈')
+  expect(initialTab('?tab=과제')).toBe('과제')
   expect(initialTab('?tab=공지')).toBe('공지')   // 2026-08-18 전용 탭 승격 — 더는 홈으로 안 보냄
   expect(initialTab('?tab=세션')).toBe('홈')
   expect(initialTab('?tab=컬렉션')).toBe('내정보')
@@ -118,15 +118,27 @@ test('구 탭명 딥링크 매핑 — 제출·스터디·과제·세션 → 홈 
   expect(initialTab('?tab=인사이트 기고')).toBe('홈')
 })
 
-test('홈 = 과제 제출·공지 화면(구 딥링크 경유 포함) — 세션·운영 기록은 홈에서 제거(2026-08-18)', () => {
+test('홈 = 캘린더 + 과제 요약 + 공지 제목 — 제출 칸·세션·운영 기록은 홈에 없다', () => {
   const store = createMockRepositories({ user: 'mock-member' })
   const member = { 이름: 'ㄱ', role: '스터디원' }
-  const 홈 = flat(<Shell member={member} store={store} search="?tab=과제" />)
+  const 홈 = flat(<Shell member={member} store={store} search="?tab=스터디" />)
   expect(홈).toContain('ws-cal-grid')
   expect(홈).toContain('과제')
   expect(홈).toContain('공지')
   expect(홈).not.toContain('운영 기록')        // 운영 탭으로 이동(오너 — 스터디원 열람 불필요)
   expect(홈).not.toContain('준비 중')
+  expect(홈).not.toContain('ws-aform')         // 제출 칸 = 과제 탭 한 곳(오너 2026-09-13)
+})
+
+// 과제 전용 탭(2026-09-13 오너 — 역할 3분리: 공지 = 알림 · 과제 = 할 일 · 가이드 = 방법)
+test('과제 탭 — 사이드바 노출 + 2열 골격(본문 + 레일) + 내는 법 레일', () => {
+  expect(visibleTabs({ role: '스터디원' }).map(([n]) => n)).toContain('과제')
+  const store = createMockRepositories({ user: 'mock-member' })
+  const 과제 = flat(<Shell member={{ 이름: 'ㄱ', role: '스터디원' }} store={store} search="?tab=과제" />)
+  expect(과제).toContain('ws-assignments')
+  expect(과제).toContain('ws-cols')
+  expect(과제).toContain('ws-crail')
+  expect(과제).toContain('내는 법')
 })
 
 // 공지 전용 탭(2026-08-18 오너) — 스터디원에게도 노출 + 탭 본문 = 카드 서식.

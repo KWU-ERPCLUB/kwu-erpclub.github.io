@@ -1,11 +1,12 @@
-// 홈 탭(2026-08-06 개편) — 첫 화면 = 대형 월 캘린더 + 다가오는 업무. 아래로 과제 제출·공지·세션 흡수(구 제출·스터디 탭).
+// 홈 탭(2026-08-06 개편) — 첫 화면 = 대형 월 캘린더 + 다가오는 업무. 아래로 과제 요약·공지 제목.
+// 2026-09-13: 과제 제출 칸은 전용 과제 탭으로 나갔다(오너 — 같은 기능이 두 곳에 있는 상태를 없앤다). 홈에는 마감 3건 요약만.
 // 데이터 = 운영 일정(events, 0007) + 과제 마감 자동 + 세션 날짜 자동. 계산은 calendar-logic.js(순수)만 쓴다.
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { monthGrid, buildAgenda, itemsOn, upcoming, dday, daysBetween, toKey, weeklyContribItems } from './calendar-logic.js'
 import { postingAgendaItems } from './postings-logic.js'
 import { filterAgendaBySubs, SUBS_CHANGED } from './postings-taxonomy.js'
 import { itemClass, itemLabel, kindClass, categoryLabel, LEGEND_CATEGORIES } from './kind-colors.js'
-import Assignments from './Assignments.jsx'
+import { AssignmentSummary } from './Assignments.jsx'
 import { NoticeTitles } from './Notices.jsx'
 
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토']
@@ -271,7 +272,8 @@ export default function Home({ store, member, onGoTab }) {
           <DayDetail items={items} selected={selected} onOpenItem={setPopup} />
           <UpcomingTasks items={items} todayKey={todayKey} onSelect={setSelected} />
         </div>
-        <Assignments store={store} />
+        {/* 과제 = 요약만(오너 2026-09-13 — 제출 칸은 과제 탭 한 곳). 누르면 과제 탭으로 간다 */}
+        <AssignmentSummary store={store} onOpen={() => onGoTab?.('과제')} />
         {/* 세션 섹션 = 로드맵 탭으로 편입(2026-08-18 오너 — 홈에선 제거, 자료·본문은 로드맵 차시 펼침이 담당) */}
       </div>
       <aside className="ws-crail">

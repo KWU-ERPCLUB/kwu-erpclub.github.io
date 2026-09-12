@@ -5,8 +5,9 @@
 // 운영 기록 = 읽기 전용 렌더 — 데이터 원천 = src/data/log.js(기록 추가 = 데이터 1줄 추가).
 import { useCallback, useEffect, useState, useRef } from 'react'
 import Markdown from '../pages/Markdown.jsx'
-import { readChecks } from './PrepNotice.jsx'
-import { PREP_GUIDES, guideHref, guideItems } from '../data/prep-guides.js'
+import { PREP_GUIDES, guideHref } from '../data/prep-guides.js'
+import { formOf } from '../data/assignment-forms.js'
+import { progressOf } from './assignments-logic.js'
 import { loadSeen, markSeen, isNew } from '../pages/seen-store.js'
 import { toKey, dday } from './calendar-logic.js'
 import { nextSessionNo, findByNo } from './Roadmap.jsx'
@@ -157,17 +158,25 @@ function NoticeCard({ n, seen, onSee, kind = '안내' }) {
 }
 
 // 우측 레일 — 「이번 주」(다음 회차 · 가장 가까운 과제 마감 · 준비물 진행) + 「읽는 법」. 홈과 같은 데이터, 새 입력 0.
+// 준비물 진행은 2026-09-13부터 서버 원천이다(구 기기 저장 체크 → 체크리스트형 과제의 제출 행).
 function NoticeRail({ store, todayKey }) {
   const [sessions, setSessions] = useState([])
   const [assignments, setAssignments] = useState([])
-  const [prepDone, setPrepDone] = useState(null)
+  const [prep, setPrep] = useState(null)
   useEffect(() => {
     let on = true
-    Promise.all([store.sessions.list(), store.assignments.list()])
-      .then(([s, a]) => { if (on) { setSessions(s || []); setAssignments(a || []) } })
+    Promise.all([store.sessions.list(), store.assignments.list(), store.submissions.listMine()])
+      .then(([s, a, subs]) => {
+        if (!on) return
+        setSessions(s || [])
+        setAssignments(a || [])
+        const check = (a || []).find((row) => row['종류'] === '체크리스트')
+        if (!check) return
+        const form = formOf(check)
+        const sub = (subs || []).find((x) => x.assignment_id === check.id) || null
+        if (form) setPrep({ ...progressOf(form, sub), 가이드: form.가이드 })
+      })
       .catch(() => { /* 레일은 보조 — 실패 시 빈 칸 */ })
-    const g = PREP_GUIDES[0]
-    if (g) { const n = guideItems(g).length; setPrepDone({ done: readChecks(g.id, n).filter(Boolean).length, n }) }
     return () => { on = false }
   }, [store])
   const nextNo = nextSessionNo(AIM_TIMELINE, sessions, todayKey)
@@ -188,17 +197,21 @@ function NoticeRail({ store, todayKey }) {
           {due && (
             <li><span className="ws-nrail-k">과제 마감</span><span className="ws-nrail-v">{due['제목']}</span><span className="ws-nrail-d">{dueKey.slice(5)} · {dday(todayKey, dueKey)}</span></li>
           )}
-          {prepDone && (
-            <li><span className="ws-nrail-k">OT 준비물</span><a className="ws-nrail-v" href={guideHref(PREP_GUIDES[0])}>{prepDone.done} / {prepDone.n} 완료 · 가이드 열기</a><span className="ws-nrail-bar" aria-hidden="true"><span style={{ width: `${(prepDone.done / prepDone.n) * 100}%` }} /></span></li>
+          {prep && prep.total > 0 && (
+            <li>
+              <span className="ws-nrail-k">OT 준비물</span>
+              <a className="ws-nrail-v" href={prep.가이드 || guideHref(PREP_GUIDES[0])}>{prep.done} / {prep.total} 완료 · 하는 법 보기</a>
+              <span className="ws-nrail-bar" aria-hidden="true"><span style={{ width: `${(prep.done / prep.total) * 100}%` }} /></span>
+            </li>
           )}
-          {!nextItem && !due && !prepDone && <li className="ws-note">이번 주 항목 없음</li>}
+          {!nextItem && !due && !prep && <li className="ws-note">이번 주 항목 없음</li>}
         </ul>
       </section>
       <section className="ws-block">
         <h2 className="ws-h2">읽는 법</h2>
         <ul className="ws-guide-lines">
           <li>카드를 누르면 본문이 열린다</li>
-          <li>하는 법은 가이드, 제출은 홈의 과제에서</li>
+          <li>하는 법은 가이드, 낼 것은 과제 탭에서</li>
           <li>N = 7일 안에 올라온 안 읽은 공지</li>
         </ul>
       </section>

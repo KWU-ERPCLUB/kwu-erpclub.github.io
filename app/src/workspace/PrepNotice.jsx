@@ -27,10 +27,20 @@ export function Icon({ name }) {
 }
 
 // 문자열 안 표기 → 화면 요소. HTML은 만들지 않는다(React 요소로만).
-const TOKEN = /(\[\[[^\]]+\]\]|\{\{[^}]+\}\}|<<[^>]+>>|\(\([^)]+\)\)|\*\*[^*]+\*\*|https?:\/\/[^\s)"'<>]+)/g
+// 링크 표기(2026-09-13 오너: "주소를 그대로 보여 주지 말고 어디로 가는 링크인지로") = `[이름](주소)`.
+// 화면에는 이름만 나가고 주소는 href로만 쓴다. 맨 주소를 쓰면 테스트가 잡는다.
+const TOKEN = /(\[[^\][]+\]\((?:https?:\/\/|\/)[^\s)]+\)|\[\[[^\]]+\]\]|\{\{[^}]+\}\}|<<[^>]+>>|\(\([^)]+\)\)|\*\*[^*]+\*\*|https?:\/\/[^\s)"'<>]+)/g
+const LINK = /^\[([^\][]+)\]\(((?:https?:\/\/|\/)[^\s)]+)\)$/
+
 export function Inline({ text }) {
   return String(text || '').split(TOKEN).map((p, i) => {
     if (!p) return null
+    const link = LINK.exec(p)
+    if (link) {
+      const [, label, href] = link
+      const ext = href.startsWith('http')
+      return <a key={i} className="ws-ui-link" href={href} {...(ext ? { target: '_blank', rel: 'noreferrer' } : {})}>{label}{ext ? ' ↗' : ' →'}</a>
+    }
     if (p.startsWith('[[')) return <span key={i} className="ws-ui-btn">{p.slice(2, -2)}</span>
     if (p.startsWith('{{')) {
       const crumbs = p.slice(2, -2).split('›').map((s) => s.trim())
@@ -39,37 +49,50 @@ export function Inline({ text }) {
     if (p.startsWith('<<')) return <span key={i} className="ws-ui-input">{p.slice(2, -2)}</span>
     if (p.startsWith('((')) return <span key={i} className="ws-ui-keys">{p.slice(2, -2).split('+').map((k, j, a) => <span key={j}><kbd>{k.trim()}</kbd>{j < a.length - 1 && ' + '}</span>)}</span>
     if (/^\*\*[^*]+\*\*$/.test(p)) return <strong key={i}>{p.slice(2, -2)}</strong>
+    // 맨 주소 폴백 — 데이터가 규칙을 어겼을 때도 화면은 살린다(도메인만 짧게).
     if (/^https?:\/\//.test(p)) return <a key={i} href={p} target="_blank" rel="noreferrer">{p.replace(/^https?:\/\//, '').replace(/\/$/, '')}</a>
     return p
   })
 }
 
-// 단계 한 줄 — URL로 시작하면 사이트 카드 + 나머지 글.
-export const splitSite = (s) => { const m = /^(https?:\/\/\S+)\s*(.*)$/.exec(s || ''); return m ? { url: m[1], rest: m[2] } : { url: null, rest: s } }
+// 단계 한 줄 — `[이름](주소)`로 시작하면 사이트 카드(이름 + 열기) + 나머지 글.
+// 카드에 도메인을 찍지 않는다(오너 2026-09-13) — 이름이 이미 어디로 가는지를 말한다.
+export function splitSite(s) {
+  const m = /^\[([^\][]+)\]\((https?:\/\/[^\s)]+)\)\s*(.*)$/.exec(s || '')
+  if (m) return { url: m[2], label: m[1], rest: m[3] }
+  const bare = /^(https?:\/\/\S+)\s*(.*)$/.exec(s || '')
+  if (bare) return { url: bare[1], label: bare[1].replace(/^https?:\/\//, '').replace(/\/$/, ''), rest: bare[2] }
+  return { url: null, label: '', rest: s }
+}
+
 function Step({ text, no }) {
-  const { url, rest } = splitSite(text)
+  const { url, label, rest } = splitSite(text)
   return (
     <li>
       <span className="ws-prep-step-no" aria-hidden="true">{no}</span>
       <span className="ws-prep-step-text">
-        {url && <a className="ws-ui-site" href={url} target="_blank" rel="noreferrer"><span className="ws-ui-site-dom">{url.replace(/^https?:\/\//, '').replace(/\/$/, '').split('/').map((seg, k, a) => <span key={k}>{seg}{k < a.length - 1 && <>/<wbr /></>}</span>)}</span><span className="ws-ui-site-go">열기 ↗</span></a>}
+        {url && (
+          <a className="ws-ui-site" href={url} target="_blank" rel="noreferrer">
+            <span className="ws-ui-site-name">{label}</span>
+            <span className="ws-ui-site-go">열기 ↗</span>
+          </a>
+        )}
         {rest && <span className="ws-prep-step-rest"><Inline text={rest} /></span>}
       </span>
     </li>
   )
 }
 
-const storageKey = (id) => `ws-prep:${id}`
-export const readChecks = (id, n) => {
-  try {
-    const saved = JSON.parse(localStorage.getItem(storageKey(id)) || '[]')
-    return Array.from({ length: n }, (_, i) => Boolean(saved[i]))
-  } catch { return Array.from({ length: n }, () => false) }
+// 경로 → 펼칠 항목(2026-09-13) — 과제 탭 「하는 법」이 /guide/<id>/#item-<항목id>로 들어온다.
+export function itemIndexFromHash(items, hash) {
+  const m = /^#item-(.+)$/.exec(String(hash || ''))
+  const i = m ? items.findIndex((it) => it.id === m[1]) : -1
+  return i < 0 ? 0 : i
 }
-export const firstOpen = (checks) => { const i = checks.findIndex((c) => !c); return i === -1 ? 0 : i }
 
-// 항목 상세 — 아이콘+제목 · 뭔가요 · 준비물 칩 · 재료 카드 · 단계 · 조건 메모 · 완료 버튼(유일한 채움)
-function ItemDetail({ item, index, done, onDone }) {
+// 항목 상세 — 아이콘+제목 · 뭔가요 · 준비물 칩 · 재료 카드 · 단계 · 조건 메모.
+// 완료 버튼은 2026-09-13에 뺐다: 진행 체크 = 과제(서버 저장), 가이드 = 방법만(역할 3분리).
+function ItemDetail({ item, index }) {
   return (
     <section className="ws-prep-detail" aria-label={`${index + 1}. ${item.title} 하는 법`}>
       <header className="ws-prep-detail-head">
@@ -93,67 +116,31 @@ function ItemDetail({ item, index, done, onDone }) {
           {item.tips.map((t, k) => <li key={k}><Inline text={t} /></li>)}
         </ul>
       )}
-      <div className="ws-prep-actions">
-        <button type="button" className={`ws-prep-done${done ? ' is-undo' : ''}`} onClick={onDone}>
-          {done ? '완료 취소' : '완료'}
-        </button>
-      </div>
     </section>
   )
 }
 
-// 4단계 스테퍼 — 묶음별 완료 수. 완료된 묶음 = 채움 점(포인트 색), 진행 중 = 테두리.
-function Stepper({ groups, checks, offsets }) {
-  return (
-    <ol className="ws-prep-stepper" aria-label="진행 단계">
-      {groups.map((g, gi) => {
-        const total = g.items.length
-        const doneN = g.items.reduce((acc, _, k) => acc + (checks[offsets[gi] + k] ? 1 : 0), 0)
-        const cls = doneN === total ? 'is-done' : doneN > 0 ? 'is-part' : ''
-        return (
-          <li key={g.label} className={`ws-prep-step ${cls}`}>
-            <span className="ws-prep-step-dot" aria-hidden="true" />
-            <span className="ws-prep-step-label">{g.label}</span>
-            <span className="ws-prep-meta">{doneN}/{total}</span>
-          </li>
-        )
-      })}
-    </ol>
-  )
-}
-
 // 한 회차 준비물 가이드 본체(2026-09-13 역할 3분리 — 가이드 페이지 /guide/<id>/가 그린다. 공지 탭에는 알림 카드만).
-// 상단 = 리드 + 4단계 스테퍼 → 좌 묶음 목록(체크) / 우 상세. 체크 = 기기 저장(과제 탭이 나오면 서버 저장 과제로 이관).
+// 상단 = 리드 + 과제 탭 안내 → 좌 묶음 목록 / 우 상세.
+// 진행 체크는 여기 없다(2026-09-13 과제 탭 신설) — 기기에만 남던 체크를 서버 저장 과제로 옮겼다.
 export function PrepGuideBody({ guide }) {
   const items = useMemo(() => guideItems(guide), [guide])
   const offsets = useMemo(() => { let o = 0; return guide.groups.map((g) => { const s = o; o += g.items.length; return s }) }, [guide])
-  const n = items.length
-  const [checks, setChecks] = useState(() => Array.from({ length: n }, () => false))
   const [sel, setSel] = useState(0)
 
-  useEffect(() => { const c = readChecks(guide.id, n); setChecks(c); setSel(firstOpen(c)) }, [guide.id, n])
+  useEffect(() => {
+    setSel(itemIndexFromHash(items, typeof window !== 'undefined' ? window.location.hash : ''))
+  }, [items])
 
-  function setCheck(i, value) {
-    setChecks((prev) => {
-      const next = prev.map((v, k) => (k === i ? value : v))
-      try { localStorage.setItem(storageKey(guide.id), JSON.stringify(next)) } catch { /* 저장 불가 = 표시만 */ }
-      return next
-    })
-  }
-  function finish(i) {
-    const value = !checks[i]
-    setCheck(i, value)
-    if (value) { const next = checks.map((v, k) => (k === i ? true : v)); setSel(firstOpen(next)) }
-  }
-
-  const done = checks.filter(Boolean).length
   const anchor = `prep-${guide.id}`
 
   return (
     <div className="ws-prep" id={anchor}>
       <header className="ws-prep-head">
-        <p className="ws-prep-lead">{guide.lead} <span className="ws-prep-meta">{done}/{n} 완료</span></p>
-        <Stepper groups={guide.groups} checks={checks} offsets={offsets} />
+        <p className="ws-prep-lead">{guide.lead}</p>
+        <p className="ws-prep-todo">
+          <a className="ws-ui-link" href="/workspace/?tab=과제">워크스페이스 과제 탭에서 진행 체크 →</a>
+        </p>
       </header>
 
       <div className="ws-prep-cols">
@@ -165,15 +152,14 @@ export function PrepGuideBody({ guide }) {
                 const i = offsets[gi] + k
                 const active = sel === i
                 return (
-                  <div key={it.id} className={`ws-prep-item${active ? ' is-active' : ''}${checks[i] ? ' is-done' : ''}`} role="listitem">
+                  <div key={it.id} id={`item-${it.id}`} className={`ws-prep-item${active ? ' is-active' : ''}`} role="listitem">
                     <div className="ws-prep-rowline">
-                      <input type="checkbox" checked={checks[i]} onChange={(e) => setCheck(i, e.target.checked)} aria-label={`${it.title} 완료`} />
                       <button type="button" className="ws-prep-rowbtn" aria-expanded={active} aria-controls={`${anchor}-detail`} onClick={() => setSel(active && !isWide() ? -1 : i)}>
                         <Icon name={it.icon} />
                         <span className="ws-prep-item-title">{it.title}</span>
                       </button>
                     </div>
-                    {active && <div className="ws-prep-inline"><ItemDetail item={it} index={i} done={checks[i]} onDone={() => finish(i)} /></div>}
+                    {active && <div className="ws-prep-inline"><ItemDetail item={it} index={i} /></div>}
                   </div>
                 )
               })}
@@ -181,7 +167,7 @@ export function PrepGuideBody({ guide }) {
           ))}
         </div>
         <aside className="ws-prep-side" id={`${anchor}-detail`}>
-          {sel >= 0 && items[sel] && <ItemDetail item={items[sel]} index={sel} done={checks[sel]} onDone={() => finish(sel)} />}
+          {sel >= 0 && items[sel] && <ItemDetail item={items[sel]} index={sel} />}
         </aside>
       </div>
 

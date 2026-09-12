@@ -240,18 +240,17 @@ export function createMockRepositories({ user = null, data = {} } = {}) {
         if (isStaff()) return clone(store.submissions)
         return clone(store.submissions.filter((s) => s.member_id === currentId))
       },
-      async submit({ id, assignment_id, url, 메모 = '' }) {
+      // 링크형 = url, 폼·체크리스트형 = 답변(0025). 넘어온 칸만 덮는다(supabase 구현과 동형).
+      async submit({ id, assignment_id, url, 답변, 메모 = '' }) {
         if (!currentId) throw new Error('로그인 필요')
+        const patch = { 메모, ...(url === undefined ? {} : { url }), ...(답변 === undefined ? {} : { 답변 }) }
         if (id) {
           const row = store.submissions.find((s) => s.id === id && s.member_id === currentId)
           if (!row) throw new Error('대상 없음')
-          Object.assign(row, { url, 메모 })
+          Object.assign(row, patch)
           return { ...row }
         }
-        const row = {
-          id: `mock-sub${store.submissions.length + 1}`,
-          assignment_id, member_id: currentId, url, 메모,
-        }
+        const row = { id: `mock-sub${store.submissions.length + 1}`, assignment_id, member_id: currentId, ...patch }
         store.submissions.push(row)
         return { ...row }
       },
