@@ -52,7 +52,7 @@ function Step({ text, no }) {
     <li>
       <span className="ws-prep-step-no" aria-hidden="true">{no}</span>
       <span className="ws-prep-step-text">
-        {url && <a className="ws-ui-site" href={url} target="_blank" rel="noreferrer"><span className="ws-ui-site-dom">{url.replace(/^https?:\/\//, '').replace(/\/$/, '')}</span><span className="ws-ui-site-go">열기 ↗</span></a>}
+        {url && <a className="ws-ui-site" href={url} target="_blank" rel="noreferrer"><span className="ws-ui-site-dom">{url.replace(/^https?:\/\//, '').replace(/\/$/, '').split('/').map((seg, k, a) => <span key={k}>{seg}{k < a.length - 1 && <>/<wbr /></>}</span>)}</span><span className="ws-ui-site-go">열기 ↗</span></a>}
         {rest && <span className="ws-prep-step-rest"><Inline text={rest} /></span>}
       </span>
     </li>
@@ -151,13 +151,16 @@ export function PrepGuide({ guide, openInitially = false }) {
   const anchor = `prep-${guide.id}`
 
   return (
-    <li className="ws-notice-row ws-prep-row" id={anchor}>
+    <li className="ws-notice-row ws-ncard ws-prep-row" id={anchor}>
       <details open={open} onToggle={(e) => setOpen(e.currentTarget.open)}>
         <summary className="ws-notice-sum">
-          <span className="ws-prep-pin" aria-label="고정 공지">📌</span>
-          <span className="ws-notice-title">{guide.title}</span>
-          <span className="ws-prep-meta">{done}/{n}</span>
-          <span className="ws-notice-when">{guide.date}</span>
+          <span className="ws-ncard-head">
+            <span className="ws-nkind">준비물</span>
+            <span className="ws-notice-title">{guide.title}</span>
+            <span className="ws-prep-meta ws-prep-sumcount">{done}/{n} 완료</span>
+            <span className="ws-notice-when">{guide.date}</span>
+          </span>
+          <span className="ws-ncard-sum">{guide.lead}</span>
         </summary>
         <div className="ws-prep">
           <header className="ws-prep-head">
