@@ -67,12 +67,21 @@ server.listen(0, '127.0.0.1', async () => {
       if (!existsSync(png)) throw new Error(`캡처 실패: ${key}`)
 
       const jpg = join(OUT, fileName(key))
-      await run('python', ['-c', [
+      // JPEG 변환: Pillow(python3/python) 우선, 없으면 macOS 내장 sips 폴백(2026-09-12 — 맥에 python 별칭·Pillow 없음).
+      const pyScript = [
         'import sys',
         'from PIL import Image',
         'im = Image.open(sys.argv[1]).convert("RGB")',
         `im.save(sys.argv[2], "JPEG", quality=${QUALITY}, optimize=True)`,
-      ].join('\n'), png, jpg], { timeout: 60000 })
+      ].join('\n')
+      let converted = false
+      for (const py of ['python3', 'python']) {
+        try { await run(py, ['-c', pyScript, png, jpg], { timeout: 60000 }); converted = true; break } catch { /* 다음 후보 */ }
+      }
+      if (!converted) {
+        if (process.platform !== 'darwin') throw new Error('JPEG 변환 실패: Pillow 없음(python3 -m pip install pillow)')
+        await run('sips', ['-s', 'format', 'jpeg', '-s', 'formatOptions', String(QUALITY), png, '--out', jpg], { timeout: 60000 })
+      }
       console.log(`shot: ${jpg}`)
     }
   } finally {

@@ -36,6 +36,7 @@ function SeminarKeys({ points }) {
 }
 
 // "다루는 내용" 섹션 → 01~NN 번호 목차형(번호=버건디, 데스크톱 2열 grid·모바일 1열). 불릿 0개면 비표시.
+// 항목 대시 절은 요점 카드와 같은 문법으로 줄바꿈 처리(2026-09-12) — 앞절 = 라벨, 뒷절 = 톤 한 단계 낮춤.
 function SeminarOutline({ md }) {
   const items = parseBullets(md)
   if (items.length === 0) return null
@@ -46,7 +47,11 @@ function SeminarOutline({ md }) {
         {items.map((t, i) => (
           <li className="sem-ed-outline-item" key={t}>
             <span className="sem-ed-outline-num">{String(i + 1).padStart(2, '0')}</span>
-            <span className="sem-ed-outline-txt">{t}</span>
+            <span className="sem-ed-outline-txt">
+              {splitTitle(t).map((line, j) => (
+                <span className={j ? 'sem-ed-outline-sub' : 'sem-ed-outline-main'} key={line}>{line}</span>
+              ))}
+            </span>
           </li>
         ))}
       </ol>
@@ -128,15 +133,7 @@ export function SeminarDetail({ s, onBack }) {
           </a>
         )}
 
-        {isStructured && (
-          <div className="sem-ed-byline">
-            <span className="sem-ed-mono" aria-hidden="true">{(authorName(s.author) || '?').charAt(0).toUpperCase()}</span>
-            <span className="sem-ed-byline-txt">
-              <span className="sem-ed-byline-name">발제 {authorName(s.author)}</span>
-              <span className="sem-ed-byline-date">{s['일정미정'] === true ? '일정 미정' : s.date}</span>
-            </span>
-          </div>
-        )}
+        {/* (구 발제 바이라인 44px 모노그램 = 2026-09-12 삭제 — 헤더 메타가 같은 정보를 이미 담당) */}
 
         {intro2 && <div className="sem-ed-intro"><Markdown body={intro2} /></div>}
 

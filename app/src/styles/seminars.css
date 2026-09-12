@@ -50,7 +50,7 @@ button.proof-link {
   transition: border-color 180ms ease-out, transform 180ms ease-out; /* 카드와 동시에 움직인다(규칙 §5 150~200ms) */
 }
 .sem-tl-ep { font-family: var(--font-display); font-weight: 800; font-size: 1.02rem; line-height: 1; color: var(--text-sub); }
-.sem-tl-ep.is-sp { font-size: 0.68rem; letter-spacing: 0.02em; } /* '특강' 두 글자 — 번호보다 축소(2026-08-15) */
+.sem-tl-ep.is-sp { font-size: 0.78rem; letter-spacing: 0.02em; } /* '특강' 두 글자 — 마이크로 하한 0.72 준수(2026-09-12) */
 /* 강조 = 가리키는 행(호버·키보드 포커스): 테두리 버건디 + 확대 + 바깥 링. 스크롤 위치와 무관. */
 .sem-tl-row:hover .sem-tl-node,
 .sem-tl-row:focus-within .sem-tl-node { border-color: var(--accent); transform: scale(1.12); }
@@ -80,10 +80,11 @@ button.proof-link {
 
 .sem-tl-txt { display: flex; flex-direction: column; gap: 0.7rem; min-width: 0; }
 .sem-tl-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.55rem; }
-.sem-tl-when { font-family: var(--font-display); font-weight: 800; font-size: 1rem; color: var(--text-sub); font-variant-numeric: tabular-nums; }
+/* 크기 단계 축소(2026-09-12) — 회차 번호(1.02)와 날짜를 같은 단, 마이크로 3종은 0.78 하나로 통일 */
+.sem-tl-when { font-family: var(--font-display); font-weight: 800; font-size: 1.02rem; color: var(--text-sub); font-variant-numeric: tabular-nums; }
 .sem-tl-kind { font-size: 0.78rem; font-weight: 700; color: var(--text-sub); border: 1px solid var(--line); border-radius: var(--radius-pill); padding: 0.12rem 0.6rem; }
 .sem-soon-badge { /* 화이트리스트 ⑤ 배지 테두리+텍스트(버건디) */
-  display: inline-block; font-size: 0.72rem; font-weight: 700; color: var(--accent);
+  display: inline-block; font-size: 0.78rem; font-weight: 700; color: var(--accent);
   border: 1px solid var(--accent); border-radius: var(--radius-pill); padding: 0.12rem 0.6rem;
 }
 /* 제목 — 오너 지적("제목 키워라"). 대시 절은 줄바꿈, 뒷절은 한 단계 낮춤. */
@@ -102,7 +103,7 @@ button.proof-link {
 .sem-tl-row.is-lead .sem-tl-h-sub { font-size: clamp(1.2rem, 2.4vw, 1.75rem); }
 .sem-tl-row.is-lead .sem-tl-node { width: 56px; height: 56px; border-color: var(--accent); }
 .sem-tl-row.is-lead .sem-tl-ep { font-size: 1.25rem; color: var(--accent); }
-.sem-tl-row.is-lead .sem-tl-ep.is-sp { font-size: 0.8rem; } /* lead 행 특강 라벨 — 56px 원 안 수용 */
+.sem-tl-row.is-lead .sem-tl-ep.is-sp { font-size: 0.78rem; } /* lead 행 특강 라벨 — 56px 원 안 수용(마이크로 단 통일) */
 
 @media (max-width: 860px) {
   .sem-tl { --rail: 46px; }
@@ -120,7 +121,8 @@ button.proof-link {
 
 /* ════ 상세 헤더 밴드 — 4차: 중앙 정렬. 4차 후속(피드백 "검은 배경 별로"): 블랙 → 연한 차콜 워시 ════ */
 /* 배경 = 흰색(2026-08-15 오너: 회색 배경 쓰지 마라) — 위계는 타이포·헤어라인이 진다. */
-.sem-ed-band { width: 100%; background: #fff; border-bottom: 1px solid var(--line); }
+/* 밴드·본문 모두 흰 면이라 사이 가로줄은 의미가 없다(4차 조항 3) — 구분은 여백이 진다. 2026-09-12 삭제. */
+.sem-ed-band { width: 100%; background: #fff; }
 .sem-ed-band-in {
   max-width: var(--maxw); margin: 0 auto; text-align: center;
   padding: clamp(2rem, 4.5vh, 3.25rem) 1.5rem clamp(2.25rem, 5vh, 3.25rem);
@@ -131,8 +133,8 @@ button.proof-link {
   font-size: 0.84rem; font-weight: 600; color: var(--text-sub); cursor: pointer;
 }
 .sem-ed-back:hover { color: var(--text); }
-.sem-ed-eyebrow {
-  display: block; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.09em; color: var(--accent); margin-bottom: 1rem;
+.sem-ed-eyebrow { /* 눈썹 = 보조 회색(§3-1) — 구 버건디는 화이트리스트 밖이라 2026-09-12 회수 */
+  display: block; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.09em; color: var(--text-sub); margin-bottom: 1rem;
 }
 /* 제목 = 대시 절 줄바꿈(2026-08-15). 뒷절은 한 단계 낮춰 주·부를 구분한다. */
 .sem-ed-title {
@@ -224,17 +226,8 @@ button.proof-link {
   .sem-ed-block { padding-bottom: 2rem; margin-bottom: 2rem; }
 }
 
-/* ── 구조형 상세 본문 (발제 블록 → "다루는 내용" 번호 목차 → "출처" 리스트) — 본문 폭 720 중앙 ── */
-.sem-ed-byline { display: flex; align-items: center; justify-content: center; gap: 0.75rem; margin-bottom: 2.25rem; }
-.sem-ed-mono { /* 검은 면 폐지(2026-08-15) → 흰 원 + 버건디 테두리·글자(화이트리스트 범위) */
-  flex: none; width: 44px; height: 44px; border-radius: 50%; background: #fff;
-  border: 2px solid var(--accent); color: var(--accent);
-  display: inline-flex; align-items: center; justify-content: center;
-  font-family: var(--font-display); font-weight: 800; font-size: 1.1rem;
-}
-.sem-ed-byline-txt { display: flex; flex-direction: column; gap: 0.15rem; text-align: left; }
-.sem-ed-byline-name { font-weight: 700; font-size: 0.95rem; color: var(--text); }
-.sem-ed-byline-date { font-size: 0.8rem; color: var(--text-sub); }
+/* ── 구조형 상세 본문 ("다루는 내용" 번호 목차 → "출처" 리스트) — 본문 폭 720 중앙 ── */
+/* (구 발제 바이라인 = 2026-09-12 삭제 — 헤더 메타와 같은 정보 2회 노출이었고 44px 모노그램은 34px 상한 초과) */
 
 .sem-ed-outline { margin: 0 auto 2.75rem; max-width: 720px; }
 .sem-ed-outline-grid {
@@ -246,7 +239,11 @@ button.proof-link {
   padding: 0.8rem 1rem; background: #fff; border: 1px solid var(--line); border-radius: 10px;
 }
 .sem-ed-outline-num { font-family: var(--font-display); font-weight: 800; font-size: 1rem; color: var(--accent); }
-.sem-ed-outline-txt { font-size: 0.95rem; line-height: 1.5; color: var(--text); word-break: keep-all; }
+.sem-ed-outline-txt { display: block; min-width: 0; }
+/* 대시 절 줄바꿈(2026-09-12) — 앞절 = 라벨(700), 뒷절 = 보조 회색 */
+.sem-ed-outline-main, .sem-ed-outline-sub { display: block; word-break: keep-all; }
+.sem-ed-outline-main { font-size: 0.95rem; font-weight: 700; line-height: 1.5; color: var(--text); }
+.sem-ed-outline-sub { font-size: 0.9rem; font-weight: 500; line-height: 1.55; color: var(--text-sub); margin-top: 0.15rem; }
 
 /* "출처" — 4차: 크기 축소(피드백 "출처 사이즈 줄이는 게") */
 .sem-ed-sources { margin: 0 auto 2rem; max-width: 720px; }

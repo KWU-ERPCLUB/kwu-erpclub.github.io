@@ -84,13 +84,13 @@ const structuredSem = {
   ].join('\n'),
 }
 
-test('SeminarDetail 구조형 — 발제 블록 + "다루는 내용" 번호 목차 + 출처 행 + 각주, 슬라이드 버튼 부재', () => {
+test('SeminarDetail 구조형 — 헤더 메타 발제 표기 + "다루는 내용" 번호 목차 + 출처 행 + 각주, 슬라이드 버튼 부재', () => {
   const html = flat(<SeminarDetail s={structuredSem} onBack={() => {}} />)
-  // ① 발제 블록 — 모노그램(author 첫 글자 대문자) + 발제 author + date
-  expect(html).toContain('sem-ed-byline')
-  expect(html).toContain('sem-ed-mono')
+  // ① 발제 표기 = 헤더 메타 1곳만(2026-09-12 — 구 바이라인 블록 삭제, 같은 정보 2회 노출이었다)
+  expect(html).not.toContain('sem-ed-byline')
+  expect(html).not.toContain('sem-ed-mono')
   // 표시명 = 계정 id가 아니라 실명(2026-08-15 오너) — 매핑 = content/authors.js
-  expect(html).toContain('>신<') // 'bapzzi' → '신해원' → 모노그램 '신'
+  expect(html).toContain('sem-ed-meta')
   expect(html).toContain('발제 신해원')
   expect(html).not.toContain('bapzzi')
   // ② "다루는 내용" 번호 목차 — 01/02 + 불릿 텍스트

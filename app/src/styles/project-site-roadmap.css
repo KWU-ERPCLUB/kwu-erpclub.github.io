@@ -24,7 +24,7 @@
 .ps-rm-node.left .ps-rm-card::after { right: -2.4rem; }
 .ps-rm-node.right .ps-rm-card::after { left: -2.4rem; }
 
-/* 점 — 축 위에 정확히. major = 확대 + 버건디 채움 */
+/* 점 — 축 위에 정확히. major = 확대 + 버건디 테두리(면 채움 회수 2026-09-12) */
 .ps-rm-dot {
   position: absolute; left: 50%; top: 1.5rem; z-index: 1;
   width: 11px; height: 11px; border-radius: 50%;
@@ -32,7 +32,7 @@
   transform: translate(-50%, -50%);
 }
 .ps-rm-node.major .ps-rm-dot {
-  width: 21px; height: 21px; background: var(--accent); border-color: var(--accent);
+  width: 21px; height: 21px; background: #fff; border-width: 3px; border-color: var(--accent);
   box-shadow: 0 0 0 5px rgba(122, 32, 48, 0.12);
 }
 
@@ -45,9 +45,9 @@
 .ps-rm-node.major .ps-rm-card { border-color: var(--dark); border-width: 2px; box-shadow: 0 14px 34px rgba(20, 20, 20, 0.09); }
 
 .ps-rm-top { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.35rem; }
-.ps-rm-date { font-size: 0.75rem; font-weight: 800; letter-spacing: 0.1em; color: var(--accent); }
+.ps-rm-date { font-size: 0.75rem; font-weight: 800; letter-spacing: 0.1em; color: var(--text-sub); } /* 날짜 = 보조 회색(2026-09-12 회수) */
 .ps-rm-flag {
-  font-size: 0.66rem; font-weight: 700; color: #fff; background: var(--dark);
+  font-size: 0.72rem; font-weight: 700; color: #fff; background: var(--dark);
   border-radius: var(--radius-pill); padding: 0.1rem 0.55rem;
 }
 .ps-rm-title {
@@ -59,7 +59,7 @@
 /* 바뀐 면 칩 */
 .ps-rm-tags { list-style: none; margin: 0 0 0.6rem; padding: 0; display: flex; flex-wrap: wrap; gap: 0.3rem; }
 .ps-rm-tags li {
-  font-size: 0.7rem; font-weight: 700; color: var(--text-sub);
+  font-size: 0.72rem; font-weight: 700; color: var(--text-sub);
   border: 1px solid var(--line); border-radius: var(--radius-pill); padding: 0.08rem 0.5rem;
   background: var(--surface);
 }
@@ -72,9 +72,9 @@
   background: var(--surface); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0;
   font-size: 0.85rem; color: var(--text-sub); line-height: 1.7; text-wrap: pretty;
 }
-.ps-rm-ai-label {
+.ps-rm-ai-label { /* 라벨 = 보조 회색(2026-09-12 회수) */
   display: inline-block; margin-right: 0.45rem;
-  font-size: 0.68rem; font-weight: 800; letter-spacing: 0.08em; color: var(--accent);
+  font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em; color: var(--text-sub);
 }
 
 /* before → after */
