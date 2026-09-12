@@ -108,7 +108,7 @@ export default function ProjectSite() {
             <span className="ps-ch-eyebrow">NEXT</span>
             <h2 className="ps-ch-title">아직 만들어가는 중이다</h2>
             <p className="ps-ch-lead">
-              1기가 실제로 시작되는 날 정식 버전을 붙일 예정이다. 지금은 베타다.
+              2026-09-12 정식 1.0.0을 붙였다. 1기 운영 중에도 회차마다 손본다.
             </p>
           </header>
           <NextList />

@@ -12,7 +12,7 @@ export const META = {
   roles: ['기획·설계', '카피·정보구조', '검수·운영'],
   roleNote: '구현은 AI 협업',
   status: '운영 중',
-  statusNote: '베타',
+  statusNote: '정식 1.0.0 (2026-09-12)',
   live: 'https://kwu-erpclub.github.io',
   repo: 'https://github.com/KWU-ERPCLUB/kwu-erpclub.github.io',
 }
