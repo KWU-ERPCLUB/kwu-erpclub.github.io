@@ -5,6 +5,7 @@ date: 2026-08-17
 source_url: https://claude.com/blog/auto-mode-default-in-claude-code
 source_name: Anthropic
 성격: 심층 분석
+보관: true
 축: AI활용
 주제: 거버넌스·리스크
 설명: 8월 14일부터 클로드 코드의 기본 권한 모드가 자동으로 바뀌었다 — 사람이 승인 프롬프트의 97%를 그냥 눌렀고 위험 명령은 13.6%만 걸러냈다는 데이터, 그리고 이 논리가 업무 자동화 전반에 던지는 질문

@@ -6,6 +6,7 @@ date: 2026-08-10
 source_url: https://zdnet.co.kr/view/?no=20260806111654
 source_name: ZDNet Korea · Anthropic · 백악관 외
 성격: 트렌드
+보관: true
 주제: 시장·생태계
 시리즈: weekly
 설명: 매주 월요일 발행하는 주간 AI 트렌드. 8/3–8/9 소식.

@@ -6,6 +6,7 @@ date: 2026-09-09
 source_url: https://erp.today/sap-joule-agents-ariba-fieldglass-procurement-automation-2026/
 source_name: ERP Today · SAP News Center · CIO
 성격: 심층 분석
+보관: true
 축: AI×MIS
 주제: 워크플로·자동화
 설명: SAP가 조달 영역 쥴 어시스턴트 11종을 두 차례로 나눠 여는 중이다. 6월 5종에 이어 9월에 구매요청·구매·입고 등 6종이 일반 공급 예정이고, 에이전트 실행 런타임은 12월 31일까지 추가 비용이 없다. 무료 창이 닫힌 뒤 무엇이 남는지를 짚는다

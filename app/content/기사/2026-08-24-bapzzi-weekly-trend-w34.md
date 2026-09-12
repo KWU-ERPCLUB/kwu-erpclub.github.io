@@ -6,6 +6,7 @@ date: 2026-08-24
 source_url: https://news.skhynix.co.kr/ai-talent-recruit-2026-02/
 source_name: SK하이닉스 뉴스룸 · Anthropic 외
 성격: 트렌드
+보관: true
 주제: 시장·생태계
 시리즈: weekly
 설명: 매주 월요일 발행하는 주간 AI 트렌드. 8/17–8/23 소식.

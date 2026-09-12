@@ -6,6 +6,7 @@ date: 2026-08-28
 source_url: https://github.com/deepseek-ai/deepseek-harness
 source_name: DeepSeek(GitHub) · AI타임스 · LangChain
 성격: 심층 분석
+보관: true
 축: AI활용
 주제: 워크플로·자동화
 설명: 8월 13일 딥시크가 에이전트 실행 계층 '하네스'를 MIT 라이선스로 공개했다 — 깃허브 최고 속도로 스타가 붙은 이유, 하네스가 무엇이고 왜 모델보다 점수를 더 흔드는가, 그리고 중국계 모델이라는 국내 관문

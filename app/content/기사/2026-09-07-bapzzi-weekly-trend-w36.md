@@ -6,6 +6,7 @@ date: 2026-09-07
 source_url: https://openai.com/index/gpt-6-astra/
 source_name: OpenAI · LG전자 · Google 외
 성격: 트렌드
+보관: true
 주제: 시장·생태계
 시리즈: weekly
 설명: 매주 월요일 발행하는 주간 AI 트렌드. 8/31–9/6 소식.

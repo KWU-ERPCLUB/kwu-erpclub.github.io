@@ -6,6 +6,7 @@ date: 2026-08-17
 source_url: https://nvidianews.nvidia.com/news/nvidia-partners-with-apollo-blackrock-blackstone-brookfield-goldman-sachs-and-kkr-to-establish-ai-compute-infrastructure-financing-platforms-to-mobilize-over-500-billion-of-third-party-capital
 source_name: NVIDIA Newsroom · Anthropic · Oracle 외
 성격: 트렌드
+보관: true
 주제: 시장·생태계
 시리즈: weekly
 설명: 매주 월요일 발행하는 주간 AI 트렌드. 8/10–8/16 소식.

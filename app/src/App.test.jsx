@@ -162,9 +162,11 @@ test('FAQ 모집 답 = 확정 기간 반영(비정기 문구 폐지) — 기간�
 test('메인 하단 INSIGHTS = 썸네일 카드 3건(제목·날짜·딥링크) + 전체 보기 링크', () => {
   const html = renderToString(<HomeInsights />)
   const recent = loadContent('기사').filter(isPublicArticle).slice(0, HOME_INSIGHTS_COUNT) // 보관 제외(2026-09-11)
-  expect(recent.length).toBe(3)
-  expect((html.match(/hi-item/g) || []).length).toBe(3)
-  expect((html.match(/art-cover/g) || []).length).toBeGreaterThanOrEqual(3) // 썸네일 프레임(4계층 해석 재사용)
+  // 공개 글이 3편 미만이면 있는 만큼만(2026-09-12 구 글 전량 보관 — 새 형식 2편만 공개). 0편은 섹션 자체가 비므로 하한 1.
+  const expected = Math.min(HOME_INSIGHTS_COUNT, recent.length)
+  expect(expected).toBeGreaterThanOrEqual(1)
+  expect((html.match(/hi-item/g) || []).length).toBe(expected)
+  expect((html.match(/art-cover/g) || []).length).toBeGreaterThanOrEqual(expected) // 썸네일 프레임(4계층 해석 재사용)
   // 제목 = 대시 폐지·의미 단위 줄바꿈(2026-08-15) → 원문 통짜가 아니라 분할된 절이 각각 렌더된다.
   for (const a of recent) {
     for (const line of splitTitle(a.title)) expect(html).toContain(line)
