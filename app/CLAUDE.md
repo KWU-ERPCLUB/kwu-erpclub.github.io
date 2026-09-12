@@ -84,6 +84,8 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
   링크가 없으면 로그인 화면 입구가 없다). 세션 키 상수 원천 = `data/session-key.js`(소비 = supabase.js만).
 - 세션 자료 = **링크 기반**. 파일 업로드(Storage 버킷) = M4.
 - **과제 제출(0025)** = 링크형은 `submissions.url`, 폼·체크리스트형은 `submissions.답변`(jsonb). `submit()`은 **넘어온 칸만 patch** — 링크 재제출이 답변을 지우지 않는다. 열람 = 본인 + 운영진(기존 RLS 그대로, 새 정책 없음).
+- ⛔**폭 상한(오너 2026-09-13)**: 읽기 폭 상한(640·760)은 **읽는 문단에만** 건다. 체크·입력·표처럼 조작하는 것은 카드 폭을 쓴다 — 1210px 카드에 640 상한을 걸어 오른쪽 절반이 비던 사고. 넓어진 자리는 2열 격자로 채운다(1100/899 아래 1열).
+- ⛔**반복 링크 금지(오너 2026-09-13)**: 같은 글자의 링크가 행마다 반복되면 항목 이름이 묻힌다 — 카드당 1개로 합친다.
 - ⛔**링크 표기(오너 2026-09-13)**: 주소·도메인을 화면 글자로 쓰지 않는다 — `[이름](주소)`로 쓰고 이름만 보여 준다. 적용처 = 준비물 단계·팁(`Inline`·`splitSite`) · 공지 `::: 링크` 카드 · 과제 제출물(「내가 낸 문서 열기」). 맨 URL이 데이터에 남으면 `PrepNotice.test`가 잡는다.
 - **로그인 ID = 학번**(§0-4 개정). 매핑 = `src/data/login-id.js`(학번 → `s<학번>@member.erpclub`, `@` 포함 = 이메일 폴백).
 - **인사이트 카드 배지 3종(2026-08-07)**: 작성자(이름 3글자·검은 타원, 원천 = author/작성자표기) · 미열람 **N**(빨간 원 —
@@ -104,7 +106,7 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
   실측 고정 수치(버건디 화이트리스트·빈도 상한·버튼 3단 위계·인터랙션 4상태·§2 타이포 실값 표). UI 작업 전 필독. 위반=재작업.
 - **PageHead 강제(3차, 4차 개정)**: 페이지 헤드 = `src/shared.jsx` `PageHead` 1개(**중앙 정렬** — 눈썹 + h1 + 서브 + children,
   갱신 메타 = 인사이트만). 페이지별 head CSS 신설 금지. (구 좌 라벨 레일·`--rail-w` 토큰 = 4차 폐지·제거됨.)
-- CSS 26개(`src/styles/`): global(토큰·nav·PageHead·푸터·버튼) · home · home-sections ·
+- CSS 27개(`src/styles/`): global(토큰·nav·PageHead·푸터·버튼) · home · home-sections ·
   pages(공용 셸) · hub-md(도판 브레이크아웃) · articles · insights-detail · seminars · projects ·
   project-adsp + project-adsp-viz(ADsP 인터랙티브 상세) ·
   project-site + project-site-roadmap(허브 사이트 인터랙티브 상세 — 세로 지그재그 로드맵) ·
@@ -112,7 +114,7 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
   recruit + recruit-form + recruit-motion(모집 — 2026-08-20 300줄 분할, motion은 recruit 엔트리만 로드) · workspace ·
   workspace-home(사이드바·앱 셸 — 2026-08-06 분할) + workspace-calendar(홈 캘린더·팝업·범례 — 2026-08-14 분할) ·
   **workspace-kinds(분류 색 단일원천 — 캘린더 칩·점·범례 + 공고 종류 배지 공용, 2026-08-19. 분류 매핑 = `workspace/kind-colors.js`)** ·
-  workspace-postings(공고 보드 — 2026-08-07 분할) · **workspace-assignments(과제 탭 카드·상태·3종 폼 — 2026-09-13 신설)** ·
+  workspace-postings(공고 보드 — 2026-08-07 분할) · **workspace-notices(공지 탭 — 2026-09-13 분할, 300줄 규격)** · **workspace-assignments(과제 탭 카드·상태·3종 폼 — 2026-09-13 신설)** ·
   workspace-mypage + workspace-roadmap(내정보·로드맵 탭 — 2026-08-14 분할).
   (`doc.css` = 2026-07-25 폐지 — 내부형 doc 셸·DocSide와 함께 제거됨.)
 - 3차 신설 토큰(현행): `--tint-accent` · `--accent-on-dark` · `--focus-on-dark` · `--btn-hover`.

@@ -241,6 +241,8 @@
 /* 폰 = 입력 16px 하한(모바일 spec M2, iOS 포커스 자동 확대 방지) + 표 = 가로 스크롤 컨테이너(spec §3-5 —
    운영진 전용 표는 카드 변환 대신 스크롤). 경계 = 워크스페이스 공통 760 */
 @media (max-width: 760px) {
+  .ws-submit { min-height: 44px; }   /* 터치 타깃 44px(모바일 spec M1) — 실측 40px, 2026-09-13 모바일 점검 */
+
   .ws-field input, .ws-field select, .ws-textarea, .ws-table select { font-size: 16px; }   /* px 고정 — 폰 루트 15px 축소와 무관하게 iOS 확대 방지 */
   .ws-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
 }
