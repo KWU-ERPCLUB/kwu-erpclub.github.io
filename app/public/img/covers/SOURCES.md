@@ -34,6 +34,7 @@
 | openai-agent-workdays.jpg | 2026-09-11 사람 하루당 에이전트 3.1일 — 오픈AI 내부 계측치 | 발표글(og:image)의 공식 카드 아트 | https://openai.com/index/research-acceleration-view-inside-openai/ | OpenAI |
 | kia-ai-screening.jpg | 2026-09-13 시험장에서 AI를 쓰게 한다 — 기아 AI 문제해결력 검증 | 기아 2026 하반기 집중 채용 공식 포스터(기아 제공, 더피알 게재) — 상단 차량 구역 크롭 | https://www.the-pr.co.kr/news/articleView.html?idxno=62555 | 기아 |
 | weekly-trend-w37.jpg | 2026-09-12 주간 AI 트렌드 — 9월 2주 | TOP 1 소재(기아 채용) 기사의 og:image — 현대차·기아 양재 사옥, 745px 원본 확대·중앙 크롭 | https://view.asiae.co.kr/article/2026090808485382454 | 아시아경제 |
+| typesafe-jev.jpg | 2026-09-21 글을 만들지 않는 모델 Jev, 같은 데이터에서 62.6%와 95%를 오갔다 | TypeSafe AI 공개 발표문의 og:image(브랜드 키비주얼) — 1200×630 원본을 원본 배경색 레터박스로 1200×750 정규화, 잘림 0 | https://typesafe.ai/blog/introducing-system-one-models-and-jev | TypeSafe AI |
 
 ## 추가할 때
 
