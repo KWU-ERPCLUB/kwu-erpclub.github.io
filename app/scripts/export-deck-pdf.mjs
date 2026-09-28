@@ -19,7 +19,7 @@ const DECKS = {
   sp1: '2026-07-25-bapzzi-question-to-delegation',
   s1: '2026-09-14-bapzzi-ot-what-we-learn-and-setup',
   s2: '2026-09-14-bapzzi-contribute-and-first-delegation',
-  s3: '2026-09-21-bapzzi-build-sprint',
+  s3: '2026-09-28-bapzzi-goal-and-depth',
 }
 const CHROME = requireChrome()
 
