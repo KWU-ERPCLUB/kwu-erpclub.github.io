@@ -5,6 +5,7 @@ import Admin, { Denied } from './Admin.jsx'
 import AdminMembers from './AdminMembers.jsx'
 import AdminContent from './AdminContent.jsx'
 import AdminApplicants from './AdminApplicants.jsx'
+import { kstToDb, dbToKst, normalize } from './AdminForm.jsx'
 import { createMockRepositories } from '../data/mock.js'
 
 const flat = (node) => renderToString(node).replace(/<!-- -->/g, '')
@@ -88,4 +89,16 @@ test('역할 변경·전공 열람 = 운영진만', async () => {
   await expect(mem.members.setRole('mock-staff', '스터디원')).rejects.toThrow('권한 없음')
   const priv = await mem.members.listPrivate()
   expect(priv.every((p) => p.member_id === 'mock-member')).toBe(true)   // 본인 1행만(RLS 동형)
+})
+
+test('운영 폼 마감 = 한국 시간 입력 · 저장 · 수정 왕복(2026-10-26 UTC로 9시간 밀린 사고)', () => {
+  expect(kstToDb('2026-11-02T18:00')).toBe('2026-11-02T18:00:00+09:00')
+  expect(Date.parse(kstToDb('2026-11-02T18:00'))).toBe(Date.parse('2026-11-02T09:00:00Z'))
+  expect(dbToKst('2026-11-02T09:00:00+00:00')).toBe('2026-11-02T18:00')   // 저장된 값 → 수정 칸
+  expect(dbToKst(kstToDb('2026-11-02T18:00'))).toBe('2026-11-02T18:00')
+  expect(dbToKst('2026-11-02T20:00:00+00:00')).toBe('2026-11-03T05:00')   // 날짜를 넘겨도 맞다
+  expect(dbToKst('')).toBe('')
+  const out = normalize([['마감', 'datetime'], ['제목', 'text']], { 마감: '2026-11-02T18:00', 제목: '과제' })
+  expect(out).toEqual({ 마감: '2026-11-02T18:00:00+09:00', 제목: '과제' })
+  expect(normalize([['마감', 'datetime']], { 마감: '' })).toEqual({ 마감: null })
 })
