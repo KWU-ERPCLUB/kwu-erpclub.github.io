@@ -21,6 +21,7 @@ const COVERS = {
   sp1: { pill: 'SPECIAL', kind: '인지', l1: '질문에서', l2: '위임으로', sub: 'AI 활용 구조 3단 · Prompt · Context · Harness', count: 30 },
   s2: { pill: 'SEMINAR 02', kind: '실습', l1: '따라 치기에서', l2: '첫 위임까지', sub: '기고 1건과 내 소재 확정', count: 26 },
   s3: { pill: 'SEMINAR 03', kind: '실습', l1: '목표 잡기와', l2: '깊이 가이드', sub: 'toy에서 포트폴리오급까지', count: 26 },
+  s4: { pill: 'SEMINAR 04', kind: '인지', l1: '에이전트', l2: '과제 발주', sub: '기업의 AI 평가 · 현직자 이야기 · 허브 업무 맡기기', count: 41 },
 }
 
 const CHROME = requireChrome()
