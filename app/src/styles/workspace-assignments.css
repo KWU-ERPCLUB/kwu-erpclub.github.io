@@ -52,6 +52,15 @@
 .ws-aform input, .ws-aform textarea { transition: border-color 150ms ease-out, box-shadow 150ms ease-out; }
 .ws-aform input:focus, .ws-aform textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--tint-accent); outline: none; }
 @media (max-width: 1099px) { .ws-aform-fields { grid-template-columns: minmax(0, 1fr); } }
+/* 폼형 자료 내려받기 · 넓은 칸 · 글자 수(2026-10-26 1기 에이전트 과제) */
+.ws-afiles { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; padding: 0.8rem 0.9rem; border-radius: 14px; background: var(--surface); }
+.ws-afiles-k { margin-right: 0.3rem; font-size: 0.82rem; font-weight: 700; color: var(--text-sub); }
+.ws-afile { display: inline-flex; align-items: center; padding: 0.35rem 0.8rem; border: 1px solid var(--line); border-radius: var(--radius-pill); background: #fff; font-size: 0.84rem; font-weight: 600; color: var(--text); text-decoration: none; transition: border-color 150ms ease-out, color 150ms ease-out; }
+.ws-afile:first-of-type { border-color: var(--dark); font-weight: 700; }
+@media (hover: hover) { .ws-afile:hover { border-color: var(--accent); color: var(--accent); } }
+.ws-afile:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.ws-afield.wide { grid-column: 1 / -1; }
+.ws-acount { align-self: flex-end; font-size: 0.78rem; color: var(--text-sub); }
 
 /* ── 체크리스트형 ── */
 .ws-achecklist { display: grid; gap: 1.1rem; }

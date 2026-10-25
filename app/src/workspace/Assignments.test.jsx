@@ -27,6 +27,33 @@ test('양식 레지스트리 — 체크리스트는 준비물 가이드에서 �
   expect(FORM_OPTIONS.map((o) => o.key)).toContain('materials-4')
 })
 
+test('1기 에이전트 과제 양식 — 칸 2개(발주서 · 지시문 전문) + 자료 6개는 public 파일과 1:1', async () => {
+  const { existsSync } = await import('node:fs')
+  const { resolve } = await import('node:path')
+  const f = ASSIGNMENT_FORMS['agent-order']
+  expect(f.종류).toBe('폼')
+  expect(f.fields.map((x) => x.key)).toEqual(['order', 'agent'])
+  expect(f.fields[1]).toMatchObject({ wide: true, count: true })
+  expect(f.자료).toHaveLength(6)
+  for (const d of f.자료) {
+    expect(d.href.startsWith('/files/aim-agent/')).toBe(true)
+    expect(existsSync(resolve(process.cwd(), 'public', d.href.slice(1)))).toBe(true)
+  }
+  expect(FORM_OPTIONS.map((o) => o.key)).toContain('agent-order')
+})
+
+test('폼형 자료 — 내려받기 링크(download) · 넓은 칸 · 글자 수 표시', async () => {
+  const { FieldForm } = await import('./AssignmentForms.jsx')
+  const form = ASSIGNMENT_FORMS['agent-order']
+  const html = flat(<FieldForm row={{ id: 'a9', 제목: '에이전트 과제' }} form={form} mine={null} onSubmit={() => {}} />)
+  expect(html).toContain('자료 내려받기')
+  expect(html).toContain('href="/files/aim-agent/aim-agent-orders.zip"')
+  expect(html).toContain('download="AIM-에이전트-과제-파일.zip"')
+  expect(html).toContain('ws-afield wide')
+  expect(html).toContain('0자')
+  expect(html).not.toContain('https://') // 주소를 글자로 쓰지 않는다(링크 표기 규칙)
+})
+
 test('kindOf·formOf — 0025 미적용이거나 모르는 양식키면 링크형으로 강등', () => {
   expect(kindOf({})).toBe('링크')
   expect(kindOf({ 종류: '폼', 양식키: 'materials-4' })).toBe('폼')
