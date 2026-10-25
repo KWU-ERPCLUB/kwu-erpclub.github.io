@@ -69,7 +69,7 @@ Static bundle + client-side fetch to Supabase (workspace only — 공개 6페이
   **과제(`Assignments.jsx`, 2026-09-13 전용 탭 승격)** = 3종(링크·폼·체크리스트) 카드 목록 + 레일. 종류·제출 판정 = `assignments-logic.js`(순수), 제출 폼 3종 = `AssignmentForms.jsx`, CSS = `workspace-assignments.css`.
   **양식(입력 칸) 단일원천 = `data/assignment-forms.js`(코드)** — `assignments.양식키`(0025)가 이 표를 가리킨다. 체크리스트 항목·폼 칸은 `prep-guides.js`에서 파생(항목 이름이 두 곳으로 갈라지지 않게). 운영 탭은 목록에서 고르기만 한다(칸 편집기 = 오너 기각 2026-09-13). 0025 미적용·모르는 양식키 = 링크형 강등.
   캘린더 원천 = 운영 일정(`events`, **0007 적용됨**) + 과제 마감 자동 + 세션 날짜 자동 + 공고 마감·시험일(0009). 주간 기고 반복 핀 = `WEEKLY_CONTRIB.dueDay`(현재 null=[미정] — 오너 확정 시 값 1개).
-  **다가오는 업무 = ★ 지정만**(오너 2026-08-07 — 전량 노출은 소음): `events.중요`(**0010**)·`postings.고정` 겸용, `upcoming()`이 필터. 캘린더는 전 항목 유지.
+  **다가오는 업무** = 구독·★ 필터를 통과한 항목, 오늘~+14일·최대 12건(`calendar-logic.js upcoming`). ★ = 마커. 캘린더는 전 항목 유지.
   흐름(`Flow.jsx`) = 주차별 스터디 흐름(지난·이번 주·예정 — `weekStatus` 순수), 원천 = `flow_weeks`(**0008**), 운영진 인라인 CRUD.
   공고(`Postings.jsx`, 2026-08-07) = 공모전·채용·**자격증**(0015 개명)·**교내활동**(0019 개명) 링크 모음판(개인 스크랩과 별개 — 운영진·자동 루틴 등록·전원 열람).
   원천 = `postings`(**0009**), 등록·삭제 = 운영 탭 > 공고(`AdminPostings.jsx`). **코멘트 = 선택**(0018 — 링크 모음판 전환으로 필수 해제. 자동 수집분은 미기재) + `출처` 배지.

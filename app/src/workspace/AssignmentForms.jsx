@@ -84,12 +84,21 @@ export function FieldForm({ row, form, mine, onSubmit }) {
 
   return (
     <form className="ws-aform ws-aform-fields" onSubmit={send}>
+      {form.자료?.length > 0 && (
+        <div className="ws-afiles">
+          <span className="ws-afiles-k">자료 내려받기</span>
+          {form.자료.map((d) => (
+            <a key={d.href} className="ws-afile" href={d.href} download={d.파일명 || true}>{d.label}</a>
+          ))}
+        </div>
+      )}
       {form.fields.map((f, i) => (
-        <label className="ws-field ws-afield" key={f.key}>
+        <label className={`ws-field ws-afield${f.wide ? ' wide' : ''}`} key={f.key}>
           <span><i className="ws-afield-no" aria-hidden="true">{i + 1}</i>{f.label}</span>
-          {f.multiline
-            ? <textarea className="ws-textarea" rows={2} value={values[f.key]} placeholder={f.hint} onChange={(e) => set(f.key, e.target.value)} />
+          {f.multiline || f.wide
+            ? <textarea className="ws-textarea" rows={f.rows || 2} value={values[f.key]} placeholder={f.hint} onChange={(e) => set(f.key, e.target.value)} />
             : <input value={values[f.key]} placeholder={f.hint} onChange={(e) => set(f.key, e.target.value)} />}
+          {f.count && <small className="ws-acount">{String(values[f.key] || '').length.toLocaleString('ko-KR')}자</small>}
         </label>
       ))}
       {error && <p className="ws-error" role="alert">{error}</p>}
