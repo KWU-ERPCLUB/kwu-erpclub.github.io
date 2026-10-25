@@ -10,14 +10,26 @@ function initial(fields) {
   return Object.fromEntries(fields.map(([key, type]) => [key, EMPTY_VALUE[type] ?? '']))
 }
 
+// datetime = 한국 시간으로 입력·표시한다(2026-10-26 — 시간대 없이 보내면 DB가 UTC로 읽어 마감이 9시간 밀렸다).
+// 입력칸 값 'YYYY-MM-DDTHH:mm' → '+09:00' 붙여 저장 / 저장된 timestamptz → 한국 시간 입력칸 값.
+const KST_MS = 9 * 60 * 60 * 1000
+export function kstToDb(local) {
+  return /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(local) ? `${local}:00+09:00` : local
+}
+export function dbToKst(value) {
+  const t = Date.parse(value)
+  return Number.isNaN(t) ? '' : new Date(t + KST_MS).toISOString().slice(0, 16)
+}
+
 // DB로 보낼 값 정리 — 빈 문자열은 null(not null 컬럼은 서버 제약이 잡는다), 숫자는 Number.
-function normalize(fields, draft) {
+export function normalize(fields, draft) {
   const out = {}
   for (const [key, type] of fields) {
     const v = draft[key]
     if (type === 'check') out[key] = Boolean(v)
     else if (type === 'number') out[key] = v === '' ? null : Number(v)
-    else out[key] = String(v ?? '').trim() === '' ? null : v
+    else if (String(v ?? '').trim() === '') out[key] = null
+    else out[key] = type === 'datetime' ? kstToDb(v) : v
   }
   return out
 }
@@ -98,7 +110,7 @@ export default function AdminForm({ title, fields, rows, sessions = [], labelOf,
     const next = initial(fields)
     for (const [key, type] of fields) {
       const v = row[key]
-      next[key] = type === 'check' ? Boolean(v) : (v ?? '')
+      next[key] = type === 'check' ? Boolean(v) : type === 'datetime' && v ? dbToKst(v) : (v ?? '')
     }
     setDraft({ ...next, id: row.id })
     setMsg('')
