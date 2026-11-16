@@ -37,6 +37,7 @@
 | typesafe-jev.jpg | 2026-09-21 글을 만들지 않는 모델 Jev, 같은 데이터에서 62.6%와 95%를 오갔다 | TypeSafe AI 공개 발표문의 og:image(브랜드 키비주얼) — 1200×630 원본을 원본 배경색 레터박스로 1200×750 정규화, 잘림 0 | https://typesafe.ai/blog/introducing-system-one-models-and-jev | TypeSafe AI |
 | weekly-trend-w44.jpg | 2026-11-02 주간 AI 트렌드 10월 5주 | TOP 1 소재(hallmark) 저장소 공식 OG 이미지 — 1200×630 원본을 원본 배경색 레터박스로 1200×750 정규화, 잘림 0 | https://github.com/Nutlope/hallmark | Nutlope (GitHub 저장소 OG 이미지) |
 | weekly-trend-w45.jpg | 2026-11-09 주간 AI 트렌드 11월 1주 | TOP 1 소재(mattpocock/skills) README 공식 배너 "AI Skills for Real Engineers" — 738×388 원본을 흰 배경 레터박스로 1200×750 정규화, 잘림 0 | https://github.com/mattpocock/skills | Matt Pocock (저장소 README 배너) |
+| weekly-trend-w46.jpg | 2026-11-16 주간 AI 트렌드 11월 2주 | TOP 1 소재(backnotprop/plannotator) 저장소 공식 배너 "plannotator" — 1500×500 원본을 원본 배경색(#0c0a12) 레터박스로 1200×750 정규화, 잘림 0 | https://github.com/backnotprop/plannotator | backnotprop (저장소 README 배너) |
 
 ## 추가할 때
 
